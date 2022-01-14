@@ -1,0 +1,74 @@
+﻿@page "/"
+
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+
+<section class="hero" id="jumpeno">
+    <article class="content">
+        <h1>Jumpeno</h1>
+        <p>
+            Jumpeno is battle-royale type of game. Accoring to name, jumping is
+            the key. Your goal is to jump on other players to eliminate them and
+            beeing the last <strong>Jumper</strong> standing.
+        </p>
+    </article>
+    <div class="separator"></div>
+    <img class="image" src="images/jumpeno-players.png" alt="" />
+</section>
+
+<section class="hero hero-blue">
+    <article class="content">
+        <h1>Controls</h1>
+        <p>
+            Use left and right arrow on your keyboard to move your character on
+            PC and use a spcebar key to jump.
+        </p>
+        <p>There are joystick controls for phone and tablet users.</p>
+    </article>
+    <div class="separator"></div>
+    <img class="image" src="images/keyboard.png" alt="" />
+</section>
+
+<footer class="footer-page">
+    <p>🎮 Have a nice <NavLink href="playsignpost" class="play">game</NavLink> ✊</p>
+    <p class="copyright">
+        Students from&nbsp;<a href="https://www.fri.uniza.sk/">FRI UNIZA</a>&nbsp;&copy 2020 - 2021
+    </p>
+</footer>
+
+<div class="scroll-up" id="btnUp">
+    <a href="#jumpeno"><i class="fas fa-chevron-up"></i></a>
+</div>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var code = await LocalStorage.GetItemAsync<string>("code");
+        if (!string.IsNullOrWhiteSpace(code))
+        {
+            Navigation.NavigateTo($"/game/{code}");
+        }
+    }
+
+    //private async Task HandleSpectate()
+    //{
+    //    Player.Spectator = true;
+    //    await Http.GetAsync("api/auth/spectatorSignIn");
+    //    Navigation.NavigateTo($"/game/{_gameCode}", true); // true aby sa aktualizoval prihlaseny použivatel
+    //}
+
+    //private void HandlePlay()
+    //{
+    //    if (string.IsNullOrWhiteSpace(_gameCode))
+    //    {
+    //        Navigation.NavigateTo("/gamesettings");
+    //    }
+    //    else
+    //    {
+    //        Navigation.NavigateTo($"/game/{_gameCode}");
+    //    }
+
+    //}
+}

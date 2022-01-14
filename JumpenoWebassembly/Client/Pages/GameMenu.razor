@@ -1,0 +1,100 @@
+﻿@page "/gamesettings"
+@attribute [Authorize]
+
+@inject ILocalStorageService LocalStorage
+@inject IToastService Toast
+@inject NavigationManager Navigation
+@inject IAuthService Auth
+@inject GameService GameService
+@inject Player Player
+
+<div class="container text-center bg-form">
+    <div class="jumbotron text-center">
+        <h1>Jumpeno</h1>
+        @if (Player.Spectator) {
+            <p>You are in spectator mode. <br />Login as normal player to play a game.</p>
+        }
+    </div>
+
+    <div class="input-group mb-4">
+        <input type="text" class="form-control" placeholder="Game code" @bind-value="@_gameSettings.GameCode">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-success" @onclick="@HandleJoin">Join</button>
+        </div>
+    </div>
+    
+    <div class="hidden-small">
+        @if (!Player.Spectator)
+        {
+            <hr class="mb-3" style="background-color: wheat;" />
+            <div class="form-group br-left">
+                <label class="font-weight-bold">Game mode</label>
+                <select class="form-control" @onchange="HandleGameModeChange">
+                    <option value="@Enums.GameMode.Player">Player</option>
+                    <option value="@Enums.GameMode.Guided">Guided</option>
+                </select>
+                <p class="mt-2">@_description</p>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Game name</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Unnamed" @bind-value="@_gameSettings.GameName">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Players (@_gameSettings.PlayersLimit)</span>
+                </div>
+                <input type="range" class="form-control" placeholder="Players Limit" min="2" max="10" @bind-value="@_gameSettings.PlayersLimit">
+            </div>
+
+            <button type="button" class="btn btn-danger" @onclick="HandleCreateGame">Create</button>
+        }
+    </div>
+
+</div>
+
+@code {
+    private string _description = "";
+    private GameSettings _gameSettings = new GameSettings();
+
+    protected override void OnParametersSet()
+    {
+        SetDescription();
+    }
+
+    private async Task HandleCreateGame()
+    {
+        var code = await GameService.CreateGame(_gameSettings);
+        if (!String.IsNullOrWhiteSpace(code)) {
+            Navigation.NavigateTo($"/game/{code}");
+        } else {
+            Toast.ShowError("There are too many games running right now. Try again later.");
+        }
+    }
+
+    private void HandleGameModeChange(ChangeEventArgs args)
+    {
+        Enum.TryParse<Enums.GameMode>(args.Value.ToString(), out var mode);
+        _gameSettings.GameMode = mode;
+        SetDescription();
+    }
+
+    private void HandleJoin()
+    {
+        Navigation.NavigateTo($"/game/{_gameSettings.GameCode}");
+    }
+
+    private void SetDescription()
+    {
+        if (_gameSettings.GameMode == Enums.GameMode.Player) {
+            _description = "Classic game mode.";
+        } else {
+            _description = "This game mode is meant to be used for presentation purposes." +
+                    "All players are anonymous and the creator manages game flow.";
+        }
+    }
+}
+
