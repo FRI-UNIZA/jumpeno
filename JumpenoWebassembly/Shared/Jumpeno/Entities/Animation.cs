@@ -8,6 +8,11 @@ namespace JumpenoWebassembly.Shared.Jumpeno.Entities
     /// </summary>
     public class Animation
     {
+        public Animation()
+        {
+
+        }
+
         public static readonly string[] _Skins = { "mageSprite_aer", "mageSprite_water", "mageSprite_earth", "mageSprite_fire", "mageSprite_magic" };
         public Vector Posiotion { get; set; }
         public string TextureName { get; }
