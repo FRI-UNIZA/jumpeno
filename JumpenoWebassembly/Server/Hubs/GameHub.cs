@@ -30,7 +30,11 @@ namespace JumpenoWebassembly.Server.Hubs
         [HubMethodName(GameHubC.ConnectToLobby)]
         public async Task ConnectToLobby(string code)
         {
-            if (!_gameService.ExistGame(code)) return;
+            if (!_gameService.ExistGame(code))
+            {
+                await Clients.Caller.SendAsync(GameHubC.WrongGameCode);
+                return;
+            };
 
             var user = await _userService.GetUser();
             var authMethod = Context.User.FindFirstValue(ClaimTypes.AuthenticationMethod);

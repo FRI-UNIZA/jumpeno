@@ -43,6 +43,11 @@ namespace JumpenoWebassembly.Client.Pages
                 StateHasChanged();
             });
 
+            _hubConnection.On(GameHubC.WrongGameCode, () =>
+            {
+                Navigation.NavigateTo($"/connecttogame");
+            });
+
             _hubConnection.On<List<Player>, long, GameSettings, LobbyInfo, GameplayInfo>(GameHubC.ConnectedToLobby, (players, myId, settings, info, gameplayInfo) => {
                 _me = players.FirstOrDefault(pl => pl.Id == myId);
                 if (_me == null) {
