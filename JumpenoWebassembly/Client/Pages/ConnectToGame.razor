@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject ILocalStorageService LocalStorage
+@inject IToastService ToastService
 
 <div class="wrapper-flex">
     <div class="auth-form card-glass">
@@ -48,12 +49,26 @@
 
     private async Task HandleSpectate()
     {
-        await Http.GetAsync("api/auth/spectatorSignIn");
-        Navigation.NavigateTo($"/game/{_gameCode}", true); // true aby sa aktualizoval prihlaseny použivatel
+        if (_gameCode == null)
+        {
+            ToastService.ShowError("No game code!");
+        } else
+        {
+            await Http.GetAsync("api/auth/spectatorSignIn");
+            Navigation.NavigateTo($"/game/{_gameCode}", true); // true aby sa aktualizoval prihlaseny použivatel
+        }
+
     }
 
     private void HandlePlay()
     {
-        Navigation.NavigateTo($"/game/{_gameCode}");
+        if (_gameCode == null)
+        {
+            ToastService.ShowError("No game code!");
+        } else
+        {
+            Navigation.NavigateTo($"/game/{_gameCode}");
+        }
+
     }
 }
