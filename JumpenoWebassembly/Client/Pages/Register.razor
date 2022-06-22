@@ -46,7 +46,7 @@
     {
         if (!isChecked)
         {
-            ToastService.ShowError("You are not a HUMAN!!!");
+            ToastService.ShowError("You must be a human to register");
             return;
         }
         user.IsConfirmed = isChecked;
