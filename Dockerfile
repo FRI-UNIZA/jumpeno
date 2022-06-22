@@ -10,7 +10,7 @@ COPY ./JumpenoWebassembly/Server ./JumpenoWebassembly/Server
 COPY ./JumpenoWebassembly/Client ./JumpenoWebassembly/Client
 RUN dotnet publish JumpenoWebassembly/Server/JumpenoWebassembly.Server.csproj -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 as
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app .
 EXPOSE 80
