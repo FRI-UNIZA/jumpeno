@@ -19,5 +19,8 @@ namespace JumpenoWebassembly.Shared.Models
         public int TotalScore { get; set; }
         public int GamesPlayed { get; set; }
         public int Victories { get; set; }
+
+        public DateTime StartGameTime { get; set; }
+        public long GameTime { get; set; }
     }
 }

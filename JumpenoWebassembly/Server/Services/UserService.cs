@@ -3,6 +3,7 @@ using JumpenoWebassembly.Shared.Constants;
 using JumpenoWebassembly.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -33,6 +34,19 @@ namespace JumpenoWebassembly.Server.Services
             } else {
                 var mail = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
                 return await _context.Users.FirstOrDefaultAsync(user => user.Email == mail);
+            }
+        }
+
+        public async Task AddGame()
+        {
+            var authMethod = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.AuthenticationMethod);
+            if (authMethod != AuthenticationMethod.Spectator && authMethod != AuthenticationMethod.Anonym)
+            {
+                var mail = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == mail);
+                user.GamesPlayed += 1;
+                user.StartGameTime = DateTime.Now;
+                await _context.SaveChangesAsync();
             }
         }
     }

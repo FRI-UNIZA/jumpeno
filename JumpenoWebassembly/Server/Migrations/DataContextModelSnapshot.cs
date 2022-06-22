@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace JumpenoWebassembly.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
@@ -13,8 +15,7 @@ namespace JumpenoWebassembly.Server.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
             modelBuilder.Entity("JumpenoWebassembly.Shared.Jumpeno.Utilities.MapTemplate", b =>
                 {
@@ -80,6 +81,9 @@ namespace JumpenoWebassembly.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("GameTime")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("GamesPlayed")
                         .HasColumnType("INTEGER");
 
@@ -96,6 +100,9 @@ namespace JumpenoWebassembly.Server.Migrations
                         .HasColumnType("BLOB");
 
                     b.Property<string>("Skin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartGameTime")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TotalScore")

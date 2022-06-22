@@ -54,6 +54,9 @@ namespace JumpenoWebassembly.Server.Hubs
             if (!result)
             {
                 await Clients.Caller.SendAsync(GameHubC.LobbyFull);
+            } else
+            {
+                await _userService.AddGame();
             }
         }
 

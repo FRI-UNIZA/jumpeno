@@ -13,5 +13,6 @@ namespace JumpenoWebassembly.Server.Services
         /// </summary>
         /// <returns></returns>
         Task<User> GetUser();
+        Task AddGame();
     }
 }
