@@ -16,7 +16,7 @@
         <InputText type="password" @bind-Value="@user.Password" placeholder="Password" />
         <InputText type="password" @bind-Value="@user.ConfirmPassword" placeholder="Repeat Password" />
         <div class="input-check">
-            <InputCheckbox type="checkbox" @bind-Value="@user.IsConfirmed" id="check" />
+            <InputCheckbox type="checkbox" @bind-Value="@isChecked" id="check" />
             <label for="check">Confirm human</label>
         </div>
 
@@ -39,10 +39,17 @@
 </div>
 
 @code {
+    bool isChecked = false;
     UserRegisterRequest user = new UserRegisterRequest();
 
     async void HandleRegistration()
     {
+        if (!isChecked)
+        {
+            ToastService.ShowError("You are not a HUMAN!!!");
+            return;
+        }
+        user.IsConfirmed = isChecked;
         var result = await AuthService.Register(user);
         if (result.Id >= 0) {
             var loginResult = await AuthService.Login(new UserLoginRequest { Email = user.Email, Password = user.Password });
