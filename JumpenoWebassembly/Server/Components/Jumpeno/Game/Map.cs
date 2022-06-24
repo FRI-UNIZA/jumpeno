@@ -224,7 +224,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     if (collision.Y > 55 && collision.Y < 70 && pl1.Falling)
                     { // skocil mu na hlavu
                         _logger.LogInformation(LogEvents.NotifyEliminationByPlayer, $"Player {pl1.Name} has eliminated player {pl2.Name} by jumping on their's head!");
-                        pl1.Kills += 1;
+                        pl1.Statistics.TotalScore += 1;
                         pl1.OnCollision(collision);
                         pl2.Die();
                         await hub.Clients.Group(_game.Settings.GameCode).SendAsync(GameHubC.PlayerDied, pl2.Id, pl1.Id);

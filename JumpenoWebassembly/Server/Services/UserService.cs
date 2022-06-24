@@ -44,8 +44,8 @@ namespace JumpenoWebassembly.Server.Services
             {
                 var mail = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
                 var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == mail);
-                user.GamesPlayed += 1;
-                user.StartGameTime = DateTime.Now;
+                user.Statistics.GamesPlayed += 1;
+                user.Statistics.StartGameTime = DateTime.Now;
                 await _context.SaveChangesAsync();
             }
         }

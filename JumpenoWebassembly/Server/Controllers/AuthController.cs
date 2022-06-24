@@ -67,10 +67,13 @@ namespace JumpenoWebassembly.Server.Controllers
                 Username = registerRequest.Username,
                 Email = registerRequest.Email,
                 IsConfirmed = registerRequest.IsConfirmed,
-                TotalScore = 0,
-                GamesPlayed = 0,
-                GameTime = 0,
-                Victories = 0
+                Statistics = new UserStatistics
+                {
+                    TotalScore = 0,
+                    GamesPlayed = 0,
+                    GameTime = 0,
+                    Victories = 0
+                }
             };
             var result = await _authService.Register(user, registerRequest.Password);
 
