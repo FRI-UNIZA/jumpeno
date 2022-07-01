@@ -4,6 +4,7 @@ using JumpenoWebassembly.Shared;
 using JumpenoWebassembly.Shared.Constants;
 using JumpenoWebassembly.Shared.Jumpeno;
 using JumpenoWebassembly.Shared.Jumpeno.Game;
+using JumpenoWebassembly.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Security.Claims;
@@ -48,15 +49,13 @@ namespace JumpenoWebassembly.Server.Hubs
             {
                 Id = user.Id,
                 Name = user.Username,
-                Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)]
+                Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)],
+                Statistics = new UserStatistics()
             };
             var result = await _gameService.ConnectToPlay(player, code, Context.ConnectionId);
             if (!result)
             {
                 await Clients.Caller.SendAsync(GameHubC.LobbyFull);
-            } else
-            {
-                await _userService.AddGame();
             }
         }
 

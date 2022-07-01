@@ -29,5 +29,7 @@ namespace JumpenoWebassembly.Server.Services
         /// <param name="email"></param>
         /// <returns></returns>
         Task<User> GetUser(string email);
+
+        Task<UserStatistics> GetUserStatistics(long id);
     }
 }

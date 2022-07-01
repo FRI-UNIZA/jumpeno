@@ -67,13 +67,7 @@ namespace JumpenoWebassembly.Server.Controllers
                 Username = registerRequest.Username,
                 Email = registerRequest.Email,
                 IsConfirmed = registerRequest.IsConfirmed,
-                Statistics = new UserStatistics
-                {
-                    TotalScore = 0,
-                    GamesPlayed = 0,
-                    GameTime = 0,
-                    Victories = 0
-                }
+                Statistics = new UserStatistics()
             };
             var result = await _authService.Register(user, registerRequest.Password);
 
@@ -88,10 +82,13 @@ namespace JumpenoWebassembly.Server.Controllers
         {
             var user = new User();
 
-            if (User.Identity.IsAuthenticated) {
+            if (User.Identity.IsAuthenticated)
+            {
                 if (User.FindFirstValue(ClaimTypes.AuthenticationMethod) == AuthenticationMethod.Anonym ||
-                    User.FindFirstValue(ClaimTypes.AuthenticationMethod) == AuthenticationMethod.Spectator) {
-                    return Ok(new User {
+                    User.FindFirstValue(ClaimTypes.AuthenticationMethod) == AuthenticationMethod.Spectator)
+                {
+                    return Ok(new User
+                    {
                         Id = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                         Username = User.FindFirstValue(ClaimTypes.Name),
                         IsConfirmed = false
@@ -101,8 +98,10 @@ namespace JumpenoWebassembly.Server.Controllers
                 user.Email = User.FindFirstValue(ClaimTypes.Email);
                 user = await _authService.GetUser(user.Email);
 
-                if (user == null) {
-                    user = new User {
+                if (user == null)
+                {
+                    user = new User
+                    {
                         Id = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                         Username = User.FindFirstValue(ClaimTypes.GivenName),
                         Email = User.FindFirstValue(ClaimTypes.Email),
@@ -112,6 +111,23 @@ namespace JumpenoWebassembly.Server.Controllers
                 }
 
                 return Ok(user);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("getCurrentUserStatistics")]
+        public async Task<ActionResult<User>> GetCurrentUserStatistics()
+        {
+            var user = new User();
+            var statistics = new UserStatistics();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user.Id = (long)Convert.ToDouble(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                statistics = await _authService.GetUserStatistics(user.Id);
+
+                return Ok(statistics);
             }
 
             return BadRequest();
