@@ -30,6 +30,13 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
             Alive = false;
             State = AnimationState.Dead;
             Velocity.Y = 0;
+            Statistics.GameTime = (long)(DateTime.Now - Statistics.StartGameTime).TotalSeconds;
+        }
+
+        public void Win()
+        {
+            Statistics.Victories++;
+            Statistics.GameTime = (long)(DateTime.Now - Statistics.StartGameTime).TotalSeconds;
         }
 
         public void Freeze()

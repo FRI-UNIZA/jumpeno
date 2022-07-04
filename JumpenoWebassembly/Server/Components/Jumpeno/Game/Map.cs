@@ -231,6 +231,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                         --_game.PlayersAllive;
                         if (_game.PlayersAllive == 1)
                         {
+                            pl1.Win();
                             return;
                         }
                     }
