@@ -112,6 +112,11 @@ namespace JumpenoWebassembly.Server.Services
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
         }
 
+        public List<Player> GetPlayers(string gameCode)
+        {
+            return _games[gameCode].PlayersInLobby;
+        }
+
         /// <summary>
         /// Pripojenie hraca do hry s danym kodom.
         /// </summary>

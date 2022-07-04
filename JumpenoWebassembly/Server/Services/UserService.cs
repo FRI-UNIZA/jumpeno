@@ -54,10 +54,12 @@ namespace JumpenoWebassembly.Server.Services
             var databaseUser = await _context.Users.FirstOrDefaultAsync(user => user.Id == player.Id);
             if (databaseUser != null)
             {
+                databaseUser.Statistics = await _context.UserStatistics.FirstOrDefaultAsync(stat => stat.UserId == player.Id);
                 databaseUser.Statistics.TotalScore += player.Statistics.TotalScore;
                 databaseUser.Statistics.GamesPlayed += player.Statistics.GamesPlayed;
                 databaseUser.Statistics.GameTime += player.Statistics.GameTime;
                 databaseUser.Statistics.Victories += player.Statistics.Victories;
+                await _context.SaveChangesAsync();
             }
         }
     }

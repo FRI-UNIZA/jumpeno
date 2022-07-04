@@ -84,6 +84,7 @@ namespace JumpenoWebassembly.Server.Hubs
         public async Task DeleteGame()
         {
             var user = await _userService.GetUser();
+            await _userService.SaveGame(_gameService.GetPlayers(_gameService.GetGameCode(user.Id)));
             await _gameService.DeleteGame(user.Id);
         }
 

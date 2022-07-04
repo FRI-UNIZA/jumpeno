@@ -163,6 +163,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
             foreach (var pl in PlayersInGame)
             {
                 pl.InGame = true;
+                pl.Statistics.GamesPlayed++;
             }
             //if (Settings.GameMode == GameMode.Guided) {
             //    PlayersInGame.Remove(Creator);  // TODO zmazat, guider už viac nie je v zozname hračov, je ako spectator
