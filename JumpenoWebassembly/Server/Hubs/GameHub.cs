@@ -88,6 +88,13 @@ namespace JumpenoWebassembly.Server.Hubs
             await _gameService.DeleteGame(user.Id);
         }
 
+        [HubMethodName(GameHubC.LeaveLobby)]
+        public async Task LeaveLobby()
+        {
+            var user = await _userService.GetUser();
+            await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
+        }
+
         [HubMethodName(GameHubC.ChangePlayerMovement)]
         public async Task ChangePlayerMovement(Enums.MovementDirection direction, bool value)
         {
