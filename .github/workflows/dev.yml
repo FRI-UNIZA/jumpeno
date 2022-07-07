@@ -30,7 +30,7 @@ jobs:
 
       # Build Image
       - name: Build Image
-        run: docker build -t docker.pkg.github.com/fri-uniza/jumpeno/jumpeno:dev
+        run: docker build -t docker.pkg.github.com/fri-uniza/jumpeno/jumpeno
       
       # Push Image
       - name: Push Image
