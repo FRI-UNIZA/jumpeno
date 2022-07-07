@@ -24,6 +24,7 @@ jobs:
       -
         name: Login to GitHub
         env:
+          TAG: dev
           GITHUB_USER: ${{ github.actor }}
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: docker login https://docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_PASSWORD
