@@ -43,8 +43,10 @@ jobs:
     needs: build
     
     steps:
-      - uses: actions/checkout@dev
+      - uses: actions/checkout@v2
+        with: 
+          ref: 'development'
       - name: Push with curl
-        uses: wei/curl@dev
+        uses: wei/curl@v2
         with:
           args:  -H 'authorization:Bearer LAMSnv4UDnBDaxjs27ZTZRHCc' http://docker.kst.fri.uniza.sk:25356/v1/update
