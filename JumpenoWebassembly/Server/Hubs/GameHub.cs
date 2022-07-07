@@ -112,6 +112,7 @@ namespace JumpenoWebassembly.Server.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = await _userService.GetUser();
+            await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
             var gameCode = await _gameService.RemovePlayer(user.Id);
             if (!String.IsNullOrWhiteSpace(gameCode))
             {
