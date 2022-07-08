@@ -1,4 +1,5 @@
-﻿using JumpenoWebassembly.Shared.Utilities;
+﻿using JumpenoWebassembly.Shared.Models;
+using JumpenoWebassembly.Shared.Utilities;
 using System;
 using static JumpenoWebassembly.Shared.Jumpeno.Enums;
 
@@ -14,10 +15,10 @@ namespace JumpenoWebassembly.Shared.Jumpeno.Entities
         public string Skin { get; set; }
         public bool Spectator { get; set; } = false;
 
-        public int Kills { get; set; }
         public bool Alive { get; set; }
         public bool Visible { get; set; }
         public bool InGame { get; set; }
+        public UserStatistics Statistics { get; set; }
 
         public Vector Position { get; set; }
 

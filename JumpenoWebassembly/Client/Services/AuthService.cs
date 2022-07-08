@@ -25,6 +25,16 @@ namespace JumpenoWebassembly.Client.Services
             return null;
         }
 
+        public async Task<UserStatistics> GetStatistics()
+        {
+            var result = await _httpClient.GetAsync("api/Auth/getCurrentUserStatistics");
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await result.Content.ReadFromJsonAsync<UserStatistics>();
+            }
+            return null;
+        }
+
         public async Task<UserLoginResponse> Login(UserLoginRequest request)
         {
             var result = await _httpClient.PostAsJsonAsync("api/Auth/login", request);

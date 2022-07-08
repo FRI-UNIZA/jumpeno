@@ -71,6 +71,7 @@ namespace JumpenoWebassembly.Client.Shared
 
         private async Task LeaveLobby()
         {
+            await Hub.SendAsync(GameHubC.LeaveLobby);
             await Storage.RemoveItemAsync("code");
             Navigation.NavigateTo("/", true);
         }

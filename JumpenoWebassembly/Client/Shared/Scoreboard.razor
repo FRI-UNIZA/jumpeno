@@ -25,7 +25,7 @@
     <tr>
         <th class="table-dark" scope="row">@(i + 1)</th>
         <td class="table-dark">@Player.Name</td>
-        <td class="table-dark">@Player.Kills</td>
+        <td class="table-dark">@Player.Statistics.TotalScore</td>
         @if (Player.Id == GameplayInfo.WinnerId)
         {
 <td class="table-dark"><span class="badge badge-pill badge-warning">King of the Hill</span><i class="fas fa-crown"></i></td> }
@@ -38,7 +38,7 @@
     <tr>
         <th scope="row">@(i + 1)</th>
         <td>@Players[i].Name</td>
-        <td>@Players[i].Kills</td>
+        <td>@Players[i].Statistics.TotalScore</td>
         @if (Players[i].Id == GameplayInfo.WinnerId)
         {
 <td><span class="badge badge-pill badge-warning">King of the Hill</span><i class="fas fa-crown"></i></td> }
