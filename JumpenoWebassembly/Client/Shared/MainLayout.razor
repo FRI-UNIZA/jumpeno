@@ -1,13 +1,30 @@
 ﻿@inherits LayoutComponentBase
 @using Blazored.Toast.Configuration
 
-<BlazoredToasts Position="ToastPosition.TopRight"
+<div class="main">
+
+    <BlazoredToasts Position="ToastPosition.TopRight"
                 Timeout="5"
                 IconType="IconType.FontAwesome"
                 SuccessClass="success-toast-override"
                 SuccessIcon="fa fa-thumbs-up"
                 ErrorIcon="fa fa-bug" />
 
-<Navbar/>
+    <Navbar/>
 
-@Body
+    <div class="content px-4">
+        <CustomErrorBoundary>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent>
+                
+                <p class="errorUI">Nothing to see here rsfzgm;sdlfhgkadfh;giozdf;lkbgnsldkight now. Sorry!</p>
+            </ErrorContent>
+        </CustomErrorBoundary>
+
+    </div>
+</div>
+
+
+

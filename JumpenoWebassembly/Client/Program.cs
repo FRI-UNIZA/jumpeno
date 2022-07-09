@@ -32,7 +32,9 @@ namespace JumpenoWebassembly.Client
             builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<Player>();
 
+
             await builder.Build().RunAsync();
+            
         }
     }
 }
