@@ -42,6 +42,8 @@
         <section class="extras">
             <button @onclick="HandleMapEditor"><i class="fas fa-map"></i> Map edit</button>
             <button @onclick="HandleAdminPanel"><i class="fas fa-scroll"></i> Admin panel</button>
+           
+            <button @onclick="HandleException"><i class="fas fa-scroll"></i> Exception</button>
         </section>
     </section>
 </div>
@@ -70,5 +72,10 @@
     private void HandleAdminPanel()
     {
         Navigation.NavigateTo("/adminpanel");
+    }
+
+    private void HandleException()
+    {
+        throw new NotImplementedException();
     }
 }

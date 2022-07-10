@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using Blazored.Toast.Configuration
+@using JumpenoWebassembly.Client.ExceptionHandling
 
 <div class="main">
 
@@ -17,14 +18,24 @@
             <ChildContent>
                 @Body
             </ChildContent>
-            <ErrorContent>
-                
-                <p class="errorUI">Nothing to see here rsfzgm;sdlfhgkadfh;giozdf;lkbgnsldkight now. Sorry!</p>
+            <ErrorContent Context="Exception">
+                <div class="alert alert-primary">
+                        <h3>@Exception.GetType()</h3>
+                        <h3>@Exception.Message</h3
+                        <h3>@Exception.StackTrace</h3>
+                        <button class="btn btn-info" @onclick="() => errorBoundary.Clear()">Clear</button>
+                </div>
             </ErrorContent>
         </CustomErrorBoundary>
-
     </div>
+
 </div>
 
 
-
+@code{
+    private CustomErrorBoundary errorBoundary;
+    protected override void OnInitialized()
+    {
+        errorBoundary = new CustomErrorBoundary();
+    }
+}
