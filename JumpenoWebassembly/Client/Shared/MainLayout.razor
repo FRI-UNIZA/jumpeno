@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Blazored.Toast.Configuration
 @using JumpenoWebassembly.Client.ExceptionHandling
+@inject NavigationManager Navigation
 
 <div class="main">
 
@@ -19,11 +20,16 @@
                 @Body
             </ChildContent>
             <ErrorContent Context="Exception">
-                <div class="alert alert-primary">
-                        <h3>@Exception.GetType()</h3>
-                        <h3>@Exception.Message</h3
-                        <h3>@Exception.StackTrace</h3>
-                        <button class="btn btn-info" @onclick="() => errorBoundary.Clear()">Clear</button>
+                <div class="wrapper-flex">
+                    <div class="card card-glass width-75 height-50">
+                        <h1>Error</h1>
+                        <div class="width-100 height-100">
+            
+                            <h3>Something went wrong! Please submit this error to us.</h3>
+                            <button class="btn btn-info" @onclick="() => HandleError()">Submit</button>
+
+                        </div>
+                    </div>
                 </div>
             </ErrorContent>
         </CustomErrorBoundary>
@@ -37,5 +43,11 @@
     protected override void OnInitialized()
     {
         errorBoundary = new CustomErrorBoundary();
+    }
+
+    private void HandleError()
+    {
+        errorBoundary.Clear();
+        Navigation.NavigateTo("/", true);
     }
 }

@@ -10,7 +10,8 @@ namespace JumpenoWebassembly.Client.ExceptionHandling
     {
         [Inject]
         private IWebAssemblyHostEnvironment env { get; set; }
-        private NavigationManager NavigationManager { get; set; }
+        [Inject]
+        private NavigationManager navigationManager { get; set; }
         protected override Task OnErrorAsync(Exception exception)
         {
             Console.WriteLine("SAHFASHFDKJLASHFJK");
@@ -23,7 +24,7 @@ namespace JumpenoWebassembly.Client.ExceptionHandling
 
         public void Clear()
         {
-            NavigationManager.NavigateTo("/");
+            //TODO post exception to server through REST
             Recover();
         }
     }
