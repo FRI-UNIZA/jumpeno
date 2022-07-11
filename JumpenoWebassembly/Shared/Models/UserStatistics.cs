@@ -16,6 +16,7 @@ namespace JumpenoWebassembly.Shared.Models
         public int GamesPlayed { get; set; }
         public int Victories { get; set; }
         public int TotalScore { get; set; }
+        public int TotalJumps { get; set; }
         public long GameTime { get; set; }
 
         public DateTime StartGameTime { get; set; }
@@ -26,6 +27,7 @@ namespace JumpenoWebassembly.Shared.Models
             Victories = 0;
             TotalScore = 0;
             GameTime = 0;
+            TotalJumps = 0;
         }
     }
 }

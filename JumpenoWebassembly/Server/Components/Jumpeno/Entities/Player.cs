@@ -1,4 +1,5 @@
-﻿using JumpenoWebassembly.Shared.Models;
+﻿using JumpenoWebassembly.Shared.Jumpeno;
+using JumpenoWebassembly.Shared.Models;
 using System;
 using System.Numerics;
 using static JumpenoWebassembly.Shared.Jumpeno.Enums;
@@ -43,6 +44,17 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
         {
             for (int i = 0; i < Movement.Length; i++) {
                 Movement[i] = false;
+            }
+        }
+
+        public void TryAddJump(Enums.MovementDirection direction, bool value)
+        {
+            if (value && direction == Enums.MovementDirection.Jump && CanJump && !JumpIsCounted)//musi pripocitat aj pri drzani tlacidla
+            {
+                Console.WriteLine(Statistics.TotalJumps + ", " + JumpIsCounted);
+                Statistics.TotalJumps++;
+                JumpIsCounted = true;
+                Console.WriteLine("Player add jump");
             }
         }
     }

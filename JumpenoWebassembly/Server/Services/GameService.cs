@@ -230,6 +230,7 @@ namespace JumpenoWebassembly.Server.Services
         public async Task ChangePlayerMovement(long id, Enums.MovementDirection direction, bool value)
         {
             var game = _games[_users[id]];
+            game.GetPlayer(id).TryAddJump(direction, value);
             game.GetPlayer(id).SetMovement(direction, value);
             await _gameHub.Clients.Group(game.Settings.GameCode).SendAsync(GameHubC.PlayerMovementChanged, id, direction);
         }

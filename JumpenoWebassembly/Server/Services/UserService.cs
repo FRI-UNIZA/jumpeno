@@ -55,6 +55,7 @@ namespace JumpenoWebassembly.Server.Services
             if (databaseUser != null)
             {
                 databaseUser.Statistics = await _context.UserStatistics.FirstOrDefaultAsync(stat => stat.UserId == player.Id);
+                databaseUser.Statistics.TotalJumps += player.Statistics.TotalJumps;
                 databaseUser.Statistics.TotalScore += player.Statistics.TotalScore;
                 databaseUser.Statistics.GamesPlayed += player.Statistics.GamesPlayed;
                 databaseUser.Statistics.GameTime += player.Statistics.GameTime;

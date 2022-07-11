@@ -119,6 +119,9 @@ namespace JumpenoWebassembly.Server.Migrations
                     b.Property<DateTime>("StartGameTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TotalJumps")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TotalScore")
                         .HasColumnType("INTEGER");
 
