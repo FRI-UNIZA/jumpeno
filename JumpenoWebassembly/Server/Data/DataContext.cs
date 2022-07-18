@@ -1,4 +1,4 @@
-﻿using JumpenoWebassembly.Shared;
+﻿using JumpenoWebassembly.Shared.ErrorHandling;
 using JumpenoWebassembly.Shared.Jumpeno.Utilities;
 using JumpenoWebassembly.Shared.Models;
 using Microsoft.EntityFrameworkCore;

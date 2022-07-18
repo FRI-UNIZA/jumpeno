@@ -1,7 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @using Blazored.Toast.Configuration
-@using JumpenoWebassembly.Client.ExceptionHandling
+@using JumpenoWebassembly.Client.ErrorHandling
+@using JumpenoWebassembly.Shared.ErrorHandling
 @inject NavigationManager Navigation
+@inject ErrorService _errorService
 
 <div class="main">
 
@@ -19,15 +21,15 @@
             <ChildContent>
                 @Body
             </ChildContent>
-            <ErrorContent>
+            <ErrorContent Context="ThrownException">
                 <div class="wrapper-flex">
                     <div class="card card-glass width-75 height-50">
                         <h1>Error</h1>
                         <div class="width-100 height-100">
             
                             <h3>Something went wrong! Please try to describe the situation that lead to this crash and submit it.</h3>
-                            <textarea @bind=notes class="width-100"/>
-                            <button class="btn btn-info" @onclick="() => HandleError()">Submit</button>
+                            <textarea @bind="_notes" class="width-100"/>
+                            <button class="btn btn-info" @onclick="() => HandleError(ThrownException)">Submit</button>
 
                         </div>
                     </div>
@@ -40,16 +42,26 @@
 
 
 @code{
-    private CustomErrorBoundary errorBoundary;
-    private string notes = "";
+    private CustomErrorBoundary _errorBoundary;
+
+    private string? _notes = "";
     protected override void OnInitialized()
     {
-        errorBoundary = new CustomErrorBoundary();
+        _errorBoundary = new CustomErrorBoundary();
     }
 
-    private void HandleError()
+    private async Task HandleError(Exception exception)
     {
-        errorBoundary.Clear();
+        Error error = new Error()
+            {
+                Type = exception.GetType().ToString(),
+                Message = exception.Message,
+                Date = DateTime.Now,
+                Notes = _notes,
+            };
+        Console.WriteLine("Chcem poslat error z MainLayout");
+        await _errorService.SubmitError(error);
+        _errorBoundary.Clear();
         Navigation.NavigateTo("/", true);
     }
 }

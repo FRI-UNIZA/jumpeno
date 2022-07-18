@@ -1,6 +1,6 @@
 ﻿using JumpenoWebassembly.Server.Data;
 using JumpenoWebassembly.Server.Services;
-using JumpenoWebassembly.Shared;
+using JumpenoWebassembly.Shared.ErrorHandling;
 using JumpenoWebassembly.Shared.Jumpeno;
 using JumpenoWebassembly.Shared.Jumpeno.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +22,15 @@ namespace JumpenoWebassembly.Server.Controllers
             _context = context;
         }
 
-        [HttpPut("addError")]
-        public async Task AddError(Error error)
+        [HttpPut("submitError")]
+        public async Task SubmitError(Error error)
         {
             _context.Errors.Add(error);
             await _context.SaveChangesAsync();
         }
 
-        [HttpGet("getAllErrors")]
-        public IActionResult GetAllError()
+        [HttpGet("receiveErrorLog")]
+        public IActionResult ReceiveErrorLog()
         {
             var errors = _context.Errors.ToList();
             return Ok(errors);

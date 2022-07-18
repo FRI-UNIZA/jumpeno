@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using JumpenoWebassembly.Client.Services;
+using JumpenoWebassembly.Shared.ErrorHandling;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System;
 using System.Threading.Tasks;
 
-namespace JumpenoWebassembly.Client.ExceptionHandling
+namespace JumpenoWebassembly.Client.ErrorHandling
 {
     public class CustomErrorBoundary : ErrorBoundary
     {
         [Inject]
         private IWebAssemblyHostEnvironment env { get; set; }
-        [Inject]
-        private NavigationManager navigationManager { get; set; }
         protected override Task OnErrorAsync(Exception exception)
-        {
-            Console.WriteLine("SAHFASHFDKJLASHFJK");
+        { 
             if (env.IsDevelopment())
             {
                 return base.OnErrorAsync(exception);
@@ -24,7 +23,6 @@ namespace JumpenoWebassembly.Client.ExceptionHandling
 
         public void Clear()
         {
-            //TODO post exception to server through REST
             Recover();
         }
     }

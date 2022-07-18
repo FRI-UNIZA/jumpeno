@@ -17,7 +17,7 @@ namespace JumpenoWebassembly.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
-            modelBuilder.Entity("JumpenoWebassembly.Shared.Error", b =>
+            modelBuilder.Entity("JumpenoWebassembly.Shared.ErrorHandling.Error", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,6 +30,9 @@ namespace JumpenoWebassembly.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

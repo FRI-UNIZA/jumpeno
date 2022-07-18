@@ -1,4 +1,7 @@
-﻿using JumpenoWebassembly.Shared.Models;
+﻿using JumpenoWebassembly.Shared.ErrorHandling;
+using JumpenoWebassembly.Shared.Models;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -17,16 +20,16 @@ namespace JumpenoWebassembly.Client.Services
             _httpClient = http;
         }
 
-        public async Task SubmitError(string errorContent)
+        public async Task SubmitError(Error errorContent)
         {
-            await _httpClient.PutAsJsonAsync("api/error/submit", errorContent);
+            await _httpClient.PutAsJsonAsync("api/error/submitError", errorContent);
         }
 
-        public async Task<string> ReceiveErrorLog()
-        {
-            var result = await _httpClient.GetAsync("api/error/receive");
+        public async Task<List<Error>> ReceiveErrorLog()
+        { 
+            var result = await _httpClient.GetAsync("api/error/receiveErrorLog");
             if (result == null) return null;
-            return result.Content.ToString();
+            return await result.Content.ReadFromJsonAsync<List<Error>>();
         }
     }
 }
