@@ -29,8 +29,8 @@ namespace JumpenoWebassembly.Server.Controllers
             await _context.SaveChangesAsync();
         }
 
-        [HttpGet("receiveErrorLog")]
-        public IActionResult ReceiveErrorLog()
+        [HttpGet("receiveErrors")]
+        public IActionResult ReceiveErrors()
         {
             var errors = _context.Errors.ToList();
             return Ok(errors);

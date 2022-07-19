@@ -32,6 +32,9 @@ namespace JumpenoWebassembly.Server.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 

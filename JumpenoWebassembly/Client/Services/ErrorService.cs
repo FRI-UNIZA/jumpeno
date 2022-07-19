@@ -25,9 +25,9 @@ namespace JumpenoWebassembly.Client.Services
             await _httpClient.PutAsJsonAsync("api/error/submitError", errorContent);
         }
 
-        public async Task<List<Error>> ReceiveErrorLog()
+        public async Task<List<Error>> ReceiveErrors()
         { 
-            var result = await _httpClient.GetAsync("api/error/receiveErrorLog");
+            var result = await _httpClient.GetAsync("api/error/receiveErrors");
             if (result == null) return null;
             return await result.Content.ReadFromJsonAsync<List<Error>>();
         }

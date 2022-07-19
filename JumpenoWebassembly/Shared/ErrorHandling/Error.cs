@@ -11,6 +11,7 @@ namespace JumpenoWebassembly.Shared.ErrorHandling
         public long Id { get; set; }
         public string Type { get; set; }
         public string Message { get; set; }
+        public string StackTrace { get; set; }
         public DateTime Date { get; set; }
         public string Notes { get; set; }
     }
