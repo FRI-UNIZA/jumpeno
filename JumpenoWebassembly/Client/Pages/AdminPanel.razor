@@ -1,13 +1,15 @@
 ﻿@page "/adminpanel"
 @attribute [Authorize]
+@inject ErrorService _errorService
 
 <ul class="menu">
-    <li class="menu-item @(_gameSection ? "active" : "")" @onclick="SwitchSection"><p>Games</p></li>
-    <li class="menu-item @(!_gameSection ? "active" : "")" @onclick="SwitchSection"><p>Usage Monitor</p></li>
+    <li class="menu-item @(_gameSection == AdminPanelSection.Games ? "active" : "")" @onclick="() => SwitchSection(AdminPanelSection.Games)"><p>Games</p></li>
+    <li class="menu-item @(_gameSection == AdminPanelSection.Monitor ? "active" : "")" @onclick="() => SwitchSection(AdminPanelSection.Monitor)"><p>Monitor</p></li>
+    <li class="menu-item @(_gameSection == AdminPanelSection.Errors ? "active" : "")" @onclick="() => SwitchSection(AdminPanelSection.Errors)"><p>Error log</p></li>
 </ul>
 
 <div class="wrapper-adminpanel">
-    @if (_gameSection)
+    @if (_gameSection == AdminPanelSection.Games)
     {
         <section class="games">
             <div class="table-header">
@@ -53,7 +55,7 @@
         </section>
 
     }
-    else
+    else if (_gameSection == AdminPanelSection.Monitor)
     {
         <section class="statistics">
             <section class="division">
@@ -105,5 +107,15 @@
                 </section>
             </section>
         </section>
+    }
+    else
+    {
+        <div class="wrapper-flex">
+            <div class="card card-glass width-75 height-50">
+                <h1>Error List</h1>
+        
+                @ErrorLogs
+            </div>
+        </div>
     }
 </div>

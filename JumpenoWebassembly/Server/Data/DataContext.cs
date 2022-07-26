@@ -1,4 +1,5 @@
-﻿using JumpenoWebassembly.Shared.Jumpeno.Utilities;
+﻿using JumpenoWebassembly.Shared.ErrorHandling;
+using JumpenoWebassembly.Shared.Jumpeno.Utilities;
 using JumpenoWebassembly.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,5 +16,6 @@ namespace JumpenoWebassembly.Server.Data
         public DbSet<User> Users { get; set; }
         public DbSet<MapTemplate> Maps { get; set; }
         public DbSet<MeasurePoint> Statistics { get; set; }
+        public DbSet<Error> Errors { get; set; }
     }
 }

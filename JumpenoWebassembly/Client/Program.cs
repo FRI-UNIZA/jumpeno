@@ -30,9 +30,12 @@ namespace JumpenoWebassembly.Client
 
             builder.Services.AddScoped<GameService>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<ErrorService>();
             builder.Services.AddSingleton<Player>();
 
+
             await builder.Build().RunAsync();
+            
         }
     }
 }

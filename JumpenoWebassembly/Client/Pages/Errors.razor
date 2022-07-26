@@ -1,0 +1,82 @@
+﻿@page "/errors"
+@using JumpenoWebassembly.Shared
+@using JumpenoWebassembly.Shared.ErrorHandling
+
+@inject ErrorService errorService;
+
+@if (actualError != null)
+{
+<div class="wrapper-errors">
+    <div class="card card-glass width-50">
+        <h3>Detail od Error with id @actualError.Id</h3>
+        <p>
+            Type: @actualError.Type
+        </p>
+        <p>
+            Date: @actualError.Date
+        </p>
+        <p>
+            Message: @actualError.Message
+        </p>
+        <p>
+            Stack trace: @actualError.StackTrace
+        </p>
+        <p>
+            Notes: @actualError.Notes
+        </p>
+        <button @onclick="() => {actualError = null;}">Back to errors</button>
+    </div>
+</div>
+        
+    
+} else
+{
+    <div class="wrapper-adminpanel">
+        <section class="games">
+            <div class="table-header">
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                        <th></th>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="table-content">
+                <table>
+                    @foreach (var error in _errors)
+                    {
+                        <tr>
+                            <td>@error.Date</td>
+                            <td>@error.Message</td>
+                            <td><button @onclick="() => ShowDetail(error)">Detail</button></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+    
+}
+
+
+@code {
+    private bool detail = false;
+    private Error actualError = null;
+
+    private List<Error> _errors = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        actualError = null;
+        _errors = await errorService.ReceiveErrors();
+        StateHasChanged();
+    }
+
+    private void ShowDetail(Error error)
+    {
+        actualError = error;
+        detail = true;
+    }
+}
