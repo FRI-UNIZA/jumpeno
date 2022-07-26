@@ -6,34 +6,38 @@
 
 @if (actualError != null)
 {
-    <button @onclick="() => {actualError = null;}">Back to errors</button>
-    <h3>Detail od Error with id @actualError.Id</h3>
-    <p>
-        Type: @actualError.Type
-    </p>
-    <p>
-        Date: @actualError.Date
-    </p>
-    <p>
-        Message: @actualError.Message
-    </p>
-    <p>
-        Stack trace: @actualError.StackTrace
-    </p>
-    <p>
-        Notes: @actualError.Notes
-    </p>
+<div class="wrapper-errors">
+    <div class="card card-glass width-50">
+        <h3>Detail od Error with id @actualError.Id</h3>
+        <p>
+            Type: @actualError.Type
+        </p>
+        <p>
+            Date: @actualError.Date
+        </p>
+        <p>
+            Message: @actualError.Message
+        </p>
+        <p>
+            Stack trace: @actualError.StackTrace
+        </p>
+        <p>
+            Notes: @actualError.Notes
+        </p>
+        <button @onclick="() => {actualError = null;}">Back to errors</button>
+    </div>
+</div>
+        
+    
 } else
 {
-    <h3>ErrorLog</h3>
-    
-    <section class="games">
+    <div class="wrapper-adminpanel">
+        <section class="games">
             <div class="table-header">
                 <table>
                     <tr>
-                        <th>Type</th>
-                        <th>Message</th>
                         <th>Date</th>
+                        <th>Message</th>
                         <th></th>
                     </tr>
                 </table>
@@ -44,15 +48,16 @@
                     @foreach (var error in _errors)
                     {
                         <tr>
-                            <td>@error.Type</td>
-                            <td>@error.Message</td>
                             <td>@error.Date</td>
+                            <td>@error.Message</td>
                             <td><button @onclick="() => ShowDetail(error)">Detail</button></td>
                         </tr>
                     }
                 </table>
             </div>
         </section>
+    </div>
+    
 }
 
 
