@@ -88,10 +88,6 @@ namespace JumpenoWebassembly.Client.Pages
             _timer.Enabled = true;
         }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         private void SwitchSection(int section)
         {
@@ -174,6 +170,12 @@ namespace JumpenoWebassembly.Client.Pages
             parameters.Add(nameof(Graph.Labels), dates);
 
             ModalGraph.Show<Graph>("Stat graph", parameters);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _timer.Enabled = false;
+            await _hubConnection.DisposeAsync();
         }
     }
 }

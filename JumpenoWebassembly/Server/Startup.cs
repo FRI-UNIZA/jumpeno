@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace JumpenoWebassembly.Server
@@ -43,7 +44,12 @@ namespace JumpenoWebassembly.Server
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-                .AddCookie();
+                .AddCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    options.Cookie.MaxAge = options.ExpireTimeSpan; // optional
+                    options.SlidingExpiration = true;
+                });
                 // TODO: uncomment after registreing app in fb and google dev accounts and adding keys
                 //.AddFacebook(fbOptions => {
                 //    fbOptions.AppId = Configuration["Authentication:Facebook:AppId"];
