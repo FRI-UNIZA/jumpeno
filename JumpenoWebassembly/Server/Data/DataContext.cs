@@ -15,5 +15,15 @@ namespace JumpenoWebassembly.Server.Data
         public DbSet<User> Users { get; set; }
         public DbSet<MapTemplate> Maps { get; set; }
         public DbSet<MeasurePoint> Statistics { get; set; }
+        public DbSet<UserStatistics> UserStatistics { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+            .HasOne(a => a.Statistics)
+            .WithOne(a => a.User)
+            .HasForeignKey<UserStatistics>(c => c.UserId);
+        }
     }
 }

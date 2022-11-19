@@ -4,6 +4,7 @@ using JumpenoWebassembly.Shared;
 using JumpenoWebassembly.Shared.Constants;
 using JumpenoWebassembly.Shared.Jumpeno;
 using JumpenoWebassembly.Shared.Jumpeno.Game;
+using JumpenoWebassembly.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Security.Claims;
@@ -48,7 +49,8 @@ namespace JumpenoWebassembly.Server.Hubs
             {
                 Id = user.Id,
                 Name = user.Username,
-                Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)]
+                Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)],
+                Statistics = new UserStatistics()
             };
             var result = await _gameService.ConnectToPlay(player, code, Context.ConnectionId);
             if (!result)
@@ -82,7 +84,15 @@ namespace JumpenoWebassembly.Server.Hubs
         public async Task DeleteGame()
         {
             var user = await _userService.GetUser();
+            await _userService.SaveGame(_gameService.GetPlayers(_gameService.GetGameCode(user.Id)));
             await _gameService.DeleteGame(user.Id);
+        }
+
+        [HubMethodName(GameHubC.LeaveLobby)]
+        public async Task LeaveLobby()
+        {
+            var user = await _userService.GetUser();
+            await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
         }
 
         [HubMethodName(GameHubC.ChangePlayerMovement)]
@@ -102,6 +112,7 @@ namespace JumpenoWebassembly.Server.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = await _userService.GetUser();
+            await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
             var gameCode = await _gameService.RemovePlayer(user.Id);
             if (!String.IsNullOrWhiteSpace(gameCode))
             {

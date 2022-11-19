@@ -112,6 +112,16 @@ namespace JumpenoWebassembly.Server.Services
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
         }
 
+        public List<Player> GetPlayers(string gameCode)
+        {
+            return _games[gameCode].PlayersInLobby;
+        }
+
+        public Player GetPlayer(long id)
+        {
+            return _games[_users[id]].PlayersInLobby.FirstOrDefault(x => x.Id == id);
+        }
+
         /// <summary>
         /// Pripojenie hraca do hry s danym kodom.
         /// </summary>
@@ -220,6 +230,7 @@ namespace JumpenoWebassembly.Server.Services
         public async Task ChangePlayerMovement(long id, Enums.MovementDirection direction, bool value)
         {
             var game = _games[_users[id]];
+            game.GetPlayer(id).TryAddJump(direction, value);
             game.GetPlayer(id).SetMovement(direction, value);
             await _gameHub.Clients.Group(game.Settings.GameCode).SendAsync(GameHubC.PlayerMovementChanged, id, direction);
         }
