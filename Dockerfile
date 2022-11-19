@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ./JumpenoWebassembly/Client/JumpenoWebassembly.Client.csproj ./JumpenoWebassembly/Client/
 COPY ./JumpenoWebassembly/Server/JumpenoWebassembly.Server.csproj ./JumpenoWebassembly/Server/
@@ -10,7 +10,7 @@ COPY ./JumpenoWebassembly/Server ./JumpenoWebassembly/Server
 COPY ./JumpenoWebassembly/Client ./JumpenoWebassembly/Client
 RUN dotnet publish JumpenoWebassembly/Server/JumpenoWebassembly.Server.csproj -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app .
 EXPOSE 80
