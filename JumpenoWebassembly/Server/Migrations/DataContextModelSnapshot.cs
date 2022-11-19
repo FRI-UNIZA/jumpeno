@@ -17,6 +17,32 @@ namespace JumpenoWebassembly.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
+            modelBuilder.Entity("JumpenoWebassembly.Shared.ErrorHandling.Error", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Errors");
+                });
+
             modelBuilder.Entity("JumpenoWebassembly.Shared.Jumpeno.Utilities.MapTemplate", b =>
                 {
                     b.Property<int>("Id")

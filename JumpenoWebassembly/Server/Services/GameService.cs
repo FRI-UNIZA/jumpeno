@@ -145,7 +145,14 @@ namespace JumpenoWebassembly.Server.Services
                 }
             }
 
-            var result = await _games[code].AddPlayer(player);
+            var result = true;
+
+            if (_games[code].GetPlayer(player.Id) == null)
+            {
+                result = await _games[code].AddPlayer(player);
+
+            }
+
             if (result)
             {
                 await SubscribeToGame(player.Id, code, connectionId);

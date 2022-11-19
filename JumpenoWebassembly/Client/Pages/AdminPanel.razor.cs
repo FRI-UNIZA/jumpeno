@@ -23,12 +23,12 @@ namespace JumpenoWebassembly.Client.Pages
         [Inject] public HttpClient Http { get; set; }
         [Inject] public NavigationManager Navigation { get; set; }
         [CascadingParameter] public IModalService ModalGraph { get; set; }
-
+        public string ErrorLogs { get; set; }
         private HubConnection _hubConnection;
         private List<GameSettings> _games = new List<GameSettings>();
         private MeasurePoint _currentMeasure = new MeasurePoint();
         private Timer _timer;
-        private bool _gameSection = true;
+        private int _gameSection = 1;
         public DateTime _dateFrom { get; set; } = DateTime.UtcNow;
         public DateTime _dateTo { get; set; } = DateTime.UtcNow;
 
@@ -75,6 +75,9 @@ namespace JumpenoWebassembly.Client.Pages
                 StateHasChanged();
             });
 
+            //TODO dorobit
+            //ErrorLogs = _errorService.ReceiveErrorLog().Result;
+
             await _hubConnection.StartAsync();
             await _hubConnection.SendAsync(AdminPanelHubC.GetGames);
             await _hubConnection.SendAsync(AdminPanelHubC.GetMeasurement);
@@ -85,14 +88,10 @@ namespace JumpenoWebassembly.Client.Pages
             _timer.Enabled = true;
         }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
 
-        private void SwitchSection()
+        private void SwitchSection(int section)
         {
-            _gameSection = !_gameSection;
+            _gameSection = section;
         }
 
         private async Task DeleteGame(string code)
@@ -109,6 +108,8 @@ namespace JumpenoWebassembly.Client.Pages
         {
             return value.ToString("0.00");
         }
+
+
 
         private async Task ShowGraph()
         {
@@ -169,6 +170,12 @@ namespace JumpenoWebassembly.Client.Pages
             parameters.Add(nameof(Graph.Labels), dates);
 
             ModalGraph.Show<Graph>("Stat graph", parameters);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _timer.Enabled = false;
+            await _hubConnection.DisposeAsync();
         }
     }
 }
