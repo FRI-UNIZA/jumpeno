@@ -16,5 +16,7 @@ namespace JumpenoWebassembly.Server.Logging
         public const int NotifyCollision =              3001;
         public const int NotifyEliminationByPlayer =    3002;
         public const int NotifyEliminationByMapShrink = 3003;
+
+        public const int PlayerStatistics =             4000;
     }
 }

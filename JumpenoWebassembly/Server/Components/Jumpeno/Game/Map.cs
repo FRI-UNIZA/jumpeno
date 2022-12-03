@@ -20,14 +20,13 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
     /// </summary>
     public class Map
     {
-        private readonly ILogger _logger;
-
-        private readonly int _tileSize;
         public List<Platform> Platforms { get; set; }
         public string BackgroundColor { get; set; }
         public float X { get; private set; }
         public float Y { get; private set; }
 
+        private readonly ILogger _logger;
+        private readonly int _tileSize;
         private readonly GameEngine _game;
 
         public Map(ILogger<GameService> logger, GameEngine game, MapTemplate template)

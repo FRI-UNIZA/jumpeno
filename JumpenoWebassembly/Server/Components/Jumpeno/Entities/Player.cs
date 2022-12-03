@@ -1,7 +1,10 @@
-﻿using JumpenoWebassembly.Shared.Jumpeno;
+﻿using JumpenoWebassembly.Server.Logging;
+using JumpenoWebassembly.Shared.Jumpeno;
 using JumpenoWebassembly.Shared.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using static JumpenoWebassembly.Shared.Jumpeno.Enums;
 
 namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
@@ -16,7 +19,9 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
         public bool Alive { get; set; }
         public bool InGame { get; set; }
         public string Skin { get; set; }
+        public ILogger Logger { get; set; } 
         public UserStatistics Statistics { get; set; }
+
 
         public void SetBody()
         {
@@ -51,10 +56,11 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
         {
             if (value && direction == Enums.MovementDirection.Jump && CanJump && !JumpIsCounted)//musi pripocitat aj pri drzani tlacidla
             {
-                Console.WriteLine(Statistics.TotalJumps + ", " + JumpIsCounted);
+                Logger.LogInformation(LogEvents.PlayerStatistics, Statistics.TotalJumps + ", " + JumpIsCounted);
                 Statistics.TotalJumps++;
                 JumpIsCounted = true;
-                Console.WriteLine("Player add jump");
+                Logger.LogInformation(LogEvents.PlayerStatistics, "Player: " + this.Name + " add jump");
+                Console.WriteLine();
             }
         }
     }

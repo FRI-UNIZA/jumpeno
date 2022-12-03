@@ -6,6 +6,7 @@ using JumpenoWebassembly.Shared.Jumpeno;
 using JumpenoWebassembly.Shared.Jumpeno.Game;
 using JumpenoWebassembly.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -20,9 +21,11 @@ namespace JumpenoWebassembly.Server.Hubs
         private readonly GameService _gameService;
         private readonly IUserService _userService;
         private readonly Random _random;
+        private readonly ILogger<GameHub> _logger;
 
-        public GameHub(GameService gameService, IUserService userService)
+        public GameHub(GameService gameService, IUserService userService, ILogger<GameHub> logger)
         {
+            _logger = logger;
             _gameService = gameService;
             _userService = userService;
             _random = new Random();
@@ -47,6 +50,7 @@ namespace JumpenoWebassembly.Server.Hubs
 
             var player = new Player
             {
+                Logger = _logger,
                 Id = user.Id,
                 Name = user.Username,
                 Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)],
