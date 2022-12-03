@@ -50,7 +50,6 @@ namespace JumpenoWebassembly.Server.Hubs
 
             var player = new Player
             {
-                Logger = _logger,
                 Id = user.Id,
                 Name = user.Username,
                 Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)],
