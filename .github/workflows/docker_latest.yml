@@ -45,4 +45,4 @@ jobs:
       - name: Push with curl
         uses: wei/curl@master
         with:
-          args:  -H 'authorization:Bearer LAMSnv4UDnBDaxjs27ZTZRHCc' http://docker.kst.fri.uniza.sk:25356/v1/update
+          args: -X POST -k https://portainer.docker.kst.fri.uniza.sk/api/stacks/webhooks/e34f73b7-98cc-4257-be33-20df9a0f02dd
