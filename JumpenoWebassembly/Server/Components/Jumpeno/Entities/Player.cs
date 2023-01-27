@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JumpenoWebassembly.Shared.Jumpeno;
+using JumpenoWebassembly.Shared.Models;
+using System;
 using System.Numerics;
 using static JumpenoWebassembly.Shared.Jumpeno.Enums;
 
@@ -11,10 +13,11 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
     {
         public long Id { get; set; }
         public bool Spectator { get; set; } = false;
-        public int Kills { get; set; }
         public bool Alive { get; set; }
         public bool InGame { get; set; }
         public string Skin { get; set; }
+        public UserStatistics Statistics { get; set; }
+
 
         public void SetBody()
         {
@@ -29,12 +32,28 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
             Alive = false;
             State = AnimationState.Dead;
             Velocity.Y = 0;
+            Statistics.GameTime = (long)(DateTime.Now - Statistics.StartGameTime).TotalSeconds;
+        }
+
+        public void Win()
+        {
+            Statistics.Victories++;
+            Statistics.GameTime = (long)(DateTime.Now - Statistics.StartGameTime).TotalSeconds;
         }
 
         public void Freeze()
         {
             for (int i = 0; i < Movement.Length; i++) {
                 Movement[i] = false;
+            }
+        }
+
+        public void TryAddJump(Enums.MovementDirection direction, bool value)
+        {
+            if (value && direction == Enums.MovementDirection.Jump && CanJump && !JumpIsCounted)//musi pripocitat aj pri drzani tlacidla
+            {
+                Statistics.TotalJumps++;
+                JumpIsCounted = true;
             }
         }
     }

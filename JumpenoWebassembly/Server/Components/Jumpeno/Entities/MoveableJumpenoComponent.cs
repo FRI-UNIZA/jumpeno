@@ -11,6 +11,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
     public class MoveableJumpenoComponent : JumpenoComponent
     {
         protected bool[] Movement = { false, false, false, false, false }; // UP, LEFT, DOWN, RIGHT
+        protected bool JumpIsCounted = false;
         protected Vector2 Velocity = new Vector2(0, 0);
         public float JumpHeight { get; protected set; } = 200f;
         public float SpeedBase { get; protected set; } = 100;
@@ -30,6 +31,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Entities
             if (direction.Y > 0f) { // bottom
                 Velocity.Y = 0;
                 CanJump = true;
+                JumpIsCounted = false;
             } else if (direction.Y < 0f) { // top
                 Velocity.Y = 0;
             }

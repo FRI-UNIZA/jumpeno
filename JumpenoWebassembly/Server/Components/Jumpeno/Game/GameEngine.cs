@@ -27,8 +27,6 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
     /// </summary>
     public class GameEngine : IDisposable
     {
-        private readonly ILogger<GameService> _logger; 
-        private readonly MapTemplate _mapTemplate;
         public Map Map { get; private set; }
 
         public GameplayInfo Gameplay { get; set; }
@@ -50,6 +48,8 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
         private int deleteFrames;
         private readonly Random _rnd;
         private Timer timer;
+        private readonly ILogger<GameService> _logger;
+        private readonly MapTemplate _mapTemplate;
 
         public event EventHandler<GameTickEventArgs> OnTickReached;
         private void OnTick(GameTickEventArgs e)
@@ -163,6 +163,8 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
             foreach (var pl in PlayersInGame)
             {
                 pl.InGame = true;
+                pl.Statistics.GamesPlayed++;
+                pl.Statistics.StartGameTime = DateTime.Now;
             }
             //if (Settings.GameMode == GameMode.Guided) {
             //    PlayersInGame.Remove(Creator);  // TODO zmazat, guider už viac nie je v zozname hračov, je ako spectator

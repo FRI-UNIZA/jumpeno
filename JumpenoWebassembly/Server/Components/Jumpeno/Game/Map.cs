@@ -20,14 +20,13 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
     /// </summary>
     public class Map
     {
-        private readonly ILogger _logger;
-
-        private readonly int _tileSize;
         public List<Platform> Platforms { get; set; }
         public string BackgroundColor { get; set; }
         public float X { get; private set; }
         public float Y { get; private set; }
 
+        private readonly ILogger _logger;
+        private readonly int _tileSize;
         private readonly GameEngine _game;
 
         public Map(ILogger<GameService> logger, GameEngine game, MapTemplate template)
@@ -224,13 +223,14 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     if (collision.Y > 55 && collision.Y < 70 && pl1.Falling)
                     { // skocil mu na hlavu
                         _logger.LogInformation(LogEvents.NotifyEliminationByPlayer, $"Player {pl1.Name} has eliminated player {pl2.Name} by jumping on their's head!");
-                        pl1.Kills += 1;
+                        pl1.Statistics.TotalScore += 1;
                         pl1.OnCollision(collision);
                         pl2.Die();
                         await hub.Clients.Group(_game.Settings.GameCode).SendAsync(GameHubC.PlayerDied, pl2.Id, pl1.Id);
                         --_game.PlayersAllive;
                         if (_game.PlayersAllive == 1)
                         {
+                            pl1.Win();
                             return;
                         }
                     }

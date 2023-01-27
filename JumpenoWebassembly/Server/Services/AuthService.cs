@@ -81,6 +81,13 @@ namespace JumpenoWebassembly.Server.Services
             return user;
         }
 
+        public async Task<UserStatistics> GetUserStatistics(long id)
+        {
+            var statistics = await _context.UserStatistics.Where(stat => stat.UserId == id).FirstOrDefaultAsync();
+
+            return statistics;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using var hmac = new System.Security.Cryptography.HMACSHA512();

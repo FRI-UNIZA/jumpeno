@@ -133,7 +133,7 @@ namespace JumpenoWebassembly.Client.Pages
                 killed.Alive = false;
                 killed.Die();
                 killed.Animation.Update(0);
-                ++killer.Kills;
+                ++killer.Statistics.TotalScore;
                 //StateHasChanged();
             });
 

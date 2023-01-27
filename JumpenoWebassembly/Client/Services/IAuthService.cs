@@ -30,6 +30,8 @@ namespace JumpenoWebassembly.Client.Services
         /// <returns></returns>
         Task<User> GetUser();
 
+        Task<UserStatistics> GetStatistics();
+
         /// <summary>
         /// Odhlasi pouzivatela zo stranky
         /// </summary>
