@@ -39,11 +39,11 @@ namespace JumpenoWebassembly.Server.Controllers
             }
 
             var code = await _gameService.TryAddGame(settings, map);
-            if (!String.IsNullOrWhiteSpace(code)) {
+            /*if (!String.IsNullOrWhiteSpace(code)) {
                 return Ok(code);
-            }
+            }*/
 
-            return BadRequest();
+            return Ok(code);
         }
 
         [HttpGet("maps")]

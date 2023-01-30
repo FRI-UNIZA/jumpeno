@@ -62,9 +62,12 @@
         {
             Navigation.NavigateTo($"/game/{code}");
         }
-        else
+        else if (code == null)
         {
             Toast.ShowError("There are too many games running right now. Try again later.");
+        } else
+        {
+            Toast.ShowError("Game was not created correctly. Try again.");
         }
     }
 }
