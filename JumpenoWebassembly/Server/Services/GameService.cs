@@ -24,7 +24,7 @@ namespace JumpenoWebassembly.Server.Services
         public readonly ILogger<GameService> _logger;
         public const string _chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         public const int _codeLength = 5;
-        private const int _gameCap = 10;
+        private const int _gameCap = 999;
         private readonly Random _rndGen;
 
         private readonly ConcurrentDictionary<string, GameEngine> _games;
