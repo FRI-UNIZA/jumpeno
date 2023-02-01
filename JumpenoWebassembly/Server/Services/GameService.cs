@@ -77,6 +77,7 @@ namespace JumpenoWebassembly.Server.Services
         /// <returns></returns>
         public async Task<string> TryAddGame(GameSettings settings, MapTemplate map)
         {
+
             if (_games.Count >= _gameCap)
             {
                 return null;
@@ -248,6 +249,19 @@ namespace JumpenoWebassembly.Server.Services
             game.GetPlayer(id).TryAddJump(direction, value);
             game.GetPlayer(id).SetMovement(direction, value);
             await _gameHub.Clients.Group(game.Settings.GameCode).SendAsync(GameHubC.PlayerMovementChanged, id, direction);
+        }
+
+        public async Task DeleteGameIfEmpty(long id)
+        {
+            var gameCode = _users[id];
+            var game = _games[gameCode];
+            if (game.PlayersInLobby.Count == 1 &&
+                game.PlayersInGame.Count == 0)
+            {
+                _games.TryRemove(gameCode, out game);
+            }
+            
+            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
         }
 
 
