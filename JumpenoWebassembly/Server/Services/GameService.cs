@@ -169,6 +169,14 @@ namespace JumpenoWebassembly.Server.Services
 
         private async Task SubscribeToGame(long playerId, string gameCode, string connectionId)
         {
+            String userIsFound;
+            _users.TryGetValue(playerId, out userIsFound);
+            if (!String.IsNullOrEmpty(userIsFound))
+            {
+                _users.TryRemove(playerId, out _);
+            }
+
+
             _users.TryAdd(playerId, gameCode);
             await _gameHub.Groups.AddToGroupAsync(connectionId, gameCode);
             await _gameHub.Clients.Client(connectionId).SendAsync
