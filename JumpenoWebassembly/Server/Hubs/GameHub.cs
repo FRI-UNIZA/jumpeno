@@ -96,7 +96,7 @@ namespace JumpenoWebassembly.Server.Hubs
         {
             var user = await _userService.GetUser();
             await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
-            await _gameService.DeleteGameIfEmpty(user.Id);
+            await _gameService.DeleteGameIfLeavingEmpty(user.Id);
         }
 
         [HubMethodName(GameHubC.ChangePlayerMovement)]
@@ -117,7 +117,7 @@ namespace JumpenoWebassembly.Server.Hubs
         {
             var user = await _userService.GetUser();
             await _userService.SaveGameUser(_gameService.GetPlayer(user.Id));
-            await _gameService.DeleteGameIfEmpty(user.Id);
+            await _gameService.DeleteGameIfLeavingEmpty(user.Id);
             var gameCode = await _gameService.RemovePlayer(user.Id);
             if (!String.IsNullOrWhiteSpace(gameCode))
             {

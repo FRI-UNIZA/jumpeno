@@ -110,8 +110,29 @@ namespace JumpenoWebassembly.Server.Services
             _games.TryRemove(code, out var game);
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
 
+            await DeleteEmptyGames();
+        }
+
+        public async Task DeleteGameIfLeavingEmpty(long id)
+        {
+            var gameCode = _users[id];
+            var game = _games[gameCode];
+            if (game.PlayersInLobby.Count == 1 &&
+                game.PlayersInGame.Count == 0)
+            {
+                await DeleteGame(gameCode);
+            }
+
+            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+        }
+
+        public async Task DeleteEmptyGames()
+        {
             var deletedGames = _games.Select(keyValuePair => keyValuePair.Value)
-                .Where(value => value.Gameplay.State == Enums.GameState.Deleted).ToList();
+                .Where(value => value.PlayersInLobby.Count == 0)
+                .Where(value => value.PlayersInGame.Count == 0)
+                .ToList();
+            // .Where(value => value.Gameplay.State == Enums.GameState.Deleted).ToList();
 
             deletedGames.ForEach(async deletedGame =>
             {
@@ -257,20 +278,6 @@ namespace JumpenoWebassembly.Server.Services
             game.GetPlayer(id).SetMovement(direction, value);
             await _gameHub.Clients.Group(game.Settings.GameCode).SendAsync(GameHubC.PlayerMovementChanged, id, direction);
         }
-
-        public async Task DeleteGameIfEmpty(long id)
-        {
-            var gameCode = _users[id];
-            var game = _games[gameCode];
-            if (game.PlayersInLobby.Count == 1 &&
-                game.PlayersInGame.Count == 0)
-            {
-                await DeleteGame(gameCode);
-            }
-            
-            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
-        }
-
 
         private string GenerateCode()
         {

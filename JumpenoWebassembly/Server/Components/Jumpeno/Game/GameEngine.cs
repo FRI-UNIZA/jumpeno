@@ -370,7 +370,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             if (deleteFrames <= 0)
                             {
                                 Map = null;
-                                Dispose();
+                                //Dispose();
                             }
                         }
                     }
