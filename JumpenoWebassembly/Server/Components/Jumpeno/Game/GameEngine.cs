@@ -235,6 +235,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
         /// <returns></returns>
         private async Task TickAsync(object source, ElapsedEventArgs e)
         {
+            //todo Task -> void, obsah obalit do trycatch a 
             OnTick(new GameTickEventArgs { FpsTickNum = currentFPS });
             if (Gameplay.State == GameState.Countdown)
             {
@@ -361,7 +362,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                         {
                             LobbyInfo.DeleteTimerRunning = true;
                             await NotifyLobbyInfoChanged();
-                            deleteFrames = 10 * _FPS;
+                            deleteFrames = 30 * _FPS;
                         }
                         else
                         {
@@ -460,6 +461,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
             timer.Elapsed -= async (sender, e) => await TickAsync(sender, e);
             timer.Enabled = false;
             Gameplay.State = GameState.Deleted;
+
             OnTick(new GameTickEventArgs { FpsTickNum = -1 });
         }
     }
