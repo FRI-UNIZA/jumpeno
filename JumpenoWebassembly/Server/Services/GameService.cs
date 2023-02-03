@@ -102,15 +102,22 @@ namespace JumpenoWebassembly.Server.Services
         public async Task DeleteGame(long userId)
         {
             var code = _users[userId];
-            await _gameHub.Clients.Group(code).SendAsync(GameHubC.GameDeleted);
-            _games.TryRemove(code, out var game);
-            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+            await DeleteGame(code);
         }
         public async Task DeleteGame(string code)
         {
             await _gameHub.Clients.Group(code).SendAsync(GameHubC.GameDeleted);
             _games.TryRemove(code, out var game);
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+
+            var deletedGames = _games.Select(keyValuePair => keyValuePair.Value)
+                .Where(value => value.Gameplay.State == Enums.GameState.Deleted).ToList();
+
+            deletedGames.ForEach(async deletedGame =>
+            {
+                _games.TryRemove(deletedGame.Settings.GameCode, out _);
+                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, deletedGame.Settings);
+            });
         }
 
         public List<Player> GetPlayers(string gameCode)
@@ -258,7 +265,7 @@ namespace JumpenoWebassembly.Server.Services
             if (game.PlayersInLobby.Count == 1 &&
                 game.PlayersInGame.Count == 0)
             {
-                _games.TryRemove(gameCode, out game);
+                await DeleteGame(gameCode);
             }
             
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);

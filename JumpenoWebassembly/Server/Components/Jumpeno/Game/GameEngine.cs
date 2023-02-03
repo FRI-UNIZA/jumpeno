@@ -256,7 +256,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     if (Gameplay.CountdownTimerRunning)
                     {
                         --Gameplay.FramesToShrink;
-                        if (Gameplay.FramesToShrink % 60 == 0)
+                        if (Gameplay.FramesToShrink % _FPS == 0)
                         {
                             await NotifyGameplayInfoChanged();
                         }
@@ -302,7 +302,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             LobbyInfo.StartTimerRunning = false;
                             await Start();
                         }
-                        else if (LobbyInfo.FramesToStart % 60 == 0)
+                        else if (LobbyInfo.FramesToStart % _FPS == 0)
                         {
                             await NotifyLobbyInfoChanged();
                         }
@@ -330,7 +330,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             if (!LobbyInfo.StoppedStartTimer)
                             {
                                 --LobbyInfo.FramesToStart;
-                                if (LobbyInfo.FramesToStart % 60 == 0)
+                                if (LobbyInfo.FramesToStart % _FPS == 0)
                                 {
                                     await NotifyLobbyInfoChanged();
                                 }
@@ -382,7 +382,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                 if (Gameplay.GameoverTimerRunning)
                 {
                     --Gameplay.FramesToScoreboard;
-                    if (Gameplay.FramesToScoreboard % 60 == 0)
+                    if (Gameplay.FramesToScoreboard % _FPS == 0)
                     {
                         await NotifyGameplayInfoChanged();
                     }
@@ -407,7 +407,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                 if (Gameplay.ScoreboardTimerRunning)
                 {
                     --Gameplay.FramesToLobby;
-                    if (Gameplay.FramesToLobby % 60 == 0)
+                    if (Gameplay.FramesToLobby % _FPS == 0)
                     {
                         await NotifyGameplayInfoChanged();
                     }
@@ -426,7 +426,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     await NotifyGameplayInfoChanged();
                 }
             }
-            currentFPS = currentFPS % 60 + 1;
+            currentFPS = currentFPS % _FPS + 1;
             ++FPSElapsed;
         }
 
