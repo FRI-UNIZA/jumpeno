@@ -66,13 +66,13 @@ namespace JumpenoWebassembly.Client.Shared
             if (Player.Spectator) return;
             switch (e.Key) {
                 case "ArrowRight":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Right, true);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Right, true);
                     break;
                 case "ArrowLeft":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Left, true);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Left, true);
                     break;
                 case " ":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Jump, true);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Jump, true);
                     break;
             }
         }
@@ -82,13 +82,13 @@ namespace JumpenoWebassembly.Client.Shared
             if (Player.Spectator) return;
             switch (e.Key) {
                 case "ArrowRight":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Right, false);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Right, false);
                     break;
                 case "ArrowLeft":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Left, false);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Left, false);
                     break;
                 case " ":
-                    await Hub.SendAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Jump, false);
+                    await Hub.InvokeAsync(GameHubC.ChangePlayerMovement, Enums.MovementDirection.Jump, false);
                     break;
             }
         }
@@ -121,31 +121,31 @@ namespace JumpenoWebassembly.Client.Shared
         private async Task SwitchCountdownTimer()
         {
             GameplayInfo.CountdownTimerRunning = !GameplayInfo.CountdownTimerRunning;
-            await Hub.SendAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
+            await Hub.InvokeAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
         }
 
         private async Task SwitchGameoverTimer()
         {
             GameplayInfo.GameoverTimerRunning = !GameplayInfo.GameoverTimerRunning;
-            await Hub.SendAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
+            await Hub.InvokeAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
         }
 
         private async Task SwitchShrinking()
         {
             GameplayInfo.ShrinkingAllowed = !GameplayInfo.ShrinkingAllowed;
-            await Hub.SendAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
+            await Hub.InvokeAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
         }
 
         private async Task SkipMainPhase()
         {
             GameplayInfo.State = Enums.GameState.Shrinking;
-            await Hub.SendAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
+            await Hub.InvokeAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
         }
 
         private async Task SkipGameoverPhase()
         {
             GameplayInfo.FramesToScoreboard = 0;
-            await Hub.SendAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
+            await Hub.InvokeAsync(GameHubC.ChangeGameplayInfo, GameplayInfo);
         }
 
         public void Dispose()

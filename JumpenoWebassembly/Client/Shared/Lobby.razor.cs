@@ -50,28 +50,28 @@ namespace JumpenoWebassembly.Client.Shared
         private async Task SwitchTimer()
         {
             Info.StoppedStartTimer = !Info.StoppedStartTimer;
-            await Hub.SendAsync(GameHubC.ChangeLobbyInfo, Info);
+            await Hub.InvokeAsync(GameHubC.ChangeLobbyInfo, Info);
         }
 
         private async Task SwitchStartTimer()
         {
             Info.StartTimerRunning = !Info.StartTimerRunning;
-            await Hub.SendAsync(GameHubC.ChangeLobbyInfo, Info);
+            await Hub.InvokeAsync(GameHubC.ChangeLobbyInfo, Info);
         }
 
         private async Task StartGame()
         {
-            await Hub.SendAsync(GameHubC.StartGame);
+            await Hub.InvokeAsync(GameHubC.StartGame);
         }
 
         private async Task DeleteGame()
         {
-            await Hub.SendAsync(GameHubC.DeleteGame);
+            await Hub.InvokeAsync(GameHubC.DeleteGame);
         }
 
         private async Task LeaveLobby()
         {
-            await Hub.SendAsync(GameHubC.LeaveLobby);
+            await Hub.InvokeAsync(GameHubC.LeaveLobby);
             await Storage.RemoveItemAsync("code");
             Navigation.NavigateTo("/", true);
         }
@@ -82,7 +82,7 @@ namespace JumpenoWebassembly.Client.Shared
             //_messages.Add(msg);
 
             //msg.User = Player.Name;
-            await Hub.SendAsync(GameHubC.SendMessage, msg);
+            await Hub.InvokeAsync(GameHubC.SendMessage, msg);
         }
     }
 }
