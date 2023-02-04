@@ -127,13 +127,24 @@ namespace JumpenoWebassembly.Server.Services
         {
             var gameCode = _users[id];
             var game = _games[gameCode];
-            if (game.PlayersInLobby.Count == 1 &&
-                game.PlayersInGame.Count == 0)
+            if (game.Settings.GameMode == Enums.GameMode.Guided)
             {
-                await DeleteGame(gameCode);
-                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+                if (game.PlayersInLobby.Count == 0 &&
+                    game.PlayersInGame.Count == 0)
+                {
+                    await DeleteGame(gameCode);
+                    await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+                }
             }
-
+            else
+            {
+                if (game.PlayersInLobby.Count == 1 &&
+                    game.PlayersInGame.Count == 0)
+                {
+                    await DeleteGame(gameCode);
+                    await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+                }
+            }
         }
 
         public async Task DeleteEmptyGames()
