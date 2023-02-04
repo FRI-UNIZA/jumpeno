@@ -121,9 +121,9 @@ namespace JumpenoWebassembly.Server.Services
                 game.PlayersInGame.Count == 0)
             {
                 await DeleteGame(gameCode);
+                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
             }
 
-            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
         }
 
         public async Task DeleteEmptyGames()
