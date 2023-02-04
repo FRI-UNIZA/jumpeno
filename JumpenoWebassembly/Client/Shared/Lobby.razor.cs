@@ -29,7 +29,7 @@ namespace JumpenoWebassembly.Client.Shared
 
         [Inject] public NavigationManager Navigation { get; set; }
         [Inject] public ILocalStorageService Storage { get; set; }
-        [Inject] public IAuthService AuthService { get; set; }
+        [Inject] public Services.IAuthService AuthService { get; set; }
 
 
         private List<Message> _messages = new List<Message>();
@@ -75,6 +75,9 @@ namespace JumpenoWebassembly.Client.Shared
             if (!Player.Spectator)
             {
                 await Hub.InvokeAsync(GameHubC.LeaveLobby);
+            } else
+            {
+                await AuthService.Logout();
             }
             await Storage.RemoveItemAsync("code");
             Navigation.NavigateTo("/", true);
