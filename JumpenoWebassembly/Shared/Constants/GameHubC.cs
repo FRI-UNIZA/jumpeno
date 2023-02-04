@@ -7,6 +7,7 @@
         #region Lobby
 
         public const string WrongGameCode = "WrongGameCode";
+        public const string GameInProgress = "GameInProgress";
         public const string ConnectToLobby = "ConnectToLobby";
         public const string ConnectedToLobby = "ConnectedToLobby";
         public const string PlayerJoined = "PlayerJoined";

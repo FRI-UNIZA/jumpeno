@@ -30,6 +30,7 @@ namespace JumpenoWebassembly.Client.Pages
         private GameplayInfo _gameplayInfo;
         private Map _map;
         private bool _isFull;
+        private bool _gameInProgress;
 
         protected override async Task OnInitializedAsync()
         {
@@ -46,6 +47,12 @@ namespace JumpenoWebassembly.Client.Pages
             _hubConnection.On(GameHubC.WrongGameCode, () =>
             {
                 Navigation.NavigateTo($"/connecttogame");
+            });
+
+            _hubConnection.On(GameHubC.GameInProgress, () =>
+            {
+                _gameInProgress = true;
+                StateHasChanged();
             });
 
             _hubConnection.On<List<Player>, long, GameSettings, LobbyInfo, GameplayInfo>(GameHubC.ConnectedToLobby, (players, myId, settings, info, gameplayInfo) => {

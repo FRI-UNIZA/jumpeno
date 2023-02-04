@@ -67,6 +67,16 @@ namespace JumpenoWebassembly.Server.Services
             return _games.TryGetValue(code, out _);
         }
 
+        public bool GameInProgress(string code)
+        {
+            GameEngine game;
+             _games.TryGetValue(code, out game);
+            if (game.Gameplay.State == Enums.GameState.Lobby)
+                return false;
+            else
+                return true;
+        }
+
         /// <summary>
         /// Ak je miesto tak prida hru.
         /// Maximalna kapacita prebiehajucich hier je 10.
