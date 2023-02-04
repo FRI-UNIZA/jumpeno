@@ -54,7 +54,8 @@
         if (!string.IsNullOrWhiteSpace(_message))
         {
             OnMessageSend.Invoke(_message);
-            
+
         }
+        _message = "";
     }
 }
