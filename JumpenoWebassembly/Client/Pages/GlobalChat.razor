@@ -70,8 +70,15 @@
         await hubConnection.StartAsync();
     }
 
-    Task Send() =>
-        hubConnection.SendAsync(GlobalChatHubC.SendMessage, messageInput);
+    private async Task Send()
+    {
+        if (String.IsNullOrEmpty(messageInput))
+        {
+            return;
+        }
+        await hubConnection.SendAsync(GlobalChatHubC.SendMessage, messageInput);
+        messageInput = "";
+    }
 
     public bool IsConnected =>
         hubConnection.State == HubConnectionState.Connected;

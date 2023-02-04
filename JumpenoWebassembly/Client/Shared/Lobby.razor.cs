@@ -77,6 +77,10 @@ namespace JumpenoWebassembly.Client.Shared
 
         private async Task SendMessage(string message)
         {
+            if (String.IsNullOrEmpty(message))
+            {
+                return;
+            }
             var msg = new Message { Text = message, User = Player.Name, UserId = Player.Id};
             //_messages.Add(msg);
 
