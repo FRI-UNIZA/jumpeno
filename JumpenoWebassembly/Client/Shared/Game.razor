@@ -8,9 +8,12 @@
      tabindex="0">
 
     @if (_isSmall) {
-        <div class="arrow_btn arrow_left" @ontouchstart="() => Left(false)" @ontouchend="() => Left(true)"></div>
-        <div class="arrow_btn arrow_right" @ontouchstart="() => Right(false)" @ontouchend="() => Right(true)"></div>
-        <div class="arrow_btn arrow_up" @ontouchstart="() => Up(false)" @ontouchend="() => Up(true)"></div>
+        <div class="player_name"><h1>@Player.Name</h1></div>
+        <div class="game_buttons">
+            <div class="arrow_btn arrow_left" @ontouchstart="() => Left(false)" @ontouchend="() => Left(true)"></div>
+            <div class="arrow_btn arrow_right" @ontouchstart="() => Right(false)" @ontouchend="() => Right(true)"></div>
+            <div class="arrow_btn arrow_up" @ontouchstart="() => Up(false)" @ontouchend="() => Up(true)"></div>
+        </div>
     } else {
         <!-- herna mapa -->
         <div class="map"
