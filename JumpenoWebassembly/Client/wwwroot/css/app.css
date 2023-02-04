@@ -69,10 +69,21 @@
     width: 100%;
 }
 
+.game_buttons {
+    display: flex;
+}
+
+.player_name {
+    text-align: center;
+    font-size: 30px;
+}
+
 .arrow_btn {
-    width: 80px;
-    height: 80px;
+    width: 30%;
+    height: 60%;
     position: fixed;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
 }
 
     .arrow_btn.arrow_left {
@@ -83,7 +94,7 @@
 
     .arrow_btn.arrow_right {
         bottom: 0px;
-        left: 80px;
+        left: 30%;
         background: url("../images/small/arrow_right.png") 0px 0px;
     }
 
