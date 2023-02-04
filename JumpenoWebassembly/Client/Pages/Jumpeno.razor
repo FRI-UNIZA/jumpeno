@@ -22,7 +22,7 @@
 
     } else if (_gameplayInfo.State == Enums.GameState.Scoreboard) {
         <Scoreboard Player="_me"
-                    Players="_players"
+                    Players="_players.OrderByDescending(player => player.Statistics.TotalScore).ToList()"
                     GameplayInfo="_gameplayInfo"
                     GameSettings="_gameSettings"
                     Hub="_hubConnection"/>
