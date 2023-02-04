@@ -77,7 +77,6 @@ namespace JumpenoWebassembly.Server.Services
         /// <returns></returns>
         public async Task<string> TryAddGame(GameSettings settings, MapTemplate map)
         {
-
             if (_games.Count >= _gameCap)
             {
                 return null;
@@ -121,9 +120,12 @@ namespace JumpenoWebassembly.Server.Services
                 game.PlayersInGame.Count == 0)
             {
                 await DeleteGame(gameCode);
+                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+            } else
+            {
+                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameUpdated, game.Settings);
             }
 
-            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
         }
 
         public async Task DeleteEmptyGames()
@@ -187,7 +189,7 @@ namespace JumpenoWebassembly.Server.Services
                 await SubscribeToGame(player.Id, code, connectionId);
                 await _gameHub.Clients.GroupExcept(code, connectionId).SendAsync(GameHubC.PlayerJoined, player);
             }
-
+            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameUpdated, _games[code].Settings);
             return result;
         }
 
@@ -253,7 +255,7 @@ namespace JumpenoWebassembly.Server.Services
                 await game.RemovePlayer(player);
                 await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.PlayerLeft, id);
             }
-
+            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameUpdated, game.Settings);
             return code;
         }
 

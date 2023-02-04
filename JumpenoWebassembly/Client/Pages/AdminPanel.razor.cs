@@ -75,6 +75,13 @@ namespace JumpenoWebassembly.Client.Pages
                 StateHasChanged();
             });
 
+            _hubConnection.On<GameSettings>(AdminPanelHubC.GameUpdated, (settings) =>
+            {
+                var game = _games.Find(game => game.GameCode == settings.GameCode);
+                game = settings;
+                StateHasChanged();
+            });
+
             //TODO dorobit
             //ErrorLogs = _errorService.ReceiveErrorLog().Result;
 

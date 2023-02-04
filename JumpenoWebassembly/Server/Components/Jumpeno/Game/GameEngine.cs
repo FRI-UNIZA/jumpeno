@@ -94,6 +94,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                         player.InGame = true;
                         Map.SpawnPlayer(player);
                         ++PlayersAllive;
+                        Settings.ConnectedPlayers++;
                         return true;
                     }
                     return false;
@@ -103,6 +104,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     if (PlayersInLobby.Count < Settings.PlayersLimit)
                     {
                         PlayersInLobby.Add(player);
+                        Settings.ConnectedPlayers++;
                         return true;
                     }
                     return false;
@@ -122,6 +124,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                         LobbyInfo.FramesToStart /= 2;
                         await NotifyLobbyInfoChanged();
                     }
+                    Settings.ConnectedPlayers++;
                     return true;
                 }
                 return false;
@@ -140,6 +143,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                 --PlayersAllive;
             }
             PlayersInLobby.Remove(player);
+            Settings.ConnectedPlayers--;
             if (PlayersInLobby.Count == 1 && Settings.GameMode != GameMode.Guided)
             {
                 Creator = PlayersInLobby[_rnd.Next(0, PlayersInLobby.Count - 1)];

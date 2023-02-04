@@ -8,6 +8,7 @@ namespace JumpenoWebassembly.Shared.Jumpeno
     public class GameSettings
     {
         public int PlayersLimit { get; set; } = 2;
+        public int ConnectedPlayers { get; set; } = 0;
         public string GameName { get; set; }
         public string GameCode { get; set; }
         public GameMode GameMode { get; set; } = GameMode.Player;

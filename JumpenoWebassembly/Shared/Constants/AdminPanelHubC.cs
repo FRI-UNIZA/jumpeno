@@ -12,6 +12,7 @@
 
         public const string GameAdded = "GameAdded";
         public const string GameRemoved = "GameRemoved";
+        public const string GameUpdated = "GameUpdated";
         public const string PlayerJoined = "PlayerJoined";
         public const string PlayerLeft = "PlayerLeft";
 
