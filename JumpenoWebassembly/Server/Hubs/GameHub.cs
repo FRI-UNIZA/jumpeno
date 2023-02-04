@@ -39,6 +39,11 @@ namespace JumpenoWebassembly.Server.Hubs
                 await Clients.Caller.SendAsync(GameHubC.WrongGameCode);
                 return;
             };
+            if (_gameService.GameInProgress(code))
+            {
+                await Clients.Caller.SendAsync(GameHubC.GameInProgress);
+                return;
+            }
 
             var user = await _userService.GetUser();
             var authMethod = Context.User.FindFirstValue(ClaimTypes.AuthenticationMethod);
@@ -55,6 +60,7 @@ namespace JumpenoWebassembly.Server.Hubs
                 Skin = user.Skin ?? Skins.Names[_random.Next(Skins.Names.Length)],
                 Statistics = new UserStatistics()
             };
+
             var result = await _gameService.ConnectToPlay(player, code, Context.ConnectionId);
             if (!result)
             {

@@ -31,8 +31,13 @@
         <h3 class="align-self-center">Lobby is not loaded</h3>
     }
 } else if (_isFull) {
-    <h3 class="align-self-center">Lobby is full.</h3>
-} else
+    <h1 class="align-self-center">Lobby is full.</h1>
+} else if (_gameInProgress)
+{
+    <h1 class="align-self-center">Game is already in progress, try again when the game is finished.</h1>
+}
+
+else
 {
     <h3>Loading...</h3>
 }
