@@ -11,38 +11,48 @@
     <ul class="nav @CollapseStyle" id="nav">
         <AuthorizeView>
             <Authorized>
-                <li class="@(_user.IsConfirmed ? "" : "link-inactive")">
-                    <NavLink @onclick="GoToProfile">
-                        <i class="fas fa-user"></i>@_user.Username
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink href="globalchat">
-                        <i class="fas fa-envelope"></i>Chat
-                    </NavLink>
-                </li>
+                @if (_user.IsConfirmed)
+                {
+                    <li class="@(_user.IsConfirmed ? "" : "link-inactive")">
+                        <NavLink @onclick="GoToProfile">
+                            <i class="fas fa-user"></i>@_user.Username
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="globalchat">
+                            <i class="fas fa-envelope"></i>Chat
+                        </NavLink>
+                    </li>
+                }
             </Authorized>
         </AuthorizeView>
 
-        <li>
-            <NavLink href="https://docs.google.com/forms/d/e/1FAIpQLSdUu5fTk2tQvr8daCmsKyyDocu4XG-VPioCy-m-au9hFf6W4w/viewform?usp=sf_link">
-                <i class="fas fa-file-contract"></i>Feedback
-            </NavLink>
-        </li>
+        @if (_user == null || (_user != null && _user.IsConfirmed))
+        {
+            <li>
+                <NavLink href="https://docs.google.com/forms/d/e/1FAIpQLSdUu5fTk2tQvr8daCmsKyyDocu4XG-VPioCy-m-au9hFf6W4w/viewform?usp=sf_link">
+                    <i class="fas fa-file-contract"></i>Feedback
+                </NavLink>
+            </li>
 
-        <li>
-            <NavLink href="playsignpost">
-                <i class="fas fa-gamepad"></i>Play
-            </NavLink>
-        </li>
+            <li>
+                <NavLink href="playsignpost">
+                    <i class="fas fa-gamepad"></i>Play
+                </NavLink>
+            </li>
+        }
         
         <AuthorizeView>
             <Authorized>
-                <li>
-                    <a href="#" @onclick="HandleLogout">
-                        <i class="fas fa-sign-out-alt"></i>Logout
-                    </a>
-                </li>
+                @if (_user.IsConfirmed)
+                {
+                    <li>
+                        <a href="#" @onclick="HandleLogout">
+                            <i class="fas fa-sign-out-alt"></i>Logout
+                        </a>
+                    </li>
+                }
+                
             </Authorized>
             <NotAuthorized>
                 <li>
