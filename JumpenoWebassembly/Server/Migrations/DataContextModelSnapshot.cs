@@ -107,9 +107,6 @@ namespace JumpenoWebassembly.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GamesPlayed")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("INTEGER");
 
@@ -125,18 +122,63 @@ namespace JumpenoWebassembly.Server.Migrations
                     b.Property<string>("Skin")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("JumpenoWebassembly.Shared.Models.UserStatistics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("GameTime")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GamesPlayed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartGameTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalJumps")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TotalScore")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Victories")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserStatistics");
+                });
+
+            modelBuilder.Entity("JumpenoWebassembly.Shared.Models.UserStatistics", b =>
+                {
+                    b.HasOne("JumpenoWebassembly.Shared.Models.User", "User")
+                        .WithOne("Statistics")
+                        .HasForeignKey("JumpenoWebassembly.Shared.Models.UserStatistics", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("JumpenoWebassembly.Shared.Models.User", b =>
+                {
+                    b.Navigation("Statistics");
                 });
 #pragma warning restore 612, 618
         }

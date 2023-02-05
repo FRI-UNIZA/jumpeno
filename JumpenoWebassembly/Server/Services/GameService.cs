@@ -24,7 +24,7 @@ namespace JumpenoWebassembly.Server.Services
         public readonly ILogger<GameService> _logger;
         public const string _chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         public const int _codeLength = 5;
-        private const int _gameCap = 10;
+        private const int _gameCap = 999;
         private readonly Random _rndGen;
 
         private readonly ConcurrentDictionary<string, GameEngine> _games;
@@ -67,6 +67,16 @@ namespace JumpenoWebassembly.Server.Services
             return _games.TryGetValue(code, out _);
         }
 
+        public bool GameInProgress(string code)
+        {
+            GameEngine game;
+             _games.TryGetValue(code, out game);
+            if (game.Gameplay.State == Enums.GameState.Lobby)
+                return false;
+            else
+                return true;
+        }
+
         /// <summary>
         /// Ak je miesto tak prida hru.
         /// Maximalna kapacita prebiehajucich hier je 10.
@@ -77,6 +87,7 @@ namespace JumpenoWebassembly.Server.Services
         /// <returns></returns>
         public async Task<string> TryAddGame(GameSettings settings, MapTemplate map)
         {
+
             if (_games.Count >= _gameCap)
             {
                 return null;
@@ -101,15 +112,64 @@ namespace JumpenoWebassembly.Server.Services
         public async Task DeleteGame(long userId)
         {
             var code = _users[userId];
-            await _gameHub.Clients.Group(code).SendAsync(GameHubC.GameDeleted);
-            _games.TryRemove(code, out var game);
-            await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+            await DeleteGame(code);
         }
         public async Task DeleteGame(string code)
         {
             await _gameHub.Clients.Group(code).SendAsync(GameHubC.GameDeleted);
             _games.TryRemove(code, out var game);
             await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+
+            await DeleteEmptyGames();
+        }
+
+        public async Task DeleteGameIfLeavingEmpty(long id)
+        {
+            var gameCode = _users[id];
+            var game = _games[gameCode];
+            if (game.Settings.GameMode == Enums.GameMode.Guided)
+            {
+                if (game.PlayersInLobby.Count == 0 &&
+                    game.PlayersInGame.Count == 0)
+                {
+                    await DeleteGame(gameCode);
+                    await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+                }
+            }
+            else
+            {
+                if (game.PlayersInLobby.Count == 1 &&
+                    game.PlayersInGame.Count == 0)
+                {
+                    await DeleteGame(gameCode);
+                    await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, game.Settings);
+                }
+            }
+        }
+
+        public async Task DeleteEmptyGames()
+        {
+            var deletedGames = _games.Select(keyValuePair => keyValuePair.Value)
+                .Where(value => value.PlayersInLobby.Count == 0)
+                .Where(value => value.PlayersInGame.Count == 0)
+                .ToList();
+            // .Where(value => value.Gameplay.State == Enums.GameState.Deleted).ToList();
+
+            deletedGames.ForEach(async deletedGame =>
+            {
+                _games.TryRemove(deletedGame.Settings.GameCode, out _);
+                await _adminPanelHub.Clients.All.SendAsync(AdminPanelHubC.GameRemoved, deletedGame.Settings);
+            });
+        }
+
+        public List<Player> GetPlayers(string gameCode)
+        {
+            return _games[gameCode].PlayersInLobby;
+        }
+
+        public Player GetPlayer(long id)
+        {
+            return _games[_users[id]].PlayersInLobby.FirstOrDefault(x => x.Id == id);
         }
 
         /// <summary>
@@ -159,6 +219,14 @@ namespace JumpenoWebassembly.Server.Services
 
         private async Task SubscribeToGame(long playerId, string gameCode, string connectionId)
         {
+            String userIsFound;
+            _users.TryGetValue(playerId, out userIsFound);
+            if (!String.IsNullOrEmpty(userIsFound))
+            {
+                _users.TryRemove(playerId, out _);
+            }
+
+
             _users.TryAdd(playerId, gameCode);
             await _gameHub.Groups.AddToGroupAsync(connectionId, gameCode);
             await _gameHub.Clients.Client(connectionId).SendAsync
@@ -227,10 +295,10 @@ namespace JumpenoWebassembly.Server.Services
         public async Task ChangePlayerMovement(long id, Enums.MovementDirection direction, bool value)
         {
             var game = _games[_users[id]];
+            game.GetPlayer(id).TryAddJump(direction, value);
             game.GetPlayer(id).SetMovement(direction, value);
             await _gameHub.Clients.Group(game.Settings.GameCode).SendAsync(GameHubC.PlayerMovementChanged, id, direction);
         }
-
 
         private string GenerateCode()
         {

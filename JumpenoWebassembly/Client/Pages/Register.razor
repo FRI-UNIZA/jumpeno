@@ -16,7 +16,7 @@
         <InputText type="password" @bind-Value="@user.Password" placeholder="Password" />
         <InputText type="password" @bind-Value="@user.ConfirmPassword" placeholder="Repeat Password" />
         <div class="input-check">
-            <InputCheckbox type="checkbox" @bind-Value="@user.IsConfirmed" id="check" />
+            <InputCheckbox type="checkbox" @bind-Value="@isChecked" id="check" />
             <label for="check">Confirm human</label>
         </div>
 
@@ -26,12 +26,12 @@
     </EditForm>
 
     <div class="third-party-logins">
-        <button class="facebook" @onclick="@(() => Navigation.NavigateTo("api/auth/facebookSignIn", true))">
+        @*<button class="facebook" @onclick="@(() => Navigation.NavigateTo("api/auth/facebookSignIn", true))">
             <i class="fab fa-facebook-square"></i>
         </button>
         <button class="google" @onclick="@(() => Navigation.NavigateTo("api/auth/googleSignIn", true))">
             <i class="fab fa-google-plus-square"></i>
-        </button>
+        </button>*@
         <button class="anonym" @onclick="@(() => Navigation.NavigateTo("api/auth/anonymSignIn", true))">
             <i class="fas fa-user-secret"></i>
         </button>
@@ -39,10 +39,17 @@
 </div>
 
 @code {
+    bool isChecked = false;
     UserRegisterRequest user = new UserRegisterRequest();
 
     async void HandleRegistration()
     {
+        if (!isChecked)
+        {
+            ToastService.ShowError("You must be a human to register");
+            return;
+        }
+        user.IsConfirmed = isChecked;
         var result = await AuthService.Register(user);
         if (result.Id >= 0) {
             var loginResult = await AuthService.Login(new UserLoginRequest { Email = user.Email, Password = user.Password });

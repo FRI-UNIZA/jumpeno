@@ -27,8 +27,6 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
     /// </summary>
     public class GameEngine : IDisposable
     {
-        private readonly ILogger<GameService> _logger; 
-        private readonly MapTemplate _mapTemplate;
         public Map Map { get; private set; }
 
         public GameplayInfo Gameplay { get; set; }
@@ -50,6 +48,8 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
         private int deleteFrames;
         private readonly Random _rnd;
         private Timer timer;
+        private readonly ILogger<GameService> _logger;
+        private readonly MapTemplate _mapTemplate;
 
         public event EventHandler<GameTickEventArgs> OnTickReached;
         private void OnTick(GameTickEventArgs e)
@@ -163,6 +163,8 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
             foreach (var pl in PlayersInGame)
             {
                 pl.InGame = true;
+                pl.Statistics.GamesPlayed++;
+                pl.Statistics.StartGameTime = DateTime.Now;
             }
             //if (Settings.GameMode == GameMode.Guided) {
             //    PlayersInGame.Remove(Creator);  // TODO zmazat, guider už viac nie je v zozname hračov, je ako spectator
@@ -233,6 +235,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
         /// <returns></returns>
         private async Task TickAsync(object source, ElapsedEventArgs e)
         {
+            //todo Task -> void, obsah obalit do trycatch a 
             OnTick(new GameTickEventArgs { FpsTickNum = currentFPS });
             if (Gameplay.State == GameState.Countdown)
             {
@@ -253,7 +256,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     if (Gameplay.CountdownTimerRunning)
                     {
                         --Gameplay.FramesToShrink;
-                        if (Gameplay.FramesToShrink % 60 == 0)
+                        if (Gameplay.FramesToShrink % _FPS == 0)
                         {
                             await NotifyGameplayInfoChanged();
                         }
@@ -299,7 +302,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             LobbyInfo.StartTimerRunning = false;
                             await Start();
                         }
-                        else if (LobbyInfo.FramesToStart % 60 == 0)
+                        else if (LobbyInfo.FramesToStart % _FPS == 0)
                         {
                             await NotifyLobbyInfoChanged();
                         }
@@ -327,7 +330,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             if (!LobbyInfo.StoppedStartTimer)
                             {
                                 --LobbyInfo.FramesToStart;
-                                if (LobbyInfo.FramesToStart % 60 == 0)
+                                if (LobbyInfo.FramesToStart % _FPS == 0)
                                 {
                                     await NotifyLobbyInfoChanged();
                                 }
@@ -359,7 +362,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                         {
                             LobbyInfo.DeleteTimerRunning = true;
                             await NotifyLobbyInfoChanged();
-                            deleteFrames = 10 * _FPS;
+                            deleteFrames = 30 * _FPS;
                         }
                         else
                         {
@@ -367,7 +370,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                             if (deleteFrames <= 0)
                             {
                                 Map = null;
-                                Dispose();
+                                //Dispose();
                             }
                         }
                     }
@@ -379,7 +382,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                 if (Gameplay.GameoverTimerRunning)
                 {
                     --Gameplay.FramesToScoreboard;
-                    if (Gameplay.FramesToScoreboard % 60 == 0)
+                    if (Gameplay.FramesToScoreboard % _FPS == 0)
                     {
                         await NotifyGameplayInfoChanged();
                     }
@@ -404,7 +407,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                 if (Gameplay.ScoreboardTimerRunning)
                 {
                     --Gameplay.FramesToLobby;
-                    if (Gameplay.FramesToLobby % 60 == 0)
+                    if (Gameplay.FramesToLobby % _FPS == 0)
                     {
                         await NotifyGameplayInfoChanged();
                     }
@@ -423,7 +426,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
                     await NotifyGameplayInfoChanged();
                 }
             }
-            currentFPS = currentFPS % 60 + 1;
+            currentFPS = currentFPS % _FPS + 1;
             ++FPSElapsed;
         }
 
@@ -458,6 +461,7 @@ namespace JumpenoWebassembly.Server.Components.Jumpeno.Game
             timer.Elapsed -= async (sender, e) => await TickAsync(sender, e);
             timer.Enabled = false;
             Gameplay.State = GameState.Deleted;
+
             OnTick(new GameTickEventArgs { FpsTickNum = -1 });
         }
     }

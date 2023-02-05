@@ -22,14 +22,22 @@
 
     } else if (_gameplayInfo.State == Enums.GameState.Scoreboard) {
         <Scoreboard Player="_me"
-                    Players="_players"
+                    Players="_players.OrderByDescending(player => player.Statistics.TotalScore).ToList()"
                     GameplayInfo="_gameplayInfo"
                     GameSettings="_gameSettings"
                     Hub="_hubConnection"/>
+    } else
+    {
+        <h3 class="align-self-center">Lobby is not loaded</h3>
     }
 } else if (_isFull) {
-    <h3 class="align-self-center">Lobby is full.</h3>
-} else
+    <h1 class="align-self-center">Lobby is full.</h1>
+} else if (_gameInProgress)
+{
+    <h1 class="align-self-center">Game is already in progress, try again when the game is finished.</h1>
+}
+
+else
 {
     <h3>Loading...</h3>
 }

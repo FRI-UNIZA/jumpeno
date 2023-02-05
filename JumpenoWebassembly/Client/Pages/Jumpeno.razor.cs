@@ -18,6 +18,7 @@ namespace JumpenoWebassembly.Client.Pages
     {
         [Inject] public NavigationManager Navigation { get; set; }
         [Inject] public ILocalStorageService LocalStorage { get; set; }
+        [Inject] public Services.IAuthService AuthService { get; set; }
         [Parameter] public string GameCode { get; set; }
 
         private HubConnection _hubConnection;
@@ -30,6 +31,7 @@ namespace JumpenoWebassembly.Client.Pages
         private GameplayInfo _gameplayInfo;
         private Map _map;
         private bool _isFull;
+        private bool _gameInProgress;
 
         protected override async Task OnInitializedAsync()
         {
@@ -46,6 +48,12 @@ namespace JumpenoWebassembly.Client.Pages
             _hubConnection.On(GameHubC.WrongGameCode, () =>
             {
                 Navigation.NavigateTo($"/connecttogame");
+            });
+
+            _hubConnection.On(GameHubC.GameInProgress, () =>
+            {
+                _gameInProgress = true;
+                StateHasChanged();
             });
 
             _hubConnection.On<List<Player>, long, GameSettings, LobbyInfo, GameplayInfo>(GameHubC.ConnectedToLobby, (players, myId, settings, info, gameplayInfo) => {
@@ -133,7 +141,7 @@ namespace JumpenoWebassembly.Client.Pages
                 killed.Alive = false;
                 killed.Die();
                 killed.Animation.Update(0);
-                ++killer.Kills;
+                ++killer.Statistics.TotalScore;
                 //StateHasChanged();
             });
 
@@ -189,6 +197,11 @@ namespace JumpenoWebassembly.Client.Pages
         public async ValueTask DisposeAsync()
         {
             await _hubConnection.DisposeAsync();
+            if (_me.Spectator)
+            {
+                await AuthService.Logout();
+                Navigation.NavigateTo("/", true);
+            }
         }
     }
 }
