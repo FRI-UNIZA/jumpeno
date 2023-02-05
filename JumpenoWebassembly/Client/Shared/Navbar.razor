@@ -11,7 +11,7 @@
     <ul class="nav @CollapseStyle" id="nav">
         <AuthorizeView>
             <Authorized>
-                @if (_user.IsConfirmed)
+                @if (_user.Id != 0)
                 {
                     <li class="@(_user.IsConfirmed ? "" : "link-inactive")">
                         <NavLink @onclick="GoToProfile">
@@ -27,7 +27,7 @@
             </Authorized>
         </AuthorizeView>
 
-        @if (_user == null || (_user != null && _user.IsConfirmed))
+        @if (_user == null || (_user != null && _user.Id != 0))
         {
             <li>
                 <NavLink href="https://docs.google.com/forms/d/e/1FAIpQLSdUu5fTk2tQvr8daCmsKyyDocu4XG-VPioCy-m-au9hFf6W4w/viewform?usp=sf_link">
@@ -44,7 +44,7 @@
         
         <AuthorizeView>
             <Authorized>
-                @if (_user.IsConfirmed)
+                @if (_user.Id != 0)
                 {
                     <li>
                         <a href="#" @onclick="HandleLogout">
