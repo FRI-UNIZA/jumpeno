@@ -18,6 +18,7 @@ namespace JumpenoWebassembly.Client.Pages
     {
         [Inject] public NavigationManager Navigation { get; set; }
         [Inject] public ILocalStorageService LocalStorage { get; set; }
+        [Inject] public Services.IAuthService AuthService { get; set; }
         [Parameter] public string GameCode { get; set; }
 
         private HubConnection _hubConnection;
@@ -196,6 +197,11 @@ namespace JumpenoWebassembly.Client.Pages
         public async ValueTask DisposeAsync()
         {
             await _hubConnection.DisposeAsync();
+            if (_me.Spectator)
+            {
+                await AuthService.Logout();
+                Navigation.NavigateTo("/", true);
+            }
         }
     }
 }
