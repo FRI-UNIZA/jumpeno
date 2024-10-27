@@ -1,10 +1,13 @@
 # Jumpeno
 
 ## Description
-This is the monorepo (FE + BE) for interactive web game Jumpeno written in C# framework Blazor.
-Application runs in WebAssembly and has configured SSR with translations.
-Backend provides REST API via controllers that should be used with AJAX calls.
-Ingame communication is provided by SignalR Hubs.
+This is the monorepo for the interactive web game Jumpeno, which includes both the front end and back end.
+The project is built using the C# framework, Blazor.
+The application runs in WebAssembly and has server-side rendering (SSR) that can be configured to be turned on or off in the configuration file.
+It also supports themes and translations.
+
+The backend offers a REST API through controllers, which should be utilized with AJAX calls.
+In-game communication is facilitated by SignalR hubs.
 
 ## Installation
 Before you start, please make sure you have installed:
@@ -19,19 +22,19 @@ And run this command:
 ```dotnet watch```
 
 ## Debug
-Use built in debugger of your IDE.
-To display running application on another device it is recommended to use Dev Tunnels.
+Use built-in debugger of your IDE.
+To display a running application on a different device, it is recommended to use DevTunnels.
 
 ## Configuration Files
-This project contains two configuration files.
-Shared for common config and server for secret (server only) configuration:
+This project contains two configuration files:
+one for shared common settings and another for server-specific secret configurations:
 
 > /Jumpeno.Server/appsettings.json
 
 > /Jumpeno.Shared/appsettings.json
 
 ## Development workflow ###
-After feature implementation, bug fix or release don't forget to raise project Version in:
+After implementing features, fixing bugs, or releasing updates, remember to raise the project version in the file:
 
 > /Jumpeno.Shared/appsettings.json
 
