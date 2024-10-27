@@ -1,0 +1,35 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.surface-all {
+    --size: 30;
+}
+.surface-primary {
+    --color: rgb(var(--color-primary));
+    --background: rgba(var(--color-primary), 0.4);
+}
+.surface-secondary {
+    --color: rgb(var(--color-secondary));
+    --background: rgba(var(--color-secondary), 0.4);
+}
+.surface-floating {
+    --color: rgb(var(--color-primary));
+    --background: rgba(var(--color-primary), 0.4);
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes spinner {
+    to {
+       transform: rotate(1turn);
+    }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.loader {
+    border-radius: 50%;
+    animation: spinner 1s infinite linear;
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
+    border: calc(var(--size) / 6 * 1px) solid;
+    border-color: var(--background);
+    border-right-color: var(--color);
+    flex-shrink: 0;
+}

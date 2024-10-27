@@ -1,0 +1,25 @@
+﻿@namespace Jumpeno.Client.Pages
+
+@inherits Page
+@attribute [Route(ManualPage.ROUTE_EN)]
+@attribute [Route(ManualPage.ROUTE_SK)]
+
+<div class="manual-page">
+    <DocTitle Value="@I18N.T("Manual")" />
+    <div class="manual-card">
+        <Container Tag="section" Surface="SURFACE.SECONDARY" class="manual-text-section">
+            <Heading1 Size="TEXT_SIZE.XL" Spacing Class="manual-heading">@I18N.T("Controls")</Heading1>
+            <Paragraph Size="TEXT_SIZE.L" Spacing Class="manual-text">
+                @I18N.T("CONTROLS_PC")
+            </Paragraph>
+            <Paragraph Size="TEXT_SIZE.L" Class="manual-text">
+                @I18N.T("CONTROLS_MOBILE")
+            </Paragraph>
+            <AntIcon Type="arrow-right" Theme="outline" Class="manual-icon" />
+            <BackgroundImage URL="@IMAGE.COMMON.BG_BLUE()" class="manual-background" Preloaded />
+        </Container>
+        <div class="manual-image-section">
+            <Image URL="@IMAGE.COMMON.KEYBOARD()" Transparent Class="manual-image" />
+        </div>
+    </div>
+</div>

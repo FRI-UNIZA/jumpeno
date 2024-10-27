@@ -1,0 +1,14 @@
+﻿@namespace Jumpeno.Client.Layout
+
+<nav class="@ComputeClass()">
+    <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="nav-menu-container">
+        <LogoLink />
+        <MenuControls />
+        <NavMenuOpenButton
+            ID="@MOBILE_MENU_BUTTON_ID"
+            OnClick="@MobileRef.Open"
+            OnFocus="@(() => { MobileMenuButtonFocused = true; })"
+            OnBlur="@(() => { MobileMenuButtonFocused = false; })"
+        />
+    </Container>
+</nav>

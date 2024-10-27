@@ -1,0 +1,180 @@
+/** Variables ------------------------------------------------------------------------------------------------------------------------- **/
+.modal {
+    --modal-padding: 16px;
+    --modal-padding-header: var(--modal-padding);
+    --modal-padding-header-mobile: var(--modal-padding-header);
+    --modal-padding-header-tablet: var(--modal-padding-header);
+    --modal-padding-header-desktop: var(--modal-padding-header);
+    --modal-padding-content: var(--modal-padding);
+    --modal-padding-content-mobile: var(--modal-padding-content);
+    --modal-padding-content-tablet: var(--modal-padding-content);
+    --modal-padding-content-desktop: var(--modal-padding-content);
+    --modal-padding-footer: var(--modal-padding);
+    --modal-padding-footer-mobile: var(--modal-padding-footer);
+    --modal-padding-footer-tablet: var(--modal-padding-footer);
+    --modal-padding-footer-desktop: var(--modal-padding-footer);
+}
+
+/** Private variables ----------------------------------------------------------------------------------------------------------------- **/
+.modal {
+    --modal-margin: var(--size-container-padding-mobile);
+    --modal-transition-speed: var(--transition-semi-fast);
+}
+
+/** Keyframes ------------------------------------------------------------------------------------------------------------------------- **/
+@keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes zoom-in {
+    0% { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fade-out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@keyframes zoom-out {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.7); }
+}
+
+/** Styles ---------------------------------------------------------------------------------------------------------------------------- **/
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100dvh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-index-modal);
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(var(--color-base), 0.5);
+    z-index: 0;
+    animation: fade-in calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+.modal-dialog {
+    display: flex;
+    flex-direction: column;
+    color: rgb(var(--color-floating));
+    background-color: rgb(var(--color-floating-surface));
+    border-radius: 8px;
+    z-index: 1;
+    box-shadow: var(--box-shadow-floating-level-2);
+    max-width: min(var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
+    max-height: min(calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    overflow: hidden;
+    outline: none;
+    border: none;
+}
+.modal:not(.pre-open):not(.loading) .modal-dialog {
+    animation: zoom-in calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+.modal-dialog.min-width {
+    min-width: min(var(--modal-min-width), var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
+}
+.modal-dialog.min-height {
+    min-height: min(var(--modal-min-height), calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    min-height: min(var(--modal-min-height), calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+}
+.modal-dialog ::deep .os-scrollbar {
+    --os-padding-axis: 6px;
+}
+.pre-open .modal-dialog,
+.loading .modal-dialog {
+    opacity: 0;
+}
+::deep .modal-loading-indicator {
+    position: absolute;
+    display: none;
+    animation: fade-in calc(var(--modal-transition-speed) * 1ms) forwards;
+    z-index: 1;
+}
+.loading ::deep .modal-loading-indicator {
+    display: inline-flex;
+}
+.modal-start,
+.modal-end {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.modal.closing .modal-backdrop {
+    animation: fade-out calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+.modal.closing:not(.pre-open):not(.loading) .modal-dialog {
+    animation: zoom-out calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+::deep .modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-header {
+    padding: var(--modal-padding-header-mobile);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    box-shadow: var(--box-shadow-floating-level-1);
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+::deep .modal-scroll {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+}
+
+.modal-content {
+    display: flex;
+    flex-wrap: wrap;
+    padding: var(--modal-padding-content-mobile);
+    z-index: 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: var(--modal-padding-footer-mobile);
+    box-shadow: var(--box-shadow-floating-level-1);
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .modal {
+        --modal-padding: 17px;
+        --modal-margin: var(--size-container-padding-tablet);
+    }
+    .modal-dialog ::deep .os-scrollbar { --os-padding-axis: 5px; }
+    .modal-header { padding: var(--modal-padding-header-tablet); }
+    .modal-content { padding: var(--modal-padding-content-tablet); }
+    .modal-footer { padding: var(--modal-padding-footer-tablet); }
+}
+
+@media (min-width: 1200px) {
+    .modal {
+        --modal-padding: 18px;
+        --modal-margin: var(--size-container-padding-desktop);
+    }
+    .modal-dialog ::deep .os-scrollbar { --os-padding-axis: 4px; }
+    .modal-header { padding: var(--modal-padding-header-desktop); }
+    .modal-content { padding: var(--modal-padding-content-desktop); }
+    .modal-footer { padding: var(--modal-padding-footer-desktop); }
+}

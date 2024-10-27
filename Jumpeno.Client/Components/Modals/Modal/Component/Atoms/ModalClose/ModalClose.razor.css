@@ -1,0 +1,54 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.modal-close {
+    --close-justify: flex-start;
+    --close-align: flex-start;
+    --close-padding: 4px;
+    --close-size: 16px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.modal-close {
+    display: inline-flex;
+    padding: var(--close-padding);
+    color: rgb(var(--color-floating-surface));
+    background-color: rgba(var(--color-floating), 0.4);
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition-property: color, background-color, opacity;
+    transition-duration: calc(var(--transition-fast) * 1ms);
+    border-radius: 50%;
+    justify-self: var(--close-justify);
+    align-self: var(--close-align);
+}
+
+.unclosable {
+    opacity: 0;
+    pointer-events: none;
+}
+
+::deep .modal-close-icon svg {
+    width: var(--close-size);
+    height: var(--close-size);
+}
+
+.modal-close:hover,
+.modal-close:focus-visible {
+    color: rgb(var(--color-floating-surface));
+    background-color: rgba(var(--color-floating), 0.3);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .modal-close {
+        --close-padding: 5px;
+        --close-size: 17px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-close {
+        --close-padding: 6px;
+        --close-size: 18px;
+    }
+}

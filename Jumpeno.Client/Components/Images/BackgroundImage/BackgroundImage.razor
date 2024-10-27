@@ -1,0 +1,17 @@
+@namespace Jumpeno.Client.Components
+
+@inherits SurfaceComponent
+
+<div id="@ID" class="@ComputeClass()">
+    <ImageBase
+        URL="@URL"
+        Alt=""
+        Class="@CLASSNAME_IMG"
+        Transparent
+        NoTransition
+        Preloaded="Preloaded"
+        Loading="IMAGE_LOADING.EAGER"
+        OnLoadingFinish="OnImageLoaded"
+    />
+    <div class="@CLASSNAME_ELEMENT" style="@($"background-image: url('{URL}')")" />
+</div>

@@ -1,0 +1,51 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.surface-all {
+    --collapse-font-size-title: 14px;
+    --collapse-font-size: 12px;
+    --collapse-gap: 6px;
+    --collapse-padding: 12px;
+}
+.surface-primary {
+    --collapse-color: rgb(var(--color-primary));
+    --collapse-background-color: rgba(var(--color-base-invert), 0.7);
+    --collapse-outline: transparent;
+    --collapse-outline-shadow: rgb(var(--color-primary-shade-strong));
+}
+.surface-secondary {
+    --collapse-color: rgb(var(--color-secondary));
+    --collapse-background-color: rgba(var(--color-base-invert), 0.1);
+    --collapse-outline: rgba(var(--color-base-invert), 0.2);
+    --collapse-outline-shadow: rgba(var(--color-base), 0.7);
+}
+.surface-floating {
+    --collapse-color: rgb(var(--color-floating));
+    --collapse-background-color: rgba(var(--color-floating-shade), 0.4);
+    --collapse-outline: rgba(var(--color-base-invert), 0.3);
+    --collapse-outline-shadow: rgba(var(--color-floating), 0.3);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.collapse {
+    display: flex;
+    flex-direction: column;
+    gap: var(--collapse-gap);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .surface-all {
+        --collapse-font-size-title: 15px;
+        --collapse-font-size: 13px;
+        --collapse-gap: 7px;
+        --collapse-padding: 14px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .surface-all {
+        --collapse-font-size-title: 16px;
+        --collapse-font-size: 14px;
+        --collapse-gap: 8px;
+        --collapse-padding: 16px;
+    }
+}

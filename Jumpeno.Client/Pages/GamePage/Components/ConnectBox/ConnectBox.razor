@@ -1,0 +1,31 @@
+@namespace Jumpeno.Client.Components
+
+@code {
+    private string[] LoginMessage = I18N.Split(I18N.T("Or @I18N_SPLIT{}login@I18N_SPLIT{} to create new."));
+}
+
+<div class="connect-box-component">
+    <Box Class="connect-box">
+        <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading">@I18N.T("Connect to game")</Heading1>
+        <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading connect-heading-mobile">@I18N.T("Connect")</Heading1>
+        <div class="connect-input-box">
+            <Input ViewModel="VMCode" Size="INPUT_SIZE.L" Align="INPUT_ALIGN.CENTER" HideLabel />
+            @if (ShowName) { <Input ViewModel="VMName" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.LEFT" AllowClear /> }
+        </div>
+        <div class="connect-buttons">
+            <Button Size="BUTTON_SIZE.M" Class="connect-button" OnClick="HandlePlay">
+                <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
+                <Text>@I18N.T("Play")</Text>
+            </Button>
+            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.M" Class="connect-button" OnClick="HandleWatch">
+                <Icon><AntIcon Type="eye" Theme="outline" /></Icon>
+                <Text>@I18N.T("Watch")</Text>
+            </Button>
+        </div>
+        <Paragraph Class="connect-text">
+            @LoginMessage[0]
+            <Link Href="@(I18N.Link<LoginPage>())" Underline>@LoginMessage[1]</Link>
+            @LoginMessage[2]
+        </Paragraph>
+    </Box>
+</div>

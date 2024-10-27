@@ -1,0 +1,50 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.box {
+    --box-direction: row;
+    --box-justify-content: flex-start;
+    --box-align-items: flex-start;
+    --box-gap: 0;
+    --box-width: auto;
+    --box-min-width: auto;
+    --box-max-width: 100%;
+    --box-height: auto;
+    --box-min-height: auto;
+    --box-max-height: 100%;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.box {
+    display: flex;
+    flex-direction: var(--box-direction);
+    justify-content: var(--box-justify-content);
+    align-items: var(--box-align-items);
+    gap: var(--box-gap);
+    width: var(--box-width);
+    min-width: var(--box-min-width);
+    max-width: var(--box-max-width);
+    height: var(--box-height);
+    min-height: var(--box-min-height);
+    max-height: var(--box-max-height);
+    backdrop-filter: blur(2rem);
+    background: linear-gradient(to right top, rgba(var(--color-base-invert), 0.7), rgba(var(--color-base-invert), 0.3));
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px 0 rgba(var(--color-base), 0.2);
+}
+
+.light-theme .box {
+    box-shadow: 0 6px 16px 0 rgba(var(--color-base), 0.15);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .box {
+        padding: 36px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .box {
+        padding: 50px;
+    }
+}

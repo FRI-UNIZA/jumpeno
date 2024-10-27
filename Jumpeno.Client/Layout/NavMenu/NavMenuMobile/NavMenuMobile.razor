@@ -1,0 +1,23 @@
+@namespace Jumpeno.Client.Components
+
+<div class="nav-menu-mobile-content" inert="@(State != MENU_STATE.CLOSED)">
+    @ChildContent
+</div>
+
+<div class="nav-menu-mobile-start" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID)" inert="@(State != MENU_STATE.OPENED)" />
+<nav id="@ID" class="@ComputeClass()" tabindex="0" role="dialog" aria-label="@I18N.T("Mobile menu")" @onkeydown="OnKeyDown">
+    <ScrollArea
+        @ref="@ScrollAreaRef"
+        OverflowX="false"
+        Class="scroll-area-nav-menu"
+        AutoHide="SCROLLAREA_AUTOHIDE.MOVE"
+        Theme="@(Theme.GetType() == typeof(DarkTheme) ? SCROLLAREA_THEME.OS_THEME_LIGHT : SCROLLAREA_THEME.OS_THEME_DARK)"
+    >
+        <NavMenuCloseButton OnClick="@Close" />
+        <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="nav-menu-mobile-container">
+            <LogoLink />
+            <MenuControls Mobile />
+        </Container>
+    </ScrollArea>
+</nav>
+<div class="nav-menu-mobile-end" tabindex="0" @onfocus="() => ActionHandler.SetFocus(ID)" inert="@(State != MENU_STATE.OPENED)" />

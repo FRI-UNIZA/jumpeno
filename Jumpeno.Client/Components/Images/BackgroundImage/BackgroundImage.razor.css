@@ -1,0 +1,72 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.background-component {
+    --background-size: auto;
+    --background-position: 0 0;
+    --background-repeat: repeat;
+    --background-attachment: scroll;
+}
+.background-component.surface-primary {
+    --background-color: rgb(var(--color-primary-shade));
+    --loading-transition-color: rgb(var(--color-primary-shade-strong));
+}
+.background-component.surface-secondary {
+    --background-color: rgb(var(--color-secondary-shade));
+    --loading-transition-color: rgb(var(--color-secondary-shade-strong));
+}
+.background-component.surface-floating {
+    --background-color: rgb(var(--color-floating-shade));
+    --loading-transition-color: rgb(var(--color-floating-shade-strong));
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes pulse {
+    0% { background-color: var(--background-color); }
+    50% { background-color: var(--loading-transition-color); }
+    100% { background-color: var(--background-color); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep .background-loader-image.surface-all {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.background-component {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--background-color);
+    pointer-events: none;
+}
+
+.background-element {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transition: opacity calc(var(--transition-fast) * 1ms);
+    background-size: var(--background-size);
+    background-position: var(--background-position);
+    background-repeat: var(--background-repeat);
+    background-attachment: var(--background-attachment);
+}
+
+.loading {
+    animation: pulse 2s infinite;
+}
+.loading .background-element {
+    opacity: 0;
+}
+
+.transparent {
+    background-color: transparent;
+    animation: none;
+}
+
+.no-transition .background-element {
+    transition: none;
+}

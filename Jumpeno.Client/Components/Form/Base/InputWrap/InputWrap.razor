@@ -1,0 +1,8 @@
+@namespace Jumpeno.Client.Components
+
+<div class="@ComputeClass()">
+    @if (!HideLabel) { <InputLabel For="@ID">@Label</InputLabel> }
+    <InputError ViewModel="ErrorVM" OnClick="HandleErrorClick" OnKeyDown="HandleErrorKeyDown">
+        @ChildContent
+    </InputError>
+</div>

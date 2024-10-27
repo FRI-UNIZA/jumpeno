@@ -1,0 +1,20 @@
+@namespace Jumpeno.Client.Components
+
+@inherits TextComponent
+
+<TextElement
+    id="@ID"
+    Type="TEXT_TYPE.ANCHOR"
+    Variant="Variant"
+    Size="Size"
+    NoWrap="NoWrap"
+    Spacing="false"
+    Class="@ComputeLinkClass()"
+    Style="@Style"
+    href="@Href"
+    target="@ComputeTarget()"
+    @onclick="OnClickEvent"
+    @attributes="@AdditionalAttributes"
+>
+    @ChildContent
+</TextElement>

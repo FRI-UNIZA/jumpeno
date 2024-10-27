@@ -1,0 +1,165 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep > .surface-all {
+    --button-width: auto;
+    --button-height: auto;
+    --button-padding: 12px;
+    --button-border-radius: 0px;
+    --button-font-family: var(--font-primary);
+    --button-font-size: 16px;
+    --button-font-weight: 400;
+    --button-line-height: 1.5;
+    --button-icon-size: 24px;
+    --button-gap: 8px;
+    --button-text-top: 0;
+    --button-transform: none;
+    --button-transform-transition: none;
+    --button-transition-properties: color, background-color;
+    --button-transition-duration: calc(var(--transition-fast) * 1ms);
+    --button-transition-timing: ease;
+}
+::deep > .surface-primary {
+    --button-color: rgb(var(--color-secondary-accent));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-primary));
+    --button-background-transition: rgb(var(--color-secondary-accent));
+    --button-border: none;
+    --button-border-transition: none;
+    --button-text-shadow: none;
+    --button-text-shadow-transition: none;
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+::deep > .surface-secondary {
+    --button-color: rgb(var(--color-primary));
+    --button-color-transition: rgb(var(--color-base));
+    --button-background: rgb(var(--color-secondary));
+    --button-background-transition: rgb(var(--color-secondary-accent));
+    --button-border: none;
+    --button-border-transition: none;
+    --button-text-shadow: none;
+    --button-text-shadow-transition: none;
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+::deep > .surface-floating {
+    --button-color: rgb(var(--color-floating-surface));
+    --button-color-transition: rgb(var(--color-floating));
+    --button-background: rgb(var(--color-floating));
+    --button-background-transition: rgb(var(--color-floating-accent));
+    --button-border: none;
+    --button-border-transition: none;
+    --button-text-shadow: none;
+    --button-text-shadow-transition: none;
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+
+/* Styles ----------------------------------------------------------------------------------------------------------------------- */
+.button-component {
+    display: inline-flex;
+    width: var(--button-width);
+    height: var(--button-height);
+    max-width: 100%;
+}
+
+::deep > .surface-all {
+    display: inline-flex;
+    max-width: 100%;
+}
+
+::deep > .surface-all {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--button-width);
+    height: var(--button-height);
+    flex-shrink: 0;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    padding: var(--button-padding);
+    margin: 0;
+    line-height: 1.5 !important;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-decoration: none !important;
+    color: var(--button-color);
+    background-color: var(--button-background);
+    border-radius: var(--button-border-radius);
+    border: var(--button-border);
+    text-shadow: var(--button-text-shadow);
+    box-shadow: var(--button-box-shadow);
+    transform: var(--button-transform);
+    transition: none;
+    transition-property: var(--button-transition-properties);
+    transition-duration: var(--button-transition-duration);
+    transition-timing-function: var(--button-transition-timing);
+}
+
+::deep .button-content {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+::deep .button-content {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--button-font-family);
+    font-size: var(--button-font-size) !important;
+    font-weight: var(--button-font-weight) !important;
+}
+
+::deep .button-icon-before,
+::deep .button-icon-after {
+    top: 0;
+    position: relative;
+    display: block;
+}
+::deep .button-icon-before > span,
+::deep .button-icon-after > span {
+    position: relative;
+    display: block;
+}
+::deep .button-icon-before svg,
+::deep .button-icon-after svg {
+    display: block;
+    width: var(--button-icon-size);
+    height: var(--button-icon-size);
+}
+
+::deep .button-icon-before + .button-icon-after {
+    margin-left: var(--button-gap)
+}
+
+::deep .button-text {
+    display: inline;
+    align-items: center;
+    line-height: var(--button-line-height);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin-top: var(--button-text-top);
+}
+::deep .button-text.has-icon-before {
+    margin-left: var(--button-gap);
+}
+::deep .button-text.has-icon-after {
+    margin-right: var(--button-gap);
+}
+
+::deep > .surface-all:hover,
+::deep > .surface-all:focus-visible,
+::deep > .surface-all:hover,
+::deep > .surface-all:focus-visible {
+    color: var(--button-color-transition) !important;
+    background-color: var(--button-background-transition) !important;
+    border-radius: var(--button-border-radius);
+    transform: var(--button-transform-transition);
+    border: var(--button-border-transition);
+    text-shadow: var(--button-text-shadow-transition);
+    box-shadow: var(--button-box-shadow-transition);
+}

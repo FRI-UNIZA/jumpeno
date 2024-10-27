@@ -1,0 +1,9 @@
+.page-loader-progress {
+    display: inline-flex;
+}
+
+::deep .page-loader-progress-element.surface-all {
+    --size: 56;
+    --color: rgb(var(--color-secondary-accent));
+    --background: rgba(var(--color-base), 0.45);
+}

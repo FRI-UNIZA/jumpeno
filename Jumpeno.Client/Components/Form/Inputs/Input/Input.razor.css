@@ -1,0 +1,67 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.input {
+    --input-wrap-width: 100%;
+    --input-wrap-height: auto;
+}
+
+.size-s ::deep .input-base {
+    --input-height: 41px;
+    --input-font-size: 16px;
+    --input-padding: 10px 12px;
+    --input-border-radius: 6px;
+    --input-icon-size: 22px;
+    --input-icon-gap-inner: 6px;
+    --input-icon-gap-outer: 8px;
+
+    --input-clear-size: 18px;
+    --input-clear-padding: 6px;
+}
+.size-s ::deep .input-base .input-wrap .input-label {
+    --input-label-font-size: 12px;
+    --input-label-gap: 1px;
+}
+
+.size-m ::deep .input-base {
+    --input-height: 52px;
+    --input-font-size: 18px;
+    --input-padding: 13px 16px;
+    --input-border-radius: 8px;
+    --input-icon-size: 30px;
+    --input-icon-gap-inner: 8px;
+    --input-icon-gap-outer: 10px;
+
+    --input-clear-size: 22px;
+    --input-clear-padding: 8px;
+}
+.size-m ::deep .input-base .input-wrap .input-label {
+    --input-label-font-size: 13px;
+    --input-label-gap: 2px;
+}
+
+.size-l ::deep .input-base {
+    --input-height: 64px;
+    --input-font-size: 24px;
+    --input-padding: 16px 20px;
+    --input-icon-size: 24px;
+    --input-border-radius: 10px;
+    --input-icon-size: 40px;
+    --input-icon-gap-inner: 10px;
+    --input-icon-gap-outer: 14px;
+
+    --input-clear-size: 24px;
+    --input-clear-padding: 8px;
+}
+.size-l ::deep .input-base .input-wrap .input-label {
+    --input-label-font-size: 15px;
+    --input-label-gap: 3px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.input {
+    position: relative;
+    display: inline-flex;
+    width: var(--input-wrap-width);
+    height: var(--input-wrap-height);
+    max-width: 100%;
+    max-height: 100%;
+}

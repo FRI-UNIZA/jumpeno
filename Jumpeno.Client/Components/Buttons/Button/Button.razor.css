@@ -1,0 +1,153 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.button {
+    --button-width: auto;
+    --button-height: auto;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.button {
+    display: inline-flex;
+    width: var(--button-width);
+    height: var(--button-height);
+    --button-propagate-width: var(--button-width);
+    --button-propagate-height: var(--button-height);
+    max-width: 100%;
+}
+
+::deep > * > .surface-all {
+    --button-width: var(--button-propagate-width);
+    --button-height: var(--button-propagate-height);
+    --button-font-weight: 500;
+    --button-border-radius: 100px;
+    --button-text-top: 2px;
+    --button-transition-properties: color, background-color, box-shadow;
+}
+
+/* Sizes ------------------------------------------------------------------------------------------------------------------------------- */
+.size-s ::deep > * > .surface-all {
+    --button-height: 41px;
+    --button-font-size: 13px;
+    --button-icon-size: 18px;
+    --button-padding: 9px 22px;
+    --button-gap: 7px;
+}
+
+.size-m ::deep > * > .surface-all {
+    --button-height: 52px;
+    --button-font-size: 16px;
+    --button-icon-size: 22px;
+    --button-padding: 13px 28px;
+    --button-gap: 9px;
+}
+
+.size-l ::deep > * > .surface-all {
+    --button-height: 64px;
+    --button-font-size: 19px;
+    --button-icon-size: 26px;
+    --button-padding: 17px 34px;
+    --button-gap: 11px;
+}
+
+/* DarkTheme --------------------------------------------------------------------------------------------------------------------------- */
+.variant-primary ::deep > * > .surface-primary {
+    --button-color: rgb(var(--color-secondary));
+    --button-color-transition: rgb(var(--color-secondary));
+    --button-background: rgb(var(--color-secondary-surface));
+    --button-background-transition: rgb(var(--color-secondary-surface-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.55);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.5);
+}
+.variant-secondary ::deep > * > .surface-primary {
+    --button-color: rgb(var(--color-primary));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-secondary-accent));
+    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+
+.variant-primary ::deep > * > .surface-secondary {
+    --button-color: rgb(var(--color-secondary-surface));
+    --button-color-transition: rgb(var(--color-secondary-surface));
+    --button-background: rgb(var(--color-secondary));
+    --button-background-transition: rgb(var(--color-secondary-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.55);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.5);
+}
+.variant-secondary ::deep > * > .surface-secondary {
+    --button-color: rgb(var(--color-primary));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-secondary-accent));
+    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+
+.variant-primary ::deep > * > .surface-floating {
+    --button-color: rgb(var(--color-floating-surface));
+    --button-color-transition: rgb(var(--color-floating-surface));
+    --button-background: rgb(var(--color-floating));
+    --button-background-transition: rgba(var(--color-floating), 0.9);
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+.variant-secondary ::deep > * > .surface-floating {
+    --button-color: rgb(var(--color-floating));
+    --button-color-transition: rgb(var(--color-floating));
+    --button-background: rgba(var(--color-floating-shade), 0.5);
+    --button-background-transition: rgba(var(--color-floating-shade), 0.8);
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+
+/* LightTheme -------------------------------------------------------------------------------------------------------------------------- */
+.light-theme .variant-primary ::deep > * > .surface-primary {
+    --button-color: rgb(var(--color-secondary));
+    --button-color-transition: rgb(var(--color-secondary));
+    --button-background: rgb(var(--color-secondary-surface));
+    --button-background-transition: rgb(var(--color-secondary-surface-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+.light-theme .variant-secondary ::deep > * > .surface-primary {
+    --button-color: rgb(var(--color-primary));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-secondary-accent));
+    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+
+.light-theme .variant-primary ::deep > * > .surface-secondary {
+    --button-color: rgb(var(--color-secondary-surface));
+    --button-color-transition: rgb(var(--color-secondary-surface));
+    --button-background: rgba(var(--color-secondary), 0.9);
+    --button-background-transition: rgba(var(--color-secondary-highlight), 0.9);
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+.light-theme .variant-secondary ::deep > * > .surface-secondary {
+    --button-color: rgb(var(--color-primary));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-secondary-accent));
+    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
+    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
+    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
+}
+
+.light-theme .variant-primary ::deep > * > .surface-floating {
+    --button-color: rgb(var(--color-floating-surface));
+    --button-color-transition: rgb(var(--color-floating-surface));
+    --button-background: rgb(var(--color-floating));
+    --button-background-transition: rgba(var(--color-floating), 0.9);
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}
+.light-theme .variant-secondary ::deep > * > .surface-floating {
+    --button-color: rgb(var(--color-floating));
+    --button-color-transition: rgb(var(--color-floating));
+    --button-background: rgba(var(--color-floating-shade), 0.5);
+    --button-background-transition: rgba(var(--color-floating-shade), 0.8);
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+}

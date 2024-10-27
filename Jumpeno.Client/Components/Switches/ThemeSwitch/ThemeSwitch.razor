@@ -1,0 +1,13 @@
+@namespace Jumpeno.Client.Components
+
+@inherits SurfaceComponent
+
+<div class="@ComputeClass()" @onclick="@TriggerChange">
+    <AntIcon Type="fire" Theme="outline" OnClick="@(() => { ActionHandler.SetFocus(SwitchRef.ID_ELEMENT); SwitchRef.Click(); })" StopPropagation />
+    <Switch
+        @ref="@SwitchRef"
+        Label="@I18N.T("Light theme")"
+        Size="SWITCH_SIZE.SMALL"
+        DefaultValue="@DefaultValue"
+    />
+</div>

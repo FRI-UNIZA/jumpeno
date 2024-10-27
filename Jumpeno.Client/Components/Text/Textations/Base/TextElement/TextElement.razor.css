@@ -1,0 +1,145 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+span {
+    --font-weight: 400;
+}
+span.surface-primary {
+    --color: rgb(var(--color-primary));
+    --background: transparent;
+}
+span.surface-secondary {
+    --color: rgb(var(--color-secondary));
+    --background: transparent;
+}
+span.surface-floating {
+    --color: rgb(var(--color-floating));
+    --background: transparent;
+}
+
+p {
+    --max-lines: unset;
+    --text-align: left;
+    --font-weight: 400;
+}
+p.surface-primary {
+    --color: rgb(var(--color-primary));
+    --background: transparent;
+}
+p.surface-secondary {
+    --color: rgb(var(--color-secondary));
+    --background: transparent;
+}
+p.surface-floating {
+    --color: rgb(var(--color-floating));
+    --background: transparent;
+}
+
+a {
+    --font-weight: 400;
+}
+a.surface-primary {
+    --color: rgb(var(--color-primary-accent));
+    --color-transition: rgb(var(--color-primary-accent-highlight));
+    --background: transparent;
+    --text-shadow: none;
+}
+a.surface-secondary {
+    --color: rgb(var(--color-secondary-accent));
+    --color-transition: rgb(var(--color-secondary-accent-highlight));
+    --background: transparent;
+    --text-shadow: none;
+}
+a.surface-floating {
+    --color: rgb(var(--color-floating-accent));
+    --color-transition: rgb(var(--color-floating-accent-highlight));
+    --background: transparent;
+    --text-shadow: none;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+p, span, a {
+    font-weight: var(--font-weight);
+    color: var(--color);
+    background: var(--background);
+    margin-bottom: 0;
+
+    word-break: break-word;
+
+    display: block;
+    display: -webkit-box;
+    width: 100%;
+    -webkit-box-orient: vertical;
+    line-clamp: var(--max-lines);
+    -webkit-line-clamp: var(--max-lines);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+p {
+    text-align: var(--text-align);
+}
+
+span, a {
+    display: inline;
+    width: auto;
+    line-clamp: unset;
+    -webkit-line-clamp: unset;
+}
+
+a {
+    display: inline;
+    text-decoration: none;
+    transition: color calc(var(--transition-fast) * 1ms) ease-in-out;
+    text-shadow: var(--text-shadow);
+}
+
+a.underline {
+    text-decoration: underline;
+}
+
+a:hover, a:focus-visible {
+    color: var(--color-transition);
+}
+
+a.surface-primary,
+a.surface-floating {
+    --font-weight: 600;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.spacing {
+    margin-bottom: 0.6em;
+}
+.spacing:last-child {
+    margin-bottom: 0;
+}
+
+.primary {
+    font-family: var(--font-primary);
+    line-height: 1.5;
+}
+
+.xs { font-size: 8px; }
+.s { font-size: 11px; }
+.m { font-size: 14px; }
+.l { font-size: 17px; }
+.xl { font-size: 20px; }
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .xs { font-size: 9px; }
+    .s { font-size: 12px; }
+    .m { font-size: 15px; }
+    .l { font-size: 18px; }
+    .xl { font-size: 21px; }
+}
+
+@media (min-width: 1200px) {
+    .xs { font-size: 10px; }
+    .s { font-size: 13px; }
+    .m { font-size: 16px; }
+    .l { font-size: 19px; }
+    .xl { font-size: 22px; }
+}

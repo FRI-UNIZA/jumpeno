@@ -1,0 +1,14 @@
+@namespace Jumpeno.Client.Components
+
+@inherits SurfaceComponent
+
+<AntDesign.Icon
+    Type="@Type"
+    Theme="@Theme"
+    Role="@ComputeRole()"
+    AriaLabel="@ComputeLabel()"
+    Class="@ComputeClass()"
+    Style="@Style"
+    @onclick="@OnClick"
+    StopPropagation="@StopPropagation"
+/>

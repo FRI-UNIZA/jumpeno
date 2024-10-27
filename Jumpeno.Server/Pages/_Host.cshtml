@@ -1,0 +1,72 @@
+﻿@page
+
+@namespace Jumpeno.Server.Pages
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Components.Web;
+@using System.Globalization;
+
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentCulture" data-overlayscrollbars-initialize>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content, viewport-fit=cover" />
+        <link rel="icon" type="image/png" href="@AppEnvironment.Import("icons/favicon.png")" />
+        <base href="/" />
+        <title>@AppSettings.Name</title>
+        <meta name="description" content="@I18N.T("JUMPENO_DESCRIPTION")">
+        <meta name="keywords" content="@I18N.T("JUMPENO_KEYWORDS")">
+        <meta name="author" content="FRI UNIZA">
+        <!-- #modules -->
+        <link rel="stylesheet" href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link href="_content/AntDesign/css/ant-design-blazor.css?v=0.20.4.2" rel="stylesheet" />
+        <script src="_content/AntDesign/js/ant-design-blazor.js?v=0.20.4.2"></script>
+        <!-- #global -->
+        <link href="@AppEnvironment.Import("css/theme.css")" rel="stylesheet" />
+        <link href="@AppEnvironment.Import("css/font.css")" rel="stylesheet" />
+        <link href="@AppEnvironment.Import("css/ant-design.css")" rel="stylesheet" />
+        <link href="@AppEnvironment.Import("css/app.css")" rel="stylesheet" />
+        <link href="@AppEnvironment.Import("css/scrollbars.css")" rel="stylesheet" />
+        <!-- #project -->
+        <link href="@AppEnvironment.Import("Jumpeno.Client.styles.css")" rel="stylesheet" />
+        <component type="typeof(HeadOutlet)" render-mode="@ServerEnvironment.RenderMode()" />
+    </head>
+    <body class="@ThemeProvider.ServerBodyClass()" data-overlayscrollbars-initialize>
+        <component type="typeof(Jumpeno.Client.Components.StaticPageLoader)" render-mode="WebAssemblyPrerendered" />
+        <component type="typeof(Jumpeno.Client.App)" render-mode="@ServerEnvironment.RenderMode()" />
+        <persist-component-state />
+        <!-- #global -->
+        <script src="@AppEnvironment.Import("js/components/JSStaticPageLoader.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSWebDocument.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSNavigator.js")"></script>
+        <script src="@AppEnvironment.Import("js/constants/DOTNET.js")"></script>
+        <script src="@AppEnvironment.Import("js/constants/ERROR.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSWindow.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSAnimationHandler.js")"></script>
+        <script src="@AppEnvironment.Import("js/theme/JSThemeProvider.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSActionHandler.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSNotification.js")"></script>
+        <script src="@AppEnvironment.Import("js/storage/JSCookies.js")"></script>
+        <script src="@AppEnvironment.Import("js/storage/JSLocalStorage.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSImage.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSModal.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSScrollArea.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSPageLoader.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSSwitch.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSTempTitle.js")"></script>
+        <!-- #project -->
+        <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
+        <script>
+            @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")
+            else @("JSActionHandler.SetFocus(JSStaticPageLoader.ID); ")
+            @if (AppSettings.Theme.AutoDetect && ThemeProvider.GetThemeCookie() is null) @("JSThemeProvider.SetupPreferred(); ")
+            JSTempTitle.Add();
+            JSImage.InitAll();
+            Blazor.start({
+                applicationCulture: "@CultureInfo.CurrentCulture"
+            });
+        </script>
+    </body>
+</html>

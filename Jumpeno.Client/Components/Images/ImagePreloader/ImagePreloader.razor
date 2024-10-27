@@ -1,0 +1,10 @@
+@namespace Jumpeno.Client.Components
+
+<div id="@ImagePreloader.ID" aria-hidden="true">
+    <style>
+        @RenderStyles()
+    </style>
+    @foreach (var image in ImagePreloader.List) {
+        <img src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;" />
+    }
+</div>

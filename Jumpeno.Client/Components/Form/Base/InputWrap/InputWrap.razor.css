@@ -1,0 +1,78 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.input-wrap ::deep .input-label {
+    --input-label-font-size: 12px;
+    --input-label-font-weight: 400;
+    --input-label-line-height: 1.5;
+    --input-label-gap: 0;
+}
+.input-wrap ::deep .input-label.surface-primary {
+    --input-label-color: rgb(var(--color-primary));
+}
+.input-wrap ::deep .input-label.surface-secondary {
+    --input-label-color: rgb(var(--color-secondary));
+}
+.input-wrap ::deep .input-label.surface-floating {
+    --input-label-color: rgb(var(--color-floating));
+}
+
+.input-wrap ::deep .input-error {
+    --input-error-input-radius: 0;
+
+    --input-error-top: -10px;
+    --input-error-margin: 10px;
+    --input-error-radius: 6px;
+    --input-error-padding-vertical: 2px;
+    --input-error-padding-horizontal: 8px;
+    --input-error-border-size: 2px;
+
+    --input-error-font-size: 12px;
+    --input-error-font-weight: 400;
+    --input-error-line-height: 1.5;
+
+    --input-error-transition-duration: calc(var(--transition-fast) * 1ms);
+    --input-error-transition-timing: ease;
+
+    --input-error-z-index: var(--z-index-form-error);
+}
+.input-wrap ::deep .input-error.surface-all {
+    --input-error-color: rgb(var(--color-danger));
+    --input-error-color-transition: rgb(var(--color-danger-highlight));
+    --input-error-background: rgb(var(--color-danger-surface));
+    --input-error-background-transition: rgb(var(--color-danger-surface-highlight));
+    --input-error-outline: rgb(var(--color-danger-accent));
+    --input-error-outline-transition: rgb(var(--color-danger-accent-highlight));
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.input-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+.input-wrap.align-left ::deep .input-label {
+    --input-label-align: left;
+}
+.input-wrap.align-left ::deep .input-error {
+    --input-error-align: flex-start;
+}
+
+.input-wrap.align-center ::deep .input-label {
+    --input-label-align: center;
+}
+.input-wrap.align-center ::deep .input-error {
+    --input-error-align: center;
+}
+
+.input-wrap.align-right ::deep .input-label {
+    --input-label-align: right;
+}
+.input-wrap.align-right ::deep .input-error {
+    --input-error-align: flex-end;
+}

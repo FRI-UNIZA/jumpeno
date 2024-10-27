@@ -1,0 +1,86 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.surface-all {
+    --width-small: 28px;
+    --width-large: 44px;
+    --focus-transition-speed: calc(var(--transition-fast) * 1ms);
+}
+.surface-primary {
+    --color-background: rgba(var(--color-primary), 0.28);
+    --color-active: rgb(var(--color-primary-accent));
+    --color-handle: rgb(var(--color-base-invert));
+    --color-focus: rgb(var(--color-base-invert));
+    --color-focus-shadow: rgb(var(--color-base));
+    --switch-disabled-opacity: 0.2;
+}
+.surface-secondary {
+    --color-background: rgba(var(--color-secondary), 0.22);
+    --color-active: rgb(var(--color-secondary-accent));
+    --color-handle: rgb(var(--color-base-invert));
+    --color-focus: rgb(var(--color-secondary));
+    --color-focus-shadow: rgb(var(--color-secondary));
+    --switch-disabled-opacity: 0.5;
+}
+.light-theme .surface-secondary {
+    --color-focus: rgb(var(--color-secondary-surface));
+}
+.surface-floating {
+    --color-background: rgba(var(--color-primary), 0.28);
+    --color-active: rgb(var(--color-primary-accent));
+    --color-handle: rgb(var(--color-base-invert));
+    --color-focus: rgb(var(--color-base-invert));
+    --color-focus-shadow: rgb(var(--color-base));
+    --switch-disabled-opacity: 0.2;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.switch-component {
+    display: inline-flex;
+}
+
+.disabled ::deep .switch-element {
+    opacity: var(--switch-disabled-opacity);
+}
+
+::deep .switch-element {
+    min-width: var(--width-large);
+    flex-shrink: 0;
+    box-shadow: none;
+    outline: none;
+    animation: none;
+}
+::deep .ant-switch-small {
+    min-width: var(--width-small);
+}
+
+::deep .switch-element {
+    background: var(--color-background);
+}
+
+::deep .switch-element.ant-switch-checked {
+    background: var(--color-active);
+}
+
+::deep .switch-element::after {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: -2px ;
+    pointer-events: none;
+    border-radius: 100px;
+    border: 2px solid transparent;
+    transition: border-color var(--focus-transition-speed),
+                box-shadow var(--focus-transition-speed);
+}
+
+::deep .switch-element:focus-visible::after {
+    border-color: var(--color-focus);
+    box-shadow: 0 0 2px var(--color-focus-shadow);
+}
+
+::deep .ant-switch-handle::before {
+    background-color: var(--color-handle);
+}
+
+::deep .ant-click-animating-node {
+    display: none;
+}

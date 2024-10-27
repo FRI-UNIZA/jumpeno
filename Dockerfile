@@ -1,16 +1,16 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ./JumpenoWebassembly/Client/JumpenoWebassembly.Client.csproj ./JumpenoWebassembly/Client/
-COPY ./JumpenoWebassembly/Server/JumpenoWebassembly.Server.csproj ./JumpenoWebassembly/Server/
-COPY ./JumpenoWebassembly/Shared/JumpenoWebassembly.Shared.csproj ./JumpenoWebassembly/Shared/
-COPY ./JumpenoWebassembly.sln ./
-RUN dotnet restore ./JumpenoWebassembly.sln
-COPY ./JumpenoWebassembly/Shared ./JumpenoWebassembly/Shared
-COPY ./JumpenoWebassembly/Server ./JumpenoWebassembly/Server
-COPY ./JumpenoWebassembly/Client ./JumpenoWebassembly/Client
-RUN dotnet publish JumpenoWebassembly/Server/JumpenoWebassembly.Server.csproj -c Release -o /app
+COPY ./Jumpeno.Client/Jumpeno.Client.csproj ./Jumpeno.Client/
+COPY ./Jumpeno.Server/Jumpeno.Server.csproj ./Jumpeno.Server/
+COPY ./Jumpeno.Shared/Jumpeno.Shared.csproj ./Jumpeno.Shared/
+COPY ./Jumpeno.sln ./
+RUN dotnet restore ./Jumpeno.sln
+COPY ./Jumpeno.Shared ./Jumpeno.Shared
+COPY ./Jumpeno.Server ./Jumpeno.Server
+COPY ./Jumpeno.Client ./Jumpeno.Client
+RUN dotnet publish Jumpeno.Server/Jumpeno.Server.csproj -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
 EXPOSE 80

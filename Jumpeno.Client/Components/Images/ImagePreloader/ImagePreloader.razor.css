@@ -1,0 +1,10 @@
+#project-image-preloader {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+}

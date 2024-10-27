@@ -1,0 +1,17 @@
+﻿@namespace Jumpeno.Client.Pages
+
+@inherits Page
+@attribute [Route(GamePage.ROUTE_EN)]
+@attribute [Route(GamePage.ROUTE_SK)]
+
+<div class="game-page">
+    <DocTitle Value="@I18N.T("Game")" />
+    @switch (State) {
+        case GAME_PAGE_STATE.CONNECT:
+            <ConnectBox @key="@ConnectBoxVM.Key()" ViewModel="ConnectBoxVM" />
+        break;
+        case GAME_PAGE_STATE.LOBBY:
+            <Lobby ViewModel="LobbyVM" />
+        break;
+    }
+</div>

@@ -1,0 +1,45 @@
+@namespace Jumpeno.Client.Atoms
+
+<div class="@ComputeClass()">
+    <div class="menu-links">
+        <MenuButton Parameters="@(new ButtonLinkParameters(
+            Href: I18N.Link<HomePage>(),
+            Match: LINK_MATCH.ALL
+        ))">
+            <Icon><AntIcon Type="home" Theme="outline" Style="top: -1px" /></Icon>
+            <Text>@I18N.T("Home")</Text>
+        </MenuButton>
+        <MenuButton Parameters="@(new ButtonLinkParameters(
+            Href: I18N.Link<ManualPage>()
+        ))">
+            <Icon><AntIcon Type="question" Theme="outline" /></Icon>
+            <Text>@I18N.T("Manual")</Text>
+        </MenuButton>
+        <MenuButton Parameters="@(new ButtonLinkParameters(
+            Href: I18N.Link<GamePage>([""])
+        ))">
+            <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
+            <Text>@I18N.T("Play")</Text>
+        </MenuButton>
+        <MenuButton Parameters="@(new ButtonLinkParameters(
+            Href: I18N.T("LINK_FEEDBACK"),
+            Target: LINK_TARGET.BLANK
+        ))">
+            <Icon><AntIcon Type="book" Theme="outline" /></Icon>
+            <Text>@I18N.T("Feedback")</Text>
+        </MenuButton>
+        <MenuButton Parameters="@(new ButtonLinkParameters(
+            Href: I18N.Link<LoginPage>()
+        ))">
+            <Icon><AntIcon Type="login" Theme="outline" /></Icon>
+            <Text>@I18N.T("Login")</Text>
+        </MenuButton>
+    </div>
+    <div class="settings-container">
+        <SelectCulture />
+        <div class="settings-area">
+            <ThemeSwitch />
+            <CookieConsentButton />
+        </div>
+    </div>
+</div>

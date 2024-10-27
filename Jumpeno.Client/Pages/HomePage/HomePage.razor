@@ -1,0 +1,37 @@
+﻿@namespace Jumpeno.Client.Pages
+
+@page "/"
+@inherits Page
+@attribute [Route(HomePage.ROUTE_EN)]
+@attribute [Route(HomePage.ROUTE_SK)]
+
+<div class="home-page">
+    <DocTitle Value="@I18N.T("Home")" />
+    <div class="home-image-section">
+        <Image URL="@IMAGE.COMMON.JUMPENO_PLAYERS()" Transparent Class="home-image" />
+    </div>
+    <section class="home-text-section">
+        <article class="content">
+            <Heading1 Size="TEXT_SIZE.XL" Spacing Class="main-heading">@AppSettings.Name</Heading1>
+            <Paragraph Size="TEXT_SIZE.L" Class="main-text">
+                @((MarkupString)I18N.T("TEXT_ABOUT"))
+            </Paragraph>
+        </article>
+        <Paragraph Class="feedback-text">
+            @I18N.T("Please send us your feedback (Please send us your)")
+            <Link Href="@I18N.T("LINK_FEEDBACK")" Target="LINK_TARGET.BLANK" Underline>
+                @I18N.T("Please send us your feedback (feedback)")
+            </Link>
+        </Paragraph>
+        <div class="action-buttons">
+            <Button Size="BUTTON_SIZE.M" Parameters="@(new ButtonLinkParameters(Href: I18N.Link<GamePage>([""])))">
+                <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
+                <Text>@I18N.T("Play game")</Text>
+            </Button>
+            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.M" Parameters="@(new ButtonLinkParameters(Href: I18N.Link<LoginPage>()))">
+                <Icon><AntIcon Type="login" Theme="outline" /></Icon>
+                <Text>@I18N.T("Login")</Text>
+            </Button>
+        </div>
+    </section>
+</div>

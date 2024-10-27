@@ -1,0 +1,43 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep .page {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgb(var(--color-secondary-surface));
+}
+
+::deep .main-background.surface-all {
+    --background-position: center 0;
+    --background-color: rgb(var(--color-primary-surface));
+    --loading-transition-color: rgb(var(--color-primary-surface));
+}
+
+::deep .main-container {
+    position: relative;
+    min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-mobile) * 1px);
+    min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-mobile) * 1px);
+    justify-content: stretch;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.no-navigation ::deep .main-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    ::deep .main-container {
+        min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-tablet) * 1px);
+        min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-tablet) * 1px);
+    }
+}
+
+@media (min-width: 1200px) {    
+    ::deep .main-container {
+        min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-desktop) * 1px);
+        min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-desktop) * 1px);
+    }
+}

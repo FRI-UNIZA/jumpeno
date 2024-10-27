@@ -1,0 +1,78 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.surface-all {
+    --collapse-font-size-title: 14px;
+    --collapse-icon-gap: 6px;
+    --collapse-icon-size: 24px;
+    --collapse-icon-svg: 12px;
+}
+.surface-primary {
+    --title-color: rgb(var(--color-primary));
+    --title-icon-color: rgba(var(--color-base), 0.6);
+    --title-icon-background: rgba(var(--color-primary-shade-strong), 0.25);
+}
+.surface-secondary {
+    --title-color: rgb(var(--color-secondary));
+    --title-icon-color: rgb(var(--color-secondary-surface));
+    --title-icon-background: rgba(var(--color-secondary), 0.8);
+}
+.surface-floating {
+    --title-color: rgb(var(--color-base));
+    --title-icon-color: rgb(var(--color-base));
+    --title-icon-background: rgb(var(--color-floating-shade));
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.collapse-title {
+    display: flex;
+    align-items: center;
+    gap: var(--collapse-icon-gap);
+    word-break: break-word;
+    font-family: var(--font-primary);
+    font-size: var(--collapse-font-size-title);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--title-color);
+    margin: 0;
+}
+
+.collapse-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+    color: var(--title-icon-color);
+    background-color: var(--title-icon-background);
+    width: var(--collapse-icon-size);
+    height: var(--collapse-icon-size);
+    border-radius: 50%;
+    transition: transform calc(var(--transition-normal) * 1ms) ease;
+}
+
+.collapse-icon ::deep svg {
+    width: var(--collapse-icon-svg);
+    height: var(--collapse-icon-svg);
+}
+
+.item-collapsed .collapse-icon {
+    transform: rotate(-180deg);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .surface-all {
+        --collapse-font-size-title: 15px;
+        --collapse-icon-gap: 8px;
+        --collapse-icon-size: 27px;
+        --collapse-icon-svg: 14px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .surface-all {
+        --collapse-font-size-title: 16px;
+        --collapse-icon-gap: 10px;
+        --collapse-icon-size: 30px;
+        --collapse-icon-svg: 16px;
+    }
+}

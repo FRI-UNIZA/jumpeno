@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+	<PropertyGroup>
+		<WasmEnableSIMD>false</WasmEnableSIMD>
+		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
+	</PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AntDesign" Version="0.20.4.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.6" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jumpeno.Shared\Jumpeno.Shared.csproj" />
+    </ItemGroup>
+
+    <Target Name="PreRunScript" BeforeTargets="Build">
+        <Exec Command="echo Running pre-build scripts..." />
+        <Exec Command="dotnet build ../Scripts/ThemeProvider/ThemeProvider/ThemeProvider.csproj" />
+        <Exec Command="dotnet ../Scripts/ThemeProvider/ThemeProvider/bin/Debug/net8.0/ThemeProvider.dll ../Jumpeno.Client/Themes/Constants Jumpeno.Client.Constants DarkTheme LightTheme ../Jumpeno.Client/wwwroot/css/theme.css" />
+        <Exec Command="echo Finished pre-build scripts!" />
+    </Target>
+</Project>

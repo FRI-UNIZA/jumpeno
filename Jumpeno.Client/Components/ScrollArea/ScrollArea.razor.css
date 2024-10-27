@@ -1,0 +1,17 @@
+.scroll-area {
+    position: relative;
+    display: inline-flex !important;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.scroll-area-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: visible !important;
+}

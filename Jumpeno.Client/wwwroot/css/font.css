@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/font/Montserrat/Montserrat-VariableFont.woff2') format('woff2'),
+         url('/font/Montserrat/Montserrat-VariableFont.woff') format('woff'),
+         url('/font/Montserrat/Montserrat-VariableFont.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/font/Montserrat/Montserrat-Italic-VariableFont.woff2') format('woff2'),
+         url('/font/Montserrat/Montserrat-Italic-VariableFont.woff') format('woff'),
+         url('/font/Montserrat/Montserrat-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}

@@ -1,0 +1,130 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.image-component {
+    --image-width: auto;
+    --image-height: auto;
+    --image-height-ratio: 0%;
+    --image-max-width: 100%;
+    --image-fit: fill;
+    --image-position: center center;
+}
+.image-component.surface-primary {
+    --image-color-loading-light: rgb(var(--color-primary-shade));
+    --image-color-loading-dark: rgb(var(--color-primary-shade-strong));
+    --image-color-error: rgb(var(--color-primary-shade-strong));
+    --image-icon-color: rgb(var(--color-primary-shade-invert));
+}
+.image-component.surface-secondary {
+    --image-color-loading-light: rgb(var(--color-secondary-shade));
+    --image-color-loading-dark: rgb(var(--color-secondary-shade-strong));
+    --image-color-error: rgb(var(--color-secondary-shade-strong));
+    --image-icon-color: rgb(var(--color-secondary-shade-invert));
+}
+.image-component.surface-floating {
+    --image-color-loading-light: rgb(var(--color-floating-shade));
+    --image-color-loading-dark: rgb(var(--color-floating-shade-strong));
+    --image-color-error: rgb(var(--color-floating-shade-strong));
+    --image-icon-color: rgb(var(--color-floating-shade-invert));
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes pulse {
+    0% { background-color: var(--image-color-loading-light); }
+    50% { background-color: var(--image-color-loading-dark); }
+    100% { background-color: var(--image-color-loading-light); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.image-component {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--image-width);
+    height: var(--image-height);
+    max-width: var(--image-max-width);
+    overflow: hidden;
+}
+
+.image-ratio {
+    position: relative;
+    display: block;
+    padding-left: var(--image-width-ratio);
+    padding-top: var(--image-height-ratio);
+    pointer-events: none;
+}
+
+.image-component.loading::after {
+    content: "";
+    position: absolute;
+    display: block;
+    inset: 0;
+    animation: pulse 2s infinite;
+}
+
+.image-component::after, .image-component.loading.transparent::after {
+    content: none;
+    animation: none;
+}
+
+.image-element {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: opacity calc(var(--transition-fast) * 1ms) ease-in-out;
+    object-fit: var(--image-fit);
+    object-position: var(--image-position);
+}
+
+.no-transition > .image-element {
+    transition: none;
+}
+
+.loading > .image-element, .error > .image-element {
+    opacity: 0;
+}
+
+.error .image-element {
+    transition: none;
+}
+
+.error::before {
+    content: "";
+    position: absolute;
+    display: block;
+    inset: 0;
+    background-color: var(--image-color-error);
+}
+
+.error.transparent::before {
+    content: none;
+}
+
+.error-icon-wrapper {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+::deep .error-icon {
+    position: absolute;
+    display: block;
+    width: 70%;
+    height: 70%;
+    max-width: 130px;
+    max-height: 130px;
+    color: var(--image-icon-color);
+}
+
+::deep .error-icon > svg {
+    width: 100%;
+    height: 100%;
+}
+
+.error > .error-icon-wrapper {
+    display: flex;
+}

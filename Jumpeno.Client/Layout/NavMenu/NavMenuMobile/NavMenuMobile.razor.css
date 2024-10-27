@@ -1,0 +1,111 @@
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes fade-out {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* State ------------------------------------------------------------------------------------------------------------------------------- */
+.closed {
+    display: none;
+    animation: none;
+}
+.opening {
+    display: flex;
+    animation: fade-in calc(var(--transition-fast) * 1ms) forwards;
+}
+.opened {
+    display: flex;
+    animation: none;
+}
+.closing {
+    display: flex;
+    animation: fade-out calc(var(--transition-normal) * 1ms) forwards;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.nav-menu-mobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: var(--z-index-menu);
+}
+
+.nav-menu-mobile-start,
+.nav-menu-mobile-end {
+    position: fixed;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+::deep .scroll-area-nav-menu {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgb(var(--color-secondary-surface));
+}
+
+::deep .nav-menu-mobile-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 560px;
+    padding-top: 44px;
+    padding-bottom: 60px;
+}
+
+::deep .menu-controls.mobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 26px;
+    margin-top: 34px;
+}
+
+::deep .menu-controls.mobile .surface-all {
+    --button-width: 100%;
+}
+
+::deep .menu-controls.mobile .menu-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    gap: 14px;
+}
+
+::deep .menu-controls.mobile .settings-container {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 24px;
+}
+
+::deep .menu-controls.mobile .settings-area {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: -1px;
+    gap: 40px;
+}

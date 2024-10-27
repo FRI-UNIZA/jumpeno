@@ -1,0 +1,43 @@
+﻿@namespace Jumpeno.Client
+
+<ThemeProvider>
+    <ImagePreloader />
+    <AriaPageAlert />
+    <PageLoader>
+        <ModalProvider>
+            <WebDocument>
+                <DocTitle Value="@AppSettings.Name" />
+                <Router AppAssembly="@typeof(App).Assembly">
+                    <Found Context="routeData">
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                    </Found>
+                    <NotFound>
+                        <LayoutView Layout="@typeof(MainLayout)">
+                            <ErrorPage />
+                        </LayoutView>
+                    </NotFound>
+                </Router>
+            </WebDocument>
+        </ModalProvider>
+    </PageLoader>
+    <AntDesign.AntContainer />
+    <CookieConsentModal @ref="@CookieConsentModalRef" />
+    <Notification />
+</ThemeProvider>
+
+@code {
+    private CookieConsentModal CookieConsentModalRef = null!;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (!firstRender) return;
+        var cookieModalOpen = await CookieStorage.InitModal();
+        await StaticPageLoader.Hide();
+        await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
+
+        await PageLoader.WithActiveLoader(() => { ActionHandler.SetFocus(PageLoader.ID); });
+        await PageLoader.AwaitAllLoaders();
+
+        if (cookieModalOpen) ActionHandler.SetFocus(CookieConsentModalRef.GetDialogID());
+        else ActionHandler.SetFocus(WebDocument.ID);
+    }
+}

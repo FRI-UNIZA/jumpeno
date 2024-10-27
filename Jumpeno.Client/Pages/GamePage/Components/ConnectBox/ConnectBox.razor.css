@@ -1,0 +1,87 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.connect-box-component {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+::deep .connect-box {
+    --box-direction: column;
+    --box-justify-content: center;
+    --box-align-items: center;
+    --box-gap: 20px;
+    --box-width: 400px;
+}
+
+.connect-input-box {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+::deep .connect-heading {
+    display: none;
+    --text-align: center;
+}
+::deep .connect-heading.connect-heading-mobile {
+    display: block;
+}
+
+::deep .connect-text {
+    --text-align: center;
+}
+
+.connect-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+}
+
+::deep .connect-button {
+    --button-width: 100%;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    ::deep .connect-box {
+        --box-gap: 24px;
+        --box-width: 450px;
+    }
+
+    ::deep .connect-heading {
+        display: block;
+    }
+    ::deep .connect-heading.connect-heading-mobile {
+        display: none;
+    }
+
+    .connect-input-box {
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    .connect-buttons {
+        flex-direction: row;
+        gap: 14px;
+    }
+}
+
+@media (min-width: 1200px) {
+    ::deep .connect-box {
+        --box-gap: 28px;
+        --box-width: 500px;
+    }
+
+    .connect-input-box {
+        gap: 16px;
+        margin-bottom: 6px;
+    }
+
+    .connect-buttons {
+        gap: 16px;
+    }
+}

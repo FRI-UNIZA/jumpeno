@@ -1,0 +1,29 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.error-boundary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 26px;
+    width: 100%;
+    padding: 40px 0;
+    min-height: var(--content-min-height-fallback);
+    min-height: calc(var(--content-min-height) - 2 * 40px);
+}
+
+h1 {
+    margin-bottom: 24px;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .error-boundary {
+        padding: 60px 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .error-boundary {
+        padding: 80px 0;
+    }
+}

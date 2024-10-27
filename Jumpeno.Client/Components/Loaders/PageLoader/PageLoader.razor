@@ -1,0 +1,24 @@
+@namespace Jumpeno.Client.Components
+
+@inherits ServiceComponent<PageLoader>
+
+<CascadingValue Value="PageLoaderDisplayed">
+<CascadingValue Value="PageLoaderTasks">
+    <div class="@ComputeClassContent()" inert="@PageLoaderDisplayed">
+        @ChildContent
+    </div>
+</CascadingValue>
+</CascadingValue>
+<div class="@CLASS_BEFORE" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(ID))" />
+<div
+    id="@ID"
+    class="@ComputeClass()"
+    aria-live="off"
+    aria-label="@I18N.T("Loading")"
+    role="status"
+    tabindex="0"
+    inert="@(!PageLoaderDisplayed)"
+>
+    <PageLoaderIndicator />
+</div>
+<div class="@CLASS_AFTER" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(ID))" />

@@ -1,0 +1,31 @@
+.page-loader {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(var(--color-base), 0.5);
+    top: 0;
+    left: 0;
+    z-index: var(--z-index-page-loader);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity calc(var(--transition-semi-bolt) * 1ms) ease-in;
+    outline: none;
+    cursor: default;
+}
+
+.displayed {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.page-loader:not(.displayed) {
+    transition: opacity calc(var(--transition-ultra-fast) * 1ms) ease-out;
+}
+
+.displayed.custom-loader {
+    opacity: 0;
+}

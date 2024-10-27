@@ -1,0 +1,10 @@
+@namespace Jumpeno.Client.Layout
+
+<CascadingValue Name="_ParentContainerSurface" Value="@Surface">
+<CascadingValue Value="@((SURFACE) Surface!)">
+    <DynamicComponent
+        Type="@typeof(Fragment)"
+        Parameters="@ComputeParameters()"
+    />
+</CascadingValue>
+</CascadingValue>

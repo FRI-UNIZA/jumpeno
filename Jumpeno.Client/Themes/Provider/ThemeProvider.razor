@@ -1,0 +1,13 @@
+@namespace Jumpeno.Client.Themes
+
+<style>
+    @($"body.{ThemeCSSClass(Theme)} {{\n")
+        @RenderThemeVariables(Theme)
+    @("}")
+</style>
+
+<CascadingValue Value="@Theme">
+<CascadingValue Value="ChangeTheme">
+    @ChildContent
+</CascadingValue>
+</CascadingValue>

@@ -1,0 +1,8 @@
+@namespace Jumpeno.Client.Components
+
+@inherits ServiceComponent<WebDocument>
+
+<div id="@ID" role="application" tabindex="0" class="@ID" />
+<CascadingValue Value="@DocumentTitle">
+    @ChildContent
+</CascadingValue>

@@ -1,0 +1,21 @@
+@namespace Jumpeno.Client.Atoms
+
+@inherits SurfaceComponent
+
+@code {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public const string CLASS_COLLAPSE_CONTENT = "collapse-content";
+    
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+    
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    protected CSSClass ComputeClass() {
+        return ComputeClass(CLASS_COLLAPSE_CONTENT);
+    }
+}
+
+<p class="@ComputeClass()">
+    @ChildContent
+</p>

@@ -1,0 +1,52 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.nav-menu-open-button {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 6px;
+    width: 46px;
+    height: 46px;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: transparent;
+    border: 2px solid transparent;
+    outline: none;
+    cursor: pointer;
+    transition-property: background-color, box-shadow;
+    transition-duration: calc(var(--transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+.nav-menu-open-button-line {
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: rgb(var(--color-secondary));
+    border-radius: 100px;
+    transition-property: background-color, filter;
+    transition-duration: calc(var(--transition-fast) * 1ms);
+}
+
+.light-theme .nav-menu-open-button:not(:hover):not(:focus-visible) .nav-menu-open-button-line {
+    filter: brightness(1.9);
+}
+
+/* State ------------------------------------------------------------------------------------------------------------------------------- */
+.nav-menu-open-button:hover .nav-menu-open-button-line,
+.nav-menu-open-button:focus-visible .nav-menu-open-button-line {
+    background-color: rgb(var(--color-secondary-highlight));
+}
+
+.nav-menu-open-button:focus-visible {
+    background-color: rgba(var(--color-secondary), 0.08);
+    box-shadow: 0 1px 6px rgba(var(--color-base), 0.4);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 1200px) {
+    .nav-menu-open-button {
+        display: none;
+    }
+}

@@ -1,0 +1,50 @@
+@namespace Jumpeno.Client.Components
+
+@typeparam T
+@inherits SurfaceComponent
+
+@code {
+    protected RenderFragment Render() {
+        return @<div class="@ComputeClassBase()">
+            <InputWrap ErrorVM="ViewModel.Error" ID="@ViewModel.ID" Label="@ViewModel.Label" HideLabel="HideLabel" Align="Align">
+                <div class="@ComputeClassComponent()">
+                    @if (Icon is not null) { <div class="input-icon-before">@Icon</div> }
+                    <input
+                        id="@ViewModel.ID"
+                        name="@ViewModel.Name"
+                        type="@ComputeType()"
+                        class="@CLASS_INPUT_BASE_INPUT"
+                        placeholder="@ViewModel.Placeholder"
+                        aria-label="@ViewModel.Label"
+                        aria-invalid="@ViewModel.Error.HasError()"
+                        inputmode="@ComputeInputMode()"
+                        autocomplete="@ComputeAutocomplete()"
+                        @bind:event="oninput"
+                        @bind:get="@TempValue"
+                        @bind:set="HandleInput"
+                        @onblur="HandleChange"
+                    />
+                    @if (IconAfter is not null) { <div class="input-icon-after">@IconAfter</div> }
+                    @if (AllowClear) {
+                        <div class="input-clear">
+                            <button
+                                type="buttton"
+                                class="input-clear-button"
+                                tabindex="@ComputeTabindexClear()"
+                                aria-label="@I18N.T("Clear")"
+                                @onclick="@(() => {
+                                    ViewModel.Clear();
+                                    ActionHandler.SetFocus(ViewModel.ID);
+                                })"
+                            >
+                                <AntIcon Type="close" Theme="outline" />
+                            </button>
+                        </div>
+                    }
+                </div>
+            </InputWrap>
+        </div>;
+    }
+}
+
+@Render()

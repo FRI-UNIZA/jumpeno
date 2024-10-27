@@ -1,0 +1,7 @@
+@namespace Jumpeno.Client.Atoms
+
+@inherits ServiceComponent<AriaPageAlert>
+
+@if (PageTitle != "") {
+    <div role="alert" aria-live="assertive" aria-label="@(I18N.T("Page: I18N{page}", new() { { "page", PageTitle } }))" />
+}

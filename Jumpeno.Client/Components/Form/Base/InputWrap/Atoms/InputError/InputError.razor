@@ -1,0 +1,17 @@
+@namespace Jumpeno.Client.Atoms
+
+@inherits SurfaceComponent
+
+<div class="@ComputeClass()">
+    @ChildContent
+    <div class="@CLASS_INPUT_ERROR_OUTLINE" />
+    <p
+        class="@CLASS_INPUT_ERROR_MESSAGE"
+        tabindex="@(ViewModel.HasError() ? 0 : -1)"
+        aria-roledescription="@I18N.T("Error")"
+        @onclick="OnClick"
+        @onkeydown="OnKeyDown"
+    >
+        @ViewModel.LastError
+    </p>
+</div>

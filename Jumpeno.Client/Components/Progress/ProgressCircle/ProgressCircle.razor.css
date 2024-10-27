@@ -1,0 +1,48 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.surface-all {
+    --size: 30;
+    --linecap: round;
+    /* Use one of these for progress: */
+    --progress: unset; /* Use "75" for 75% (0% is marked correctly) */
+    --progress-percentage: unset; /* Use "75%" or "75" for 75% (0% is marked with dot) */
+}
+.surface-primary {
+    --color: rgb(var(--color-primary));
+    --background: rgba(var(--color-primary), 0.4);
+}
+.surface-secondary {
+    --color: rgb(var(--color-secondary));
+    --background: rgba(var(--color-secondary), 0.4);
+}
+.surface-floating {
+    --color: rgb(var(--color-primary));
+    --background: rgba(var(--color-primary), 0.4);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.progress-circle {
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
+    transform: rotate(-90deg);
+}
+
+circle {
+    --border-size: 16px;
+    --dash-array: calc(2 * pi * 42px);
+    stroke-width: var(--border-size);
+    stroke-dasharray: var(--dash-array);
+    fill: transparent;
+}
+
+.progress-circle-background {
+    stroke: var(--background);
+    stroke-dashoffset: 0;
+}
+
+.progress-circle-progress {
+    stroke: var(--color);
+    stroke-dashoffset: calc((100 - min(max(var(--progress) * 1, 0), 100)) / 100 * var(--dash-array));
+    --use-percentage: calc(pi * var(--progress-percentage) * 0.84);
+    stroke-dasharray: var(--use-percentage, calc(2 * pi * 42px)), 1000%;
+    stroke-linecap: var(--linecap);
+}

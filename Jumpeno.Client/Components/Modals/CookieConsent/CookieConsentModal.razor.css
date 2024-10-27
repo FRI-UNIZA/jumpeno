@@ -1,0 +1,50 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.cookie-consent-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cookie-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+::deep .cookie-paragraph {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+}
+
+.cookie-consent-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.cookie-consent-footer ::deep .surface-all {
+    --button-width: 100%;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .cookie-title {
+        gap: 10px;
+    }
+    .cookie-consent-footer {
+        flex-direction: row;
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .cookie-title {
+        gap: 12px;
+    }
+}
