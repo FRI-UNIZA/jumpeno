@@ -357,4 +357,13 @@
   <data name="You have been disconnected from the server." xml:space="preserve">
     <value />
   </data>
+  <data name="Game code is incorrect!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Capacity not between I18N{min} and I18N{max}" xml:space="preserve">
+    <value />
+  </data>
+  <data name="The game is currently full!" xml:space="preserve">
+    <value />
+  </data>
 </root>

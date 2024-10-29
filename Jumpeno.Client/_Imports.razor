@@ -2,6 +2,8 @@
 @using System.Net.Http;
 @using System.Diagnostics.CodeAnalysis;
 @using System.Globalization;
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.AspNetCore.Components.Web;
 @using Microsoft.AspNetCore.Components.Routing;
@@ -9,8 +11,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 @using Microsoft.Extensions.Localization;
 @using Microsoft.JSInterop;
-@using Newtonsoft.Json;
-@using Newtonsoft.Json.Linq;
+@using Microsoft.AspNetCore.SignalR.Client;
 @using OneOf;
 
 @using Jumpeno.Client;
@@ -24,15 +25,17 @@
 @using Jumpeno.Client.Layout;
 @using Jumpeno.Client.Pages;
 @using Jumpeno.Client.Services;
+@using Jumpeno.Client.Utils;
 @using Jumpeno.Client.Themes;
 
 @using Jumpeno.Shared;
-@using Jumpeno.Shared.Attributes;
 @using Jumpeno.Shared.Base;
 @using Jumpeno.Shared.Constants;
 @using Jumpeno.Shared.Constraints;
 @using Jumpeno.Shared.Delegates;
+@using Jumpeno.Shared.Exceptions;
 @using Jumpeno.Shared.Extensions;
 @using Jumpeno.Shared.Models;
 @using Jumpeno.Shared.Services;
 @using Jumpeno.Shared.Translations;
+@using Jumpeno.Shared.Utils;

@@ -32,8 +32,8 @@
                                 class="input-clear-button"
                                 tabindex="@ComputeTabindexClear()"
                                 aria-label="@I18N.T("Clear")"
-                                @onclick="@(() => {
-                                    ViewModel.Clear();
+                                @onclick="@(async () => {
+                                    await ViewModel.Clear();
                                     ActionHandler.SetFocus(ViewModel.ID);
                                 })"
                             >

@@ -1,4 +1,4 @@
-namespace Jumpeno.Shared.Services;
+namespace Jumpeno.Shared.Utils;
 
 public class Delay {
     // Attributes -------------------------------------------------------------------------------------------------------------------------

@@ -1,17 +1,11 @@
-namespace Jumpeno.Client.Models;
+namespace Jumpeno.Client.ViewModels;
 
-public class MainLayoutController {
+public class MainLayoutViewModel(MainLayout layout)
+{
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private MainLayout Layout;
-    public bool NavigationDisplayed { get; private set; }
-    public bool ForegroundDisplayed { get; private set; }
-
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public MainLayoutController(MainLayout layout) {
-        Layout = layout;
-        NavigationDisplayed = true;
-        ForegroundDisplayed = false;
-    }
+    private readonly MainLayout Layout = layout;
+    public bool NavigationDisplayed { get; private set; } = true;
+    public bool ForegroundDisplayed { get; private set; } = false;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public void ShowNavigation() {

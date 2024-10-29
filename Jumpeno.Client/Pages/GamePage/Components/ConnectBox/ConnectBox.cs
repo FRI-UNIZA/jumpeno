@@ -8,7 +8,7 @@ public partial class ConnectBox {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool ShowName { get; set; } = true;
     private readonly InputViewModel<string> VMCode = new(new InputViewModelTextProps(
-        ID: "input-code",
+        ID: Game.CODE_ID,
         TextMode: INPUT_TEXT_MODE.UPPERCASE,
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
@@ -19,21 +19,23 @@ public partial class ConnectBox {
         DefaultValue: ""
     ));
 
+    private static string LastNameValue = "";
     private readonly InputViewModel<string> VMName = new(new InputViewModelTextProps(
-        ID: "input-name",
+        ID: User.NAME_ID,
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
         MaxLength: User.NAME_MAX_LENGTH,
         Name: I18N.T("Your name"),
         Label: I18N.T("Your name"),
         Placeholder: I18N.T("Your name"),
-        DefaultValue: ""
+        DefaultValue: "",
+        OnChange: new(value => LastNameValue = value)
     ));
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnInitializedAsync() {
-        await VMName.SetValue(User.GenerateName());
-        if (Auth.IsLoggedIn()) ShowName = false;
+        await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
+        if (Auth.IsRegistered()) ShowName = false;
     }
 
     private bool FirstTimeParametersSet = false;
@@ -48,12 +50,12 @@ public partial class ConnectBox {
         var isValid = true;
         var errors = Game.ValidateCode(VMCode.Value);
         if (errors.Count > 0) {
-            VMCode.Error.SetError(errors[0]);
+            VMCode.Error.SetError(errors[0].Message);
             isValid = false;
         }
         errors = User.ValidateName(VMName.Value);
         if (errors.Count > 0) {
-            VMName.Error.SetError(errors[0]);
+            VMName.Error.SetError(errors[0].Message);
             isValid = false;
         }
         return isValid;

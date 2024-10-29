@@ -1,4 +1,7 @@
 @namespace Jumpeno.Client.Components
 
 <div class="lobby">
+    @foreach (var player in ViewModel.Game.PlayersIterator) {
+        <p>@player.User.Name</p>
+    }
 </div>

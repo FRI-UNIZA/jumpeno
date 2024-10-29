@@ -1,5 +1,7 @@
 namespace Jumpeno.Shared.Services;
 
+using Newtonsoft.Json;
+
 #pragma warning disable CS8618
 
 public static class CookieStorage {

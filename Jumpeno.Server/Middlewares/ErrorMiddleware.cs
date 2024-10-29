@@ -1,5 +1,7 @@
 namespace Jumpeno.Server.Middlewares;
 
+using Newtonsoft.Json;
+
 public class ErrorMiddleware(RequestDelegate next) {
     private readonly RequestDelegate _next = next;
 

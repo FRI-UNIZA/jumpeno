@@ -1,5 +1,7 @@
 namespace Jumpeno.Shared.Models;
 
+using Newtonsoft.Json.Linq;
+
 public class HTTPException: Exception {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public int Code { get; }

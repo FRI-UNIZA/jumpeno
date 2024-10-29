@@ -1,6 +1,6 @@
 namespace Jumpeno.Shared.Models;
 
 public record Point(
-    double X,
-    double Y
+    float X,
+    float Y
 );

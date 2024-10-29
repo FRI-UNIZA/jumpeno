@@ -7,18 +7,18 @@ public partial class MainLayout {
     private const string INERT_SELECTOR = $"#{WebDocument.ID}";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private MainLayoutController LayoutController;
+    private readonly MainLayoutViewModel LayoutVM;
     private NavMenu NavMenuRef = null!;
     private NavMenuMobile NavMenuMobileRef = null!;
     private CSSClass ComputeClass() {
         var c = new CSSClass();
-        if (!LayoutController.NavigationDisplayed) c.Set(CLASS_NO_NAVIGATION);
+        if (!LayoutVM.NavigationDisplayed) c.Set(CLASS_NO_NAVIGATION);
         return c;
     }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public MainLayout() {
-        LayoutController = new MainLayoutController(this);
+        LayoutVM = new MainLayoutViewModel(this);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

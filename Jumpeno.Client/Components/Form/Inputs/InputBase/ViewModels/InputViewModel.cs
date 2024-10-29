@@ -30,6 +30,8 @@ public class InputViewModel<T> {
     public readonly EventDelegate<T> OnChange;
 
     public readonly InputErrorViewModel Error;
+    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) { return viewModel?.Error; }
+
     private readonly Action? Notify = null;
     
     // Initializers -----------------------------------------------------------------------------------------------------------------------
@@ -203,9 +205,7 @@ public class InputViewModel<T> {
         Notify?.Invoke();
     }
 
-    public void Clear() {
-        Value = DefaultValue;
-        Error.ClearError();
-        Notify?.Invoke();
+    public async Task Clear() {
+        await SetValue(DefaultValue);
     }
 }

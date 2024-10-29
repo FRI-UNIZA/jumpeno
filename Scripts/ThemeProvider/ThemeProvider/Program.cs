@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Jumpeno.Shared.Services;
+using Jumpeno.Shared.Utils;
 
 public class Program {
     // Constants --------------------------------------------------------------------------------------------------------------------------
