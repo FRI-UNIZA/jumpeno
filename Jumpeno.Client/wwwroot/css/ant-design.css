@@ -120,8 +120,8 @@
 }
 
 .ant-notification .ant-notification-notice .ant-notification-notice-close {
-    top: 24px;
-    right: 22px;
+    top: 21px;
+    right: 19px;
 }
 
 .ant-notification .ant-notification-notice .ant-notification-notice-close-x {
@@ -165,6 +165,7 @@
     }
 
     .ant-notification .ant-notification-notice .ant-notification-notice-close {
-        top: 29px;
+        top: 26px;
+        right: 21px;
     }
 }
