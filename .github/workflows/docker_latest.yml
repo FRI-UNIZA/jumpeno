@@ -34,7 +34,7 @@ jobs:
       
       # Push Image
       - name: Push Image
-        run: ghcr.io/fri-uniza/jumpeno/jumpeno:latest
+        run: docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
         
   deploy:
     runs-on: ubuntu-latest
