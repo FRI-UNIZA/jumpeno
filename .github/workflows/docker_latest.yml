@@ -1,36 +1,47 @@
 name: Latest Build&Deploy
 
+# Controls when the action will run. 
 on:
+  # Triggers the workflow on push event but only for the master branch
   push:
-    branches: [master]
+    branches: [ master ]
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
+  # This workflow contains two job called "build" and "deploy"
   build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
 
-      - name: Login to GitHub
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Login to GitHub
         env:
           GITHUB_USER: ${{ github.actor }}
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: docker login https://docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_PASSWORD
+        run: docker login https://ghcr.io -u $GITHUB_USER -p $GITHUB_PASSWORD
 
+      # Build Image
       - name: Build Image
-        run: docker build -t docker.pkg.github.com/fri-uniza/jumpeno/jumpeno .
-
+        run: docker build -t ghcr.io/fri-uniza/jumpeno/jumpeno:latest .
+      
+      # Push Image
       - name: Push Image
-        run: docker push docker.pkg.github.com/fri-uniza/jumpeno/jumpeno
-
+        run: docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    
     steps:
       - uses: actions/checkout@master
-
       - name: Push with curl
         uses: wei/curl@master
         with:
