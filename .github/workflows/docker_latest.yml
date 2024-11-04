@@ -26,15 +26,15 @@ jobs:
         env:
           GITHUB_USER: ${{ github.actor }}
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: docker login https://docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_PASSWORD
+        run: docker login https://ghcr.io -u $GITHUB_USER -p $GITHUB_PASSWORD
 
       # Build Image
       - name: Build Image
-        run: docker build -t docker.pkg.github.com/fri-uniza/jumpeno/jumpeno .
+        run: docker build -t ghcr.io/fri-uniza/jumpeno/jumpeno:latest .
       
       # Push Image
       - name: Push Image
-        run: docker push docker.pkg.github.com/fri-uniza/jumpeno/jumpeno
+        run: ghcr.io/fri-uniza/jumpeno/jumpeno:latest
         
   deploy:
     runs-on: ubuntu-latest
