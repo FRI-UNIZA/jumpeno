@@ -13,6 +13,7 @@ COPY ./Jumpeno.Shared ./Jumpeno.Shared
 COPY ./Jumpeno.Server ./Jumpeno.Server
 COPY ./Jumpeno.Client ./Jumpeno.Client
 COPY ./Scripts ./Scripts
+COPY ./Jumpeno.Shared/appsettings.json /app/appsettings.shared.json
 RUN dotnet publish Jumpeno.Server/Jumpeno.Server.csproj -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

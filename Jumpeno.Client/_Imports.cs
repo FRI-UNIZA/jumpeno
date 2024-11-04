@@ -12,6 +12,9 @@ global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 global using Microsoft.Extensions.Localization;
 global using Microsoft.JSInterop;
 global using Microsoft.AspNetCore.SignalR.Client;
+global using Blazor.Extensions;
+global using Blazor.Extensions.Canvas;
+global using Blazor.Extensions.Canvas.Canvas2D;
 global using OneOf;
 
 global using Jumpeno.Client;

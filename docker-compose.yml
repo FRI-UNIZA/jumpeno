@@ -1,4 +1,4 @@
-version: "3.9"
+version: "4.0"
 services:
     web:
         image: jumpeno
@@ -12,6 +12,6 @@ services:
         volumes:
             - jumpeno:/app
         ports:
-            - 80:80
+            - 80:8080
 volumes:
     jumpeno:

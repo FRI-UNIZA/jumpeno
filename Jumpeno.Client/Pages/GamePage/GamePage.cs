@@ -92,7 +92,8 @@ public partial class GamePage {
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL).Build();
             // 3) Add events:
             HubConnection.On<Game, Player>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
-            HubConnection.On<GamePlayerUpdate>(GAME_HUB.GAME_PLAYER_UPDATE, GameUpdate);
+            HubConnection.On<GamePlayUpdate>(GAME_HUB.GAME_PLAY_UPDATE, GameUpdate);
+            HubConnection.On<PlayerUpdate>(GAME_HUB.PLAYER_UPDATE, GameUpdate);
             HubConnection.On<GameExceptionDTO>(GAME_HUB.ERROR, HandleErrors);
             HubConnection.Closed += OnConnectionClosed;
             // 4) Connect:
@@ -157,7 +158,7 @@ public partial class GamePage {
 
     // Server actions ---------------------------------------------------------------------------------------------------------------------
     public void ExecuteUpdate(GameUpdate update) {
-        GameVM?.Game.Update(update);
+        GameVM?.Game?.Update(update);
         StateHasChanged();
     }
 
@@ -177,8 +178,9 @@ public partial class GamePage {
     // Error handling ---------------------------------------------------------------------------------------------------------------------
     private async Task HandleErrors(GameExceptionDTO? exception = null) {
         await ConnectLock.WaitAsync();
-        await DisposeGame();
-        if (exception != null) {
+        if (exception is null) await DisposeGame();
+        else {
+            if (exception.Type == GAME_EXCEPTION_TYPE.EXCEPTION) await DisposeGame();
             if (exception.Errors.Count > 0) {
                 foreach (var error in exception.Errors) {
                     Notification.Error(error.Message);
@@ -194,7 +196,10 @@ public partial class GamePage {
 
     private async Task OnConnectionClosed(Exception? e) {
         if (e is not null) await HandleErrors(
-            new([new(I18N.T("You have been disconnected from the server."))])
+            new GameException([
+                new Error(I18N.T("You have been disconnected from the server."))
+            ])
+            .DataTransferObject()
         );
     }
 

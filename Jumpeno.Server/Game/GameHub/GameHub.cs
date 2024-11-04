@@ -2,14 +2,14 @@ namespace Jumpeno.Server.Hubs;
 
 public class GameHub: Hub {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public static IHubContext<GameHub> Hub => AppEnvironment.GetService<IHubContext<GameHub>>();
+    private static IHubContext<GameHub> Hub => AppEnvironment.GetService<IHubContext<GameHub>>();
     private GameConnection? GameConnection {
         get { try { return (GameConnection) Context.Items[GameConnection.ID]!; } catch { return null; } }
         set { Context.Items[GameConnection.ID] = value; }
     }
 
     // Locks ------------------------------------------------------------------------------------------------------------------------------
-    private readonly Semaphore Lock = new(1, 1);
+    private readonly Locker Lock = new();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(WebApplication app) {
@@ -30,56 +30,59 @@ public class GameHub: Hub {
 
     // Connect ----------------------------------------------------------------------------------------------------------------------------
     public override async Task OnConnectedAsync() {
-        // 1) Base call:
-        await base.OnConnectedAsync();
+        try { await Lock.Lock(async () => {
+            // 1) Base call:
+            Console.WriteLine($"Connection opened::: {Context.ConnectionId}");
+            await base.OnConnectedAsync();
         
-        // 2) Read parameters:
-        string code;
-        User user;
-        try {
+            // 2) Read parameters:
+            string code;
+            User user;
             var ctx = Context.GetHttpContext() ?? throw new GameException();
             code = $"{ctx.Request.Query[Game.CODE_ID]}";
             user = JsonSerializer.Deserialize<User>(ctx.Request.Query[User.USER_ID]!) ?? throw new GameException();
-        } catch (Exception e) {
-            await HandleCallException(e); return;
-        }
 
-        // 3) Try connect to game:
-        try {
-            Lock.WaitOne();
-            GameConnection = await GameService.Connect(Context.ConnectionId, code, user);
-            await Groups.AddToGroupAsync(GameConnection.Player.ConnectionID, GameConnection.GameEngine.Code);
-            await Clients.Caller.SendAsync(GAME_HUB.CONNECTION_SUCCESSFUL, GameConnection.GameEngine.ClientGameCopy(), GameConnection.Player);
-        } catch (Exception e) {
+            // 3) Try connect to game:
+            var enginePlayer = await GameService.Connect(code, user);
+            GameConnection = new(Context.ConnectionId, enginePlayer.Engine, enginePlayer.Player);
+            await Groups.AddToGroupAsync(GameConnection.ConnectionID, GameConnection.Engine.Code);
+            await Clients.Caller.SendAsync(GAME_HUB.CONNECTION_SUCCESSFUL, GameConnection.Engine.ClientGameCopy(), GameConnection.Player);
+
+            Lock.Unlock();
+        }); } catch (Exception e) {
             await HandleCallException(e); return;
-        } finally {
-            Lock.Release();
         }
     }
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
 
-    // Server updates ---------------------------------------------------------------------------------------------------------------------
-    public static async Task GamePlayerUpdate(GameEngine engine, Player player, PLAYER_ACTION action) {
-        await Hub.Clients.Group(engine.Code).SendAsync(
-            GAME_HUB.GAME_PLAYER_UPDATE, new GamePlayerUpdate(engine.Time, engine.State, player, action)
-        );
+    // Server updates ---------------------------------------------------------------------------------------------------------------------    
+    public static async Task SendGameUpdate(string code, GameUpdate update) {
+        try { await Hub.Clients.Group(code).SendAsync(update.HUB_ACTION, update); }
+        catch (Exception e) { Console.WriteLine(e); }
+    }
+
+    public static async Task SendException(string code, GameException exception) {
+        try { await HandleException(Hub.Clients.Group(code), exception); }
+        catch (Exception e) { Console.WriteLine(e); }
     }
 
     // Disconnect -------------------------------------------------------------------------------------------------------------------------    
     public override async Task OnDisconnectedAsync(Exception? exception) {
-        // 1) Disconnect player from game:
-        if (GameConnection != null) {
-            try {
-                Lock.WaitOne();
-                await Groups.RemoveFromGroupAsync(GameConnection.Player.ConnectionID, GameConnection.GameEngine.Code);
-                await GameService.Disconnect(GameConnection);
-            } finally {
-                Lock.Release();
+        try { await Lock.Lock(async () => {
+            // 1) Disconnect player from game:
+            if (GameConnection != null) {
+                await Groups.RemoveFromGroupAsync(GameConnection.ConnectionID, GameConnection.Engine.Code);
+                await GameService.Disconnect(GameConnection.Engine, GameConnection.Player);
             }
-        }
 
-        // 2) Base call:
-        await base.OnDisconnectedAsync(exception);
+            // 2) Base call:
+            Console.WriteLine($"Connection closed::: {Context.ConnectionId}");
+            await base.OnDisconnectedAsync(exception);
+
+            Lock.Unlock();
+        }); } catch (Exception e) {
+            Console.WriteLine(e);
+        }
     }
 }

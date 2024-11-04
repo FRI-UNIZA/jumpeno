@@ -28,21 +28,7 @@ public class GameException: Exception {
     }
 
     // Conversions ------------------------------------------------------------------------------------------------------------------------
-    public GameExceptionDTO DataTransferObject() {
-        return new GameExceptionDTO(Errors);
+    public virtual GameExceptionDTO DataTransferObject() {
+        return new GameExceptionDTO(this);
     }
-}
-
-public class GameExceptionDTO {
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public string Message { get; private set; }
-    public List<Error> Errors { get; private set; }
-
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
-    [JsonConstructor]
-    private GameExceptionDTO(string message, List<Error> errors) {
-        Message = message;
-        Errors = errors;
-    }
-    public GameExceptionDTO(List<Error> errors): this(GameException.DEFAULT_MESSAGE(), errors) {}
 }

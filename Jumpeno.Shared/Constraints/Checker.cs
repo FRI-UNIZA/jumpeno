@@ -64,30 +64,32 @@ public static class Checker {
         throw new ArgumentOutOfRangeException($"Value{Name(name)} is not greater or equal to {value2}!");
     }
 
-    public static bool IsAlpha(string value) {
+    public static bool IsAlpha(string value, List<char>? allowed = null) {
         value = value.ToUpper();
         foreach (var c in value) {
-            if (c < 'A' || 'Z' < c) {
+            if ((c < 'A' || 'Z' < c) && !(allowed != null && allowed.Contains(c))) {
                 return false;
             }
         }
         return true;
     }
-    public static void CheckAlpha(string value, string name = "") {
-        if (IsAlpha(value)) return;
+    public static bool IsAlpha(string value) { return IsAlpha(value, null); }
+    public static void CheckAlpha(string value, List<char>? allowed = null, string name = "") {
+        if (IsAlpha(value, allowed)) return;
         throw new ArgumentException($"Value{Name(name)} is not alphabetical!");
     }
-    public static bool IsAlphaNum(string value) {
+    public static bool IsAlphaNum(string value, List<char>? allowed = null) {
         value = value.ToUpper();
         foreach (var c in value) {
-            if (!char.IsDigit(c) && (c < 'A' || 'Z' < c)) {
+            if (!char.IsDigit(c) && (c < 'A' || 'Z' < c) && !(allowed != null && allowed.Contains(c))) {
                 return false;
             }
         }
         return true;
     }
-    public static void CheckAlphaNum(string value, string name = "") {
-        if (IsAlphaNum(value)) return;
+    public static bool IsAlphaNum(string value) { return IsAlphaNum(value, null); }
+    public static void CheckAlphaNum(string value, List<char>? allowed = null, string name = "") {
+        if (IsAlphaNum(value, allowed)) return;
         throw new ArgumentException($"Value{Name(name)} is not alphanumeric!");
     }
 }

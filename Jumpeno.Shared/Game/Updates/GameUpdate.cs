@@ -1,6 +1,9 @@
 namespace Jumpeno.Shared.Models;
 
-public class GameUpdate(double time, GAME_STATE state) {
-    public double Time { get; private set; } = time;
-    public GAME_STATE State { get; private set; } = state;
+public abstract class GameUpdate(ulong id) {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public abstract string HUB_ACTION { get; }
+
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public ulong ID { get; private set; } = id;
 }

@@ -22,6 +22,7 @@ public partial class TextElementBase: SurfaceComponent {
 
     protected CSSClass ComputeClass() {
         var c = ComputeClass(CLASSNAME);
+        c.Set(Class);
         c.Set(Variant.ToString().ToLower());
         c.Set(Size.ToString().ToLower());
         if (NoWrap) c.Set(CLASSNAME_NOWRAP);

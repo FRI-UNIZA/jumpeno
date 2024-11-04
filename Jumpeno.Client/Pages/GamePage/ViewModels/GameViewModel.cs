@@ -10,16 +10,8 @@ public class GameViewModel {
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public GameViewModel(Game game, Player player, Func<string, object, Task> send, EmptyDelegate onRender) {
         Game = game;
-        Player = GamePlayer(player);
+        Player = player;
         Send = send;
         OnRender = onRender;
-    }
-
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private Player GamePlayer(Player player) {
-        foreach (var gamePlayer in Game.PlayersIterator) {
-            if (player.Equals(gamePlayer)) return gamePlayer;
-        }
-        return player;
     }
 }

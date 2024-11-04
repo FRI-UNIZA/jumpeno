@@ -108,6 +108,9 @@ a.surface-floating {
 .no-wrap {
     white-space: nowrap;
 }
+.no-wrap:not(span) {
+    display: inline;
+}
 
 .spacing {
     margin-bottom: 0.6em;

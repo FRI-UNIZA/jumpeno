@@ -21,6 +21,7 @@ builder.Services.AddAntiforgery(options => {
 ServerSettings.Init(builder.Configuration);
 // Configure the app to load appsettings.json from the Shared project
 var sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Shared", "appsettings.json");
+if (!File.Exists(sharedSettingsPath)) sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.shared.json");
 var sharedConfig = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile(sharedSettingsPath, optional: true, reloadOnChange: true)

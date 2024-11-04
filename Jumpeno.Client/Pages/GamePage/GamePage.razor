@@ -10,7 +10,12 @@
         <ConnectBox ViewModel="ConnectBoxVM" @key="@ConnectBoxVM.Key()" />
     } else switch (GameVM.Game.State) {
         case GAME_STATE.LOBBY:
+        case GAME_STATE.SCOREBOARD:
             <Lobby ViewModel="GameVM" />
+        break;
+        case GAME_STATE.GAMEPLAY:
+        case GAME_STATE.SHRINKING:
+            <GameScreen ViewModel="GameVM" />
         break;
     }
 </div>

@@ -3,25 +3,23 @@ namespace Jumpeno.Server.Services;
 public static class GameService {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static readonly Dictionary<string, GameEngine> Engines = new() {
-        {"FRI25", new GameEngine("FRI25", 2)}
+        {Game.MOCK_CODE, new GameEngine(Game.MOCK_CODE, Game.MOCK_NAME, 2)}
     };
 
     // Locks ------------------------------------------------------------------------------------------------------------------------------
-    private static readonly Semaphore Lock = new(1, 1);
+    private static readonly Locker Lock = new();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private static GameEngine? FindEngine(string code) {
-        try {
-            Lock.WaitOne();
+        return Lock.Lock(() => {
             Engines.TryGetValue(code, out var engine);
-            return engine;   
-        } finally {
-            Lock.Release();
-        }
+            Lock.Unlock();
+            return engine;  
+        });
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<GameConnection> Connect(string connectionID, string code, User user) {
+    public static async Task<EnginePlayer> Connect(string code, User user) {
         // 0) Results:
         GameEngine? engine = null;
         Player? player = null;
@@ -34,7 +32,7 @@ public static class GameService {
             engine = FindEngine(code);
             if (engine != null) {
                 // 2.1) Add client to game:
-                try { player = await engine.AddPlayer(connectionID, user); }
+                try { player = await engine.AddPlayer(user); }
                 catch (Exception e) { exception.Add(new Error(e.Message)); }
             } else {
                 // 2.2) Game does not exist:
@@ -46,7 +44,17 @@ public static class GameService {
         return new(engine!, player!);
     }
 
-    public static async Task Disconnect(GameConnection connection) {
-        await connection.GameEngine.RemovePlayer(connection.Player);
+    public static async Task Disconnect(GameEngine engine, Player player) {
+        await engine.RemovePlayer(player);
+    }
+
+    public static async Task StartGame(string code) {
+        var engine = FindEngine(code) ?? throw new GameException([new(Game.CODE_ID, I18N.T("Game code is incorrect!"))]);
+        await engine.Start();
+    }
+
+    public static async Task ResetGame(string code) {
+        var engine = FindEngine(code) ?? throw new GameException([new(Game.CODE_ID, I18N.T("Game code is incorrect!"))]);
+        await engine.Reset();
     }
 }

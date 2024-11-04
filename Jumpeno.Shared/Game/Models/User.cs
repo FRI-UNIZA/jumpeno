@@ -64,4 +64,10 @@ public class User {
     }
     public User(Guid id, string name, SKIN skin): this((Guid?) id, name, skin) {}
     public User(string name, SKIN skin): this(null, name, skin) {}
+
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public bool Equals(User user) {
+        if (user.ID == null) return user.Name == Name;
+        return user.ID == ID;
+    }
 }

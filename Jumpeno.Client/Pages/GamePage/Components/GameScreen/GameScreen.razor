@@ -1,0 +1,7 @@
+@namespace Jumpeno.Client.Components
+
+<div class="game-screen">
+    <div class="canvas-box" width="@($"{Width}px")" height="@($"{Height}px")" style="@($"background-color: {BackgroundColor}")">
+        <BECanvas Width="Width" Height="Height" @ref="GameCanvasRef" />
+    </div>
+</div>

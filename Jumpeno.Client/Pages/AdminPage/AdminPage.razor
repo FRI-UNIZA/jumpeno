@@ -1,0 +1,17 @@
+﻿@namespace Jumpeno.Client.Pages
+
+@inherits Page
+@attribute [Route(AdminPage.ROUTE_EN)]
+@attribute [Route(AdminPage.ROUTE_SK)]
+
+<div class="admin-page">
+    <DocTitle Value="Admin" />
+    <Button Size="BUTTON_SIZE.M" OnClick="Start">
+        <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
+        <Text>Start</Text>
+    </Button>
+    <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.M" OnClick="Reset">
+        <Icon><AntIcon Type="login" Theme="outline" /></Icon>
+        <Text>Reset</Text>
+    </Button>
+</div>

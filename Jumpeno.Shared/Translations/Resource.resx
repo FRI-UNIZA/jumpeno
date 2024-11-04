@@ -366,4 +366,19 @@
   <data name="The game is currently full!" xml:space="preserve">
     <value />
   </data>
+  <data name="Value contains not allowed character" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Value must not start with a dot" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Player name is taken!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Kills" xml:space="preserve">
+    <value />
+  </data>
 </root>

@@ -45,6 +45,7 @@
         <script src="@AppEnvironment.Import("js/constants/ERROR.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSWindow.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSAnimationHandler.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSAnimator.js")"></script>
         <script src="@AppEnvironment.Import("js/theme/JSThemeProvider.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSActionHandler.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSNotification.js")"></script>
@@ -57,6 +58,7 @@
         <script src="@AppEnvironment.Import("js/components/JSSwitch.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSTempTitle.js")"></script>
         <!-- #project -->
+        <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")"></script>
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
             @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")

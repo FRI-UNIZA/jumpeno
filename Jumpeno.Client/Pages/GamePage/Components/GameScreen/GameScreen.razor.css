@@ -1,0 +1,41 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.game-screen {
+    height: 100%;
+}
+
+.canvas-box {
+    position: relative;
+    display: flex;
+    top: -15px;
+    left: 0;
+    transform: none;
+    box-shadow: 0 0 10px 4px rgba(var(--color-base), 0.8);
+    overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 40px;
+}
+
+::deep canvas {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .canvas-box {
+        top: calc(50% - 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        box-shadow: 0 1px 15px 6px rgba(var(--color-base), 0.8);
+        border-radius: 6px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .canvas-box {
+        top: calc(50% - 20px);
+        box-shadow: 0 2px 20px 8px rgba(var(--color-base), 0.8);
+        border-radius: 10px;
+    }
+}

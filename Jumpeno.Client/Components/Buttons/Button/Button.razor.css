@@ -14,7 +14,7 @@
     max-width: 100%;
 }
 
-::deep > * > .surface-all {
+::deep > .surface-all > .surface-all {
     --button-width: var(--button-propagate-width);
     --button-height: var(--button-propagate-height);
     --button-font-weight: 500;
