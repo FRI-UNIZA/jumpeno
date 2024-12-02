@@ -98,7 +98,7 @@ These programs can run automatically as part of the project’s build and run ac
 
 For example, ThemeProvider automatically generates theme CSS variables from C# code.
 
-## Development workflow ###
+## Development Workflow ###
 After implementing features, fixing bugs, or releasing updates, remember to update project version in the file:
 
 > /Jumpeno.Shared/appsettings.json
