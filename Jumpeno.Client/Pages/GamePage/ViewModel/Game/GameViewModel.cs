@@ -91,8 +91,8 @@ public class GameViewModel {
     public async Task RemoveAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) { await UpdateLock.Lock(); AfterUpdate -= listener; UpdateLock.Unlock(); }
     
     private event Func<Task>? AfterUpdates;
-    public async Task AddAfterUpdatesListener(Func<Task> listener) { await UpdateLock.Lock(); BeforeUpdates += listener; UpdateLock.Unlock(); }
-    public async Task RemoveAfterUpdatesListener(Func<Task> listener) { await UpdateLock.Lock(); BeforeUpdates -= listener; UpdateLock.Unlock(); }
+    public async Task AddAfterUpdatesListener(Func<Task> listener) { await UpdateLock.Lock(); AfterUpdates += listener; UpdateLock.Unlock(); }
+    public async Task RemoveAfterUpdatesListener(Func<Task> listener) { await UpdateLock.Lock(); AfterUpdates -= listener; UpdateLock.Unlock(); }
 
     private event Func<Task>? Notify;
     public async Task AddNotifyListener(Func<Task> listener) { await UpdateLock.Lock(); Notify += listener; UpdateLock.Unlock(); }
