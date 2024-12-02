@@ -11,7 +11,7 @@ public class CultureController : Controller {
             CookieStorage.Set(new Cookie(
                 COOKIE_FUNCTIONAL.APP_CULTURE,
                 culture,
-                DateTimeOffset.Now.AddYears(1)
+                DateTimeOffset.UtcNow.AddYears(1)
             ));
         }
         return Redirect(redirectUri);

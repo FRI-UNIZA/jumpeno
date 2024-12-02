@@ -38,11 +38,9 @@ public partial class Switch {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
-        Value = DefaultValue;
-    }
+    protected override void OnParametersSet(bool firstTime) => Value = DefaultValue;
     protected override void OnAfterRender(bool firstRender) {
-        if (AppEnvironment.IsServer() || !firstRender) return;
+        if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSSwitch.InitInstance, ID, CLASSNAME_ELEMENT, Label);
     }
 

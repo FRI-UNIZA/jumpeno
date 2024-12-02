@@ -59,7 +59,7 @@ public partial class PageLoader {
         
         instance.PageLoaderDisplayed = true;
         instance.UpdateGlobalLoaders(task, custom);
-        if (!AppEnvironment.IsServer()) {
+        if (!AppEnvironment.IsServer) {
             var firstLoader = instance.PageLoaderTasks.Count == 1;
             if (firstLoader) {
                 ActionHandler.SaveActiveElement();
@@ -80,7 +80,7 @@ public partial class PageLoader {
         if (instance.PageLoaderDisplayed) {
             instance.PageLoaderDisplayed = instance.PageLoaderTasks.Count > 0;
             instance.RemoveGlobalLoader(task);
-            if (!AppEnvironment.IsServer()) {
+            if (!AppEnvironment.IsServer) {
                 await instance.OnChange();
                 if (!instance.PageLoaderDisplayed) {
                     instance.NoLoaderTCS.TrySetResult();
@@ -108,7 +108,7 @@ public partial class PageLoader {
     }
 
     public static async Task AwaitAllLoaders() {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         var instance = Instance();
         await instance.Lock.WaitAsync();
         if (instance.PageLoaderTasks.Count > 0) {

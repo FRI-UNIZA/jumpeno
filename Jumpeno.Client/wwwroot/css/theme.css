@@ -79,7 +79,7 @@ body.dark-theme {
     --z-index-menu: 1001;
     --z-index-modal: 1002;
     --z-index-page-loader: 1000000;
-    --z-index-static-page-loader: 1000001;
+    --z-index-server-page-loader: 1000001;
     --z-index-notification: 1000002;
     --breakpoint-mobile-sm: 480;
     --breakpoint-mobile: 768;
@@ -158,7 +158,7 @@ body.light-theme {
     --z-index-menu: 1001;
     --z-index-modal: 1002;
     --z-index-page-loader: 1000000;
-    --z-index-static-page-loader: 1000001;
+    --z-index-server-page-loader: 1000001;
     --z-index-notification: 1000002;
     --breakpoint-mobile-sm: 480;
     --breakpoint-mobile: 768;

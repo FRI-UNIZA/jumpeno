@@ -19,8 +19,8 @@ public static class COOKIE {
 
     // NOTE: Use enum ToString() value as key to save cookie domain and path.
     // (Default domain and path values do not have to be specified.)
-    public static readonly Dictionary<string, string> DOMAIN = new() {};
-    public static readonly Dictionary<string, string> PATH = new() {};
+    public static readonly Dictionary<string, string> DOMAIN = [];
+    public static readonly Dictionary<string, string> PATH = [];
 
     public static readonly List<Type> TYPES = [
         typeof(COOKIE_MANDATORY),

@@ -1,18 +1,24 @@
 namespace Jumpeno.Shared.Exceptions;
 
-public class GameException: Exception {
+public class GameException : Exception {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string DEFAULT_MESSAGE() => I18N.T("Something went wrong.");
+    public static string DEFAULT_MESSAGE() => "Something went wrong.";
+    public static string DEFAULT_MESSAGE_TRANSLATED() => I18N.T(DEFAULT_MESSAGE());
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public bool Translated { get; private set; }
     public List<Error> Errors { get; private set; }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameException(): base(DEFAULT_MESSAGE()) { Errors = []; }
+    public GameException(bool translated = true): base(translated ? DEFAULT_MESSAGE_TRANSLATED() : DEFAULT_MESSAGE())
+    { Translated = translated; Errors = []; }
     [JsonConstructor]
-    public GameException(List<Error> errors): base(DEFAULT_MESSAGE()) { Errors = errors; }
-    public GameException(Exception? inner): base(DEFAULT_MESSAGE(), inner) { Errors = []; }
-    public GameException(List<Error> errors, Exception? inner): base(DEFAULT_MESSAGE(), inner) { Errors = errors; }
+    public GameException(List<Error> errors, bool translated = true): base(translated ? DEFAULT_MESSAGE_TRANSLATED() : DEFAULT_MESSAGE())
+    { Translated = translated; Errors = errors; }
+    public GameException(Exception? inner, bool translated = true): base(translated ? DEFAULT_MESSAGE_TRANSLATED() : DEFAULT_MESSAGE(), inner)
+    { Translated = translated; Errors = []; }
+    public GameException(List<Error> errors, Exception? inner, bool translated = true): base(translated ? DEFAULT_MESSAGE_TRANSLATED() : DEFAULT_MESSAGE(), inner)
+    { Translated = translated; Errors = errors; }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public void Add(Error error) {

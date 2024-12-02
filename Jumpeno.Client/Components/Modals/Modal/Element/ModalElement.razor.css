@@ -75,6 +75,7 @@
     overflow: hidden;
     outline: none;
     border: none;
+    pointer-events: all;
 }
 .modal:not(.pre-open):not(.loading) .modal-dialog {
     animation: zoom-in calc(var(--modal-transition-speed) * 1ms) forwards;
@@ -120,6 +121,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .modal-header {

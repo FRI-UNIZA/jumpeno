@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Base;
 
-public abstract class SurfaceComponent: ComponentBase {
+public abstract class SurfaceComponent : Component {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public SURFACE Surface { get; set; }

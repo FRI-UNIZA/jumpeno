@@ -48,14 +48,14 @@ CookieStorage.Init(
             cookie.Key.StringValue(),
             URL.EncodeValue(cookie.Value),
             cookie.Expires is not null ? ((DateTimeOffset) cookie.Expires).UtcDateTime.ToString("R") : null,
-            cookie.Domain,
+            cookie.Domain == Cookie.NormDomain(cookie.Domain),
             cookie.Path,
             cookie.Secure,
             cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.StringValue()
         );
     },
     (string key, string domain, string path) => {
-        JS.InvokeVoid(JSCookies.Delete, key, domain, path);
+        JS.InvokeVoid(JSCookies.Delete, key, Cookie.NormDomain(domain), path);
     },
     async (bool unclosable) => {
         var modal = RequestStorage.Get<CookieConsentModal>(REQUEST_STORAGE_KEYS.COOKIE_CONSENT_MODAL);

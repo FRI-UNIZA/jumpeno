@@ -34,23 +34,27 @@
         <component type="typeof(HeadOutlet)" render-mode="@ServerEnvironment.RenderMode()" />
     </head>
     <body class="@ThemeProvider.ServerBodyClass()" data-overlayscrollbars-initialize>
-        <component type="typeof(Jumpeno.Client.Components.StaticPageLoader)" render-mode="WebAssemblyPrerendered" />
+        <component type="typeof(Jumpeno.Client.Components.ServerPageLoader)" render-mode="WebAssemblyPrerendered" />
         <component type="typeof(Jumpeno.Client.App)" render-mode="@ServerEnvironment.RenderMode()" />
         <persist-component-state />
         <!-- #global -->
-        <script src="@AppEnvironment.Import("js/components/JSStaticPageLoader.js")"></script>
+        <script src="@AppEnvironment.Import("js/utils/locks/Mutex.js")"></script>
+        <script src="@AppEnvironment.Import("js/utils/locks/models/LockToken.js")"></script>
+        <script src="@AppEnvironment.Import("js/utils/locks/Locker.js")"></script>
+        <script src="@AppEnvironment.Import("js/utils/listeners/ListenerStorage.js")"></script>
+        <script src="@AppEnvironment.Import("js/storage/JSCookies.js")"></script>
+        <script src="@AppEnvironment.Import("js/theme/JSThemeProvider.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSServerPageLoader.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSWebDocument.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSNavigator.js")"></script>
         <script src="@AppEnvironment.Import("js/constants/DOTNET.js")"></script>
         <script src="@AppEnvironment.Import("js/constants/ERROR.js")"></script>
+        <script src="@AppEnvironment.Import("js/storage/JSLocalStorage.js")"></script>
+        <script src="@AppEnvironment.Import("js/document/JSActionHandler.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSWindow.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSAnimationHandler.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSAnimator.js")"></script>
-        <script src="@AppEnvironment.Import("js/theme/JSThemeProvider.js")"></script>
-        <script src="@AppEnvironment.Import("js/document/JSActionHandler.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSNotification.js")"></script>
-        <script src="@AppEnvironment.Import("js/storage/JSCookies.js")"></script>
-        <script src="@AppEnvironment.Import("js/storage/JSLocalStorage.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSImage.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSModal.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSScrollArea.js")"></script>
@@ -62,8 +66,8 @@
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
             @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")
-            else @("JSActionHandler.SetFocus(JSStaticPageLoader.ID); ")
-            @if (AppSettings.Theme.AutoDetect && ThemeProvider.GetThemeCookie() is null) @("JSThemeProvider.SetupPreferred(); ")
+            else @("JSActionHandler.SetFocus(JSServerPageLoader.ID); ")
+            JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE_FUNCTIONAL.APP_THEME.StringValue()");
             JSTempTitle.Add();
             JSImage.InitAll();
             Blazor.start({

@@ -7,14 +7,23 @@ public partial class ImagePreloader {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static readonly List<PreloadedImage> List = [];
 
-    // Constants --------------------------------------------------------------------------------------------------------------------------
+    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    private static void Add(string url) => List.Add(new PreloadedImage(url));
+
+    // Constructors -----------------------------------------------------------------------------------------------------------------------
     static ImagePreloader() {
-        List.Add(new PreloadedImage(IMAGE.COMMON.BG_YELLOW()));
-        List.Add(new PreloadedImage(IMAGE.COMMON.BG_BLUE()));
-        List.Add(new PreloadedImage(IMAGE.COMMON.JUMPER_YELLOW()));
+        Add(IMAGE.COMMON.BG_YELLOW);
+        Add(IMAGE.COMMON.BG_BLUE);
+        Add(IMAGE.COMMON.JUMPER_YELLOW);
+        Add(IMAGE.COMMON.SPRITE_MAGE_AIR);
+        Add(IMAGE.COMMON.SPRITE_MAGE_EARTH);
+        Add(IMAGE.COMMON.SPRITE_MAGE_FIRE);
+        Add(IMAGE.COMMON.SPRITE_MAGE_MAGIC);
+        Add(IMAGE.COMMON.SPRITE_MAGE_WATER);
+        Add(IMAGE.COMMON.SPRITE_TILE);
     }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Styles -----------------------------------------------------------------------------------------------------------------------------
     private static string RenderStyles() {
         var styles = "";
         foreach (var image in List) {

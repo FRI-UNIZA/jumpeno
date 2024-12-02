@@ -12,4 +12,5 @@ public static class JSAnimationHandler {
     public static readonly string DisableAnimations = $"{ClassName}.DisableAnimations";
     public static readonly string RestoreAnimations = $"{ClassName}.RestoreAnimations";
     public static readonly string CallOnAnimationEnd = $"{ClassName}.CallOnAnimationEnd";
+    public static readonly string RenderFrames = $"{ClassName}.RenderFrames";
 }

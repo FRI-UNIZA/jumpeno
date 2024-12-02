@@ -20,7 +20,7 @@ public class Delay {
             await Action.Invoke();
         } catch (TaskCanceledException) {
         } catch (Exception e) {
-            if (AppEnvironment.IsDevelopment()) Console.Error.WriteLine(e);
+            if (AppEnvironment.IsDevelopment) Console.Error.WriteLine(e);
         }
     }
 

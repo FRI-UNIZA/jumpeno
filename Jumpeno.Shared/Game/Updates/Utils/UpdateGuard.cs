@@ -1,6 +1,6 @@
 namespace Jumpeno.Shared.Utils;
 
-public class UpdateGuard<T> where T : GameUpdate {
+public class UpdateGuard<T> where T : NetworkUpdate {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private T? LastUpdate = null;
 
@@ -16,5 +16,14 @@ public class UpdateGuard<T> where T : GameUpdate {
         if (!ShouldUpdate(ref LastUpdate, update)) return false;
         callback();
         return true;
+    }
+
+    public bool Update(T update, Func<bool> callback) {
+        if (!ShouldUpdate(ref LastUpdate, update)) return false;
+        return callback();
+    }
+
+    public void Reset() {
+        LastUpdate = null;
     }
 }

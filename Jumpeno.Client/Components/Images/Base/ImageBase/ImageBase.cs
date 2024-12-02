@@ -7,7 +7,7 @@ namespace Jumpeno.Client.Components;
 /// Other css properties (e.g. border-radius...) style as you wish.
 /// Modify component parameters to controll transparency, image transition and loading.
 /// </summary>
-public partial class ImageBase: IDisposable {
+public partial class ImageBase : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "image";
     public const string CLASSNAME = "image-component";
@@ -54,14 +54,12 @@ public partial class ImageBase: IDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    private bool ParametersSet = false;
-    protected override void OnParametersSet() {
-        if (ParametersSet) return;
-        ParametersSet = true;
+    protected override void OnParametersSet(bool firstTime) {
+        if (!firstTime) return;
         var alt = Alt.Trim();
         AdditionalAttributes["alt"] = alt;
         if (alt == "") AdditionalAttributes["aria-hidden"] = "true";
-        if (AppEnvironment.IsServer()) {
+        if (AppEnvironment.IsServer) {
             State = IMAGE_STATE.LOADING;
         } else {
             State = Preloaded
@@ -72,7 +70,7 @@ public partial class ImageBase: IDisposable {
     }
 
     override protected void OnAfterRender(bool firstRender) {
-        if (AppEnvironment.IsServer() || !firstRender) return;
+        if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSImage.Init, ID);
     }
 

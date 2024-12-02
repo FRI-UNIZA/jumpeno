@@ -31,7 +31,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         var cookieModalOpen = await CookieStorage.InitModal();
-        await StaticPageLoader.Hide();
+        await ServerPageLoader.Hide();
         await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
 
         await PageLoader.WithActiveLoader(() => { ActionHandler.SetFocus(PageLoader.ID); });

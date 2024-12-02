@@ -12,19 +12,21 @@ class JSCookies {
         return null;
     }
     
-    static Set(key, value, expires = null, domain, path, secure = true, sameSite = null) {
-        if (!key || (!value && value != "") || !domain || !path) {
+    static Set(key, value, expires = null, domain = null, path, secure = true, sameSite = null) {
+        if (!key || (!value && value != "") || !path) {
             throw new Error(ERROR.PARAMETERS_REQUIRED)
         }
         expires = expires ? `; expires=${expires}` : ''
+        domain = domain ? `; domain=${domain}` : ''
         secure = secure ? '; secure' : ''
         sameSite = sameSite ? `; SameSite=${sameSite}` : ''
-        document.cookie = `${key}=${value}${expires}; domain=${domain}; path=${path}${secure}${sameSite}`
+        document.cookie = `${key}=${value}${expires}${domain}; path=${path}${secure}${sameSite}`
     }
     
-    static Delete(key, domain, path) {
-        if (!key || !domain || !path) throw new Error(ERROR.PARAMETERS_REQUIRED)
-        document.cookie = `${key}=; Max-Age=-99999999; domain=${domain}; path=${path}`
+    static Delete(key, domain = null, path) {
+        if (!key || !path) throw new Error(ERROR.PARAMETERS_REQUIRED)
+        domain = domain ? `; domain=${domain}` : ''
+        document.cookie = `${key}=; Max-Age=-99999999${domain}; path=${path}`
     }
 }
 

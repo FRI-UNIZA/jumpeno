@@ -6,11 +6,13 @@ using Newtonsoft.Json;
 
 public static class ServerSettings {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public static int Port { get; private set; }
     public static string AllowedHosts { get; private set; }
     public static LoggingSettings Logging { get; private set; }
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
+        Port = config.GetValue<int>("Port");
         AllowedHosts = config.GetValue<string>("AllowedHosts")!;
         Logging = new LoggingSettings(
             new LogLevelSettings(

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Base;
 
-public class ServiceComponent<T>: ComponentBase {
+public class ServiceComponent<T> : Component {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string Key;
 

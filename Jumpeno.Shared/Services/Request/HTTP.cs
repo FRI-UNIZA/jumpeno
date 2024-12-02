@@ -98,7 +98,7 @@ public class HTTP: StaticService<HTTP> {
             }
 
             // Add cookies:
-            if (AppEnvironment.IsServer() && URL.IsLocal(url) && AddClientCookies is not null) {
+            if (AppEnvironment.IsServer && URL.IsLocal(url) && AddClientCookies is not null) {
                 AddClientCookies(request);
             }
 

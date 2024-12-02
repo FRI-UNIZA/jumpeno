@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 using System.Reflection;
 
-public partial class ModalElement: IDisposable {
+public partial class ModalElement : IDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public required BaseTheme Theme { get; set; }
@@ -57,7 +57,7 @@ public partial class ModalElement: IDisposable {
             ModalProvider.NotifyOpen();
         }
         LastState = Modal.State;
-        if (AppEnvironment.IsServer() || !firstRender) return;
+        if (AppEnvironment.IsServer || !firstRender) return;
         await ModalProvider.AddElement(this);
         JS.InvokeVoid(JSModal.Activate, Modal.ID);
     }

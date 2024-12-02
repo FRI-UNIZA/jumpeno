@@ -106,6 +106,11 @@ class JSAnimationHandler {
         listener = async () => await this.#OnAnimationEndListener(element, objRef, method, listener)
         element.addEventListener("animationend", listener)
     }
+
+    static RenderFrames(count) {
+        if (count <= 0) return
+        setTimeout(() => requestAnimationFrame(() => this.RenderFrames(--count)), 0)
+    }
 }
 
 window.JSAnimationHandler = JSAnimationHandler

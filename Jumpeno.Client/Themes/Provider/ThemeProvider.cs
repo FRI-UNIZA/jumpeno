@@ -2,18 +2,15 @@ namespace Jumpeno.Client.Themes;
 
 #pragma warning disable CS8618
 
-using System.Web;
-
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string TEMPLATE_NAMESPACE = "Themes.Constants";
+    public const string TEMPLATE_NAMESPACE = "Constants";
     public static readonly BaseTheme DARK_THEME = new DarkTheme();
     public static readonly BaseTheme LIGHT_THEME = new LightTheme();
     public static readonly BaseTheme DEFAULT_THEME = DARK_THEME;
     public const string CLASSNAME_NO_THEME = "no-theme";
     public const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
     public static bool THEME_AUTODETECT { get; private set; } // Set in appsettings.json
-    public const int LOADER_DELAY_MS = 400;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -32,7 +29,7 @@ public partial class ThemeProvider {
         var cookie = GetThemeCookie();
         if (cookie is null) {
             c.Set(ThemeCSSClass(DEFAULT_THEME));
-            if (THEME_AUTODETECT) c.Set(CLASSNAME_NO_THEME);
+            c.Set(CLASSNAME_NO_THEME);
         } else {
             c.Set(ThemeCSSClass(cookie));
         }
@@ -43,7 +40,7 @@ public partial class ThemeProvider {
     protected override void OnInitialized() {
         var cookie = GetThemeCookie();
         if (THEME_AUTODETECT && cookie is null) {
-            if (AppEnvironment.IsServer()) {
+            if (AppEnvironment.IsServer) {
                 Theme = DEFAULT_THEME;
             } else {
                 Theme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? DARK_THEME : LIGHT_THEME;
@@ -52,7 +49,7 @@ public partial class ThemeProvider {
             Theme = DEFAULT_THEME;
         } else {
             Theme = CreateThemeByName(cookie);
-            if (!AppEnvironment.IsServer()) {
+            if (!AppEnvironment.IsServer) {
                 SetThemeCookie(Theme);
             }
         }
@@ -78,7 +75,7 @@ public partial class ThemeProvider {
         CookieStorage.Set(new Cookie(
             COOKIE_FUNCTIONAL.APP_THEME,
             className,
-            DateTimeOffset.Now.AddYears(1)
+            DateTimeOffset.UtcNow.AddYears(1)
         ));
     }
 
@@ -110,12 +107,10 @@ public partial class ThemeProvider {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangeTheme(BaseTheme theme) {
         try {
-            if (AppEnvironment.IsServer()) {
+            if (AppEnvironment.IsServer) {
                 throw new InvalidOperationException("Changing theme not allowed on the server!");
             }
-            if (theme.GetType().Name == Theme.GetType().Name) {
-                return;
-            }
+            if (theme.GetType().Name == Theme.GetType().Name) return;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
             await Task.Delay(Theme.TRANSITION_FAST);
             SetThemeCookie(theme);

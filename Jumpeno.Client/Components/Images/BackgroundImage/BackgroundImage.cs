@@ -37,11 +37,9 @@ public partial class BackgroundImage {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    private bool ParametersSet = false;
-    protected override void OnParametersSet() {
-        if (ParametersSet) return;
-        ParametersSet = true;
-        if (AppEnvironment.IsServer()) {
+    protected override void OnParametersSet(bool firstTime) {
+        if (!firstTime) return;
+        if (AppEnvironment.IsServer) {
             State = IMAGE_STATE.LOADING;
         } else {
             State = Preloaded

@@ -1,8 +1,8 @@
 @namespace Jumpeno.Client.Atoms
 
-<div class="@ComputeClass()">
+<div class="@ComputeClass()" @onfocusin="OnFocusIn" @onfocusout="OnFocusOut">
     <div class="menu-links">
-        <MenuButton Parameters="@(new ButtonLinkParameters(
+        <MenuButton ID="@FIRST_LINK_ID" Parameters="@(new ButtonLinkParameters(
             Href: I18N.Link<HomePage>(),
             Match: LINK_MATCH.ALL
         ))">

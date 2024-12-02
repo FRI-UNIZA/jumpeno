@@ -1,41 +1,92 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 .game-screen {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .canvas-box {
     position: relative;
     display: flex;
-    top: -15px;
+    justify-content: center;
+    align-items: center;
+    background: rgb(var(--color-base));
+    border: none;
+    padding: 0;
     left: 0;
     transform: none;
     box-shadow: 0 0 10px 4px rgba(var(--color-base), 0.8);
     overflow: hidden;
     border-radius: 0;
-    margin-bottom: 40px;
+    margin-bottom: 14px;
 }
 
 ::deep canvas {
     border: none;
     outline: none;
     background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.game-info {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.game-info ::deep canvas {
+    position: relative;
+    margin-left: -140px;
+    border-right: 2px solid var(--color-base);
+}
+
+.info-text {
+    position: absolute;
+    font-size: 14px;
+    left: calc(50% + 40px);
+    top: -2px;
+    margin: 0;
+    padding: 0;
+    width: calc(50% - 40px);
+    padding-right: 40px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.info-text b {
+    font-weight: 600;
+}
+
+.info-trip {
+    top: 20px;
+}
+
+.mid-line {
+    position: absolute;
+    width: 2px;
+    height: 40px;
+    background-color: rgba(var(--color-base-invert), 0.8);
+    box-shadow: 0 0 7px 1px rgba(var(--color-base), 0.4);
 }
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     .canvas-box {
-        top: calc(50% - 10px);
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
+        border: 4px solid rgb(var(--color-base));
         box-shadow: 0 1px 15px 6px rgba(var(--color-base), 0.8);
-        border-radius: 6px;
+        border-radius: 10px;
     }
 }
 
 @media (min-width: 1200px) {
     .canvas-box {
-        top: calc(50% - 20px);
+        border: 6px solid rgb(var(--color-base));
         box-shadow: 0 2px 20px 8px rgba(var(--color-base), 0.8);
-        border-radius: 10px;
+        border-radius: 12px;
     }
 }

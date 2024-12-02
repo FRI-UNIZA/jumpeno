@@ -9,7 +9,7 @@ public partial class AdminPage {
     private static async Task Start() {
         try {
             await PageLoader.Show();
-            await HTTP.Patch(API.BASE.GAME_START(), body: Game.MOCK_CODE);
+            await HTTP.Patch(API.BASE.GAME_START, body: Game.MOCK_CODE);
         } catch {
         } finally {
             await PageLoader.Hide();
@@ -19,7 +19,7 @@ public partial class AdminPage {
     private static async Task Reset() {
         try {
             await PageLoader.Show();
-            await HTTP.Patch(API.BASE.GAME_RESET(), body: Game.MOCK_CODE);
+            await HTTP.Patch(API.BASE.GAME_RESET, body: Game.MOCK_CODE);
         } catch {
         } finally {
             await PageLoader.Hide();

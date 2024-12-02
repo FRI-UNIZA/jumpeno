@@ -1,13 +1,13 @@
 namespace Jumpeno.Client.Components;
 
-public partial class ConnectBox {
+public partial class ConnectBox : IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required ConnectBoxViewModel ViewModel { get; set; }
+    public required ConnectViewModel VM { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool ShowName { get; set; } = true;
-    private readonly InputViewModel<string> VMCode = new(new InputViewModelTextProps(
+    private readonly InputViewModel<string> VMCode = new(new InputViewModelTextParams(
         ID: Game.CODE_ID,
         TextMode: INPUT_TEXT_MODE.UPPERCASE,
         Trim: true,
@@ -18,9 +18,10 @@ public partial class ConnectBox {
         Placeholder: I18N.T("Code"),
         DefaultValue: ""
     ));
+    private async Task SetInputCode(string urlCode) => await VMCode.SetValue(urlCode);
 
     private static string LastNameValue = "";
-    private readonly InputViewModel<string> VMName = new(new InputViewModelTextProps(
+    private readonly InputViewModel<string> VMName = new(new InputViewModelTextParams(
         ID: User.NAME_ID,
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
@@ -38,14 +39,16 @@ public partial class ConnectBox {
         if (Auth.IsRegistered()) ShowName = false;
     }
 
-    private bool FirstTimeParametersSet = false;
-    protected override async Task OnParametersSetAsync() {
-        if (FirstTimeParametersSet) return;
-        FirstTimeParametersSet = true;
-        await VMCode.SetValue(ViewModel.DefaultCode());
+    protected override async Task OnParametersSetAsync(bool firstTime) {
+        if (!firstTime) return;
+        await VM.AddURLCodeChangedListener(SetInputCode);
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    public async ValueTask DisposeAsync() {
+        await VM.RemoveURLCodeChangedListener(SetInputCode);
+    }
+
+    // Methods ----------------------------------------------------------------------------------------------------------------------------    
     private bool Validate() {
         var isValid = true;
         var errors = Game.ValidateCode(VMCode.Value);
@@ -64,11 +67,11 @@ public partial class ConnectBox {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task HandlePlay() {
         if (!Validate()) return;
-        await ViewModel.OnPlay.Invoke(new(VMCode.Value, VMName.Value));
+        await VM.PlayRequest(new(VMCode.Value, VMName.Value));
     }
 
     private async Task HandleWatch() {
         if (!Validate()) return;
-        await ViewModel.OnWatch.Invoke(new(VMCode.Value, VMName.Value));
+        await VM.WatchRequest(new(VMCode.Value, VMName.Value));
     }
 }

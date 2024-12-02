@@ -63,9 +63,7 @@ public static class URL {
             url = url.Substring(NormSchema(schema).Length);
         }
         var index = url.IndexOf('/');
-        if (index >= 0) {
-            return url.Substring(0, index);
-        }
+        if (index >= 0) url = url.Substring(0, index);
         return url;
     }
 

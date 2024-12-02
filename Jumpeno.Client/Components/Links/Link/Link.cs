@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class Link: IAsyncDisposable {
+public partial class Link : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string UNDERLINE_CLASS = "underline";
     public const string DEFAULT_ACTIVE_CLASS = "active";
@@ -66,7 +66,7 @@ public partial class Link: IAsyncDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
+    protected override void OnParametersSet(bool firstTime) {
         if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
         if (Label != "") AdditionalAttributes["aria-label"] = Label;
     }

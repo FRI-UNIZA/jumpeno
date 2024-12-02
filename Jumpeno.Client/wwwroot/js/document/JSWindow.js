@@ -1,53 +1,59 @@
 class JSWindow {
-    static #ResizeListeners = {}
+    // Size -------------------------------------------------------------------------------------------------------------------------------
+    static GetSize() {
+        return { Width: window.innerWidth, Height: window.innerHeight }
+    }
 
+    // Resize -----------------------------------------------------------------------------------------------------------------------------
     static #WidthPrevious = 0
     static #HeightPrevious = 0
 
-    static #GetID(objRef, method) {
-        return `${objRef.id}-${method}`
+    static #WidthNow
+    static #HeightNow
+
+    static #ResizeStorage = new ListenerStorage('resize', () => ({
+        WidthPrevious: JSWindow.#WidthPrevious,
+        Width: JSWindow.#WidthNow,
+        HeightPrevious: JSWindow.#HeightPrevious,
+        Height: JSWindow.#HeightNow
+    }),
+    () => {
+        this.#WidthNow = window.innerWidth
+        this.#HeightNow = window.innerHeight
+    },
+    () => {
+        this.#WidthPrevious = this.#WidthNow
+        this.#HeightPrevious = this.#HeightNow
+    })
+    
+    static async AddResizeEventListener(objRef, method) {
+        await this.#ResizeStorage.AddEventListener(objRef, method)
     }
 
-    static #CreateListener(objRef, method) {
-        return { objRef, method }
+    static async RemoveResizeEventListener(objRef, method) {
+        await this.#ResizeStorage.RemoveEventListener(objRef, method)
     }
 
-    static #InvokeResizeListeners() {
-        const innerWidth = window.innerWidth
-        const innerHeight = window.innerHeight
-
-        Object.entries(JSWindow.#ResizeListeners).forEach(async ([id, listener]) => {
-            await listener.objRef.invokeMethodAsync(listener.method, {
-                WidthPrevious: JSWindow.#WidthPrevious,
-                Width: innerWidth,
-                HeightPrevious: JSWindow.#HeightPrevious,
-                Height: innerHeight
-            })
-        })
-
-        JSWindow.#WidthPrevious = innerWidth
-        JSWindow.#HeightPrevious = innerHeight
+    // KeyDown ----------------------------------------------------------------------------------------------------------------------------
+    static #KeyDownStorage = new ListenerStorage('keydown', e => e.key)
+    
+    static async AddKeyDownEventListener(objRef, method) {
+        await this.#KeyDownStorage.AddEventListener(objRef, method)
     }
 
-    static AddResizeEventListener(objRef, method) {
-        this.#WidthPrevious = window.innerWidth
-        this.#HeightPrevious = window.innerHeight
-        
-        const listener = this.#CreateListener(objRef, method)
-        this.#ResizeListeners[this.#GetID(objRef, method)] = listener
-
-        if (Object.keys(this.#ResizeListeners).length > 1) return 
-        window.addEventListener("resize", this.#InvokeResizeListeners)
+    static async RemoveKeyDownEventListener(objRef, method) {
+        await this.#KeyDownStorage.RemoveEventListener(objRef, method)
+    }
+    
+    // KeyUp ------------------------------------------------------------------------------------------------------------------------------
+    static #KeyUpStorage = new ListenerStorage('keyup', e => e.key)
+    
+    static async AddKeyUpEventListener(objRef, method) {
+        await this.#KeyUpStorage.AddEventListener(objRef, method)
     }
 
-    static RemoveResizeEventListener(objRef, method) {
-        delete this.#ResizeListeners[this.#GetID(objRef, method)]
-        if (Object.keys(this.#ResizeListeners).length > 0) return 
-        window.removeEventListener("resize", this.#InvokeResizeListeners)
-    }
-
-    static GetSize() {
-        return { Width: window.innerWidth, Height: window.innerHeight }
+    static async RemoveKeyUpEventListener(objRef, method) {
+        await this.#KeyUpStorage.RemoveEventListener(objRef, method)
     }
 }
 

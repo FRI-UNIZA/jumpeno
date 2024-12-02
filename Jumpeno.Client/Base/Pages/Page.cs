@@ -34,9 +34,7 @@ public class Page: ComponentBase, IAsyncDisposable {
     /// <param name="url">Automaticall determined page url for new culture.</param>
     /// <returns>Improved url after language is switched.</returns>
     /// <exception cref="Exception">Thrown when new URL can not be determined and language switch should not happen.</exception>
-    public virtual string CustomURL(string culture, string url) {
-        return url;
-    }
+    public virtual string CustomURL(string culture, string url) => url;
 
     /// <summary>
     ///     Method is called when creating link to the page with parameters set as path segments.
@@ -47,41 +45,50 @@ public class Page: ComponentBase, IAsyncDisposable {
     /// <param name="id">Example of id as the first path segment parameter.</param>
     /// <param name="name">Example of name as the third path segment parameter.</param>
     /// <returns></returns>
-    public static string Link(string url, int id, string name) {
-        return URL.ReplaceSegments(
-            url,
-            new Dictionary<int, string> {
-                { 1, $"{id}" },
-                { 3, name }
-            }
-        );
-    }
-
-    // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------
-    protected virtual void OnPageInitialized() {}
-    protected virtual Task OnPageInitializedAsync() { return Task.CompletedTask; }
-    protected virtual void OnPageParametersSet() {}
-    protected virtual Task OnPageParametersSetAsync() { return Task.CompletedTask; }
-    protected virtual void OnPageAfterRender(bool firstRender) {}
-    protected virtual Task OnPageAfterRenderAsync(bool firstRender) { return Task.CompletedTask; }
-    protected virtual void OnPageDispose() {}
-    protected virtual ValueTask OnPageDisposeAsync() { return ValueTask.CompletedTask; }
+    public static string Link(string url, int id, string name) => URL.ReplaceSegments(
+        url,
+        new Dictionary<int, string> {
+            { 1, $"{id}" },
+            { 3, name }
+        }
+    );
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() {
         SetCurrentPage(this);
         OnPageInitialized();
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
-    protected override sealed async Task OnInitializedAsync() { await OnPageInitializedAsync(); }
-    protected sealed override void OnParametersSet() { OnPageParametersSet(); }
-    protected sealed override async Task OnParametersSetAsync() { await OnPageParametersSetAsync(); }
-    protected sealed override void OnAfterRender(bool firstRender) { OnPageAfterRender(firstRender); }
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender) { await OnPageAfterRenderAsync(firstRender); }
+    protected override sealed async Task OnInitializedAsync() => await OnPageInitializedAsync();
+    private bool ParametersSet = false;
+    protected sealed override void OnParametersSet() {
+        OnPageParametersSet(!ParametersSet);
+        ParametersSet = true;
+    }
+    private bool ParametersSetAsync = false;
+    private readonly LockerSlim ParametersSetLock = new();
+    protected sealed override async Task OnParametersSetAsync() {
+        await ParametersSetLock.Exclusive(async () => {
+            await OnPageParametersSetAsync(!ParametersSetAsync);
+            ParametersSetAsync = true;
+        });
+    }
+    protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnPageAfterRenderAsync(firstRender);
     public async ValueTask DisposeAsync() {
         OnPageDispose();
         await OnPageDisposeAsync();
         await HTTP.ClearTokens();
     }
+
+    // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------
+    protected virtual void OnPageInitialized() {}
+    protected virtual Task OnPageInitializedAsync() => Task.CompletedTask;
+    protected virtual void OnPageParametersSet(bool firstTime) {}
+    protected virtual Task OnPageParametersSetAsync(bool firstTime) => Task.CompletedTask;
+    protected virtual void OnPageAfterRender(bool firstRender) {}
+    protected virtual Task OnPageAfterRenderAsync(bool firstRender) => Task.CompletedTask;
+    protected virtual void OnPageDispose() {}
+    protected virtual ValueTask OnPageDisposeAsync() => ValueTask.CompletedTask;
 }

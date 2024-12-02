@@ -19,7 +19,7 @@ public partial class ButtonBase {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
+    protected override void OnParametersSet(bool firstTime) {
         var Label = Parameters.IsT0 ? Parameters.AsT0.Label : Parameters.AsT1.Label;
         if (Label != "") AdditionalAttributes["aria-label"] = Label;
     }

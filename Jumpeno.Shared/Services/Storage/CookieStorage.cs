@@ -61,7 +61,7 @@ public static class CookieStorage {
         SetCookie(new Cookie(
             COOKIE_MANDATORY.APP_COOKIES_ACCEPTED,
             json,
-            DateTimeOffset.Now.AddYears(1)
+            DateTimeOffset.UtcNow.AddYears(1)
         ));
         CacheAcceptedCookies(accepted);
     }
@@ -143,7 +143,7 @@ public static class CookieStorage {
 
     private static void SetCookie(Cookie cookie) {
         Checker.CheckEmptyString(cookie.Key.StringValue(), name: "key");
-        if (!AppEnvironment.IsServer() && cookie.HttpOnly) {
+        if (!AppEnvironment.IsServer && cookie.HttpOnly) {
             cookie.HttpOnly = false;
         }
         if (!cookie.Secure && cookie.SameSite == SAME_SITE.NONE) {
@@ -162,8 +162,8 @@ public static class CookieStorage {
         Checker.CheckEmptyString(keyValue, name: "key");
         DeleteItem(
             keyValue,
-            domain is null ? Cookie.DEFAULT_DOMAIN() : domain,
-            path is null ? Cookie.DEFAULT_PATH() : path
+            domain is null ? Cookie.DEFAULT_DOMAIN : domain,
+            path is null ? Cookie.DEFAULT_PATH : path
         );
     }
     public static void Delete(Enum key, string? domain = null, string? path = null) {

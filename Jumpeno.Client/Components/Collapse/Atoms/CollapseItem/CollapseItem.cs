@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Atoms;
 
-public partial class CollapseItem: IDisposable {
+public partial class CollapseItem : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_COLLAPSE_ITEM = "collapse-item";
     public const string CLASS_ITEM_COLLAPSED = "item-collapsed";

@@ -35,23 +35,23 @@ public class InputViewModel<T> {
     private readonly Action? Notify = null;
     
     // Initializers -----------------------------------------------------------------------------------------------------------------------
-    private static INPUT_TYPE InitType(InputViewModelProps<T> props) {
-        var propsType = props.GetType();
-        if (propsType == typeof(InputViewModelTextProps)) return INPUT_TYPE.TEXT;
-        else if (propsType == typeof(InputViewModelLongProps)) return INPUT_TYPE.LONG;
-        else if (propsType == typeof(InputViewModelDoubleProps)) return INPUT_TYPE.DOUBLE;
+    private static INPUT_TYPE InitType(InputViewModelParams<T> @params) {
+        var paramsType = @params.GetType();
+        if (paramsType == typeof(InputViewModelTextParams)) return INPUT_TYPE.TEXT;
+        else if (paramsType == typeof(InputViewModelLongParams)) return INPUT_TYPE.LONG;
+        else if (paramsType == typeof(InputViewModelDoubleParams)) return INPUT_TYPE.DOUBLE;
         else return INPUT_TYPE.TEXT;
     }
-    private static int InitDecimals(InputViewModelProps<T> props) {
-        if (props.GetType() == typeof(InputViewModelDoubleProps)) {
-            var decimals = ((InputViewModelDoubleProps)(object) props).Decimals;
+    private static int InitDecimals(InputViewModelParams<T> @params) {
+        if (@params.GetType() == typeof(InputViewModelDoubleParams)) {
+            var decimals = ((InputViewModelDoubleParams)(object) @params).Decimals;
             Checker.CheckGreaterOrEqualTo(decimals, 1);
             return decimals;
         }
         return 0;
     }
     private static Boundary<T>[] CreateNumberBoundaries(
-        OneOf<InputViewModelLongProps, InputViewModelDoubleProps> props
+        OneOf<InputViewModelLongParams, InputViewModelDoubleParams> @params
     ) {
         OneOf<long, double> MinValue;
         OneOf<long, double> MaxValue;
@@ -59,20 +59,20 @@ public class InputViewModel<T> {
         bool isDecimalError = false;
         bool isBoundaryError;
 
-        if (props.IsT0) {
-            MinValue = props.AsT0.MinValue;
-            MaxValue = props.AsT0.MaxValue;
+        if (@params.IsT0) {
+            MinValue = @params.AsT0.MinValue;
+            MaxValue = @params.AsT0.MaxValue;
 
-            isMaxLengthError = props.AsT0.MaxLength is not null && $"{MinValue.AsT0}".Length > props.AsT0.MaxLength || $"{MaxValue.AsT0}".Length > props.AsT0.MaxLength;
+            isMaxLengthError = @params.AsT0.MaxLength is not null && $"{MinValue.AsT0}".Length > @params.AsT0.MaxLength || $"{MaxValue.AsT0}".Length > @params.AsT0.MaxLength;
             isBoundaryError = MaxValue.AsT0 < MinValue.AsT0;
         } else {
-            MinValue = props.AsT1.MinValue;
-            MaxValue = props.AsT1.MaxValue;
+            MinValue = @params.AsT1.MinValue;
+            MaxValue = @params.AsT1.MaxValue;
             
             var minParts = Precision.SplitDouble(MinValue.AsT1);
             var maxParts = Precision.SplitDouble(MaxValue.AsT1);
-            isMaxLengthError =  props.AsT1.MaxLength is not null && $"{minParts[0]}".Length > props.AsT1.MaxLength || $"{maxParts[0]}".Length > props.AsT1.MaxLength;
-            isDecimalError = $"{minParts[1]}".Length > props.AsT1.Decimals || $"{maxParts[1]}".Length > props.AsT1.Decimals;
+            isMaxLengthError =  @params.AsT1.MaxLength is not null && $"{minParts[0]}".Length > @params.AsT1.MaxLength || $"{maxParts[0]}".Length > @params.AsT1.MaxLength;
+            isDecimalError = $"{minParts[1]}".Length > @params.AsT1.Decimals || $"{maxParts[1]}".Length > @params.AsT1.Decimals;
 
             isBoundaryError = MaxValue.AsT1 < MinValue.AsT1;
         }
@@ -86,12 +86,12 @@ public class InputViewModel<T> {
             new(MaxValue.IsT0 ? (T)(object) MaxValue.AsT0 : (T)(object) MaxValue.AsT1, false)
         ];
     }
-    private static Boundary<T>[] GetBoundaries(InputViewModelProps<T> props) {
-        var propType = props.GetType();        
-        if (propType == typeof(InputViewModelLongProps)) {
-            return CreateNumberBoundaries((InputViewModelLongProps)(object) props);
-        } else if (propType == typeof(InputViewModelDoubleProps)) {
-            return CreateNumberBoundaries((InputViewModelDoubleProps)(object) props);
+    private static Boundary<T>[] GetBoundaries(InputViewModelParams<T> @params) {
+        var propType = @params.GetType();        
+        if (propType == typeof(InputViewModelLongParams)) {
+            return CreateNumberBoundaries((InputViewModelLongParams)(object) @params);
+        } else if (propType == typeof(InputViewModelDoubleParams)) {
+            return CreateNumberBoundaries((InputViewModelDoubleParams)(object) @params);
         }
         return [new (default!, false), new (default!, false)];
     }
@@ -163,34 +163,34 @@ public class InputViewModel<T> {
     }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    private InputViewModel(InputViewModelProps<T> props) {
-        ID = props.ID is null ? ComponentService.GenerateID(InputBase<T>.CLASS_INPUT_BASE) : props.ID;
-        Type = InitType(props);
-        Name = props.Name;
-        Label = props.Label;
-        Placeholder = props.Placeholder;
-        Secret = props.Secret;
-        TextMode = props.TextMode;
-        Trim = props.Trim;
-        TextCheck = props.TextCheck;
-        if (props.MaxLength is not null) {
-            Checker.CheckGreaterOrEqualTo((int) props.MaxLength, 0);
-            MaxLength = props.MaxLength;
+    private InputViewModel(InputViewModelParams<T> @params) {
+        ID = @params.ID is null ? ComponentService.GenerateID(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
+        Type = InitType(@params);
+        Name = @params.Name;
+        Label = @params.Label;
+        Placeholder = @params.Placeholder;
+        Secret = @params.Secret;
+        TextMode = @params.TextMode;
+        Trim = @params.Trim;
+        TextCheck = @params.TextCheck;
+        if (@params.MaxLength is not null) {
+            Checker.CheckGreaterOrEqualTo((int) @params.MaxLength, 0);
+            MaxLength = @params.MaxLength;
         }
-        Decimals = InitDecimals(props);
-        var boundaries = GetBoundaries(props);
+        Decimals = InitDecimals(@params);
+        var boundaries = GetBoundaries(@params);
         MinValue = boundaries[0].Value;
         MaxValue = boundaries[1].Value;
 
-        DefaultValue = ConstrainedValue(props.DefaultValue);
+        DefaultValue = ConstrainedValue(@params.DefaultValue);
         Value = DefaultValue;
-        OnChange = props.OnChange is null ? new(v => {}) : props.OnChange;
+        OnChange = @params.OnChange is null ? new(v => {}) : @params.OnChange;
         
         Error = new InputErrorViewModel();
     }
-    public InputViewModel(InputViewModelTextProps props) : this((InputViewModelProps<T>)(object) props) {}
-    public InputViewModel(InputViewModelLongProps props) : this((InputViewModelProps<T>)(object) props) {}
-    public InputViewModel(InputViewModelDoubleProps props) : this((InputViewModelProps<T>)(object) props) {}
+    public InputViewModel(InputViewModelTextParams @params) : this((InputViewModelParams<T>)(object) @params) {}
+    public InputViewModel(InputViewModelLongParams @params) : this((InputViewModelParams<T>)(object) @params) {}
+    public InputViewModel(InputViewModelDoubleParams @params) : this((InputViewModelParams<T>)(object) @params) {}
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public async Task SetValue(T value, bool skipEvent = false) {

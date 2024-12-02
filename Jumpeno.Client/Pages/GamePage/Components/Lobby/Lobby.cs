@@ -1,9 +1,9 @@
 namespace Jumpeno.Client.Components;
 
-public partial class Lobby {
+public partial class Lobby : IDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required GameViewModel ViewModel { get; set; }
+    public required GameViewModel VM { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private CSSClass ComputePlayerLineClass(bool current) {
@@ -15,6 +15,11 @@ public partial class Lobby {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
-        await ViewModel.OnRender.Invoke();
+        await VM.InitOnRender();
+        await VM.StartUpdating();
+    }
+
+    public void Dispose() {
+        VM.StopUpdating();
     }
 }

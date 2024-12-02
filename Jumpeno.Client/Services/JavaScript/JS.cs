@@ -6,7 +6,7 @@ public class JS {
     private static IJSInProcessRuntime Runtime;
 
     public static void Init(IJSRuntime runtime) {
-        if (AppEnvironment.IsServer()) throw new InvalidOperationException("JS can not be used on server!");
+        if (AppEnvironment.IsServer) throw new InvalidOperationException("JS can not be used on server!");
         if (Runtime is not null) throw new InvalidOperationException("JSRuntime already initialized!");
         Runtime = (IJSInProcessRuntime) runtime;
     }

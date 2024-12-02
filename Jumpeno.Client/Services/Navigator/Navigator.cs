@@ -25,7 +25,7 @@ public class Navigator: StaticService<Navigator> {
     
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public Navigator() {
-        if (!AppEnvironment.IsServer()) {
+        if (!AppEnvironment.IsServer) {
             Manager = AppEnvironment.GetService<NavigationManager>();
             Manager.RegisterLocationChangingHandler(BeforeLocationChanged);
             Manager.LocationChanged += AfterLocationChanged;
@@ -121,7 +121,7 @@ public class Navigator: StaticService<Navigator> {
     private async Task Navigate(string url, bool forceLoad = false, bool replace = false, bool queries = false, bool loader = true) {
         await NavLock.WaitAsync();
 
-        if (AppEnvironment.IsServer()) {
+        if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
             RequestStorage.Set(REQUEST_STORAGE_KEYS.REPLACE_URL, url);
             NavLock.Release();
@@ -150,7 +150,7 @@ public class Navigator: StaticService<Navigator> {
         await Instance().Navigate(url, forceLoad, replace, queries: false, true);
     }
     public static void Refresh() {
-        if (AppEnvironment.IsServer()) ServerRefresh();
+        if (AppEnvironment.IsServer) ServerRefresh();
         else Instance().Manager.Refresh(forceReload: true);
     }
     public static async Task SetQueryParams(QueryParams queryParams) {

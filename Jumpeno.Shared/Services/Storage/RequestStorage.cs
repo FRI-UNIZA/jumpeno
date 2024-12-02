@@ -30,7 +30,7 @@ public static class RequestStorage {
     private static object? GetValue(string key) {
         Checker.CheckEmptyString(key, name: "key");
         try {
-            if (AppEnvironment.IsServer()) {
+            if (AppEnvironment.IsServer) {
                 return GetServerItem(key);
             } else {
                 return Items[key];
@@ -46,7 +46,7 @@ public static class RequestStorage {
 
     public static void Set(string key, object o) {
         Checker.CheckEmptyString(key, name: "key");
-        if (AppEnvironment.IsServer()) {
+        if (AppEnvironment.IsServer) {
             SetServerItem(key, o);
         } else {
             Items[key] = o;
@@ -55,7 +55,7 @@ public static class RequestStorage {
 
     public static bool Delete(string key) {
         Checker.CheckEmptyString(key, name: "key");
-        if (AppEnvironment.IsServer()) {
+        if (AppEnvironment.IsServer) {
             return DeleteServerItem(key);
         } else {
             return Items.Remove(key);

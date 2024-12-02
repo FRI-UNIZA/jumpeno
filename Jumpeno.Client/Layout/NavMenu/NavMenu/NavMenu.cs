@@ -1,12 +1,11 @@
 namespace Jumpeno.Client.Layout;
 
-public partial class NavMenu: IDisposable {
+public partial class NavMenu : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "nav-menu";
     public const string HIDDEN_CLASS = "hidden";
     public const string DISPLAY_CLASS = "display";
     public const string MOBILE_MENU_BUTTON_ID = "mobile-menu-button";
-    public const string FIRST_LINK_ID = "menu-first-link";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -16,8 +15,15 @@ public partial class NavMenu: IDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool Hidden = false;
+
     public bool MobileMenuButtonFocused { get; private set; }
+    private void OnMobileMenuButtonFocusIn() => MobileMenuButtonFocused = true;
+    private void OnMobileMenuButtonFocusOut() => MobileMenuButtonFocused = false;
+
     public bool ControlsFocused { get; private set; }
+    private void OnControlsFocusIn() => ControlsFocused = true;
+    private void OnControlsFocusOut() => ControlsFocused = false;
+
     private string ComputeClass() {
         var c = new CSSClass(CLASS);
         if (Display) c.Set(DISPLAY_CLASS);
@@ -43,12 +49,6 @@ public partial class NavMenu: IDisposable {
             if (Hidden) ToggleHidden();
         }
         TopPosition = position.ScrollTop;
-    }
-    private void OnControlsFocusIn() {
-        ControlsFocused = true;
-    }
-    private void OnControlsFocusOut() {
-        ControlsFocused = false;
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

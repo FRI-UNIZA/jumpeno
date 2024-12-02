@@ -3,12 +3,12 @@
 <nav class="@ComputeClass()">
     <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="nav-menu-container">
         <LogoLink />
-        <MenuControls />
+        <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
         <NavMenuOpenButton
             ID="@MOBILE_MENU_BUTTON_ID"
-            OnClick="@MobileRef.Open"
-            OnFocus="@(() => { MobileMenuButtonFocused = true; })"
-            OnBlur="@(() => { MobileMenuButtonFocused = false; })"
+            OnClick="MobileRef.Open"
+            OnFocus="OnMobileMenuButtonFocusIn"
+            OnBlur="OnMobileMenuButtonFocusOut"
         />
     </Container>
 </nav>

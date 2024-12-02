@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class MainErrorBoundary: IAsyncDisposable {
+public partial class MainErrorBoundary : IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

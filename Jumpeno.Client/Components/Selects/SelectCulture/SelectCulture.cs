@@ -15,7 +15,7 @@ public partial class SelectCulture {
         CookieStorage.Set(new Cookie(
             COOKIE_FUNCTIONAL.APP_CULTURE,
             cookie,
-            DateTimeOffset.Now.AddYears(1)
+            DateTimeOffset.UtcNow.AddYears(1)
         ));
     }
 
@@ -90,10 +90,10 @@ public partial class SelectCulture {
         q.Set("redirectUri", path);
 
         // Request redirect:
-        await Navigator.NavigateTo(URL.SetQueryParams(API.BASE.SET_CULTURE(), q), forceLoad: true);
+        await Navigator.NavigateTo(URL.SetQueryParams(API.BASE.CULTURE_SET, q), forceLoad: true);
     }
     protected override void OnAfterRender(bool firstRender) {
-        if (AppEnvironment.IsServer() || !firstRender) return;
+        if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSTempTitle.Remove);
     }
 }

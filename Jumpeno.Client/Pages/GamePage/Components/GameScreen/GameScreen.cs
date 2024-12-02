@@ -1,51 +1,57 @@
 namespace Jumpeno.Client.Components;
 
-public partial class GameScreen: IDisposable {
+public partial class GameScreen : IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public required BaseTheme Theme { get; set; }
     [Parameter]
-    public required GameViewModel ViewModel { get; set; }
+    public required GameViewModel VM { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly DotNetObjectReference<GameScreen> ObjRef;
+    // Reference:
+    private readonly DotNetObjectReference<GameScreen> Ref;
+    // Rendering:
     private BECanvasComponent? GameCanvasRef = null;
     private Canvas2DContext? GameCanvasContext = null;
-
-    // Canvas dimensions (Automatically updated based on screen resolution and resize):
-    private int Width = 16;
-    private int Height = 9;
-    private string BackgroundColor = "rgb(36, 30, 59)";
+    private readonly LockerSlim RenderLock = new();
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameScreen() {
-        ObjRef = DotNetObjectReference.Create(this);
-    }
+    public GameScreen() => Ref = DotNetObjectReference.Create(this);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (!firstRender) {
-            if (GameCanvasRef == null) return;
+        if (firstRender) {
+            await VM.StartPing();
+            await VM.AddAfterUpdateListener(AfterUpdate);
+            await VM.AddAfterUpdatesListener(AfterUpdates);
+            await VM.InitOnRender();
+            await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
+            await Window.AddKeyDownEventListener(Ref, JS_OnKeyDown);
+            await Window.AddKeyUpEventListener(Ref, JS_OnKeyUp);
+            await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
+            var size = Window.GetSize();
+            UpdateDimensions((int) size.Width, (int) size.Height);
+        } else if (GameCanvasRef != null && GameCanvasContext == null) {
             GameCanvasContext = await GameCanvasRef.CreateCanvas2DAsync();
-            await Draw(GameCanvasContext);
-            return;
+            await Render(GameCanvasContext);
         }
-        await ViewModel.OnRender.Invoke();
-        Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
-        Animator.AddAnimator(ObjRef, JS_OnAnimationFrame);
-        var size = Window.GetSize();
-        UpdateDimensions((int) size.Width, (int) size.Height);
     }
 
-    public void Dispose() {
-        if (!AppEnvironment.IsServer()) {
-            Window.RemoveResizeEventListener(ObjRef, JS_OnWindowResize);
-            Animator.RemoveAnimator(ObjRef, JS_OnAnimationFrame);
+    public async ValueTask DisposeAsync() {
+        if (!AppEnvironment.IsServer) {
+            await VM.StopPing();
+            await VM.RemoveAfterUpdateListener(AfterUpdate);
+            await VM.RemoveAfterUpdatesListener(AfterUpdates);
+            await Window.RemoveResizeEventListener(Ref, JS_OnWindowResize);
+            await Window.RemoveKeyDownEventListener(Ref, JS_OnKeyDown);
+            await Window.RemoveKeyUpEventListener(Ref, JS_OnKeyUp);
+            await Animator.RemoveAnimator(Ref, JS_OnAnimationFrame);
+            GameCanvasContext?.Dispose();
         }
-        ObjRef.Dispose();
+        Ref.Dispose();
     }
 
-    // Calculations -----------------------------------------------------------------------------------------------------------------------
+    // Screen dimensions ------------------------------------------------------------------------------------------------------------------
     private int CalcPaddingHorizontal(int screenWidth) {
         if (screenWidth >= 1200) {
             return Theme.SIZE_CONTAINER_PADDING_DESKTOP + 40;
@@ -70,60 +76,152 @@ public partial class GameScreen: IDisposable {
         var originalWidth = screenWidth;
         screenWidth = Math.Max(screenWidth - 2 * CalcPaddingHorizontal(originalWidth), 1);
         screenHeight = Math.Max(screenHeight - 2 * CalcPaddingVertical(originalWidth), 1);
+        int width;
+        int height;
         if (originalWidth < 768 || (screenWidth / (double) screenHeight < 16 / 9.0)) {
-            Width = screenWidth;
-            Height = (int) (Width * 0.5625);
+            // NOTE: [marginal-gap] + 1px on mobile phones
+            width = screenWidth + 1;
+            height = (int) (width * 0.5625) + 1;
         } else {
-            Height = screenHeight;
-            Width = (int) (16 / 9.0 * Height);
-            if (Height < 260) {
-                Width = Math.Min(462, originalWidth);
-                Height = (int) (Width * 0.5625);
+            height = screenHeight;
+            width = (int) (16 / 9.0 * height);
+            if (height < 260) {
+                width = Math.Min(462, originalWidth);
+                height = (int) (width * 0.5625);
             }
         }
-        ViewModel.Game.Map.UpdateScreen(0, Width, Height, 0);
+        VM.Game.Map.UpdateScreen(0, width, height, 0);
         StateHasChanged();
     }
 
-    // JS Interop -------------------------------------------------------------------------------------------------------------------------
+    // NOTE: [marginal-gap] Canvas is rendered smaller to hide marginal gap
+    private int CanvasWidth => VM.Game.Map.ScreenWidth - 1;
+    private int CanvasHeight => VM.Game.Map.ScreenHeight - 1;
+
+    // Updates ----------------------------------------------------------------------------------------------------------------------------
+    // 1) Apply server updates:
+    private async Task Update() => await VM.ExecuteUpdates();
+    
+    // 2) After each server update:
+    // NOTE: [Controls] Checks applied jump and allows press again
+    public async Task AfterUpdate(UpdateAfterEvent e) {
+        if (e.Update is not GamePlayUpdate update) return;
+        await ControlLock.Exclusive(() => {
+            update.Movements.TryGetValue(VM.Player.ID, out var movementUpdate);
+            if (movementUpdate is not MovementUpdate movement) return;
+            foreach (var keyUpdateID in movement.KeyUpdateIDs) {
+                if (LastSpaceUpdate == null || keyUpdateID != LastSpaceUpdate.ID) continue;
+                LastSpaceUpdate = null;
+            }
+        });
+    }
+
+    // 3) After all server updates:
+    public async Task AfterUpdates() {
+        var deltaT = await VM.Game.Clock.AwaitDelta();
+        VM.Game.Update(VM.Game.NewTimeFlowUpdate(deltaT));
+    } 
+
+    // Controls ---------------------------------------------------------------------------------------------------------------------------
+    // Arrows:
+    private readonly List<GAME_CONTROLS> ArrowsPressed = [];
+    private GAME_CONTROLS? LastArrowPressed = null;
+    // Space:
+    private bool SpacePressed = false;
+    private KeyUpdate? LastSpaceUpdate = null;
+    // Lock:
+    private readonly LockerSlim ControlLock = new();
+
+    // Save pressed keys:
     [JSInvokable]
-    public void JS_OnWindowResize(WindowResizeEvent e) {
-        UpdateDimensions((int) e.Width, (int) e.Height);
+    public async Task JS_OnKeyDown(string key) {
+        await ControlLock.Exclusive(() => {
+            var control = GameControlsExtension.Get(key);
+            switch (control) {
+                case GAME_CONTROLS.SPACE:
+                    SpacePressed = true;
+                break;
+                case GAME_CONTROLS.LEFT:
+                case GAME_CONTROLS.RIGHT:
+                    if (ArrowsPressed.Contains((GAME_CONTROLS) control)) break;
+                    ArrowsPressed.Add((GAME_CONTROLS) control);
+                break;
+            }
+        });
     }
 
-    private DateTime LastTime = DateTime.UtcNow;
+    // Save released keys:
     [JSInvokable]
-    public async Task JS_OnAnimationFrame() {
-        var now = DateTime.UtcNow;
-        var deltaT = (now - LastTime).TotalMilliseconds;
-        if (deltaT <= 0) return;
-        await GameLoop(deltaT);
-        LastTime = now;
+    public async Task JS_OnKeyUp(string key) {
+        await ControlLock.Exclusive(() => {
+            var control = GameControlsExtension.Get(key);
+            switch (control) {
+                case GAME_CONTROLS.SPACE:
+                    SpacePressed = false;
+                break;
+                case GAME_CONTROLS.LEFT:
+                case GAME_CONTROLS.RIGHT:
+                    ArrowsPressed.Remove((GAME_CONTROLS) control);
+                break;
+            }
+        });
     }
 
-    private async Task GameLoop(double deltaT) {
-        if (GameCanvasContext == null) return;
-        await Update(deltaT);
-        await Draw(GameCanvasContext);
-    }
-
-    private async Task Update(double deltaT) {
-        foreach (var (player, index) in ViewModel.Game.PlayerIterator) {
-            player.Avatar.Update(deltaT, ViewModel.Game);
-        }
+    // Send pressed keys to the server:
+    private async Task Control() {
+        await ControlLock.Exclusive(async () => {
+            // 1) Arrows:
+            KeyUpdate update = VM.Game.NewKeyUpdate(VM.Player.ID, []);
+            if (ArrowsPressed.Count > 0) {
+                if (LastArrowPressed != ArrowsPressed[0]) {
+                    update.Controls.AddLast(new Control(ArrowsPressed[0], true));
+                    LastArrowPressed = ArrowsPressed[0];
+                }
+            } else {
+                if (LastArrowPressed is GAME_CONTROLS control) {
+                    update.Controls.AddLast(new Control(control, false));
+                    LastArrowPressed = null;
+                }
+            }
+            // 2) Space:
+            if (SpacePressed) {
+                if (LastSpaceUpdate == null && !VM.Player.IsJumping) {
+                    update.Controls.AddLast(new Control(GAME_CONTROLS.SPACE, true));
+                    LastSpaceUpdate = update;
+                }
+            }
+            if (update.Controls.Count > 0) await VM.SendGameUpdate(update);
+        });
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    private async Task Draw(Canvas2DContext ctx) {
-        var Game = ViewModel.Game;
-        var Map = Game.Map;
-        await ctx.ClearRectAsync(0, 0, Width, Height);
-        foreach (var (player, index) in Game.PlayerIterator) {
-            await player.Avatar.Draw(ctx, Map, player?.User?.Skin);
-        }
-        // await ctx.SetFillStyleAsync("green");
-        // await ctx.FillRectAsync(10, 100, 100, 100);
-        // await ctx.SetFontAsync("48px serif");
-        // await ctx.StrokeTextAsync("Hello Blazor!!!", 10, 100);
+    // Handle window resize:
+    [JSInvokable]
+    public async Task JS_OnWindowResize(WindowResizeEvent e) {
+        await RenderLock.Exclusive(() => {
+            UpdateDimensions((int) e.Width, (int) e.Height);
+        });
+    }
+
+    // Render game:
+    private async Task Render(Canvas2DContext ctx) {
+        await RenderLock.Exclusive(async () => {
+            await VM.Game.Render(ctx);
+        });
+    }
+
+    // Game loop --------------------------------------------------------------------------------------------------------------------------
+    // Execute loop:
+    private async Task GameLoop(Canvas2DContext ctx) {
+        await Update();
+        await Control();
+        await Render(ctx);
+    }
+
+    // On each frame:
+    [JSInvokable]
+    public async Task JS_OnAnimationFrame() {
+        if (GameCanvasContext == null) return;
+        await GameLoop(GameCanvasContext);
     }
 }

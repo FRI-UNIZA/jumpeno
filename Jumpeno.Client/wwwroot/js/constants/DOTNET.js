@@ -19,7 +19,7 @@ class DOTNET {
         AFTER_ANIMATION_FRAME: "JS_AfterAnimationFrame"
     }
 
-    static STATIC_LOADER = {
+    static SERVER_LOADER = {
         LOADER_ANIMATED: "JS_LoaderAnimated"
     }
 

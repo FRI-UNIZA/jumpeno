@@ -6,7 +6,7 @@ public partial class AriaPageAlert {
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public static void Notify(string title) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         var instance = Instance();
         instance.PageTitle = title;
         instance.StateHasChanged();

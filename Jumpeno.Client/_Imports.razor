@@ -4,6 +4,8 @@
 @using System.Globalization;
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
+@using System.Web;
+@using System.Drawing;
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.AspNetCore.Components.Web;
 @using Microsoft.AspNetCore.Components.Routing;
@@ -23,7 +25,7 @@
 @using Jumpeno.Client.Models;
 @using Jumpeno.Client.Components;
 @using Jumpeno.Client.Atoms;
-@using Jumpeno.Client.Props;
+@using Jumpeno.Client.Params;
 @using Jumpeno.Client.ViewModels;
 @using Jumpeno.Client.Layout;
 @using Jumpeno.Client.Pages;
@@ -32,13 +34,10 @@
 @using Jumpeno.Client.Themes;
 
 @using Jumpeno.Shared;
-@using Jumpeno.Shared.Base;
 @using Jumpeno.Shared.Constants;
-@using Jumpeno.Shared.Constraints;
-@using Jumpeno.Shared.Delegates;
 @using Jumpeno.Shared.Exceptions;
-@using Jumpeno.Shared.Extensions;
 @using Jumpeno.Shared.Models;
 @using Jumpeno.Shared.Services;
 @using Jumpeno.Shared.Translations;
 @using Jumpeno.Shared.Utils;
+@using Jumpeno.Shared.Interfaces;

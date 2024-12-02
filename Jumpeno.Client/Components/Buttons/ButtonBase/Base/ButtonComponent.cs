@@ -20,7 +20,7 @@ public class ButtonComponent: SurfaceComponent {
     public RenderFragment? IconAfter { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
+    protected override void OnParametersSet(bool firstTime) {
         if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
     }
 

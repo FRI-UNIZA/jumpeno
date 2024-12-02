@@ -12,6 +12,7 @@ public static class GAME_HUB {
     // Server updates ---------------------------------------------------------------------------------------------------------------------
     public const string CONNECTION_SUCCESSFUL = "ConnectionSuccessful";
     public const string GAME_PLAY_UPDATE = "GamePlayUpdate";
+    public const string PING_UPDATE = "PingUpdate";
     public const string PLAYER_UPDATE = "PlayerUpdate";
     public const string TIMER_UPDATE = "TimerUpdate";
     public const string ERROR = "Error";

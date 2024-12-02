@@ -7,7 +7,7 @@ using AntDesign;
 /// Use class property to set width, height, max-width or max-height and background of scrollable area.
 /// This allows to use media or container queries.
 /// </summary>
-public partial class ScrollArea: IDisposable {
+public partial class ScrollArea : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const string MARK = "scroll-area";
 
@@ -72,7 +72,7 @@ public partial class ScrollArea: IDisposable {
     }
 
     public void Dispose() {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         if (Listeners.Length > 0) {
             JS.InvokeVoid(JSScrollArea.RemoveScrollListener, ID);
             Listeners = [];
@@ -107,43 +107,43 @@ public partial class ScrollArea: IDisposable {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void SetTheme(SCROLLAREA_THEME theme) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.SetTheme, GetThemeString(theme));
     }
 
     public static void HideScrollbars(string id) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.HideScrollbars, id);
     }
     public void HideScrollbars() { HideScrollbars(ID); }
 
     public static void ShowScrollbars(string id) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.ShowScrollbars, id);
     }
     public void ShowScrollbars() { ShowScrollbars(ID); }
 
     public static void ScrollTo(string id, double left, double top) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.Scroll, id, left, top);
     }
     public void ScrollTo(double left, double top) { ScrollTo(ID, left, top); }
 
     public static ScrollAreaPosition Position(string id) {
-        if (AppEnvironment.IsServer()) throw new Exception("Can't use on the server!");
+        if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaPosition>(JSScrollArea.Position, id);
     }
     public ScrollAreaPosition Position() { return Position(ID); }
 
     public static ScrollAreaItemPosition ItemPosition(string id, string selector) {
-        if (AppEnvironment.IsServer()) throw new Exception("Can't use on the server!");
+        if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaItemPosition>(JSScrollArea.ItemPosition, id, selector);
     }
     public ScrollAreaItemPosition ItemPosition(string selector) { return ItemPosition(ID, selector); }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static void AddScrollListener(string id, Action<ScrollAreaPosition> listener) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         var area = GetArea(id);
         if (area is not null) {
             area.Listeners = [.. area.Listeners, listener];
@@ -157,7 +157,7 @@ public partial class ScrollArea: IDisposable {
     public void AddScrollListener(Action<ScrollAreaPosition> listener) { AddScrollListener(ID, listener); }
 
     public static void RemoveScrollListener(string id, Action<ScrollAreaPosition> listener) {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         var area = GetArea(id);
         if (area is not null) {
             area.Listeners = area.Listeners.Remove(listener);

@@ -7,15 +7,18 @@ public class Cookie(
     SAME_SITE sameSite = SAME_SITE.STRICT
 ) {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string DEFAULT_DOMAIN() { return URL.Domain(); }
-    public static string DEFAULT_PATH() { return "/"; }
+    public static string DEFAULT_DOMAIN => URL.Domain();
+    public static string DEFAULT_PATH => "/";
+
+    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    public static string? NormDomain(string domain) => domain == DEFAULT_DOMAIN ? null : domain;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public Enum Key { get; set; } = key;
     public string Value { get; set; } = value;
     public DateTimeOffset? Expires { get; set; } = expires is null ? expires : ((DateTimeOffset)expires).UtcDateTime;
-    public string Domain { get; set; } = domain is null ? DEFAULT_DOMAIN() : domain;
-    public string Path { get; set; } = path is null ? DEFAULT_PATH() : path;
+    public string Domain { get; set; } = domain is null ? DEFAULT_DOMAIN : domain;
+    public string Path { get; set; } = path is null ? DEFAULT_PATH : path;
     public bool HttpOnly { get; set; } = httpOnly;
     public bool Secure { get; set; } = secure;
     public SAME_SITE SameSite { get; set; } = sameSite;

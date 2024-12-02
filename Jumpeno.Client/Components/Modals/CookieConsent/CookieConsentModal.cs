@@ -69,7 +69,7 @@ public partial class CookieConsentModal {
                 await ModalRef.Close();
                 return;
             }
-            await HTTP.Patch(API.BASE.COOKIE(), body: accept.Select(x => x.Name));
+            await HTTP.Patch(API.BASE.COOKIE, body: accept.Select(x => x.Name));
             CookieStorage.CacheAcceptedCookies(accept);
             await ModalRef.Close();
         } finally {

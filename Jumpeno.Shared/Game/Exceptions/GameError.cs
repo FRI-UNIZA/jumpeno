@@ -1,12 +1,12 @@
 namespace Jumpeno.Shared.Exceptions;
 
-public class GameError: GameException {
+public class GameError : GameException {
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameError(): base() {}
+    public GameError(bool translated = true): base(translated) {}
     [JsonConstructor]
-    public GameError(List<Error> errors): base(errors) {}
-    public GameError(Exception? inner): base(inner) {}
-    public GameError(List<Error> errors, Exception? inner): base(errors, inner) {}
+    public GameError(List<Error> errors, bool translated = true): base(errors, translated) {}
+    public GameError(Exception? inner, bool translated = true): base(inner, translated) {}
+    public GameError(List<Error> errors, Exception? inner, bool translated = true): base(errors, inner, translated) {}
 
     // Conversions ------------------------------------------------------------------------------------------------------------------------
     public override GameExceptionDTO DataTransferObject() {

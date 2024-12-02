@@ -1,10 +1,14 @@
 @namespace Jumpeno.Client.Components
 
+@{ #pragma warning disable CS8887 }
+
 <div id="@ImagePreloader.ID" aria-hidden="true">
     <style>
         @RenderStyles()
     </style>
     @foreach (var image in ImagePreloader.List) {
-        <img src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;" />
+        ElementReference reference;
+        <img @ref="reference" src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;" />
+        ImageReferrer.SetRef(image.URL, () => reference);
     }
 </div>

@@ -3,7 +3,7 @@
 @inherits Page
 @code {
     protected override void OnPageInitialized() {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
 }

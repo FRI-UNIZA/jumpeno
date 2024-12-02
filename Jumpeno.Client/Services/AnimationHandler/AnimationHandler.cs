@@ -18,4 +18,6 @@ public class AnimationHandler {
     { JS.InvokeVoid(JSAnimationHandler.CallOnAnimationEnd, selector, objRef, method); }
     public static async Task CallOnAnimationEndAsync<T>(string selector, DotNetObjectReference<T> objRef, string method) where T : class
     { await JS.InvokeVoidAsync(JSAnimationHandler.CallOnAnimationEnd, selector, objRef, method); }
+    public static void RenderFrames(int count) { JS.InvokeVoid(JSAnimationHandler.RenderFrames, count); }
+    public static async Task RenderFramesAsync(int count) { await JS.InvokeVoidAsync(JSAnimationHandler.RenderFrames, count); }
 }

@@ -2,18 +2,18 @@
 
 <div class="lobby">
     <Box Class="lobby-game">
-        <Heading1>@ViewModel.Game.Name</Heading1>
-        <Paragraph>@I18N.T("Code"): @ViewModel.Game.Code</Paragraph>
+        <Heading1>@VM.Game.Name</Heading1>
+        <Paragraph>@I18N.T("Code"): @VM.Game.Code</Paragraph>
     </Box>
     <Box Class="lobby-players">
         <div class="player-titles">
             <Heading2 NoWrap Class="player-title">@I18N.T("Players"):</Heading2>
             <Heading2 NoWrap Class="player-title">@I18N.T("Kills")</Heading2>
         </div>
-        @foreach (var (player, index) in ViewModel.Game.PlayerIterator) {
-            <div class="@ComputePlayerLineClass(ViewModel.Player.Equals(player))">
+        @foreach (var (player, index) in VM.Game.PlayerIterator) {
+            <div class="@ComputePlayerLineClass(VM.Player.Equals(player))">
                 <Paragraph NoWrap Class="player-name">@(index + 1). @player?.User?.Name</Paragraph>
-                <Paragraph NoWrap Class="player-score">@player.Avatar.Kills</Paragraph>
+                <Paragraph NoWrap Class="player-score">@player.Kills</Paragraph>
             </div>
         }
     </Box>

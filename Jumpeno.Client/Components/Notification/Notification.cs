@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Components;
 
 using AntDesign;
 
-public partial class Notification: IDisposable {
+public partial class Notification : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME_ARIA = "ant-notification-aria-label";
     public const string CLASSNAME_SPACE = "ant-notification-message-space";
@@ -61,7 +61,7 @@ public partial class Notification: IDisposable {
 
     // Instance ---------------------------------------------------------------------------------------------------------------------------
     public Notification(): base() {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         Service = AppEnvironment.GetService<INotificationService>();
     }
 
@@ -120,7 +120,7 @@ public partial class Notification: IDisposable {
         builder.CloseElement();
     };
     private static async void OpenNotification(NotificationConfig config, int? duration) {
-        if (AppEnvironment.IsServer()) {
+        if (AppEnvironment.IsServer) {
             AddServerNotification(
                 new NotificationData(
                     config.NotificationType,

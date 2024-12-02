@@ -22,7 +22,7 @@ public partial class ModalProvider {
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public ModalProvider(): base() {
-        if (AppEnvironment.IsServer()) return;
+        if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSModal.Init);
     }
 

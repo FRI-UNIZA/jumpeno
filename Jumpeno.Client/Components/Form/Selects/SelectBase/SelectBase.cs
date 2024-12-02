@@ -75,11 +75,9 @@ public partial class SelectBase {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    private bool FirstTimeParametersSet = false;
-    protected override void OnParametersSet() {
-        if (FirstTimeParametersSet) return;
+    protected override void OnParametersSet(bool firstTime) {
+        if (!firstTime) return;
         if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
-        FirstTimeParametersSet = true;
         if (Options.Count < 1) throw new Exception("Select list can not be empty!");
         DisplayedOptions = new List<SelectOption>(Options);
         Selected = DefaultValue;

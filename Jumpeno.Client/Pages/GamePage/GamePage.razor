@@ -6,16 +6,16 @@
 
 <div class="game-page">
     <DocTitle Value="@I18N.T("Game")" />
-    @if (GameVM is null || IsNavigating) {
-        <ConnectBox ViewModel="ConnectBoxVM" @key="@ConnectBoxVM.Key()" />
+    @if (GameVM is null) {
+        <ConnectBox VM="ConnectVM" />
     } else switch (GameVM.Game.State) {
         case GAME_STATE.LOBBY:
         case GAME_STATE.SCOREBOARD:
-            <Lobby ViewModel="GameVM" />
+            <Lobby VM="GameVM" />
         break;
         case GAME_STATE.GAMEPLAY:
         case GAME_STATE.SHRINKING:
-            <GameScreen ViewModel="GameVM" />
+            <GameScreen VM="GameVM" />
         break;
     }
 </div>

@@ -1,5 +1,6 @@
 class JSAnimator {
     static #Animators = {}
+    static #Lock = new Locker()
 
     static #GetID(objRef, method) {
         return `${objRef.id}-${method}`
@@ -9,25 +10,31 @@ class JSAnimator {
         return { objRef, method }
     }
 
-    static #NotifyAnimators() {
-        Object.entries(JSAnimator.#Animators).forEach(async ([id, listener]) => {
-            await listener.objRef.invokeMethodAsync(listener.method)
+    static async #NotifyAnimators() {
+        await JSAnimator.#Lock.Exclusive(async token => {
+            for (const animator of Object.values(JSAnimator.#Animators)) {
+                await animator.objRef.invokeMethodAsync(animator.method)
+            }
+            const request = Object.keys(JSAnimator.#Animators).length > 0
+            token.Unlock()
+            if (request) window.requestAnimationFrame(JSAnimator.#NotifyAnimators)
         })
-        if (Object.keys(JSAnimator.#Animators).length > 0) {
-            window.requestAnimationFrame(JSAnimator.#NotifyAnimators)
-        }
     }
 
-    static AddAnimator(objRef, method) {
-        const animator = this.#CreateAnimator(objRef, method)
-        this.#Animators[this.#GetID(objRef, method)] = animator
-
-        if (Object.keys(this.#Animators).length > 1) return
-        this.#NotifyAnimators()
+    static async AddAnimator(objRef, method) {
+        await this.#Lock.Exclusive(token => {
+            const animator = this.#CreateAnimator(objRef, method)
+            this.#Animators[this.#GetID(objRef, method)] = animator
+            const notify = Object.keys(this.#Animators).length <= 1
+            token.Unlock()
+            if (notify) this.#NotifyAnimators()
+        })
     }
 
-    static RemoveAnimator(objRef, method) {
-        delete this.#Animators[this.#GetID(objRef, method)]
+    static async RemoveAnimator(objRef, method) {
+        await this.#Lock.Exclusive(() => {
+            delete this.#Animators[this.#GetID(objRef, method)]
+        })
     }
 }
 

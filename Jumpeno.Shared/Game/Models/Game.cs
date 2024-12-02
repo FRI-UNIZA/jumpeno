@@ -1,6 +1,6 @@
 namespace Jumpeno.Shared.Models;
 
-public class Game: IUpdateAble {
+public class Game : IUpdateable, IRenderablePure {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CODE_ID = "game-code";
     public const byte CODE_LENGTH = 5;
@@ -12,10 +12,27 @@ public class Game: IUpdateAble {
     public const byte MAX_CAPACITY = 10;
     public const float MAP_WIDTH = 1024;
     public const float MAP_HEIGHT = 576;
+    public const int FPS = 60;
+    public const string DEFAULT_BACKGROUND = "36, 30, 59";
 
     // Mockup -----------------------------------------------------------------------------------------------------------------------------
     public const string MOCK_CODE = "FRI25";
     public const string MOCK_NAME = "FRI UNIZA 1";
+    public static List<Tile> MOCK_TILES() {
+        List<Tile> tiles = [];
+        tiles.Add(new(new(0 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(1 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(2 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(5 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(6 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(7 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(8 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(9 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 1 * Tile.SIZE + Tile.HALF_SIZE)));
+        tiles.Add(new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)));
+        return tiles;
+    }
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateCode(string code) {
@@ -71,39 +88,59 @@ public class Game: IUpdateAble {
     }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Base:
     public string Code { get; private set; }
     public string Name { get; private set; }
+    public Map Map { get; private set; }
+    public byte Capacity { get; private set; }
+    // State:
     public double Time { get; private set; }
     public GAME_STATE State { get; private set; }
-    public byte Capacity { get; private set; }
+    public GameClock Clock { get; private set; }
+    // Players:
     [JsonInclude]
     private List<Player> ActivePlayers { get; set; }
     // NOTE: Index contains all possible game players:
     private Dictionary<byte, Player> Players { get; set; }
-    public Map Map { get; private set; }
+    // NOTE: QuadTree of active players:
+    private QuadTreeRectF<Player> PlayersQT { get; set; }
+    // Traffic:
+    public double? Latency { get; set; }
+    public double? Ping { get; set; }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private Game(string code, string name, double time, GAME_STATE state, byte capacity, List<Player> activePlayers, Map map) {
+    private Game(string code, string name, Map map, byte capacity, double time, GAME_STATE state, List<Player> activePlayers) {
         CheckCode(code);
         CheckName(name);
         CheckCapacity(capacity);
         Code = code;
         Name = name.Trim();
+        Map = map;
+        Capacity = capacity;
         Time = time;
         State = state;
-        Capacity = capacity;
+        Clock = new(FPS);
         ActivePlayers = activePlayers;
         Players = InitPlayers(ActivePlayers);
-        Map = map;
+        PlayersQT = InitPlayersQT(ActivePlayers);
+        Latency = null;
+        Ping = null;
     }
-    public Game(string code, string name, byte capacity) : this(code, name, 0, GAME_STATE.LOBBY, capacity, [], new(0, MAP_WIDTH, 0, MAP_HEIGHT)) {}
+    public Game(string code, string name, byte capacity)
+    : this(code, name, new(0, MAP_WIDTH, 0, MAP_HEIGHT, MOCK_TILES(), DEFAULT_BACKGROUND), capacity, 0, GAME_STATE.LOBBY, []) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private Dictionary<byte, Player> InitPlayers(List<Player> activePlayers) {
         Dictionary<byte, Player> players = [];
         for (byte i = 0; i < Capacity; i++) players.Add(i, new Player(i));
         foreach (var player in activePlayers) players[player.ID] = player;
+        return players;
+    }
+
+    private QuadTreeRectF<Player> InitPlayersQT(List<Player> activePlayers) {
+        QuadTreeRectF<Player> players = new(Map.Rect);
+        foreach (var player in activePlayers) players.Add(player);
         return players;
     }
 
@@ -120,7 +157,13 @@ public class Game: IUpdateAble {
                 return player;
             }
         }
-        throw new Exception(I18N.T("The game is currently full!"));
+        if (State == GAME_STATE.LOBBY) throw new Exception(I18N.T("The game is currently full!"));
+        else throw new Exception(I18N.T("The game is already running."));
+    }
+
+    public Player? GetPlayerRef(byte id) {
+        Players.TryGetValue(id, out var player);
+        return player;
     }
 
     public IEnumerable<(Player player, int index)> PlayerIterator { get {
@@ -130,28 +173,148 @@ public class Game: IUpdateAble {
         }
     }}
 
+    public List<Player> GetCollidingPlayers(Player player) {
+        return PlayersQT.GetObjects(player.Rect);
+    }
+
+    private void MovePlayer(Player player) {
+        PlayersQT.Move(player);
+    }
+
+    private void RestorePlayers() {
+        foreach (var player in ActivePlayers) {
+            player.Update(NewLifeUpdate(player.ID));
+        }
+    }
+
     // Updates ----------------------------------------------------------------------------------------------------------------------------
     public bool Update(GameUpdate update) {
-        if (update is PlayerUpdate p) return PlayerUpdate(p);
-        if (update is GamePlayUpdate g) return GamePlayUpdate(g);
+        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
+        if (update is KeyUpdate key) return KeyUpdate(key);
+        if (update is GamePlayUpdate game) return GamePlayUpdate(game);
+        if (update is PingUpdate ping) return PingUpdate(ping);
+        if (update is KillUpdate kill) return KillUpdate(kill);
+        if (update is PlayerUpdate player) return PlayerUpdate(player);
+        if (update is StateUpdate state) return StateUpdate(state);
         return false;
+    }
+
+    private bool TimeFlowUpdate(TimeFlowUpdate update) {
+        if (update.DeltaT <= 0) return false;
+        Time += update.DeltaT;
+        foreach (var player in ActivePlayers) {
+            player.Update(update);
+            MovePlayer(player);
+        }
+        return true;
+    }
+
+    private bool KeyUpdate(KeyUpdate update) {
+        Players.TryGetValue(update.PlayerID, out var player);
+        if (player == null) return false;
+        return player.Update(update);
+    }
+
+    readonly UpdateGuard<GamePlayUpdate> GamePlayUpdateGuard = new();
+    private bool GamePlayUpdate(GamePlayUpdate update) {
+        // 1) Prepare response:
+        var response = update.Response = new();
+        // 2) Update latency:
+        Latency = GameClock.DeltaAhead(update.CreatedAt);
+        // 3) Update state (sync with server):
+        response.StateUpdated = GamePlayUpdateGuard.Update(update, () => {
+            StateUpdate(NewStateUpdate(update.StateUpdate.Time, update.StateUpdate.State));
+        });
+        // 4) Apply kill updates:
+        foreach (var (key, killUpdate) in update.Kills) {
+            if (KillUpdate(killUpdate)) response.KillsUpdated = true;
+        }
+        // 5) Update players (sync with server):
+        switch (update.StateUpdate.State) {
+            case GAME_STATE.GAMEPLAY:
+                foreach (var player in ActivePlayers) {
+                    if (player.Update(update)) response.PlayersUpdated = true;
+                }
+            break;
+        }
+        // 6) Return result:
+        return response.Updated;
+    }
+
+    public bool PingUpdate(PingUpdate update) {
+        Ping = GameClock.DeltaAhead(update.CreatedAt);
+        return true;
+    }
+
+    private bool KillUpdate(KillUpdate update) {
+        var updated = Players[update.DeadID].Update(update);
+        if (update.KillerID is not byte killerID) return updated;
+        return Players[killerID].Update(update);
     }
 
     private bool PlayerUpdate(PlayerUpdate update) {
         var player = Players[update.Player.ID];
         if (!player.Update(update)) return false;
-        if (update.Action == PLAYER_ACTION.JOIN) ActivePlayers.Add(player);
-        else ActivePlayers.Remove(player);
+        if (update.Action == PLAYER_ACTION.JOIN) {
+            ActivePlayers.Add(player);
+            PlayersQT.Add(player);
+            player.ResetUpdateGuards();
+        } else {
+            ActivePlayers.Remove(player);
+            PlayersQT.Remove(player);
+            KillUpdate(NewKillUpdate(null, player.ID));
+            if (State == GAME_STATE.LOBBY) player.ForgetUser();
+        }
         return true;
     }
 
-    private bool GamePlayUpdate(GamePlayUpdate update) {
+    private bool StateUpdate(StateUpdate update) {
+        switch (update.State) {
+            case GAME_STATE.LOBBY:
+                ActivePlayers.Clear();
+                Players = InitPlayers(ActivePlayers);
+                PlayersQT.Clear();
+                Updater.Reset();
+            break;
+            case GAME_STATE.GAMEPLAY:
+                if (State == GAME_STATE.LOBBY) {
+                    Clock.Reset();
+                    RestorePlayers();
+                }
+            break;
+        }
         Time = update.Time;
         State = update.State;
-        if (update.State == GAME_STATE.LOBBY) {
-            ActivePlayers.Clear();
-            Players = InitPlayers(ActivePlayers);
-        }
         return true;
+    }
+
+    // Partial update generators ----------------------------------------------------------------------------------------------------------
+    public KillUpdate NewKillUpdate(byte? killerID, byte deadID) => new(killerID, deadID);
+    public LifeUpdate NewLifeUpdate(byte playerID) => new(playerID);
+    public MovementUpdate NewMovementUpdate(byte playerID, ulong? keyUpdateID = null) {
+        var body = Players[playerID].Body;
+        return new(playerID, keyUpdateID, body.Position.Center, body.Direction, body.JumpFinishY);
+    }
+    public StateUpdate NewStateUpdate(double time, GAME_STATE state) => new(time, state);
+    public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) => new(this, deltaT);
+
+    // Network update generators ----------------------------------------------------------------------------------------------------------
+    private readonly NetworkUpdater Updater = new();
+    public GamePlayUpdate NewGamePlayUpdate(
+        StateUpdate stateUpdate,
+        Dictionary<byte, MovementUpdate>? movements = null,
+        Dictionary<byte, KillUpdate>? kills = null
+    ) => Updater.NewGamePlayUpdate(stateUpdate, movements, kills);
+    public KeyUpdate NewKeyUpdate(byte playerID, LinkedList<Control> controls) => Updater.NewKeyUpdate(playerID, controls);
+    public PingUpdate NewPingUpdate() => Updater.NewPingUpdate(DateTime.UtcNow);
+    public PlayerUpdate NewPlayerUpdate(Player player, PLAYER_ACTION action) => Updater.NewPlayerUpdate(player, action);
+    public TimerUpdate NewTimerUpdate(double time, TIMER_STATE state) => Updater.NewTimerUpdate(time, state);
+
+    // Rendering --------------------------------------------------------------------------------------------------------------------------
+    public async Task Render(Canvas2DContext ctx) {
+        await Map.Render(ctx, this);
+        foreach (var player in ActivePlayers) {
+            await player.Render(ctx, this);
+        }
     }
 }

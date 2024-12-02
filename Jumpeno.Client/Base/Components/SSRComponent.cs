@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Base;
 
-public abstract class SSRComponent<T>: ComponentBase, IAsyncDisposable {
+public abstract class SSRComponent<T> : Component, IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string KEY_PREFIX = "component";
 
@@ -44,11 +44,11 @@ public abstract class SSRComponent<T>: ComponentBase, IAsyncDisposable {
     protected virtual void OnComponentInitialized() {}
     protected abstract Task OnComponentInitializedAsync();
     protected virtual void OnComponentParametersSet() {}
-    protected virtual Task OnComponentParametersSetAsync() { return Task.CompletedTask; }
+    protected virtual Task OnComponentParametersSetAsync() => Task.CompletedTask;
     protected virtual void OnComponentAfterRender(bool firstRender) {}
-    protected virtual Task OnComponentAfterRenderAsync(bool firstRender) { return Task.CompletedTask; }
+    protected virtual Task OnComponentAfterRenderAsync(bool firstRender) => Task.CompletedTask;
     protected virtual void OnComponentDispose() {}
-    protected virtual ValueTask OnComponentDisposeAsync() { return ValueTask.CompletedTask; }
+    protected virtual ValueTask OnComponentDisposeAsync() => ValueTask.CompletedTask;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public SSRComponent() {
@@ -67,7 +67,7 @@ public abstract class SSRComponent<T>: ComponentBase, IAsyncDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override sealed void OnInitialized() { OnComponentInitialized(); }
+    protected override sealed void OnInitialized() => OnComponentInitialized();
     protected override sealed async Task OnInitializedAsync() {
         PersistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
@@ -80,10 +80,10 @@ public abstract class SSRComponent<T>: ComponentBase, IAsyncDisposable {
             Initializing = false;
         }
     }
-    protected override sealed void OnParametersSet() { OnComponentParametersSet(); }
-    protected override sealed async Task OnParametersSetAsync() { await OnComponentParametersSetAsync(); }
-    protected override sealed void OnAfterRender(bool firstRender) { OnComponentAfterRender(firstRender); }
-    protected override sealed async Task OnAfterRenderAsync(bool firstRender) { await OnComponentAfterRenderAsync(firstRender); }
+    protected override sealed void OnParametersSet(bool fristTime) => OnComponentParametersSet();
+    protected override sealed async Task OnParametersSetAsync(bool firstTime) => await OnComponentParametersSetAsync();
+    protected override sealed void OnAfterRender(bool firstRender) => OnComponentAfterRender(firstRender);
+    protected override sealed async Task OnAfterRenderAsync(bool firstRender) => await OnComponentAfterRenderAsync(firstRender);
     public async ValueTask DisposeAsync() {
         OnComponentDispose();
         await OnComponentDisposeAsync();

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class NavMenuMobile: IAsyncDisposable {
+public partial class NavMenuMobile : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "nav-menu-mobile";
     public const string CLASS_SELECTOR = $".{CLASS}";
@@ -51,9 +51,9 @@ public partial class NavMenuMobile: IAsyncDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async void OnAfterRender(bool firstRender) {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
-            Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
+            await Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
             if (Page.CurrentPage().GetType() != typeof(ErrorPage)) {
                 await Navigator.AddAfterFinishEventListener(CloseAfter);
             }
@@ -64,9 +64,9 @@ public partial class NavMenuMobile: IAsyncDisposable {
         }
     }
     public async ValueTask DisposeAsync() {
-        if (!AppEnvironment.IsServer()) {
+        if (!AppEnvironment.IsServer) {
             await Navigator.RemoveAfterFinishEventListener(CloseAfter);
-            Window.RemoveResizeEventListener(ObjRef, JS_OnWindowResize);
+            await Window.RemoveResizeEventListener(ObjRef, JS_OnWindowResize);
         }
         ObjRef.Dispose();
     }
@@ -139,7 +139,7 @@ public partial class NavMenuMobile: IAsyncDisposable {
         if (windowSize.Width < MOBILE_MENU_BREAKPOINT) {
             ActionHandler.SetFocus(NavMenu.MOBILE_MENU_BUTTON_ID);
         } else {
-            ActionHandler.SetFocus(NavMenu.FIRST_LINK_ID);
+            ActionHandler.SetFocus(MenuControls.FIRST_LINK_ID);
         }
 
         await OnMobileMenuClose.InvokeAsync();
@@ -157,7 +157,7 @@ public partial class NavMenuMobile: IAsyncDisposable {
         // Change to desktop:
         if (e.WidthPrevious < MOBILE_MENU_BREAKPOINT && MOBILE_MENU_BREAKPOINT <= e.Width) {
             if (State == MENU_STATE.CLOSED && MenuRef.MobileMenuButtonFocused) {
-                ActionHandler.SetFocus(NavMenu.FIRST_LINK_ID);
+                ActionHandler.SetFocus(MenuControls.FIRST_LINK_ID);
             } else if (State == MENU_STATE.OPENED) {
                 await Close();
             }

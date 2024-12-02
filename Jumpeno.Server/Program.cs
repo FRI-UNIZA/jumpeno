@@ -28,6 +28,11 @@ var sharedConfig = new ConfigurationBuilder()
     .Build();
 AppSettings.Init(sharedConfig);
 
+// Port configuration:
+if (builder.Environment.IsProduction()) {
+    builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(ServerSettings.Port));
+}
+
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews(options => {
@@ -113,9 +118,7 @@ app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
     async (HTTPException e) => {
-        if (AppEnvironment.IsController()) {
-            return;
-        }
+        if (AppEnvironment.IsController) return;
         Notification.Error(e.Message);
         await Task.CompletedTask;
     },
@@ -153,7 +156,7 @@ CookieStorage.Init(
             cookie.Value,
             new CookieOptions {
                 Expires = cookie.Expires,
-                Domain = cookie.Domain,
+                Domain = Cookie.NormDomain(cookie.Domain),
                 Path = cookie.Path,
                 HttpOnly = cookie.HttpOnly,
                 Secure = cookie.Secure,
@@ -166,7 +169,7 @@ CookieStorage.Init(
         ctx.Response.Cookies.Delete(
             key,
             new CookieOptions {
-                Domain = domain,
+                Domain = Cookie.NormDomain(domain),
                 Path = path,
             }
         );
