@@ -1,5 +1,6 @@
 namespace Jumpeno.Client.ViewModels;
 
+using System.Collections.Concurrent;
 using System.Timers;
 
 public class GameViewModel {
@@ -14,8 +15,7 @@ public class GameViewModel {
     public GameViewModel(Game game, Player player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
         Game = game;
         Player = Game.GetPlayerRef(player.ID) ?? player;
-        GameUpdates = updates;
-        UpdateListLock = new();
+        GameUpdates = InitGameUpdates(updates);
         UpdateLock = new();
         PingTimer = null;
         Send = send;
@@ -25,40 +25,33 @@ public class GameViewModel {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     private readonly EmptyDelegate OnRender;
-    
+
     // NOTE: Init must be called after render of displayed component:
     public async Task InitOnRender() => await OnRender.Invoke();
 
+    private static ConcurrentQueue<GameUpdate> InitGameUpdates(LinkedList<GameUpdate> updates) {
+        var queue = new ConcurrentQueue<GameUpdate>();
+        foreach (var update in updates) queue.Enqueue(update);
+        return queue;
+    }
+
     // Update Data ------------------------------------------------------------------------------------------------------------------------
-    private LinkedList<GameUpdate> GameUpdates;
-    private readonly LockerSlim UpdateListLock;
+    private readonly ConcurrentQueue<GameUpdate> GameUpdates;
     private readonly LockerSlim UpdateLock;
     public bool Updating { get; private set; }
 
     public async Task AddUpdate(GameUpdate update) {
-        await UpdateListLock.Lock();
-        GameUpdates.AddLast(update);
-        UpdateListLock.Unlock();
+        GameUpdates.Enqueue(update);
         if (Updating) await ExecuteUpdates();
     }
 
-    public async Task ResetUpdates() {
-        await UpdateListLock.Lock();
-        GameUpdates.Clear();
-        UpdateListLock.Unlock();
-    }
+    public void ResetUpdates() => GameUpdates.Clear();
 
     // Update execution -------------------------------------------------------------------------------------------------------------------
     public async Task ExecuteUpdates() {
-        // 1) Take pending updates:
-        await UpdateListLock.Lock();
-        var updates = GameUpdates;
-        GameUpdates = [];
-        UpdateListLock.Unlock();
-        // 2) Execute updates:
         await UpdateLock.Exclusive(async () => {
             if (BeforeUpdates != null) await BeforeUpdates.Invoke();
-            foreach (var update in updates) {
+            while (GameUpdates.TryDequeue(out var update)) {
                 if (BeforeUpdate != null) await BeforeUpdate.Invoke(new(update));
                 var success = Game.Update(update);
                 if (AfterUpdate != null) await AfterUpdate.Invoke(new(update, success));
