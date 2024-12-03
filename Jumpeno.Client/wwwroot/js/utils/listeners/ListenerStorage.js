@@ -40,7 +40,7 @@ class ListenerStorage {
         await this.#Lock.Exclusive(async () => {
             const listener = this.#CreateListener(objRef, method)
             this.#Listeners[this.#GetID(objRef, method)] = listener
-            if (Object.keys(this.#Listeners).length > 1) return;
+            if (Object.keys(this.#Listeners).length > 1) return
             window.addEventListener(this.#Event, this.#InvokeListeners)
         })
     }
@@ -48,7 +48,7 @@ class ListenerStorage {
     async RemoveEventListener(objRef, method) {
         await this.#Lock.Exclusive(async () => {
             delete this.#Listeners[this.#GetID(objRef, method)]
-            if (Object.keys(this.#Listeners).length > 0) return;
+            if (Object.keys(this.#Listeners).length > 0) return
             window.removeEventListener(this.#Event, this.#InvokeListeners)
         })
     }
