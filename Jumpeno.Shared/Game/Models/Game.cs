@@ -229,11 +229,11 @@ public class Game : IUpdateable, IRenderablePure {
         foreach (var (key, killUpdate) in update.Kills) {
             if (KillUpdate(killUpdate)) response.KillsUpdated = true;
         }
-        // 5) Update players (sync with server):
+        // 5) Update player movements (sync with server):
         switch (update.StateUpdate.State) {
             case GAME_STATE.GAMEPLAY:
-                foreach (var player in ActivePlayers) {
-                    if (player.Update(update)) response.PlayersUpdated = true;
+                foreach (var movement in update.Movements) {
+                    if (Players[movement.Key].Update(update)) response.PlayersUpdated = true;
                 }
             break;
         }

@@ -53,6 +53,7 @@ public class GameEngine : IUpdateable {
 
     public async Task Reset() {
         await GameLock.Exclusive(async token => {
+            ResetKeyUpdates();
             var update = Game.NewStateUpdate(0, GAME_STATE.LOBBY);
             var updated = Game.Update(update);
             token.Unlock();
@@ -65,15 +66,11 @@ public class GameEngine : IUpdateable {
         if (update is KeyUpdate key) return KeyUpdate(key);
         return false;
     }
-    
+
     private readonly LinkedList<KeyUpdate> KeyUpdates = [];
     private readonly Locker KeyUpdateLock = new();
-    private bool KeyUpdate(KeyUpdate update) {
-        KeyUpdateLock.Lock();
-        KeyUpdates.AddLast(update);
-        KeyUpdateLock.Unlock();
-        return true;
-    }
+    private bool KeyUpdate(KeyUpdate update) => KeyUpdateLock.Exclusive(() => { KeyUpdates.AddLast(update); return true; });
+    private void ResetKeyUpdates() => KeyUpdateLock.Exclusive(() => KeyUpdates.Clear());
 
     // Loop methods -----------------------------------------------------------------------------------------------------------------------
     private void EvaluatePlayerCollisions(ref (GamePlayUpdate Update, bool Send) loop) {
@@ -103,8 +100,7 @@ public class GameEngine : IUpdateable {
                 Game.Update(update);
                 // 2) Generate movement update:
                 var movement = Game.NewMovementUpdate(update.PlayerID, update.ID);
-                loop.Update.Movements.TryGetValue(update.PlayerID, out var previous);
-                if (previous is not null) movement.Chain(previous);
+                if (loop.Update.Movements.TryGetValue(update.PlayerID, out var previous)) movement.Chain(previous);
                 // 3) Add movement update to loop:
                 loop.Update.Movements[update.PlayerID] = movement;
             }
@@ -119,8 +115,7 @@ public class GameEngine : IUpdateable {
             // 1) Check collision:
             if (!player.CollisionDetected()) continue;
             // 2) Check movement update:
-            loop.Update.Movements.TryGetValue(player.ID, out var previous);
-            if (previous != null) continue;
+            if (loop.Update.Movements.ContainsKey(player.ID)) continue;
             // 3) Add movement update to loop:
             loop.Update.Movements[player.ID] = Game.NewMovementUpdate(player.ID);
             loop.Send = true;
