@@ -111,7 +111,6 @@ public class GameViewModel {
             PingTimer.Elapsed += async (sender, e) => await SendPing();
             PingTimer.Start();
         });
-
     }
 
     public async Task StopPing() {
