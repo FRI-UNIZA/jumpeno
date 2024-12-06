@@ -19,7 +19,11 @@ var app = builder.Build();
 AppEnvironment.Init(
     () => false,
     () => false,
-    builder.HostEnvironment.IsDevelopment,
+    #if CLIENT_DEVELOPMENT
+        () => true,
+    #else
+        () => false,
+    #endif
     (Type T) => app.Services.GetService(T)!
 );
 RequestStorage.Init();

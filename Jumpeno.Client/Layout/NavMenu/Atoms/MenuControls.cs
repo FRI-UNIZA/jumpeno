@@ -5,6 +5,7 @@ public partial class MenuControls {
     public const string CLASS = "menu-controls";
     public const string CLASS_MOBILE = "mobile";
     public const string FIRST_LINK_ID = "menu-first-link";
+    public const string FIRST_LINK_ID_MOBILE = "menu-first-link-mobile";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

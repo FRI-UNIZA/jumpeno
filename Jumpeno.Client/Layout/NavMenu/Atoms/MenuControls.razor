@@ -2,7 +2,7 @@
 
 <div class="@ComputeClass()" @onfocusin="OnFocusIn" @onfocusout="OnFocusOut">
     <div class="menu-links">
-        <MenuButton ID="@FIRST_LINK_ID" Parameters="@(new ButtonLinkParameters(
+        <MenuButton ID="@(Mobile ? FIRST_LINK_ID_MOBILE : FIRST_LINK_ID)" Parameters="@(new ButtonLinkParameters(
             Href: I18N.Link<HomePage>(),
             Match: LINK_MATCH.ALL
         ))">

@@ -10,6 +10,13 @@
 		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
 	</PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <DefineConstants>CLIENT_DEVELOPMENT</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DefineConstants>CLIENT_PRODUCTION</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="AntDesign" Version="0.20.4.2" />
         <PackageReference Include="Blazor.Extensions.Canvas" Version="1.1.1" />
