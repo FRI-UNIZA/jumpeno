@@ -13,6 +13,7 @@ public class Game : IUpdateable, IRenderablePure {
     public const float MAP_WIDTH = 1024;
     public const float MAP_HEIGHT = 576;
     public const int FPS = 60;
+    public const int TOUCH_DEVICE_NOTIFICATIONS_PER_SECOND = 5;
     public const string DEFAULT_BACKGROUND = "36, 30, 59";
 
     // Mockup -----------------------------------------------------------------------------------------------------------------------------
@@ -89,6 +90,7 @@ public class Game : IUpdateable, IRenderablePure {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Base:
+    public ACCESS_MODE Access { get; private set; }
     public string Code { get; private set; }
     public string Name { get; private set; }
     public Map Map { get; private set; }
@@ -97,6 +99,7 @@ public class Game : IUpdateable, IRenderablePure {
     public double Time { get; private set; }
     public GAME_STATE State { get; private set; }
     public GameClock Clock { get; private set; }
+    public GameClock TouchClock { get; private set; }
     // Players:
     [JsonInclude]
     private List<Player> ActivePlayers { get; set; }
@@ -110,10 +113,11 @@ public class Game : IUpdateable, IRenderablePure {
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private Game(string code, string name, Map map, byte capacity, double time, GAME_STATE state, List<Player> activePlayers) {
+    private Game(ACCESS_MODE access, string code, string name, Map map, byte capacity, double time, GAME_STATE state, List<Player> activePlayers) {
         CheckCode(code);
         CheckName(name);
         CheckCapacity(capacity);
+        Access = access;
         Code = code;
         Name = name.Trim();
         Map = map;
@@ -121,14 +125,15 @@ public class Game : IUpdateable, IRenderablePure {
         Time = time;
         State = state;
         Clock = new(FPS);
+        TouchClock = new(TOUCH_DEVICE_NOTIFICATIONS_PER_SECOND);
         ActivePlayers = activePlayers;
         Players = InitPlayers(ActivePlayers);
         PlayersQT = InitPlayersQT(ActivePlayers);
         Latency = null;
         Ping = null;
     }
-    public Game(string code, string name, byte capacity)
-    : this(code, name, new(0, MAP_WIDTH, 0, MAP_HEIGHT, MOCK_TILES(), DEFAULT_BACKGROUND), capacity, 0, GAME_STATE.LOBBY, []) {}
+    public Game(ACCESS_MODE access, string code, string name, byte capacity)
+    : this(access, code, name, new(0, MAP_WIDTH, 0, MAP_HEIGHT, MOCK_TILES(), DEFAULT_BACKGROUND), capacity, 0, GAME_STATE.LOBBY, []) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private Dictionary<byte, Player> InitPlayers(List<Player> activePlayers) {
@@ -145,7 +150,7 @@ public class Game : IUpdateable, IRenderablePure {
     }
 
     // Player methods ---------------------------------------------------------------------------------------------------------------------
-    public Player AllocatePlayer(User user) {
+    public Player AllocatePlayer(User user, bool touchDevice = false) {
         bool nameTaken = false;
         foreach (var p in Players) {
             Player player = p.Value;
@@ -153,7 +158,7 @@ public class Game : IUpdateable, IRenderablePure {
                 if (player.User != null && player.User.Name == user.Name) nameTaken = true;
             } else if (State == GAME_STATE.LOBBY || (player.User != null && player.User.Equals(user))) {
                 if (nameTaken) throw new Exception(I18N.T("Player name is taken!"));
-                player.ConnectUser(user);
+                player.ConnectUser(user, touchDevice);
                 return player;
             }
         }
@@ -279,6 +284,7 @@ public class Game : IUpdateable, IRenderablePure {
             case GAME_STATE.GAMEPLAY:
                 if (State == GAME_STATE.LOBBY) {
                     Clock.Reset();
+                    TouchClock.Reset();
                     RestorePlayers();
                 }
             break;

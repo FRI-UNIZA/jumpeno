@@ -49,7 +49,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderableParametric<(Game
         && (LastPosition.Center.Y - HALF_HEIGHT >= body.LastPosition.Center.Y + HALF_HEIGHT)
         && (Position.Center.Y - HALF_HEIGHT <= body.Position.Center.Y + HALF_HEIGHT);
 
-    public bool CollisionDetected() => !(Normal.Equals(Collision.ZERO_VECTOR) || Normal.Equals(LastNormal));
+    public bool CollisionDetected => !(Normal.Equals(Collision.ZERO_VECTOR) || Normal.Equals(LastNormal));
 
     // Movement ---------------------------------------------------------------------------------------------------------------------------
     private void ChangeDirection(GAME_CONTROLS key, bool pressed) {

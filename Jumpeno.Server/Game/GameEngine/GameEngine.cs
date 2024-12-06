@@ -8,8 +8,8 @@ public class GameEngine : IUpdateable {
     private readonly Locker GameLock;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameEngine(string code, string name, byte capacity) {
-        Game = new Game(code, name, capacity);
+    public GameEngine(ACCESS_MODE access, string code, string name, byte capacity) {
+        Game = new Game(access, code, name, capacity);
         GameLock = new Locker();
     }
 
@@ -17,9 +17,9 @@ public class GameEngine : IUpdateable {
     public Game ClientGameCopy() { return Game; }
     
     // Player actions ---------------------------------------------------------------------------------------------------------------------
-    public async Task<Player> AddPlayer(User user) {
+    public async Task<Player> AddPlayer(User user, bool touchDevice) {
         return await GameLock.Exclusive(async token => {
-            var player = Game.AllocatePlayer(user);
+            var player = Game.AllocatePlayer(user, touchDevice);
             var update = Game.NewPlayerUpdate(player, PLAYER_ACTION.JOIN);
             var updated = Game.Update(update);
             token.Unlock();
@@ -113,7 +113,7 @@ public class GameEngine : IUpdateable {
     private void AddCollisionUpdates(ref (GamePlayUpdate Update, bool Send) loop) {
         foreach (var (player, index) in Game.PlayerIterator) {
             // 1) Check collision:
-            if (!player.CollisionDetected()) continue;
+            if (!player.CollisionDetected) continue;
             // 2) Check movement update:
             if (loop.Update.Movements.ContainsKey(player.ID)) continue;
             // 3) Add movement update to loop:
@@ -122,8 +122,22 @@ public class GameEngine : IUpdateable {
         }
     }
 
+    private async Task SendLoopUpdate((GamePlayUpdate Update, bool Send) loop) {
+        if (loop.Send) {
+            // 1) Send update to all clients:
+            await GameHub.SendGameUpdate(Code, loop.Update, CLIENT_DEVICE.ALL);
+            Game.TouchClock.Reset();
+        } else if (Game.Access == ACCESS_MODE.EACH_OWN) {
+            // 2) Send periodical (wake-up) updates to touch devices:
+            var deltaT = Game.TouchClock.ComputeDelta();
+            if (deltaT < Game.TouchClock.IntervalMS) return;
+            await GameHub.SendGameUpdate(Code, loop.Update, CLIENT_DEVICE.TOUCH);
+            Game.TouchClock.Update(deltaT);
+        }
+    }
+
     // Game loop --------------------------------------------------------------------------------------------------------------------------
-    private async void GameLoop() {
+    private async void GameLoop() {        
         // 1) Run loop:
         while (Game.State == GAME_STATE.GAMEPLAY) {
             // 1.1) Await delta of time:
@@ -143,7 +157,7 @@ public class GameEngine : IUpdateable {
             GameLock.Unlock();
 
             // 1.7) Send loop update:
-            if (loop.Send) await GameHub.SendGameUpdate(Code, loop.Update);
+            await SendLoopUpdate(loop);
         }
         // 2) Release resources:
         GameLoopThread = null;

@@ -157,8 +157,12 @@ public class Navigator: StaticService<Navigator> {
         await Instance().Navigate(URL.SetQueryParams(queryParams), forceLoad: false, replace: true, queries: true, loader: false);
     }
 
-    public static T State<T>() { return JS.Invoke<T>(JSNavigator.State); }
-    public static void SetState<T>(T state, string? url = null) { JS.InvokeVoid(JSNavigator.SetState, state, url); }
+    // State ------------------------------------------------------------------------------------------------------------------------------
+    public static T State<T>() => JS.Invoke<T>(JSNavigator.State);
+    public static void SetState<T>(T state, string? url = null) => JS.InvokeVoid(JSNavigator.SetState, state, url);
+
+    // Media ------------------------------------------------------------------------------------------------------------------------------
+    public static bool IsTouchDevice => JS.Invoke<bool>(JSNavigator.IsTouchDevice);
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static async Task AddBlocker(EventPredicate<NavigationEvent> predicate) {

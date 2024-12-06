@@ -3,7 +3,7 @@ namespace Jumpeno.Server.Services;
 public static class GameService {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static readonly Dictionary<string, GameEngine> Engines = new() {
-        {Game.MOCK_CODE, new GameEngine(Game.MOCK_CODE, Game.MOCK_NAME, 5)}
+        {Game.MOCK_CODE, new GameEngine(ACCESS_MODE.EACH_OWN, Game.MOCK_CODE, Game.MOCK_NAME, 5)}
     };
 
     // Locks ------------------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ public static class GameService {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<EnginePlayer> Connect(string code, User user) {
+    public static async Task<EnginePlayer> Connect(string code, User user, bool touchDevice = false) {
         // 1) Results:
         GameEngine? engine = null;
         Player? player = null;
@@ -31,7 +31,7 @@ public static class GameService {
             engine = FindEngine(code);
             if (engine != null) {
                 // 3.1) Add client to game:
-                try { player = await engine.AddPlayer(user); }
+                try { player = await engine.AddPlayer(user, touchDevice); }
                 catch (Exception e) { exception.Add(new Error(e.Message)); }
             } else {
                 // 3.2) Game does not exist:

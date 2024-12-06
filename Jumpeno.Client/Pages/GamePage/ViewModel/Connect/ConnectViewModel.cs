@@ -95,6 +95,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             var q = new QueryParams();
             q.Set(Game.CODE_ID, code);
             q.Set(User.USER_ID, JsonSerializer.Serialize(Auth.User));
+            q.Set(Player.TOUCH_DEVICE_ID, Navigator.IsTouchDevice);
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);
             // 2) Create HUB:
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL).Build();

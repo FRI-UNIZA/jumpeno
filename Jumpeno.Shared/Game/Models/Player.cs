@@ -1,36 +1,42 @@
 namespace Jumpeno.Shared.Models;
 
 public class Player : IRectFQuadStorable, IUpdateable, IRenderableParametric<Game> {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public const string TOUCH_DEVICE_ID = "touch-device";
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public byte ID { get; private set; }
     public User? User { get; private set; }
     public Body Body { get; private set; }
     public bool Connected { get; private set; }
+    public bool TouchDevice { get; private set; }
     public int Kills { get; private set; }
     public RectangleF Rect => Body.Rect;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private Player(byte id, User? user, Body body, bool connected, int kills) {
+    private Player(byte id, User? user, Body body, bool connected, bool touchDevice, int kills) {
         ID = id;
         User = user;
         Body = body;
         Connected = connected;
+        TouchDevice = touchDevice;
         Kills = kills;
     }
-    
-    public Player(byte id) : this(id, null, new(), false, 0) {}
+
+    public Player(byte id) : this(id, null, new(), false, false, 0) {}
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool Equals(Player player) => ID == player.ID;
     public bool IsJumping => Body.IsJumping;
     public bool JumpedOn(Player player) => Body.JumpedOn(player.Body);
-    public bool CollisionDetected() => Body.CollisionDetected();
+    public bool CollisionDetected => Body.CollisionDetected;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public void ConnectUser(User user) {
+    public void ConnectUser(User user, bool touchDevice = false) {
         User = user;
         Connected = true;
+        TouchDevice = touchDevice;
     }
 
     public void ForgetUser() {
