@@ -13,7 +13,7 @@ public class Game : IUpdateable, IRenderablePure {
     public const float MAP_WIDTH = 1024;
     public const float MAP_HEIGHT = 576;
     public const int FPS = 60;
-    public const int TOUCH_DEVICE_NOTIFICATIONS_PER_SECOND = 5;
+    public const int TOUCH_DEVICE_NOTIFICATIONS_PER_SECOND = 10;
     public const string DEFAULT_BACKGROUND = "36, 30, 59";
 
     // Mockup -----------------------------------------------------------------------------------------------------------------------------
