@@ -108,7 +108,6 @@ public class Game : IUpdateable, IRenderablePure {
     // NOTE: QuadTree of active players:
     private QuadTreeRectF<Player> PlayersQT { get; set; }
     // Traffic:
-    public double? Latency { get; set; }
     public double? Ping { get; set; }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
@@ -129,7 +128,6 @@ public class Game : IUpdateable, IRenderablePure {
         ActivePlayers = activePlayers;
         Players = InitPlayers(ActivePlayers);
         PlayersQT = InitPlayersQT(ActivePlayers);
-        Latency = null;
         Ping = null;
     }
     public Game(ACCESS_MODE access, string code, string name, byte capacity)
@@ -224,17 +222,15 @@ public class Game : IUpdateable, IRenderablePure {
     private bool GamePlayUpdate(GamePlayUpdate update) {
         // 1) Prepare response:
         var response = update.Response = new();
-        // 2) Update latency:
-        Latency = GameClock.DeltaAhead(update.CreatedAt);
-        // 3) Update state (sync with server):
+        // 2) Update state (sync with server):
         response.StateUpdated = GamePlayUpdateGuard.Update(update, () => {
             StateUpdate(NewStateUpdate(update.StateUpdate.Time, update.StateUpdate.State));
         });
-        // 4) Apply kill updates:
+        // 3) Apply kill updates:
         foreach (var (key, killUpdate) in update.Kills) {
             if (KillUpdate(killUpdate)) response.KillsUpdated = true;
         }
-        // 5) Update player movements (sync with server):
+        // 4) Update player movements (sync with server):
         switch (update.StateUpdate.State) {
             case GAME_STATE.GAMEPLAY:
                 foreach (var movement in update.Movements) {
@@ -242,12 +238,13 @@ public class Game : IUpdateable, IRenderablePure {
                 }
             break;
         }
-        // 6) Return result:
+        // 5) Return result:
         return response.Updated;
     }
 
     public bool PingUpdate(PingUpdate update) {
-        Ping = GameClock.DeltaAhead(update.CreatedAt);
+        if (update.ReturnedAt is not DateTime returnedAt) return false;
+        Ping = GameClock.Delta(returnedAt, update.CreatedAt);
         return true;
     }
 

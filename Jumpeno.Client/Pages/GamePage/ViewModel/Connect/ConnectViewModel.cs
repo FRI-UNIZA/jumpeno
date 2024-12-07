@@ -165,6 +165,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     // Server actions ---------------------------------------------------------------------------------------------------------------------
     private async Task GameUpdate(GameUpdate update) {
         await ConnectLock.Exclusive(async () => {
+            if (update is PingUpdate ping) ping.SetReturn();
             if (GameVM is GameViewModel VM) await VM.AddUpdate(update);
             else PendingUpdates.AddLast(update);
         });

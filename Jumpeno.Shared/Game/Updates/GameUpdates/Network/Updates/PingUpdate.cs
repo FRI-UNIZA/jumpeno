@@ -7,7 +7,9 @@ public class PingUpdate(ulong id, DateTime createdAt) : NetworkUpdate(id) {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public DateTime CreatedAt { get; private set; } = createdAt;
+    public DateTime? ReturnedAt { get; private set; } = null;
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
+    public void SetReturn() => ReturnedAt = DateTime.UtcNow;
     public override string ToString() => Format.JSON_PRETTY(this);
 }
