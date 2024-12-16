@@ -13,4 +13,10 @@ public static class JSWindow {
 
     public static readonly string AddKeyUpEventListener = $"{ClassName}.AddKeyUpEventListener";
     public static readonly string RemoveKeyUpEventListener = $"{ClassName}.RemoveKeyUpEventListener";
+    
+    public static readonly string AddMouseDownEventListener = $"{ClassName}.AddMouseDownEventListener";
+    public static readonly string RemoveMouseDownEventListener = $"{ClassName}.RemoveMouseDownEventListener";
+    
+    public static readonly string AddMouseUpEventListener = $"{ClassName}.AddMouseUpEventListener";
+    public static readonly string RemoveMouseUpEventListener = $"{ClassName}.RemoveMouseUpEventListener";
 }

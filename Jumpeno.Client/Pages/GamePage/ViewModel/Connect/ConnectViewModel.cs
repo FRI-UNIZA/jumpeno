@@ -66,13 +66,13 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     // Request actions --------------------------------------------------------------------------------------------------------------------
     // NOTE: Call actions in components:
-    public async Task PlayRequest(ConnectData data) {
+    public async Task ConnectRequest(ConnectData data, bool watch) {
         try {
             await ConnectLock.Lock();
             await PageLoader.Show(PAGE_LOADER_TASK.GAME);
             PendingUpdates.Clear();
             if (!Auth.IsRegistered()) Auth.LogInAnonymous(data.Name, User.GenerateSkin());
-            if (!await CreateConnection(data.Code)) throw new GameException();
+            if (!await CreateConnection(data.Code, watch)) throw new CoreException();
         } catch {
             Notification.Error(I18N.T("Something went wrong."));
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
@@ -81,30 +81,25 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         }
     }
 
-    public async Task WatchRequest(ConnectData data) {
-        // TODO: Implement spectators
-        await Task.Delay(0);
-        Notification.Info(I18N.T("This feature is not available yet."));
-    }
-
     // Connect methods --------------------------------------------------------------------------------------------------------------------
-    private async Task<bool> CreateConnection(string code) {
+    private async Task<bool> CreateConnection(string code, bool watch) {
         if (IsConnected) return true;
         try {
             // 1) Create data URL:
             var q = new QueryParams();
             q.Set(Game.CODE_ID, code);
             q.Set(User.USER_ID, JsonSerializer.Serialize(Auth.User));
-            q.Set(Player.TOUCH_DEVICE_ID, Navigator.IsTouchDevice);
+            q.Set(Spectator.DEVICE_ID, JsonSerializer.Serialize(Navigator.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
+            q.Set(Spectator.WATCH_ID, watch);
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);
             // 2) Create HUB:
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL).Build();
             // 3) Add events:
-            HubConnection.On<Game, Player>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
+            HubConnection.On<Game, Player?>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
             HubConnection.On<GamePlayUpdate>(GAME_HUB.GAME_PLAY_UPDATE, GameUpdate);
             HubConnection.On<PlayerUpdate>(GAME_HUB.PLAYER_UPDATE, GameUpdate);
             HubConnection.On<PingUpdate>(GAME_HUB.PING_UPDATE, GameUpdate);
-            HubConnection.On<GameExceptionDTO>(GAME_HUB.ERROR, HandleErrors);
+            HubConnection.On<CoreExceptionDTO>(GAME_HUB.ERROR, HandleErrors);
             HubConnection.Closed += OnConnectionClosed;
             // 4) Connect:
             await HubConnection.StartAsync();
@@ -114,7 +109,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         return IsConnected;
     }
 
-    private async Task ConnectionSuccessful(Game game, Player player) {
+    private async Task ConnectionSuccessful(Game game, Player? player) {
         try {
             await ConnectLock.Lock();
             await PageLoader.Show(PAGE_LOADER_TASK.GAME);
@@ -142,7 +137,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             await GameViewTCS.Task;
 
             // 4) Full screen:
-            LayoutVM?.HideNavigation();
+            LayoutVM?.HideNavigation(false);
             ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
         } catch {
             GameVM = null;
@@ -172,19 +167,12 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     // Error handling ---------------------------------------------------------------------------------------------------------------------
-    private async Task HandleErrors(GameExceptionDTO? exception = null) {
+    private async Task HandleErrors(CoreExceptionDTO? exception = null) {
         await ConnectLock.Exclusive(async () => {
             if (exception is null) await DisposeGame();
             else {
-                if (exception.Type == GAME_EXCEPTION_TYPE.EXCEPTION) await DisposeGame();
-                if (exception.Errors.Count > 0) {
-                    foreach (var error in exception.Errors) {
-                        Notification.Error(exception.Translated ? error.Message : I18N.T(error.Message));
-                        Input<object>.TrySetError(error, exception.Translated);
-                    }
-                } else {
-                    Notification.Error(exception.Translated ? exception.Message : I18N.T(exception.Message));
-                }
+                if (exception.Type == EXCEPTION_TYPE.EXCEPTION) await DisposeGame();
+                ErrorHandler.NotifyErrors(exception, fallback: true);
             }
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
         });
@@ -192,9 +180,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     private async Task OnConnectionClosed(Exception? e) {
         if (e is not null) await HandleErrors(
-            new GameException([
-                new Error(I18N.T("You have been disconnected from the server."))
-            ]).DataTransferObject()
+            new CoreException(new Error("You have been disconnected from the server.")).DTO
         );
     }
 

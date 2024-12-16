@@ -11,7 +11,7 @@
             <Heading2 NoWrap Class="player-title">@I18N.T("Kills")</Heading2>
         </div>
         @foreach (var (player, index) in VM.Game.PlayerIterator) {
-            <div class="@ComputePlayerLineClass(VM.Player.Equals(player))">
+            <div class="@ComputePlayerLineClass(VM.Player != null && VM.Player.Equals(player))">
                 <Paragraph NoWrap Class="player-name">@(index + 1). @player?.User?.Name</Paragraph>
                 <Paragraph NoWrap Class="player-score">@player.Kills</Paragraph>
             </div>

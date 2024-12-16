@@ -7,8 +7,8 @@ public class InputErrorViewModel {
     private readonly Action? Notify = null;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public bool HasError() { return IsError; }
-    public string Error() { return IsError ? LastError : ""; }
+    public bool HasError => IsError;
+    public string Error => IsError ? LastError : "";
     public void SetError(string error) {
         LastError = error;
         IsError = true;

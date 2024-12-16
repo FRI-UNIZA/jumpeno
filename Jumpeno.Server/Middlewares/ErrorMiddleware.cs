@@ -26,9 +26,11 @@ public class ErrorMiddleware(RequestDelegate next) {
 
         if (exception is not null) {
             ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON_UTF8;
-            await ctx.Response.WriteAsync(JsonConvert.SerializeObject(
-                new { message = exception.Message, data = exception.Data }
-            ));
+            await ctx.Response.WriteAsync(JsonConvert.SerializeObject(new {
+                exception.Message,
+                Errors = exception is HTTPException e ? e.Errors : [],
+                exception.Data
+            }));
         }
     }
 }

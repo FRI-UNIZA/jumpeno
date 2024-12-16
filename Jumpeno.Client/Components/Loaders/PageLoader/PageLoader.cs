@@ -16,8 +16,8 @@ public partial class PageLoader {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool PageLoaderDisplayed { get; set; } = true;
     private readonly SemaphoreSlim Lock = new(1, 1);
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() { { PAGE_LOADER_TASK.INITIAL, true } };
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() { { PAGE_LOADER_TASK.INITIAL, true } } : [];
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() {{ PAGE_LOADER_TASK.INITIAL, true }};
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() {{ PAGE_LOADER_TASK.INITIAL, true }} : [];
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
     public CSSClass ComputeClassContent() {

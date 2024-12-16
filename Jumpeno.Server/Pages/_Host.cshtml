@@ -12,7 +12,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content, viewport-fit=cover" />
-        <link rel="icon" type="image/png" href="@AppEnvironment.Import("icons/favicon.png")" />
+        <link rel="icon" type="image/png" href="@IMAGE.ICON_FAVICON" />
         <base href="/" />
         <title>@AppSettings.Name</title>
         <meta name="description" content="@I18N.T("JUMPENO_DESCRIPTION")">
@@ -43,6 +43,7 @@
         <script src="@AppEnvironment.Import("js/utils/locks/Locker.js")"></script>
         <script src="@AppEnvironment.Import("js/utils/listeners/ListenerStorage.js")"></script>
         <script src="@AppEnvironment.Import("js/storage/JSCookies.js")"></script>
+        <script src="@AppEnvironment.Import("js/components/JSImage.js")"></script>
         <script src="@AppEnvironment.Import("js/theme/JSThemeProvider.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSServerPageLoader.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSWebDocument.js")"></script>
@@ -55,7 +56,6 @@
         <script src="@AppEnvironment.Import("js/document/JSAnimationHandler.js")"></script>
         <script src="@AppEnvironment.Import("js/document/JSAnimator.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSNotification.js")"></script>
-        <script src="@AppEnvironment.Import("js/components/JSImage.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSModal.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSScrollArea.js")"></script>
         <script src="@AppEnvironment.Import("js/components/JSPageLoader.js")"></script>

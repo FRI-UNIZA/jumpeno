@@ -2,28 +2,24 @@ namespace Jumpeno.Server.Utils;
 
 public class GameEngine : IUpdateable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private Game Game { get; set; }
-    public string Code => Game.Code;
-    public string Name => Game.Name;
+    public Game Game { get; private set; }
+    private Thread? GameLoopThread = null;
     private readonly Locker GameLock;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameEngine(ACCESS_MODE access, string code, string name, byte capacity) {
-        Game = new Game(access, code, name, capacity);
+    public GameEngine(DISPLAY_MODE display, User host, string code, string name, byte capacity) {
+        Game = new Game(display, host, code, name, capacity);
         GameLock = new Locker();
     }
-
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public Game ClientGameCopy() { return Game; }
     
     // Player actions ---------------------------------------------------------------------------------------------------------------------
-    public async Task<Player> AddPlayer(User user, bool touchDevice) {
+    public async Task<Player> AddPlayer(User user, DEVICE_TYPE device) {
         return await GameLock.Exclusive(async token => {
-            var player = Game.AllocatePlayer(user, touchDevice);
+            var player = Game.AllocatePlayer(user, device);
             var update = Game.NewPlayerUpdate(player, PLAYER_ACTION.JOIN);
             var updated = Game.Update(update);
             token.Unlock();
-            if (updated) await GameHub.SendGameUpdate(Code, update);
+            if (updated) await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.ALL, update);
             return player;
         });
     }
@@ -33,11 +29,30 @@ public class GameEngine : IUpdateable {
             var update = Game.NewPlayerUpdate(player, PLAYER_ACTION.LEAVE);
             var updated = Game.Update(update);
             token.Unlock();
-            if (updated) await GameHub.SendGameUpdate(Code, update);
+            if (updated) await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.ALL, update);
         });
     }
 
-    private Thread? GameLoopThread = null;
+    // Spectator actions ------------------------------------------------------------------------------------------------------------------
+    public async Task<Spectator> AddSpectator(User user, DEVICE_TYPE device) {
+        return await GameLock.Exclusive(async token => {
+            var spectator = Game.AddSpectator(user, device);
+            var update = Game.NewWatchUpdate();
+            token.Unlock();
+            await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.ALL, update);
+            return spectator;
+        });
+    }
+
+    public async Task RemoveSpectator(Spectator spectator) {
+        await GameLock.Exclusive(async token => {
+            Game.RemoveSpectator(spectator);
+            var update = Game.NewWatchUpdate();
+            token.Unlock();
+            await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.ALL, update);
+        });
+    }
+
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     public async Task Start() {
         await GameLock.Exclusive(async token => {
@@ -47,7 +62,7 @@ public class GameEngine : IUpdateable {
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
             token.Unlock();
-            if (updated) await GameHub.SendGameUpdate(Code, Game.NewGamePlayUpdate(update));
+            if (updated) await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.ALL, Game.NewGamePlayUpdate(update));
         });
     }
 
@@ -57,7 +72,7 @@ public class GameEngine : IUpdateable {
             var update = Game.NewStateUpdate(0, GAME_STATE.LOBBY);
             var updated = Game.Update(update);
             token.Unlock();
-            if (updated) await GameHub.SendException(Code, new([new("You have been disconnected from the server.")], false));
+            if (updated) await GameHub.SendException(Game.Code, UPDATE_GROUP.ALL, new(new Error("You have been disconnected from the server.")));
         });
     }
 
@@ -99,8 +114,7 @@ public class GameEngine : IUpdateable {
                 // 1) Update game:
                 Game.Update(update);
                 // 2) Generate movement update:
-                var movement = Game.NewMovementUpdate(update.PlayerID, update.ID);
-                if (loop.Update.Movements.TryGetValue(update.PlayerID, out var previous)) movement.Chain(previous);
+                var movement = Game.NewMovementUpdate(update.PlayerID);
                 // 3) Add movement update to loop:
                 loop.Update.Movements[update.PlayerID] = movement;
             }
@@ -111,7 +125,7 @@ public class GameEngine : IUpdateable {
     }
 
     private void AddCollisionUpdates(ref (GamePlayUpdate Update, bool Send) loop) {
-        foreach (var (player, index) in Game.PlayerIterator) {
+        foreach (var (player, _) in Game.PlayerIterator) {
             // 1) Check collision:
             if (!player.CollisionDetected) continue;
             // 2) Check movement update:
@@ -124,14 +138,14 @@ public class GameEngine : IUpdateable {
 
     private async Task SendLoopUpdate((GamePlayUpdate Update, bool Send) loop) {
         if (loop.Send) {
-            // 1) Send update to all clients:
-            await GameHub.SendGameUpdate(Code, loop.Update, CLIENT_DEVICE.ALL);
+            // 1) Send update to all watching clients:
+            await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.WATCH, loop.Update);
             Game.TouchClock.Reset();
-        } else if (Game.Access == ACCESS_MODE.EACH_OWN) {
+        } else {
             // 2) Send periodical (wake-up) updates to touch devices:
             var deltaT = Game.TouchClock.ComputeDelta();
             if (deltaT < Game.TouchClock.IntervalMS) return;
-            await GameHub.SendGameUpdate(Code, loop.Update, CLIENT_DEVICE.TOUCH);
+            await GameHub.SendGameUpdate(Game.Code, UPDATE_GROUP.WATCH_TOUCH, loop.Update);
             Game.TouchClock.Update(deltaT);
         }
     }

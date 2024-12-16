@@ -17,12 +17,17 @@ public partial class ThemeProvider {
     public RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private static ThemeProvider? Instance;
     private BaseTheme Theme = DEFAULT_THEME;
-    private static string ThemeCSSClass(string classname) {
+    public static string ThemeCSSClass(string classname) {
         return $"{HttpUtility.HtmlEncode(classname).Replace("Theme", "").ToLower()}-theme";
     }
-    private static string ThemeCSSClass(BaseTheme theme) {
+    public static string ThemeCSSClass(BaseTheme theme) {
         return ThemeCSSClass(theme.GetType().Name);
+    }
+    public static string ThemeCSSClass() {
+        if (Instance == null) return ThemeCSSClass(DEFAULT_THEME);
+        return ThemeCSSClass(Instance.Theme);
     }
     public static string ServerBodyClass() {
         var c = new CSSClass();
@@ -36,6 +41,9 @@ public partial class ThemeProvider {
         return c;
     }
     
+    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    public ThemeProvider() => Instance = this;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnInitialized() {
         var cookie = GetThemeCookie();
@@ -52,7 +60,7 @@ public partial class ThemeProvider {
             if (!AppEnvironment.IsServer) {
                 SetThemeCookie(Theme);
             }
-        }
+        }        
         ScrollArea.SetTheme(Theme.SCROLL_THEME);
     }
 

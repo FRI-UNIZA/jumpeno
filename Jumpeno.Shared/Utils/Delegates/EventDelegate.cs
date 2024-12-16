@@ -5,6 +5,7 @@ namespace Jumpeno.Shared.Utils;
 public class EventDelegate<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly EventDelegate<T> EMPTY = new(v => {});
+    public static readonly Func<T, Task> EMPTY_TASK = (T value) => System.Threading.Tasks.Task.CompletedTask;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action<T>? WrappedAction;

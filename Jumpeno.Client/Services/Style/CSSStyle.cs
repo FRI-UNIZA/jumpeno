@@ -31,7 +31,7 @@ public class CSSStyle {
             Styles[property] = value;
         }
     }
-    public CSSStyle(): this("") {}
+    public CSSStyle() : this("") {}
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public string? Get(string property) {

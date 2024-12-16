@@ -1,5 +1,7 @@
 namespace Jumpeno.Client.Components;
 
+// TODO: [Using SSR] Implement check of theme & login inconsistency before hide
+//       (To avoid different theme/language specific images and logged in component states rendered on the server)
 public partial class ServerPageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_LOADER = "server-page-loader";

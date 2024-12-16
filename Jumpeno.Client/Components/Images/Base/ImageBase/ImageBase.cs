@@ -22,6 +22,8 @@ public partial class ImageBase : IDisposable {
     [Parameter]
     public string Alt { get; set; } = "";
     [Parameter]
+    public string Style { get; set; } = "";
+    [Parameter]
     public bool Transparent { get; set; } = false;
     [Parameter]
     public bool NoTransition { get; set; } = false;
@@ -45,7 +47,7 @@ public partial class ImageBase : IDisposable {
         return c;
     }
     
-    private static Dictionary<string, ImageBase> Images = [];
+    private static readonly Dictionary<string, ImageBase> Images = [];
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     public ImageBase() {
@@ -64,7 +66,7 @@ public partial class ImageBase : IDisposable {
         } else {
             State = Preloaded
                     ? (IMAGE_STATE) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
-                    : (IMAGE_STATE) JS.Invoke<int>(JSImage.CheckState, ID);
+                    : (IMAGE_STATE) JS.Invoke<int>(JSImage.CheckState, URL);
             HandleLoadFinish(State, OnLoadingFinish);
         } 
     }

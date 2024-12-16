@@ -30,7 +30,7 @@ public class InputViewModel<T> {
     public readonly EventDelegate<T> OnChange;
 
     public readonly InputErrorViewModel Error;
-    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) { return viewModel?.Error; }
+    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) => viewModel?.Error;
 
     private readonly Action? Notify = null;
     
@@ -93,7 +93,7 @@ public class InputViewModel<T> {
         } else if (propType == typeof(InputViewModelDoubleParams)) {
             return CreateNumberBoundaries((InputViewModelDoubleParams)(object) @params);
         }
-        return [new (default!, false), new (default!, false)];
+        return [new(default!, false), new(default!, false)];
     }
     public T ApplyTextMode(T value) {
         if (Type == INPUT_TYPE.TEXT) {

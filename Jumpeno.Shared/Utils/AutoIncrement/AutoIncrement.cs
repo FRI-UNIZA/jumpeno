@@ -8,7 +8,7 @@ public class AutoIncrement {
     public AutoIncrement(long value) {
         Value = value;
     }
-    public AutoIncrement(): this(0) {}
+    public AutoIncrement() : this(0) {}
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public long Current() { return Value; }

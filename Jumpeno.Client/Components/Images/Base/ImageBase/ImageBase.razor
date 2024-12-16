@@ -2,7 +2,7 @@
 
 @inherits SurfaceComponent
 
-<div id="@ID" class="@ComputeClass()">
+<div id="@ID" class="@ComputeClass()" style="@Style">
     <div class="image-ratio" />
     <img class="image-element" src="@URL" loading="@Loading.ToString().ToLower()" @attributes="@AdditionalAttributes" />
     <div class="error-icon-wrapper" aria-hidden="true">

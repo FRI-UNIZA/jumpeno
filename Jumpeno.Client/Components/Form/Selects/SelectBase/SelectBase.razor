@@ -11,7 +11,7 @@
                     id="@ID"
                     type="button"
                     aria-roledescription="combobox"
-                    aria-label="@($"{Label}, {I18N.T("Selected: I18N{option}", new() { { "option", Selected.Label } })}")"
+                    aria-label="@($"{Label}, {I18N.T("Selected: I18N{option}", new() {{ "option", Selected.Label }})}")"
                     class="@ComputeButtonClass()"
                     @onclick="@OpenModal"
                 >

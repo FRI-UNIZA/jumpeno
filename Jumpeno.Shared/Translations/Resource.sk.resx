@@ -384,4 +384,37 @@
   <data name="The game is already running." xml:space="preserve">
     <value>Hra práve prebieha.</value>
   </data>
+  <data name="Show" xml:space="preserve">
+    <value>Zobraziť</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Skryť</value>
+  </data>
+  <data name="Screen too small" xml:space="preserve">
+    <value>Príliš malá obrazovka</value>
+  </data>
+  <data name="Rotate screen" xml:space="preserve">
+    <value>Otoč obrazovku</value>
+  </data>
+  <data name="Screen connected" xml:space="preserve">
+    <value>Obrazovka pripojená</value>
+  </data>
+  <data name="Missing parameters!" xml:space="preserve">
+    <value>Nezadané parametre!</value>
+  </data>
+  <data name="User undefined!" xml:space="preserve">
+    <value>Neznámy používateľ!</value>
+  </data>
+  <data name="Code not set!" xml:space="preserve">
+    <value>Kód nie je zadaný!</value>
+  </data>
+  <data name="Device parameter not set!" xml:space="preserve">
+    <value>Nezadaný parameter typ zariadenia!</value>
+  </data>
+  <data name="Watch parameter not set!" xml:space="preserve">
+    <value>Parameter sledovať nie je zadaný!</value>
+  </data>
+  <data name="Game can not have more spectators!" xml:space="preserve">
+    <value>Hra nemôže mať viac sledovateľov!</value>
+  </data>
 </root>

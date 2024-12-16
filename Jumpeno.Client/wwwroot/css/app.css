@@ -61,6 +61,14 @@ body:not(.no-theme) {
     padding-right: var(--container-padding);
 }
 
+.no-user-select {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     .container {

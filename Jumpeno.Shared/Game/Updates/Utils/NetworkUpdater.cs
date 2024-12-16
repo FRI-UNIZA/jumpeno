@@ -29,6 +29,12 @@ public class NetworkUpdater {
         return new PlayerUpdate(PlayerUpdateID++, player, action);
     }
 
+    // WatchUpdate -----------------------------------------------------------------------------------------------------------------------
+    private ulong WatchUpdateID = 0;
+    public WatchUpdate NewWatchUpdate(int spectatorCount) {
+        return new WatchUpdate(WatchUpdateID++, spectatorCount);
+    }
+
     // TimerUpdate ------------------------------------------------------------------------------------------------------------------------
     private ulong TimerUpdateID = 0;
     public TimerUpdate NewTimerUpdate(double time, TIMER_STATE state) {
@@ -41,6 +47,7 @@ public class NetworkUpdater {
         KeyUpdateID = 0;
         PingUpdateID = 0;
         PlayerUpdateID = 0;
+        WatchUpdateID = 0;
         TimerUpdateID = 0;
     }
 }

@@ -55,6 +55,40 @@ class JSWindow {
     static async RemoveKeyUpEventListener(objRef, method) {
         await this.#KeyUpStorage.RemoveEventListener(objRef, method)
     }
+
+    // MouseDown --------------------------------------------------------------------------------------------------------------------------
+    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ X: e.clientX, Y: e.clientY }))
+    
+    static async AddMouseDownEventListener(objRef, method) {
+        await this.#MouseDownStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveMouseDownEventListener(objRef, method) {
+        await this.#MouseDownStorage.RemoveEventListener(objRef, method)
+    }
+
+    // MouseUp ----------------------------------------------------------------------------------------------------------------------------
+    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ X: e.clientX, Y: e.clientY }))
+    
+    static async AddMouseUpEventListener(objRef, method) {
+        await this.#MouseUpStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveMouseUpEventListener(objRef, method) {
+        await this.#MouseUpStorage.RemoveEventListener(objRef, method)
+    }
+
+    // User select ------------------------------------------------------------------------------------------------------------------------
+    static #NO_USER_SELECT_CLASS = 'no-user-select'
+    
+    static BlockUserSelect() {
+        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
+        document.body.classList.add(this.#NO_USER_SELECT_CLASS)
+    }
+
+    static AllowUserSelect() {
+        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
+    }
 }
 
 window.JSWindow = JSWindow

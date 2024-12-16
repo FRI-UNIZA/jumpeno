@@ -14,7 +14,7 @@ public class CSSClass {
             Classes[value] = true;
         }
     }
-    public CSSClass(): this("") {}
+    public CSSClass() : this("") {}
     
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public bool Contains(string className) {

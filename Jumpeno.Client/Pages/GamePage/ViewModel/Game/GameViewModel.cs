@@ -9,12 +9,16 @@ public class GameViewModel {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public Game Game { get; private set; }
-    public Player Player { get; private set; }
+    public Player? Player { get; private set; }
+
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public bool IsWatching => Game.Display == DISPLAY_MODE.EACH_OWN || !IsPlayer || Game.Host.Equals(Player?.User);
+    public bool IsPlayer => Player != null;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameViewModel(Game game, Player player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
+    public GameViewModel(Game game, Player? player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
         Game = game;
-        Player = Game.GetPlayerRef(player.ID) ?? player;
+        Player = player == null ? player : Game.GetPlayerRef(player.ID);
         GameUpdates = InitGameUpdates(updates);
         UpdateLock = new();
         PingTimer = null;

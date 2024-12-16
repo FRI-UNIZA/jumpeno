@@ -384,4 +384,37 @@
   <data name="The game is already running." xml:space="preserve">
     <value>The game is already running.</value>
   </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="Screen too small" xml:space="preserve">
+    <value>Screen too small</value>
+  </data>
+  <data name="Rotate screen" xml:space="preserve">
+    <value>Rotate screen</value>
+  </data>
+  <data name="Screen connected" xml:space="preserve">
+    <value>Screen connected</value>
+  </data>
+  <data name="Missing parameters!" xml:space="preserve">
+    <value>Missing parameters!</value>
+  </data>
+  <data name="User undefined!" xml:space="preserve">
+    <value>User undefined!</value>
+  </data>
+  <data name="Code not set!" xml:space="preserve">
+    <value>Code not set!</value>
+  </data>
+  <data name="Device parameter not set!" xml:space="preserve">
+    <value>Device parameter not set!</value>
+  </data>
+  <data name="Watch parameter not set!" xml:space="preserve">
+    <value>Watch parameter not set!</value>
+  </data>
+  <data name="Game can not have more spectators!" xml:space="preserve">
+    <value>Game can not have more spectators!</value>
+  </data>
 </root>
