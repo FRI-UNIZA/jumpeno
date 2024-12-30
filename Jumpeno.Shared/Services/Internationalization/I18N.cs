@@ -44,12 +44,10 @@ public class I18N {
         CultureInfo.CurrentUICulture = cultureInfo;
     }
 
-    public static string Culture() {
-        return CultureInfo.CurrentCulture.ToString();
-    }
+    public static string Culture => CultureInfo.CurrentCulture.ToString();
 
     public static bool IsCulture(LANGUAGE language) {
-        return Culture() == language.StringValue();
+        return Culture == language.StringValue();
     }
 
     public static string GetHost(string language) {
@@ -64,17 +62,17 @@ public class I18N {
         if (AppSettings.Language.UsePrefix) {
             var path = URL.Path(url, keepEnd: true);
             return URL.IsLocal(url) && (
-                path.StartsWith($"/{Culture()}/")
-                || path == $"/{Culture()}"
+                path.StartsWith($"/{Culture}/")
+                || path == $"/{Culture}"
             );
         } else {
             var host = URL.Host(url);
-            return host == "" || host == GetHost(Culture());
+            return host == "" || host == GetHost(Culture);
         }
     }
 
     // Translations -----------------------------------------------------------------------------------------------------------------------
-    public static string T(string key, Dictionary<string, string>? values = null) {
+    private static string T(string key, Dictionary<string, string>? values = null) {
         if (values is null) {
             return Localizer[key];
         }
@@ -95,14 +93,17 @@ public class I18N {
             return Localizer[key];
         }
     }
-
-    public static string[] Split(string value) {
-        return value.Split(SPLIT);
+    public static string T(string key, Dictionary<string, string>? values = null, bool unsplit = false) {
+        if (unsplit) return UnSplit(T(key, values));
+        else return T(key, values);
     }
 
+    public static string[] Split(string value) => value.Split(SPLIT);
+    public static string UnSplit(string value) => value.Replace(SPLIT, "");
+
     public static string Link<T>() {
-        string link = typeof(T).GetField($"ROUTE_{Culture().ToUpper()}")!.GetValue(null)!.ToString()!;
-        if (USE_PREFIX && link == $"/{Culture()}") {
+        string link = typeof(T).GetField($"ROUTE_{Culture.ToUpper()}")!.GetValue(null)!.ToString()!;
+        if (USE_PREFIX && link == $"/{Culture}") {
             return $"{link}/";
         }
         if (link.EndsWith('/')) {
@@ -112,8 +113,8 @@ public class I18N {
     }
     public static string Link<T>(object[] parameters) {
         var link = Link<T>();
-        if (USE_PREFIX && link.StartsWith($"/{Culture()}")) {
-            link = link[$"/{Culture()}".Length..];
+        if (USE_PREFIX && link.StartsWith($"/{Culture}")) {
+            link = link[$"/{Culture}".Length..];
         }
         var linkParams = parameters.Prepend(link).ToArray();
 
@@ -125,9 +126,6 @@ public class I18N {
 
         if (link.EndsWith('/')) link = link[..^1];
         
-        return USE_PREFIX ? $"/{URL.EncodeValue(Culture())}{link}" : link;
-    }
-    public static string ImageLink(string file) {
-        return URL.Encode($"/images/{Culture()}/{file}?v={AppSettings.Version}");
+        return USE_PREFIX ? $"/{URL.EncodeValue(Culture)}{link}" : link;
     }
 }

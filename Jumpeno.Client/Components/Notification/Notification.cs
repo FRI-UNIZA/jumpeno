@@ -60,7 +60,7 @@ public partial class Notification : IDisposable {
     }
 
     // Instance ---------------------------------------------------------------------------------------------------------------------------
-    public Notification(): base() {
+    public Notification() : base() {
         if (AppEnvironment.IsServer) return;
         Service = AppEnvironment.GetService<INotificationService>();
     }

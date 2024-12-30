@@ -13,8 +13,10 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <DefineConstants>CLIENT_DEVELOPMENT</DefineConstants>
     </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <DefineConstants>CLIENT_PRODUCTION</DefineConstants>
+        <BlazorWebAssemblyEnableLinking>true</BlazorWebAssemblyEnableLinking>
     </PropertyGroup>
 
     <ItemGroup>

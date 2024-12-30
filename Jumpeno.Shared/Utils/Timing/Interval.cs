@@ -1,6 +1,6 @@
 namespace Jumpeno.Shared.Utils;
 
-public class Interval(EmptyDelegate action, int time): Delay(action, time) {
+public class Interval(EmptyDelegate action, int time) : Delay(action, time) {
     // Instance methods -------------------------------------------------------------------------------------------------------------------
     protected override async void StartExecution() {
         do await ExecuteTimeout();

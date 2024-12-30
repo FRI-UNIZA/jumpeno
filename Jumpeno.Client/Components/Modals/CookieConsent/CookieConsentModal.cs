@@ -72,6 +72,7 @@ public partial class CookieConsentModal {
             await HTTP.Patch(API.BASE.COOKIE, body: accept.Select(x => x.Name));
             CookieStorage.CacheAcceptedCookies(accept);
             await ModalRef.Close();
+        } catch {
         } finally {
             await PageLoader.Hide(PAGE_LOADER_TASK.COOKIE_CONSENT);
         }

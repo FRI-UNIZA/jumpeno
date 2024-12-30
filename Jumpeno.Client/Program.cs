@@ -28,15 +28,18 @@ AppEnvironment.Init(
 );
 RequestStorage.Init();
 Navigator.Init();
-URL.Init(() => {
-    var manager = AppEnvironment.GetService<NavigationManager>();
-    return manager.Uri;
-});
+URL.Init(
+    () => {
+        var manager = AppEnvironment.GetService<NavigationManager>();
+        return manager.Uri;
+    },
+    ThemeProvider.ThemeCSSClass
+);
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 JS.Init(app.Services.GetRequiredService<IJSRuntime>());
 HTTP.Init(
     async (HTTPException e) => {
-        Notification.Error(e.Message);
+        ErrorHandler.Display(e);
         await Task.CompletedTask;
     }
 );

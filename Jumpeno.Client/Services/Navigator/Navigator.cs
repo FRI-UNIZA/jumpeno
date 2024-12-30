@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 #pragma warning disable CS8618
 
-public class Navigator: StaticService<Navigator> {
+public class Navigator : StaticService<Navigator> {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private NavigationManager Manager;
     private static Action<string, bool, bool> ServerRedirect;

@@ -12,15 +12,16 @@ public partial class ImagePreloader {
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
     static ImagePreloader() {
-        Add(IMAGE.COMMON.BG_YELLOW);
-        Add(IMAGE.COMMON.BG_BLUE);
-        Add(IMAGE.COMMON.JUMPER_YELLOW);
-        Add(IMAGE.COMMON.SPRITE_MAGE_AIR);
-        Add(IMAGE.COMMON.SPRITE_MAGE_EARTH);
-        Add(IMAGE.COMMON.SPRITE_MAGE_FIRE);
-        Add(IMAGE.COMMON.SPRITE_MAGE_MAGIC);
-        Add(IMAGE.COMMON.SPRITE_MAGE_WATER);
-        Add(IMAGE.COMMON.SPRITE_TILE);
+        Add(IMAGE.BG_YELLOW);
+        Add(IMAGE.BG_BLUE);
+        Add(IMAGE.ICON_KEYBOARD);
+        Add(IMAGE.JUMPER_YELLOW);
+        Add(IMAGE.TILE);
+        Add(IMAGE.SPRITE_MAGE_AIR);
+        Add(IMAGE.SPRITE_MAGE_EARTH);
+        Add(IMAGE.SPRITE_MAGE_FIRE);
+        Add(IMAGE.SPRITE_MAGE_MAGIC);
+        Add(IMAGE.SPRITE_MAGE_WATER);
     }
 
     // Styles -----------------------------------------------------------------------------------------------------------------------------

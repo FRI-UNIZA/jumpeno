@@ -21,7 +21,7 @@ public partial class ModalProvider {
     public required RenderFragment ChildContent { get; set; }
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public ModalProvider(): base() {
+    public ModalProvider() : base() {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSModal.Init);
     }

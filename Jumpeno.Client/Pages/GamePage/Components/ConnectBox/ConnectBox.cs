@@ -53,12 +53,12 @@ public partial class ConnectBox : IAsyncDisposable {
         var isValid = true;
         var errors = Game.ValidateCode(VMCode.Value);
         if (errors.Count > 0) {
-            VMCode.Error.SetError(errors[0].Message);
+            VMCode.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;
         }
         errors = User.ValidateName(VMName.Value);
         if (errors.Count > 0) {
-            VMName.Error.SetError(errors[0].Message);
+            VMName.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;
         }
         return isValid;
@@ -67,11 +67,11 @@ public partial class ConnectBox : IAsyncDisposable {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task HandlePlay() {
         if (!Validate()) return;
-        await VM.PlayRequest(new(VMCode.Value, VMName.Value));
+        await VM.ConnectRequest(new(VMCode.Value, VMName.Value), false);
     }
 
     private async Task HandleWatch() {
         if (!Validate()) return;
-        await VM.WatchRequest(new(VMCode.Value, VMName.Value));
+        await VM.ConnectRequest(new(VMCode.Value, VMName.Value), true);
     }
 }

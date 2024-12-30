@@ -2,7 +2,12 @@ namespace Jumpeno.Client.Base;
 
 using System.Reflection;
 
-public class Page: ComponentBase, IAsyncDisposable {
+public class Page : ComponentBase, IAsyncDisposable {
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [CascadingParameter]
+    // NOTE: Used to trigger page rerender on theme change! (Important for Image URL)
+    private BaseTheme? RenderTheme { get; set; }
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() {

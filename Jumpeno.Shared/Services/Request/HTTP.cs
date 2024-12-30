@@ -1,10 +1,11 @@
 namespace Jumpeno.Shared.Services;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
 
-public class HTTP: StaticService<HTTP> {
+public class HTTP : StaticService<HTTP> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const int STATUS_FAILED = 600;
     public const int STATUS_CANCELLED = 601;
@@ -82,7 +83,7 @@ public class HTTP: StaticService<HTTP> {
             }
 
             // Add headers:
-            SetHeader(request, "Accept-Language", I18N.Culture());
+            SetHeader(request, "Accept-Language", I18N.Culture);
             if (headers is not null) {
                 foreach (var header in headers) {
                     SetHeader(request, header.Key, header.Value);
@@ -115,9 +116,9 @@ public class HTTP: StaticService<HTTP> {
             code = (int) response.StatusCode;
             await instance.RemoveToken(requestID);
         } catch (OperationCanceledException) {
-            throw new HTTPException(code: STATUS_CANCELLED, message: I18N.T("Request cancelled."));
+            throw new HTTPException(code: STATUS_CANCELLED, message: "Request cancelled.");
         } catch {
-            var exception = new HTTPException(code: STATUS_FAILED, message: I18N.T("Request failed."));
+            var exception = new HTTPException(code: STATUS_FAILED, message: "Request failed.");
             if (handleError) await OnError(exception);
             await instance.RemoveToken(requestID);
             throw exception;
@@ -130,7 +131,7 @@ public class HTTP: StaticService<HTTP> {
                 if (bodyAccess) return new HTTPResult<T>(code, response.Headers, response.Content.Headers, (await response.Content.ReadFromJsonAsync<T>())!);
                 return new HTTPHeadResult(code, response.Headers, response.Content.Headers);
             } catch {
-                var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, I18N.T("Parsing error."));
+                var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, "Parsing error.");
                 if (handleError) await OnError(exception);
                 throw exception;
             }
@@ -139,16 +140,20 @@ public class HTTP: StaticService<HTTP> {
             HTTPException exception;
             try {
                 string jsonResponse = await response!.Content.ReadAsStringAsync();
-                Dictionary<object, object> data = JsonConvert.DeserializeObject<Dictionary<object, object>>(jsonResponse)!;
+                var json = JObject.Parse(jsonResponse);
                 string message;
-                try { message = (data["message"] as string)!; }
+                try { message = json["Message"]!.ToString(); }
                 catch { message = ""; }
                 if (message is null || message == "") {
-                    message = I18N.T("Something went wrong.");
+                    message = "Something went wrong.";
                 }
-                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, data);
+                List<Error> errors;
+                try { errors = json["Errors"]!.ToObject<List<Error>>()!; }
+                catch { errors = []; }
+                var data = json["Data"]!.ToObject<IDictionary>();
+                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, errors, data);
             } catch {
-                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, I18N.T("Something went wrong."));
+                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, "Something went wrong.");
             }
             if (handleError) await OnError(exception);
             throw exception;

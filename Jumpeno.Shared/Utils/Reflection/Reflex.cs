@@ -71,4 +71,9 @@ public static class Reflex {
             yield return (field.Name, value);
         }
     }
+
+    public static void SetField<T>(Type type, object instance, string name, T value) {
+        FieldInfo field = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)!;
+        field?.SetValue(instance, value);
+    }
 }

@@ -8,6 +8,8 @@ public partial class Image {
     [Parameter]
     public string Class { get; set; } = "";
     [Parameter]
+    public string Style { get; set; } = "";
+    [Parameter]
     public bool Transparent { get; set; } = false;
     [Parameter]
     public bool NoTransition { get; set; } = false;

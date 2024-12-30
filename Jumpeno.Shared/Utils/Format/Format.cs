@@ -5,11 +5,12 @@ public static class Format {
     public static JsonSerializerOptions JSON_OPTIONS_PRETTY = new() { WriteIndented = true };
 
     // Time -------------------------------------------------------------------------------------------------------------------------------
-    public static string Ms_To_MMSS(double ms) {
+    public static string Ms_To_MMSS(double ms, bool space = false) {
         int seconds = (int) Math.Floor(ms / 1000);
         int displayMinutes = seconds / 60;
         int displaySeconds = seconds % 60;
-        return $"{displayMinutes:D2}:{displaySeconds:D2}";
+        string s = space ? " " : "";
+        return $"{displayMinutes:D2}{s}:{s}{displaySeconds:D2}";
     }
 
     // Numbers ----------------------------------------------------------------------------------------------------------------------------

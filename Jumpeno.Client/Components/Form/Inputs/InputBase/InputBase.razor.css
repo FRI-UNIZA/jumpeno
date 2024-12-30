@@ -5,7 +5,6 @@
     --input-padding: 10px;
     --input-border-radius: 6px;
     --input-font-family: var(--font-primary);
-    --input-font-family-password: Calibri;
     --input-font-size: 16px;
     --input-font-weight: 400;
     --input-line-height: 1;
@@ -185,8 +184,9 @@
     color: var(--input-color-placeholder);
 }
 
-.input-base-input[type="password"] {
-    font-family: var(--input-font-family-password);
+.input-base-input[type="password"]:not(:placeholder-shown) {
+    font-weight: 600;
+    letter-spacing: calc(0.25 * var(--input-font-size));
 }
 
 /* Align ------------------------------------------------------------------------------------------------------------------------------- */

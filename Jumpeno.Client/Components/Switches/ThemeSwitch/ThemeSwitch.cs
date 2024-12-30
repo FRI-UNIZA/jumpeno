@@ -4,15 +4,14 @@ namespace Jumpeno.Client.Components;
 public partial class ThemeSwitch {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME = "theme-switch";
+    public const string CLASSNAME_ELEMENT = "theme-switch-element";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public required BaseTheme Theme { get; set; }
     [CascadingParameter]
     public required Func<BaseTheme, Task> ChangeTheme { get; set; }
-    protected CSSClass ComputeClass() {
-        return ComputeClass(CLASSNAME);
-    }
+    protected CSSClass ComputeClass() => ComputeClass(CLASSNAME);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool DefaultValue;

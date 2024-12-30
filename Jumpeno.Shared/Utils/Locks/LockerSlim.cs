@@ -4,6 +4,9 @@ public class LockerSlim {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly SemaphoreSlim Semaphore = new(1, 1);
 
+    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    ~LockerSlim() => Semaphore.Dispose();
+
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Lock() => await Semaphore.WaitAsync();
     public void Unlock() => Semaphore.Release();

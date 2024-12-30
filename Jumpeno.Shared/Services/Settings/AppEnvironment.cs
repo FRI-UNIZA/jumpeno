@@ -22,11 +22,6 @@ public static class AppEnvironment {
     private static Func<bool> IsDevelopmentCheck; public static bool IsDevelopment => IsDevelopmentCheck();
 
     private static Func<Type, object> GetServiceOfType { get; set; }
-    public static T GetService<T>() {
-        return (T) GetServiceOfType(typeof(T));
-    }
-
-    public static string Import(string url) {
-        return $"{url}?v={AppSettings.Version}";
-    }
+    public static T GetService<T>() => (T) GetServiceOfType(typeof(T));
+    public static string Import(string url) => $"{url}?v={AppSettings.Version}";
 }

@@ -9,12 +9,17 @@ public class GameViewModel {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public Game Game { get; private set; }
-    public Player Player { get; private set; }
+    public Player? Player { get; private set; }
+
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public bool IsHost => Game.Host.Equals(Auth.User);
+    public bool IsWatching => Game.DisplayMode == DISPLAY_MODE.EACH_OWN || !IsPlayer || IsHost;
+    public bool IsPlayer => Player != null;
 
     // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public GameViewModel(Game game, Player player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
+    public GameViewModel(Game game, Player? player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
         Game = game;
-        Player = Game.GetPlayerRef(player.ID) ?? player;
+        Player = player == null ? player : Game.GetPlayerRef(player.ID);
         GameUpdates = InitGameUpdates(updates);
         UpdateLock = new();
         PingTimer = null;
@@ -35,6 +40,14 @@ public class GameViewModel {
         return queue;
     }
 
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
+    public static async Task GameRequest(Func<Task> action) {
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        try { await action(); }
+        catch { Console.Error.WriteLine("Game request failed!"); }
+        finally { await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST); }
+    }
+
     // Update Data ------------------------------------------------------------------------------------------------------------------------
     private readonly ConcurrentQueue<GameUpdate> GameUpdates;
     private readonly LockerSlim UpdateLock;
@@ -48,12 +61,25 @@ public class GameViewModel {
     public void ResetUpdates() => GameUpdates.Clear();
 
     // Update execution -------------------------------------------------------------------------------------------------------------------
+    private bool TryUpdateGame(GameUpdate update) {
+        // 1) Ensure current round:
+        if (update is GamePlayUpdate gameUpdate) {
+            if (gameUpdate.Round < Game.Round) return false;
+            if ((gameUpdate.Round == Game.Round && Game.LOBBY_STATES.Contains(Game.State)) || (gameUpdate.Round > Game.Round)) {
+                GameUpdates.Enqueue(gameUpdate);
+                return false;
+            }
+        }
+        // 2) Update game:
+        return Game.Update(update);
+    }
+
     public async Task ExecuteUpdates() {
         await UpdateLock.Exclusive(async () => {
             if (BeforeUpdates != null) await BeforeUpdates.Invoke();
             while (GameUpdates.TryDequeue(out var update)) {
                 if (BeforeUpdate != null) await BeforeUpdate.Invoke(new(update));
-                var success = Game.Update(update);
+                var success = TryUpdateGame(update);
                 if (AfterUpdate != null) await AfterUpdate.Invoke(new(update, success));
             }
             if (AfterUpdates != null) await AfterUpdates.Invoke();
@@ -120,4 +146,9 @@ public class GameViewModel {
             PingTimer = null;
         });
     }
+
+    // Controls ---------------------------------------------------------------------------------------------------------------------------
+    public bool ControlsDisplayed { get; private set; } = false;
+    public void InitControls() => ControlsDisplayed = Player != null && Player.Device == DEVICE_TYPE.TOUCH;
+    public void ToggleControls() => ControlsDisplayed = !ControlsDisplayed;
 }

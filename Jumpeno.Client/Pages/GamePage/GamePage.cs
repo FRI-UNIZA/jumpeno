@@ -35,7 +35,18 @@ public partial class GamePage {
     protected override async ValueTask OnPageDisposeAsync() => await ConnectVM.OnPageDisposeAsync();
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    private void OnConnect(GameViewModel vm) => GameVM = vm;
-    private void OnDisconnect() => GameVM = null;
+    private void OnConnect(GameViewModel vm) {
+        Window.TouchActionPanOn();
+        Window.BlockUserSelect();
+        vm.InitControls();
+        GameVM = vm;
+    }
+
+    private void OnDisconnect() {
+        Window.TouchActionPanOff();
+        Window.AllowUserSelect();
+        GameVM = null;
+    }
+
     private void Notify() => StateHasChanged();
 }
