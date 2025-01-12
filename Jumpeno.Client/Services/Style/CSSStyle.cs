@@ -18,7 +18,7 @@ public class CSSStyle {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, string> Styles = [];
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CSSStyle(string? styles) {
         styles = styles is null ? "" : styles;
         var arr = styles.Split(';');
@@ -31,7 +31,7 @@ public class CSSStyle {
             Styles[property] = value;
         }
     }
-    public CSSStyle(): this("") {}
+    public CSSStyle() : this("") {}
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public string? Get(string property) {

@@ -50,7 +50,7 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
     protected virtual void OnComponentDispose() {}
     protected virtual ValueTask OnComponentDisposeAsync() => ValueTask.CompletedTask;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SSRComponent() {
         Page.CurrentPage()!.CountComponent();
         Key = $"{KEY_PREFIX}-{Page.CurrentPage()!.ComponentCount}";
@@ -60,13 +60,6 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
         Exception = null;
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private Task PersistData() {
-        ApplicationState.PersistAsJson(Key, new { State, Data });
-        return Task.CompletedTask;
-    }
-
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() => OnComponentInitialized();
     protected override sealed async Task OnInitializedAsync() {
         PersistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
@@ -88,5 +81,12 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
         OnComponentDispose();
         await OnComponentDisposeAsync();
         PersistingSubscription.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    private Task PersistData() {
+        ApplicationState.PersistAsJson(Key, new { State, Data });
+        return Task.CompletedTask;
     }
 }

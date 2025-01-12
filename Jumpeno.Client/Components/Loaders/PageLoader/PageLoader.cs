@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class PageLoader {
+public partial class PageLoader : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_CONTENT = "page-loader-content";
     public const string ID = "page-loader";
@@ -15,9 +15,9 @@ public partial class PageLoader {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool PageLoaderDisplayed { get; set; } = true;
-    private readonly SemaphoreSlim Lock = new(1, 1);
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() { { PAGE_LOADER_TASK.INITIAL, true } };
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() { { PAGE_LOADER_TASK.INITIAL, true } } : [];
+    private readonly LockerSlim Lock = new();
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() {{ PAGE_LOADER_TASK.INITIAL, true }};
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() {{ PAGE_LOADER_TASK.INITIAL, true }} : [];
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
     public CSSClass ComputeClassContent() {
@@ -30,6 +30,12 @@ public partial class PageLoader {
         if (PageLoaderDisplayed) c.Set(CLASS_DISPLAYED);
         if (GlobalLoaders.Count == 0) c.Set(CLASS_CUSTOM);
         return c;
+    }
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public void Dispose() {
+        Lock.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
@@ -53,52 +59,57 @@ public partial class PageLoader {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task Show(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT, bool custom = false) {
-        var instance = Instance();
-        await instance.Lock.WaitAsync();
-        instance.PageLoaderTasks[task] = true;
-        
-        instance.PageLoaderDisplayed = true;
-        instance.UpdateGlobalLoaders(task, custom);
-        if (!AppEnvironment.IsServer) {
-            var firstLoader = instance.PageLoaderTasks.Count == 1;
-            if (firstLoader) {
-                ActionHandler.SaveActiveElement();
-                instance.NoLoaderTCS = new TaskCompletionSource();
+        var instance = Instance(); await instance.Lock.TryExclusive(async () => {
+            instance.PageLoaderTasks[task] = true;
+            // Focus handling:
+            instance.PageLoaderDisplayed = true;
+            instance.UpdateGlobalLoaders(task, custom);
+            if (!AppEnvironment.IsServer) {
+                var firstLoader = instance.PageLoaderTasks.Count == 1;
+                if (firstLoader) {
+                    ActionHandler.SaveActiveElement();
+                    instance.NoLoaderTCS = new TaskCompletionSource();
+                }
+                await instance.OnChange();
+                if (firstLoader) ActionHandler.SetFocus(ID);
             }
-            await instance.OnChange();
-            if (firstLoader) ActionHandler.SetFocus(ID);
-        }
-
-        instance.Lock.Release();
+        });
     }
 
     public static async Task Hide(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
-        var instance = Instance();
-        await instance.Lock.WaitAsync();
-        instance.PageLoaderTasks.Remove(task);
-
-        if (instance.PageLoaderDisplayed) {
-            instance.PageLoaderDisplayed = instance.PageLoaderTasks.Count > 0;
-            instance.RemoveGlobalLoader(task);
-            if (!AppEnvironment.IsServer) {
-                await instance.OnChange();
-                if (!instance.PageLoaderDisplayed) {
-                    instance.NoLoaderTCS.TrySetResult();
-                    await ActionHandler.RestoreFocusAsync();
+        var instance = Instance(); await instance.Lock.TryExclusive(async () => {
+            instance.PageLoaderTasks.Remove(task);
+            // Focus handling:
+            if (instance.PageLoaderDisplayed) {
+                instance.PageLoaderDisplayed = instance.PageLoaderTasks.Count > 0;
+                instance.RemoveGlobalLoader(task);
+                if (!AppEnvironment.IsServer) {
+                    await instance.OnChange();
+                    if (!instance.PageLoaderDisplayed) {
+                        instance.NoLoaderTCS.TrySetResult();
+                        await ActionHandler.RestoreFocusAsync();
+                    }
                 }
             }
-        }
+        });
+    }
 
-        instance.Lock.Release();
+    public static async Task Show(Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
+        await Show(task);
+        try { await action(); }
+        finally { await Hide(task); }
+    }
+
+    public static async Task Try(Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
+        try { await Show(action, task); }
+        catch {}
     }
 
     private static async Task WithActiveLoader(EmptyDelegate callback) {
-        var instance = Instance();
-        await instance.Lock.WaitAsync();
-        if (instance.PageLoaderTasks.Count > 0) {
+        var instance = Instance(); await instance.Lock.TryExclusive(async () => {
+            if (instance.PageLoaderTasks.Count <= 0) return;
             await callback.Invoke();
-        }
-        instance.Lock.Release();
+        });
     }
     public static async Task WithActiveLoader(Action callback) {
         await WithActiveLoader(new EmptyDelegate(callback));
@@ -109,23 +120,18 @@ public partial class PageLoader {
 
     public static async Task AwaitAllLoaders() {
         if (AppEnvironment.IsServer) return;
-        var instance = Instance();
-        await instance.Lock.WaitAsync();
-        if (instance.PageLoaderTasks.Count > 0) {
+        var instance = Instance(); await instance.Lock.TryExclusive(async token => {
+            if (instance.PageLoaderTasks.Count <= 0) return;
             var tcs = instance.NoLoaderTCS.Task;
-            instance.Lock.Release();
+            token.Unlock();
             await tcs;
-        } else {
-            instance.Lock.Release();
-        }
+        });
     }
 
     public static async Task<bool> IsActiveTask(PAGE_LOADER_TASK task) {
-        var instance = Instance();
-        await instance.Lock.WaitAsync();
-        var result = Instance().PageLoaderTasks.ContainsKey(task);
-        instance.Lock.Release();
-        return result;
+        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
+            return instance.PageLoaderTasks.ContainsKey(task);
+        }, false);
     }
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------

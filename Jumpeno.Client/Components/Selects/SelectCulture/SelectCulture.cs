@@ -6,7 +6,7 @@ public partial class SelectCulture {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly List<SelectOption> Options = I18N.LANGUAGES.Select(x => new SelectOption(x, x.ToUpper())).ToList();
-    private readonly SelectOption DefaultValue = new(I18N.Culture(), I18N.Culture().ToUpper());
+    private readonly SelectOption DefaultValue = new(I18N.Culture, I18N.Culture.ToUpper());
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public static void Init() {
@@ -35,7 +35,7 @@ public partial class SelectCulture {
     private static async Task ChangeCulture(SelectEvent ev) {
         var value = ev.After.GetValue<string>();
 
-        if (I18N.Culture() == value) return;
+        if (I18N.Culture == value) return;
 
         // Access info:
         var path = URL.Path();

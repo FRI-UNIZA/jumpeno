@@ -31,7 +31,7 @@ class JSModal {
 
     static async #OnClose(id, dialog, listener) {
         dialog.removeEventListener("animationend", listener)
-        await DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.MODAL_PROVIDER.MODAL_CLOSED, id)
+        await DotNet.invokeMethodAsync(DOTNET.NAMESPACE.CLIENT, DOTNET.MODAL_PROVIDER.MODAL_CLOSED, id)
     }
 
     static Deactivate(id) {

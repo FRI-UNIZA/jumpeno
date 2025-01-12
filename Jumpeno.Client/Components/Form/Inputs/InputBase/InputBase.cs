@@ -94,10 +94,10 @@ public partial class InputBase<T> : IDisposable {
         return (InputViewModel<T>?) ActiveInputManager.Get(id);
     }
 
-    public static void TrySetError(Error error, bool translated = true) {
+    public static void TrySetError(Error error) {
         InputErrorViewModel? errorVM = InputViewModel<object>.ErrorViewModel(ActiveInputManager.Get(error.ID));
-        if (errorVM is null || errorVM.HasError()) return;
-        errorVM.SetError(translated ? error.Message : I18N.T(error.Message));
+        if (errorVM is null || errorVM.HasError) return;
+        errorVM.SetError(I18N.T(error.Message, error.Values, unsplit: true));
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

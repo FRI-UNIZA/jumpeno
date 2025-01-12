@@ -2,15 +2,15 @@ namespace Jumpeno.Client.Components;
 
 using System.Reflection;
 
-public partial class ModalProvider {
+public partial class ModalProvider : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME_MODAL_PROVIDER_CONTENT = "modal-provider-content";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, ModalElement> ElementDictionary = [];
     private readonly List<Modal> ModalList = [];
-    private readonly SemaphoreSlim ModalLock = new(1, 1);
-    private readonly SemaphoreSlim ElementLock = new(1, 1);
+    private readonly LockerSlim ModalLock = new();
+    private readonly LockerSlim ElementLock = new();
     private TaskCompletionSource TCSOpen = null!;
     private TaskCompletionSource TCSDispose = null!;
 
@@ -20,18 +20,23 @@ public partial class ModalProvider {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
-    public ModalProvider(): base() {
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public ModalProvider() : base() {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSModal.Init);
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnInitializedAsync() {
         await Navigator.AddBeforeEventListener(async e => {
             // Close all modals before navigation
             await CloseAllAbove(null);
         });
+    }
+
+    public void Dispose() {
+        ModalLock.Dispose();
+        ElementLock.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
@@ -48,7 +53,7 @@ public partial class ModalProvider {
     // Opening:
     public static async Task CreateModal(Modal modal) {
         var instance = Instance();
-        await instance.ModalLock.WaitAsync();
+        await instance.ModalLock.TryLock();
         ActionHandler.SaveActiveElement();
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         SetModalState(modal, MODAL_STATE.PRE_OPEN);
@@ -57,10 +62,9 @@ public partial class ModalProvider {
     }
 
     public static async Task AddElement(ModalElement element) {
-        var instance = Instance();
-        await instance.ElementLock.WaitAsync();
-        instance.ElementDictionary.Add(element.Modal.ID, element);
-        instance.ElementLock.Release();
+        var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
+            instance.ElementDictionary.Add(element.Modal.ID, element);
+        });
         JS.InvokeVoid(JSModal.PreOpen, element.Modal.ID);
     }
 
@@ -83,11 +87,10 @@ public partial class ModalProvider {
 
     // Notification:
     public static async Task NotifyElement(Modal modal) {
-        var instance = Instance();
-        await instance.ElementLock.WaitAsync();
-        instance.ElementDictionary.TryGetValue(modal.ID, out var element);
-        element?.TriggerStateChange(); 
-        instance.ElementLock.Release();
+        var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
+            instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+            element?.TriggerStateChange(); 
+        });
     }
 
     public static async Task NotifyFinishLoading(Modal modal) {
@@ -99,7 +102,7 @@ public partial class ModalProvider {
     // Closing:
     public static async Task DestroyModal(Modal modal, bool withLock = true) {
         var instance = Instance();
-        if (withLock) await instance.ModalLock.WaitAsync();
+        if (withLock) await instance.ModalLock.TryLock();
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         await modal.OnBeforeClose.InvokeAsync(modal);
 
@@ -111,16 +114,15 @@ public partial class ModalProvider {
         await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
         await ActionHandler.RestoreFocusAsync();
         await modal.OnAfterClose.InvokeAsync(modal);
-        if (withLock) instance.ModalLock.Release();
+        if (withLock) instance.ModalLock.TryUnlock();
     }
 
     public static async Task RemoveElement(ModalElement element) {
-        var instance = Instance();
-        await instance.ElementLock.WaitAsync();
-        instance.ElementDictionary.Remove(element.Modal.ID);
-        instance.ModalList.Remove(element.Modal);
-        instance.StateHasChanged();
-        instance.ElementLock.Release();
+        var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
+            instance.ElementDictionary.Remove(element.Modal.ID);
+            instance.ModalList.Remove(element.Modal);
+            instance.StateHasChanged();
+        });
     }
 
     public static void NotifyDispose(Modal modal) {
@@ -148,7 +150,7 @@ public partial class ModalProvider {
     [JSInvokable]
     public static async Task JS_ModalOpened(string id) {
         await SetModalOpen(id);
-        Instance().ModalLock.Release();
+        Instance().ModalLock.TryUnlock();
     }
     [JSInvokable]
     public static async Task JS_ModalClosed(string id) {
@@ -159,14 +161,12 @@ public partial class ModalProvider {
     }
     [JSInvokable]
     public static async Task JS_ModalESCPressed() {
-        var instance = Instance();
-        await instance.ModalLock.WaitAsync();
-        if (instance.ModalList.Count > 0) {
+        var instance = Instance(); await instance.ModalLock.TryExclusive(async () => {
+            if (instance.ModalList.Count <= 0) return;
             var modal = instance.ModalList[^1];
             if (modal.State == MODAL_STATE.OPEN && !modal.Unclosable) {
                 await DestroyModal(modal, withLock: false);
             }
-        }
-        instance.ModalLock.Release();
+        });
     }
 }

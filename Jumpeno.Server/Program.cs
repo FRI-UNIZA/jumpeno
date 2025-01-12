@@ -2,8 +2,9 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAllOrigins", policy => {
+    options.AddPolicy(ORIGIN_POLICY, policy => {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
@@ -71,7 +72,7 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 // Apply the CORS middleware
-app.UseCors("AllowAllOrigins");
+app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();
 // Configure Forwarded Headers Middleware
 var forwardedHeadersOptions = new ForwardedHeadersOptions {
@@ -88,7 +89,8 @@ AppEnvironment.Init(
     () => {
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
-        return ctx.Request.Path.StartsWithSegments(AppSettings.Api.Base.Prefix);
+        return ctx.Request.Path.StartsWithSegments(AppSettings.Api.Base.Prefix)
+            || ctx.Request.Path.StartsWithSegments(HUB.CULTURE_PREFIX);
     },
     builder.Environment.IsDevelopment,
     (Type T) => app.Services.GetService(T)!
@@ -112,14 +114,15 @@ URL.Init(
         var ctx = ServerContext.Get();
         var replaceURL = RequestStorage.Get<string>(REQUEST_STORAGE_KEYS.REPLACE_URL);
         return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
-    }
+    },
+    ThemeProvider.ThemeCSSClass
 );
 app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
     async (HTTPException e) => {
         if (AppEnvironment.IsController) return;
-        Notification.Error(e.Message);
+        ErrorHandler.Notify(e);
         await Task.CompletedTask;
     },
     (HttpRequestMessage request) => {
@@ -196,6 +199,7 @@ app.UseBlazorFrameworkFiles();
 app.UseMiddleware<StaticFileMiddleware>();
 app.UseMiddleware<ErrorMiddleware>();
 app.UseMiddleware<HeadersMiddleware>();
+app.UseMiddleware<DisposeMiddleware>();
 
 app.UseAuthorization();
 

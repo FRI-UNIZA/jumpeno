@@ -1,0 +1,6 @@
+#project-canvas-pre-renderer {
+    position: fixed;
+    top: 100vh;
+    left: 0;
+    display: none;
+}

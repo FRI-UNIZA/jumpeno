@@ -7,7 +7,7 @@ class ListenerStorage {
     #After
     #Lock = new Locker()
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     constructor(event, createArgs, before = null, after = null) {
         this.#Listeners = {}
         this.#Event = event
@@ -26,7 +26,7 @@ class ListenerStorage {
     }
 
     #InvokeListeners = async (e) => {
-        await this.#Lock.Exclusive(async () => {
+        await this.#Lock.TryExclusive(async () => {
             if (this.#Before) this.#Before()
             for (const listener of Object.values(this.#Listeners)) {
                 await listener.objRef.invokeMethodAsync(listener.method, this.#CreateArgs(e))

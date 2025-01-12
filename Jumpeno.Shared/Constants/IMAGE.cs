@@ -1,23 +1,21 @@
 namespace Jumpeno.Shared.Constants;
 
-#pragma warning disable CA1822
-
-public class COMMON_IMAGE {
-    public string BG_YELLOW => URL.ImageLink("backgrounds/bg-yellow.svg");
-    public string BG_BLUE => URL.ImageLink("backgrounds/bg-blue.svg");
-    public string JUMPER_YELLOW => URL.ImageLink("images/jumper-yellow.png");
-    public string JUMPENO_PLAYERS => URL.ImageLink("images/jumpeno-players.png");
-    public string KEYBOARD => URL.ImageLink("images/keyboard.png");
-    public string SPRITE_MAGE_AIR => URL.ImageLink("sprites/mage-air.png");
-    public string SPRITE_MAGE_EARTH => URL.ImageLink("sprites/mage-earth.png");
-    public string SPRITE_MAGE_FIRE => URL.ImageLink("sprites/mage-fire.png");
-    public string SPRITE_MAGE_MAGIC => URL.ImageLink("sprites/mage-magic.png");
-    public string SPRITE_MAGE_WATER => URL.ImageLink("sprites/mage-water.png");
-    public string SPRITE_TILE => URL.ImageLink("sprites/tile.png");
-}
-public class LANGUAGE_IMAGE {}
-
 public static class IMAGE {
-    public static readonly COMMON_IMAGE COMMON = new();
-    public static readonly LANGUAGE_IMAGE LANGUAGE = new();
+    // Backgrounds:
+    public static string BG_YELLOW => URL.ImageLink("backgrounds/bg-yellow.svg");
+    public static string BG_BLUE => URL.ImageLink("backgrounds/bg-blue.svg");
+    // Icons:
+    public static string ICON_FAVICON => URL.ImageLink("icons/favicon.png");
+    public static string ICON_KEYBOARD => URL.ImageLink("icons/keyboard.svg");
+    // Images:
+    public static string JUMPER_YELLOW => URL.ImageLink("images/jumper-yellow.png");
+    public static string JUMPENO_PLAYERS => URL.ImageLink("images/jumpeno-players.png");
+    public static string KEYBOARD => URL.ImageLink("images/keyboard.png");
+    public static string TILE => URL.ImageLink("images/tile.png");
+    // Sprites:
+    public static string SPRITE_MAGE_AIR => URL.ImageLink("sprites/mage-air.png");
+    public static string SPRITE_MAGE_EARTH => URL.ImageLink("sprites/mage-earth.png");
+    public static string SPRITE_MAGE_FIRE => URL.ImageLink("sprites/mage-fire.png");
+    public static string SPRITE_MAGE_MAGIC => URL.ImageLink("sprites/mage-magic.png");
+    public static string SPRITE_MAGE_WATER => URL.ImageLink("sprites/mage-water.png");
 }

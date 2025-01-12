@@ -8,19 +8,20 @@ public partial class ImagePreloader {
     private static readonly List<PreloadedImage> List = [];
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private static void Add(string url) => List.Add(new PreloadedImage(url));
+    private static void Add(string url) => List.Add(new(url));
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     static ImagePreloader() {
-        Add(IMAGE.COMMON.BG_YELLOW);
-        Add(IMAGE.COMMON.BG_BLUE);
-        Add(IMAGE.COMMON.JUMPER_YELLOW);
-        Add(IMAGE.COMMON.SPRITE_MAGE_AIR);
-        Add(IMAGE.COMMON.SPRITE_MAGE_EARTH);
-        Add(IMAGE.COMMON.SPRITE_MAGE_FIRE);
-        Add(IMAGE.COMMON.SPRITE_MAGE_MAGIC);
-        Add(IMAGE.COMMON.SPRITE_MAGE_WATER);
-        Add(IMAGE.COMMON.SPRITE_TILE);
+        Add(IMAGE.BG_YELLOW);
+        Add(IMAGE.BG_BLUE);
+        Add(IMAGE.ICON_KEYBOARD);
+        Add(IMAGE.JUMPER_YELLOW);
+        Add(IMAGE.TILE);
+        Add(IMAGE.SPRITE_MAGE_AIR);
+        Add(IMAGE.SPRITE_MAGE_EARTH);
+        Add(IMAGE.SPRITE_MAGE_FIRE);
+        Add(IMAGE.SPRITE_MAGE_MAGIC);
+        Add(IMAGE.SPRITE_MAGE_WATER);
     }
 
     // Styles -----------------------------------------------------------------------------------------------------------------------------

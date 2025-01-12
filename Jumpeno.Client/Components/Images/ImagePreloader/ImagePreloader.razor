@@ -8,7 +8,9 @@
     </style>
     @foreach (var image in ImagePreloader.List) {
         ElementReference reference;
-        <img @ref="reference" src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;" />
-        ImageReferrer.SetRef(image.URL, () => reference);
+        <img
+            @ref="reference" src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;"
+            onload="@(() => ImageReferrer.Set(image.URL, () => reference))"
+        />
     }
 </div>

@@ -3,9 +3,9 @@ namespace Jumpeno.Shared.Models;
 public class QueryArray {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public QUERY_ARRAY_TYPE Type { get; set; }
-    private List<string> Items;
+    private readonly List<string> Items;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public QueryArray(QUERY_ARRAY_TYPE type, StringValues? value) {
         Type = type;
         Items = ParseArray(value);

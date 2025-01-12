@@ -23,6 +23,6 @@ global using Jumpeno.Shared.Constants;
 global using Jumpeno.Shared.Exceptions;
 global using Jumpeno.Shared.Models;
 global using Jumpeno.Shared.Services;
-global using Jumpeno.Shared.Translations;
+global using Jumpeno.Shared.Services.Internationalization.Translations;
 global using Jumpeno.Shared.Utils;
 global using Jumpeno.Shared.Interfaces;

@@ -31,13 +31,12 @@ public partial class Switch {
         return c;
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Switch() {
         ID = ComponentService.GenerateID(CLASSNAME);
         ID_ELEMENT = $"{ID}-{CLASSNAME_ELEMENT}";
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnParametersSet(bool firstTime) => Value = DefaultValue;
     protected override void OnAfterRender(bool firstRender) {
         if (AppEnvironment.IsServer || !firstRender) return;

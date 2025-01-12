@@ -11,7 +11,7 @@ class JSAnimator {
     }
 
     static async #NotifyAnimators() {
-        await JSAnimator.#Lock.Exclusive(async token => {
+        await JSAnimator.#Lock.TryExclusive(async token => {
             for (const animator of Object.values(JSAnimator.#Animators)) {
                 await animator.objRef.invokeMethodAsync(animator.method)
             }

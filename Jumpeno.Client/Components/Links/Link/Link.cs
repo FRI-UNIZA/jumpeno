@@ -60,12 +60,11 @@ public partial class Link : IAsyncDisposable {
         return uri.Split('?')[0].StartsWith(hrefUri.Split('?')[0], StringComparison.OrdinalIgnoreCase);
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Link() {
         ID = ComponentService.GenerateID(ID_PREFIX);
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnParametersSet(bool firstTime) {
         if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
         if (Label != "") AdditionalAttributes["aria-label"] = Label;

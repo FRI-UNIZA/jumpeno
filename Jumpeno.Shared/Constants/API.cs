@@ -7,8 +7,12 @@ public static class API {
 
         // Endpoints ----------------------------------------------------------------------------------------------------------------------
         public static string COOKIE => $"{URL}/Cookie";
+        
         public static string CULTURE_SET => $"{URL}/Culture/Set";
+
         public static string GAME_START => $"{URL}/Game/Start";
+        public static string GAME_PAUSE => $"{URL}/Game/Pause";
+        public static string GAME_RESUME => $"{URL}/Game/Resume";
         public static string GAME_RESET => $"{URL}/Game/Reset";
     }
 }

@@ -16,7 +16,7 @@
                         class="@CLASS_INPUT_BASE_INPUT"
                         placeholder="@ViewModel.Placeholder"
                         aria-label="@ViewModel.Label"
-                        aria-invalid="@ViewModel.Error.HasError()"
+                        aria-invalid="@ViewModel.Error.HasError"
                         inputmode="@ComputeInputMode()"
                         autocomplete="@ComputeAutocomplete()"
                         @bind:event="oninput"

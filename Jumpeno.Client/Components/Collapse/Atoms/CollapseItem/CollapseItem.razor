@@ -1,20 +1,21 @@
 @namespace Jumpeno.Client.Atoms
 
 <div class="@ComputeClass()">
+    <div class="no-display">@RenderVar</div>
     <div
-        id="@ID_TITLE()"
+        id="@ID_TITLE"
         class="@CLASS_COLLAPSE_ITEM_TITLE"
-        @onclick="async () => { await Toggle(); }"
+        @onclick="Toggle"
         @onkeypress="@(async e => { if (e.Key == KEYBOARD.ENTER) await Toggle(); })"
         role="button"
-        aria-controls="@ID_CONTENT()"
+        aria-controls="@ID_CONTENT"
         aria-expanded="@($"{!Collapsed}".ToLower())"
         tabindex="0"
         aria-label="@Label"
     >
         @Title
     </div>
-    <div id="@ID_CONTENT()" class="@CLASS_COLLAPSE_ITEM_CONTENT_WRAP" inert="@Collapsed">
+    <div id="@ID_CONTENT" class="@CLASS_COLLAPSE_ITEM_CONTENT_WRAP" inert="@Collapsed">
         <div class="@CLASS_COLLAPSE_ITEM_CONTENT" tabindex="0">@Content</div>
     </div>
 </div>

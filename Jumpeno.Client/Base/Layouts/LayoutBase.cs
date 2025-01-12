@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Base;
 
-public class LayoutBase: LayoutComponentBase {
+public class LayoutBase : LayoutComponentBase {
     // Static methods ---------------------------------------------------------------------------------------------------------------------
     public static LayoutBase CurrentLayout() {
         return RequestStorage.Get<LayoutBase>(REQUEST_STORAGE_KEYS.CURRENT_LAYOUT) ?? new LayoutBase();
@@ -12,7 +12,7 @@ public class LayoutBase: LayoutComponentBase {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     protected bool Key { get; private set; }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public LayoutBase() {
         Key = false;
         SetCurrentLayout(this);

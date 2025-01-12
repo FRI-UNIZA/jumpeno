@@ -6,7 +6,7 @@ public class Delay {
     protected readonly int Time;
     protected readonly CancellationTokenSource TokenSource;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected Delay(EmptyDelegate action, int time) {
         Action = action;
         Time = time;

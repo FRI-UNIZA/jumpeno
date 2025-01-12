@@ -20,10 +20,10 @@ public partial class NavMenuMobile : IAsyncDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string ID { get; private set; }
-    private DotNetObjectReference<NavMenuMobile> ObjRef;
+    private readonly DotNetObjectReference<NavMenuMobile> ObjRef;
     private ScrollArea ScrollAreaRef = null!;
     private MENU_STATE State { get; set; } = MENU_STATE.CLOSED;
-    private readonly SemaphoreSlim Lock = new(1, 1);
+    private readonly LockerSlim Lock = new();
     private TaskCompletionSource StateTCS { get; set; } = null!;
     private string ComputeClass() {
         var c = new CSSClass(CLASS);
@@ -44,13 +44,12 @@ public partial class NavMenuMobile : IAsyncDisposable {
         return c;
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public NavMenuMobile() {
         ID = ComponentService.GenerateID(CLASS);
         ObjRef = DotNetObjectReference.Create(this);
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             await Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
@@ -68,7 +67,9 @@ public partial class NavMenuMobile : IAsyncDisposable {
             await Navigator.RemoveAfterFinishEventListener(CloseAfter);
             await Window.RemoveResizeEventListener(ObjRef, JS_OnWindowResize);
         }
+        Lock.Dispose();
         ObjRef.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
@@ -83,67 +84,61 @@ public partial class NavMenuMobile : IAsyncDisposable {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {
-        await Lock.WaitAsync();
-        if (State != MENU_STATE.CLOSED) {
-            Lock.Release();
-            return;
-        }
+        await Lock.TryExclusive(async () => {
+            if (State != MENU_STATE.CLOSED) return;
 
-        await PageLoader.Show(PAGE_LOADER_TASK.MENU, true);
+            await PageLoader.Show(PAGE_LOADER_TASK.MENU, true);
 
-        var objRef = DotNetObjectReference.Create(this);
-        AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
-        State = MENU_STATE.OPENING;
-        StateTCS = new TaskCompletionSource();
-        StateHasChanged();
-        ScrollAreaRef.ScrollTo(0, 0);
-        await StateTCS.Task;
+            var objRef = DotNetObjectReference.Create(this);
+            AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
+            State = MENU_STATE.OPENING;
+            StateTCS = new TaskCompletionSource();
+            StateHasChanged();
+            ScrollAreaRef.ScrollTo(0, 0);
+            await StateTCS.Task;
 
-        State = MENU_STATE.OPENED;
-        StateTCS = new TaskCompletionSource();
-        StateHasChanged();
-        await StateTCS.Task;
+            State = MENU_STATE.OPENED;
+            StateTCS = new TaskCompletionSource();
+            StateHasChanged();
+            await StateTCS.Task;
 
-        objRef.Dispose();
-        await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
+            objRef.Dispose();
+            await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
 
-        ActionHandler.SetFocus(ID);
+            ActionHandler.SetFocus(ID);
 
-        await OnMobileMenuOpen.InvokeAsync();
-        Lock.Release();
+            await OnMobileMenuOpen.InvokeAsync();
+        });
     }
     public async Task Close() {
-        await Lock.WaitAsync();
-        if (State != MENU_STATE.OPENED) {
-            Lock.Release();
-            return;
-        }
-        await PageLoader.Show(PAGE_LOADER_TASK.MENU, true);
+        await Lock.TryExclusive(async () => {
+            if (State != MENU_STATE.OPENED) return;
+            await PageLoader.Show(PAGE_LOADER_TASK.MENU, true);
 
-        var objRef = DotNetObjectReference.Create(this);
-        AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
-        State = MENU_STATE.CLOSING;
-        StateTCS = new TaskCompletionSource();
-        StateHasChanged();
-        await StateTCS.Task;
+            var objRef = DotNetObjectReference.Create(this);
+            AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
+            State = MENU_STATE.CLOSING;
+            StateTCS = new TaskCompletionSource();
+            StateHasChanged();
+            await StateTCS.Task;
 
-        State = MENU_STATE.CLOSED;
-        StateTCS = new TaskCompletionSource();
-        StateHasChanged();
-        await StateTCS.Task;
+            State = MENU_STATE.CLOSED;
+            StateTCS = new TaskCompletionSource();
+            StateHasChanged();
+            await StateTCS.Task;
 
-        objRef.Dispose();
-        await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
-    
-        var windowSize = Window.GetSize();
-        if (windowSize.Width < MOBILE_MENU_BREAKPOINT) {
-            ActionHandler.SetFocus(NavMenu.MOBILE_MENU_BUTTON_ID);
-        } else {
-            ActionHandler.SetFocus(MenuControls.FIRST_LINK_ID);
-        }
+            objRef.Dispose();
+            await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
+        
+            var windowSize = Window.GetSize();
+            if (windowSize.Width < MOBILE_MENU_BREAKPOINT) {
+                ActionHandler.SetFocus(NavMenu.MOBILE_MENU_BUTTON_ID);
+            } else {
+                ActionHandler.SetFocus(MenuControls.FIRST_LINK_ID);
+            }
 
-        await OnMobileMenuClose.InvokeAsync();
-        Lock.Release();
+            await OnMobileMenuClose.InvokeAsync();
+        });
     }
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------

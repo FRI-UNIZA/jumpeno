@@ -6,21 +6,36 @@ The project is developed using the C# framework Blazor.
 The application runs in WebAssembly and supports server-side rendering (SSR), which can be enabled through the configuration file.
 It also includes support for themes and translations.
 
-The back end provides a REST API via controllers, which can be accessed using HTTP requests.
-
+The back-end provides a REST API via controllers, which can be accessed using HTTP requests.<br />
 In-game communication is handled through SignalR hubs.
+
+The project is divided into client, server and shared part.
 
 ## Installation
 Before you start, please make sure you have installed:
 - .NET 8.0
 - Microsoft Visual Studio 2022+ or Visual Studio Code
+- You can be prompted to install additional workloads
 
 ## Run
 To start the project, go to directory:
 > /Jumpeno.Server
 
-and run this command:
+And run this command:
 `dotnet watch`
+
+## Local network
+To test the app on a local network, open port `7284` through the firewall.
+
+Go to directory:
+> /Jumpeno.Server
+
+And run this command:
+`dotnet watch --urls "https://192.168.1.12:7284"`
+
+The app is now accessible on other devices via the URL: "https://192.168.1.12:7284".
+
+(Replace `192.168.1.12` with the local IP address of your computer)
 
 ## Debug
 Use the built-in debugger in your IDE.
@@ -30,7 +45,10 @@ Ensure that `Jumpeno.sln` is selected as your workspace solution.
 To access the running application on a different device, it is recommended to use `DevTunnels`.
 
 ## Build
-To build the project, go to root directory:
+Temporarily disable `Bundle` option in:
+> /Jumpeno.Shared/appsettings.json
+
+Go to root directory:
 > /
 
 Create release build:
@@ -40,7 +58,7 @@ Navigate to publish directory:
 > /Publish
 
 Run the project using dotnet:
-`dotnet Jupeno.Server.dll`
+`dotnet Jumpeno.Server.dll`
 
 ## Run in Docker
 Docker desktop app must be installed!
@@ -78,7 +96,7 @@ Docker configuration can be modified in:
 
 > /docker-compose.yml
 
-App must run on port `80` to work properly (configured in `appsettings.json`).
+App is served on port mentioned in `Settings` section!
 
 ## Configuration Files
 This project includes two configuration files:
@@ -89,6 +107,28 @@ For shared common settings:
 For server-specific secret configurations:
 > /Jumpeno.Shared/appsettings.json
 
+## Settings
+Deployed app must run on port `80` to work properly!<br />
+(`Port` option in `/Jumpeno.Server/appsettings.json`).
+
+In latest .NET version "SIMD" is enabled automatically,<br />
+howewer must be turned off to support older mobile phone devices.<br />
+(`WasmEnableSIMD` option in `/Jumpeno.Client/Jumpeno.Client.csproj`)
+
+Not that client part has "tree shaking" enabled to speed up initial loading time.<br />
+(`PublishTrimmed` option in `/Jumpeno.Client/Jumpeno.Client.csproj`)
+
+Static CSS and JS files in `Jumpeno.Client/wwwroot` directory should also be bundled for production.<br />
+(`Bundle` option in `/Jumpeno.Shared/appsettings.json`)
+
+SSR can be enabled, but not recommended.<br />
+(`Prerender` option in `/Jumpeno.Shared/appsettings.json`)
+
+After feature implementation or bugfix, do not forget to update project version.<br />
+(`Version` option in `/Jumpeno.Shared/appsettings.json`)
+
+Additional options like language settings can be set in `/Jumpeno.Shared/appsettings.json`.
+
 ## Scripts
 Build scripts are located in the following directory:
 
@@ -96,12 +136,7 @@ Build scripts are located in the following directory:
 
 These programs can run automatically as part of the project’s build and run actions.
 
-For example, ThemeProvider automatically generates theme CSS variables from C# code.
-
-## Development Workflow ###
-After implementing features, fixing bugs, or releasing updates, remember to update project version in the file:
-
-> /Jumpeno.Shared/appsettings.json
+For example, `ThemeProvider` automatically generates theme CSS variables from C# code.
 
 ## Learn More
 This project was bootstrapped with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).

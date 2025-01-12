@@ -6,9 +6,11 @@ public class InputErrorViewModel {
     public string LastError { get; private set; } = "";
     private readonly Action? Notify = null;
 
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public bool HasError => IsError;
+    public string Error => IsError ? LastError : "";
+    
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public bool HasError() { return IsError; }
-    public string Error() { return IsError ? LastError : ""; }
     public void SetError(string error) {
         LastError = error;
         IsError = true;

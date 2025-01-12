@@ -20,9 +20,4 @@
         <ProjectReference Include="..\Jumpeno.Client\Jumpeno.Client.csproj" />
         <ProjectReference Include="..\Jumpeno.Shared\Jumpeno.Shared.csproj" />
     </ItemGroup>
-
-    <Target Name="BuildScripts">
-        <Exec Command="echo Building scripts..." />
-        <Exec Command="echo Finished building of scripts!" />
-    </Target>
 </Project>

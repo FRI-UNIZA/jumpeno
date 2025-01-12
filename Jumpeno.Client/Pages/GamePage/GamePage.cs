@@ -17,7 +17,7 @@ public partial class GamePage {
     private readonly ConnectViewModel ConnectVM;
     private GameViewModel? GameVM;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
         ConnectVM = new(new(
             URLCode: () => URLCode,
@@ -29,13 +29,23 @@ public partial class GamePage {
         GameVM = null;
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnPageInitializedAsync() => await ConnectVM.OnPageInitializedAsync();
     protected override async Task OnPageParametersSetAsync(bool firstTime) => await ConnectVM.OnPageParametersSetAsync();
     protected override async ValueTask OnPageDisposeAsync() => await ConnectVM.OnPageDisposeAsync();
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    private void OnConnect(GameViewModel vm) => GameVM = vm;
-    private void OnDisconnect() => GameVM = null;
+    private void OnConnect(GameViewModel vm) {
+        Window.TouchActionPanOn();
+        Window.BlockUserSelect();
+        vm.InitControls();
+        GameVM = vm;
+    }
+
+    private void OnDisconnect() {
+        Window.TouchActionPanOff();
+        Window.AllowUserSelect();
+        GameVM = null;
+    }
+
     private void Notify() => StateHasChanged();
 }

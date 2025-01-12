@@ -2,10 +2,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 // Configure the app to load appsettings.json from the Shared project
 var assembly = typeof(AppSettings).Assembly;
-using var stream = assembly.GetManifestResourceStream("Jumpeno.Shared.appsettings.json");
-if (stream == null) {
-    throw new FileNotFoundException("Shared configuration file not found.");
-}
+using var stream = assembly.GetManifestResourceStream("Jumpeno.Shared.appsettings.json")
+?? throw new FileNotFoundException("Shared configuration file not found.");
+
 var config = new ConfigurationBuilder()
     .AddJsonStream(stream)
     .Build();
@@ -28,15 +27,18 @@ AppEnvironment.Init(
 );
 RequestStorage.Init();
 Navigator.Init();
-URL.Init(() => {
-    var manager = AppEnvironment.GetService<NavigationManager>();
-    return manager.Uri;
-});
+URL.Init(
+    () => {
+        var manager = AppEnvironment.GetService<NavigationManager>();
+        return manager.Uri;
+    },
+    ThemeProvider.ThemeCSSClass
+);
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 JS.Init(app.Services.GetRequiredService<IJSRuntime>());
 HTTP.Init(
     async (HTTPException e) => {
-        Notification.Error(e.Message);
+        ErrorHandler.Display(e);
         await Task.CompletedTask;
     }
 );

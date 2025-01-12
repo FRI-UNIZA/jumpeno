@@ -6,15 +6,19 @@ public static class URL {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string SCHEMA_DIVIDER = "://";
 
-    // Initializers -----------------------------------------------------------------------------------------------------------------------
-    public static void Init(Func<string> url) {
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private static Func<string> ThemeCSSClass;
+
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    public static void Init(Func<string> url, Func<string> themeCSSClass) {
         if (Url is not null) {
             throw new InvalidOperationException("Already initialized!");
         }
         Url = url;
+        ThemeCSSClass = themeCSSClass;
     }
 
-    // Normalisation ----------------------------------------------------------------------------------------------------------------------
+    // Normalization ----------------------------------------------------------------------------------------------------------------------
     public static string NormSchema(string schema) {
         if (schema.EndsWith(SCHEMA_DIVIDER)) return schema;
         return $"{schema}{SCHEMA_DIVIDER}";
@@ -220,12 +224,30 @@ public static class URL {
         return Encode(url, false);
     }
 
+    // File -------------------------------------------------------------------------------------------------------------------------------
+    public static string Directory(string path) {
+        var index = path.LastIndexOf('/');
+        return index == -1 ? "" : path.Substring(0, index);
+    }
+    public static string FileName(string path) => System.IO.Path.GetFileNameWithoutExtension(path) ?? "";
+    public static string Extension(string path, bool dot = false) {
+        var index = path.LastIndexOf('.');
+        return index == -1 || index == path.Length - 1 ? "" : path.Substring(dot ? index : index + 1);
+    }
+
+    // File name --------------------------------------------------------------------------------------------------------------------------
+    public static string AppendText(string file, string text) => $"{Directory(file)}/{FileName(file)}-{text}{Extension(file, true)}";    
+    public static string AppendTheme(string file, string? theme = null) => AppendText(file, theme ?? ThemeCSSClass());
+    public static string AppendCulture(string file, string? culture = null) =>  AppendText(file, culture ?? I18N.Culture);
+
     // Links ------------------------------------------------------------------------------------------------------------------------------
     public static string Link(string url, bool encode = false) {
         if (encode) return Encode(url);
         else return url;
     }
-    public static string ImageLink(string file) {
-        return Encode($"/images/common/{file}?v={AppSettings.Version}");
+    public static string ImageLink(string file, bool theme = false, bool culture = false) {
+        if (theme) file = AppendTheme(file);
+        if (culture) file = AppendCulture(file);
+        return Encode($"/images/{file}?v={AppSettings.Version}");
     }
 }

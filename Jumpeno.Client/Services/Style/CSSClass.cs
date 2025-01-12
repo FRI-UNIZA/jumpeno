@@ -4,7 +4,7 @@ public class CSSClass {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, bool> Classes = [];
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CSSClass(string? className) {
         className = className is null ? "" : className;
         var arr = className.Trim().Split(' ');
@@ -14,7 +14,7 @@ public class CSSClass {
             Classes[value] = true;
         }
     }
-    public CSSClass(): this("") {}
+    public CSSClass() : this("") {}
     
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public bool Contains(string className) {

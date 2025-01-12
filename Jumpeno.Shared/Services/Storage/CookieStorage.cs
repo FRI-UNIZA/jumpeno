@@ -11,7 +11,7 @@ public static class CookieStorage {
     private static Action<string, string, string> DeleteItem;
     private static Func<bool, Task> OpenConsentModal;
 
-    // Initializers -----------------------------------------------------------------------------------------------------------------------
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(
         Func<string, string?> getItem,  Action<Cookie> setItem, Action<string, string, string> deleteItem,
         Func<bool, Task> openConsentModal
@@ -96,6 +96,8 @@ public static class CookieStorage {
     }
 
     // Cookie consent ---------------------------------------------------------------------------------------------------------------------
+    public static bool CookiesAccepted => GetAcceptedCookies().Count > 0;
+    
     public static async Task OpenModal() {
         await OpenConsentModal(false);
     }

@@ -1,10 +1,12 @@
 namespace Jumpeno.Shared.Services;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
+#pragma warning disable CA1816
 
-public class HTTP: StaticService<HTTP> {
+public class HTTP : StaticService<HTTP>, IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const int STATUS_FAILED = 600;
     public const int STATUS_CANCELLED = 601;
@@ -15,9 +17,19 @@ public class HTTP: StaticService<HTTP> {
     private static Func<HTTPException, Task> OnError;
     private static Action<HttpRequestMessage>? AddClientCookies;
     private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
-    private readonly SemaphoreSlim TokenLock = new(1, 1);
+    private readonly LockerSlim TokenLock = new();
 
-    // Initializers -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public HTTP() => Disposer = new(this, DisposeUnmanaged);
+    private readonly Disposer Disposer;
+    private void DisposeUnmanaged() {
+        foreach (var token in Tokens.Values) token.Dispose();
+        TokenLock.Dispose();
+    }
+    public void Dispose() => Disposer.Dispose();
+    ~HTTP() => Disposer.Final();
+
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(Func<HTTPException, Task> onError, Action<HttpRequestMessage>? addClientCookies = null) {
         if (Client is not null) return;
         Client = AppEnvironment.GetService<HttpClient>;
@@ -45,10 +57,25 @@ public class HTTP: StaticService<HTTP> {
         return $"{method}:{url}";
     }
 
-    private async Task RemoveToken(string requestID) {
-        await TokenLock.WaitAsync();
-        Tokens.Remove(requestID);
-        TokenLock.Release();
+    private static void CancelToken(CancellationTokenSource token) {
+        token.Cancel();
+        token.Dispose();
+    }
+
+    private async Task RemoveToken(string requestID, CancellationTokenSource token) {
+        await TokenLock.TryExclusive(() => {
+            if (!Tokens.TryGetValue(requestID, out var stored)) return;
+            if (stored != token) return;
+            CancelToken(token);
+            Tokens.Remove(requestID);
+        });
+    }
+
+    private async Task ReplaceToken(string requestID, CancellationTokenSource token) {
+        await TokenLock.TryExclusive(() => {
+            if (Tokens.TryGetValue(requestID, out var stored)) CancelToken(stored);
+            Tokens[requestID] = token;
+        });
     }
 
     private static async Task<HTTPHeadResult> Request<T>(
@@ -61,6 +88,7 @@ public class HTTP: StaticService<HTTP> {
         var requestID = GetRequestID(method, url);
         HttpResponseMessage? response;
         int code;
+        var token = new CancellationTokenSource(); // NOTE: Cancel token
         try {
             // TODO: Add authorization for base url
             
@@ -82,7 +110,7 @@ public class HTTP: StaticService<HTTP> {
             }
 
             // Add headers:
-            SetHeader(request, "Accept-Language", I18N.Culture());
+            SetHeader(request, "Accept-Language", I18N.Culture);
             if (headers is not null) {
                 foreach (var header in headers) {
                     SetHeader(request, header.Key, header.Value);
@@ -102,25 +130,20 @@ public class HTTP: StaticService<HTTP> {
                 AddClientCookies(request);
             }
 
-            // Cancel token:
-            await instance.TokenLock.WaitAsync();
-            instance.Tokens.TryGetValue(requestID, out var previousToken);
-            previousToken?.Cancel();
-            var token = new CancellationTokenSource();
-            instance.Tokens[requestID] = token;
-            instance.TokenLock.Release();
+            // Store token:
+            await instance.ReplaceToken(requestID, token);
 
             // Send request:
             response = await Client().SendAsync(request, token.Token);
             code = (int) response.StatusCode;
-            await instance.RemoveToken(requestID);
         } catch (OperationCanceledException) {
-            throw new HTTPException(code: STATUS_CANCELLED, message: I18N.T("Request cancelled."));
+            throw new HTTPException(code: STATUS_CANCELLED, message: "Request cancelled.");
         } catch {
-            var exception = new HTTPException(code: STATUS_FAILED, message: I18N.T("Request failed."));
+            var exception = new HTTPException(code: STATUS_FAILED, message: "Request failed.");
             if (handleError) await OnError(exception);
-            await instance.RemoveToken(requestID);
             throw exception;
+        } finally {
+            await instance.RemoveToken(requestID, token);
         }
 
         // Check status code:
@@ -130,7 +153,7 @@ public class HTTP: StaticService<HTTP> {
                 if (bodyAccess) return new HTTPResult<T>(code, response.Headers, response.Content.Headers, (await response.Content.ReadFromJsonAsync<T>())!);
                 return new HTTPHeadResult(code, response.Headers, response.Content.Headers);
             } catch {
-                var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, I18N.T("Parsing error."));
+                var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, "Parsing error.");
                 if (handleError) await OnError(exception);
                 throw exception;
             }
@@ -139,16 +162,20 @@ public class HTTP: StaticService<HTTP> {
             HTTPException exception;
             try {
                 string jsonResponse = await response!.Content.ReadAsStringAsync();
-                Dictionary<object, object> data = JsonConvert.DeserializeObject<Dictionary<object, object>>(jsonResponse)!;
+                var json = JObject.Parse(jsonResponse);
                 string message;
-                try { message = (data["message"] as string)!; }
+                try { message = json["Message"]!.ToString(); }
                 catch { message = ""; }
                 if (message is null || message == "") {
-                    message = I18N.T("Something went wrong.");
+                    message = "Something went wrong.";
                 }
-                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, data);
+                List<Error> errors;
+                try { errors = json["Errors"]!.ToObject<List<Error>>()!; }
+                catch { errors = []; }
+                var data = json["Data"]!.ToObject<IDictionary>();
+                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, errors, data);
             } catch {
-                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, I18N.T("Something went wrong."));
+                exception = new HTTPException(code, response?.Headers, response?.Content.Headers, "Something went wrong.");
             }
             if (handleError) await OnError(exception);
             throw exception;
@@ -157,13 +184,10 @@ public class HTTP: StaticService<HTTP> {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task ClearTokens() {
-        var instance = Instance();
-        await instance.TokenLock.WaitAsync();
-        foreach (var token in instance.Tokens) {
-            token.Value.Cancel();
-        }
-        instance.Tokens.Clear();
-        instance.TokenLock.Release();
+        var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
+            foreach (var token in instance.Tokens.Values) CancelToken(token);
+            instance.Tokens.Clear();
+        });
     }
 
     public static async Task<HTTPHeadResult> Head(

@@ -34,9 +34,13 @@ public partial class ConnectBox : IAsyncDisposable {
     ));
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    private readonly TaskCompletionSource InitTCS = new();
+
     protected override async Task OnInitializedAsync() {
+        await InitAutoWatch();
         await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
         if (Auth.IsRegistered()) ShowName = false;
+        InitTCS.TrySetResult();
     }
 
     protected override async Task OnParametersSetAsync(bool firstTime) {
@@ -44,21 +48,40 @@ public partial class ConnectBox : IAsyncDisposable {
         await VM.AddURLCodeChangedListener(SetInputCode);
     }
 
-    public async ValueTask DisposeAsync() {
-        await VM.RemoveURLCodeChangedListener(SetInputCode);
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (!firstRender) return;
+        await InitTCS.Task;
+        await TryAutoWatch();
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------    
+    public async ValueTask DisposeAsync() {
+        await VM.RemoveURLCodeChangedListener(SetInputCode);
+        GC.SuppressFinalize(this);
+    }
+
+    // Auto-Watch -------------------------------------------------------------------------------------------------------------------------
+    private static async Task InitAutoWatch() {
+        if (!ConnectViewModel.RunPresentation && !ConnectViewModel.RunAutoWatch) return;
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+    }
+
+    private async Task TryAutoWatch() {
+        // TODO: Implement reconnect hub:
+        if (ConnectViewModel.RunPresentation) await HandleWatch();
+        else if (ConnectViewModel.RunAutoWatch) await HandleWatch();
+    }
+
+    // Validation -------------------------------------------------------------------------------------------------------------------------
     private bool Validate() {
         var isValid = true;
-        var errors = Game.ValidateCode(VMCode.Value);
+        var errors = GameValidator.ValidateCode(VMCode.Value);
         if (errors.Count > 0) {
-            VMCode.Error.SetError(errors[0].Message);
+            VMCode.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;
         }
         errors = User.ValidateName(VMName.Value);
         if (errors.Count > 0) {
-            VMName.Error.SetError(errors[0].Message);
+            VMName.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;
         }
         return isValid;
@@ -66,12 +89,12 @@ public partial class ConnectBox : IAsyncDisposable {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task HandlePlay() {
-        if (!Validate()) return;
-        await VM.PlayRequest(new(VMCode.Value, VMName.Value));
+        if (Validate()) await VM.ConnectRequest(new(VMCode.Value, VMName.Value), false);
+        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_CONNECT);
     }
 
     private async Task HandleWatch() {
-        if (!Validate()) return;
-        await VM.WatchRequest(new(VMCode.Value, VMName.Value));
+        if (Validate()) await VM.ConnectRequest(new(VMCode.Value, VMName.Value), true);
+        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_CONNECT);
     }
 }

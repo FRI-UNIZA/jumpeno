@@ -2,7 +2,12 @@ namespace Jumpeno.Client.Base;
 
 using System.Reflection;
 
-public class Page: ComponentBase, IAsyncDisposable {
+public class Page : ComponentBase, IAsyncDisposable {
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [CascadingParameter]
+    // NOTE: Used to trigger page rerender on theme change! (Important for Image URL)
+    private BaseTheme? RenderTheme { get; set; }
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() {
@@ -67,12 +72,10 @@ public class Page: ComponentBase, IAsyncDisposable {
         ParametersSet = true;
     }
     private bool ParametersSetAsync = false;
-    private readonly LockerSlim ParametersSetLock = new();
     protected sealed override async Task OnParametersSetAsync() {
-        await ParametersSetLock.Exclusive(async () => {
-            await OnPageParametersSetAsync(!ParametersSetAsync);
-            ParametersSetAsync = true;
-        });
+        var firstTime = !ParametersSetAsync;
+        ParametersSetAsync = true;
+        await OnPageParametersSetAsync(firstTime);
     }
     protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
     protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnPageAfterRenderAsync(firstRender);
@@ -80,6 +83,7 @@ public class Page: ComponentBase, IAsyncDisposable {
         OnPageDispose();
         await OnPageDisposeAsync();
         await HTTP.ClearTokens();
+        GC.SuppressFinalize(this);
     }
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------

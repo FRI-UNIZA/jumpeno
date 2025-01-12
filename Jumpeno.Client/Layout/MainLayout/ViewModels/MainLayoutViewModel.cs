@@ -1,30 +1,21 @@
 namespace Jumpeno.Client.ViewModels;
 
-public class MainLayoutViewModel(MainLayout layout)
-{
+public class MainLayoutViewModel(MainLayout layout) {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly MainLayout Layout = layout;
     public bool NavigationDisplayed { get; private set; } = true;
-    public bool ForegroundDisplayed { get; private set; } = false;
+    public bool Padding { get; private set; } = true;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public void ShowNavigation() {
         NavigationDisplayed = true;
+        Padding = true;
         Layout.Notify();
     }
 
-    public void HideNavigation() {
+    public void HideNavigation(bool keepPadding = true) {
         NavigationDisplayed = false;
-        Layout.Notify();
-    }
-
-    public void ShowForeground() {
-        ForegroundDisplayed = true;
-        Layout.Notify();
-    }
-
-    public void HideForeground() {
-        ForegroundDisplayed = false;
+        Padding = keepPadding;
         Layout.Notify();
     }
 }

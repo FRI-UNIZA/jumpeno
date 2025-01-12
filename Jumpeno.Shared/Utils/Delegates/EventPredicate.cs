@@ -10,7 +10,7 @@ public class EventPredicate<T> {
     private readonly Func<T, bool>? WrappedAction;
     private readonly Func<T, Task<bool>> Action;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public EventPredicate(Func<T, bool> action) {
         WrappedAction = action;
         Action = async (T data) => action(data);

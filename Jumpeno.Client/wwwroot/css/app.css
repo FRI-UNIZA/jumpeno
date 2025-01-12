@@ -26,6 +26,42 @@ body:not(.no-theme) {
     z-index: 0;
 }
 
+/* General ----------------------------------------------------------------------------------------------------------------------------- */
+.no-display {
+    display: none !important;
+}
+
+/* User select ------------------------------------------------------------------------------------------------------------------------- */
+.no-user-select {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Touch actions ----------------------------------------------------------------------------------------------------------------------- */
+.touch-action-auto {
+    touch-action: auto;
+}
+
+.touch-action-none {
+    touch-action: none;
+}
+
+.touch-action-pan {
+    touch-action: pan-x pan-y;
+}
+
+.touch-action-pinch-zoom {
+    touch-action: pinch-zoom;
+}
+
+.touch-action-manipulation {
+    touch-action: manipulation;
+}
+
+/* Container --------------------------------------------------------------------------------------------------------------------------- */
 .container {
     position: relative;
     display: flex;
@@ -61,7 +97,7 @@ body:not(.no-theme) {
     padding-right: var(--container-padding);
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+/* Container media --------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     .container {
         --container-padding: calc(var(--size-container-padding-tablet) * 1px);

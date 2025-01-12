@@ -13,4 +13,9 @@ class Locker {
         try { return await callback(token) }
         finally { token.Unlock() }
     }
+
+    async TryExclusive(callback, fallback = undefined) {
+        try { return await this.Exclusive(callback) }
+        catch { return fallback }
+    }
 }

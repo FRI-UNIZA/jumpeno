@@ -22,25 +22,33 @@ public partial class CollapseItem : IDisposable {
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly string ID;
-    private string ID_TITLE() { return $"{ID}-{CLASS_COLLAPSE_ITEM_TITLE}"; }
-    private string ID_CONTENT() { return $"{ID}-{CLASS_COLLAPSE_ITEM_CONTENT}"; }
+    private string ID_TITLE => $"{ID}-{CLASS_COLLAPSE_ITEM_TITLE}";
+    private string ID_CONTENT => $"{ID}-{CLASS_COLLAPSE_ITEM_CONTENT}";
     protected CSSClass ComputeClass() {
         var c = new CSSClass(CLASS_COLLAPSE_ITEM);
         if (Collapsed) c.Set(CLASS_ITEM_COLLAPSED);
         return c;
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Rendering --------------------------------------------------------------------------------------------------------------------------
+    // NOTE: Fix of auto-height transition not applied to scrollbars
+    private bool RenderVar = true;
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CollapseItem() {
         ID = ComponentService.GenerateID(CLASS_COLLAPSE_ITEM);
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    protected override void OnAfterRender(bool firstRender) {
+        if (firstRender) return;
+        RenderVar = !RenderVar;
+    }
+
     public void Dispose() {
         Collapsed = true;
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Toggle() {
         await PageLoader.Show(PAGE_LOADER_TASK.COLLAPSE, true);
         Collapsed = !Collapsed;

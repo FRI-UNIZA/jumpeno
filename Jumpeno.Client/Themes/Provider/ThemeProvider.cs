@@ -4,6 +4,7 @@ namespace Jumpeno.Client.Themes;
 
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
+    public static readonly string NAME = typeof(ThemeProvider).Name;
     public const string TEMPLATE_NAMESPACE = "Constants";
     public static readonly BaseTheme DARK_THEME = new DarkTheme();
     public static readonly BaseTheme LIGHT_THEME = new LightTheme();
@@ -17,12 +18,21 @@ public partial class ThemeProvider {
     public RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private static ThemeProvider? Instance {
+        get { return RequestStorage.Get<ThemeProvider>(NAME); }
+        set { if (value == null) RequestStorage.Delete(NAME); else RequestStorage.Set(NAME, value); }
+    }
     private BaseTheme Theme = DEFAULT_THEME;
-    private static string ThemeCSSClass(string classname) {
+    public static string ThemeCSSClass(string classname) {
         return $"{HttpUtility.HtmlEncode(classname).Replace("Theme", "").ToLower()}-theme";
     }
-    private static string ThemeCSSClass(BaseTheme theme) {
+    public static string ThemeCSSClass(BaseTheme theme) {
         return ThemeCSSClass(theme.GetType().Name);
+    }
+    public static string ThemeCSSClass() {
+        var instance = Instance;
+        if (instance == null) return ThemeCSSClass(DEFAULT_THEME);
+        return ThemeCSSClass(instance.Theme);
     }
     public static string ServerBodyClass() {
         var c = new CSSClass();
@@ -37,6 +47,8 @@ public partial class ThemeProvider {
     }
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public ThemeProvider() => Instance = this;
+
     protected override void OnInitialized() {
         var cookie = GetThemeCookie();
         if (THEME_AUTODETECT && cookie is null) {
@@ -52,7 +64,7 @@ public partial class ThemeProvider {
             if (!AppEnvironment.IsServer) {
                 SetThemeCookie(Theme);
             }
-        }
+        }        
         ScrollArea.SetTheme(Theme.SCROLL_THEME);
     }
 

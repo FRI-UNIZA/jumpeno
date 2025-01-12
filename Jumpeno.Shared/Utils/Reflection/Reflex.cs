@@ -7,22 +7,21 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 public static class Reflex {
-    public static Type CompileClass(string classDir, string classNamespace, string className, string[]? dependencies = null) {
+    // Compilation ------------------------------------------------------------------------------------------------------------------------
+    public static Type CompileClass(
+        string classDir, string classNamespace, string className, string usings,
+        PortableExecutableReference[]? references = null,
+        (string Path, string Usings)[]? dependencies = null
+    ) {
         // Compile the code
-        var references = new[] {
-            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),           // System.Private.CoreLib.dll
-            MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),          // System.Console.dll
-            MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location)    // System.Runtime.dll
-        };
-
-        SyntaxTree[] syntaxTrees = [];
+        LinkedList<SyntaxTree> syntaxTrees = [];
         if (dependencies is not null) {
             foreach (var dep in dependencies) {
-                syntaxTrees = syntaxTrees.Append(CSharpSyntaxTree.ParseText(File.ReadAllText(dep))).ToArray();
+                syntaxTrees.AddLast(CSharpSyntaxTree.ParseText($"{dep.Usings}\n{File.ReadAllText(dep.Path)}"));
             }
         }
-        string code = File.ReadAllText($"{classDir}/{className}.cs");
-        syntaxTrees = syntaxTrees.Append(CSharpSyntaxTree.ParseText(code)).ToArray();
+        string code = $"{usings}\n{File.ReadAllText($"{classDir}/{className}.cs")}";
+        syntaxTrees.AddLast(CSharpSyntaxTree.ParseText(code));
 
         var compilation = CSharpCompilation.Create(
             "DynamicAssembly",
@@ -34,9 +33,8 @@ public static class Reflex {
         using var ms = new MemoryStream();
         var result = compilation.Emit(ms);
 
-        if (!result.Success) {
-            throw new Exception("Compilation failed!");
-        }
+        foreach (var d in result.Diagnostics) Console.Error.WriteLine(d);
+        if (!result.Success) throw new Exception("Compilation failed!");
 
         ms.Seek(0, SeekOrigin.Begin);
         var assembly = Assembly.Load(ms.ToArray());
@@ -46,11 +44,13 @@ public static class Reflex {
         return type;
     }
 
+    // Instance ---------------------------------------------------------------------------------------------------------------------------
     [return: NotNull]
     public static T CreateInstance<T>(Type type) {
         return (T) Activator.CreateInstance(type)! ?? throw new Exception("Instance could not be created!"); 
     }
 
+    // Getters ----------------------------------------------------------------------------------------------------------------------------
     public static IEnumerable<(string Name, object Value)> GetMembers(object instance) {
         // Ensure model is not null
         if (instance == null) yield break;
@@ -70,5 +70,11 @@ public static class Reflex {
             var value = field.GetValue(instance) ?? "null";
             yield return (field.Name, value);
         }
+    }
+
+    // Setters ----------------------------------------------------------------------------------------------------------------------------
+    public static void SetField<T>(Type type, object instance, string name, T value) {
+        FieldInfo field = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)!;
+        field?.SetValue(instance, value);
     }
 }

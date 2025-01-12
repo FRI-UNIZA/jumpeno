@@ -97,13 +97,12 @@ class JSAnimationHandler {
 
     static async #OnAnimationEndListener(element, objRef, method, listener) {
         element.removeEventListener("animationend", listener)
-        await objRef.invokeMethodAsync(method)
+        try { await objRef.invokeMethodAsync(method) } catch {}
     }
     static CallOnAnimationEnd(selector, objRef, method) {
         const element = document.querySelector(selector)
         if (!element) return
-        let listener
-        listener = async () => await this.#OnAnimationEndListener(element, objRef, method, listener)
+        let listener = async () => await this.#OnAnimationEndListener(element, objRef, method, listener)
         element.addEventListener("animationend", listener)
     }
 

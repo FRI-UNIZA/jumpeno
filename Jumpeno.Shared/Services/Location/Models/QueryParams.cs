@@ -5,7 +5,7 @@ public class QueryParams {
     private Dictionary<string, QUERY_ARRAY_TYPE> ArrayTypes;
     private Dictionary<string, StringValues> Items;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public QueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, Dictionary<string, StringValues> items) {
         ArrayTypes = arrayTypes;
         Items = items;
@@ -32,6 +32,8 @@ public class QueryParams {
         try { return bool.Parse(Items[key]!); }
         catch { return null; }
     }
+    public bool IsTrue(string key) => GetBool(key) is bool value && value;
+
     public QueryArray GetArray(string key) {
         QUERY_ARRAY_TYPE type;
         try { type = ArrayTypes[key]; }

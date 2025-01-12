@@ -73,7 +73,7 @@ public partial class Modal {
     public MODAL_STATE State { get; private set; }
     public required ScrollArea ScrollAreaRef { get; set; }
     
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Modal() {
         ID = ComponentService.GenerateID(ID_PREFIX);
         ID_DIALOG_START = $"{ID_DIALOG_START_PREFIX}-{ID}";
@@ -82,7 +82,6 @@ public partial class Modal {
         State = MODAL_STATE.CLOSED;
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnParametersSetAsync() {
         MaxWidth ??= "100vw";
         MaxHeight ??= "100vh";
@@ -91,29 +90,29 @@ public partial class Modal {
         }
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Open(bool loading = false) {
-        Checker.CheckClient();
+        AppEnvironment.CheckClient();
         CreatedLoading = loading;
         await ModalProvider.CreateModal(this);
     }
     public async Task Open() { await Open(false); }
     public async Task OpenLoading() { await Open(true); }
     public async Task FinishLoading() {
-        Checker.CheckClient();
+        AppEnvironment.CheckClient();
         await ModalProvider.NotifyFinishLoading(this);
     }
 
     public async Task Close() {
-        Checker.CheckClient();
+        AppEnvironment.CheckClient();
         await ModalProvider.DestroyModal(this);
     }
     public static async Task CloseAllAbove(Modal root) {
-        Checker.CheckClient();
+        AppEnvironment.CheckClient();
         await ModalProvider.CloseAllAbove(root);
     }
     public static async Task CloseAll() {
-        Checker.CheckClient();
+        AppEnvironment.CheckClient();
         await ModalProvider.CloseAllAbove(null);
     }
 }

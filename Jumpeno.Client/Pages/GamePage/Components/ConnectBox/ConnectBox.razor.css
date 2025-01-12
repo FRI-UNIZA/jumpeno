@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    padding: 6px 0;
 }
 
 ::deep .connect-box {
@@ -47,6 +48,10 @@
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
+    .connect-box-component {
+        padding: 30px 0;
+    }
+
     ::deep .connect-box {
         --box-gap: 24px;
         --box-width: 450px;

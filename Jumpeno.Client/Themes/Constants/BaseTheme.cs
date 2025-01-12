@@ -2,65 +2,62 @@ namespace Jumpeno.Client.Constants;
 
 #pragma warning disable CS8618
 
-// Mandatory using statement for generator script:
-using Jumpeno.Client.Constants;
-
 public class BaseTheme {
     // Themes -----------------------------------------------------------------------------------------------------------------------------
     public virtual SCROLLAREA_THEME SCROLL_THEME { get; }
 
     // Base surface -----------------------------------------------------------------------------------------------------------------------
-    public string COLOR_BASE { get; } = "0, 0, 0";
-    public string COLOR_BASE_HIGHLIGHT { get; } = "40, 40, 40";
-    public string COLOR_BASE_INVERT { get; } = "255, 255, 255";
-    public string COLOR_BASE_INVERT_HIGHLIGHT { get; } = "220, 220, 220";
+    public RGBColor COLOR_BASE { get; } = new(0, 0, 0);
+    public RGBColor COLOR_BASE_HIGHLIGHT { get; } = new(40, 40, 40);
+    public RGBColor COLOR_BASE_INVERT { get; } = new(255, 255, 255);
+    public RGBColor COLOR_BASE_INVERT_HIGHLIGHT { get; } = new(220, 220, 220);
     // Danger surface ---------------------------------------------------------------------------------------------------------------------
-    public virtual string COLOR_DANGER { get; }
-    public virtual string COLOR_DANGER_HIGHLIGHT { get; }
-    public virtual string COLOR_DANGER_SURFACE { get; }
-    public virtual string COLOR_DANGER_SURFACE_HIGHLIGHT { get; }
-    public virtual string COLOR_DANGER_ACCENT { get; }
-    public virtual string COLOR_DANGER_ACCENT_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_DANGER { get; }
+    public virtual RGBColor COLOR_DANGER_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_DANGER_SURFACE { get; }
+    public virtual RGBColor COLOR_DANGER_SURFACE_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_DANGER_ACCENT { get; }
+    public virtual RGBColor COLOR_DANGER_ACCENT_HIGHLIGHT { get; }
     // Primary surface --------------------------------------------------------------------------------------------------------------------
-    public virtual string COLOR_PRIMARY { get; }
-    public virtual string COLOR_PRIMARY_HIGHLIGHT { get; }
-    public virtual string COLOR_PRIMARY_ACCENT { get; }
-    public virtual string COLOR_PRIMARY_ACCENT_HIGHLIGHT { get; }
-    public virtual string COLOR_PRIMARY_SURFACE { get; }
-    public virtual string COLOR_PRIMARY_SURFACE_HIGHLIGHT { get; }
-    public virtual string COLOR_PRIMARY_SHADE { get; }
-    public virtual string COLOR_PRIMARY_SHADE_INVERT { get; }
-    public virtual string COLOR_PRIMARY_SHADE_STRONG { get; }
-    public virtual string COLOR_PRIMARY_SHADE_STRONG_INVERT { get; }
+    public virtual RGBColor COLOR_PRIMARY { get; }
+    public virtual RGBColor COLOR_PRIMARY_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_PRIMARY_ACCENT { get; }
+    public virtual RGBColor COLOR_PRIMARY_ACCENT_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_PRIMARY_SURFACE { get; }
+    public virtual RGBColor COLOR_PRIMARY_SURFACE_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_PRIMARY_SHADE { get; }
+    public virtual RGBColor COLOR_PRIMARY_SHADE_INVERT { get; }
+    public virtual RGBColor COLOR_PRIMARY_SHADE_STRONG { get; }
+    public virtual RGBColor COLOR_PRIMARY_SHADE_STRONG_INVERT { get; }
     // Secondary surface ------------------------------------------------------------------------------------------------------------------
-    public virtual string COLOR_SECONDARY { get; }
-    public virtual string COLOR_SECONDARY_HIGHLIGHT { get; }
-    public virtual string COLOR_SECONDARY_ACCENT { get; }
-    public virtual string COLOR_SECONDARY_ACCENT_HIGHLIGHT { get; }
-    public virtual string COLOR_SECONDARY_SURFACE { get; }
-    public virtual string COLOR_SECONDARY_SURFACE_HIGHLIGHT { get; }
-    public virtual string COLOR_SECONDARY_SHADE { get; }
-    public virtual string COLOR_SECONDARY_SHADE_INVERT { get; }
-    public virtual string COLOR_SECONDARY_SHADE_STRONG { get; }
-    public virtual string COLOR_SECONDARY_SHADE_STRONG_INVERT { get; }
+    public virtual RGBColor COLOR_SECONDARY { get; }
+    public virtual RGBColor COLOR_SECONDARY_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_SECONDARY_ACCENT { get; }
+    public virtual RGBColor COLOR_SECONDARY_ACCENT_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_SECONDARY_SURFACE { get; }
+    public virtual RGBColor COLOR_SECONDARY_SURFACE_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_SECONDARY_SHADE { get; }
+    public virtual RGBColor COLOR_SECONDARY_SHADE_INVERT { get; }
+    public virtual RGBColor COLOR_SECONDARY_SHADE_STRONG { get; }
+    public virtual RGBColor COLOR_SECONDARY_SHADE_STRONG_INVERT { get; }
     // Floating surface -------------------------------------------------------------------------------------------------------------------
         // Colors -------------------------------------------------------------------------------------------------------------------------
-            public virtual string COLOR_FLOATING { get; }
-            public virtual string COLOR_FLOATING_HIGHLIGHT { get; }
-            public virtual string COLOR_FLOATING_ACCENT { get; }
-            public virtual string COLOR_FLOATING_ACCENT_HIGHLIGHT { get; }
-            public virtual string COLOR_FLOATING_SURFACE { get; }
-            public virtual string COLOR_FLOATING_SURFACE_HIGHLIGHT { get; }
-            public virtual string COLOR_FLOATING_SHADE { get; }
-            public virtual string COLOR_FLOATING_SHADE_INVERT { get; }
-            public virtual string COLOR_FLOATING_SHADE_STRONG { get; }
-            public virtual string COLOR_FLOATING_SHADE_STRONG_INVERT { get; }
+            public virtual RGBColor COLOR_FLOATING { get; }
+            public virtual RGBColor COLOR_FLOATING_HIGHLIGHT { get; }
+            public virtual RGBColor COLOR_FLOATING_ACCENT { get; }
+            public virtual RGBColor COLOR_FLOATING_ACCENT_HIGHLIGHT { get; }
+            public virtual RGBColor COLOR_FLOATING_SURFACE { get; }
+            public virtual RGBColor COLOR_FLOATING_SURFACE_HIGHLIGHT { get; }
+            public virtual RGBColor COLOR_FLOATING_SHADE { get; }
+            public virtual RGBColor COLOR_FLOATING_SHADE_INVERT { get; }
+            public virtual RGBColor COLOR_FLOATING_SHADE_STRONG { get; }
+            public virtual RGBColor COLOR_FLOATING_SHADE_STRONG_INVERT { get; }
         // Shades -------------------------------------------------------------------------------------------------------------------------
             public virtual string BOX_SHADOW_FLOATING_LEVEL_1 { get; }
             public virtual string BOX_SHADOW_FLOATING_LEVEL_2 { get; }
     // Selection surface ------------------------------------------------------------------------------------------------------------------
-    public virtual string COLOR_SELECTION { get; }
-    public virtual string COLOR_SELECTION_BACKGROUND { get; }
+    public virtual RGBColor COLOR_SELECTION { get; }
+    public virtual RGBColor COLOR_SELECTION_BACKGROUND { get; }
 
     // Fonts ------------------------------------------------------------------------------------------------------------------------------
     public string FONT_PRIMARY { get; } = "Montserrat, sans-serif";

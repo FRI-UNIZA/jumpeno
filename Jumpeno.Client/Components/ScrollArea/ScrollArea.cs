@@ -45,7 +45,7 @@ public partial class ScrollArea : IDisposable {
         return theme.ToString()!.ToLower().Replace("_", "-");
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {
         Theme = null;
         AutoHide = SCROLLAREA_AUTOHIDE.NEVER;
@@ -56,7 +56,6 @@ public partial class ScrollArea : IDisposable {
         ID = ComponentService.GenerateID(MARK);
     }
 
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     override protected void OnAfterRender(bool firstRender) {
         if (firstRender) {
             Areas.Add(ID, this);

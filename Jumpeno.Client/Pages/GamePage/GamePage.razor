@@ -11,6 +11,7 @@
     } else switch (GameVM.Game.State) {
         case GAME_STATE.LOBBY:
         case GAME_STATE.SCOREBOARD:
+        case GAME_STATE.PAUSE:
             <Lobby VM="GameVM" />
         break;
         case GAME_STATE.GAMEPLAY:

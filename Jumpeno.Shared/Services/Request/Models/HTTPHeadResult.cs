@@ -18,7 +18,7 @@ public class HTTPHeadResult {
         } else return null;
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public HTTPHeadResult(
         int code = 200,
         HttpResponseHeaders? headers = null, HttpContentHeaders? contentHeaders = null

@@ -7,7 +7,7 @@
     <div class="@CLASS_INPUT_ERROR_OUTLINE" />
     <p
         class="@CLASS_INPUT_ERROR_MESSAGE"
-        tabindex="@(ViewModel.HasError() ? 0 : -1)"
+        tabindex="@(ViewModel.HasError ? 0 : -1)"
         aria-roledescription="@I18N.T("Error")"
         @onclick="OnClick"
         @onkeydown="OnKeyDown"

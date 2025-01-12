@@ -1,12 +1,23 @@
 namespace Jumpeno.Shared.Utils;
 
-public class LockerSlim {
+#pragma warning disable CA1816
+
+public class LockerSlim : IDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly SemaphoreSlim Semaphore = new(1, 1);
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public LockerSlim() => Disposer = new(this, Semaphore.Dispose);
+    private readonly Disposer Disposer;
+    public void Dispose() => Disposer.Dispose();
+    ~LockerSlim() => Disposer.Final();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Lock() => await Semaphore.WaitAsync();
     public void Unlock() => Semaphore.Release();
+    // [Dispose] Exception prone:
+    public async Task TryLock() { try { await Lock(); } catch {} }
+    public void TryUnlock() { try { Semaphore.Release(); } catch {} }
 
     // Callbacks --------------------------------------------------------------------------------------------------------------------------
     public async Task Exclusive(Action callback) {
@@ -24,6 +35,19 @@ public class LockerSlim {
     public async Task<T> Exclusive<T>(Func<Task<T>> callback) {
         try { await Lock(); return await callback(); }
         finally { Unlock(); }
+    }
+    // [Dispose] Exception prone:
+    public async Task TryExclusive(Action callback) {
+        try { await Exclusive(callback); } catch {}
+    }
+    public async Task<T> TryExclusive<T>(Func<T> callback, T fallback) {
+        try { return await Exclusive(callback); } catch { return fallback; }
+    }
+    public async Task TryExclusive(Func<Task> callback) {
+        try { await Exclusive(callback); } catch {}
+    }
+    public async Task<T> TryExclusive<T>(Func<Task<T>> callback, T fallback) {
+        try { return await Exclusive(callback); } catch { return fallback; }
     }
 
     // Token callbacks --------------------------------------------------------------------------------------------------------------------
@@ -46,5 +70,18 @@ public class LockerSlim {
         var token = new LockToken(Unlock);
         try { await Lock(); return await callback(token); }
         finally { token.Unlock(); }
+    }
+    // [Dispose] Exception prone:
+    public async Task TryExclusive(Action<LockToken> callback) {
+        try { await Exclusive(callback); } catch {}
+    }
+    public async Task<T> TryExclusive<T>(Func<LockToken, T> callback, T fallback) {
+        try { return await Exclusive(callback); } catch { return fallback; }
+    }
+    public async Task TryExclusive(Func<LockToken, Task> callback) {
+        try { await Exclusive(callback); } catch {}
+    }
+    public async Task<T> TryExclusive<T>(Func<LockToken, Task<T>> callback, T fallback) {
+        try { return await Exclusive(callback); } catch { return fallback; }
     }
 }

@@ -8,12 +8,12 @@
     <Box Class="lobby-players">
         <div class="player-titles">
             <Heading2 NoWrap Class="player-title">@I18N.T("Players"):</Heading2>
-            <Heading2 NoWrap Class="player-title">@I18N.T("Kills")</Heading2>
+            <Heading2 NoWrap Class="player-title">@I18N.T("Score")</Heading2>
         </div>
-        @foreach (var (player, index) in VM.Game.PlayerIterator) {
-            <div class="@ComputePlayerLineClass(VM.Player.Equals(player))">
-                <Paragraph NoWrap Class="player-name">@(index + 1). @player?.User?.Name</Paragraph>
-                <Paragraph NoWrap Class="player-score">@player.Kills</Paragraph>
+        @foreach (var (player, index) in VM.Game.PlayerScoreIterator) {
+            <div class="@ComputePlayerLineClass(VM.Player != null && VM.Player.Equals(player))">
+                <Paragraph NoWrap Class="player-name">@(index + 1). @player.User.Name@(player.IsConnected ? "" : " (disconnected)")</Paragraph>
+                <Paragraph NoWrap Class="player-score">@(player.Score)</Paragraph>
             </div>
         }
     </Box>

@@ -10,7 +10,7 @@ public partial class CookieConsentButton {
         return ComputeClass(COOKIE_ID);
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CookieConsentButton() {
         ID = ComponentService.GenerateID(COOKIE_ID);
     }

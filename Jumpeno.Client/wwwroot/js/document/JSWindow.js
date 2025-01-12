@@ -55,6 +55,76 @@ class JSWindow {
     static async RemoveKeyUpEventListener(objRef, method) {
         await this.#KeyUpStorage.RemoveEventListener(objRef, method)
     }
+
+    // MouseDown --------------------------------------------------------------------------------------------------------------------------
+    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ X: e.clientX, Y: e.clientY }))
+    
+    static async AddMouseDownEventListener(objRef, method) {
+        await this.#MouseDownStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveMouseDownEventListener(objRef, method) {
+        await this.#MouseDownStorage.RemoveEventListener(objRef, method)
+    }
+
+    // MouseUp ----------------------------------------------------------------------------------------------------------------------------
+    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ X: e.clientX, Y: e.clientY }))
+    
+    static async AddMouseUpEventListener(objRef, method) {
+        await this.#MouseUpStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveMouseUpEventListener(objRef, method) {
+        await this.#MouseUpStorage.RemoveEventListener(objRef, method)
+    }
+
+    // User select ------------------------------------------------------------------------------------------------------------------------
+    static #NO_USER_SELECT_CLASS = 'no-user-select'
+    
+    static BlockUserSelect() {
+        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
+        document.body.classList.add(this.#NO_USER_SELECT_CLASS)
+    }
+
+    static AllowUserSelect() {
+        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
+    }
+
+    // Touch actions ----------------------------------------------------------------------------------------------------------------------
+    static #TOUCH_ACTION_AUTO = 'touch-action-auto'
+    static TouchActionAutoOn() {
+        document.body.classList.remove(this.#TOUCH_ACTION_AUTO)
+        document.body.classList.add(this.#TOUCH_ACTION_AUTO)
+    }
+    static TouchActionAutoOff = () => document.body.classList.remove(this.#TOUCH_ACTION_AUTO)
+
+    static #TOUCH_ACTION_NONE = 'touch-action-none'
+    static TouchActionNoneOn() {
+        document.body.classList.remove(this.#TOUCH_ACTION_NONE)
+        document.body.classList.add(this.#TOUCH_ACTION_NONE)
+    }
+    static TouchActionNoneOff = () => document.body.classList.remove(this.#TOUCH_ACTION_NONE)
+
+    static #TOUCH_ACTION_PAN = 'touch-action-pan'
+    static TouchActionPanOn() {
+        document.body.classList.remove(this.#TOUCH_ACTION_PAN)
+        document.body.classList.add(this.#TOUCH_ACTION_PAN)
+    }
+    static TouchActionPanOff = () => document.body.classList.remove(this.#TOUCH_ACTION_PAN)
+
+    static #TOUCH_ACTION_PINCH_ZOOM = 'touch-action-pinch-zoom'
+    static TouchActionPinchZoomOn() {
+        document.body.classList.remove(this.#TOUCH_ACTION_PINCH_ZOOM)
+        document.body.classList.add(this.#TOUCH_ACTION_PINCH_ZOOM)
+    }
+    static TouchActionPinchZoomOff = () => document.body.classList.remove(this.#TOUCH_ACTION_PINCH_ZOOM)
+
+    static #TOUCH_ACTION_MANIPULATION = 'touch-action-manipulation'
+    static TouchActionManipulationOn() {
+        document.body.classList.remove(this.#TOUCH_ACTION_MANIPULATION)
+        document.body.classList.add(this.#TOUCH_ACTION_MANIPULATION)
+    }
+    static TouchActionManipulationOff = () => document.body.classList.remove(this.#TOUCH_ACTION_MANIPULATION)
 }
 
 window.JSWindow = JSWindow

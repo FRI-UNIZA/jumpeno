@@ -10,6 +10,15 @@
 		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
 	</PropertyGroup>
 
+    <PropertyGroup>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+    </PropertyGroup>
+    <ItemGroup>
+        <TrimmerRootAssembly Include="Jumpeno.Client" />
+        <TrimmerRootAssembly Include="Jumpeno.Shared" />
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <DefineConstants>CLIENT_DEVELOPMENT</DefineConstants>
     </PropertyGroup>
@@ -32,9 +41,9 @@
     </ItemGroup>
 
     <Target Name="PreRunScript" BeforeTargets="Build">
-        <Exec Command="echo Running pre-build scripts..." />
+        <Exec Command="echo Running client scripts..." />
         <Exec Command="dotnet build ../Scripts/ThemeProvider/ThemeProvider/ThemeProvider.csproj" />
-        <Exec Command="dotnet ../Scripts/ThemeProvider/ThemeProvider/bin/Debug/net8.0/ThemeProvider.dll ../Jumpeno.Client/Themes/Constants Jumpeno.Client.Constants DarkTheme LightTheme ../Jumpeno.Client/wwwroot/css/theme.css" />
-        <Exec Command="echo Finished pre-build scripts!" />
+        <Exec Command="dotnet ../Scripts/ThemeProvider/ThemeProvider/bin/Debug/net8.0/ThemeProvider.dll" />
+        <Exec Command="echo Finished client scripts!" />
     </Target>
 </Project>

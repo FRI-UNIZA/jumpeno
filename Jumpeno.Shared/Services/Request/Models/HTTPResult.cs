@@ -4,7 +4,7 @@ public class HTTPResult<T> : HTTPHeadResult {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public T Data { get; }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public HTTPResult(
         T data, int code = 200,
         HttpResponseHeaders? headers = null, HttpContentHeaders? contentHeaders = null

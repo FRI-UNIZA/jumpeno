@@ -7,6 +7,7 @@ public class StaticService<T> {
         if (instance is null) {
             instance = Reflex.CreateInstance<T>(typeof(T));
             RequestStorage.Set(name, instance);
+            Disposer.TryRequestRegister(instance);
         }
         return instance;
     }

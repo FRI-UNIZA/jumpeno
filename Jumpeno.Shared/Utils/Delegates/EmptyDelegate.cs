@@ -5,12 +5,13 @@ namespace Jumpeno.Shared.Utils;
 public class EmptyDelegate {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly EmptyDelegate EMPTY = new(() => {});
+    public static readonly Func<Task> EMPTY_TASK = () => System.Threading.Tasks.Task.CompletedTask;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action? WrappedAction;
     private readonly Func<Task> Action;
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public EmptyDelegate(Action action) {
         WrappedAction = action;
         Action = async () => action();

@@ -30,10 +30,40 @@ public class InputViewModel<T> {
     public readonly EventDelegate<T> OnChange;
 
     public readonly InputErrorViewModel Error;
-    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) { return viewModel?.Error; }
+    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) => viewModel?.Error;
 
     private readonly Action? Notify = null;
-    
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    private InputViewModel(InputViewModelParams<T> @params) {
+        ID = @params.ID is null ? ComponentService.GenerateID(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
+        Type = InitType(@params);
+        Name = @params.Name;
+        Label = @params.Label;
+        Placeholder = @params.Placeholder;
+        Secret = @params.Secret;
+        TextMode = @params.TextMode;
+        Trim = @params.Trim;
+        TextCheck = @params.TextCheck;
+        if (@params.MaxLength is not null) {
+            Checker.CheckGreaterOrEqualTo((int) @params.MaxLength, 0);
+            MaxLength = @params.MaxLength;
+        }
+        Decimals = InitDecimals(@params);
+        var boundaries = GetBoundaries(@params);
+        MinValue = boundaries[0].Value;
+        MaxValue = boundaries[1].Value;
+
+        DefaultValue = ConstrainedValue(@params.DefaultValue);
+        Value = DefaultValue;
+        OnChange = @params.OnChange is null ? new(v => {}) : @params.OnChange;
+        
+        Error = new InputErrorViewModel();
+    }
+    public InputViewModel(InputViewModelTextParams @params) : this((InputViewModelParams<T>)(object) @params) {}
+    public InputViewModel(InputViewModelLongParams @params) : this((InputViewModelParams<T>)(object) @params) {}
+    public InputViewModel(InputViewModelDoubleParams @params) : this((InputViewModelParams<T>)(object) @params) {}
+
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private static INPUT_TYPE InitType(InputViewModelParams<T> @params) {
         var paramsType = @params.GetType();
@@ -93,7 +123,7 @@ public class InputViewModel<T> {
         } else if (propType == typeof(InputViewModelDoubleParams)) {
             return CreateNumberBoundaries((InputViewModelDoubleParams)(object) @params);
         }
-        return [new (default!, false), new (default!, false)];
+        return [new(default!, false), new(default!, false)];
     }
     public T ApplyTextMode(T value) {
         if (Type == INPUT_TYPE.TEXT) {
@@ -162,37 +192,7 @@ public class InputViewModel<T> {
         return ApplyTrim(ApplyTextMode(valResult));
     }
 
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
-    private InputViewModel(InputViewModelParams<T> @params) {
-        ID = @params.ID is null ? ComponentService.GenerateID(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
-        Type = InitType(@params);
-        Name = @params.Name;
-        Label = @params.Label;
-        Placeholder = @params.Placeholder;
-        Secret = @params.Secret;
-        TextMode = @params.TextMode;
-        Trim = @params.Trim;
-        TextCheck = @params.TextCheck;
-        if (@params.MaxLength is not null) {
-            Checker.CheckGreaterOrEqualTo((int) @params.MaxLength, 0);
-            MaxLength = @params.MaxLength;
-        }
-        Decimals = InitDecimals(@params);
-        var boundaries = GetBoundaries(@params);
-        MinValue = boundaries[0].Value;
-        MaxValue = boundaries[1].Value;
-
-        DefaultValue = ConstrainedValue(@params.DefaultValue);
-        Value = DefaultValue;
-        OnChange = @params.OnChange is null ? new(v => {}) : @params.OnChange;
-        
-        Error = new InputErrorViewModel();
-    }
-    public InputViewModel(InputViewModelTextParams @params) : this((InputViewModelParams<T>)(object) @params) {}
-    public InputViewModel(InputViewModelLongParams @params) : this((InputViewModelParams<T>)(object) @params) {}
-    public InputViewModel(InputViewModelDoubleParams @params) : this((InputViewModelParams<T>)(object) @params) {}
-
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task SetValue(T value, bool skipEvent = false) {
         T previous = Value;
         Value = ConstrainedValue(value);

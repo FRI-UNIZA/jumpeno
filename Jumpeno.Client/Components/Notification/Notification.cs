@@ -17,7 +17,7 @@ public partial class Notification : IDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly List<NotificationData> AriaNotifications = [];
-    private readonly SemaphoreSlim DisplayLock = new(1, 1);
+    private readonly LockerSlim DisplayLock = new();
     private Delay? AriaDelay;
     private int AriaDelayTime = ARIA_DELAY_START;
 
@@ -56,11 +56,13 @@ public partial class Notification : IDisposable {
         }
     }
     public void Dispose() {
+        DisplayLock.Dispose();
         PersistingSubscription.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     // Instance ---------------------------------------------------------------------------------------------------------------------------
-    public Notification(): base() {
+    public Notification() : base() {
         if (AppEnvironment.IsServer) return;
         Service = AppEnvironment.GetService<INotificationService>();
     }
@@ -69,11 +71,11 @@ public partial class Notification : IDisposable {
         Delay.Clear(AriaDelay);
         if (AriaDelayTime <= int.MaxValue - ARIA_DELAY_INCREMENT) AriaDelayTime += ARIA_DELAY_INCREMENT;
         AriaDelay = Delay.Set(async () => {
-            await DisplayLock.WaitAsync();
-            AriaNotifications.Clear();
-            StateHasChanged();
-            AriaDelayTime = ARIA_DELAY_START;
-            DisplayLock.Release();
+            await DisplayLock.TryExclusive(() => {
+                AriaNotifications.Clear();
+                StateHasChanged();
+                AriaDelayTime = ARIA_DELAY_START;
+            });
         }, AriaDelayTime);
     }
 
@@ -83,13 +85,13 @@ public partial class Notification : IDisposable {
         string description,
         int? duration
     ) {
-        await DisplayLock.WaitAsync();
-        AriaNotifications.Add(new NotificationData(
-            type, message, description, duration
-        ));
-        StartAriaDisposer();
-        StateHasChanged();
-        DisplayLock.Release();
+        await DisplayLock.TryExclusive(() => {
+            AriaNotifications.Add(new NotificationData(
+                type, message, description, duration
+            ));
+            StartAriaDisposer();
+            StateHasChanged();
+        });
     }
 
     // Open -------------------------------------------------------------------------------------------------------------------------------

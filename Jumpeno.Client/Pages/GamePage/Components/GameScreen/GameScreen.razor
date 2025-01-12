@@ -1,17 +1,63 @@
 @namespace Jumpeno.Client.Components
 
-<div class="game-screen">
-    <div
-        class="canvas-box"
-        width="@($"{CanvasWidth}px")"
-        height="@($"{CanvasHeight}px")"
-        style="@($"border-color: rgba({VM.Game.Map.Background}, 0.4)")"
-    >
-        <BECanvas Width="CanvasWidth" Height="CanvasHeight" @ref="GameCanvasRef" />
+@{ #pragma warning disable CS8600 }
+@{ #pragma warning disable CS8602 }
+
+@inherits Component
+
+<div class="@GameScreenClass()" style="@CSSVariables()">
+    <div class="canvas-box">
+        <BECanvas Width="@Dimension.CanvasWidth" Height="@Dimension.CanvasHeight" @ref="GameCanvasRef" />
     </div>
+
     <div class="game-info">
-        <p class="game-time">@Format.Ms_To_MMSS(VM.Game.Time)</p>
-        <div class="mid-line" />
-        <p class="info-text info-trip">@($"Ping"):&nbsp;&nbsp;<b>@Format.DoubleWhole(VM.Game.Ping)</b></p>
+        <div class="keyboard-display-box">
+            <button class="keyboard-display-button" tabindex="-1" @onclick="VM.ToggleControls" @onfocus="() => ActionHandler.BlurFocus()">
+                <Image URL="@IMAGE.ICON_KEYBOARD" Transparent NoTransition Preloaded Class="keyboard-display-image" />
+                <span class="keyboard-display-text">@(VM.ControlsDisplayed ? I18N.T("Hide") : I18N.T("Show"))</span>
+            </button>
+        </div>
+        <p class="trademark project-name">@(AppSettings.Name)&trade;</p>
+        <p class="game-time" @onclick="Pause">@Format.Ms_To_MMSS(VM.Game.Time)</p>
+        <p class="trademark faculty-name">&copy; FRI UNIZA</p>
+        <div class="game-connected">
+            <p class="connect-text">@I18N.T("Screen connected")</p>
+            <AntIcon Type="wifi" Theme="outline" Class="connect-icon" />
+        </div>
+        <p class="game-ping">@($"Ping"):&nbsp;&nbsp;<strong>@Format.DoubleWhole(VM.Game.Ping)</strong></p>
+    </div>
+
+    <div class="@GameControlsClass()">
+        @code {
+            private RenderFragment RenderControl(GAME_CONTROLS control, RenderFragment icon) =>
+                @<button
+                    class="@ControlClass(control)"
+                    @ontouchstart="TouchKeyEvent(control)" @ontouchend="ReleaseKeyEvent(control)"
+                    @onmousedown="MouseTouchKeyEvent(control)"
+                    @ontouchstart:preventDefault @ontouchend:preventDefault
+                    @ontouchstart:stopPropagation @ontouchend:stopPropagation
+                    tabindex="-1"
+                >
+                    @icon
+                </button>
+            ;
+        }
+        <div class="arrows">
+            @RenderControl(GAME_CONTROLS.LEFT, @<AntIcon Type="left" Theme="outline" Class="control-icon" />)
+            @RenderControl(GAME_CONTROLS.RIGHT, @<AntIcon Type="right" Theme="outline" Class="control-icon" />)
+        </div>
+        <div class="abilities">
+            @RenderControl(GAME_CONTROLS.SPACE, @<AntIcon Type="to-top" Theme="outline" Class="control-icon" />)
+        </div>
+    </div>
+
+    <div class="message-box flip-device">
+        <AntIcon Type="rotate-left" Theme="outline" Class="message-icon" />
+        <p class="message-text">@I18N.T("Rotate screen")</p>
+    </div>
+
+    <div class="message-box small-device">
+        <AntIcon Type="fullscreen" Theme="outline" Class="message-icon" />
+        <p class="message-text">@I18N.T("Screen too small")</p>
     </div>
 </div>

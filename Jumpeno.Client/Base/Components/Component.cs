@@ -9,12 +9,10 @@ public class Component : ComponentBase {
     }
 
     private bool ParametersSetAsync = false;
-    private readonly LockerSlim ParametersSetLock = new();
     protected sealed override async Task OnParametersSetAsync() {
-        await ParametersSetLock.Exclusive(async () => {
-            await OnParametersSetAsync(!ParametersSetAsync);
-            ParametersSetAsync = true;
-        });
+        var firstTime = !ParametersSetAsync;
+        ParametersSetAsync = true;
+        await OnParametersSetAsync(firstTime);
     }
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------

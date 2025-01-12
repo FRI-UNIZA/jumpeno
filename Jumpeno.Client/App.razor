@@ -2,6 +2,7 @@
 
 <ThemeProvider>
     <ImagePreloader />
+    <CanvasPreRenderer />
     <AriaPageAlert />
     <PageLoader>
         <ModalProvider>
@@ -34,7 +35,7 @@
         await ServerPageLoader.Hide();
         await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
 
-        await PageLoader.WithActiveLoader(() => { ActionHandler.SetFocus(PageLoader.ID); });
+        await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
         await PageLoader.AwaitAllLoaders();
 
         if (cookieModalOpen) ActionHandler.SetFocus(CookieConsentModalRef.GetDialogID());

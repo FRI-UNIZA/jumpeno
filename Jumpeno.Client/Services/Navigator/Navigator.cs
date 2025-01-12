@@ -3,10 +3,11 @@ namespace Jumpeno.Client.Services;
 using System.Diagnostics;
 
 #pragma warning disable CS8618
+#pragma warning disable CA1816
 
-public class Navigator: StaticService<Navigator> {
+public class Navigator : StaticService<Navigator>, IDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private NavigationManager Manager;
+    private readonly NavigationManager Manager;
     private static Action<string, bool, bool> ServerRedirect;
     private static Action ServerRefresh;
     private bool ProgramNavigation;
@@ -16,14 +17,14 @@ public class Navigator: StaticService<Navigator> {
     private TaskCompletionSource NavigationFinished;
     private const int MIN_LOADING_MS = 100;
     private Stopwatch Watch;
-    private readonly SemaphoreSlim NavLock = new(1, 1);
+    private readonly LockerSlim NavLock = new();
 
     private readonly List<EventPredicate<NavigationEvent>> Blockers = [];
     private readonly List<EventDelegate<NavigationEvent>> BeforeListeners = [];
     private readonly List<EventDelegate<NavigationEvent>> AfterListeners = [];
     private readonly List<EventDelegate<NavigationEvent>> AfterFinishListeners = [];
     
-    // Constructors -----------------------------------------------------------------------------------------------------------------------
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Navigator() {
         if (!AppEnvironment.IsServer) {
             Manager = AppEnvironment.GetService<NavigationManager>();
@@ -32,7 +33,11 @@ public class Navigator: StaticService<Navigator> {
         }
         ProgramNavigation = false;
         SettingQueries = false;
+        Disposer = new(this, NavLock.Dispose);
     }
+    private readonly Disposer Disposer;
+    public void Dispose() => Disposer.Dispose();
+    ~Navigator() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(Action<string, bool, bool> serverRedirect, Action serverRefresh) {
@@ -47,13 +52,13 @@ public class Navigator: StaticService<Navigator> {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private async ValueTask BeforeLocationChanged(LocationChangingContext ctx) {
-        if (!ProgramNavigation) await NavLock.WaitAsync();
+        if (!ProgramNavigation) await NavLock.TryLock();
         PreviousURL = URL.Url();
 
         foreach (var blocker in Blockers) {
             if (!await blocker.Invoke(new(PreviousURL, ctx.TargetLocation))) {
                 ctx.PreventNavigation();
-                NavLock.Release();
+                NavLock.TryUnlock();
                 return;
             }
         }
@@ -62,7 +67,7 @@ public class Navigator: StaticService<Navigator> {
             if (!ProgramNavigation) {
                 if (Page.CurrentPage().GetType() == typeof(ErrorPage)) {
                     ctx.PreventNavigation();
-                    NavLock.Release();
+                    NavLock.TryUnlock();
                     await NavigateTo(ctx.TargetLocation);
                     return;
                 }
@@ -70,7 +75,7 @@ public class Navigator: StaticService<Navigator> {
                 var isCurrentCulture = I18N.IsCurrentCultureUrl(ctx.TargetLocation);
                 if (isSameURL || !isCurrentCulture) {
                     ctx.PreventNavigation();
-                    NavLock.Release();
+                    NavLock.TryUnlock();
                     await NavigateTo(ctx.TargetLocation, replace: isCurrentCulture);
                     return;
                 }
@@ -114,17 +119,17 @@ public class Navigator: StaticService<Navigator> {
         foreach (var listener in AfterFinishListeners) {
             await listener.Invoke(new(PreviousURL, e.Location));
         }
-        NavLock.Release();
+        NavLock.TryUnlock();
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private async Task Navigate(string url, bool forceLoad = false, bool replace = false, bool queries = false, bool loader = true) {
-        await NavLock.WaitAsync();
+        await NavLock.TryLock();
 
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
             RequestStorage.Set(REQUEST_STORAGE_KEYS.REPLACE_URL, url);
-            NavLock.Release();
+            NavLock.TryUnlock();
             return;
         }
 
@@ -167,9 +172,7 @@ public class Navigator: StaticService<Navigator> {
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static async Task AddBlocker(EventPredicate<NavigationEvent> predicate) {
         var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        instance.Blockers.Add(predicate);
-        instance.NavLock.Release();
+        await instance.NavLock.TryExclusive(() => instance.Blockers.Add(predicate));
     }
     public static async Task AddBlocker(Func<NavigationEvent, bool> predicate) {
         await AddBlocker(new EventPredicate<NavigationEvent>(predicate));
@@ -180,14 +183,12 @@ public class Navigator: StaticService<Navigator> {
 
     public static async Task RemoveBlocker(EventPredicate<NavigationEvent> predicate) {
         var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        for (int i = 0; i < instance.Blockers.Count; i++) {
-            if (predicate.Equals(instance.Blockers[i])) {
-                instance.Blockers.RemoveAt(i);
-                break;
+        await instance.NavLock.TryExclusive(() => {
+            for (int i = 0; i < instance.Blockers.Count; i++) {
+                if (!predicate.Equals(instance.Blockers[i])) continue;
+                instance.Blockers.RemoveAt(i); break;
             }
-        }
-        instance.NavLock.Release();
+        });
     }
     public static async Task RemoveBlocker(Func<NavigationEvent, bool> predicate) {
         await RemoveBlocker(new EventPredicate<NavigationEvent>(predicate));
@@ -198,9 +199,7 @@ public class Navigator: StaticService<Navigator> {
 
     public static async Task AddBeforeEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        instance.BeforeListeners.Add(listener);
-        instance.NavLock.Release();
+        await instance.NavLock.TryExclusive(() => instance.BeforeListeners.Add(listener));
     }
     public static async Task AddBeforeEventListener(Action<NavigationEvent> listener) {
         await AddBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
@@ -211,14 +210,12 @@ public class Navigator: StaticService<Navigator> {
 
     public static async Task RemoveBeforeEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        for (int i = 0; i < instance.BeforeListeners.Count; i++) {
-            if (listener.Equals(instance.BeforeListeners[i])) {
-                instance.BeforeListeners.RemoveAt(i);
-                break;
+        await instance.NavLock.TryExclusive(() => {
+            for (int i = 0; i < instance.BeforeListeners.Count; i++) {
+                if (!listener.Equals(instance.BeforeListeners[i])) continue;
+                instance.BeforeListeners.RemoveAt(i); break;
             }
-        }
-        instance.NavLock.Release();
+        });
     }
     public static async Task RemoveBeforeEventListener(Action<NavigationEvent> listener) {
         await RemoveBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
@@ -228,10 +225,7 @@ public class Navigator: StaticService<Navigator> {
     }
 
     public static async Task AddAfterEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        instance.AfterListeners.Add(listener);
-        instance.NavLock.Release();
+        var instance = Instance(); await instance.NavLock.TryExclusive(() => instance.AfterListeners.Add(listener));
     }
     public static async Task AddAfterEventListener(Action<NavigationEvent> listener) {
         await AddAfterEventListener(new EventDelegate<NavigationEvent>(listener));
@@ -241,15 +235,12 @@ public class Navigator: StaticService<Navigator> {
     }
 
     public static async Task RemoveAfterEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        for (int i = 0; i < instance.AfterListeners.Count; i++) {
-            if (listener.Equals(instance.AfterListeners[i])) {
-                instance.AfterListeners.RemoveAt(i);
-                break;
+        var instance = Instance(); await instance.NavLock.TryExclusive(() => {
+            for (int i = 0; i < instance.AfterListeners.Count; i++) {
+                if (!listener.Equals(instance.AfterListeners[i])) continue;
+                instance.AfterListeners.RemoveAt(i); break;
             }
-        }
-        instance.NavLock.Release();
+        });
     }
     public static async Task RemoveAfterEventListener(Action<NavigationEvent> listener) {
         await RemoveAfterEventListener(new EventDelegate<NavigationEvent>(listener));
@@ -259,10 +250,7 @@ public class Navigator: StaticService<Navigator> {
     }
 
     public static async Task AddAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        instance.AfterFinishListeners.Add(listener);
-        instance.NavLock.Release();
+        var instance = Instance(); await instance.NavLock.TryExclusive(() => instance.AfterFinishListeners.Add(listener));
     }
     public static async Task AddAfterFinishEventListener(Action<NavigationEvent> listener) {
         await AddAfterFinishEventListener(new EventDelegate<NavigationEvent>(listener));
@@ -272,15 +260,12 @@ public class Navigator: StaticService<Navigator> {
     }
 
     public static async Task RemoveAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.WaitAsync();
-        for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
-            if (listener.Equals(instance.AfterFinishListeners[i])) {
-                instance.AfterFinishListeners.RemoveAt(i);
-                break;
+        var instance = Instance(); await instance.NavLock.TryExclusive(() => {
+            for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
+                if (listener.Equals(instance.AfterFinishListeners[i])) continue;
+                instance.AfterFinishListeners.RemoveAt(i); break;
             }
-        }
-        instance.NavLock.Release();
+        });
     }
     public static async Task RemoveAfterFinishEventListener(Action<NavigationEvent> listener) {
         await RemoveAfterFinishEventListener(new EventDelegate<NavigationEvent>(listener));
