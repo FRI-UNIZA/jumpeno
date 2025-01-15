@@ -277,7 +277,7 @@
     <value>Play game</value>
   </data>
   <data name="LINK_FEEDBACK" xml:space="preserve">
-    <value>https://docs.google.com/forms/d/e/1FAIpQLSdUu5fTk2tQvr8daCmsKyyDocu4XG-VPioCy-m-au9hFf6W4w/viewform?usp=sf_link</value>
+    <value>https://docs.google.com/forms/d/e/1FAIpQLSeoBnWAxfPZmaEE6FWgkkX00Vpp8LKSlfFjdBSs7Te0t0FPFA/viewform?usp=dialog</value>
   </data>
   <data name="TEXT_ABOUT" xml:space="preserve">
     <value>Jumpeno is a battle-royale type of game. According to its name, jumping is the key. Your goal is to jump on other players to eliminate them and be the last &lt;strong&gt;Jumper&lt;/strong&gt; standing.</value>

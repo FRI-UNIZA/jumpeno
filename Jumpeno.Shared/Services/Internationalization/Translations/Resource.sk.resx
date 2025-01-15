@@ -277,7 +277,7 @@
     <value>Hrať hru</value>
   </data>
   <data name="LINK_FEEDBACK" xml:space="preserve">
-    <value>https://docs.google.com/forms/d/e/1FAIpQLSdUu5fTk2tQvr8daCmsKyyDocu4XG-VPioCy-m-au9hFf6W4w/viewform?usp=sf_link</value>
+    <value>https://docs.google.com/forms/d/e/1FAIpQLSeQLWT3cKez5q8UY9cJmWmTnKhGd-J4btM0FyM8US9Nua8AqA/viewform?usp=dialog</value>
   </data>
   <data name="TEXT_ABOUT" xml:space="preserve">
     <value>Jumpeno je hra typu battle-royale. Ako už názov hovorí, skákanie je kľúčové. Vaším cieľom je skočiť na ostatných hráčov, eliminovať ich a zostať posledným &lt;strong&gt;skokanom&lt;/strong&gt; nažive.</value>
