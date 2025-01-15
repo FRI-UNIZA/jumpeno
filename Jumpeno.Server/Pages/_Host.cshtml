@@ -77,7 +77,7 @@
         <script>
             @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")
             else @("JSActionHandler.SetFocus(JSServerPageLoader.ID); ")
-            JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE_FUNCTIONAL.APP_THEME.StringValue()");
+            JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE_FUNCTIONAL.APP_THEME.String()");
             JSTempTitle.Add();
             JSImage.InitAll();
             Blazor.start({ applicationCulture: "@CultureInfo.CurrentCulture" });

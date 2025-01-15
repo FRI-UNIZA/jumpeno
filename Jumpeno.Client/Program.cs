@@ -51,13 +51,13 @@ CookieStorage.Init(
     (Cookie cookie) => {
         JS.InvokeVoid(
             JSCookies.Set,
-            cookie.Key.StringValue(),
+            cookie.Key.String(),
             URL.EncodeValue(cookie.Value),
             cookie.Expires is not null ? ((DateTimeOffset) cookie.Expires).UtcDateTime.ToString("R") : null,
             cookie.Domain == Cookie.NormDomain(cookie.Domain),
             cookie.Path,
             cookie.Secure,
-            cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.StringValue()
+            cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.String()
         );
     },
     (string key, string domain, string path) => {

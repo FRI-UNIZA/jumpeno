@@ -1,0 +1,8 @@
+.game-button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+}

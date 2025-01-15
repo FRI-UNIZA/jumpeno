@@ -23,8 +23,8 @@ public partial class TextElementBase: SurfaceComponent {
     protected CSSClass ComputeClass() {
         var c = ComputeClass(CLASSNAME);
         c.Set(Class);
-        c.Set(Variant.ToString().ToLower());
-        c.Set(Size.ToString().ToLower());
+        c.Set(Variant.StringLower());
+        c.Set(Size.StringLower());
         if (NoWrap) c.Set(CLASSNAME_NOWRAP);
         if (Spacing) c.Set(CLASSNAME_SPACING);
         return c;

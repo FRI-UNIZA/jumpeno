@@ -45,6 +45,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         if (update is KillUpdate kill) return KillUpdate(kill);
         if (update is LifeUpdate life) return LifeUpdate(life);
         if (update is PlayerUpdate player) return PlayerUpdate(player);
+        if (update is StateUpdate state) return StateUpdate(state);
         if (update is RoundUpdate round) return RoundUpdate(round);
         return false;
     }
@@ -111,6 +112,10 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     private readonly UpdateGuard<PlayerUpdate> PlayerUpdateGuard = new();
     private bool PlayerUpdate(PlayerUpdate update) {
         return PlayerUpdateGuard.Update(update, () => Synchronize(update.Player));
+    }
+
+    private bool StateUpdate(StateUpdate update) {
+        return Body.Update(update);
     }
 
     private bool RoundUpdate(RoundUpdate update) {

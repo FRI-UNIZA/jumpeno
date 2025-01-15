@@ -9,7 +9,7 @@
     @onkeypress:stopPropagation="@StopPropagation"
 >
     <AntDesign.Switch
-        size="@Size.ToString().ToLower()"
+        size="@Size.StringLower()"
         @bind-Checked="@Value"
         OnChange="OnChangeEvent"
         Class="@CLASSNAME_ELEMENT"

@@ -86,4 +86,36 @@ public class Window {
     public static async Task TouchActionManipulationOnAsync() => await JS.InvokeVoidAsync(JSWindow.TouchActionManipulationOn);
     public static void TouchActionManipulationOff() => JS.InvokeVoid(JSWindow.TouchActionManipulationOff);
     public static async Task TouchActionManipulationOffAsync() => await JS.InvokeVoidAsync(JSWindow.TouchActionManipulationOff);
+
+    // Overscroll -------------------------------------------------------------------------------------------------------------------------
+    public static void OverscrollAutoOn() => JS.InvokeVoid(JSWindow.OverscrollAutoOn);
+    public static async Task OverscrollAutoOnAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollAutoOn);
+    public static void OverscrollAutoOff() => JS.InvokeVoid(JSWindow.OverscrollAutoOff);
+    public static async Task OverscrollAutoOffAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollAutoOff);
+    
+    public static void OverscrollContainOn() => JS.InvokeVoid(JSWindow.OverscrollContainOn);
+    public static async Task OverscrollContainOnAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollContainOn);
+    public static void OverscrollContainOff() => JS.InvokeVoid(JSWindow.OverscrollContainOff);
+    public static async Task OverscrollContainOffAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollContainOff);
+
+    public static void OverscrollNoneOn() => JS.InvokeVoid(JSWindow.OverscrollNoneOn);
+    public static async Task OverscrollNoneOnAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollNoneOn);
+    public static void OverscrollNoneOff() => JS.InvokeVoid(JSWindow.OverscrollNoneOff);
+    public static async Task OverscrollNoneOffAsync() => await JS.InvokeVoidAsync(JSWindow.OverscrollNoneOff);
+
+    // Prevents ---------------------------------------------------------------------------------------------------------------------------
+    public static void PreventTouchStart() => JS.InvokeVoid(JSWindow.PreventTouchStart);
+    public static async Task PreventTouchStartAsync() => await JS.InvokeVoidAsync(JSWindow.PreventTouchStart);
+    public static void DefaultTouchStart() => JS.InvokeVoid(JSWindow.DefaultTouchStart);
+    public static async Task DefaultTouchStartAsync() => await JS.InvokeVoidAsync(JSWindow.DefaultTouchStart);
+    
+    public static void PreventTouchMove() => JS.InvokeVoid(JSWindow.PreventTouchMove);
+    public static async Task PreventTouchMoveAsync() => await JS.InvokeVoidAsync(JSWindow.PreventTouchMove);
+    public static void DefaultTouchMove() => JS.InvokeVoid(JSWindow.DefaultTouchMove);
+    public static async Task DefaultTouchMoveAsync() => await JS.InvokeVoidAsync(JSWindow.DefaultTouchMove);
+
+    public static void PreventTouchEnd() => JS.InvokeVoid(JSWindow.PreventTouchEnd);
+    public static async Task PreventTouchEndAsync() => await JS.InvokeVoidAsync(JSWindow.PreventTouchEnd);
+    public static void DefaultTouchEnd() => JS.InvokeVoid(JSWindow.DefaultTouchEnd);
+    public static async Task DefaultTouchEndAsync() => await JS.InvokeVoidAsync(JSWindow.DefaultTouchEnd);
 }

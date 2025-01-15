@@ -8,6 +8,7 @@ public class GameViewModel : IDisposable {
     public const int PING_INTERVAL_MS = 2000;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public string QRCode { get; private set; }
     public Game Game { get; private set; }
     public Player? Player { get; private set; }
 
@@ -17,7 +18,11 @@ public class GameViewModel : IDisposable {
     public bool IsPlayer => Player != null;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public GameViewModel(Game game, Player? player, LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender) {
+    public GameViewModel(
+        string qrCode, Game game, Player? player,
+        LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender
+    ) {
+        QRCode = qrCode;
         Game = game;
         Player = player == null ? player : Game.GetPlayerRef(player.ID);
         GameUpdates = InitGameUpdates(updates);

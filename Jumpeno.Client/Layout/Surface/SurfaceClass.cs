@@ -7,7 +7,7 @@ public static class SurfaceClass {
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public static void Apply(CSSClass @class, SURFACE surface) {
-        @class.Set($"{PREFIX}-{surface.ToString().ToLower()}");
+        @class.Set($"{PREFIX}-{surface.StringLower()}");
         @class.Set(ALL);
     }
 }

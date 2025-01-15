@@ -125,6 +125,40 @@ class JSWindow {
         document.body.classList.add(this.#TOUCH_ACTION_MANIPULATION)
     }
     static TouchActionManipulationOff = () => document.body.classList.remove(this.#TOUCH_ACTION_MANIPULATION)
+
+    // Overscroll -------------------------------------------------------------------------------------------------------------------------
+    static #OVERSCROLL_AUTO = 'overscroll-auto'
+    static OverscrollAutoOn() {
+        document.body.classList.remove(this.#OVERSCROLL_AUTO)
+        document.body.classList.add(this.#OVERSCROLL_AUTO)
+    }
+    static OverscrollAutoOff = () => document.body.classList.remove(this.#OVERSCROLL_AUTO)
+
+    static #OVERSCROLL_CONTAIN = 'overscroll-contain'
+    static OverscrollContainOn() {
+        document.body.classList.remove(this.#OVERSCROLL_CONTAIN)
+        document.body.classList.add(this.#OVERSCROLL_CONTAIN)
+    }
+    static OverscrollContainOff = () => document.body.classList.remove(this.#OVERSCROLL_CONTAIN)
+
+    static #OVERSCROLL_NONE = 'overscroll-none'
+    static OverscrollNoneOn() {
+        document.body.classList.remove(this.#OVERSCROLL_NONE)
+        document.body.classList.add(this.#OVERSCROLL_NONE)
+    }
+    static OverscrollNoneOff = () => document.body.classList.remove(this.#OVERSCROLL_NONE)
+
+    // Prevents ---------------------------------------------------------------------------------------------------------------------------
+    static #Prevent = e => { if (e.cancelable) e.preventDefault() }
+    
+    static PreventTouchStart = () => document.body.addEventListener('touchstart', this.#Prevent)
+    static DefaultTouchStart = () => document.body.removeEventListener('touchstart', this.#Prevent)
+    
+    static PreventTouchMove = () => document.body.addEventListener('touchmove', this.#Prevent)
+    static DefaultTouchMove = () => document.body.removeEventListener('touchmove', this.#Prevent)
+    
+    static PreventTouchEnd = () => document.body.addEventListener('touchend', this.#Prevent)
+    static DefaultTouchEnd = () => document.body.removeEventListener('touchend', this.#Prevent)
 }
 
 window.JSWindow = JSWindow

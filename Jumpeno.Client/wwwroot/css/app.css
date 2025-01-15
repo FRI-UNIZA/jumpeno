@@ -10,6 +10,7 @@ html, body {
     padding: 0;
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 
 body:not(.no-theme) {
@@ -40,7 +41,7 @@ body:not(.no-theme) {
     user-select: none;
 }
 
-/* Touch actions ----------------------------------------------------------------------------------------------------------------------- */
+/* Touch actions [extended in scrollbars] ---------------------------------------------------------------------------------------------- */
 .touch-action-auto {
     touch-action: auto;
 }
@@ -59,6 +60,19 @@ body:not(.no-theme) {
 
 .touch-action-manipulation {
     touch-action: manipulation;
+}
+
+/* Overscroll [extended in scrollbars] ------------------------------------------------------------------------------------------------- */
+.overscroll-auto {
+    overscroll-behavior: auto;
+}
+
+.overscroll-contain {
+    overscroll-behavior: contain;
+}
+
+.overscroll-none {
+    overscroll-behavior: none;
 }
 
 /* Container --------------------------------------------------------------------------------------------------------------------------- */

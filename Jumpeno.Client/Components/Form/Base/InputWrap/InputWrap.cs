@@ -25,7 +25,7 @@ public partial class InputWrap {
     protected CSSClass ComputeClass() {
         var c = new CSSClass(CLASS_INPUT_WRAP);
         if (ErrorVM.HasError) c.Set(CLASS_ERROR);
-        c.Set($"align-{Align.ToString().ToLower()}");
+        c.Set($"align-{Align.StringLower()}");
         return c;
     }
 

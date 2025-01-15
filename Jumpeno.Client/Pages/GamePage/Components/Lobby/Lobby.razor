@@ -1,20 +1,51 @@
 @namespace Jumpeno.Client.Components
 
 <div class="lobby">
-    <Box Class="lobby-game">
-        <Heading1>@VM.Game.Name</Heading1>
-        <Paragraph>@I18N.T("Code"): @VM.Game.Code</Paragraph>
-    </Box>
-    <Box Class="lobby-players">
-        <div class="player-titles">
-            <Heading2 NoWrap Class="player-title">@I18N.T("Players"):</Heading2>
-            <Heading2 NoWrap Class="player-title">@I18N.T("Score")</Heading2>
-        </div>
-        @foreach (var (player, index) in VM.Game.PlayerScoreIterator) {
-            <div class="@ComputePlayerLineClass(VM.Player != null && VM.Player.Equals(player))">
-                <Paragraph NoWrap Class="player-name">@(index + 1). @player.User.Name@(player.IsConnected ? "" : " (disconnected)")</Paragraph>
-                <Paragraph NoWrap Class="player-score">@(player.Score)</Paragraph>
+    <div class="lobby-panel primary">
+        <Box Class="lobby-box game">
+            <h1 class="lobby-text game-name">@VM.Game.Name</h1>
+            <div class="game-info">
+                <p class="lobby-text game-code">
+                    <span>@I18N.T("Code"):</span>
+                    <b>@VM.Game.Code</b>
+                </p>
+                <p class="lobby-text spectators">
+                    <AntIcon Type="eye" Theme="outline" Class="watch-icon" />
+                    <span>@VM.Game.SpectatorCount</span>
+                </p>
             </div>
-        }
-    </Box>
+        </Box>
+        <div class="round-line">
+            <p class="game-round">@I18N.T("Round"): <b>@(Game.LOBBY_STATES.Contains(VM.Game.State) ? VM.Game.Round + 1 : VM.Game.Round)</b></p>
+            <p class="game-state">&laquo;&thinsp;@(VM.Game.State == GAME_STATE.PAUSE ? I18N.T("Pause") : "Lobby")&thinsp;&raquo;</p>
+        </div>
+        <Box Class="lobby-box players">
+            <div class="player-titles">
+                <p Class="lobby-text player-title">@I18N.T("Players")</p>
+                <p Class="lobby-text player-title">@I18N.T("Score")</p>
+            </div>
+            <div class="player-table">
+                @foreach (var (player, index) in VM.Game.PlayerScoreIterator) {
+                    <div class="@ComputePlayerLineClass(player)">
+                        <div class="player-presence" />
+                        <p Class="lobby-text player-name">@(index + 1). @player.User.Name</p>
+                        <div class="player-line-dash" />
+                        <p Class="lobby-text player-score">@(player.Score)</p>
+                    </div>
+                }
+            </div>
+            <p class="lobby-text players-empty">@I18N.T("No players")</p>
+        </Box>
+    </div>
+
+    <div class="lobby-panel secondary">
+        <Box Class="lobby-box qrcode">
+            <Image URL="@VM.QRCode" NotDraggable Transparent NoTransition Class="qrcode-image" />
+        </Box>
+        <Box Class="lobby-box chat">
+            <p class="chat-message">@I18N.T("Chat not available")</p>
+        </Box>
+    </div>
+
+    <InfoBox Class="small-device" Type="fullscreen" Theme="outline">@I18N.T("Screen too small")</InfoBox>
 </div>

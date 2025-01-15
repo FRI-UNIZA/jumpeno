@@ -24,6 +24,8 @@ public partial class ImageBase : IDisposable {
     [Parameter]
     public string Style { get; set; } = "";
     [Parameter]
+    public bool Draggable { get; set; } = true;
+    [Parameter]
     public bool Transparent { get; set; } = false;
     [Parameter]
     public bool NoTransition { get; set; } = false;

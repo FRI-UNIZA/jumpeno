@@ -134,7 +134,7 @@ public static class CookieStorage {
     
     // Cookie usage -----------------------------------------------------------------------------------------------------------------------
     private static string? GetCookie(Enum key) {
-        var keyValue = key.StringValue();
+        var keyValue = key.String();
         Checker.CheckEmptyString(keyValue, name: "key");
         return GetItem(keyValue);
     }
@@ -144,7 +144,7 @@ public static class CookieStorage {
     }
 
     private static void SetCookie(Cookie cookie) {
-        Checker.CheckEmptyString(cookie.Key.StringValue(), name: "key");
+        Checker.CheckEmptyString(cookie.Key.String(), name: "key");
         if (!AppEnvironment.IsServer && cookie.HttpOnly) {
             cookie.HttpOnly = false;
         }
@@ -160,7 +160,7 @@ public static class CookieStorage {
     }
 
     private static void DeleteCookie(Enum key, string? domain = null, string? path = null) {
-        var keyValue = key.StringValue();
+        var keyValue = key.String();
         Checker.CheckEmptyString(keyValue, name: "key");
         DeleteItem(
             keyValue,

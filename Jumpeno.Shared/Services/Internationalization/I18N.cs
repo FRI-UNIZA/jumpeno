@@ -47,7 +47,7 @@ public class I18N {
     public static string Culture => CultureInfo.CurrentCulture.ToString();
 
     public static bool IsCulture(LANGUAGE language) {
-        return Culture == language.StringValue();
+        return Culture == language.String();
     }
 
     public static string GetHost(string language) {

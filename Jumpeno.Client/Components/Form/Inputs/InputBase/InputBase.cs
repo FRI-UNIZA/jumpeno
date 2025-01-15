@@ -31,7 +31,7 @@ public partial class InputBase<T> : IDisposable {
     public EventDelegate<string> OnInput { get; set; } = EventDelegate<string>.EMPTY;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private string DELIMITER = DEFAULT_DELIMITER.StringValue();
+    private string DELIMITER = DEFAULT_DELIMITER.String();
     private string TempValue = "";
     protected string ComputeType() {
         if (ViewModel.Secret) return "password";
@@ -56,8 +56,8 @@ public partial class InputBase<T> : IDisposable {
 
     protected CSSClass ComputeClassBase() {
         var c = ComputeClass(CLASS_INPUT_BASE);
-        c.Set($"align-{Align.ToString().ToLower()}");
-        c.Set($"text-mode-{ViewModel.TextMode.ToString().ToLower()}");
+        c.Set($"align-{Align.StringLower()}");
+        c.Set($"text-mode-{ViewModel.TextMode.StringLower()}");
         return c;
     }
 
@@ -77,7 +77,7 @@ public partial class InputBase<T> : IDisposable {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnParametersSet(bool firstTime) {
         ActiveInputManager.Add(ViewModel.ID, ViewModel);
-        DELIMITER = Delimiter.StringValue();
+        DELIMITER = Delimiter.String();
         ViewModel.GetType().GetField("Notify", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(ViewModel, () => {
             UpdateTempValue();
             StateHasChanged();

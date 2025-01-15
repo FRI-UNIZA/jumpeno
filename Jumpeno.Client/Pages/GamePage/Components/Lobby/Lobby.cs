@@ -6,9 +6,10 @@ public partial class Lobby : IDisposable {
     public required GameViewModel VM { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputePlayerLineClass(bool current) {
+    private CSSClass ComputePlayerLineClass(Player player) {
         var c = new CSSClass("player-line");
-        if (current) c.Set("current");
+        if (VM.Player != null && VM.Player.Equals(player)) c.Set("current");
+        c.Set(player.IsConnected ? "connected" : "disconnected");
         return c;
     }
 
@@ -21,5 +22,6 @@ public partial class Lobby : IDisposable {
 
     public void Dispose() {
         VM.StopUpdating();
+        GC.SuppressFinalize(this);
     }
 }

@@ -417,4 +417,16 @@
   <data name="Score" xml:space="preserve">
     <value />
   </data>
+  <data name="Pause" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Chat not available" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Round" xml:space="preserve">
+    <value />
+  </data>
+  <data name="No players" xml:space="preserve">
+    <value />
+  </data>
 </root>

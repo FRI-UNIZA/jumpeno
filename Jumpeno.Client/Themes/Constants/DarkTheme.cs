@@ -17,6 +17,7 @@ public class DarkTheme : BaseTheme {
     public override RGBColor COLOR_PRIMARY_ACCENT_HIGHLIGHT { get; } = new(122, 113, 136);
     public override RGBColor COLOR_PRIMARY_SURFACE { get; } = new(255, 255, 83);
     public override RGBColor COLOR_PRIMARY_SURFACE_HIGHLIGHT { get; } = new(225, 225, 53);
+    public override RGBColor COLOR_PRIMARY_BOX { get; } = new(250, 250, 175);
     public override RGBColor COLOR_PRIMARY_SHADE { get; } = new(220, 220, 220);
     public override RGBColor COLOR_PRIMARY_SHADE_INVERT { get; } = new(60, 60, 60);
     public override RGBColor COLOR_PRIMARY_SHADE_STRONG { get; } = new(190, 190, 190);
@@ -28,6 +29,7 @@ public class DarkTheme : BaseTheme {
     public override RGBColor COLOR_SECONDARY_ACCENT_HIGHLIGHT { get; } = new(255, 239, 0);
     public override RGBColor COLOR_SECONDARY_SURFACE { get; } = new(42, 33, 56);
     public override RGBColor COLOR_SECONDARY_SURFACE_HIGHLIGHT { get; } = new(72, 63, 86);
+    public override RGBColor COLOR_SECONDARY_BOX { get; } = new(57, 48, 71);
     public override RGBColor COLOR_SECONDARY_SHADE { get; } = new(170, 170, 170);
     public override RGBColor COLOR_SECONDARY_SHADE_INVERT { get; } = new(236, 240, 241);
     public override RGBColor COLOR_SECONDARY_SHADE_STRONG { get; } = new(140, 140, 140);
@@ -40,6 +42,7 @@ public class DarkTheme : BaseTheme {
         public override RGBColor COLOR_FLOATING_ACCENT_HIGHLIGHT { get; } = new(122, 113, 136);
         public override RGBColor COLOR_FLOATING_SURFACE { get; } = new(255, 255, 255);
         public override RGBColor COLOR_FLOATING_SURFACE_HIGHLIGHT { get; } = new(225, 225, 225);
+        public override RGBColor COLOR_FLOATING_BOX { get; } = new(245, 245, 245);
         public override RGBColor COLOR_FLOATING_SHADE { get; } = new(220, 220, 220);
         public override RGBColor COLOR_FLOATING_SHADE_INVERT { get; } = new(60, 60, 60);
         public override RGBColor COLOR_FLOATING_SHADE_STRONG { get; } = new(190, 190, 190);

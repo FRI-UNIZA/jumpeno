@@ -15,7 +15,6 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     private string URLCode => @params.URLCode() ?? "";
-    private MainLayoutViewModel? LayoutVM => @params.LayoutVM();
     private readonly EventDelegate<GameViewModel> OnConnect = @params.OnConnect ?? EventDelegate<GameViewModel>.EMPTY;
     private readonly EmptyDelegate OnDisconnect = @params.OnDisconnect ?? EmptyDelegate.EMPTY;
     private readonly EmptyDelegate Notify = @params.Notify ?? EmptyDelegate.EMPTY;
@@ -132,7 +131,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 IsConnecting = true;
         
                 // 1) Create ViewModel:
-                GameVM = new(game, player, PendingUpdates, Send, new(GameViewRendered));
+                var qrCode = QRCode.SVG($"{URL.BaseUrl()}{I18N.Link<GamePage>([game.Code])}");
+                GameVM = new(qrCode, game, player, PendingUpdates, Send, new(GameViewRendered));
                 PendingUpdates.Clear();
                 await GameVM.AddNotifyListener(NotifyListener);
                 await GameVM.PreRender();
@@ -154,10 +154,6 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 await OnConnect.Invoke(GameVM);
                 await Notify.Invoke();
                 await GameViewTCS.Task;
-
-                // 4) Full screen:
-                LayoutVM?.HideNavigation(false);
-                ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
             } catch {
                 GameVM = null;
                 Notification.Error(I18N.T("Something went wrong."));
@@ -192,6 +188,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             else {
                 if (exception.Type == EXCEPTION_TYPE.EXCEPTION) await DisposeGame();
                 ErrorHandler.NotifyErrors(exception, fallback: true);
+                ErrorHandler.MarkInputs(exception);
             }
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
         });
@@ -222,14 +219,13 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     private async Task DisposeGame() {
         await DisposeHub();
+        var wasConnected = GameVM != null;
         if (GameVM != null) await GameVM.RemoveNotifyListener(NotifyListener);
         GameVM?.Dispose();
         GameVM = null;
         GameViewTCS = null;
         PendingUpdates.Clear();
         if (!Auth.IsRegistered()) Auth.LogOut();
-        await OnDisconnect.Invoke();
-        LayoutVM?.ShowNavigation();
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        if (wasConnected) await OnDisconnect.Invoke();
     }
 }

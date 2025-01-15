@@ -37,4 +37,22 @@ public static class JSWindow {
 
     public static readonly string TouchActionManipulationOn = $"{ClassName}.TouchActionManipulationOn";
     public static readonly string TouchActionManipulationOff = $"{ClassName}.TouchActionManipulationOff";
+
+    public static readonly string OverscrollAutoOn = $"{ClassName}.OverscrollAutoOn";
+    public static readonly string OverscrollAutoOff = $"{ClassName}.OverscrollAutoOff";
+    
+    public static readonly string OverscrollContainOn = $"{ClassName}.OverscrollContainOn";
+    public static readonly string OverscrollContainOff = $"{ClassName}.OverscrollContainOff";
+    
+    public static readonly string OverscrollNoneOn = $"{ClassName}.OverscrollNoneOn";
+    public static readonly string OverscrollNoneOff = $"{ClassName}.OverscrollNoneOff";
+
+    public static readonly string PreventTouchStart = $"{ClassName}.PreventTouchStart";
+    public static readonly string DefaultTouchStart = $"{ClassName}.DefaultTouchStart";
+    
+    public static readonly string PreventTouchMove = $"{ClassName}.PreventTouchMove";
+    public static readonly string DefaultTouchMove = $"{ClassName}.DefaultTouchMove";
+    
+    public static readonly string PreventTouchEnd = $"{ClassName}.PreventTouchEnd";
+    public static readonly string DefaultTouchEnd = $"{ClassName}.DefaultTouchEnd";
 }

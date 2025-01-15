@@ -149,6 +149,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         if (update is MovementUpdate move) return MovementUpdate(move);
         if (update is KillUpdate kill) return KillUpdate(kill);
         if (update is LifeUpdate life) return LifeUpdate(life);
+        if (update is StateUpdate state) return StateUpdate(state);
         return false;
     }
 
@@ -242,6 +243,15 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         Fallen = false;
         ImmortalMS = update.ImmortalMS;
         return true;
+    }
+
+    private bool StateUpdate(StateUpdate update) {
+        switch (update.State) {
+            case GAME_STATE.PAUSE:
+                direction.X = 0;
+            return true;
+        }
+        return false;
     }
 
     public void ResetUpdateGuards() {

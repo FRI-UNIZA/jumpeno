@@ -61,7 +61,7 @@ public partial class ScrollArea : IDisposable {
             Areas.Add(ID, this);
             JS.InvokeVoid(
                 JSScrollArea.Activate, ID,
-                Theme is null ? null : GetThemeString((SCROLLAREA_THEME) Theme), AutoHide.ToString().ToLower(), OverflowX, OverflowY
+                Theme is null ? null : GetThemeString((SCROLLAREA_THEME) Theme), AutoHide.StringLower(), OverflowX, OverflowY
             );
             RegisterAreaListeners(ID);
         } else {

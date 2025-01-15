@@ -6,8 +6,8 @@
     @if (Parameters.IsT0) {
         <button
             id="@ID"
-            type="@Parameters.AsT0.Type.ToString().ToLower()"
-            @onclick="@(async () => { await OnClick.InvokeAsync(this); })"
+            type="@Parameters.AsT0.Type.StringLower()"
+            @onclick="@(async () => await OnClick.InvokeAsync(this))"
             @attributes="@AdditionalAttributes"
             class="@ComputeClass(@CLASSNAME_ELEMENT)"
         >
@@ -18,7 +18,7 @@
             ID="@ID"
             Href="@Parameters.AsT1.Href"
             Label="@Parameters.AsT1.Label"
-            OnClick="@(async () => { await OnClick.InvokeAsync(this); })"
+            OnClick="@(async () => await OnClick.InvokeAsync(this))"
             Target="@Parameters.AsT1.Target"
             Match="@Parameters.AsT1.Match"
             ActiveClass="@Parameters.AsT1.ActiveClass"

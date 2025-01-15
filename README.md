@@ -141,4 +141,4 @@ For example, `ThemeProvider` automatically generates theme CSS variables from C#
 ## Learn More
 This project was bootstrapped with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).
 
-You can learn more in the [Blazor documentation](https://learn.microsoft.com/sk-sk/aspnet/core/blazor/?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website).
+You can learn more in the [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website).

@@ -71,7 +71,7 @@ public partial class SelectBase {
         return c;
     }
     private CSSStyle ComputeOptionStyle() {
-        return new CSSStyle($"--option-align: {OptionAlign.ToString().ToLower()}");
+        return new CSSStyle($"--option-align: {OptionAlign.StringLower()}");
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

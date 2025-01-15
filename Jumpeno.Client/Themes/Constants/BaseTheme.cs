@@ -11,6 +11,8 @@ public class BaseTheme {
     public RGBColor COLOR_BASE_HIGHLIGHT { get; } = new(40, 40, 40);
     public RGBColor COLOR_BASE_INVERT { get; } = new(255, 255, 255);
     public RGBColor COLOR_BASE_INVERT_HIGHLIGHT { get; } = new(220, 220, 220);
+    public RGBColor COLOR_BASE_ERROR { get; } = new(255, 0, 0);
+    public RGBColor COLOR_BASE_SUCCESS { get; } = new(0, 255, 0);
     // Danger surface ---------------------------------------------------------------------------------------------------------------------
     public virtual RGBColor COLOR_DANGER { get; }
     public virtual RGBColor COLOR_DANGER_HIGHLIGHT { get; }
@@ -25,6 +27,7 @@ public class BaseTheme {
     public virtual RGBColor COLOR_PRIMARY_ACCENT_HIGHLIGHT { get; }
     public virtual RGBColor COLOR_PRIMARY_SURFACE { get; }
     public virtual RGBColor COLOR_PRIMARY_SURFACE_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_PRIMARY_BOX { get; }
     public virtual RGBColor COLOR_PRIMARY_SHADE { get; }
     public virtual RGBColor COLOR_PRIMARY_SHADE_INVERT { get; }
     public virtual RGBColor COLOR_PRIMARY_SHADE_STRONG { get; }
@@ -36,6 +39,7 @@ public class BaseTheme {
     public virtual RGBColor COLOR_SECONDARY_ACCENT_HIGHLIGHT { get; }
     public virtual RGBColor COLOR_SECONDARY_SURFACE { get; }
     public virtual RGBColor COLOR_SECONDARY_SURFACE_HIGHLIGHT { get; }
+    public virtual RGBColor COLOR_SECONDARY_BOX { get; }
     public virtual RGBColor COLOR_SECONDARY_SHADE { get; }
     public virtual RGBColor COLOR_SECONDARY_SHADE_INVERT { get; }
     public virtual RGBColor COLOR_SECONDARY_SHADE_STRONG { get; }
@@ -48,6 +52,7 @@ public class BaseTheme {
             public virtual RGBColor COLOR_FLOATING_ACCENT_HIGHLIGHT { get; }
             public virtual RGBColor COLOR_FLOATING_SURFACE { get; }
             public virtual RGBColor COLOR_FLOATING_SURFACE_HIGHLIGHT { get; }
+            public virtual RGBColor COLOR_FLOATING_BOX { get; }
             public virtual RGBColor COLOR_FLOATING_SHADE { get; }
             public virtual RGBColor COLOR_FLOATING_SHADE_INVERT { get; }
             public virtual RGBColor COLOR_FLOATING_SHADE_STRONG { get; }

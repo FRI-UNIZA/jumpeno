@@ -6,10 +6,12 @@ public sealed class StringValueAttribute(string value) : Attribute {
 }
 
 public static class EnumExtension {
-    public static string StringValue(this Enum value) {
+    public static string String(this Enum value) {
         var field = value.GetType().GetField(value.ToString());
         var attribute = (StringValueAttribute)Attribute.GetCustomAttribute(field!, typeof(StringValueAttribute))!;
 
         return attribute == null ? value.ToString() : attribute.Value;
     }
+    public static string StringLower(this Enum value) => String(value).ToLower();
+    public static string StringUpper(this Enum value) => String(value).ToUpper();
 }

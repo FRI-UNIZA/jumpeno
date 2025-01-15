@@ -89,7 +89,7 @@
     z-index: 1;
     padding-right: calc(var(--canvas-width) * 0.045px);
 }
-.keyboard-display-button {
+::deep .keyboard-display-button {
     --font-size: max(var(--info-height) * 0.2, var(--min-info-text-size));
     display: inline-flex;
     justify-content: center;
@@ -97,17 +97,13 @@
     gap: calc(var(--font-size) * 0.6px);
     width: auto;
     padding: 0 4px;
-    border: none;
-    outline: none;
-    cursor: pointer;
     font-size: calc(var(--font-size) * 1px);
     font-weight: 600;
     white-space: nowrap;
-    background-color: transparent;
     opacity: 1;
     transition: opacity calc(var(--transition-ultra-fast) * 1ms);
 }
-.keyboard-display-button:active {
+::deep .keyboard-display-button.active {
     opacity: 0.65;
 }
 ::deep .keyboard-display-image {
@@ -237,6 +233,7 @@
     color: rgb(var(--color-secondary));
     background-color: rgb(var(--color-secondary-surface));
     --control-shadow-color: rgb(var(--color-base));
+    --control-shadow-color-pressed: rgba(var(--color-base), 0.7);
     box-shadow: 0
                 calc(var(--control-button-height) * 0.04px)
                 calc(var(--control-button-height) * 0.16px)
@@ -247,9 +244,11 @@
 .light-theme .control {
     color: rgba(var(--color-secondary), 0.7);
     --control-shadow-color: rgba(var(--color-base), 0.2);
+    --control-shadow-color-pressed: rgba(var(--color-base), 0.14);
 }
 .control.pressed {
-    opacity: 0.7;
+    background-color: rgba(var(--color-secondary-surface), 0.7);
+    --control-shadow-color: var(--control-shadow-color-pressed);
 }
 .space {
     width: calc(var(--control-button-height) * 2.5px);
@@ -290,53 +289,31 @@
 .game-screen:not(.player) .game-controls { display: none; }
 .game-screen.player .trademark { display: none; }
 
-/* State [device small or rotate] ------------------------------------------------------------------------------------------------------ */
-.message-box {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: calc(var(--size-container-padding-mobile) * 1px);
-}
-::deep .message-box .message-icon svg {
-    min-width: 60px;
-    min-height: 60px;
-    width: min(30vw, 30vh);
-    height: min(30vw, 30vh);
-}
-.message-box .message-text {
-    font-size: max(16px, min(6vw, 6vh));
-    font-weight: 500;
-    padding-top: max(10px, min(2vw, 2vh));
-    margin: 0;
-    text-align: center;
-}
-
 /* Media state [device rotate] --------------------------------------------------------------------------------------------------------- */
 @media (max-height: 479.98px) and (orientation: landscape) {
-    .game-screen.watching.player > * {
+    .game-screen.watching.player > ::deep * {
         display: none;
     }
-    .game-screen.watching.player .flip-device {
+    .game-screen.watching.player ::deep .flip-device {
         display: flex;
     }
 }
 
 /* Media state [device small] ---------------------------------------------------------------------------------------------------------- */
 @media (max-width: 269.98px) or (max-height: 269.98px) {
-    .game-screen.watching > * {
+    .game-screen.watching > ::deep * {
         display: none !important;
     }
-    .game-screen.watching .small-device {
+    .game-screen.watching ::deep .small-device {
         display: flex !important;
     }
 }
 
 @media (max-width: 269.98px) or (max-height: 219.98px) {
-    .game-screen:not(.watching) > * {
+    .game-screen:not(.watching) > ::deep * {
         display: none !important;
     }
-    .game-screen:not(.watching) .small-device {
+    .game-screen:not(.watching) ::deep .small-device {
         display: flex !important;
     }
 }
@@ -354,8 +331,14 @@
     }
 }
 
-@media (min-width: 420px) and (min-height: 320px) {
+@media (min-width: 420px) and (min-height: 300px) {
     .game-screen:not(.watching) {
         --min-control-height: 70 !important;
+    }
+}
+
+@media (min-width: 480px) and (min-height: 320px) {
+    .game-screen:not(.watching) {
+        --min-control-height: 80 !important;
     }
 }

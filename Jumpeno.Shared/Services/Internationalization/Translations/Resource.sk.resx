@@ -417,4 +417,16 @@
   <data name="Score" xml:space="preserve">
     <value>Skóre</value>
   </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pauza</value>
+  </data>
+  <data name="Chat not available" xml:space="preserve">
+    <value>Chat neprístupný</value>
+  </data>
+  <data name="Round" xml:space="preserve">
+    <value>Kolo</value>
+  </data>
+  <data name="No players" xml:space="preserve">
+    <value>Žiadni hráči</value>
+  </data>
 </root>

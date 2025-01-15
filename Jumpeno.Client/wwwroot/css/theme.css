@@ -22,6 +22,7 @@ body.dark-theme {
     --color-primary-accent-highlight: 122, 113, 136;
     --color-primary-surface: 255, 255, 83;
     --color-primary-surface-highlight: 225, 225, 53;
+    --color-primary-box: 250, 250, 175;
     --color-primary-shade: 220, 220, 220;
     --color-primary-shade-invert: 60, 60, 60;
     --color-primary-shade-strong: 190, 190, 190;
@@ -32,6 +33,7 @@ body.dark-theme {
     --color-secondary-accent-highlight: 255, 239, 0;
     --color-secondary-surface: 42, 33, 56;
     --color-secondary-surface-highlight: 72, 63, 86;
+    --color-secondary-box: 57, 48, 71;
     --color-secondary-shade: 170, 170, 170;
     --color-secondary-shade-invert: 236, 240, 241;
     --color-secondary-shade-strong: 140, 140, 140;
@@ -42,6 +44,7 @@ body.dark-theme {
     --color-floating-accent-highlight: 122, 113, 136;
     --color-floating-surface: 255, 255, 255;
     --color-floating-surface-highlight: 225, 225, 225;
+    --color-floating-box: 245, 245, 245;
     --color-floating-shade: 220, 220, 220;
     --color-floating-shade-invert: 60, 60, 60;
     --color-floating-shade-strong: 190, 190, 190;
@@ -54,6 +57,8 @@ body.dark-theme {
     --color-base-highlight: 40, 40, 40;
     --color-base-invert: 255, 255, 255;
     --color-base-invert-highlight: 220, 220, 220;
+    --color-base-error: 255, 0, 0;
+    --color-base-success: 0, 255, 0;
     --font-primary: Montserrat, sans-serif;
     --size-container-max-width: 1340;
     --size-container-padding-mobile: 16;
@@ -101,6 +106,7 @@ body.light-theme {
     --color-primary-accent-highlight: 122, 113, 136;
     --color-primary-surface: 255, 255, 83;
     --color-primary-surface-highlight: 225, 225, 53;
+    --color-primary-box: 250, 250, 175;
     --color-primary-shade: 220, 220, 220;
     --color-primary-shade-invert: 60, 60, 60;
     --color-primary-shade-strong: 190, 190, 190;
@@ -111,6 +117,7 @@ body.light-theme {
     --color-secondary-accent-highlight: 235, 219, 0;
     --color-secondary-surface: 255, 255, 255;
     --color-secondary-surface-highlight: 235, 235, 235;
+    --color-secondary-box: 245, 245, 245;
     --color-secondary-shade: 220, 220, 220;
     --color-secondary-shade-invert: 60, 60, 60;
     --color-secondary-shade-strong: 190, 190, 190;
@@ -121,6 +128,7 @@ body.light-theme {
     --color-floating-accent-highlight: 122, 113, 136;
     --color-floating-surface: 255, 255, 255;
     --color-floating-surface-highlight: 225, 225, 225;
+    --color-floating-box: 245, 245, 245;
     --color-floating-shade: 220, 220, 220;
     --color-floating-shade-invert: 60, 60, 60;
     --color-floating-shade-strong: 190, 190, 190;
@@ -133,6 +141,8 @@ body.light-theme {
     --color-base-highlight: 40, 40, 40;
     --color-base-invert: 255, 255, 255;
     --color-base-invert-highlight: 220, 220, 220;
+    --color-base-error: 255, 0, 0;
+    --color-base-success: 0, 255, 0;
     --font-primary: Montserrat, sans-serif;
     --size-container-max-width: 1340;
     --size-container-padding-mobile: 16;

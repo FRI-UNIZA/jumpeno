@@ -14,7 +14,7 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.Secure = CookieSecurePolicy.Always; // Enforce secure cookies
 });
 builder.Services.AddAntiforgery(options => {
-    options.Cookie.Name = COOKIE_MANDATORY.ASP_NET_CORE_ANTIFORGERY.StringValue();
+    options.Cookie.Name = COOKIE_MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
@@ -155,7 +155,7 @@ CookieStorage.Init(
     (Cookie cookie) => {
         var ctx = ServerContext.Get();
         ctx.Response.Cookies.Append(
-            cookie.Key.StringValue(),
+            cookie.Key.String(),
             cookie.Value,
             new CookieOptions {
                 Expires = cookie.Expires,

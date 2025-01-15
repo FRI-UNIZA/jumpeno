@@ -4,7 +4,13 @@
 
 <div id="@ID" class="@ComputeClass()" style="@Style">
     <div class="image-ratio" />
-    <img class="image-element" src="@URL" loading="@Loading.ToString().ToLower()" @attributes="@AdditionalAttributes" />
+    <img
+        class="image-element"
+        src="@URL"
+        loading="@Loading.StringLower()"
+        draggable="@Draggable.ToString().ToLower()"
+        @attributes="@AdditionalAttributes"
+    />
     <div class="error-icon-wrapper" aria-hidden="true">
         <AntDesign.Icon Type="file-image" Theme="outline" class="error-icon" />
     </div>

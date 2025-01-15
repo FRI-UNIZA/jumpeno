@@ -390,6 +390,11 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
                 ResetUpdateGuards();
                 Updater.Reset();
             break;
+            case GAME_STATE.PAUSE:
+                foreach (var player in Players.Values) {
+                    player.Update(update);
+                }
+            break;
         }
         // 3) Update state:
         Time = update.Time;

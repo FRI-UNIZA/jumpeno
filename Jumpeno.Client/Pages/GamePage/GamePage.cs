@@ -21,7 +21,6 @@ public partial class GamePage {
     public GamePage() {
         ConnectVM = new(new(
             URLCode: () => URLCode,
-            LayoutVM: () => LayoutVM,
             OnConnect: new(OnConnect),
             OnDisconnect: new(OnDisconnect),
             Notify: new(Notify)
@@ -35,16 +34,32 @@ public partial class GamePage {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private void OnConnect(GameViewModel vm) {
-        Window.TouchActionPanOn();
+        // 1) Control actions:
         Window.BlockUserSelect();
-        vm.InitControls();
+        Window.TouchActionPanOn();
+        Window.OverscrollNoneOn();
+        Window.PreventTouchStart();
+        Window.PreventTouchEnd();
+        // 2) Set model:
         GameVM = vm;
+        GameVM.InitControls();
+        // 3) Update layout:
+        LayoutVM?.HideNavigation(false);
+        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
 
     private void OnDisconnect() {
-        Window.TouchActionPanOff();
+        // 1) Control actions:
         Window.AllowUserSelect();
+        Window.TouchActionPanOff();
+        Window.OverscrollNoneOff();
+        Window.DefaultTouchStart();
+        Window.DefaultTouchEnd();
+        // 2) Set model:
         GameVM = null;
+        // 3) Update layout:
+        LayoutVM?.ShowNavigation();
+        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
 
     private void Notify() => StateHasChanged();

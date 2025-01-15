@@ -10,6 +10,8 @@ public partial class Image {
     [Parameter]
     public string Style { get; set; } = "";
     [Parameter]
+    public bool NotDraggable { get; set; } = false;
+    [Parameter]
     public bool Transparent { get; set; } = false;
     [Parameter]
     public bool NoTransition { get; set; } = false;

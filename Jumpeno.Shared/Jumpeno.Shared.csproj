@@ -14,6 +14,7 @@
         <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.6" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="OneOf" Version="3.0.271" />
+        <PackageReference Include="QRCoder" Version="1.6.0" />
         <PackageReference Include="QuadTrees" Version="1.0.4" />
     </ItemGroup>
 
