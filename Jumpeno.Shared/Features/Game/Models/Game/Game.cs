@@ -144,10 +144,11 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         GameValidator.CheckConnectionType(connection);
         User.CheckUnknown(connection.User);
         foreach (var (id, player) in Players) {
-            if (player.IsConnected && player.User.Name == connection.User.Name) {
-                throw new CoreException(new Error("Player name is taken!"));
-            }
-            if (!player.IsConnected && (State == GAME_STATE.LOBBY || player.User.Equals(connection.User))) {
+            if (player.IsConnected) {
+                if (player.User.Name != connection.User.Name) continue;
+                if (State == GAME_STATE.LOBBY) throw new CoreException(new Error("Player name is taken!"));
+                else throw new CoreException(new Error("The game is already running."));
+            } else if (State == GAME_STATE.LOBBY || player.User.Equals(connection.User)) {
                 player.Synchronize(connection);
                 return player;
             }
