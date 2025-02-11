@@ -331,14 +331,14 @@
     }
 }
 
-@media (min-width: 420px) and (min-height: 300px) {
+@media (min-width: 440px) and (min-height: 300px) {
     .game-screen:not(.watching) {
-        --min-control-height: 70 !important;
+        --min-control-height: 75 !important;
     }
 }
 
-@media (min-width: 480px) and (min-height: 320px) {
+@media (min-width: 520px) and (min-height: 320px) {
     .game-screen:not(.watching) {
-        --min-control-height: 80 !important;
+        --min-control-height: 90 !important;
     }
 }
