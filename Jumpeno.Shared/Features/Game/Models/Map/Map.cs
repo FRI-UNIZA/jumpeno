@@ -2,7 +2,7 @@ namespace Jumpeno.Shared.Models;
 
 public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string DEFAULT_NAME = "Jumper's home";
+    public const string DEFAULT_NAME = "Jumper's home";
     public const float WIDTH = 1024;
     public const float HEIGHT = 576;
     public static readonly RGBColor DEFAULT_BACKGROUND = new(36, 30, 59);
@@ -119,7 +119,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
         return false;
     }
 
-    public bool TimeFlowUpdate(TimeFlowUpdate update) {
+    private bool TimeFlowUpdate(TimeFlowUpdate update) {
         return Shrink.Update(update);
     }
 

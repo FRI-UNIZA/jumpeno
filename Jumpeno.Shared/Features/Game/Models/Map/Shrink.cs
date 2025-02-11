@@ -72,13 +72,13 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         return false;
     }
 
-    public bool TimeFlowUpdate(TimeFlowUpdate update) {
+    private bool TimeFlowUpdate(TimeFlowUpdate update) {
         if (update.Game.State != GAME_STATE.SHRINKING) return false;
         Timer += update.DeltaT;
         return true;
     }
 
-    public bool StateUpdate(StateUpdate update) {
+    private bool StateUpdate(StateUpdate update) {
         Level = update.Level;
         Timer = update.Timer;
         return true;

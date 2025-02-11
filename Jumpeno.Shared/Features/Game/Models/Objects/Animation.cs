@@ -46,7 +46,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
         Running = direction.X != 0;
     }
 
-    public static ElementReference? GetImage(SKIN skin) {
+    private static ElementReference? GetImage(SKIN skin) {
         if (AppEnvironment.IsServer) return null;
         string id = IMAGE.SPRITE_MAGE_MAGIC;
         switch (skin) {
@@ -60,7 +60,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
         return img;
     }
 
-    public (int X, int Y) GetSpritePosition(bool alive, bool jumping) {
+    private (int X, int Y) GetSpritePosition(bool alive, bool jumping) {
         if (!alive) return (0, 2);
         if (jumping) return (1, 2);
         var divisor = Running ? RUN_INTERVAL : IDLE_INTERVAL;
