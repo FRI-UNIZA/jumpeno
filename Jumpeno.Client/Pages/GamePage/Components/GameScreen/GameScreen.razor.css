@@ -25,6 +25,9 @@
     --time-width: max(calc(var(--canvas-width) * 0.3), var(--min-time-width));
     --control-button-height: max(calc(var(--controls-height) * 0.7), var(--min-control-height));
     --control-padding: 10px;
+    --min-arrows-gap: 10px;
+    --arrows-gap-part: 0.03;
+    --arrows-gap: max(calc(var(--canvas-width) * var(--arrows-gap-part) * 1px), var(--min-arrows-gap));
 }
 
 /* Game screen ------------------------------------------------------------------------------------------------------------------------- */
@@ -202,15 +205,17 @@
 }
 
 .arrows {
+    position: relative;
     display: flex;
     justify-content: center;
-    gap: calc(var(--canvas-width) * 0.06px);
+    gap: var(--arrows-gap);
     width: 50%;
     min-width: 50%;
     padding-left: var(--control-padding);
     padding-right: var(--control-padding);
 }
 .abilities {
+    position: relative;
     display: flex;
     justify-content: center;
     width: 50%;
@@ -218,6 +223,13 @@
     padding-right: var(--control-padding);
 }
 
+.control-wrap {
+    position: relative;
+    display: inline-flex;
+    max-width: 100%;
+    padding: calc(var(--arrows-gap) / 2);
+    margin: calc(var(--arrows-gap) / -2);    
+}
 .control {
     position: relative;
     display: flex;
@@ -262,7 +274,7 @@
 }
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
-@media (min-width: 480px) and (min-height: 300px) {
+@media (min-width: 480px) {
     .keyboard-display-box {
         padding-right: 0;
     }
@@ -319,25 +331,40 @@
 }
 
 /* Media state [player] improved mobile controls --------------------------------------------------------------------------------------- */
-@media (max-height: 767.98px) {
-    .game-screen:not(.watching) .game-controls {
-        width: min(100vw, 1000px) !important;
-    }
+.game-screen:not(.watching) {
+    --arrows-gap: max(min(calc(var(--arrows-gap-part) * 100vw), calc(var(--control-button-height) * 0.3px)), var(--min-arrows-gap));
+}
+.game-screen:not(.watching) .game-controls {
+    width: 100vw !important;
+}
+.game-screen:not(.watching) .arrows {
+    justify-content: flex-start;
+    padding-left: 5vw;
+}
+.game-screen:not(.watching) .abilities {
+    justify-content: flex-end;
+    padding-right: 5vw;
 }
 
-@media (min-width: 350px) and (min-height: 280px) {
+@media (min-width: 330px) and (min-height: 180px) {
     .game-screen:not(.watching) {
         --min-control-height: 60 !important;
     }
 }
 
-@media (min-width: 440px) and (min-height: 300px) {
+@media (min-width: 380px) and (min-height: 180px) {
     .game-screen:not(.watching) {
-        --min-control-height: 75 !important;
+        --min-control-height: 70 !important;
     }
 }
 
-@media (min-width: 520px) and (min-height: 320px) {
+@media (min-width: 440px) and (min-height: 200px) {
+    .game-screen:not(.watching) {
+        --min-control-height: 80 !important;
+    }
+}
+
+@media (min-width: 520px) and (min-height: 250px) {
     .game-screen:not(.watching) {
         --min-control-height: 90 !important;
     }

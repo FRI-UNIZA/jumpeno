@@ -30,17 +30,21 @@
     <div class="@GameControlsClass()">
         @code {
             private RenderFragment RenderControl(GAME_CONTROLS control, RenderFragment icon) =>
-                @<button
-                    class="@ControlClass(control)"
-                    type="@BUTTON_TYPE.BUTTON.StringLower()"
+                @<div
+                    class="control-wrap"
                     @ontouchstart="TouchKeyEvent(control)" @ontouchend="ReleaseKeyEvent(control)"
-                    @onmousedown="MouseTouchKeyEvent(control)"
                     @ontouchstart:preventDefault @ontouchend:preventDefault
                     @ontouchstart:stopPropagation @ontouchend:stopPropagation
-                    tabindex="-1"
                 >
-                    @icon
-                </button>
+                    <button
+                        class="@ControlClass(control)"
+                        type="@BUTTON_TYPE.BUTTON.StringLower()"
+                        @onmousedown="MouseTouchKeyEvent(control)"
+                        tabindex="-1"
+                    >
+                        @icon
+                    </button>
+                </div>
             ;
         }
         <div class="arrows">

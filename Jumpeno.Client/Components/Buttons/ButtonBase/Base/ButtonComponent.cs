@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public class ButtonComponent: SurfaceComponent {
+public class ButtonComponent : SurfaceComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "button";
     public static readonly ButtonParameters DEFAULT_PARAMETERS = new();

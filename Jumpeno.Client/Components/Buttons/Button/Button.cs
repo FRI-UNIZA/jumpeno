@@ -1,4 +1,3 @@
-
 namespace Jumpeno.Client.Components;
 
 public partial class Button {

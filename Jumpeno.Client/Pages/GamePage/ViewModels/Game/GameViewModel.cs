@@ -161,6 +161,6 @@ public class GameViewModel : IDisposable {
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     public bool ControlsDisplayed { get; private set; } = false;
-    public void InitControls() => ControlsDisplayed = Player != null && Player.Device == DEVICE_TYPE.TOUCH;
+    public void InitControls() => ControlsDisplayed = Player != null && (Game.DisplayMode == DISPLAY_MODE.ONE_SCREEN || Player.Device == DEVICE_TYPE.TOUCH);
     public void ToggleControls() => ControlsDisplayed = !ControlsDisplayed;
 }
