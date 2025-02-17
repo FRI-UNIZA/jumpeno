@@ -14,25 +14,21 @@ public partial class GameScreen : IAsyncDisposable {
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) {
-            if (VM.IsWatching) {
-                await VM.AddAfterUpdatesListener(AfterUpdates);
-            }
-            if (VM.IsPlayer) {
-                await VM.StartPing();
-                await Window.AddKeyDownEventListener(Ref, JS_OnKeyDown);
-                await Window.AddKeyUpEventListener(Ref, JS_OnKeyUp);
-                await Window.AddMouseUpEventListener(Ref, JS_OnMouseUp);
-            }
-            await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
-            await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
-            var size = Window.GetSize();
-            UpdateDimensions((int) size.Width, (int) size.Height);
-            await VM.InitOnRender();
-        } else if (GameCanvasRef != null && GameContext == null) {
-            GameContext = await GameCanvasRef.CreateCanvas2DAsync();
-            await Render();
+        if (!firstRender) return;
+        if (VM.IsWatching) {
+            await VM.AddAfterUpdatesListener(AfterUpdates);
         }
+        if (VM.IsPlayer) {
+            await VM.StartPing();
+            await Window.AddKeyDownEventListener(Ref, JS_OnKeyDown);
+            await Window.AddKeyUpEventListener(Ref, JS_OnKeyUp);
+            await Window.AddMouseUpEventListener(Ref, JS_OnMouseUp);
+        }
+        await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
+        await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
+        var size = Window.GetSize();
+        UpdateDimensions((int) size.Width, (int) size.Height);
+        await VM.InitOnRender();
     }
 
     public async ValueTask DisposeAsync() {
@@ -48,7 +44,6 @@ public partial class GameScreen : IAsyncDisposable {
             }
             await Window.RemoveResizeEventListener(Ref, JS_OnWindowResize);
             await Animator.RemoveAnimator(Ref, JS_OnAnimationFrame);
-            GameContext?.Dispose();
         }
         ControlLock.Dispose();
         MouseReleaseKeyEventLock.Dispose();
@@ -229,13 +224,13 @@ public partial class GameScreen : IAsyncDisposable {
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     private BECanvasComponent? GameCanvasRef = null;
-    private Canvas2DContext? GameContext = null;
     private readonly LockerSlim RenderLock = new();
 
     private async Task Render() {
         if (!VM.IsWatching) return;
-        if (GameContext == null) return;
-        await RenderLock.TryExclusive(async () => await VM.Game.Render(GameContext, (VM.Player, Theme.FONT_PRIMARY)));
+        using var ctx = await GameCanvasRef.CreateCanvas2DAsync();
+        if (ctx == null) return;
+        await RenderLock.TryExclusive(async () => await VM.Game.Render(ctx, (VM.Player, Theme.FONT_PRIMARY)));
     }
 
     // Game loop --------------------------------------------------------------------------------------------------------------------------
