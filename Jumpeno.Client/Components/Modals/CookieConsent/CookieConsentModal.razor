@@ -8,7 +8,7 @@
     MaxWidth="600px"
 >
     <Content>
-        <div class="cookie-consent-container">
+        <div class="consent-container">
             <Collapse>
                 <CollapseItem Label="@I18N.T("Mandatory cookies")">
                     <Title>
@@ -55,7 +55,7 @@
         </div>
     </Content>
     <Footer>
-        <div class="cookie-consent-footer">
+        <div class="consent-footer">
             <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" OnClick="@(async () => { await AcceptCookies(Selected.Keys.ToList()); })">
                 <Text>@I18N.T("Accept chosen")</Text>
             </Button>
