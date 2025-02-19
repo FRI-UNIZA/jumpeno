@@ -98,6 +98,7 @@ public class BaseTheme {
     public int Z_INDEX_PAGE_LOADER { get; } = 1000000;
     public int Z_INDEX_SERVER_PAGE_LOADER { get; } = 1000001;
     public int Z_INDEX_NOTIFICATION { get; } = 1000002;
+    public int Z_INDEX_CONSOLE_UI { get; } = 1000003;
 
     // Breakpoints (px) -------------------------------------------------------------------------------------------------------------------
     public double BREAKPOINT_MOBILE_SM { get; } = 480;

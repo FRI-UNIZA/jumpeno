@@ -86,6 +86,7 @@ body.dark-theme {
     --z-index-page-loader: 1000000;
     --z-index-server-page-loader: 1000001;
     --z-index-notification: 1000002;
+    --z-index-console-ui: 1000003;
     --breakpoint-mobile-sm: 480;
     --breakpoint-mobile: 768;
     --breakpoint-tablet-sm: 992;
@@ -170,6 +171,7 @@ body.light-theme {
     --z-index-page-loader: 1000000;
     --z-index-server-page-loader: 1000001;
     --z-index-notification: 1000002;
+    --z-index-console-ui: 1000003;
     --breakpoint-mobile-sm: 480;
     --breakpoint-mobile: 768;
     --breakpoint-tablet-sm: 992;

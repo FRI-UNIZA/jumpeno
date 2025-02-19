@@ -1,0 +1,22 @@
+#console-ui {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    left: var(--console-left, "auto");
+    top: var(--console-top, "auto");
+    right: var(--console-right, "auto");
+    bottom: var(--console-bottom, "auto");
+    width: var(--console-width, "auto");
+    height: var(--console-height, "auto");
+    pointer-events: var(--console-events, "all");
+    padding: 4px 8px;
+    background-color: rgba(var(--color-base), 0.8);
+    color: rgb(var(--color-base-invert));
+    z-index: var(--z-index-console-ui);
+    font-size: 12px;
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 3px;
+    box-shadow: 0 0 10px 2px rgb(var(--color-base));
+}

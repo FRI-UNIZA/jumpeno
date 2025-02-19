@@ -228,7 +228,7 @@
     display: inline-flex;
     max-width: 100%;
     padding: calc(var(--arrows-gap) / 2);
-    margin: calc(var(--arrows-gap) / -2);    
+    margin: calc(var(--arrows-gap) / -2);
 }
 .control {
     position: relative;
