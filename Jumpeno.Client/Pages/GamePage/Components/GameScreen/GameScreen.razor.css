@@ -93,7 +93,7 @@
     padding-right: calc(var(--canvas-width) * 0.045px);
 }
 ::deep .keyboard-display-button {
-    --font-size: max(var(--info-height) * 0.2, var(--min-info-text-size));
+    --font-size: max(var(--info-height) * 0.25, var(--min-info-text-size));
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -110,7 +110,7 @@
     opacity: 0.65;
 }
 ::deep .keyboard-display-image {
-    --image-height: calc(max(var(--info-height) * 0.2, var(--min-info-text-size)) * 1.8px);
+    --image-height: calc(max(var(--info-height) * 0.28, var(--min-info-text-size)) * 1.8px);
     --image-width: calc(var(--image-height) * 1.2);
     --image-fit: contain;
     --image-position: center;
@@ -290,7 +290,7 @@
 /* State [watching] -------------------------------------------------------------------------------------------------------------------- */
 .game-screen:not(.watching) .canvas-box { display: none; }
 .game-screen:not(.watching) .game-info { padding-top: 0; }
-.game-screen:not(.watching) .keyboard-display-box { margin-top: calc(var(--info-height) * 0.65px); }
+.game-screen:not(.watching) .keyboard-display-box { margin-top: calc(var(--info-height) * 0.6px); }
 .game-screen.watching .game-connected { display: none; }
 .game-screen:not(.watching) .game-time { display: none; }
 .game-screen:not(.watching) .game-ping { margin-top: calc(var(--info-height) * 0.6px); }
