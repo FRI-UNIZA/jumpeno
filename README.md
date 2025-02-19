@@ -17,8 +17,8 @@ Before you start, please make sure you have installed:
 - Microsoft Visual Studio 2022+ or Visual Studio Code
 - You can be prompted to install additional workloads
 
-## Run
-To start the project, go to directory:
+## Run (Hot reloading)
+To simply start the project, go to directory:
 > /Jumpeno.Server
 
 And run this command:
@@ -42,7 +42,7 @@ Use the built-in debugger in your IDE.
 
 Ensure that `Jumpeno.sln` is selected as your workspace solution.
 
-To access the running application on a different device, it is recommended to use `DevTunnels`.
+To access the running application on a different device, it is recommended to use `DevTunnels` or `Local network` option.
 
 ## Build
 Temporarily disable `Bundle` option in:
@@ -61,7 +61,7 @@ Run the project using dotnet:
 `dotnet Jumpeno.Server.dll`
 
 ## Run in Docker
-Docker desktop app must be installed!
+Docker desktop app must be installed and running!
 
 To build the project, go to root directory:
 > /
