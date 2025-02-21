@@ -34,6 +34,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private void GameViewRendered() => GameViewTCS?.TrySetResult();
     // Updates:
     private readonly LinkedList<GameUpdate> PendingUpdates = [];
+    private bool Updated = false;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     // NOTE: Lifecycle events must be explicitly invoked in page:
@@ -85,6 +86,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             try {
                 await PageLoader.Show(PAGE_LOADER_TASK.GAME);
                 PendingUpdates.Clear();
+                Updated = false;
                 if (!Auth.IsRegistered()) Auth.LogInAnonymous(data.Name, User.GenerateSkin());
                 if (!await CreateConnection(data.Code, spectator)) throw new CoreException();
             } catch {
@@ -172,13 +174,16 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         });
     }
 
-    // Server actions ---------------------------------------------------------------------------------------------------------------------
+    // Server actions ---------------------------------------------------------------------------------------------------------------------    
     private async Task GameUpdate(GameUpdate update) {
-        await ConnectLock.TryExclusive(async () => {
-            if (update is PingUpdate ping) ping.SetReturn();
-            if (GameVM is GameViewModel VM) await VM.AddUpdate(update);
-            else PendingUpdates.AddLast(update);
-        });
+        if (Updated) await HandleUpdate(update);
+        else await ConnectLock.TryExclusive(async () => await HandleUpdate(update));
+    }
+
+    private async Task HandleUpdate(GameUpdate update) {
+        if (update is PingUpdate ping) ping.SetReturn();
+        if (GameVM is GameViewModel VM) { await VM.AddUpdate(update); Updated = true; }
+        else PendingUpdates.AddLast(update);
     }
 
     // Error handling ---------------------------------------------------------------------------------------------------------------------
@@ -225,6 +230,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         GameVM = null;
         GameViewTCS = null;
         PendingUpdates.Clear();
+        Updated = false;
         if (!Auth.IsRegistered()) Auth.LogOut();
         if (wasConnected) await OnDisconnect.Invoke();
     }
