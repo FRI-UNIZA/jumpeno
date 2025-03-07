@@ -2,6 +2,8 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContextFactory<DB>(options => options.UseSqlite(DB.ConnectionString));
+
 const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
     options.AddPolicy(ORIGIN_POLICY, policy => {
@@ -71,6 +73,12 @@ builder.Services.AddSingleton(sp => {
 builder.Services.AddSignalR();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope()) {
+    var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
+    dbContext.Database.Migrate();
+}
+
 // Apply the CORS middleware
 app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();

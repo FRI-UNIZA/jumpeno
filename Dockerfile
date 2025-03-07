@@ -49,6 +49,7 @@ RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Shared/appsettings.json) && \
 
 # Publish the server
 RUN dotnet publish Jumpeno.Server/Jumpeno.Server.csproj -c Release -o /app
+RUN mkdir -p /app/Services/Database
 
 # Stage 2: Use a runtime image for deployment
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

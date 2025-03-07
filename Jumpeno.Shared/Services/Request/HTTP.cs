@@ -317,4 +317,16 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     ) {
         return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body, handleError);
     }
+
+    public static async Task<byte[]> Download(string url) {
+        // return await Client().GetByteArrayAsync(url);
+
+        var response = await Client().GetAsync(url);
+
+        if (response.IsSuccessStatusCode) {
+            return await response.Content.ReadAsByteArrayAsync();
+        } else {
+            throw new Exception();
+        }
+    }
 }
