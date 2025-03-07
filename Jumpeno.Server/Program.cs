@@ -74,6 +74,9 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+if (!Directory.Exists(DB.Dir)) {
+    Directory.CreateDirectory(DB.Dir);
+}
 using (var scope = app.Services.CreateScope()) {
     var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
     dbContext.Database.Migrate();
