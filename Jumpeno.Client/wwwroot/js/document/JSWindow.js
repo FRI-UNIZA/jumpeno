@@ -162,3 +162,20 @@ class JSWindow {
 }
 
 window.JSWindow = JSWindow
+
+function BlazorDownloadFile(filename, mimeType, content) {
+    // const blob = new Blob([content], { type: mimeType });
+    // const link = document.createElement("a");
+    // link.href = URL.createObjectURL(blob);
+    // link.download = filename;
+    // link.click();
+    // URL.revokeObjectURL(link.href);
+    const blob = new Blob([new Uint8Array(content)], { type: mimeType });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+}

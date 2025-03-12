@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Components;
 
-// TODO: [Using SSR] Implement check of theme & login inconsistency before hide
-//       (To avoid different theme/language specific images and logged in component states rendered on the server)
 public partial class ServerPageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_LOADER = "server-page-loader";
@@ -9,8 +7,8 @@ public partial class ServerPageLoader {
     public const string CLASS_HIDDEN = "hidden";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private bool Hidden = AppSettings.Prerender;
-    private bool Displayed = !AppSettings.Prerender;
+    private bool Hidden = false;
+    private bool Displayed = true;
     private TaskCompletionSource HideTCS = null!;
     public CSSClass ComputeClass() {
         var c = new CSSClass(ID_LOADER);
@@ -36,7 +34,7 @@ public partial class ServerPageLoader {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task Hide() {
-        if (AppSettings.Prerender || AppEnvironment.IsServer) return;
+        if (AppEnvironment.IsServer) return;
         Instance.Hidden = true;
         Instance.HideTCS = new TaskCompletionSource();
         Instance.StateHasChanged();

@@ -12,6 +12,12 @@ public static class ServerSettings {
             public string Microsoft_AspNetCore { get; init; }
         }
     }
+    public static ServerSettingsAuthentication Authentication { get; private set; } public class ServerSettingsAuthentication {
+        public string FACEBOOK_APPID { get; init; }
+        public string FACEBOOK_APPSECRET { get; init; }
+        public string GOOGLE_CLIENTID { get; init; }
+        public string GOOGLE_CLIENTSECRET { get; init; }
+    }
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
@@ -22,6 +28,12 @@ public static class ServerSettings {
                 Default = config.GetValue<string>("Logging:LogLevel:Default")!,
                 Microsoft_AspNetCore = config.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
             }
+        };
+        Authentication = new() {
+            FACEBOOK_APPID = config.GetValue<string>("Authentication:FACEBOOK_APPID")!,
+            FACEBOOK_APPSECRET = config.GetValue<string>("Authentication:FACEBOOK_APPSECRET")!,
+            GOOGLE_CLIENTID = config.GetValue<string>("Authentication:GOOGLE_CLIENTID")!,
+            GOOGLE_CLIENTSECRET = config.GetValue<string>("Authentication:GOOGLE_CLIENTSECRET")!
         };
     }
 }

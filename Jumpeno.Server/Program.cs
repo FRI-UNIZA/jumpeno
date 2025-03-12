@@ -2,6 +2,10 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Database
+builder.Services.AddDbContextFactory<DBContext>(options => options.UseSqlite(DBContext.ConnectionString));
+
+// Origin policy
 const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
     options.AddPolicy(ORIGIN_POLICY, policy => {
@@ -67,10 +71,33 @@ builder.Services.AddSingleton(sp => {
     return new HttpClient { BaseAddress = new Uri(baseAddress) };
 });
 
-// SignalR & Hubs:
+// SignalR & Hubs
 builder.Services.AddSignalR();
 
 var app = builder.Build();
+
+// Database import & migrations
+if (Directory.Exists(DBContext.ImportDir)) {
+    if (Directory.Exists(DBContext.Dir)) {
+        foreach (var file in Directory.GetFiles(DBContext.Dir)) File.Delete(file);
+        foreach (var dir in Directory.GetDirectories(DBContext.Dir)) Directory.Delete(dir, true);
+    } else {
+        Directory.CreateDirectory(DBContext.Dir);
+    }
+    foreach (var file in Directory.GetFiles(DBContext.ImportDir))
+        File.Move(file, Path.Combine(DBContext.Dir, Path.GetFileName(file)), true);
+    foreach (var dir in Directory.GetDirectories(DBContext.ImportDir))
+        Directory.Move(dir, Path.Combine(DBContext.Dir, Path.GetFileName(dir)));
+    Directory.Delete(DBContext.ImportDir, true);
+}
+if (!Directory.Exists(DBContext.Dir)) {
+    Directory.CreateDirectory(DBContext.Dir);
+}
+using (var scope = app.Services.CreateScope()) {
+    var dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
+    dbContext.Database.Migrate();
+}
+
 // Apply the CORS middleware
 app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();

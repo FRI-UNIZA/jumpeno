@@ -1,16 +1,13 @@
 services:
     web:
+        build:
+            context: .
+            dockerfile: Dockerfile
         image: jumpeno
         restart: always
-        environment:
-            - CONNECTIONSTRINGS:DEFAULTCONNECTION=
-            - AUTHENTICATION:FACEBOOK:APPID=
-            - AUTHENTICATION:FACEBOOK:APPSECRET=
-            - AUTHENTICATION:GOOGLE:CLIENTID=
-            - AUTHENTICATION:GOOGLE:CLIENTSECRET=
         volumes:
-            - jumpeno:/app
+            - jumpeno-db:/app/Services/Database/Files
         ports:
             - 80:80
 volumes:
-    jumpeno:
+    jumpeno-db:

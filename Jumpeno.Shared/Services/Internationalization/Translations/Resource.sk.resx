@@ -429,4 +429,7 @@
   <data name="No players" xml:space="preserve">
     <value>Žiadni hráči</value>
   </data>
+  <data name="Error reading the file!" xml:space="preserve">
+    <value>Chyba pri čítaní súboru!</value>
+  </data>
 </root>

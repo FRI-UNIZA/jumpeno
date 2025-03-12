@@ -20,16 +20,8 @@ public partial class SelectCulture {
     }
 
     private static async Task OnSelect(SelectEvent ev) {
-        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE, !AppSettings.Prerender);
-        if (!AppSettings.Prerender) {
-            await ChangeCulture(ev);
-        }
-    }
-
-    private static async Task OnCloseSelected(SelectEvent ev) {
-        if (AppSettings.Prerender) {
-            await ChangeCulture(ev);
-        }
+        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE, true);
+        await ChangeCulture(ev);
     }
 
     private static async Task ChangeCulture(SelectEvent ev) {

@@ -30,6 +30,12 @@ COPY ./Jumpeno.Shared ./Jumpeno.Shared
 COPY ./Scripts ./Scripts
 COPY ./Jumpeno.Shared/appsettings.json /app/appsettings.shared.json
 
+# Import database
+RUN if [ -d "./Jumpeno.Server/Services/Database/Imports" ]; then \
+        mkdir -p /app/Services/Database && \
+        cp -r ./Jumpeno.Server/Services/Database/Imports /app/Services/Database; \
+    fi
+
 # Minify static CSS & JS files based on the "Bundle" value
 RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Shared/appsettings.json) && \
     if [ "$BUNDLE" = "true" ]; then \

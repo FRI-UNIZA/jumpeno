@@ -68,6 +68,7 @@
             <script src="@AppEnvironment.Import("js/components/JSScrollArea.js")"></script>
             <script src="@AppEnvironment.Import("js/components/JSPageLoader.js")"></script>
             <script src="@AppEnvironment.Import("js/components/JSSwitch.js")"></script>
+            <script src="@AppEnvironment.Import("js/components/JSConsoleUI.js")"></script>
             <script src="@AppEnvironment.Import("js/document/JSTempTitle.js")"></script>
         }
         <!-- Global JS END -->
@@ -75,8 +76,7 @@
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")"></script>
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
-            @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")
-            else @("JSActionHandler.SetFocus(JSServerPageLoader.ID); ")
+            JSActionHandler.SetFocus(JSServerPageLoader.ID);
             JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE_FUNCTIONAL.APP_THEME.String()");
             JSTempTitle.Add();
             JSImage.InitAll();

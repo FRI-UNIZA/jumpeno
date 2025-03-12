@@ -429,4 +429,7 @@
   <data name="No players" xml:space="preserve">
     <value>No players</value>
   </data>
+  <data name="Error reading the file!" xml:space="preserve">
+    <value>Error reading the file!</value>
+  </data>
 </root>

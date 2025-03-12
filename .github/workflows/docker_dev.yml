@@ -13,6 +13,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 'development'
+      - name: Inject secrets
+        run: |
+          jq '.Authentication.FACEBOOK_APPID = "${{ secrets.AUTHENTICATION_FACEBOOK_APPID }}" |
+              .Authentication.FACEBOOK_APPSECRET = "${{ secrets.AUTHENTICATION_FACEBOOK_APPSECRET }}" |
+              .Authentication.GOOGLE_CLIENTID = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTID }}" |
+              .Authentication.GOOGLE_CLIENTSECRET = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTSECRET }}"' \
+              Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
+          mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
       - name: Login to GitHub
         env:
           GITHUB_USER: ${{ github.actor }}
@@ -32,4 +40,4 @@ jobs:
       - name: Push with curl
         uses: wei/curl@v1
         with:
-          args: -X POST -k https://portainer.docker.kst.fri.uniza.sk/api/stacks/webhooks/e34f73b7-98cc-4257-be33-20df9a0f02dd
+          args: -X POST -k ${{ secrets.PORTAINER_WEBHOOK_URL }}

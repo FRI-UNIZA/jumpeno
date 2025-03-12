@@ -7,7 +7,7 @@ The application runs in WebAssembly and supports server-side rendering (SSR), wh
 It also includes support for themes and translations.
 
 The back-end provides a REST API via controllers, which can be accessed using HTTP requests.<br />
-In-game communication is handled through SignalR hubs.
+In-game communication is handled through SignalR hubs (WebSocket).
 
 The project is divided into client, server and shared part.
 
@@ -43,6 +43,16 @@ Use the built-in debugger in your IDE.
 Ensure that `Jumpeno.sln` is selected as your workspace solution.
 
 To access the running application on a different device, it is recommended to use `DevTunnels` or `Local network` option.
+
+There is an utility named ConsoleUI in both Blazor and JavaScript for logging runtime information on specific devices (such as iOS) that cannot be connected to DevTools on our PC. To display this console, add the component to the App.razor and specify its position and dimension parameters like so:
+
+`<ConsoleUI Left="5" Top="5" Width="400" Height="100" />`
+
+Example usage:
+
+`ConsoleUI.WriteLine("Debug info")`
+
+`ConsoleUI.Clear()`
 
 ## Build
 Temporarily disable `Bundle` option in:
@@ -98,14 +108,52 @@ Docker configuration can be modified in:
 
 App is served on port mentioned in `Settings` section!
 
+## Database
+The project uses an <b>SQLite database</b> stored in:
+> /Jumpeno.Server/Services/Database/Files/Jumpeno.db
+
+This file is ignored by Git and stores a local copy of the database.<br />
+The deployed container uses a separate persistent database from its volume.
+
+To overwrite the deployed database with the next commit, save the file to:
+> /Jumpeno.Server/Services/Database/Imports/Jumpeno.db
+
+If <b>Imports</b> folder is empty, volume will not change.<br />
+(This process does not work with local build!)
+
+The server database can be accessed and downloaded through the web admin.<br />
+To preview the database locally, you can use [DB Browser for SQLite](https://sqlitebrowser.org/).
+
+For database manipulation in code, use <b>Entity Framework</b> and <b>migrations</b>.
+
+## Admin
+You can log into the web admin at URL: `/admin`.<br />
+Here, you can manipulate the database, monitor the application, and run tests.
+
+The application uses a <b>JWT authentication</b> system for both users and administrators.<br />
+Administrators are authenticated using email-only authentication with one of the email addresses specified in:
+
+> /Jumpeno.Shared/appsettings.json
+
 ## Configuration Files
 This project includes two configuration files:
 
 For shared common settings:
-> /Jumpeno.Server/appsettings.json
+> /Jumpeno.Server/appsettings.json (Definitions)
+> /Jumpeno.Server/Services/Settings/ServerSettings.cs (Use in code)
 
 For server-specific secret configurations:
-> /Jumpeno.Shared/appsettings.json
+> /Jumpeno.Shared/appsettings.json (Definitions)
+> /Jumpeno.Shared/Services/Settings/AppSettings.cs (Use in code)
+
+## Secrets
+Secret information, such as API keys, is defined along with the server configuration in:
+> /Jumpeno.Server/appsettings.json
+
+These secrets are initially empty and injected into the Docker image during a job inside GitHub workflows.
+For testing purposes, you can create your own local files to override them:
+> /Jumpeno.Server/appsettings.Development.json
+> /Jumpeno.Server/appsettings.Production.json
 
 ## Settings
 Deployed app must run on port `80` to work properly!<br />
