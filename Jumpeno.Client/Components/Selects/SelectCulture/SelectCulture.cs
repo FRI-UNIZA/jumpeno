@@ -33,8 +33,8 @@ public partial class SelectCulture {
         var path = URL.Path();
 
         // Update uri with parameters:
-        var page = Page.CurrentPage();
-        if (page is not ErrorPage) {
+        var page = Page.CurrentPage;
+        if (page is not Error404Page) {
             var pageURI = URL.Encode(page.GetType().GetField($"ROUTE_{value.ToString().ToUpper()}")!.GetValue(null)!.ToString()!);
 
             var currentSegments = $"{path}/".Split('/', StringSplitOptions.RemoveEmptyEntries);

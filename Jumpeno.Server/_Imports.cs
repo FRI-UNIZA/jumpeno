@@ -9,6 +9,7 @@ global using Microsoft.AspNetCore.Mvc.ApplicationModels;
 global using Microsoft.AspNetCore.Http.Extensions;
 global using Microsoft.Extensions.Localization;
 global using Microsoft.AspNetCore.SignalR;
+global using System.ComponentModel.DataAnnotations;
 global using OneOf;
 
 global using Jumpeno.Client;
@@ -36,7 +37,6 @@ global using Jumpeno.Server.Utils;
 
 global using Jumpeno.Shared;
 global using Jumpeno.Shared.Constants;
-global using Jumpeno.Shared.Exceptions;
 global using Jumpeno.Shared.Models;
 global using Jumpeno.Shared.Services;
 global using Jumpeno.Shared.Services.Internationalization.Translations;

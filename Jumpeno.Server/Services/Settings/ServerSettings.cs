@@ -12,6 +12,8 @@ public static class ServerSettings {
             public string Microsoft_AspNetCore { get; init; }
         }
     }
+    public static string[] Admins { get; private set; }
+    public static string JWT_SECRET { get; private set; }
     public static ServerSettingsAuthentication Authentication { get; private set; } public class ServerSettingsAuthentication {
         public string FACEBOOK_APPID { get; init; }
         public string FACEBOOK_APPSECRET { get; init; }
@@ -29,6 +31,8 @@ public static class ServerSettings {
                 Microsoft_AspNetCore = config.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
             }
         };
+        Admins = config.GetSection("Admins").Get<string[]>()!;
+        JWT_SECRET = config.GetValue<string>("JWT_SECRET")!;
         Authentication = new() {
             FACEBOOK_APPID = config.GetValue<string>("Authentication:FACEBOOK_APPID")!,
             FACEBOOK_APPSECRET = config.GetValue<string>("Authentication:FACEBOOK_APPSECRET")!,

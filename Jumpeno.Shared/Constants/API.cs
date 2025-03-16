@@ -15,6 +15,8 @@ public static class API {
         public static string GAME_RESUME => $"{URL}/Game/Resume";
         public static string GAME_RESET => $"{URL}/Game/Reset";
 
+        public static string USER_LOGIN_ADMIN => $"{URL}/User/LogInAdmin";
+        public static string USER_PROFILE_ADMIN => $"{URL}/User/ProfileAdmin";
         public static string USER_CREATE => $"{URL}/User/Create";
         public static string USER_READ => $"{URL}/User/Read";
         public static string USER_UPDATE => $"{URL}/User/Update";

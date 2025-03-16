@@ -15,7 +15,8 @@ jobs:
           ref: 'development'
       - name: Inject secrets
         run: |
-          jq '.Authentication.FACEBOOK_APPID = "${{ secrets.AUTHENTICATION_FACEBOOK_APPID }}" |
+          jq '.JWT_SECRET = "${{ secrets.JWT_SECRET }}" |
+              .Authentication.FACEBOOK_APPID = "${{ secrets.AUTHENTICATION_FACEBOOK_APPID }}" |
               .Authentication.FACEBOOK_APPSECRET = "${{ secrets.AUTHENTICATION_FACEBOOK_APPSECRET }}" |
               .Authentication.GOOGLE_CLIENTID = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTID }}" |
               .Authentication.GOOGLE_CLIENTSECRET = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTSECRET }}"' \

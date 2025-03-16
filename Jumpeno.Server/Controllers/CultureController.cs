@@ -5,7 +5,7 @@ using System.Globalization;
 
 [Route("[controller]/[action]")]
 public class CultureController : Controller {
-    [HttpGet(Name = "SetCulture")]
+    [HttpGet]
     public IActionResult Set(string culture, string redirectUri) {
         if (culture != null) {
             CookieStorage.Set(new Cookie(

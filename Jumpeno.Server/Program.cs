@@ -1,3 +1,5 @@
+using System.Reflection;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,9 +49,47 @@ builder.Services.AddControllersWithViews(options => {
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 });
 builder.Services.AddRazorPages();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+if (builder.Environment.IsDevelopment()) {
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options => {
+        options.SwaggerDoc(AppSettings.Version, new OpenApiInfo { Title = AppSettings.Name, Version = AppSettings.Version });
+
+        // Enable JWT Authentication in Swagger:
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter 'Bearer {token}'"
+        });
+
+        // Security Requirement:
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement {{
+                new OpenApiSecurityScheme {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+
+        // Required:
+        options.SupportNonNullableReferenceTypes();
+        options.NonNullableReferenceTypesAsRequired();
+
+        // Add filters:
+        options.OperationFilter<RoleFilter>();
+        options.OperationFilter<ContentTypeFilter>();
+
+        // Add comments:
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    });
+}
 
 // Localization
 builder.Services.AddLocalization();
@@ -120,18 +160,18 @@ AppEnvironment.Init(
             || ctx.Request.Path.StartsWithSegments(HUB.CULTURE_PREFIX);
     },
     builder.Environment.IsDevelopment,
-    (Type T) => app.Services.GetService(T)!
+    T => app.Services.GetService(T)!
 );
 RequestStorage.Init(
-    (string key) => {
+    key => {
         var ctx = ServerContext.Get();
         return ctx.Items[key]!;
     },
-    (string key, object o) => {
+    (key, o) => {
         var ctx = ServerContext.Get();
         ctx.Items[key] = o;
     },
-    (string key) => {
+    key => {
         var ctx = ServerContext.Get();
         return ctx.Items.Remove(key);
     }
@@ -147,12 +187,15 @@ URL.Init(
 app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
-    async (HTTPException e) => {
+    async e => {
         if (AppEnvironment.IsController) return;
-        ErrorHandler.Notify(e);
+        if (e is HTTPException eHTTP) ErrorHandler.Notify(eHTTP);
+        else if (e is CoreError eCore) ErrorHandler.Notify(eCore);
+        else ErrorHandler.Notify(CoreException.DEFAULT_MESSAGE);
         await Task.CompletedTask;
     },
-    (HttpRequestMessage request) => {
+    () => null,
+    request => {
         var ctx = ServerContext.Get();
         var cookies = ctx.Request.Cookies;
 
@@ -164,7 +207,7 @@ HTTP.Init(
     }
 );
 Navigator.Init(
-    (string url, bool forceLoad, bool replace) => {
+    (url, forceLoad, replace) => {
         var ctx = ServerContext.Get();
         var currentURL = URL.Url();
         if (url != currentURL) {
@@ -174,12 +217,12 @@ Navigator.Init(
     () => {}
 );
 CookieStorage.Init(
-    (string key) => {
+    key => {
         var ctx = ServerContext.Get();
         ctx.Request.Cookies.TryGetValue(key, out string? cookie);
         return cookie;
     },
-    (Cookie cookie) => {
+    cookie => {
         var ctx = ServerContext.Get();
         ctx.Response.Cookies.Append(
             cookie.Key.String(),
@@ -194,7 +237,7 @@ CookieStorage.Init(
             }
         );
     },
-    (string key, string domain, string path) => {
+    (key, domain, path) => {
         var ctx = ServerContext.Get();
         ctx.Response.Cookies.Delete(
             key,
@@ -204,17 +247,18 @@ CookieStorage.Init(
             }
         );
     },
-    (bool unclosable) => throw new InvalidOperationException("Can not run on the server!")
+    unclosable => throw new InvalidOperationException("Can not run on the server!")
 );
 ThemeProvider.Init();
 
 // Configure the HTTP request pipeline:
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint($"/swagger/{AppSettings.Version}/swagger.json", AppSettings.Version);
+    });
     app.UseWebAssemblyDebugging();
 }
-
 app.UseHttpsRedirection();
 
 // Hubs:
@@ -225,6 +269,8 @@ app.UseBlazorFrameworkFiles();
 // Custom Middlewares:
 app.UseMiddleware<StaticFileMiddleware>();
 app.UseMiddleware<ErrorMiddleware>();
+app.UseMiddleware<APIMiddleware>();
+app.UseMiddleware<AuthorizationMiddleware>();
 app.UseMiddleware<HeadersMiddleware>();
 app.UseMiddleware<DisposeMiddleware>();
 

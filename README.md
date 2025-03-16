@@ -11,6 +11,9 @@ In-game communication is handled through SignalR hubs (WebSocket).
 
 The project is divided into client, server and shared part.
 
+## APIDoc (Swagger)
+<b>Swagger</b> tool is used for documentation, allowing you to test endpoints, including those requiring authorization. In the development environment, the API documentation is accessible at `/swagger`.
+
 ## Installation
 Before you start, please make sure you have installed:
 - .NET 8.0
@@ -127,13 +130,12 @@ To preview the database locally, you can use [DB Browser for SQLite](https://sql
 For database manipulation in code, use <b>Entity Framework</b> and <b>migrations</b>.
 
 ## Admin
-You can log into the web admin at URL: `/admin`.<br />
+You can log into the web admin at URL: `/{culture}/admin`.<br />
 Here, you can manipulate the database, monitor the application, and run tests.
 
 The application uses a <b>JWT authentication</b> system for both users and administrators.<br />
 Administrators are authenticated using email-only authentication with one of the email addresses specified in:
-
-> /Jumpeno.Shared/appsettings.json
+> /Jumpeno.Server/appsettings.json
 
 ## Configuration Files
 This project includes two configuration files:

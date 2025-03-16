@@ -10,7 +10,8 @@ public class DBController : ControllerBase {
     private static readonly Locker Lock = new();
     
     // Endpoints --------------------------------------------------------------------------------------------------------------------------
-    [HttpGet]
+    [HttpGet][Role(ROLE.ADMIN)]
+    [Produces(CONTENT_TYPE.OCTET_STREAM)][ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
     public FileContentResult Download() {
         try {
             Lock.Lock();
@@ -28,6 +29,7 @@ public class DBController : ControllerBase {
             // 3) Download file:
             byte[] fileBytes = System.IO.File.ReadAllBytes(backupPath);
             System.IO.File.Delete(backupPath);
+            Response.Headers.ContentType = CONTENT_TYPE.OCTET_STREAM;
             return File(fileBytes, CONTENT_TYPE.OCTET_STREAM, DBContext.FileName);
         } catch {
             throw new CoreException().SetCode(500).SetMessage("Error reading the file!");
@@ -36,13 +38,18 @@ public class DBController : ControllerBase {
         }
     }
 
-    [HttpGet]
+    [HttpGet][Role(ROLE.ADMIN, ROLE.USER)]
     public IActionResult AdminTest() {
+        foreach (var email in ServerSettings.Admins) {
+            Console.WriteLine($"admin email: {email}");
+        }
+
         return Ok(new {
             AUTHENTICATION_FACEBOOK_APPID = ServerSettings.Authentication.FACEBOOK_APPID,
             AUTHENTICATION_FACEBOOK_APPSECRET = ServerSettings.Authentication.FACEBOOK_APPSECRET,
             AUTHENTICATION_GOOGLE_CLIENTID = ServerSettings.Authentication.GOOGLE_CLIENTID,
-            AUTHENTICATION_GOOGLE_CLIENTSECRET = ServerSettings.Authentication.GOOGLE_CLIENTSECRET
+            AUTHENTICATION_GOOGLE_CLIENTSECRET = ServerSettings.Authentication.GOOGLE_CLIENTSECRET,
+            token = JWT.GenerateAdmin("daniel.test@gmail.com")
         });
     }
 }

@@ -8,7 +8,7 @@ public class User {
     public const byte NAME_MIN_LENGTH = 3;
     public const byte NAME_MAX_LENGTH = 13;
     public const string NAME_UNKNOWN = "Unknown";
-    public static readonly string[] DEFAULT_NAMES = {
+    public static readonly string[] DEFAULT_NAMES = [
         "Whistlejacket",
         "Niatross",
         "Exterminator",
@@ -27,7 +27,7 @@ public class User {
         "Azzor",
         "Jumper",
         "Stonks"
-    };
+    ];
 
     public static readonly User UNKNOWN = new(NAME_UNKNOWN, SKIN.MAGE_MAGIC);
 
