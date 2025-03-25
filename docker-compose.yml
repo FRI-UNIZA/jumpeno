@@ -1,13 +1,38 @@
 services:
-    web:
+    jumpeno:
+        container_name: jumpeno
+        image: jumpeno
         build:
             context: .
-            dockerfile: Dockerfile
-        image: jumpeno
+            dockerfile: Dockerfile.jumpeno
+            args:
+                ARG_DB_HOST: ${DB_HOST}
         restart: always
-        volumes:
-            - jumpeno-db:/app/Services/Database/Files
         ports:
             - 80:80
-volumes:
-    jumpeno-db:
+    database:
+        container_name: database
+        image: database
+        build:
+            context: .
+            dockerfile: Dockerfile.database
+            args:
+                ARG_MARIADB_DATABASE: ${DB_DATABASE}
+                ARG_MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+        restart: always
+        ports:
+            - 3306:3306
+        volumes:
+            - ${DB_PATH}:/var/lib/mysql
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin
+        build:
+            context: .
+            dockerfile: Dockerfile.phpmyadmin
+            args:
+                ARG_PMA_HOST: ${DB_HOST}
+                ARG_PMA_PORT: ${DB_PORT}
+        restart: always
+        ports:
+            - 8080:80

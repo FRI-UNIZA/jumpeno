@@ -2,6 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+ARG ARG_DB_HOST
+
 # Install dependencies
 RUN apt-get update && \
     apt-get install -y python3 && \
@@ -35,6 +37,10 @@ RUN if [ -d "./Jumpeno.Server/Services/Database/Imports" ]; then \
         mkdir -p /app/Services/Database && \
         cp -r ./Jumpeno.Server/Services/Database/Imports /app/Services/Database; \
     fi
+
+RUN jq --arg dbHost "$ARG_DB_HOST" '.Database.DB_HOST = $dbHost' \
+    Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
+    mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
 
 # Minify static CSS & JS files based on the "Bundle" value
 RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Shared/appsettings.json) && \

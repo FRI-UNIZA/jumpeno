@@ -1,6 +1,7 @@
 namespace Jumpeno.Server.Controllers;
 
 using Microsoft.Data.Sqlite;
+using MySqlConnector;
 
 [ApiController]
 [Route("[controller]/[action]")]
@@ -38,17 +39,47 @@ public class DBController : ControllerBase {
         }
     }
 
-    [HttpGet][Role(ROLE.ADMIN, ROLE.USER)]
-    public IActionResult AdminTest() {
+    [HttpGet]
+    public async Task<IActionResult> AdminTest() {
+        // using (var connection = new MySqlConnection(
+        //     $"Server={ServerSettings.Database.DB_HOST};"
+        //     + $"Database={ServerSettings.Database.Database};"
+        //     + $"User={ServerSettings.Database.User};"
+        //     + $"Password={ServerSettings.Database.DB_PASSWORD};"
+        //     + $"Port={ServerSettings.Database.DB_PORT}"
+        // )) {
+        //     await connection.OpenAsync();
+
+        //     // Simple dummy query for testing
+        //     string query = "SELECT 1"; // Just returns '1' as a result
+
+        //     using (var command = new MySqlCommand(query, connection))
+        //     {
+        //         var result = await command.ExecuteScalarAsync();
+        //         if (result != null)
+        //         {
+        //             Console.WriteLine($"Query Result: {result}");
+        //         }
+        //     }
+        // }
+
+
         foreach (var email in ServerSettings.Admins) {
             Console.WriteLine($"admin email: {email}");
         }
 
         return Ok(new {
-            AUTHENTICATION_FACEBOOK_APPID = ServerSettings.Authentication.FACEBOOK_APPID,
-            AUTHENTICATION_FACEBOOK_APPSECRET = ServerSettings.Authentication.FACEBOOK_APPSECRET,
-            AUTHENTICATION_GOOGLE_CLIENTID = ServerSettings.Authentication.GOOGLE_CLIENTID,
-            AUTHENTICATION_GOOGLE_CLIENTSECRET = ServerSettings.Authentication.GOOGLE_CLIENTSECRET,
+            DB_HOST = ServerSettings.Database.DB_HOST,
+            DB_PORT = ServerSettings.Database.DB_PORT,
+            DB_Database = ServerSettings.Database.Database,
+            DB_USER = ServerSettings.Database.User,
+            DB_PASSWORD = ServerSettings.Database.DB_PASSWORD,
+
+            EMAIL_HOST = ServerSettings.Email.EMAIL_HOST,
+            EMAIL_PORT = ServerSettings.Email.EMAIL_PORT,
+            EMAIL_FROM = ServerSettings.Email.EMAIL_FROM,
+            EMAIL_PASSWORD = ServerSettings.Email.EMAIL_PASSWORD,
+
             token = JWT.GenerateAdmin("daniel.test@gmail.com")
         });
     }

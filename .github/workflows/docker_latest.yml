@@ -2,38 +2,66 @@ name: Latest Build&Deploy
 
 on:
   push:
-    branches: [ master ]
-  workflow_dispatch: # To run this workflow manually from the Actions tab
+    branches: [ master ] # Trigger this on pushing to the 'master' branch
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
 
 jobs:
-  build: # Job 1:
+  # Job 1:
+  build:
     runs-on: ubuntu-latest
     steps:
+      # Step 1:
       - name: Checkout
         uses: actions/checkout@v4
+      # Step 2:
       - name: Inject secrets
         run: |
+          # Modify appsettings.json
           jq '.JWT_SECRET = "${{ secrets.JWT_SECRET }}" |
-              .Authentication.FACEBOOK_APPID = "${{ secrets.AUTHENTICATION_FACEBOOK_APPID }}" |
-              .Authentication.FACEBOOK_APPSECRET = "${{ secrets.AUTHENTICATION_FACEBOOK_APPSECRET }}" |
-              .Authentication.GOOGLE_CLIENTID = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTID }}" |
-              .Authentication.GOOGLE_CLIENTSECRET = "${{ secrets.AUTHENTICATION_GOOGLE_CLIENTSECRET }}"' \
-              Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
+              .Database.DB_HOST = "${{ vars.DB_HOST }}" |
+              .Database.DB_PORT = "${{ vars.DB_PORT }}" |
+              .Database.DB_PASSWORD = "${{ secrets.DB_PASSWORD }}" |
+              .Email.EMAIL_HOST = "${{ vars.EMAIL_HOST }}" |
+              .Email.EMAIL_PORT = "${{ vars.EMAIL_PORT }}" |
+              .Email.EMAIL_FROM = "${{ vars.EMAIL_FROM }}" |
+              .Email.EMAIL_PASSWORD = "${{ secrets.EMAIL_PASSWORD }}"' \
+          Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
           mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
-      - name: Login to GitHub
+
+          # Rewrite .env file
+          sed -i "s/^DB_HOST=.*/DB_HOST=${{ vars.DB_HOST }}/" .env
+          sed -i "s/^DB_PORT=.*/DB_PORT=${{ vars.DB_PORT }}/" .env
+          sed -i "s/^DB_PATH=.*/DB_PATH=${{ vars.DB_PATH }}/" .env
+          sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
+      # Step 3:
+      - name: Login to GitHub Container Registry (GHCR)
         env:
           GITHUB_USER: ${{ github.actor }}
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: docker login https://ghcr.io -u $GITHUB_USER -p $GITHUB_PASSWORD
-      - name: Build Image
-        run: docker build -t ghcr.io/fri-uniza/jumpeno/jumpeno:latest .
-      - name: Push Image
-        run: docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
-  deploy: # Job 2:
+      # Step 4:
+      - name: Build images
+        run: docker compose build
+      # Step 5:
+      - name: Tag images
+        run: |
+          docker tag jumpeno ghcr.io/fri-uniza/jumpeno/jumpeno:latest
+          docker tag database ghcr.io/fri-uniza/jumpeno/database:latest
+          docker tag phpmyadmin ghcr.io/fri-uniza/jumpeno/phpmyadmin:latest
+      # Step 6:
+      - name: Push images to GHCR
+        run: |
+          docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
+          docker push ghcr.io/fri-uniza/jumpeno/database:latest
+          docker push ghcr.io/fri-uniza/jumpeno/phpmyadmin:latest
+  # Job 2:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Step 1:
       - uses: actions/checkout@master
+      # Step 2:
       - name: Push with curl
         uses: wei/curl@master
         with:

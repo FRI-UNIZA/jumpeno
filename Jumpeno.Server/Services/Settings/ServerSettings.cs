@@ -14,11 +14,18 @@ public static class ServerSettings {
     }
     public static string[] Admins { get; private set; }
     public static string JWT_SECRET { get; private set; }
-    public static ServerSettingsAuthentication Authentication { get; private set; } public class ServerSettingsAuthentication {
-        public string FACEBOOK_APPID { get; init; }
-        public string FACEBOOK_APPSECRET { get; init; }
-        public string GOOGLE_CLIENTID { get; init; }
-        public string GOOGLE_CLIENTSECRET { get; init; }
+    public static ServerSettingsDatabase Database { get; private set; } public class ServerSettingsDatabase {
+        public string DB_HOST { get; init; }
+        public int DB_PORT { get; init; }
+        public string Database { get; init; }
+        public string User { get; init; }
+        public string DB_PASSWORD { get; init; }
+    }
+    public static ServerSettingsEmail Email { get; private set; } public class ServerSettingsEmail {
+        public string EMAIL_HOST { get; init; }
+        public int EMAIL_PORT { get; init; }
+        public string EMAIL_FROM { get; init; }
+        public string EMAIL_PASSWORD { get; init; }
     }
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
@@ -33,11 +40,18 @@ public static class ServerSettings {
         };
         Admins = config.GetSection("Admins").Get<string[]>()!;
         JWT_SECRET = config.GetValue<string>("JWT_SECRET")!;
-        Authentication = new() {
-            FACEBOOK_APPID = config.GetValue<string>("Authentication:FACEBOOK_APPID")!,
-            FACEBOOK_APPSECRET = config.GetValue<string>("Authentication:FACEBOOK_APPSECRET")!,
-            GOOGLE_CLIENTID = config.GetValue<string>("Authentication:GOOGLE_CLIENTID")!,
-            GOOGLE_CLIENTSECRET = config.GetValue<string>("Authentication:GOOGLE_CLIENTSECRET")!
+        Database = new() {
+            DB_HOST = config.GetValue<string>("Database:DB_HOST")!,
+            DB_PORT = config.GetValue<int>("Database:DB_PORT")!,
+            Database = config.GetValue<string>("Database:Database")!,
+            User = config.GetValue<string>("Database:User")!,
+            DB_PASSWORD = config.GetValue<string>("Database:DB_PASSWORD")!
+        };
+        Email = new() {
+            EMAIL_HOST = config.GetValue<string>("Email:EMAIL_HOST")!,
+            EMAIL_PORT = config.GetValue<int>("Email:EMAIL_PORT")!,
+            EMAIL_FROM = config.GetValue<string>("Email:EMAIL_FROM")!,
+            EMAIL_PASSWORD = config.GetValue<string>("Email:EMAIL_PASSWORD")!
         };
     }
 }
