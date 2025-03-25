@@ -9,6 +9,7 @@ jobs:
   # Job 1:
   build:
     runs-on: ubuntu-latest
+    environment: development
     steps:
       # Step 1:
       - name: Checkout
