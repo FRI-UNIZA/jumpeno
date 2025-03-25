@@ -30,10 +30,10 @@ jobs:
           mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
 
           # Rewrite .env file
-          sed -i "s/^DB_HOST=.*/DB_HOST=${{ vars.DB_HOST }}/" .env
-          sed -i "s/^DB_PORT=.*/DB_PORT=${{ vars.DB_PORT }}/" .env
-          sed -i "s/^DB_PATH=.*/DB_PATH=${{ vars.DB_PATH }}/" .env
-          sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env
+          sed -i "s|^DB_HOST=.*|DB_HOST=${{ vars.DB_HOST }}|" .env
+          sed -i "s|^DB_PORT=.*|DB_PORT=${{ vars.DB_PORT }}|" .env
+          sed -i "s|^DB_PATH=.*|DB_PATH=${{ vars.DB_PATH }}|" .env
+          sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" .env
       # Step 3:
       - name: Login to GitHub Container Registry (GHCR)
         env:
