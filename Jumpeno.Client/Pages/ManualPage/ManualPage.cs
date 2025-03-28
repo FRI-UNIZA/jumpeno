@@ -3,7 +3,6 @@ namespace Jumpeno.Client.Pages;
 public partial class ManualPage {
     public const string ROUTE_EN = "/en/manual";
     public const string ROUTE_SK = "/sk/navod";
-    public static readonly ROLE[] ROLES = [ROLE.USER];
 
     protected override void OnPageInitialized() => Console.WriteLine("ManualPage:OnPageInitialized");
     protected override async Task OnPageInitializedAsync() => Console.WriteLine("ManualPage:OnPageInitializedAsync");
