@@ -52,8 +52,8 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SSRComponent() {
-        Page.CurrentPage()!.CountComponent();
-        Key = $"{KEY_PREFIX}-{Page.CurrentPage()!.ComponentCount}";
+        Page.Current.CountComponent();
+        Key = $"{KEY_PREFIX}-{Page.Current.ComponentCount}";
         State =  COMPONENT_STATE.DONE;
         Initializing = false;
         Data = EmptyData();

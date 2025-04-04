@@ -17,7 +17,7 @@ public partial class PageLoader : IDisposable {
     private bool PageLoaderDisplayed { get; set; } = true;
     private readonly LockerSlim Lock = new();
     private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() {{ PAGE_LOADER_TASK.INITIAL, true }};
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() {{ PAGE_LOADER_TASK.INITIAL, true }} : [];
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = [];
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
     public CSSClass ComputeClassContent() {

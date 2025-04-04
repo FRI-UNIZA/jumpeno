@@ -22,7 +22,7 @@ public partial class ConnectBox : IAsyncDisposable {
 
     private static string LastNameValue = "";
     private readonly InputViewModel<string> VMName = new(new InputViewModelTextParams(
-        ID: User.NAME_ID,
+        ID: nameof(User.Name),
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
         MaxLength: User.NAME_MAX_LENGTH,

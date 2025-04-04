@@ -1,0 +1,22 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+<div class="user-login-form">
+    <Heading1 Class="login-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
+    <div class="login-inputs">
+        <Input ViewModel="VMEmail" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete HideLabel />
+        <Input ViewModel="VMPlayerName" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+        <Input ViewModel="VMPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+        <Input ViewModel="VMConfirmPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+    </div>
+    <Button Size="BUTTON_SIZE.M" OnClick="Register">
+        <Text>@I18N.T("Register")</Text>
+    </Button>
+    <Paragraph Size="TEXT_SIZE.S" Class="register-block login-text">
+        @I18N.T("Have an account?")&nbsp;
+        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.USER)" Underline Class="login-text">
+            @I18N.T("Log in")
+        </Link>
+    </Paragraph>
+</div>

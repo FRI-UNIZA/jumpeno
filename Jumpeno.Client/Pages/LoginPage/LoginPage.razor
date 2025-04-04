@@ -6,7 +6,27 @@
 
 <div class="login-page">
     <DocTitle Value="@I18N.T("Login")" />
-    <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin-right: -24px" />
-    <Heading1 Size="TEXT_SIZE.XL" Style="text-align: center; line-height: 1.2">@I18N.T("Under construction")</Heading1>
-    <Paragraph Size="TEXT_SIZE.L" Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
+
+    @switch (VM.Form) {
+        case LOGIN_FORM.ADMIN: <AdminLoginForm VM="VM" /> break;
+        case LOGIN_FORM.PASSWORD: <PasswordForm VM="VM" /> break;
+        case LOGIN_FORM.REGISTER: <RegisterForm VM="VM" /> break;
+        case LOGIN_FORM.USER: <UserLoginForm VM="VM" /> break;
+    }
+
+    <div style="display: none">
+        <div style="display: flex; justify-content: center;">
+            <button @onclick="@AddUser">Add</button>
+            <button @onclick="@LoadUsers">Read</button>
+            <button @onclick="@DownloadDatabase">Download</button>
+            <button @onclick="@AdminTest">Admin Test</button>
+        </div>
+        @foreach (var user in Users) {
+            <div>
+                @user.Id | @user.Email | @user.Name | @user.Skin | @user.ActivationCode
+                | <button @onclick="@(() => UpdateUser((int)user.Id!))">update</button>
+                | <button @onclick="@(() => DeleteUser((int)user.Id!))">delete</button>
+            </div>
+        }
+    </div>
 </div>

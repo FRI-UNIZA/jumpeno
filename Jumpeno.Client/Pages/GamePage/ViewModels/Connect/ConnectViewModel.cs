@@ -103,7 +103,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             // 1) Create data URL:
             var q = new QueryParams();
             q.Set(Game.CODE_ID, code);
-            q.Set(User.USER_ID, JsonSerializer.Serialize(Auth.User));
+            q.Set(nameof(User), JsonSerializer.Serialize(Auth.User));
             q.Set(Connection.DEVICE_ID, JsonSerializer.Serialize(Navigator.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
             q.Set(Spectator.SPECTATOR_ID, spectator);
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);

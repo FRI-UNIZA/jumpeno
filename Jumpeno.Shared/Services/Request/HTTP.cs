@@ -14,7 +14,8 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
-    private static Func<HTTPException, Task> OnError;
+    private static Func<Exception, Task> OnError;
+    private static Func<string?> AccessToken;
     private static Action<HttpRequestMessage>? AddClientCookies;
     private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
     private readonly LockerSlim TokenLock = new();
@@ -30,10 +31,13 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     ~HTTP() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(Func<HTTPException, Task> onError, Action<HttpRequestMessage>? addClientCookies = null) {
+    public static void Init(
+        Func<Exception, Task> onError, Func<string?> accessToken, Action<HttpRequestMessage>? addClientCookies = null
+    ) {
         if (Client is not null) return;
         Client = AppEnvironment.GetService<HttpClient>;
         OnError = onError;
+        AccessToken = accessToken;
         AddClientCookies = addClientCookies;
     }
 
@@ -80,8 +84,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
     private static async Task<HTTPHeadResult> Request<T>(
         HttpMethod method, bool bodyAccess, string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
         // Access instance:
         var instance = Instance();
@@ -89,9 +92,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         HttpResponseMessage? response;
         int code;
         var token = new CancellationTokenSource(); // NOTE: Cancel token
-        try {
-            // TODO: Add authorization for base url
-            
+        try {            
             // Add query parameters:
             if (query is not null) {
                 url = URL.SetQueryParams(url, query);
@@ -99,6 +100,12 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
             // Create request object:
             var request = new HttpRequestMessage(method, url);
+
+            // Add authorization:
+            if (URL.IsLocal(url)) {
+                var accessToken = AccessToken();
+                if (accessToken != null) SetHeader(request, "Authorization", $"Bearer {accessToken}");
+            }
 
             // Add body:
             if (
@@ -118,7 +125,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
             }
 
             // Add content headers:
-            SetContentHeader(request, "Content-Type", CONTENT_TYPE.JSON_UTF8);
+            SetContentHeader(request, "Content-Type", CONTENT_TYPE.JSON);
             if (contentHeaders is not null) {
                 foreach (var header in contentHeaders) {
                     SetContentHeader(request, header.Key, header.Value);
@@ -140,7 +147,6 @@ public class HTTP : StaticService<HTTP>, IDisposable {
             throw new HTTPException(code: STATUS_CANCELLED, message: "Request cancelled.");
         } catch {
             var exception = new HTTPException(code: STATUS_FAILED, message: "Request failed.");
-            if (handleError) await OnError(exception);
             throw exception;
         } finally {
             await instance.RemoveToken(requestID, token);
@@ -154,7 +160,6 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 return new HTTPHeadResult(code, response.Headers, response.Content.Headers);
             } catch {
                 var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, "Parsing error.");
-                if (handleError) await OnError(exception);
                 throw exception;
             }
         } else {
@@ -177,7 +182,6 @@ public class HTTP : StaticService<HTTP>, IDisposable {
             } catch {
                 exception = new HTTPException(code, response?.Headers, response?.Content.Headers, "Something went wrong.");
             }
-            if (handleError) await OnError(exception);
             throw exception;
         }
     }
@@ -192,129 +196,129 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
     public static async Task<HTTPHeadResult> Head(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return await Request<object>(HttpMethod.Head, false, url, query, headers, handleError: handleError);
+        return await Request<object>(HttpMethod.Head, false, url, query, headers);
     }
 
     public static async Task<HTTPHeadResult> Options(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return await Request<object>(HttpMethod.Options, false, url, query, headers, handleError: handleError);
+        return await Request<object>(HttpMethod.Options, false, url, query, headers);
     }
     public static async Task<HTTPResult<T>> Options<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Options, true, url, query, headers, handleError: handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Options, true, url, query, headers);
     }
 
     public static async Task<HTTPHeadResult> Trace(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return await Request<object>(HttpMethod.Trace, false, url, query, headers, handleError: handleError);
+        return await Request<object>(HttpMethod.Trace, false, url, query, headers);
     }
     public static async Task<HTTPResult<T>> Trace<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Trace, true, url, query, headers, handleError: handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Trace, true, url, query, headers);
     }
 
     public static async Task<HTTPHeadResult> Get(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return await Request<object>(HttpMethod.Get, false, url, query, headers, handleError: handleError);
+        return await Request<object>(HttpMethod.Get, false, url, query, headers);
     }
     public static async Task<HTTPResult<T>> Get<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Get, true, url, query, headers, handleError: handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Get, true, url, query, headers);
     }
 
     public static async Task<HTTPHeadResult> Connect(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return await Request<object>(HttpMethod.Connect, false, url, query, headers, contentHeaders, body, handleError);
+        return await Request<object>(HttpMethod.Connect, false, url, query, headers, contentHeaders, body);
     }
     public static async Task<HTTPResult<T>> Connect<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Connect, true, url, query, headers, contentHeaders, body, handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Connect, true, url, query, headers, contentHeaders, body);
     }
 
     public static async Task<HTTPHeadResult> Post(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return await Request<object>(HttpMethod.Post, false, url, query, headers, contentHeaders, body, handleError);
+        return await Request<object>(HttpMethod.Post, false, url, query, headers, contentHeaders, body);
     }
     public static async Task<HTTPResult<T>> Post<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Post, true, url, query, headers, contentHeaders, body, handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Post, true, url, query, headers, contentHeaders, body);
     }
 
     public static async Task<HTTPHeadResult> Put(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return await Request<object>(HttpMethod.Put, false, url, query, headers, contentHeaders, body, handleError);
+        return await Request<object>(HttpMethod.Put, false, url, query, headers, contentHeaders, body);
     }
     public static async Task<HTTPResult<T>> Put<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Put, true, url, query, headers, contentHeaders, body, handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Put, true, url, query, headers, contentHeaders, body);
     }
 
     public static async Task<HTTPHeadResult> Patch(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return await Request<object>(HttpMethod.Patch, false, url, query, headers, contentHeaders, body, handleError);
+        return await Request<object>(HttpMethod.Patch, false, url, query, headers, contentHeaders, body);
     }
     public static async Task<HTTPResult<T>> Patch<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Patch, true, url, query, headers, contentHeaders, body, handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Patch, true, url, query, headers, contentHeaders, body);
     }
 
     public static async Task<HTTPHeadResult> Delete(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return await Request<object>(HttpMethod.Delete, false, url, query, headers, contentHeaders, body, handleError);
+        return await Request<object>(HttpMethod.Delete, false, url, query, headers, contentHeaders, body);
     }
     public static async Task<HTTPResult<T>> Delete<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
-        bool handleError = true
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body, handleError);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body);
+    }
+
+    public static async Task<byte[]> Download(string url) {
+        // return await Client().GetByteArrayAsync(url);
+
+        var response = await Client().GetAsync(url);
+
+        if (response.IsSuccessStatusCode) {
+            return await response.Content.ReadAsByteArrayAsync();
+        } else {
+            throw new Exception();
+        }
+    }
+
+    public static async Task Try(Func<Task> callback) {
+        try { await callback(); }
+        catch (Exception e) { await OnError(e); }
     }
 }
