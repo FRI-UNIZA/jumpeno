@@ -1,0 +1,42 @@
+.user-login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    max-width: 100%;
+    gap: 20px;
+}
+
+::deep .login-heading.surface-all {
+    --text-align: center;
+}
+
+.login-inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+::deep .register-block {
+    --text-align: center;
+    margin-bottom: -8px
+}
+
+.login-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.option-delimiter {
+    position: relative;
+    top: -2px;
+}
+
+::deep .icon-admin {
+    position: relative;
+    font-size: 15px;
+    bottom: -1px;
+}

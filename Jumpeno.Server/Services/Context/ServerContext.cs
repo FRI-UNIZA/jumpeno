@@ -1,12 +1,10 @@
 namespace Jumpeno.Server.Services;
 
 public static class ServerContext {
-    public static HttpContext Get() {
-        return AppEnvironment.GetService<IHttpContextAccessor>().HttpContext!;
-    }
+    public static HttpContext Instance => AppEnvironment.GetService<IHttpContextAccessor>().HttpContext!;
 
     public static void Respond(HTTPHeadResult result) {
-        var ctx = Get();
+        var ctx = Instance;
         ctx.Response.StatusCode = result.Code;
         foreach (var header in result.Headers) {
             ctx.Response.Headers[header.Key] = header.Value.FirstOrDefault();

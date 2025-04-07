@@ -1,5 +1,6 @@
 global using System.Net.Http.Headers;
 global using System.Diagnostics.CodeAnalysis;
+global using Microsoft.EntityFrameworkCore;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using System.Drawing;
@@ -8,6 +9,8 @@ global using Microsoft.AspNetCore.Mvc.ApplicationModels;
 global using Microsoft.AspNetCore.Http.Extensions;
 global using Microsoft.Extensions.Localization;
 global using Microsoft.AspNetCore.SignalR;
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
 global using OneOf;
 
 global using Jumpeno.Client;
@@ -25,6 +28,7 @@ global using Jumpeno.Client.Utils;
 global using Jumpeno.Client.Themes;
 
 global using Jumpeno.Server;
+global using Jumpeno.Server.Constants;
 global using Jumpeno.Server.Controllers;
 global using Jumpeno.Server.Hubs;
 global using Jumpeno.Server.Middlewares;
@@ -35,7 +39,6 @@ global using Jumpeno.Server.Utils;
 
 global using Jumpeno.Shared;
 global using Jumpeno.Shared.Constants;
-global using Jumpeno.Shared.Exceptions;
 global using Jumpeno.Shared.Models;
 global using Jumpeno.Shared.Services;
 global using Jumpeno.Shared.Services.Internationalization.Translations;

@@ -53,7 +53,7 @@ public partial class NavMenuMobile : IAsyncDisposable {
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             await Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
-            if (Page.CurrentPage().GetType() != typeof(ErrorPage)) {
+            if (Page.Current.GetType() != typeof(Error404Page)) {
                 await Navigator.AddAfterFinishEventListener(CloseAfter);
             }
         } else {

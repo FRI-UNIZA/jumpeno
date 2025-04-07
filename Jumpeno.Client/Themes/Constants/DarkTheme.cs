@@ -10,6 +10,8 @@ public class DarkTheme : BaseTheme {
     public override RGBColor COLOR_DANGER_SURFACE_HIGHLIGHT { get; } = new(255, 219, 219);
     public override RGBColor COLOR_DANGER_ACCENT { get; } = new(255, 0, 0);
     public override RGBColor COLOR_DANGER_ACCENT_HIGHLIGHT { get; } = new(253, 118, 118);
+    // Success surface --------------------------------------------------------------------------------------------------------------------
+    public override RGBColor COLOR_SUCCESS { get; } = new(68, 221, 36);
     // Primary surface --------------------------------------------------------------------------------------------------------------------
     public override RGBColor COLOR_PRIMARY { get; } = new(42, 33, 56);
     public override RGBColor COLOR_PRIMARY_HIGHLIGHT { get; } = new(122, 113, 136);

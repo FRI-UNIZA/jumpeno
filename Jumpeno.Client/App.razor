@@ -1,5 +1,7 @@
 ﻿@namespace Jumpeno.Client
 
+@using System.Reflection
+
 <ThemeProvider>
     <ImagePreloader />
     <CanvasPreRenderer />
@@ -8,16 +10,18 @@
         <ModalProvider>
             <WebDocument>
                 <DocTitle Value="@AppSettings.Name" />
-                <Router AppAssembly="@typeof(App).Assembly">
-                    <Found Context="routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                    </Found>
-                    <NotFound>
-                        <LayoutView Layout="@typeof(MainLayout)">
-                            <ErrorPage />
-                        </LayoutView>
-                    </NotFound>
-                </Router>
+                @if (PageAuth.CanRender()) {
+                    <Router AppAssembly="@typeof(App).Assembly">
+                        <Found Context="routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        </Found>
+                        <NotFound>
+                            <LayoutView Layout="@typeof(MainLayout)">
+                                <Error404Page />
+                            </LayoutView>
+                        </NotFound>
+                    </Router>
+                }
             </WebDocument>
         </ModalProvider>
     </PageLoader>
@@ -29,10 +33,65 @@
 @code {
     private CookieConsentModal CookieConsentModalRef = null!;
     
+    private EventWaitHandle InitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+    
+    protected override async Task OnInitializedAsync() {
+        try {
+            if (AppEnvironment.IsServer) return;
+            await Navigator.AddBlocker(async ev => {
+                try {
+                    @* await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION); *@
+                    Type? page = GetPageTypeFromUrl(URL.ToRelative(ev.AfterURL));
+                    if (page == null) return true;
+                    var attr = page.GetField("ROLES");
+                    if (attr == null) return true;
+                    ROLE[] roles = (ROLE[]) attr!.GetValue(null)!;
+                    if (roles.Length <= 0) return true;
+                    if (Token.Access.role == null) return false;
+                    else return true;
+                } catch {}
+                Navigator.NavigateTo(I18N.Link<LoginPage>());
+                return false;
+            });
+            var token = LocalStorage.Get(nameof(Token));
+            if (token == null) return;
+            Token.StoreAccess(token);
+            Console.WriteLine("Token decoded:::");
+            Console.WriteLine(Token.Access.sub);
+            Console.WriteLine(Token.Access.role);
+            Console.WriteLine(Token.Access.iss);
+            Console.WriteLine(Token.Access.aud);
+            Console.WriteLine(Token.Access.iat);
+            Console.WriteLine(Token.Access.exp);
+        } finally {
+            InitHandle.Set();
+        }
+    }
+
+    private Type? GetPageTypeFromUrl(string url) {
+        var assembly = Assembly.GetExecutingAssembly();
+        var pageType = assembly.GetTypes()
+        .Where(t => t.IsSubclassOf(typeof(Page)))
+        .FirstOrDefault(t => {
+            try {
+                foreach (var lang in I18N.LANGUAGES) {
+                    string link = t.GetField($"ROUTE_{lang.ToUpper()}")!.GetValue(null)!.ToString()!;
+                    if (link == url) return true;
+                }
+                return false;
+            } catch {
+                return false;
+            }
+        });
+        return pageType;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender) {
+        InitHandle.WaitOne();
         if (!firstRender) return;
+        await PageAuth.CheckRoles(Page.Current);
         var cookieModalOpen = await CookieStorage.InitModal();
-        await ServerPageLoader.Hide();
+        JS.InvokeVoid(JSServerPageLoader.Hide);
         await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
 
         await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));

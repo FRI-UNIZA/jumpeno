@@ -11,7 +11,7 @@ public partial class MainLayout {
     private NavMenu NavMenuRef = null!;
     private NavMenuMobile NavMenuMobileRef = null!;
     private CSSClass ComputeClass() {
-        var c = new CSSClass();
+        var c = new CSSClass(CLASS);
         if (!LayoutVM.NavigationDisplayed) c.Set(CLASS_NO_NAVIGATION);
         return c;
     }

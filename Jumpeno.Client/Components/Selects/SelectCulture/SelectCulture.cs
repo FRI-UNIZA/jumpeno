@@ -20,16 +20,8 @@ public partial class SelectCulture {
     }
 
     private static async Task OnSelect(SelectEvent ev) {
-        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE, !AppSettings.Prerender);
-        if (!AppSettings.Prerender) {
-            await ChangeCulture(ev);
-        }
-    }
-
-    private static async Task OnCloseSelected(SelectEvent ev) {
-        if (AppSettings.Prerender) {
-            await ChangeCulture(ev);
-        }
+        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE, true);
+        await ChangeCulture(ev);
     }
 
     private static async Task ChangeCulture(SelectEvent ev) {
@@ -41,8 +33,8 @@ public partial class SelectCulture {
         var path = URL.Path();
 
         // Update uri with parameters:
-        var page = Page.CurrentPage();
-        if (page is not ErrorPage) {
+        var page = Page.Current;
+        if (page is not Error404Page) {
             var pageURI = URL.Encode(page.GetType().GetField($"ROUTE_{value.ToString().ToUpper()}")!.GetValue(null)!.ToString()!);
 
             var currentSegments = $"{path}/".Split('/', StringSplitOptions.RemoveEmptyEntries);

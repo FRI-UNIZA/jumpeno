@@ -5,29 +5,45 @@ public partial class AdminPage {
     public const string ROUTE_EN = "/en/admin";
     public const string ROUTE_SK = "/sk/admin";
 
-    public const string PASSWORD = "FRIadm25";
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private bool Verified = false;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private readonly InputViewModel<string> VMPassword;
+    private readonly InputViewModel<string> VMEmail;
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public AdminPage() {
-        VMPassword = new(new InputViewModelTextParams(
-            ID: "password",
+        VMEmail = new(new InputViewModelTextParams(
+            ID: nameof(AdminLoginDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
-            MaxLength: 20,
-            Name: "Password",
-            Label: "Password",
-            Placeholder: "Password",
-            DefaultValue: "",
-            Secret: true
+            TextCheck: Checker.IsEmail,
+            MaxLength: 100,
+            Name: nameof(AdminLoginDTO.Email),
+            Label: I18N.T("Email address verification"),
+            Placeholder: "Email",
+            DefaultValue: ""
         ));
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private void Login() => StateHasChanged();
+    private async Task Login() {
+        await PageLoader.Show(PAGE_LOADER_TASK.LOGIN_REQUEST);
+        await HTTP.Try(async () => {
+            // 1) Create data:
+            var data = new AdminLoginDTO(
+                Email: VMEmail.Value
+            );
+            // 2) Validation:
+            data.Check();
+            // 3) Send request:
+            var response = await HTTP.Post<MessageDTOR>(API.BASE.ADMIN_LOGIN, body: data);
+            // 4) Show result:
+            Notification.Success(response.Data.Message);
+            Verified = true;
+        });
+        await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN_REQUEST);
+    }
     private static async Task Start() => await GameViewModel.Request(async () => await HTTP.Patch(API.BASE.GAME_START, body: Game.DEFAULT_CODE));
     private static async Task Pause() => await GameViewModel.Request(async () => await HTTP.Patch(API.BASE.GAME_PAUSE, body: Game.DEFAULT_CODE));
     private static async Task Resume() => await GameViewModel.Request(async () => await HTTP.Patch(API.BASE.GAME_RESUME, body: Game.DEFAULT_CODE));

@@ -16,6 +16,7 @@ body.dark-theme {
     --color-danger-surface-highlight: 255, 219, 219;
     --color-danger-accent: 255, 0, 0;
     --color-danger-accent-highlight: 253, 118, 118;
+    --color-success: 68, 221, 36;
     --color-primary: 42, 33, 56;
     --color-primary-highlight: 122, 113, 136;
     --color-primary-accent: 42, 33, 56;
@@ -101,6 +102,7 @@ body.light-theme {
     --color-danger-surface-highlight: 255, 219, 219;
     --color-danger-accent: 255, 0, 0;
     --color-danger-accent-highlight: 253, 118, 118;
+    --color-success: 68, 221, 36;
     --color-primary: 42, 33, 56;
     --color-primary-highlight: 122, 113, 136;
     --color-primary-accent: 42, 33, 56;
