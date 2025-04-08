@@ -28,14 +28,17 @@ public class ErrorMiddleware(RequestDelegate next) {
         }
 
         if (exception is not null) {
-            ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON_UTF8;
+            ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON;
             var errors = exception switch {
                 HTTPException e => e.Errors,
                 CoreException e => e.Errors,
                 _ => []
             };
+            foreach (var error in errors) {
+                error.Message = I18N.T(error.Message, error.Values, unsplit: true);
+            }
             await ctx.Response.WriteAsync(JsonConvert.SerializeObject(new {
-                exception.Message,
+                Message = I18N.T(exception.Message, unsplit: true),
                 Errors = errors,
                 exception.Data
             }));

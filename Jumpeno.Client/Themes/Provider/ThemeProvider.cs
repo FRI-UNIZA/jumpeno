@@ -75,13 +75,9 @@ public partial class ThemeProvider {
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public static void Init() {
-        THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
-    }
+    public static void Init() => THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
 
-    public static string? GetThemeCookie() {
-        return CookieStorage.Get(COOKIE_FUNCTIONAL.APP_THEME);
-    }
+    public static string? GetThemeCookie() => CookieStorage.Get(COOKIE_FUNCTIONAL.APP_THEME);
 
     private static void SetThemeCookie(string className) {
         CookieStorage.Set(new Cookie(
@@ -91,9 +87,7 @@ public partial class ThemeProvider {
         ));
     }
 
-    private static void SetThemeCookie(BaseTheme theme) {
-        SetThemeCookie(theme.GetType().Name);
-    }
+    private static void SetThemeCookie(BaseTheme theme) => SetThemeCookie(theme.GetType().Name);
 
     public static BaseTheme CreateThemeByName(string className) {
         try {

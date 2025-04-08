@@ -65,7 +65,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         
         if (URL.IsLocal(ctx.TargetLocation)) {
             if (!ProgramNavigation) {
-                if (Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+                if (Page.Current.GetType() == typeof(Error404Page)) {
                     ctx.PreventNavigation();
                     NavLock.TryUnlock();
                     await NavigateTo(ctx.TargetLocation);
@@ -128,7 +128,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(REQUEST_STORAGE_KEYS.REPLACE_URL, url);
+            RequestStorage.Set(nameof(URL), url);
             NavLock.TryUnlock();
             return;
         }
@@ -139,7 +139,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
-            if (!I18N.IsCurrentCultureUrl(url) || Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+            if (!I18N.IsCurrentCultureUrl(url) || Page.Current.GetType() == typeof(Error404Page)) {
                 forceLoad = true;
             }
             if (URL.Path(url) == URL.Path()) {

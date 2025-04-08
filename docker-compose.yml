@@ -1,16 +1,56 @@
 services:
-    web:
+    jumpeno:
+        container_name: jumpeno
         image: jumpeno
-        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile.jumpeno
         environment:
-            - CONNECTIONSTRINGS:DEFAULTCONNECTION=
-            - AUTHENTICATION:FACEBOOK:APPID=
-            - AUTHENTICATION:FACEBOOK:APPSECRET=
-            - AUTHENTICATION:GOOGLE:CLIENTID=
-            - AUTHENTICATION:GOOGLE:CLIENTSECRET=
-        volumes:
-            - jumpeno:/app
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USER: ${DB_USER}
+            DB_PASSWORD: ${DB_PASSWORD}
+            EMAIL_HOST: ${EMAIL_HOST}
+            EMAIL_PORT: ${EMAIL_PORT}
+            EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+            EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+        restart: always
         ports:
             - 80:80
-volumes:
-    jumpeno:
+    database:
+        container_name: database
+        image: database
+        build:
+            context: .
+            dockerfile: Dockerfile.database
+        environment:
+            MARIADB_DATABASE: ${DB_DATABASE}
+            MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+        restart: always
+        ports:
+            - 3306:3306
+        volumes:
+            - ${DB_PATH}:/var/lib/mysql
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin
+        build:
+            context: .
+            dockerfile: Dockerfile.phpmyadmin
+        environment:
+            PMA_HOST: ${DB_HOST}
+            PMA_PORT: ${DB_PORT}
+        restart: always
+        ports:
+            - 8080:80
+    mailcatcher:
+        container_name: mailcatcher
+        image: mailcatcher
+        build:
+            context: .
+            dockerfile: Dockerfile.mailcatcher
+        restart: always
+        ports:
+            - 1025:1025 # SMTP server
+            - 1080:1080 # Web UI

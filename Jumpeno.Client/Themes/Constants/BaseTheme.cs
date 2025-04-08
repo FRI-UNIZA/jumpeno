@@ -20,6 +20,9 @@ public class BaseTheme {
     public virtual RGBColor COLOR_DANGER_SURFACE_HIGHLIGHT { get; }
     public virtual RGBColor COLOR_DANGER_ACCENT { get; }
     public virtual RGBColor COLOR_DANGER_ACCENT_HIGHLIGHT { get; }
+    // Success surface ---------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor COLOR_SUCCESS { get; }
+    public virtual RGBColor COLOR_SUCCESS_HIGHLIGHT { get; }
     // Primary surface --------------------------------------------------------------------------------------------------------------------
     public virtual RGBColor COLOR_PRIMARY { get; }
     public virtual RGBColor COLOR_PRIMARY_HIGHLIGHT { get; }

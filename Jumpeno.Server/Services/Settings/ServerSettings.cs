@@ -12,6 +12,58 @@ public static class ServerSettings {
             public string Microsoft_AspNetCore { get; init; }
         }
     }
+    public static ServerSettingsAuth Auth { get; private set; } public class ServerSettingsAuth {
+        public string Pepper { get; init; }
+        public ServerSettingsAuthJWT JWT { get; init; } public class ServerSettingsAuthJWT {
+            public string AccessSecret { get; init; }
+            public string RefreshSecret { get; init; }
+            public string DataSecret { get; init; }
+        }
+        public string[] Admins { get; init; }
+    }
+    public static ServerSettingsDatabase Database { get; private set; } public class ServerSettingsDatabase {
+        public string Version { get; init; }
+        public string Host { get; init; }
+        public int Port { get; init; }
+        public string Database { get; init; }
+        public string User { get; init; }
+        public string Password { get; init; }
+    }
+    public static ServerSettingsEmail Email { get; private set; } public class ServerSettingsEmail {
+        public string Host { get; init; }
+        public int Port { get; init; }
+        public string Address { get; init; }
+        public string Password { get; init; }
+        public bool Mailcatcher { get; init; }
+    }
+    public static ServerSettingsExpiration Expiration { get; private set; } public class ServerSettingsExpiration {
+        public ServerSettingsExpirationAccessToken AccessToken { get; init; }
+        public class ServerSettingsExpirationAccessToken {
+            public int Minutes { get; init; }
+        }
+        public ServerSettingsExpirationRefreshToken RefreshToken { get; init; }
+        public class ServerSettingsExpirationRefreshToken {
+            public int Hours { get; init; }
+        }
+        public ServerSettingsExpirationActivationToken ActivationToken { get; init; }
+        public class ServerSettingsExpirationActivationToken {
+            public int Hours { get; init; }
+        }
+        public ServerSettingsExpirationPasswordResetToken PasswordResetToken { get; init; }
+        public class ServerSettingsExpirationPasswordResetToken {
+            public int Minutes { get; init; }
+        }
+    }
+    public static ServerSettingsSchedule Schedule { get; private set; } public class ServerSettingsSchedule {
+        public ServerSettingsScheduleActivationCleaner ActivationCleaner { get; init; }
+        public class ServerSettingsScheduleActivationCleaner {
+            public int Minutes { get; init; }
+        }
+        public ServerSettingsScheduleRefreshCleaner RefreshCleaner { get; init; }
+        public class ServerSettingsScheduleRefreshCleaner {
+            public int Minutes { get; init; }
+        }
+    }
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
@@ -22,6 +74,40 @@ public static class ServerSettings {
                 Default = config.GetValue<string>("Logging:LogLevel:Default")!,
                 Microsoft_AspNetCore = config.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
             }
+        };
+        Auth = new() {
+            Pepper = config.GetValue<string>("Auth:Pepper")!,
+            JWT = new() {
+                AccessSecret = config.GetValue<string>("Auth:JWT:AccessSecret")!,
+                RefreshSecret = config.GetValue<string>("Auth:JWT:RefreshSecret")!,
+                DataSecret = config.GetValue<string>("Auth:JWT:DataSecret")!
+            },
+            Admins = config.GetSection("Auth:Admins").Get<string[]>()!
+        };
+        Database = new() {
+            Version = config.GetValue<string>("Database:Version")!,
+            Host = Environment.GetEnvironmentVariable("DB_HOST") ?? config.GetValue<string>("Database:Host")!,
+            Port = Environment.GetEnvironmentVariable("DB_PORT") is string portDB ? int.Parse(portDB) : config.GetValue<int>("Database:Port")!,
+            Database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? config.GetValue<string>("Database:Database")!,
+            User = Environment.GetEnvironmentVariable("DB_USER") ?? config.GetValue<string>("Database:User")!,
+            Password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? config.GetValue<string>("Database:Password")!
+        };
+        Email = new() {
+            Host = Environment.GetEnvironmentVariable("EMAIL_HOST") ?? config.GetValue<string>("Email:Host")!,
+            Port = Environment.GetEnvironmentVariable("EMAIL_PORT") is string portEmail ? int.Parse(portEmail) : config.GetValue<int>("Email:Port")!,
+            Address = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? config.GetValue<string>("Email:Address")!,
+            Password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? config.GetValue<string>("Email:Password")!,
+            Mailcatcher = config.GetValue<bool>("Email:Mailcatcher")!
+        };
+        Expiration = new() {
+            AccessToken = new() { Minutes = config.GetValue<int>("Expiration:AccessToken:Minutes")! },
+            RefreshToken = new() { Hours = config.GetValue<int>("Expiration:RefreshToken:Hours")! },
+            ActivationToken = new() { Hours = config.GetValue<int>("Expiration:ActivationToken:Hours")! },
+            PasswordResetToken = new() { Minutes = config.GetValue<int>("Expiration:PasswordResetToken:Minutes")! }
+        };
+        Schedule = new() {
+            ActivationCleaner = new() { Minutes = config.GetValue<int>("Schedule:ActivationCleaner:Minutes")! },
+            RefreshCleaner = new() { Minutes = config.GetValue<int>("Schedule:RefreshCleaner:Minutes")! }
         };
     }
 }

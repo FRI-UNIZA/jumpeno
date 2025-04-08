@@ -28,6 +28,19 @@ public static class AppSettings {
             public string URL { get; init; }
         }
     }
+    public static AppSettingsGame Game { get; private set; } public class AppSettingsGame {
+        public int FPS { get; init; }
+        public AppSettingsGameTouchDeviceNotifications TouchDeviceNotifications { get; init; }
+        public class AppSettingsGameTouchDeviceNotifications {
+            public int PerSecond { get; init; }
+        }
+        public AppSettingsGameRound Round { get; init; } public class AppSettingsGameRound {
+            public int Minutes { get; init; }
+        }
+        public AppSettingsGameFinishDelay FinishDelay { get; init; } public class AppSettingsGameFinishDelay {
+            public int Seconds { get; init; }
+        }
+    }
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
@@ -54,6 +67,12 @@ public static class AppSettings {
             Game = new() {
                 URL = config.GetValue<string>("Hub:Game:URL")!
             }
+        };
+        Game = new() {
+            FPS = config.GetValue<int>("Game:FPS")!,
+            TouchDeviceNotifications = new() { PerSecond = config.GetValue<int>("Game:TouchDeviceNotifications:PerSecond")! },
+            Round = new() { Minutes = config.GetValue<int>("Game:Round:Minutes")! },
+            FinishDelay = new() { Seconds = config.GetValue<int>("Game:FinishDelay:Seconds")! }
         };
     }
 }

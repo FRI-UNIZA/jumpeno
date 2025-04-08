@@ -17,7 +17,7 @@ public partial class CookieConsentModal {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnInitialized() {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.COOKIE_CONSENT_MODAL, this);
+        RequestStorage.Set(nameof(CookieConsentModal), this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
