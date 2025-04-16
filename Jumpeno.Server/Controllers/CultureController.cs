@@ -5,8 +5,14 @@ using System.Globalization;
 
 [Route("[controller]/[action]")]
 public class CultureController : Controller {
-    [HttpGet(Name = "SetCulture")]
-    public IActionResult Set(string culture, string redirectUri) {
+    // Endpoints --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Sets culture cookie and redirects to given URI.</summary>
+    /// <param name="culture">Culture to set.</param>
+    /// <param name="redirectURI">URI to redirect to.</param>
+    /// <response code="302">Culture change successful.</response>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status302Found)]
+    public IActionResult Redirect(string culture, string redirectURI) {
         if (culture != null) {
             CookieStorage.Set(new Cookie(
                 COOKIE_FUNCTIONAL.APP_CULTURE,
@@ -14,9 +20,10 @@ public class CultureController : Controller {
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
         }
-        return Redirect(redirectUri);
+        return Redirect(redirectURI);
     }
 
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static Action<RequestLocalizationOptions> SetupAction() {
         return options => {
             var supportedCultures = I18N.LANGUAGES.Select(lang => new CultureInfo(lang)).ToList();

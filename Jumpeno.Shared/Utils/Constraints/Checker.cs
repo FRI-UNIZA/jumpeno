@@ -1,6 +1,19 @@
 namespace Jumpeno.Shared.Utils;
 
+using System.Text.RegularExpressions;
+
 public static class Checker {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    // Message:
+    public const string MESSAGE_ERROR = "Something went wrong.";
+    public const string MESSAGE_VALUES = "Incorrect field values.";
+    // Field:
+    public const string FIELD_UNDEFINED = "Value undefined";
+    public const string FIELD_EMPTY = "Empty field";
+    public const string FIELD_FORMAT = "Wrong format";
+    public const string FIELD_NOT_MATCH = "Not a match";
+    public const string FIELD_EXISTS = "Already exists";
+
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static string Name(string name) {
         if (name != "") name = $" \"{name}\"";
@@ -8,8 +21,20 @@ public static class Checker {
     }
 
     // General ----------------------------------------------------------------------------------------------------------------------------
-    public static void Check(bool condition, Error error) => Check(Validate(condition, error));
-    public static void Check(List<Error> errors) { if (errors.Count > 0) throw new CoreException(errors); }
+    public static void Check(bool condition, Error error, string? message = null) {
+        Check(Validate(condition, error), message);
+    }
+    public static void Check(List<Error> errors, string? message = null) {
+        if (errors.Count > 0) throw new CoreException(errors).SetMessage(message ?? MESSAGE_ERROR);
+    }
+    public static void CheckValues(bool condition, Error error, string? message = null) {
+        try { Check(condition, error, message ?? MESSAGE_VALUES); }
+        catch (CoreException e) { e.SetCode(400); throw; }
+    }
+    public static void CheckValues(List<Error> errors, string? message = null) {
+        try { Check(errors, message ?? MESSAGE_VALUES); }
+        catch (CoreException e) { e.SetCode(400); throw; }
+    }
 
     public static List<Error> Validate(bool condition, Error error) {
         List<Error> errors = [];
@@ -19,9 +44,7 @@ public static class Checker {
     public static void Validate(List<Error> errors, bool condition, Error error) { if (condition) errors.Add(error); }
 
     // Null -------------------------------------------------------------------------------------------------------------------------------
-    public static bool IsNotNull(object? value) {
-        return value is not null;
-    }
+    public static bool IsNotNull(object? value) => value is not null;
     public static void CheckNotNull(object? value, string name = "") {
         if (IsNotNull(value)) return;
         throw new InvalidDataException($"Value{Name(name)} can not be null!");
@@ -54,6 +77,18 @@ public static class Checker {
         if (!IsEmptyString(value, trim)) return;
         name = name == "" ? " " : $" \"{name}\" ";
         throw new ArgumentException($"Value of argument{name}is empty!");
+    }
+    public static List<Error> ValidateUndefined(string id, object? value) {
+        return Validate(
+            value == null,
+            new Error(id, FIELD_UNDEFINED)
+        );
+    }
+    public static List<Error> ValidateEmpty(string id, object? value) {
+        return Validate(
+            value == null || (value is string s && s.Trim() == ""),
+            new Error(id, FIELD_EMPTY)
+        );
     }
 
     // Whole numbers ----------------------------------------------------------------------------------------------------------------------
@@ -110,7 +145,7 @@ public static class Checker {
         }
         return true;
     }
-    public static bool IsAlpha(string value) { return IsAlpha(value, null); }
+    public static bool IsAlpha(string value) => IsAlpha(value, null);
     public static void CheckAlpha(string value, List<char>? allowed = null, string name = "") {
         if (IsAlpha(value, allowed)) return;
         throw new ArgumentException($"Value{Name(name)} is not alphabetical!");
@@ -124,9 +159,33 @@ public static class Checker {
         }
         return true;
     }
-    public static bool IsAlphaNum(string value) { return IsAlphaNum(value, null); }
+    public static bool IsAlphaNum(string value) => IsAlphaNum(value, null);
     public static void CheckAlphaNum(string value, List<char>? allowed = null, string name = "") {
         if (IsAlphaNum(value, allowed)) return;
         throw new ArgumentException($"Value{Name(name)} is not alphanumeric!");
+    }
+
+    // Email ------------------------------------------------------------------------------------------------------------------------------
+    public static bool IsValidEmail(string value) {
+        if (string.IsNullOrWhiteSpace(value)) return false;
+        if (value.Length > EMAIL.MAX_LENGTH) return false;
+        string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(value, pattern);
+    }
+    public static void CheckValidEmail(string value, string name = "") {
+        if (IsValidEmail(value)) return;
+        throw new ArgumentException($"Value{Name(name)} is not valid email!");
+    }
+    public static bool IsEmail(string value) => IsAlphaNum(value, ['@', '.']);
+    public static void CheckEmail(string value, string name = "") {
+        if (IsEmail(value)) return;
+        throw new ArgumentException($"Value{Name(name)} is not email string!");
+    }
+
+    // Password ---------------------------------------------------------------------------------------------------------------------------
+    public static bool IsPassword(string value) => IsAlphaNum(value, ['.', ',', '-', '_', '@']);
+    public static void CheckPassword(string value, string name = "") {
+        if (IsPassword(value)) return;
+        throw new ArgumentException($"Value{Name(name)} is not a password!");
     }
 }

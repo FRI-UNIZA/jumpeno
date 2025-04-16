@@ -8,11 +8,11 @@ public partial class ConnectBox : IAsyncDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool ShowName { get; set; } = true;
     private readonly InputViewModel<string> VMCode = new(new InputViewModelTextParams(
-        ID: Game.CODE_ID,
+        ID: GameValidator.CODE,
         TextMode: INPUT_TEXT_MODE.UPPERCASE,
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
-        MaxLength: Game.CODE_LENGTH,
+        MaxLength: GameValidator.CODE_LENGTH,
         Name: I18N.T("Game code"),
         Label: I18N.T("Game code"),
         Placeholder: I18N.T("Code"),
@@ -22,10 +22,10 @@ public partial class ConnectBox : IAsyncDisposable {
 
     private static string LastNameValue = "";
     private readonly InputViewModel<string> VMName = new(new InputViewModelTextParams(
-        ID: User.NAME_ID,
+        ID: UserValidator.NAME,
         Trim: true,
         TextCheck: Checker.IsAlphaNum,
-        MaxLength: User.NAME_MAX_LENGTH,
+        MaxLength: UserValidator.NAME_MAX_LENGTH,
         Name: I18N.T("Your name"),
         Label: I18N.T("Your name"),
         Placeholder: I18N.T("Your name"),
@@ -39,7 +39,7 @@ public partial class ConnectBox : IAsyncDisposable {
     protected override async Task OnInitializedAsync() {
         await InitAutoWatch();
         await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
-        if (Auth.IsRegistered()) ShowName = false;
+        if (Auth.IsRegisteredUser) ShowName = false;
         InitTCS.TrySetResult();
     }
 
@@ -79,7 +79,7 @@ public partial class ConnectBox : IAsyncDisposable {
             VMCode.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;
         }
-        errors = User.ValidateName(VMName.Value);
+        errors = UserValidator.ValidateName(VMName.Value);
         if (errors.Count > 0) {
             VMName.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
             isValid = false;

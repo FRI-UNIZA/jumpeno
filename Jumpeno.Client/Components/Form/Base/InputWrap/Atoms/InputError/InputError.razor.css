@@ -38,6 +38,7 @@
     border-radius: var(--input-error-input-radius);
     pointer-events: all;
     cursor: text;
+    z-index: auto;
 }
 
 .input-error-outline {

@@ -11,9 +11,7 @@ public static class URL {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(Func<string> url, Func<string> themeCSSClass) {
-        if (Url is not null) {
-            throw new InvalidOperationException("Already initialized!");
-        }
+        if (Url is not null) throw new InvalidOperationException("Already initialized!");
         Url = url;
         ThemeCSSClass = themeCSSClass;
     }

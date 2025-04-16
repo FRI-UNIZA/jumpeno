@@ -1,0 +1,63 @@
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes server-page-loader-show {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.6); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+#server-page-loader {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    gap: 28px;
+    inset: 0;
+    z-index: calc(var(--z-index-server-page-loader));
+    background-color: rgb(var(--color-secondary-surface));
+    outline: none;
+    animation: none;
+}
+#server-page-loader.hidden {
+    animation: server-page-loader-show calc(var(--transition-normal) * 1ms) forwards;
+}
+#server-page-loader.stopped .server-page-loader-indicator {
+    display: none;
+}
+
+.server-page-loader-title {
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    color: rgb(var(--color-secondary));
+}
+.light-theme .server-page-loader-title {
+    color: rgba(var(--color-secondary), 0.9);
+}
+
+/* Indicator keyframes ----------------------------------------------------------------------------------------------------------------- */
+@keyframes spinner {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Indicator styles -------------------------------------------------------------------------------------------------------------------- */
+.server-page-loader-indicator {
+    --size: 56;
+    --color: rgb(var(--color-secondary-accent));
+    --background: rgba(var(--color-base), 0.45);
+    display: inline-flex;
+    border-radius: 50%;
+    animation: spinner 1s infinite linear;
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
+    border: calc(var(--size) / 6 * 1px) solid;
+    border-color: var(--background);
+    border-right-color: var(--color);
+    flex-shrink: 0;
+}

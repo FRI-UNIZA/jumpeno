@@ -8,16 +8,18 @@
         <ModalProvider>
             <WebDocument>
                 <DocTitle Value="@AppSettings.Name" />
-                <Router AppAssembly="@typeof(App).Assembly">
-                    <Found Context="routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                    </Found>
-                    <NotFound>
-                        <LayoutView Layout="@typeof(MainLayout)">
-                            <ErrorPage />
-                        </LayoutView>
-                    </NotFound>
-                </Router>
+                @if (AuthPage.IsRendering()) {
+                    <Router AppAssembly="@typeof(App).Assembly">
+                        <Found Context="routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        </Found>
+                        <NotFound>
+                            <LayoutView Layout="@typeof(MainLayout)">
+                                <Error404Page />
+                            </LayoutView>
+                        </NotFound>
+                    </Router>
+                }
             </WebDocument>
         </ModalProvider>
     </PageLoader>
@@ -27,18 +29,41 @@
 </ThemeProvider>
 
 @code {
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
     private CookieConsentModal CookieConsentModalRef = null!;
-    
+
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public void Notify() => StateHasChanged();
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    protected override void OnInitialized() => AuthPage.Init(this);
+
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (!firstRender) return;
-        var cookieModalOpen = await CookieStorage.InitModal();
-        await ServerPageLoader.Hide();
-        await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
-
-        await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
-        await PageLoader.AwaitAllLoaders();
-
-        if (cookieModalOpen) ActionHandler.SetFocus(CookieConsentModalRef.GetDialogID());
-        else ActionHandler.SetFocus(WebDocument.ID);
+        try {
+            if (!firstRender) { AuthPage.FinishStage(); return; }
+            // Authorization:
+            if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
+            await AuthPage.NextStage();
+            await AuthPage.ChangeLoginPath();
+            await AuthPage.AddLoginRedirect();
+            // Cookie modal:
+            var cookieModalOpen = await CookieStorage.InitModal();
+            // Server loader:
+            ServerPageLoader.Hide();
+            await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
+            // Init actions:
+            await Init.TryActivate();
+            await Init.TryPasswordReset();
+            // PageLoader:
+            await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
+            await PageLoader.AwaitAllLoaders();
+            // Focus:
+            if (cookieModalOpen) ActionHandler.SetFocus(CookieConsentModalRef.GetDialogID());
+            else ActionHandler.SetFocus(WebDocument.ID);
+        } catch {
+            // Initialization error:
+            ServerPageLoader.Stop();
+            Notification.Error(I18N.T("Something went wrong."));
+        }
     }
 }

@@ -65,7 +65,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         
         if (URL.IsLocal(ctx.TargetLocation)) {
             if (!ProgramNavigation) {
-                if (Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+                if (Page.Current.GetType() == typeof(Error404Page)) {
                     ctx.PreventNavigation();
                     NavLock.TryUnlock();
                     await NavigateTo(ctx.TargetLocation);
@@ -108,7 +108,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (ProgramNavigation) {
             if (!SettingQueries && URL.IsLocal(e.Location) && URL.Path(PreviousURL) == URL.Path(e.Location)) {
-                LayoutBase.CurrentLayout().UpdateContent();
+                LayoutBase.Current.UpdateContent();
             }
             NavigationFinished.TrySetResult();
         }
@@ -128,7 +128,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(REQUEST_STORAGE_KEYS.REPLACE_URL, url);
+            RequestStorage.Set(nameof(URL), url);
             NavLock.TryUnlock();
             return;
         }
@@ -139,7 +139,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
-            if (!I18N.IsCurrentCultureUrl(url) || Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+            if (!I18N.IsCurrentCultureUrl(url) || Page.Current.GetType() == typeof(Error404Page)) {
                 forceLoad = true;
             }
             if (URL.Path(url) == URL.Path()) {
@@ -165,9 +165,6 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     // State ------------------------------------------------------------------------------------------------------------------------------
     public static T State<T>() => JS.Invoke<T>(JSNavigator.State);
     public static void SetState<T>(T state, string? url = null) => JS.InvokeVoid(JSNavigator.SetState, state, url);
-
-    // Media ------------------------------------------------------------------------------------------------------------------------------
-    public static bool IsTouchDevice => JS.Invoke<bool>(JSNavigator.IsTouchDevice);
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static async Task AddBlocker(EventPredicate<NavigationEvent> predicate) {
@@ -262,7 +259,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     public static async Task RemoveAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
             for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
-                if (listener.Equals(instance.AfterFinishListeners[i])) continue;
+                if (!listener.Equals(instance.AfterFinishListeners[i])) continue;
                 instance.AfterFinishListeners.RemoveAt(i); break;
             }
         });

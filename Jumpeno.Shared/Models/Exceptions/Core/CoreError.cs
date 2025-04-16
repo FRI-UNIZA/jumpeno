@@ -1,5 +1,6 @@
-namespace Jumpeno.Shared.Exceptions;
+namespace Jumpeno.Shared.Models;
 
+// NOTE: CoreError is weak CoreException (does not mean socket connection should close)
 public class CoreError : CoreException {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]

@@ -10,23 +10,17 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
-    public void CountComponent() {
-        ComponentCount++;
-    }
-    /// <summary>
-    ///     Returns all page urls as an array.
-    /// </summary>
-    /// <returns></returns>
-    public string[] GetPageUrls() {
-        return GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
-    }
+    public void CountComponent() => ComponentCount++;
+    /// <summary>Returns all page urls as an array.</summary>
+    /// <returns>Array of URLs</returns>
+    public string[] GetPageUrls() => GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
 
     // Static methods ---------------------------------------------------------------------------------------------------------------------
-    public static Page CurrentPage() {
-        return RequestStorage.Get<Page>(REQUEST_STORAGE_KEYS.CURRENT_PAGE) ?? new ErrorPage();
-    }
-    private static void SetCurrentPage(Page page) {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.CURRENT_PAGE, page);
+    public static Page Current => RequestStorage.Get<Page>(nameof(Page)) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(nameof(Page), page);
+    public static Type? Type(RenderFragment? body) {
+        try { return (body?.Target as RouteView)?.RouteData?.PageType; }
+        catch { return null; }
     }
 
     // Useful methods ---------------------------------------------------------------------------------------------------------------------
@@ -60,26 +54,42 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() {
-        SetCurrentPage(this);
+        SetCurrent(this);
+        // if (!AuthPage.CanRun()) return;
+        // if (!AuthPage.IsAuthorized(this)) throw Exceptions.NotAuthorized;
+        // throw Exceptions.NotAuthorized;
         OnPageInitialized();
         if (AppEnvironment.IsServer) return;
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
-    protected override sealed async Task OnInitializedAsync() => await OnPageInitializedAsync();
+
+    protected override sealed async Task OnInitializedAsync() {
+        // if (!AuthPage.CanRun()) return;
+        await OnPageInitializedAsync();
+    }
     private bool ParametersSet = false;
     protected sealed override void OnParametersSet() {
+        // if (!AuthPage.CanRun()) return;
         OnPageParametersSet(!ParametersSet);
         ParametersSet = true;
     }
     private bool ParametersSetAsync = false;
     protected sealed override async Task OnParametersSetAsync() {
+        // if (!AuthPage.CanRun()) return;
         var firstTime = !ParametersSetAsync;
         ParametersSetAsync = true;
         await OnPageParametersSetAsync(firstTime);
     }
-    protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnPageAfterRenderAsync(firstRender);
+    protected sealed override void OnAfterRender(bool firstRender) {
+        // if (!AuthPage.CanRun()) return;
+        OnPageAfterRender(firstRender);
+    }
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
+        // if (!AuthPage.CanRun()) return;
+        await OnPageAfterRenderAsync(firstRender);
+    }
     public async ValueTask DisposeAsync() {
+        // if (!AuthPage.CanRun()) return;
         OnPageDispose();
         await OnPageDisposeAsync();
         await HTTP.ClearTokens();

@@ -1,16 +1,27 @@
 class JSServerPageLoader {
     static ID = "server-page-loader"
+    static CLASS_HIDDEN = "hidden"
+    static CLASS_STOPPED = "stopped"
 
-    static async #OnHide(loader, listener) {
-        loader.removeEventListener("animationend", listener)
-        await DotNet.invokeMethodAsync(DOTNET.NAMESPACE.CLIENT, DOTNET.SERVER_LOADER.LOADER_ANIMATED)
-    }
-
-    static Activate(id) {
-        const loader = document.getElementById(id)
+    static Hide() {
+        const loader = document.getElementById(this.ID)
         if (!loader) return
         const listener = async () => await this.#OnHide(loader, listener)
         loader.addEventListener("animationend", listener)
+        loader.classList.remove(this.CLASS_HIDDEN)
+        loader.classList.add(this.CLASS_HIDDEN)
+    }
+
+    static async #OnHide(loader, listener) {
+        loader.removeEventListener("animationend", listener)
+        document.body.removeChild(loader)
+    }
+
+    static Stop() {
+        const loader = document.getElementById(this.ID)
+        if (!loader) return
+        if (loader.classList.contains(this.CLASS_STOPPED)) return
+        loader.classList.add(this.CLASS_STOPPED)
     }
 }
 

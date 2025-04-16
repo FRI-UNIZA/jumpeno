@@ -56,13 +56,13 @@
     </Content>
     <Footer>
         <div class="consent-footer">
-            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" OnClick="@(async () => { await AcceptCookies(Selected.Keys.ToList()); })">
+            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
                 <Text>@I18N.T("Accept chosen")</Text>
             </Button>
-            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" OnClick="@(async () => { await AcceptCookies(COOKIE.TYPES_REQUIRED); })">
+            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES_REQUIRED))">
                 <Text>@I18N.T("Only mandatory")</Text>
             </Button>
-            <Button Size="BUTTON_SIZE.S" OnClick="@(async () => { await AcceptCookies(COOKIE.TYPES); })">
+            <Button Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES))">
                 <Text>@I18N.T("Accept all")</Text>
             </Button>
         </div>

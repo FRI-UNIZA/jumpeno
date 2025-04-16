@@ -1,8 +1,9 @@
 class JSWindow {
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    static Init = () => this.#InitTabReload()
+
     // Size -------------------------------------------------------------------------------------------------------------------------------
-    static GetSize() {
-        return { Width: window.innerWidth, Height: window.innerHeight }
-    }
+    static GetSize = () => ({ Width: window.innerWidth, Height: window.innerHeight })
 
     // Resize -----------------------------------------------------------------------------------------------------------------------------
     static #WidthPrevious = 0
@@ -159,6 +160,22 @@ class JSWindow {
     
     static PreventTouchEnd = () => document.body.addEventListener('touchend', this.#Prevent)
     static DefaultTouchEnd = () => document.body.removeEventListener('touchend', this.#Prevent)
+
+    // Media ------------------------------------------------------------------------------------------------------------------------------
+    static IsTouchDevice = () => window.matchMedia('(pointer: coarse) and (hover: none)').matches
+
+    // Tab reload -------------------------------------------------------------------------------------------------------------------------
+    static #TAB_RELOAD_ID = "JSWindow.TabReloadChannel"
+    static #TabReloadChannel = new BroadcastChannel(this.#TAB_RELOAD_ID)
+
+    static #InitTabReload = () => this.#TabReloadChannel.onmessage = () => location.reload()
+
+    static ReloadTabs = () => this.#TabReloadChannel.postMessage({})
+
+    // Web locks --------------------------------------------------------------------------------------------------------------------------
+    static Lock = id => navigator.locks.request(id, async () => {
+        await DotNet.invokeMethodAsync(DOTNET.NAMESPACE.CLIENT, DOTNET.WINDOW.LOCK, id)
+    })
 }
 
 window.JSWindow = JSWindow

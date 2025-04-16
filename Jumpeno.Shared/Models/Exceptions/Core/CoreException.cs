@@ -1,4 +1,4 @@
-namespace Jumpeno.Shared.Exceptions;
+namespace Jumpeno.Shared.Models;
 
 public class CoreException : Exception {
     // Constants --------------------------------------------------------------------------------------------------------------------------

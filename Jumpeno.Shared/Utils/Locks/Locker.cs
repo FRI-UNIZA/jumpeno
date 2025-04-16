@@ -40,13 +40,13 @@ public class Locker : IDisposable {
     public void TryExclusive(Action callback) {
         try { Exclusive(callback); } catch {}
     }
-    public T TryExclusive<T>(Func<T> callback, T fallback) {
+    public T TryExclusive<T>(Func<T> callback, T fallback = default!) {
         try { return Exclusive(callback); } catch { return fallback; }
     }
     public async Task TryExclusive(Func<Task> callback) {
         try { await Exclusive(callback); } catch {}
     }
-    public async Task<T> TryExclusive<T>(Func<Task<T>> callback, T fallback) {
+    public async Task<T> TryExclusive<T>(Func<Task<T>> callback, T fallback = default!) {
         try { return await Exclusive(callback); } catch { return fallback; }
     }
 
@@ -75,13 +75,13 @@ public class Locker : IDisposable {
     public void TryExclusive(Action<LockToken> callback) {
         try { Exclusive(callback); } catch {}
     }
-    public T TryExclusive<T>(Func<LockToken, T> callback, T fallback) {
+    public T TryExclusive<T>(Func<LockToken, T> callback, T fallback = default!) {
         try { return Exclusive(callback); } catch { return fallback; }
     }
     public async Task TryExclusive(Func<LockToken, Task> callback) {
         try { await Exclusive(callback); } catch {}
     }
-    public async Task<T> TryExclusive<T>(Func<LockToken, Task<T>> callback, T fallback) {
+    public async Task<T> TryExclusive<T>(Func<LockToken, Task<T>> callback, T fallback = default!) {
         try { return await Exclusive(callback); } catch { return fallback; }
     }
 }

@@ -4,7 +4,7 @@ namespace Jumpeno.Shared.Utils;
 
 public class EventPredicate<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly EventPredicate<T> EMPTY = new(v => true);
+    public static EventPredicate<T> EMPTY(bool result) => new(v => result);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Func<T, bool>? WrappedAction;
@@ -13,7 +13,7 @@ public class EventPredicate<T> {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public EventPredicate(Func<T, bool> action) {
         WrappedAction = action;
-        Action = async (T data) => action(data);
+        Action = async data => action(data);
     }
 
     public EventPredicate(Func<T, Task<bool>> action) {
@@ -22,14 +22,12 @@ public class EventPredicate<T> {
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static Func<T, Task<bool>> Task(Func<T, bool> action) => (T value) => {
+    public static Func<T, Task<bool>> Task(Func<T, bool> action) => value => {
         return System.Threading.Tasks.Task.FromResult(action(value));
     };
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Invoke(T data) {
-        return await Action(data);
-    }
+    public async Task<bool> Invoke(T data) => await Action(data);
 
     public bool Equals(EventPredicate<T> o) {
         return WrappedAction is null ? Action == o.Action : WrappedAction == o.WrappedAction;

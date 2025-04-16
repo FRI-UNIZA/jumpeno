@@ -7,17 +7,40 @@
 
     <ItemGroup>
         <PackageReference Include="AntDesign" Version="0.20.4.2" />
+        <PackageReference Include="MailKit" Version="4.11.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.14">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.6" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Jumpeno.Client\Jumpeno.Client.csproj" />
         <ProjectReference Include="..\Jumpeno.Shared\Jumpeno.Shared.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Services\Database\Jumpeno.db">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
 </Project>

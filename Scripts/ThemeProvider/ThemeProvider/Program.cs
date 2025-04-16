@@ -35,7 +35,7 @@ public class Program {
     ];
     private static (string Path, string Usings)[] DEPENDENCIES = [
         ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/SCROLLAREA_THEME.cs", ""),
-        ($"{ROOT}/Jumpeno.Shared/Models/Graphics/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
+        ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Client/Themes/Constants/BaseTheme.cs", USINGS)
     ];
 

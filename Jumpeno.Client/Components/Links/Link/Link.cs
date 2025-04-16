@@ -10,7 +10,7 @@ public partial class Link : IAsyncDisposable {
     [Parameter]
     public string ID { get; set; } = "";
     [Parameter]
-    public required string Href { get; set; }
+    public string? Href { get; set; } = null;
     [Parameter]
     public string Label { get; set; } = "";
     [Parameter]
@@ -23,15 +23,19 @@ public partial class Link : IAsyncDisposable {
     public bool Underline { get; set; } = false;
     [Parameter]
     public string ActiveClass { get; set; } = DEFAULT_ACTIVE_CLASS;
+    [Parameter]
+    public int TabIndex { get; set; } = 0;
     private readonly Dictionary<string, object> AdditionalAttributes = [];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private bool IsActive() { 
+    private bool IsActive() {
+        if (Href == null) return false;
         if (URL.Schema(Href) != "") return false;
         return Match == LINK_MATCH.ALL ? IsExactMatch() : IsPrefixMatch();
     }
 
-    private string ComputeTarget() {
+    private string? ComputeTarget() {
+        if (Href == null) return null;
         return Target.IsT0
             ? $"_{Target.AsT0.ToString().ToLower()}"
             : Target.AsT1;
@@ -45,45 +49,40 @@ public partial class Link : IAsyncDisposable {
     }
 
     private bool IsExactMatch() {
+        if (Href == null) return false;
         var uri = URL.Path().ToLower();
         var hrefUri = URL.Path(Href).ToLower();
-
         // Compare the path ignoring query parameters
         return uri.Split('?')[0] == hrefUri.Split('?')[0];
     }
 
     private bool IsPrefixMatch() {
+        if (Href == null) return false;
         var uri = URL.Path().ToLower();
         var hrefUri = URL.Path(Href).ToLower();
-
         // Compare the prefix of the path ignoring query parameters
         return uri.Split('?')[0].StartsWith(hrefUri.Split('?')[0], StringComparison.OrdinalIgnoreCase);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public Link() {
-        ID = ComponentService.GenerateID(ID_PREFIX);
-    }
+    public Link() => ID = ComponentService.GenerateID(ID_PREFIX);
 
     protected override void OnParametersSet(bool firstTime) {
         if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
         if (Label != "") AdditionalAttributes["aria-label"] = Label;
     }
 
-    protected override async Task OnInitializedAsync() {
-        await Navigator.AddAfterEventListener(ChangeState);
-    }
+    protected override async Task OnInitializedAsync() => await Navigator.AddAfterEventListener(ChangeState);
 
-    public virtual async ValueTask DisposeAsync() {
-        await Navigator.RemoveAfterEventListener(ChangeState);
-    }
+    public virtual async ValueTask DisposeAsync() => await Navigator.RemoveAfterEventListener(ChangeState);
 
-    private async Task OnClickEvent(MouseEventArgs e) {
+    private async Task OnClickEvent(MouseEventArgs e) => await OnClick.InvokeAsync(this);
+
+    private async Task OnEnterEvent(KeyboardEventArgs e) {
+        if (e.Key != KEYBOARD.ENTER) return;
         await OnClick.InvokeAsync(this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private void ChangeState(NavigationEvent e) {
-        StateHasChanged();
-    }
+    private void ChangeState(NavigationEvent e) => StateHasChanged();
 }

@@ -24,7 +24,9 @@
                             Class="main-container"
                         >
                             <MainErrorBoundary>
-                                @Body
+                                @if (!AuthPage.IsAuthenticated(Body)) { <Error401Page /> }
+                                else if (!AuthPage.IsAuthorized(Body)) { <Error403Page /> }
+                                else { @Body }
                             </MainErrorBoundary>
                         </Container>
                     </Container>

@@ -1,7 +1,7 @@
 namespace Jumpeno.Client.Constants;
 
 public class JSNotification {
-    public static readonly string ClassName = typeof(JSNotification).Name;
+    public static readonly string ClassName = nameof(JSNotification);
 
-    public static readonly string Open = $"{ClassName}.Open";
+    public static readonly string Open = $"{ClassName}.{nameof(Open)}";
 }

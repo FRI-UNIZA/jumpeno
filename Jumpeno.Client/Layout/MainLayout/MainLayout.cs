@@ -7,30 +7,22 @@ public partial class MainLayout {
     private const string INERT_SELECTOR = $"#{WebDocument.ID}";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly MainLayoutViewModel LayoutVM;
     private NavMenu NavMenuRef = null!;
     private NavMenuMobile NavMenuMobileRef = null!;
     private CSSClass ComputeClass() {
-        var c = new CSSClass();
+        var c = new CSSClass(CLASS);
         if (!LayoutVM.NavigationDisplayed) c.Set(CLASS_NO_NAVIGATION);
         return c;
     }
 
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    private readonly MainLayoutViewModel LayoutVM;
+    public void Notify() => StateHasChanged();
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public MainLayout() {
-        LayoutVM = new MainLayoutViewModel(this);
-    }
+    public MainLayout() => LayoutVM = new MainLayoutViewModel(this);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private void OnMobileMenuOpen() {
-        ActionHandler.SetInert(INERT_SELECTOR);
-    }
-
-    private void OnMobileMenuClose() {
-        ActionHandler.RemoveInert(INERT_SELECTOR);
-    }
-
-    public void Notify() {
-        StateHasChanged();
-    }
+    private void OnMobileMenuOpen() => ActionHandler.SetInert(INERT_SELECTOR);
+    private void OnMobileMenuClose() => ActionHandler.RemoveInert(INERT_SELECTOR);
 }
