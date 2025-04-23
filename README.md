@@ -134,7 +134,7 @@ To change data model via code, follow these steps:
 All migrations are stored in:
 > /Jumpeno.Server/Services/Database/Migrations
 
-[3] Migrations run automatically on app start.<br />
+[4] Migrations run automatically on app start.<br />
 (Ensure that new migration can be applied to existing data on the server!)<br />
 (In this order you can also tweak the migration in `{MigrationName}.cs` file.)
 

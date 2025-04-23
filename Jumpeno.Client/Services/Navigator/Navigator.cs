@@ -13,6 +13,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private bool ProgramNavigation;
     private bool SettingQueries;
     private bool Loader = true;
+    private bool RefreshUI = true;
     private string PreviousURL;
     private TaskCompletionSource NavigationFinished;
     private const int MIN_LOADING_MS = 100;
@@ -108,7 +109,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         }
 
         if (ProgramNavigation) {
-            if (!SettingQueries && URL.IsLocal(e.Location)) {
+            if (RefreshUI && !SettingQueries && URL.IsLocal(e.Location)) {
                 LayoutBase.Current.Notify();
             }
             NavigationFinished.TrySetResult();
@@ -127,6 +128,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ProgramNavigation = false;
         SettingQueries = false;
         Loader = true;
+        RefreshUI = true;
         IsPopState = false;
         
         foreach (var listener in AfterFinishListeners) {
@@ -136,7 +138,11 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private async Task Navigate(string url, bool forceLoad = false, bool replace = false, bool queries = false, bool loader = true) {
+    private async Task Navigate(
+        string url,
+        bool forceLoad = false, bool replace = false, bool queries = false,
+        bool loader = true, bool refreshUI = true
+    ) {
         await NavLock.TryLock();
 
         if (AppEnvironment.IsServer) {
@@ -149,6 +155,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
+        RefreshUI = refreshUI;
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
@@ -164,8 +171,8 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         await NavigationFinished.Task;
     }
 
-    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false) {
-        await Instance().Navigate(url, forceLoad, replace, queries: false, true);
+    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false, bool refreshUI = true) {
+        await Instance().Navigate(url, forceLoad, replace, queries: false, true, refreshUI);
     }
     public static void Refresh() {
         if (AppEnvironment.IsServer) ServerRefresh();
@@ -180,7 +187,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     public static void SetState<T>(T state, string? url = null) => JS.InvokeVoid(JSNavigator.SetState, state, url);
 
     // Pop state --------------------------------------------------------------------------------------------------------------------------
-    public static bool IsPopState { get; private set; } = false; 
+    public static bool IsPopState { get; private set; } = false;
 
     [JSInvokable]
     public static void JS_PopState() => IsPopState = true;

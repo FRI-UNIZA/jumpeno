@@ -143,11 +143,12 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 var state = Navigator.State<GamePageHistoryState>();
                 bool isCodeSet = URLCode != "";
                 var query = !GameVM.IsPlayer && IsPresentation ? $"?{PRESENT_QUERY}=true" : "";
-                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>([""]), replace: true);
+                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>([""]), replace: true, refreshUI: false);
                 else await Navigator.SetQueryParams(new());
                 await Navigator.NavigateTo(
                     URL.WithQuery(I18N.Link<GamePage>([GameVM.Game.Code]), query),
-                    replace: state.WasRedirect && isCodeSet
+                    replace: state.WasRedirect && isCodeSet,
+                    refreshUI: false
                 );
                 Navigator.SetState<GamePageHistoryState>(new(true));
 

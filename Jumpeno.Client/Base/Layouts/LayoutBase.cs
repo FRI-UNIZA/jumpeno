@@ -27,4 +27,6 @@ public class LayoutBase : LayoutComponentBase {
         ContentKey = !ContentKey;
         StateHasChanged();
     }
+
+    public void ChangeState() => StateHasChanged();
 }
