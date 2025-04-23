@@ -5,9 +5,24 @@ class DOTNET {
         SHARED: 'Jumpeno.Shared'
     }
 
+    static WINDOW = {
+        LOCK: "JS_Lock"
+    }
+
+    // NOTE: No JS prefix
+    static CONSOLE_UI = {
+        WRITE: "Write",
+        WRITELINE: "WriteLine",
+        CLEAR: "Clear"
+    }
+
     static IMAGE = {
         ON_LOAD: "JS_OnLoad",
         ON_ERROR: "JS_OnError"
+    }
+
+    static NAVIGATOR = {
+        POP_STATE: "JS_PopState"
     }
 
     static NOTIFICATION = {

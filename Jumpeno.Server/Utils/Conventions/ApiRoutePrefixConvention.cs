@@ -1,11 +1,7 @@
 namespace Jumpeno.Server.Utils;
 
-public class ApiRoutePrefixConvention : IApplicationModelConvention {
-    private readonly AttributeRouteModel _centralPrefix;
-
-    public ApiRoutePrefixConvention(string prefix) {
-        _centralPrefix = new AttributeRouteModel(new RouteAttribute(prefix));
-    }
+public class ApiRoutePrefixConvention(string prefix) : IApplicationModelConvention {
+    private readonly AttributeRouteModel Prefix = new(new RouteAttribute(prefix));
 
     public void Apply(ApplicationModel application) {
         foreach (var controller in application.Controllers) {
@@ -13,10 +9,10 @@ public class ApiRoutePrefixConvention : IApplicationModelConvention {
                 if (selector.AttributeRouteModel != null) {
                     // NOTE: Combine existing route models with the global prefix
                     selector.AttributeRouteModel = AttributeRouteModel.CombineAttributeRouteModel(
-                        _centralPrefix,
+                        Prefix,
                         selector.AttributeRouteModel);
                 } else {
-                    selector.AttributeRouteModel = _centralPrefix;
+                    selector.AttributeRouteModel = Prefix;
                 }
             }
         }

@@ -7,21 +7,3 @@
     width: 100%;
     gap: 20px;
 }
-
-.admin-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 400px;
-    max-width: 100%;
-    gap: 20px;
-}
-
-::deep .admin-heading.surface-all {
-    --text-align: center;
-}
-
-.admin-page > div:not(.admin-form) {
-    display: flex;
-    gap: 20px;
-}

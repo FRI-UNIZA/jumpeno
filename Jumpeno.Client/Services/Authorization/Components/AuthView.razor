@@ -1,0 +1,13 @@
+@namespace Jumpeno.Client.Components
+
+@code {
+    [Parameter]
+    public ROLE[] Roles { get; set; } = [ROLE.USER, ROLE.ADMIN];
+
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}
+
+@if (Auth.IsRole(Roles)) {
+    @ChildContent
+}

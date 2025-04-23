@@ -11,6 +11,8 @@ public class BaseTheme {
     public RGBColor COLOR_BASE_HIGHLIGHT { get; } = new(40, 40, 40);
     public RGBColor COLOR_BASE_INVERT { get; } = new(255, 255, 255);
     public RGBColor COLOR_BASE_INVERT_HIGHLIGHT { get; } = new(220, 220, 220);
+    public RGBColor COLOR_BASE_ACCENT { get; } = new(255, 215, 0);
+    public RGBColor COLOR_BASE_ACCENT_HIGHLIGHT { get; } = new(255, 239, 0);
     public RGBColor COLOR_BASE_ERROR { get; } = new(255, 0, 0);
     public RGBColor COLOR_BASE_SUCCESS { get; } = new(0, 255, 0);
     // Danger surface ---------------------------------------------------------------------------------------------------------------------
@@ -20,6 +22,9 @@ public class BaseTheme {
     public virtual RGBColor COLOR_DANGER_SURFACE_HIGHLIGHT { get; }
     public virtual RGBColor COLOR_DANGER_ACCENT { get; }
     public virtual RGBColor COLOR_DANGER_ACCENT_HIGHLIGHT { get; }
+    // Success surface ---------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor COLOR_SUCCESS { get; }
+    public virtual RGBColor COLOR_SUCCESS_HIGHLIGHT { get; }
     // Primary surface --------------------------------------------------------------------------------------------------------------------
     public virtual RGBColor COLOR_PRIMARY { get; }
     public virtual RGBColor COLOR_PRIMARY_HIGHLIGHT { get; }

@@ -5,7 +5,6 @@ namespace Jumpeno.Shared.Utils;
 public class EmptyDelegate {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly EmptyDelegate EMPTY = new(() => {});
-    public static readonly Func<Task> EMPTY_TASK = () => System.Threading.Tasks.Task.CompletedTask;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action? WrappedAction;
@@ -29,9 +28,7 @@ public class EmptyDelegate {
     };
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public async Task Invoke() {
-        await Action();
-    }
+    public async Task Invoke() => await Action();
 
     public bool Equals(EmptyDelegate o) {
         return WrappedAction is null ? Action == o.Action : WrappedAction == o.WrappedAction;

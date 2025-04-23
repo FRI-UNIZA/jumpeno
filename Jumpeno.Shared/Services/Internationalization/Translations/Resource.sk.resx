@@ -120,9 +120,6 @@
   <data name="Error 404" xml:space="preserve">
     <value>Chyba 404</value>
   </data>
-  <data name="Hello, world!" xml:space="preserve">
-    <value>Ahoj, svet!</value>
-  </data>
   <data name="Home" xml:space="preserve">
     <value>Domov</value>
   </data>
@@ -131,9 +128,6 @@
   </data>
   <data name="Sorry, there's nothing at this address." xml:space="preserve">
     <value>Ospravedlňujeme sa, ale na tejto adrese sa nič nenachádza.</value>
-  </data>
-  <data name="Welcome to your new app" xml:space="preserve">
-    <value>Vitajte v našej novej appke</value>
   </data>
   <data name="Reload page" xml:space="preserve">
     <value>Obnoviť stránku</value>
@@ -158,9 +152,6 @@
   </data>
   <data name="Version" xml:space="preserve">
     <value>Verzia</value>
-  </data>
-  <data name="Hello I18N{name}, your registration is OK. I18N{name}!!! Your age is: I18N{age}." xml:space="preserve">
-    <value>Ahoj I18N{name}, tvoja registrácia je OK. I18N{name}!!! Tvoj vek je: I18N{age}.</value>
   </data>
   <data name="Parsing error." xml:space="preserve">
     <value>Chyba parsovania.</value>
@@ -196,7 +187,7 @@
     <value>Spätná väzba</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Prihlásiť</value>
+    <value>Prihlásenie</value>
   </data>
   <data name="Manual" xml:space="preserve">
     <value>Návod</value>
@@ -299,12 +290,6 @@
   </data>
   <data name="Play" xml:space="preserve">
     <value>Hrať</value>
-  </data>
-  <data name="Under construction" xml:space="preserve">
-    <value>Pripravuje sa</value>
-  </data>
-  <data name="We are working on the implementation of this functionality." xml:space="preserve">
-    <value>Na implementácii tejto funkcionality pracujeme.</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Zmazať</value>
@@ -428,5 +413,179 @@
   </data>
   <data name="No players" xml:space="preserve">
     <value>Žiadni hráči</value>
+  </data>
+  <data name="Error reading the file!" xml:space="preserve">
+    <value>Chyba pri čítaní súboru!</value>
+  </data>
+  <data name="Incorrect field values." xml:space="preserve">
+    <value>Nesprávne zadané hodnoty.</value>
+  </data>
+  <data name="Empty field" xml:space="preserve">
+    <value>Prázdne pole</value>
+  </data>
+  <data name="Wrong format" xml:space="preserve">
+    <value>Nesprávny formát</value>
+  </data>
+  <data name="Token was sent to your email." xml:space="preserve">
+    <value>Token bol odoslaný na tvoj e-mail.</value>
+  </data>
+  <data name="Email address verification" xml:space="preserve">
+    <value>Overenie e-mailovej adresy</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Odoslať</value>
+  </data>
+  <data name="Check your email address." xml:space="preserve">
+    <value>Skontroluj svoj e-mail.</value>
+  </data>
+  <data name="You can now close this page." xml:space="preserve">
+    <value>Túto stránku môžeš zavrieť.</value>
+  </data>
+  <data name="Hello, here is your login link:" xml:space="preserve">
+    <value>Ahoj, tu je tvoj prihlasovací odkaz:</value>
+  </data>
+  <data name="Not authenticated." xml:space="preserve">
+    <value>Nie ste autentifikovaní.</value>
+  </data>
+  <data name="Not authorized." xml:space="preserve">
+    <value>Nie ste autorizovaní.</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Prihlásiť</value>
+  </data>
+  <data name="I am admin" xml:space="preserve">
+    <value>Som admin</value>
+  </data>
+  <data name="Not a user?" xml:space="preserve">
+    <value>Nemáš účet?</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrovať</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="This functionality is not implemented yet." xml:space="preserve">
+    <value>Táto funkcia ešte nie je implementovaná.</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registrácia</value>
+  </data>
+  <data name="Have an account?" xml:space="preserve">
+    <value>Máš účet?</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Player name" xml:space="preserve">
+    <value>Meno hráča</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Potvrď heslo</value>
+  </data>
+  <data name="Bad request." xml:space="preserve">
+    <value>Nesprávna požiadavka.</value>
+  </data>
+  <data name="403 Not authorized" xml:space="preserve">
+    <value>403 Neautorizované</value>
+  </data>
+  <data name="Error 403" xml:space="preserve">
+    <value>Chyba 403</value>
+  </data>
+  <data name="You are not authorized to view this page." xml:space="preserve">
+    <value>Pre túto stránku nemáte oprávnenie.</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Obnoviť heslo</value>
+  </data>
+  <data name="Name forbidden" xml:space="preserve">
+    <value>Meno je zakázané</value>
+  </data>
+  <data name="Value undefined" xml:space="preserve">
+    <value>Nedefinovaná hodnota</value>
+  </data>
+  <data name="Invalid characters" xml:space="preserve">
+    <value>Nepovolené znaky</value>
+  </data>
+  <data name="Not a match" xml:space="preserve">
+    <value>Nezhoduje sa</value>
+  </data>
+  <data name="Registration successful." xml:space="preserve">
+    <value>Registrácia úspešná.</value>
+  </data>
+  <data name="Already exists" xml:space="preserve">
+    <value>Už existuje</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="In order to play, account must be activated!" xml:space="preserve">
+    <value>Aby si mohol hrať, účet musí byť aktivovaný!</value>
+  </data>
+  <data name="Activation link was sent to your email address." xml:space="preserve">
+    <value>Aktivačný link bol odoslaný na tvoj email.</value>
+  </data>
+  <data name="You can always ask for new one in profile." xml:space="preserve">
+    <value>Kedykoľvek môžeš požiadať o nový v profile.</value>
+  </data>
+  <data name="Jumpeno login" xml:space="preserve">
+    <value>Jumpeno login</value>
+  </data>
+  <data name="Jumpeno activation" xml:space="preserve">
+    <value>Jumpeno aktivácia</value>
+  </data>
+  <data name="Hello, here is your activation link:" xml:space="preserve">
+    <value>Ahoj, tu je tvoj aktivačný odkaz:</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>Aktivovať</value>
+  </data>
+  <data name="Invalid token." xml:space="preserve">
+    <value>Neplatný token.</value>
+  </data>
+  <data name="Account activated." xml:space="preserve">
+    <value>Účet aktivovaný.</value>
+  </data>
+  <data name="Jumpeno password reset" xml:space="preserve">
+    <value>Jumpeno obnova hesla</value>
+  </data>
+  <data name="Hello, confirm that your password can be reset to:" xml:space="preserve">
+    <value>Ahoj, potvrď, že tvoje heslo môže byť nastavené na:</value>
+  </data>
+  <data name="Confirm reset" xml:space="preserve">
+    <value>Potvrdiť reset</value>
+  </data>
+  <data name="Password reset successful." xml:space="preserve">
+    <value>Reset hesla úspešný.</value>
+  </data>
+  <data name="Cookies accepted." xml:space="preserve">
+    <value>Cookies akceptované.</value>
+  </data>
+  <data name="Token invalidated." xml:space="preserve">
+    <value>Token invalidovaný.</value>
+  </data>
+  <data name="Token deleted." xml:space="preserve">
+    <value>Token zmazaný.</value>
+  </data>
+  <data name="Not found." xml:space="preserve">
+    <value>Nenájdené.</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Under construction" xml:space="preserve">
+    <value>Pripravuje sa</value>
+  </data>
+  <data name="We are working on the implementation of this functionality." xml:space="preserve">
+    <value>Na implementácii tejto funkcionality pracujeme.</value>
+  </data>
+  <data name="401 Not authenticated" xml:space="preserve">
+    <value>401 Neautentifikované</value>
+  </data>
+  <data name="Error 401" xml:space="preserve">
+    <value>Chyba 401</value>
+  </data>
+  <data name="We apologize, you are not logged in." xml:space="preserve">
+    <value>Ospravedlňujeme sa, nie ste prihlásení.</value>
   </data>
 </root>

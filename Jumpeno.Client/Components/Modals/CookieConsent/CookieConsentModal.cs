@@ -16,9 +16,7 @@ public partial class CookieConsentModal {
     public string GetDialogID() { return ModalRef.ID_DIALOG; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnInitialized() {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.COOKIE_CONSENT_MODAL, this);
-    }
+    protected override void OnInitialized() => RequestStorage.Set(nameof(CookieConsentModal), this);
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) {
@@ -59,8 +57,8 @@ public partial class CookieConsentModal {
     }
 
     private async Task AcceptCookies(List<Type> accept) {
-        try {
-            await PageLoader.Show(PAGE_LOADER_TASK.COOKIE_CONSENT);
+        await PageLoader.Show(PAGE_LOADER_TASK.COOKIE_CONSENT);
+        await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
             StateHasChanged();
@@ -69,12 +67,13 @@ public partial class CookieConsentModal {
                 await ModalRef.Close();
                 return;
             }
-            await HTTP.Patch(API.BASE.COOKIE, body: accept.Select(x => x.Name));
+            var body = new CookieSetDTO(
+                AcceptedNames: [.. accept.Select(x => x.Name)]
+            );
+            await HTTP.Patch(API.BASE.COOKIE_SET, body: body);
             CookieStorage.CacheAcceptedCookies(accept);
             await ModalRef.Close();
-        } catch {
-        } finally {
-            await PageLoader.Hide(PAGE_LOADER_TASK.COOKIE_CONSENT);
-        }
+        });
+        await PageLoader.Hide(PAGE_LOADER_TASK.COOKIE_CONSENT);
     }
 }

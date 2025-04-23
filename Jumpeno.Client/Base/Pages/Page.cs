@@ -3,6 +3,13 @@ namespace Jumpeno.Client.Base;
 using System.Reflection;
 
 public class Page : ComponentBase, IAsyncDisposable {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    // Used to specify language specific URL:
+    public const string ROUTE_PREFIX = "ROUTE";
+    // Used to determine role page access:
+    public const string ROLES_NAME = "ROLES";
+    public const string ROLES_BLOCK_NAME = "ROLES_BLOCK";
+
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     // NOTE: Used to trigger page rerender on theme change! (Important for Image URL)
@@ -10,24 +17,61 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
-    public void CountComponent() {
-        ComponentCount++;
+    public void CountComponent() => ComponentCount++;
+    /// <summary>Returns all page urls as an array.</summary>
+    /// <returns>Array of URLs</returns>
+    public string[] GetPageUrls() => GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
+
+    // Current page -----------------------------------------------------------------------------------------------------------------------
+    public static Page Current => RequestStorage.Get<Page>(nameof(Page)) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(nameof(Page), page);
+
+    // Types ------------------------------------------------------------------------------------------------------------------------------
+    private static readonly IEnumerable<Type> PageTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Page)));
+    public static Type? Type(RenderFragment? body) {
+        try { return (body?.Target as RouteView)?.RouteData?.PageType; }
+        catch { return null; }
     }
-    /// <summary>
-    ///     Returns all page urls as an array.
-    /// </summary>
-    /// <returns></returns>
-    public string[] GetPageUrls() {
-        return GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
+    public static Type? Type(string url) {
+        return PageTypes.FirstOrDefault(t => {
+            try {
+                foreach (var lang in I18N.LANGUAGES) {
+                    string link = t.GetField($"{ROUTE_PREFIX}_{lang.ToUpper()}")!.GetValue(null)!.ToString()!;
+                    if (link.Equals(url, StringComparison.CurrentCultureIgnoreCase)) return true;
+                }
+                return false;
+            } catch {
+                return false;
+            }
+        });
     }
 
-    // Static methods ---------------------------------------------------------------------------------------------------------------------
-    public static Page CurrentPage() {
-        return RequestStorage.Get<Page>(REQUEST_STORAGE_KEYS.CURRENT_PAGE) ?? new ErrorPage();
+    // Roles ------------------------------------------------------------------------------------------------------------------------------
+    public static ROLE[] Roles(Type? type) {
+        if (type == null) return [];
+        var attr = type.GetField(ROLES_NAME);
+        if (attr == null) return [];
+        ROLE[]? roles = (ROLE[]?) attr.GetValue(null);
+        return roles ?? [];
     }
-    private static void SetCurrentPage(Page page) {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.CURRENT_PAGE, page);
+    public static ROLE[] Roles(RenderFragment? body) {
+        if (body == null) return [];
+        return Roles(Type(body));
     }
+    public static ROLE[] Roles(string url) => Roles(Type(url));
+
+    public static ROLE[] RolesBlock(Type? type) {
+        if (type == null) return [];
+        var attr = type.GetField(ROLES_BLOCK_NAME);
+        if (attr == null) return [];
+        ROLE[]? roles = (ROLE[]?) attr.GetValue(null);
+        return roles ?? [];
+    }
+    public static ROLE[] RolesBlock(RenderFragment? body) {
+        if (body == null) return [];
+        return RolesBlock(Type(body));
+    }
+    public static ROLE[] RolesBlock(string url) => RolesBlock(Type(url));
 
     // Useful methods ---------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -60,7 +104,7 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() {
-        SetCurrentPage(this);
+        SetCurrent(this);
         OnPageInitialized();
         if (AppEnvironment.IsServer) return;
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);

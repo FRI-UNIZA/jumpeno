@@ -40,7 +40,10 @@ public partial class ConsoleUI {
     public ConsoleUI() => Instance ??= this;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
+    [JSInvokable]
     public static void Write(string text) { Content = $"{text}{Content}"; Instance?.StateHasChanged(); }
+    [JSInvokable]
     public static void WriteLine(string text) => Write($"{text}\n");
+    [JSInvokable]
     public static void Clear() { Content = ""; Instance?.StateHasChanged(); }
 }

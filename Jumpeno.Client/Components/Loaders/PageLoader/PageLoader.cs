@@ -17,7 +17,7 @@ public partial class PageLoader : IDisposable {
     private bool PageLoaderDisplayed { get; set; } = true;
     private readonly LockerSlim Lock = new();
     private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() {{ PAGE_LOADER_TASK.INITIAL, true }};
-    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = AppSettings.Prerender ? new() {{ PAGE_LOADER_TASK.INITIAL, true }} : [];
+    private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = [];
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
     public CSSClass ComputeClassContent() {
@@ -62,10 +62,10 @@ public partial class PageLoader : IDisposable {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
             instance.PageLoaderTasks[task] = true;
             // Focus handling:
+            var firstLoader = !instance.PageLoaderDisplayed;
             instance.PageLoaderDisplayed = true;
             instance.UpdateGlobalLoaders(task, custom);
             if (!AppEnvironment.IsServer) {
-                var firstLoader = instance.PageLoaderTasks.Count == 1;
                 if (firstLoader) {
                     ActionHandler.SaveActiveElement();
                     instance.NoLoaderTCS = new TaskCompletionSource();
@@ -136,12 +136,8 @@ public partial class PageLoader : IDisposable {
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
-    public static async void JS_Show() {
-        await Show();
-    }
+    public static async void JS_Show() => await Show();
 
     [JSInvokable]
-    public static void JS_AfterAnimationFrame() {
-        Instance().RenderTCS.TrySetResult();
-    }
+    public static void JS_AfterAnimationFrame() => Instance().RenderTCS.TrySetResult();
 }

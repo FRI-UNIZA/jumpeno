@@ -1,0 +1,39 @@
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    max-width: 100%;
+    gap: 20px;
+}
+
+::deep .admin-heading.surface-all {
+    --text-align: center;
+}
+
+.verification-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0 16px;
+}
+
+::deep .verification-icon {
+    font-size: 100px;
+    padding-bottom: 16px;
+}
+
+::deep .verification-text {
+    --text-align: center;
+}
+
+::deep .verification-text-info {
+    --text-align: center;
+    padding-top: 2px;
+}
+
+::deep .icon-login {
+    position: relative;
+    font-size: 15px;
+    bottom: -1px;
+}

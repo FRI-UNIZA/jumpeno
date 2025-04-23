@@ -55,32 +55,5 @@ namespace Jumpeno.Shared.Services.Internationalization.Translations {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hello, world!.
-        /// </summary>
-        public static string Hello__world_ {
-            get {
-                return ResourceManager.GetString("Hello, world!", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        public static string Home {
-            get {
-                return ResourceManager.GetString("Home", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Welcome to your new app.
-        /// </summary>
-        public static string Welcome_to_your_new_app {
-            get {
-                return ResourceManager.GetString("Welcome to your new app", resourceCulture);
-            }
-        }
     }
 }

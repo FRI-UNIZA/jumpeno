@@ -1,0 +1,10 @@
+@namespace Jumpeno.Client.Pages
+
+@inherits Page
+
+<div class="error-page">
+    <DocTitle Value="@I18N.T("403 Not authorized")" />
+    <AntIcon Type="lock" Theme="outline" Style="font-size: 130px; margin-bottom: -6px;" />
+    <Heading1 Size="TEXT_SIZE.XL" Class="error-page-heading">@I18N.T("Error 403")</Heading1>
+    <Paragraph Size="TEXT_SIZE.L" Class="error-page-paragraph">@I18N.T("You are not authorized to view this page.")</Paragraph>
+</div>

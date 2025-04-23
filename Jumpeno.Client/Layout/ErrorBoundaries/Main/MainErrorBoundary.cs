@@ -10,11 +10,11 @@ public partial class MainErrorBoundary : IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnInitializedAsync() {
-        await Navigator.AddAfterEventListener(RecoveryListener);
+        await Navigator.AddAfterFinishEventListener(RecoveryListener);
     }
-    
+
     public async ValueTask DisposeAsync() {
-        await Navigator.RemoveAfterEventListener(RecoveryListener);
+        await Navigator.RemoveAfterFinishEventListener(RecoveryListener);
     }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------

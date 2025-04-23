@@ -53,11 +53,13 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private async ValueTask BeforeLocationChanged(LocationChangingContext ctx) {
         if (!ProgramNavigation) await NavLock.TryLock();
+        await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION, true);
         PreviousURL = URL.Url();
 
         foreach (var blocker in Blockers) {
             if (!await blocker.Invoke(new(PreviousURL, ctx.TargetLocation))) {
                 ctx.PreventNavigation();
+                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
                 NavLock.TryUnlock();
                 return;
             }
@@ -65,13 +67,21 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         
         if (URL.IsLocal(ctx.TargetLocation)) {
             if (!ProgramNavigation) {
-                if (Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+                var isSameURL = URL.Path(PreviousURL) == URL.Path(ctx.TargetLocation);
+                if (Page.Current.GetType() == typeof(Error404Page)) {
                     ctx.PreventNavigation();
                     NavLock.TryUnlock();
                     await NavigateTo(ctx.TargetLocation);
                     return;
                 }
-                var isSameURL = URL.Path(PreviousURL) == URL.Path(ctx.TargetLocation);
+                
+                if (isSameURL && IsPopState) {
+                    ctx.PreventNavigation();
+                    NavLock.TryUnlock();
+                    await NavigateTo(ctx.TargetLocation, forceLoad: true, replace: true);
+                    return;
+                }
+
                 var isCurrentCulture = I18N.IsCurrentCultureUrl(ctx.TargetLocation);
                 if (isSameURL || !isCurrentCulture) {
                     ctx.PreventNavigation();
@@ -96,6 +106,14 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         foreach (var listener in AfterListeners) {
             await listener.Invoke(new(PreviousURL, e.Location));
         }
+
+        if (ProgramNavigation) {
+            if (!SettingQueries && URL.IsLocal(e.Location)) {
+                LayoutBase.Current.Notify();
+            }
+            NavigationFinished.TrySetResult();
+        }
+
         if (Loader) {
             Watch?.Stop();
             if ((Watch?.ElapsedMilliseconds ?? 0) > MIN_LOADING_MS) {
@@ -104,17 +122,12 @@ public class Navigator : StaticService<Navigator>, IDisposable {
                 await Task.Delay(MIN_LOADING_MS - (int) (Watch?.ElapsedMilliseconds ?? 0));
                 await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
             }
-        }
+        } else await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
 
-        if (ProgramNavigation) {
-            if (!SettingQueries && URL.IsLocal(e.Location) && URL.Path(PreviousURL) == URL.Path(e.Location)) {
-                LayoutBase.CurrentLayout().UpdateContent();
-            }
-            NavigationFinished.TrySetResult();
-        }
         ProgramNavigation = false;
         SettingQueries = false;
         Loader = true;
+        IsPopState = false;
         
         foreach (var listener in AfterFinishListeners) {
             await listener.Invoke(new(PreviousURL, e.Location));
@@ -128,7 +141,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(REQUEST_STORAGE_KEYS.REPLACE_URL, url);
+            RequestStorage.Set(nameof(URL), url);
             NavLock.TryUnlock();
             return;
         }
@@ -139,7 +152,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
-            if (!I18N.IsCurrentCultureUrl(url) || Page.CurrentPage().GetType() == typeof(ErrorPage)) {
+            if (!I18N.IsCurrentCultureUrl(url) || Page.Current.GetType() == typeof(Error404Page)) {
                 forceLoad = true;
             }
             if (URL.Path(url) == URL.Path()) {
@@ -166,8 +179,11 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     public static T State<T>() => JS.Invoke<T>(JSNavigator.State);
     public static void SetState<T>(T state, string? url = null) => JS.InvokeVoid(JSNavigator.SetState, state, url);
 
-    // Media ------------------------------------------------------------------------------------------------------------------------------
-    public static bool IsTouchDevice => JS.Invoke<bool>(JSNavigator.IsTouchDevice);
+    // Pop state --------------------------------------------------------------------------------------------------------------------------
+    public static bool IsPopState { get; private set; } = false; 
+
+    [JSInvokable]
+    public static void JS_PopState() => IsPopState = true;
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static async Task AddBlocker(EventPredicate<NavigationEvent> predicate) {
@@ -262,7 +278,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     public static async Task RemoveAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
             for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
-                if (listener.Equals(instance.AfterFinishListeners[i])) continue;
+                if (!listener.Equals(instance.AfterFinishListeners[i])) continue;
                 instance.AfterFinishListeners.RemoveAt(i); break;
             }
         });

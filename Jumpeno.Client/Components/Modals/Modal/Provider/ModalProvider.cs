@@ -26,13 +26,6 @@ public partial class ModalProvider : IDisposable {
         JS.InvokeVoid(JSModal.Init);
     }
 
-    protected override async Task OnInitializedAsync() {
-        await Navigator.AddBeforeEventListener(async e => {
-            // Close all modals before navigation
-            await CloseAllAbove(null);
-        });
-    }
-
     public void Dispose() {
         ModalLock.Dispose();
         ElementLock.Dispose();
@@ -43,7 +36,7 @@ public partial class ModalProvider : IDisposable {
     // Setting:
     private static void SetModalState(Modal modal, MODAL_STATE state) {
         Type type = typeof(Modal);
-        PropertyInfo? prop = type.GetProperty("State");
+        PropertyInfo? prop = type.GetProperty(nameof(Modal.State));
         if (prop is null) return;
         MethodInfo? setMethod = prop.GetSetMethod(nonPublic: true);
         if (setMethod is null) return;

@@ -27,6 +27,7 @@
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <link href="@AppEnvironment.Import("css/bundle.css")" rel="stylesheet" />
         } else {
+            <link href="@AppEnvironment.Import("css/server-page-loader.css")" rel="stylesheet" />
             <link href="@AppEnvironment.Import("css/theme.css")" rel="stylesheet" />
             <link href="@AppEnvironment.Import("css/font.css")" rel="stylesheet" />
             <link href="@AppEnvironment.Import("css/ant-design.css")" rel="stylesheet" />
@@ -39,7 +40,10 @@
         <component type="typeof(HeadOutlet)" render-mode="@ServerEnvironment.RenderMode()" />
     </head>
     <body class="@ThemeProvider.ServerBodyClass()" data-overlayscrollbars-initialize>
-        <component type="typeof(Jumpeno.Client.Components.ServerPageLoader)" render-mode="WebAssemblyPrerendered" />
+        <div id="server-page-loader" tabindex="0" role="status" aria-label="@I18N.T("Loading")">
+            <h1 class="server-page-loader-title" aria-hidden="true">@AppSettings.Name</h1>
+            <div class="server-page-loader-indicator"></div>
+        </div>
         <component type="typeof(Jumpeno.Client.App)" render-mode="@ServerEnvironment.RenderMode()" />
         <persist-component-state />
         <!-- Global JS -->
@@ -68,6 +72,7 @@
             <script src="@AppEnvironment.Import("js/components/JSScrollArea.js")"></script>
             <script src="@AppEnvironment.Import("js/components/JSPageLoader.js")"></script>
             <script src="@AppEnvironment.Import("js/components/JSSwitch.js")"></script>
+            <script src="@AppEnvironment.Import("js/components/JSConsoleUI.js")"></script>
             <script src="@AppEnvironment.Import("js/document/JSTempTitle.js")"></script>
         }
         <!-- Global JS END -->
@@ -75,10 +80,11 @@
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")"></script>
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
-            @if (AppSettings.Prerender) @("JSActionHandler.SetFocus(JSPageLoader.ID); ")
-            else @("JSActionHandler.SetFocus(JSServerPageLoader.ID); ")
+            JSActionHandler.SetFocus(JSServerPageLoader.ID);
             JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE_FUNCTIONAL.APP_THEME.String()");
             JSTempTitle.Add();
+            JSWindow.Init();
+            JSNavigator.Init();
             JSImage.InitAll();
             Blazor.start({ applicationCulture: "@CultureInfo.CurrentCulture" });
         </script>

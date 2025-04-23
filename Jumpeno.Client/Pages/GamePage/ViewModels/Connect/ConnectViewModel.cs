@@ -87,7 +87,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 await PageLoader.Show(PAGE_LOADER_TASK.GAME);
                 PendingUpdates.Clear();
                 Updated = false;
-                if (!Auth.IsRegistered()) Auth.LogInAnonymous(data.Name, User.GenerateSkin());
+                if (!Auth.IsRegisteredUser) Auth.LogInAnonymous(data.Name, User.GenerateSkin());
                 if (!await CreateConnection(data.Code, spectator)) throw new CoreException();
             } catch {
                 Notification.Error(I18N.T("Something went wrong."));
@@ -102,10 +102,10 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         try {
             // 1) Create data URL:
             var q = new QueryParams();
-            q.Set(Game.CODE_ID, code);
-            q.Set(User.USER_ID, JsonSerializer.Serialize(Auth.User));
-            q.Set(Connection.DEVICE_ID, JsonSerializer.Serialize(Navigator.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
-            q.Set(Spectator.SPECTATOR_ID, spectator);
+            q.Set(GameValidator.CODE, code);
+            q.Set(UserValidator.NAME, JsonSerializer.Serialize(Auth.User));
+            q.Set(nameof(Connection.Device), JsonSerializer.Serialize(Window.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
+            q.Set(nameof(Spectator), spectator);
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);
             // 2) Create HUB:
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL).Build();
@@ -231,7 +231,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         GameViewTCS = null;
         PendingUpdates.Clear();
         Updated = false;
-        if (!Auth.IsRegistered()) Auth.LogOut();
+        if (Auth.IsAnonymousUser) Auth.LogOutAnonymous();
         if (wasConnected) await OnDisconnect.Invoke();
     }
 }

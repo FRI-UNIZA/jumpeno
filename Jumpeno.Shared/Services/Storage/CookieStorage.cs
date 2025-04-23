@@ -38,12 +38,12 @@ public static class CookieStorage {
     }
 
     public static List<Type> CacheAcceptedCookies(List<Type> accepted) {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.ACCEPTED_COOKIES, accepted);
+        RequestStorage.Set(nameof(GetAcceptedCookies), accepted);
         return accepted;
     }
 
     public static List<Type> GetAcceptedCookies() {
-        var cachedAccepted = RequestStorage.Get<List<Type>>(REQUEST_STORAGE_KEYS.ACCEPTED_COOKIES);
+        var cachedAccepted = RequestStorage.Get<List<Type>>(nameof(GetAcceptedCookies));
         if (cachedAccepted is not null) return cachedAccepted;
 
         var json = GetCookie(COOKIE_MANDATORY.APP_COOKIES_ACCEPTED);

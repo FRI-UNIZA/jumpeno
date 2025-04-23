@@ -28,12 +28,22 @@
             <Icon><AntIcon Type="book" Theme="outline" /></Icon>
             <Text>@I18N.T("Feedback")</Text>
         </MenuButton>
-        <MenuButton Parameters="@(new ButtonLinkParameters(
-            Href: I18N.Link<LoginPage>()
-        ))">
-            <Icon><AntIcon Type="login" Theme="outline" /></Icon>
-            <Text>@I18N.T("Login")</Text>
-        </MenuButton>
+        <AuthViewBlock>
+            <MenuButton Parameters="@(new ButtonLinkParameters(
+                Href: I18N.Link<LoginPage>()
+            ))">
+                <Icon><AntIcon Type="login" Theme="outline" /></Icon>
+                <Text>@I18N.T("Log in")</Text>
+            </MenuButton>
+        </AuthViewBlock>
+        <AuthView>
+            <MenuButton Parameters="@(new ButtonLinkParameters(
+                Href: I18N.Link<ChatPage>()
+            ))">
+                <Icon><AntIcon Type="message" Theme="outline" /></Icon>
+                <Text>@I18N.T("Chat")</Text>
+            </MenuButton>
+        </AuthView>
     </div>
     <div class="settings-container">
         <SelectCulture />

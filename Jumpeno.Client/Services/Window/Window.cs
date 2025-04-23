@@ -118,4 +118,61 @@ public class Window {
     public static async Task PreventTouchEndAsync() => await JS.InvokeVoidAsync(JSWindow.PreventTouchEnd);
     public static void DefaultTouchEnd() => JS.InvokeVoid(JSWindow.DefaultTouchEnd);
     public static async Task DefaultTouchEndAsync() => await JS.InvokeVoidAsync(JSWindow.DefaultTouchEnd);
+
+    // Media ------------------------------------------------------------------------------------------------------------------------------
+    public static bool IsTouchDevice => JS.Invoke<bool>(JSWindow.IsTouchDevice);
+
+    // Tab reload -------------------------------------------------------------------------------------------------------------------------
+    public static void ReloadTabs() => JS.InvokeVoid(JSWindow.ReloadTabs);
+
+    // Web locks --------------------------------------------------------------------------------------------------------------------------
+    private static readonly LockerSlim WindowLocker = AppEnvironment.IsServer ? null! : new();
+    private static (TaskCompletionSource TCS, dynamic action, Exception? e, object? response) LockAction;
+
+    [JSInvokable]
+    public static async Task JS_Lock(WINDOW_LOCK id) {
+        try {
+            if (LockAction.action is EmptyDelegate action) await action.Invoke();
+            else LockAction.response = await LockAction.action.Invoke();
+        }
+        catch (Exception e) { LockAction.e = e; }
+        finally { LockAction.TCS.SetResult(); }
+    }
+    private static async Task Lock(object action, WINDOW_LOCK id) {
+        AppEnvironment.CheckClient();
+        await WindowLocker.Exclusive(async () => {
+            LockAction = (new(), action, null, null);
+            try {
+                await JS.InvokeVoidAsync(JSWindow.Lock, id);
+                await LockAction.TCS.Task;
+            } catch {}
+            Exception? e = LockAction.e;
+            LockAction = (null!, null!, null, LockAction.response);
+            if (e != null) throw e;
+        });
+    }
+    private static async Task Lock(EmptyDelegate action, WINDOW_LOCK id) => await Lock((object) action, id);
+    private static async Task<R> Lock<R>(EmptyResponse<R> action, WINDOW_LOCK id) {
+        await Lock((object) action, id);
+        var response = (R) LockAction.response!;
+        LockAction.response = null;
+        return response;
+    }
+
+    public static async Task Lock(Action action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) => await Lock(new EmptyDelegate(action), id);
+    public static async Task TryLock(Action action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) {
+        try { await Lock(action, id); } catch {}
+    }
+    public static async Task Lock(Func<Task> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) => await Lock(new EmptyDelegate(action), id);
+    public static async Task TryLock(Func<Task> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) {
+        try { await Lock(action, id); } catch {}
+    }
+    public static async Task<R> Lock<R>(Func<R> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) => await Lock(new EmptyResponse<R>(action), id);
+    public static async Task<R> TryLock<R>(Func<R> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT, R fallback = default!) {
+        try { return await Lock(action, id); } catch { return fallback; }
+    }
+    public static async Task<R> Lock<R>(Func<Task<R>> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) => await Lock(new EmptyResponse<R>(action), id);
+    public static async Task<R> TryLock<R>(Func<Task<R>> action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT, R fallback = default!) {
+        try { return await Lock(action, id); } catch { return fallback; }
+    }
 }

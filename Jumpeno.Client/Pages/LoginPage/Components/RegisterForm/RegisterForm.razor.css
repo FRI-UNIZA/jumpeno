@@ -1,0 +1,89 @@
+.register-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.register-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    max-width: 100%;
+    gap: 20px;
+}
+
+::deep .register-heading.surface-all {
+    --text-align: center;
+}
+
+.register-inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+::deep .register-block {
+    --text-align: center;
+    margin-bottom: -8px
+}
+
+.register-success-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.activation-box {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+::deep .register-icon {
+    font-size: 76px;
+    margin-top: 10px;
+    color: rgb(var(--color-success));
+}
+
+::deep .icon-admin {
+    position: relative;
+    font-size: 15px;
+    bottom: -1px;
+}
+
+::deep .activation-text {
+    font-size: 16px;
+    --font-weight: 600;
+    text-align: center;
+}
+
+::deep .activation-text-info {
+    font-size: 14px;
+    text-align: center;
+}
+
+::deep .icon-login {
+    position: relative;
+    font-size: 17px;
+    bottom: -1px !important;
+}
+
+::deep .register-redirect {
+    font-size: 15px !important;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    ::deep .activation-text {
+        font-size: 17px;
+    }
+
+    ::deep .activation-text-info {
+        font-size: 15px;
+    }
+}

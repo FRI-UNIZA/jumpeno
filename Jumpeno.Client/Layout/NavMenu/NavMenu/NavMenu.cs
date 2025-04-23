@@ -32,13 +32,9 @@ public partial class NavMenu : IDisposable {
     }
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnInitialized() {
-        ScrollArea.AddScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
-    }
+    protected override void OnInitialized() => ScrollArea.AddScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
 
-    public void Dispose() {
-        ScrollArea.RemoveScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
-    }
+    public void Dispose() => ScrollArea.RemoveScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private double TopPosition = 0;

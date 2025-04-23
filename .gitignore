@@ -4,6 +4,7 @@ Jumpeno.Client/bin
 Jumpeno.Client/obj
 Jumpeno.Server/bin
 Jumpeno.Server/obj
+Jumpeno.Server/Services/Database/Files
 Jumpeno.Shared/bin
 Jumpeno.Shared/obj
 Scripts/ThemeProvider/ThemeProvider/bin

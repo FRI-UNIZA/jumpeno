@@ -5,7 +5,6 @@ namespace Jumpeno.Shared.Utils;
 public class EventDelegate<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly EventDelegate<T> EMPTY = new(v => {});
-    public static readonly Func<T, Task> EMPTY_TASK = (T value) => System.Threading.Tasks.Task.CompletedTask;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action<T>? WrappedAction;
@@ -14,7 +13,7 @@ public class EventDelegate<T> {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public EventDelegate(Action<T> action) {
         WrappedAction = action;
-        Action = async (T data) => action(data);
+        Action = async data => action(data);
     }
 
     public EventDelegate(Func<T, Task> action) {
@@ -23,15 +22,13 @@ public class EventDelegate<T> {
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static Func<T, Task> Task(Action<T> action) => (T value) => {
+    public static Func<T, Task> Task(Action<T> action) => value => {
         action(value);
         return System.Threading.Tasks.Task.CompletedTask;
     };
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public async Task Invoke(T data) {
-        await Action(data);
-    }
+    public async Task Invoke(T data) => await Action(data);
 
     public bool Equals(EventDelegate<T> o) {
         return WrappedAction is null ? Action == o.Action : WrappedAction == o.WrappedAction;

@@ -13,7 +13,5 @@ public class ServiceComponent<T> : Component {
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    protected static T Instance() {
-        return RequestStorage.Get<T>(typeof(T).Name)!;
-    }
+    protected static T Instance() => RequestStorage.Get<T>(typeof(T).Name)!;
 }

@@ -1,0 +1,45 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+<DocTitle Value="@I18N.T("Registration")" />
+
+<div class="register-form">
+    @if (!Success) {
+        <div class="register-box">
+            <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
+            <div class="register-inputs">
+                <Input ViewModel="VMEmail" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete HideLabel />
+                <Input ViewModel="VMPlayerName" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+                <Input ViewModel="VMPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+                <Input ViewModel="VMConfirmPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+            </div>
+            <Button Size="BUTTON_SIZE.M" OnClick="Register">
+                <Text>@I18N.T("Register")</Text>
+            </Button>
+            <Paragraph Size="TEXT_SIZE.S" Class="register-block login-text">
+                @I18N.T("Have an account?")&nbsp;
+                <Jumpeno.Client.Components.Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.USER)" Underline Class="login-text">
+                    @I18N.T("Log in")
+                </Jumpeno.Client.Components.Link>
+            </Paragraph>
+        </div>
+    } else {
+        <div class="register-success-box">
+            <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration successful.")</Heading1>
+            <AntIcon Type="check-circle" Theme="outline" Class="register-icon" />
+            <div class="activation-box">
+                <Paragraph Class="activation-text">@I18N.T("In order to play, account must be activated!")</Paragraph>
+                <Paragraph Class="activation-text-info">@I18N.T("Activation link was sent to your email address.")</Paragraph>
+                <Paragraph Class="activation-text-info">(@I18N.T("You can always ask for new one in profile."))</Paragraph>
+            </div>
+            <Jumpeno.Client.Components.Link Size="TEXT_SIZE.S"
+                NoWrap
+                OnClick="() => VM.Show(LOGIN_FORM.USER)"
+                Class="login-text register-redirect"
+            >
+                <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Log in")&nbsp;
+            </Jumpeno.Client.Components.Link>
+        </div>
+    }
+</div>

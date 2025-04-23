@@ -20,6 +20,7 @@ public partial class NavMenuMobile : IAsyncDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string ID { get; private set; }
+    private bool Key = false;
     private readonly DotNetObjectReference<NavMenuMobile> ObjRef;
     private ScrollArea ScrollAreaRef = null!;
     private MENU_STATE State { get; set; } = MENU_STATE.CLOSED;
@@ -44,6 +45,12 @@ public partial class NavMenuMobile : IAsyncDisposable {
         return c;
     }
 
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------    
+    public void Notify() {
+        Key = !Key;
+        StateHasChanged();
+    }
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public NavMenuMobile() {
         ID = ComponentService.GenerateID(CLASS);
@@ -53,7 +60,7 @@ public partial class NavMenuMobile : IAsyncDisposable {
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             await Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
-            if (Page.CurrentPage().GetType() != typeof(ErrorPage)) {
+            if (Page.Current.GetType() != typeof(Error404Page)) {
                 await Navigator.AddAfterFinishEventListener(CloseAfter);
             }
         } else {
@@ -73,9 +80,7 @@ public partial class NavMenuMobile : IAsyncDisposable {
     }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
-    private async Task CloseAfter(NavigationEvent e) {
-        await Close();
-    }
+    private async Task CloseAfter(NavigationEvent e) => await Close();
 
     private async Task OnKeyDown(KeyboardEventArgs e) {
         if (e.Key != KEYBOARD.ESC) return;
@@ -143,9 +148,7 @@ public partial class NavMenuMobile : IAsyncDisposable {
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
-    public void JS_OnAnimationEnd() {
-        StateTCS.TrySetResult();        
-    }
+    public void JS_OnAnimationEnd() => StateTCS.TrySetResult();
 
     [JSInvokable]
     public async Task JS_OnWindowResize(WindowResizeEvent e) {

@@ -26,16 +26,16 @@ public partial class Notification : IDisposable {
     public required PersistentComponentState ApplicationState { private get; set; }
     private PersistingComponentStateSubscription PersistingSubscription;
     private Task PersistData() {
-        ApplicationState.PersistAsJson(REQUEST_STORAGE_KEYS.SERVER_NOTIFICATIONS, new { ServerNotifications = GetServerNotifications() });
+        ApplicationState.PersistAsJson(nameof(GetServerNotifications), new { ServerNotifications = GetServerNotifications() });
         return Task.CompletedTask;
     }
 
     public static List<NotificationData> GetServerNotifications() {
-        var notifications = RequestStorage.Get<List<NotificationData>>(REQUEST_STORAGE_KEYS.SERVER_NOTIFICATIONS);
+        var notifications = RequestStorage.Get<List<NotificationData>>(nameof(GetServerNotifications));
         return notifications is null ? [] : notifications;
     }
     public static void SetServerNotifications(List<NotificationData> notifications) {
-        RequestStorage.Set(REQUEST_STORAGE_KEYS.SERVER_NOTIFICATIONS, notifications);
+        RequestStorage.Set(nameof(GetServerNotifications), notifications);
     }
     public static void AddServerNotification(NotificationData notification) {
         List<NotificationData> notifications = GetServerNotifications();
@@ -45,7 +45,7 @@ public partial class Notification : IDisposable {
 
     protected sealed override void OnInitialized() {
         PersistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-        if (ApplicationState.TryTakeFromJson<NotificationState>(REQUEST_STORAGE_KEYS.SERVER_NOTIFICATIONS, out var restored)) {
+        if (ApplicationState.TryTakeFromJson<NotificationState>(nameof(GetServerNotifications), out var restored)) {
             SetServerNotifications(restored!.ServerNotifications);
         }
     }

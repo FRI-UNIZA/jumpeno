@@ -1,7 +1,10 @@
+using System.Reflection;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Origin policy
 const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
     options.AddPolicy(ORIGIN_POLICY, policy => {
@@ -43,9 +46,47 @@ builder.Services.AddControllersWithViews(options => {
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 });
 builder.Services.AddRazorPages();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+if (builder.Environment.IsDevelopment()) {
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options => {
+        options.SwaggerDoc(AppSettings.Version, new OpenApiInfo { Title = AppSettings.Name, Version = AppSettings.Version });
+
+        // Enable JWT Authentication in Swagger:
+        options.AddSecurityDefinition(AUTH.BEARER, new OpenApiSecurityScheme {
+            Name = AUTH.HEADER,
+            Type = SecuritySchemeType.Http,
+            Scheme = AUTH.BEARER,
+            BearerFormat = AUTH.JWT,
+            In = ParameterLocation.Header,
+            Description = "Enter 'Bearer {token}'"
+        });
+
+        // Security Requirement:
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement {{
+                new OpenApiSecurityScheme {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = AUTH.BEARER
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+
+        // Required:
+        options.SupportNonNullableReferenceTypes();
+        options.NonNullableReferenceTypesAsRequired();
+
+        // Add filters:
+        options.OperationFilter<RoleFilter>();
+        options.OperationFilter<ContentTypeFilter>();
+
+        // Add comments:
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    });
+}
 
 // Localization
 builder.Services.AddLocalization();
@@ -67,10 +108,24 @@ builder.Services.AddSingleton(sp => {
     return new HttpClient { BaseAddress = new Uri(baseAddress) };
 });
 
-// SignalR & Hubs:
+// SignalR & Hubs
 builder.Services.AddSignalR();
 
+// Database
+builder.Services.AddDbContextFactory<DB>(DB.Setup);
+
 var app = builder.Build();
+
+// Database migrations
+// using (var scope = app.Services.CreateScope()) {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
+//     while (!dbContext.Database.CanConnect()) {
+//         Console.WriteLine("Waiting for database connection...");
+//         await Task.Delay(5000);
+//     }
+//     dbContext.Database.Migrate();
+// }
+
 // Apply the CORS middleware
 app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();
@@ -84,35 +139,37 @@ forwardedHeadersOptions.KnownNetworks.Clear(); // Clears the default networks
 forwardedHeadersOptions.KnownProxies.Clear();  // Clears the default proxies
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
+// App services:
 AppEnvironment.Init(
     () => true,
     () => {
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
+        if (ctx == null) return false;
         return ctx.Request.Path.StartsWithSegments(AppSettings.Api.Base.Prefix)
             || ctx.Request.Path.StartsWithSegments(HUB.CULTURE_PREFIX);
     },
     builder.Environment.IsDevelopment,
-    (Type T) => app.Services.GetService(T)!
+    T => app.Services.GetService(T)!
 );
 RequestStorage.Init(
-    (string key) => {
-        var ctx = ServerContext.Get();
+    key => {
+        var ctx = ServerContext.Instance;
         return ctx.Items[key]!;
     },
-    (string key, object o) => {
-        var ctx = ServerContext.Get();
+    (key, o) => {
+        var ctx = ServerContext.Instance;
         ctx.Items[key] = o;
     },
-    (string key) => {
-        var ctx = ServerContext.Get();
+    key => {
+        var ctx = ServerContext.Instance;
         return ctx.Items.Remove(key);
     }
 );
 URL.Init(
     () => {
-        var ctx = ServerContext.Get();
-        var replaceURL = RequestStorage.Get<string>(REQUEST_STORAGE_KEYS.REPLACE_URL);
+        var ctx = ServerContext.Instance;
+        var replaceURL = RequestStorage.Get<string>(nameof(URL));
         return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
     },
     ThemeProvider.ThemeCSSClass
@@ -120,25 +177,26 @@ URL.Init(
 app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
-    async (HTTPException e) => {
+    (iteration, e) => throw e,
+    async e => {
         if (AppEnvironment.IsController) return;
-        ErrorHandler.Notify(e);
+        if (e is HTTPException eHTTP) ErrorHandler.Notify(eHTTP);
+        else if (e is CoreException eCore) ErrorHandler.Notify(eCore);
+        else ErrorHandler.Notify(CoreException.DEFAULT_MESSAGE);
         await Task.CompletedTask;
     },
-    (HttpRequestMessage request) => {
-        var ctx = ServerContext.Get();
+    request => {
+        var ctx = ServerContext.Instance;
         var cookies = ctx.Request.Cookies;
-
-        if (cookies is not null) {
-            foreach (var cookie in cookies) {
-                request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
-            }
+        if (cookies is null) return;
+        foreach (var cookie in cookies) {
+            request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
         }
     }
 );
 Navigator.Init(
-    (string url, bool forceLoad, bool replace) => {
-        var ctx = ServerContext.Get();
+    (url, forceLoad, replace) => {
+        var ctx = ServerContext.Instance;
         var currentURL = URL.Url();
         if (url != currentURL) {
             ctx.Response.Redirect(url);
@@ -147,13 +205,13 @@ Navigator.Init(
     () => {}
 );
 CookieStorage.Init(
-    (string key) => {
-        var ctx = ServerContext.Get();
+    key => {
+        var ctx = ServerContext.Instance;
         ctx.Request.Cookies.TryGetValue(key, out string? cookie);
         return cookie;
     },
-    (Cookie cookie) => {
-        var ctx = ServerContext.Get();
+    cookie => {
+        var ctx = ServerContext.Instance;
         ctx.Response.Cookies.Append(
             cookie.Key.String(),
             cookie.Value,
@@ -167,8 +225,8 @@ CookieStorage.Init(
             }
         );
     },
-    (string key, string domain, string path) => {
-        var ctx = ServerContext.Get();
+    (key, domain, path) => {
+        var ctx = ServerContext.Instance;
         ctx.Response.Cookies.Delete(
             key,
             new CookieOptions {
@@ -177,35 +235,41 @@ CookieStorage.Init(
             }
         );
     },
-    (bool unclosable) => throw new InvalidOperationException("Can not run on the server!")
+    unclosable => throw new InvalidOperationException("Can not run on the server!")
 );
 ThemeProvider.Init();
 
-// Configure the HTTP request pipeline:
+// Swagger:
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint($"/swagger/{AppSettings.Version}/swagger.json", AppSettings.Version);
+    });
     app.UseWebAssemblyDebugging();
 }
-
+// HTTPS:
 app.UseHttpsRedirection();
 
 // Hubs:
 GameHub.Init(app);
 
+// Framework files:
 app.UseBlazorFrameworkFiles();
 
 // Custom Middlewares:
 app.UseMiddleware<StaticFileMiddleware>();
 app.UseMiddleware<ErrorMiddleware>();
+app.UseMiddleware<APIMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<HeadersMiddleware>();
 app.UseMiddleware<DisposeMiddleware>();
 
-app.UseAuthorization();
-
+// Mapping:
 app.MapRazorPages();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+// Start app:
+CronService.Start();
 app.Run();

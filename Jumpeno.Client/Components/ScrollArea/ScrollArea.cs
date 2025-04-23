@@ -114,31 +114,31 @@ public partial class ScrollArea : IDisposable {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.HideScrollbars, id);
     }
-    public void HideScrollbars() { HideScrollbars(ID); }
+    public void HideScrollbars() => HideScrollbars(ID);
 
     public static void ShowScrollbars(string id) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.ShowScrollbars, id);
     }
-    public void ShowScrollbars() { ShowScrollbars(ID); }
+    public void ShowScrollbars() => ShowScrollbars(ID);
 
     public static void ScrollTo(string id, double left, double top) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.Scroll, id, left, top);
     }
-    public void ScrollTo(double left, double top) { ScrollTo(ID, left, top); }
+    public void ScrollTo(double left, double top) => ScrollTo(ID, left, top);
 
     public static ScrollAreaPosition Position(string id) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaPosition>(JSScrollArea.Position, id);
     }
-    public ScrollAreaPosition Position() { return Position(ID); }
+    public ScrollAreaPosition Position() => Position(ID);
 
     public static ScrollAreaItemPosition ItemPosition(string id, string selector) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaItemPosition>(JSScrollArea.ItemPosition, id, selector);
     }
-    public ScrollAreaItemPosition ItemPosition(string selector) { return ItemPosition(ID, selector); }
+    public ScrollAreaItemPosition ItemPosition(string selector) => ItemPosition(ID, selector);
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static void AddScrollListener(string id, Action<ScrollAreaPosition> listener) {
@@ -153,7 +153,7 @@ public partial class ScrollArea : IDisposable {
             RegisterListeners[id] = [.. reg, listener];
         }
     }
-    public void AddScrollListener(Action<ScrollAreaPosition> listener) { AddScrollListener(ID, listener); }
+    public void AddScrollListener(Action<ScrollAreaPosition> listener) => AddScrollListener(ID, listener);
 
     public static void RemoveScrollListener(string id, Action<ScrollAreaPosition> listener) {
         if (AppEnvironment.IsServer) return;
@@ -170,7 +170,7 @@ public partial class ScrollArea : IDisposable {
             else RegisterListeners[id] = reg.Remove(listener);
         }
     }
-    public void RemoveScrollListener(Action<ScrollAreaPosition> listener) { RemoveScrollListener(ID, listener); }
+    public void RemoveScrollListener(Action<ScrollAreaPosition> listener) => RemoveScrollListener(ID, listener);
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]

@@ -17,9 +17,7 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
     public Exception? Exception { get; private set; }
 
     // Useful methods ---------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    ///     Handles state changes while load function executes.
-    /// </summary>
+    /// <summary>Handles state changes while load function executes.</summary>
     /// <param name="loadFunction"></param>
     protected async Task Load(Func<Task<T>> loadFunction) {
         try {
@@ -34,9 +32,7 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
             Data = EmptyData();
         }
     }
-    /// <summary>
-    ///     Returns empty data to show.
-    /// </summary>
+    /// <summary>Returns empty data to show.</summary>
     /// <returns>Empty data</returns>
     protected abstract T EmptyData();
 
@@ -52,8 +48,8 @@ public abstract class SSRComponent<T> : Component, IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SSRComponent() {
-        Page.CurrentPage()!.CountComponent();
-        Key = $"{KEY_PREFIX}-{Page.CurrentPage()!.ComponentCount}";
+        Page.Current.CountComponent();
+        Key = $"{KEY_PREFIX}-{Page.Current.ComponentCount}";
         State =  COMPONENT_STATE.DONE;
         Initializing = false;
         Data = EmptyData();

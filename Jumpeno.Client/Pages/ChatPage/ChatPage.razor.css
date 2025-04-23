@@ -1,0 +1,23 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.chat-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    padding: 40px 0;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    .chat-page {
+        padding: 60px 0;
+    }    
+}
+
+@media (min-width: 1200px) {
+    .chat-page {
+        padding: 80px 0;
+    }    
+}

@@ -23,7 +23,7 @@ AppEnvironment.Init(
     #else
         () => false,
     #endif
-    (Type T) => app.Services.GetService(T)!
+    T => app.Services.GetService(T)!
 );
 RequestStorage.Init();
 Navigator.Init();
@@ -37,18 +37,24 @@ URL.Init(
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 JS.Init(app.Services.GetRequiredService<IJSRuntime>());
 HTTP.Init(
-    async (HTTPException e) => {
-        ErrorHandler.Display(e);
+    async (iteration, e) => {
+        if (!Auth.IsLoggedIn) throw e;
+        await Auth.Refresh(iteration);
+    },
+    async e => {
+        if (e is HTTPException eHTTP) ErrorHandler.Display(eHTTP);
+        else if (e is CoreException eCore) ErrorHandler.Display(eCore);
+        else ErrorHandler.Notify(CoreException.DEFAULT_MESSAGE);
         await Task.CompletedTask;
     }
 );
 CookieStorage.Init(
-    (string key) => {
+    key => {
         var value = JS.Invoke<string>(JSCookies.Get, key);
         if (value is null) return value;
         else return URL.DecodeValue(value);
     },
-    (Cookie cookie) => {
+    cookie => {
         JS.InvokeVoid(
             JSCookies.Set,
             cookie.Key.String(),
@@ -60,11 +66,11 @@ CookieStorage.Init(
             cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.String()
         );
     },
-    (string key, string domain, string path) => {
+    (key, domain, path) => {
         JS.InvokeVoid(JSCookies.Delete, key, Cookie.NormDomain(domain), path);
     },
-    async (bool unclosable) => {
-        var modal = RequestStorage.Get<CookieConsentModal>(REQUEST_STORAGE_KEYS.COOKIE_CONSENT_MODAL);
+    async unclosable => {
+        var modal = RequestStorage.Get<CookieConsentModal>(nameof(CookieConsentModal));
         if (modal is null) return;
         await modal.OpenModal(unclosable);
     }

@@ -4,36 +4,8 @@
 @attribute [Route(AdminPage.ROUTE_EN)]
 @attribute [Route(AdminPage.ROUTE_SK)]
 
+<DocTitle Value="@I18N.T("Admin")" />
+
 <div class="admin-page">
-    <DocTitle Value="Admin" />
-    @if (VMPassword.Value != PASSWORD) {
-        <div class="admin-form">
-            <Heading1 Class="admin-heading">Admin</Heading1>
-            <Input ViewModel="VMPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
-            <Button Size="BUTTON_SIZE.M" OnClick="Login">
-                <Text>Log in</Text>
-            </Button>
-        </div>
-    } else {
-        <div>
-            <Button Size="BUTTON_SIZE.M" OnClick="Start">
-                <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
-                <Text>Start</Text>
-            </Button>
-            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.M" OnClick="Reset">
-                <Icon><AntIcon Type="login" Theme="outline" /></Icon>
-                <Text>Reset</Text>
-            </Button>
-        </div>
-        <div>
-            <Button Size="BUTTON_SIZE.M" OnClick="Pause">
-                <Icon><AntIcon Type="pause" Theme="outline" /></Icon>
-                <Text>Pause</Text>
-            </Button>
-            <Button Size="BUTTON_SIZE.M" OnClick="Resume">
-                <Icon><AntIcon Type="caret-right" Theme="outline" /></Icon>
-                <Text>Resume</Text>
-            </Button>
-        </div>
-    }
+    <Heading1 Class="admin-heading">@I18N.T("Admin")</Heading1>
 </div>
