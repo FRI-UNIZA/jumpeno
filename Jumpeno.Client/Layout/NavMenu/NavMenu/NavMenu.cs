@@ -5,6 +5,8 @@ public partial class NavMenu : IDisposable {
     public const string CLASS = "nav-menu";
     public const string HIDDEN_CLASS = "hidden";
     public const string DISPLAY_CLASS = "display";
+    public const string CLASS_CONTAINER = "nav-menu-container";
+    public const string CLASS_NAVIGATION = "navigation";
     public const string MOBILE_MENU_BUTTON_ID = "mobile-menu-button";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------

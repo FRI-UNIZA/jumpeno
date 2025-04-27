@@ -1,9 +1,9 @@
 ﻿@namespace Jumpeno.Client.Layout
 
 <nav class="@ComputeClass()">
-    <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="nav-menu-container">
+    <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
         <LogoLink />
-        <div class="navigation">
+        <div class="@CLASS_NAVIGATION">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
             <AuthView Roles="[ROLE.USER]">
                 <UserDropDown />
