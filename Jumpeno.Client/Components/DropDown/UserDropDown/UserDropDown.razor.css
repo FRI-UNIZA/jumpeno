@@ -1,4 +1,9 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.user-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
 .user-dropdown ::deep .dropdown {
     --dropdown-button-width: 40px;
     --dropdown-button-height: 40px;

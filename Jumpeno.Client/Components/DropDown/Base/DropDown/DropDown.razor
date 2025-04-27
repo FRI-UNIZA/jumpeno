@@ -4,7 +4,7 @@
 
 <div class="@ComputeClass()">
     @if (Displayed) { <div id="@ID_START" class="@CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID_OPTIONS)" /> }
-    <button type="@BUTTON_TYPE.BUTTON.StringLower()" id="@ID_BUTTON" class="@CLASS_BUTTON" @onclick="Open" aria-label="@ComputeLabel()">
+    <button type="@BUTTON_TYPE.BUTTON.String()" id="@ID_BUTTON" class="@CLASS_BUTTON" @onclick="Open" aria-label="@ComputeLabel()">
         @DropDownButton
     </button>
     <div class="@CLASS_MENU">

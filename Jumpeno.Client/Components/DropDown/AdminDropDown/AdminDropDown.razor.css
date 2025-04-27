@@ -1,4 +1,9 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.admin-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
 .admin-dropdown ::deep .dropdown {
     --dropdown-button-width: 38px;
     --dropdown-button-height: 38px;

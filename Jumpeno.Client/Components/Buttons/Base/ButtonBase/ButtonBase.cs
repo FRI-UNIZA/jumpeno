@@ -13,9 +13,7 @@ public partial class ButtonBase {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------    
     private readonly Dictionary<string, object> AdditionalAttributes = [];
-    protected CSSClass ComputeClass() {
-        return ComputeClass(CLASSNAME);
-    }
+    protected CSSClass ComputeClass() => ComputeClass(CLASSNAME);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnParametersSet(bool firstTime) {
