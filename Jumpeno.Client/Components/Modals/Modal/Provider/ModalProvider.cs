@@ -5,6 +5,8 @@ using System.Reflection;
 public partial class ModalProvider : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME_MODAL_PROVIDER_CONTENT = "modal-provider-content";
+    // Timing:
+    public const int DELAY_MODAL_LOADING_FINISH = 100; // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, ModalElement> ElementDictionary = [];
@@ -13,6 +15,7 @@ public partial class ModalProvider : IDisposable {
     private readonly LockerSlim ElementLock = new();
     private TaskCompletionSource TCSOpen = null!;
     private TaskCompletionSource TCSDispose = null!;
+    private bool Disposed = false;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
@@ -29,6 +32,7 @@ public partial class ModalProvider : IDisposable {
     public void Dispose() {
         ModalLock.Dispose();
         ElementLock.Dispose();
+        Disposed = true;
         GC.SuppressFinalize(this);
     }
 
@@ -87,6 +91,10 @@ public partial class ModalProvider : IDisposable {
     }
 
     public static async Task NotifyFinishLoading(Modal modal) {
+        while (modal.State != MODAL_STATE.LOADING) {
+            await Task.Delay(DELAY_MODAL_LOADING_FINISH);
+            if (Instance().Disposed) return;
+        }
         await modal.OnBeforeOpen.InvokeAsync(modal);
         SetModalState(modal, MODAL_STATE.OPENING);
         await NotifyElement(modal);

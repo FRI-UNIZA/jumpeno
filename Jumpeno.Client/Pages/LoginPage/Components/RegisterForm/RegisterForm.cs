@@ -25,7 +25,8 @@ public partial class RegisterForm {
             Name: nameof(UserValidator.EMAIL).ToLower(),
             Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
-            DefaultValue: ""
+            DefaultValue: "",
+            OnEnter: new(Register)
         ));
         VMPlayerName = new(new InputViewModelTextParams(
             ID: UserValidator.NAME,
@@ -36,7 +37,8 @@ public partial class RegisterForm {
             Name: nameof(UserValidator.NAME).ToLower(),
             Label: I18N.T("Player name"),
             Placeholder: I18N.T("Player name"),
-            DefaultValue: ""
+            DefaultValue: "",
+            OnEnter: new(Register)
         ));
         VMPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD,
@@ -53,7 +55,8 @@ public partial class RegisterForm {
                 if (VMConfirmPassword == null) return;
                 if (VMConfirmPassword.Value != value) return;
                 VMConfirmPassword.Error.ClearError();
-            })
+            }),
+            OnEnter: new(Register)
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD_CONFIRM,
@@ -65,13 +68,14 @@ public partial class RegisterForm {
             Label: I18N.T("Confirm password"),
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
-            Secret: true
+            Secret: true,
+            OnEnter: new(Register)
         ));
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Register() {
-        await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
+        await PageLoader.Show(PAGE_LOADER_TASK.REGISTRATION);
         await HTTP.Try(async () => {
             // 1) Create body:
             var body = new UserRegisterDTO(
@@ -91,9 +95,11 @@ public partial class RegisterForm {
             // 3) Send request:
             var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_REGISTER, body: body);
             // 4) Show result:
-            Success = true;
             Notification.Success(result.Body.Message);
+            Success = true;
+            StateHasChanged();
+            ActionHandler.PopFocus();
         });
-        await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
+        await PageLoader.Hide(PAGE_LOADER_TASK.REGISTRATION);
     }
 }

@@ -543,9 +543,6 @@
   <data name="Invalid token." xml:space="preserve">
     <value>Neplatný token.</value>
   </data>
-  <data name="Account activated." xml:space="preserve">
-    <value>Účet aktivovaný.</value>
-  </data>
   <data name="Jumpeno password reset" xml:space="preserve">
     <value>Jumpeno obnova hesla</value>
   </data>
@@ -587,5 +584,41 @@
   </data>
   <data name="We apologize, you are not logged in." xml:space="preserve">
     <value>Ospravedlňujeme sa, nie ste prihlásení.</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Nastavenia</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Odhlásiť</value>
+  </data>
+  <data name="My profile" xml:space="preserve">
+    <value>Môj profil</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Otvoriť</value>
+  </data>
+  <data name="User menu" xml:space="preserve">
+    <value>Používateľské menu</value>
+  </data>
+  <data name="Admin menu" xml:space="preserve">
+    <value>Menu administrátora</value>
+  </data>
+  <data name="Try again" xml:space="preserve">
+    <value>Skúsiť znovu</value>
+  </data>
+  <data name="Account activated" xml:space="preserve">
+    <value>Účet aktivovaný</value>
+  </data>
+  <data name="Account not activated" xml:space="preserve">
+    <value>Účet neaktivovaný</value>
+  </data>
+  <data name="Resend link" xml:space="preserve">
+    <value>Preposlať odkaz</value>
+  </data>
+  <data name="Account already activated." xml:space="preserve">
+    <value>Účet už je aktivovaný.</value>
+  </data>
+  <data name="Activation email sent." xml:space="preserve">
+    <value>Aktivačný email odoslaný.</value>
   </data>
 </root>

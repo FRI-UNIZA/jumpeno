@@ -169,23 +169,22 @@ public static class JWT {
 
         // Get the custom RoleAttribute
         var roleAttribute = methodInfo.GetCustomAttribute<RoleAttribute>();
-        if (roleAttribute != null) {
+        if (roleAttribute == null) return;
             
-            var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
-            if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw Exceptions.NotAuthenticated;
-            
-            string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
-            if (!ValidateAccess(token)) throw Exceptions.NotAuthenticated;
+        var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
+        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw Exceptions.NotAuthenticated;
+        
+        string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
+        if (!ValidateAccess(token)) throw Exceptions.NotAuthenticated;
 
-            Token.StoreAccess(token);
-            bool allowed = false;
-            foreach (var role in roleAttribute.Allowed) {
-                if (role == Token.Access.role) {
-                    allowed = true;
-                    break;
-                }
+        Token.StoreAccess(token);
+        bool allowed = false;
+        foreach (var role in roleAttribute.Allowed) {
+            if (role == Token.Access.role) {
+                allowed = true;
+                break;
             }
-            if (!allowed) throw Exceptions.NotAuthorized;
         }
+        if (!allowed) throw Exceptions.NotAuthorized;
     }
 }

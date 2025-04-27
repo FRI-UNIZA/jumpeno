@@ -13,7 +13,7 @@ public partial class CookieConsentModal {
     private bool Unclosable = false;
     private Dictionary<Type, bool> Initial = [];
     private Dictionary<Type, bool> Selected = [];
-    public string GetDialogID() { return ModalRef.ID_DIALOG; }
+    public string GetDialogID() => ModalRef.ID_DIALOG;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnInitialized() => RequestStorage.Set(nameof(CookieConsentModal), this);

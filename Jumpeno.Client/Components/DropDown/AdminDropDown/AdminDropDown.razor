@@ -1,0 +1,23 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+@if (Auth.IsAdmin) {
+    <div class="@CLASS">
+        <DropDown @ref="Ref" Title="@I18N.T("Admin menu")">
+            <DropDownButton>
+                <AntIcon Type="user" Theme="outline" Class="@CLASS_PROFILE_IMAGE" />
+            </DropDownButton>
+            <Options>
+                <DropDownOption Ref="Ref" Label="@I18N.T("Settings")" Action="@new(OpenSettings)">
+                    <AntIcon Type="setting" Theme="outline" Class="@CLASS_ICON" Style="font-size: 18px;" />
+                    <DropDownOptionText>@I18N.T("Settings")</DropDownOptionText>
+                </DropDownOption>
+                <DropDownOption Ref="Ref" Label="@I18N.T("Log out")" Action="@new(LogOut)">
+                    <AntIcon Type="logout" Theme="outline" Class="@CLASS_ICON" Style="margin-top: -1px;" />
+                    <DropDownOptionText>@I18N.T("Log out")</DropDownOptionText>
+                </DropDownOption>
+            </Options>
+        </DropDown>
+    </div>
+}

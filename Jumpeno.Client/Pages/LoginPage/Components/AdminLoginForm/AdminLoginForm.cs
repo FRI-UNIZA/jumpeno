@@ -22,12 +22,13 @@ public partial class AdminLoginForm {
             Name: nameof(AdminValidator.EMAIL).ToLower(),
             Label: I18N.T("Email address verification"),
             Placeholder: I18N.T("Email"),
-            DefaultValue: ""
+            DefaultValue: "",
+            OnEnter: new(Send)
         ));
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task Login() {
+    private async Task Send() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
         await HTTP.Try(async () => {
             // 1) Create body:
@@ -41,6 +42,8 @@ public partial class AdminLoginForm {
             // 4) Show result:
             Notification.Success(response.Body.Message);
             Verified = true;
+            StateHasChanged();
+            ActionHandler.PopFocus();
         });
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }

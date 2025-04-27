@@ -1,0 +1,60 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.admin-dropdown ::deep .dropdown {
+    --dropdown-button-width: 38px;
+    --dropdown-button-height: 38px;
+    --dropdown-button-radius: 100%;
+    --dropdown-options-right: -48px;
+}
+
+.admin-dropdown ::deep .dropdown-button {
+    border: 3px solid rgba(var(--color-base-invert), 0.9);
+    box-shadow: 0 0 2px 2px rgb(var(--color-primary));
+    background-color: rgb(var(--color-secondary-surface));
+    transition: transform calc(var(--transition-slow) * 1ms),
+                box-shadow calc(var(--transition-fast) * 1ms);
+}
+
+.admin-dropdown ::deep .dropdown.displayed .dropdown-button {
+    transform: rotate(-360deg);
+}
+
+.admin-dropdown ::deep .dropdown-button:focus-visible {
+    border: 3px solid rgb(var(--color-base-invert));
+    box-shadow: 0 0 2px 2px rgba(var(--color-base-invert), 0.8);
+}
+
+.admin-dropdown ::deep .admin-dropdown-profile-image {
+    position: relative;
+    font-size: 26px;
+    top: 2px;
+    color: rgb(var(--color-base-invert));
+}
+
+.admin-dropdown ::deep .admin-dropdown-icon {
+    margin-right: 10px;
+}
+
+/* Themes ------------------------------------------------------------------------------------------------------------------------------ */
+.light-theme .admin-dropdown ::deep .dropdown-button {
+    background-color: rgba(var(--color-base), 0.25);
+    box-shadow: 0 0px 3px 1px rgba(var(--color-primary), 0.5);
+}
+
+.light-theme .admin-dropdown ::deep .dropdown-button:focus-visible {
+    border: 3px solid rgb(var(--color-base-invert));
+    box-shadow: 0 0 3px 2px rgba(var(--color-base), 0.4);
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 1200px) {
+    .admin-dropdown ::deep .dropdown {
+        --dropdown-button-width: 42px;
+        --dropdown-button-height: 42px;
+        --dropdown-options-right: -8px;
+    }
+
+    .admin-dropdown ::deep .admin-dropdown-profile-image {
+        font-size: 28px;
+        top: 2px;
+    }
+}

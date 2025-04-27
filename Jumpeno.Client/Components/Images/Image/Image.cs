@@ -20,5 +20,5 @@ public partial class Image {
     [Parameter]
     public IMAGE_LOADING Loading { get; set; } = IMAGE_LOADING.LAZY;
     [Parameter]
-    public Action<bool> OnLoadingFinish { get; set; } = (bool success) => {};
+    public Action<bool> OnLoadingFinish { get; set; } = success => {};
 }

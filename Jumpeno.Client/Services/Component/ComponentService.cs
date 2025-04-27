@@ -1,8 +1,5 @@
 namespace Jumpeno.Client.Services;
 
 public static class ComponentService {
-    public static string GenerateID(string prefix) {
-        var generatedID = $"{prefix}-{Guid.NewGuid()}";
-        return generatedID;
-    }
+    public static string GenerateID(string prefix) => $"{prefix}-{Guid.NewGuid()}";
 }

@@ -46,16 +46,20 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
         Running = direction.X != 0;
     }
 
+    public static string GetURL(SKIN skin) {
+        switch (skin) {
+            case SKIN.MAGE_AIR: return IMAGE.SPRITE_MAGE_AIR;
+            case SKIN.MAGE_EARTH: return IMAGE.SPRITE_MAGE_EARTH;
+            case SKIN.MAGE_FIRE: return IMAGE.SPRITE_MAGE_FIRE;
+            case SKIN.MAGE_MAGIC: return IMAGE.SPRITE_MAGE_MAGIC;
+            case SKIN.MAGE_WATER: return IMAGE.SPRITE_MAGE_WATER;
+            default: return IMAGE.SPRITE_MAGE_MAGIC;
+        }
+    }
+
     private static ElementReference? GetImage(SKIN skin) {
         if (AppEnvironment.IsServer) return null;
-        string id = IMAGE.SPRITE_MAGE_MAGIC;
-        switch (skin) {
-            case SKIN.MAGE_AIR: id = IMAGE.SPRITE_MAGE_AIR; break;
-            case SKIN.MAGE_EARTH: id = IMAGE.SPRITE_MAGE_EARTH; break;
-            case SKIN.MAGE_FIRE: id = IMAGE.SPRITE_MAGE_FIRE; break;
-            case SKIN.MAGE_MAGIC: id = IMAGE.SPRITE_MAGE_MAGIC; break;
-            case SKIN.MAGE_WATER: id = IMAGE.SPRITE_MAGE_WATER; break;
-        }
+        string id = GetURL(skin);
         if (ImageReferrer.Get(id) is not ElementReference img) return null;
         return img;
     }

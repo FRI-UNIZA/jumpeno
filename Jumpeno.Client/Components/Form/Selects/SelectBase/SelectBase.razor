@@ -9,7 +9,7 @@
                 @if (!HideLabel) { <InputLabel For="@ID">@Label</InputLabel> }
                 <button
                     id="@ID"
-                    type="button"
+                    type="@BUTTON_TYPE.BUTTON.StringLower()"
                     aria-roledescription="combobox"
                     aria-label="@($"{Label}, {I18N.T("Selected: I18N{option}", new() {{ "option", Selected.Label }})}")"
                     class="@ComputeButtonClass()"
@@ -40,7 +40,7 @@
                     <div class="@CLASS_OPTIONS">
                         @foreach(var option in DisplayedOptions) {
                             <button
-                                type="button"
+                                type="@BUTTON_TYPE.BUTTON.StringLower()"
                                 role="option"
                                 aria-label="@option.Label"
                                 class="@ComputeOptionClass(option)"

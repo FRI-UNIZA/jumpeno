@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class UserController : ControllerBase {   
+public class UserController : ControllerBase {
     /// <summary>New user account registration.</summary>
     /// <param name="body">Registration data.</param>
     /// <response code="201">User is successfully registered.</response>
@@ -14,25 +14,30 @@ public class UserController : ControllerBase {
         // 2) Transaction:
         UserEntity user = null!;
         await DB.Transaction(async () => {
-            user = await UserEntity.Create(body.Email, body.Name);
+            user = await UserEntity.Create(body.Email.ToLower(), body.Name);
             await PasswordEntity.Create(user.ID, body.Password);
             await ActivationEntity.Create(user.ID);
         });
         // 3) Activation email:
-        var q = new QueryParams(); q.Set(TOKEN_TYPE.ACTIVATION.String(), JWT.GenerateActivation(Guid.Parse(user.ID)));
-        Email.TrySend(
-            user.Email,
-            I18N.T("Jumpeno activation"), 
-            Email.LINK_CONTENT(
-                I18N.T("Jumpeno activation"),
-                I18N.T("Hello, here is your activation link:"),
-                I18N.T("Activate"),
-                URL.ToAbsolute(URL.SetQueryParams(I18N.Link<HomePage>(), q))
-            )
-        );
+        Email.SendActivation(user.Email, user.ID);
         // 4) Response:
         Response.StatusCode = StatusCodes.Status201Created;
         return new(I18N.T("Registration successful."));
+    }
+
+    /// <summary>Sends activation email to authenticated user.</summary>
+    /// <response code="200">Activation email sent.</response>
+    [HttpPost][Role(ROLE.USER)]
+    [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
+    public async Task<MessageDTOR> SendActivation() {
+        // 1) Select user:
+        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+        // 2) Check activation:
+        if (user.Activation == null) throw new CoreException().SetCode(404).SetMessage("Account already activated.");
+        // 3) Activation email:
+        Email.SendActivation(user.Email, user.ID);
+        // 4) Response:
+        return new(I18N.T("Activation email sent."));
     }
 
     /// <summary>Activation of existing user account.</summary>
@@ -52,7 +57,7 @@ public class UserController : ControllerBase {
         // 2) Activation:
         if (!await ActivationEntity.Delete(Token.Activation.sub)) throw Exceptions.InvalidToken;
         // 3) Response:
-        return new(I18N.T("Account activated."));
+        return new($"{I18N.T("Account activated")}.");
     }
 
     /// <summary>User login.</summary>

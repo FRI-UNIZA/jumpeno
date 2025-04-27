@@ -22,9 +22,9 @@ public static class Email {
         text +=     $"p {{ font-family: {theme.FONT_PRIMARY}; font-size: 14px; margin: 0; }}";
         text +=     ".email-link {";
         text +=         "display: inline-flex; padding: 12px 18px; border-radius: 100px;";
-        text +=         $"background-color: rgb({theme.COLOR_BASE_ACCENT}); color: rgba({theme.COLOR_BASE}, 0.8); cursor: pointer;";
+        text +=         $"background-color: rgb({theme.COLOR_BASE_ACCENT}); color: rgb({theme.COLOR_BASE}); cursor: pointer;";
         text +=         $"box-shadow: 0 1px 2px rgba({theme.COLOR_BASE}, 0.5);";
-        text +=         $"font-family: {theme.FONT_PRIMARY}; font-size: 14px; font-weight: bold; text-decoration: none;";
+        text +=         $"font-family: {theme.FONT_PRIMARY}; font-size: 14px; font-weight: bold; text-decoration: none; letter-spacing: 0.8px;";
         text +=         "margin-top: 16px;";
         text +=         "transition: background-color 200ms;";
         text +=     "}";
@@ -33,6 +33,21 @@ public static class Email {
         text +=     "}";
         text += "</style>";
         return text;
+    }
+
+    // Prepared actions -------------------------------------------------------------------------------------------------------------------
+    public static void SendActivation(string email, string id) {
+        var q = new QueryParams(); q.Set(TOKEN_TYPE.ACTIVATION.String(), JWT.GenerateActivation(Guid.Parse(id)));
+        TrySend(
+            email,
+            I18N.T("Jumpeno activation"), 
+            LINK_CONTENT(
+                I18N.T("Jumpeno activation"),
+                I18N.T("Hello, here is your activation link:"),
+                I18N.T("Activate"),
+                URL.ToAbsolute(URL.SetQueryParams(I18N.Link<HomePage>(), q))
+            )
+        );
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

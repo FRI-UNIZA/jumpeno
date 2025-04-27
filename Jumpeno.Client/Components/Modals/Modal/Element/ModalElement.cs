@@ -73,7 +73,7 @@ public partial class ModalElement : IDisposable {
 
     public void StartClosing() {
         Type type = typeof(Modal);
-        PropertyInfo? prop = type.GetProperty("State");
+        PropertyInfo? prop = type.GetProperty(nameof(Modal.State));
         if (prop is null) return;
         MethodInfo? setMethod = prop.GetSetMethod(nonPublic: true);
         if (setMethod is null) return;

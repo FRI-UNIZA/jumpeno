@@ -96,8 +96,8 @@ public partial class Modal {
         CreatedLoading = loading;
         await ModalProvider.CreateModal(this);
     }
-    public async Task Open() { await Open(false); }
-    public async Task OpenLoading() { await Open(true); }
+    public async Task Open() => await Open(false);
+    public async Task OpenLoading() => await Open(true);
     public async Task FinishLoading() {
         AppEnvironment.CheckClient();
         await ModalProvider.NotifyFinishLoading(this);

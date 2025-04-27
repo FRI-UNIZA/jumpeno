@@ -1,0 +1,13 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+<button
+    type="@BUTTON_TYPE.BUTTON.StringLower()"
+    role="option"
+    aria-label="@Label"
+    class="@CLASS"
+    @onclick="@Ref.CreateAction(Action)"
+>
+    @ChildContent
+</button>

@@ -120,7 +120,7 @@ public class GameViewModel : IDisposable {
     
     private event Func<UpdateAfterEvent, Task>? AfterUpdate;
     public async Task AddAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => await UpdateLock.TryExclusive(() => AfterUpdate += listener);
-    public async Task RemoveAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => await UpdateLock.TryExclusive(() => AfterUpdate -= listener);    
+    public async Task RemoveAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => await UpdateLock.TryExclusive(() => AfterUpdate -= listener);
     private event Func<Task>? AfterUpdates;
     public async Task AddAfterUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => AfterUpdates += listener);
     public async Task RemoveAfterUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => AfterUpdates -= listener);

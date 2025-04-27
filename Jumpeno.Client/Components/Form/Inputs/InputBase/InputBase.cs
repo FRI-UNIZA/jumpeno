@@ -251,4 +251,8 @@ public partial class InputBase<T> : IDisposable {
         } catch { changedValue = ViewModel.DefaultValue; }
         await ViewModel.SetValue(changedValue);
     }
+    
+    private async Task HandleKeyDown(KeyboardEventArgs e) {
+        if (e.Key == KEYBOARD.ENTER) await ViewModel.OnEnter.Invoke();
+    }
 }

@@ -20,7 +20,8 @@ public partial class UserLoginForm {
             Name: nameof(UserValidator.EMAIL).ToLower(),
             Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
-            DefaultValue: ""
+            DefaultValue: "",
+            OnEnter: new(Login)
         ));
         VMPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD,
@@ -32,7 +33,8 @@ public partial class UserLoginForm {
             Label: I18N.T("Password"),
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
-            Secret: true
+            Secret: true,
+            OnEnter: new(Login)
         ));
     }
 
@@ -41,6 +43,7 @@ public partial class UserLoginForm {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
         await HTTP.Try(async () => {
             await Auth.LogInUser(VMEmail.Value, VMPassword.Value);
+            ActionHandler.PopFocus();
         });
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }

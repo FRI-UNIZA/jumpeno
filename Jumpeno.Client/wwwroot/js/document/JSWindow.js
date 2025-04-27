@@ -79,6 +79,28 @@ class JSWindow {
         await this.#MouseUpStorage.RemoveEventListener(objRef, method)
     }
 
+    // Click ------------------------------------------------------------------------------------------------------------------------------
+    static #ClickStorage = new ListenerStorage('click', e => ({ X: e.clientX, Y: e.clientY }))
+    
+    static async AddClickEventListener(objRef, method) {
+        await this.#ClickStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveClickEventListener(objRef, method) {
+        await this.#ClickStorage.RemoveEventListener(objRef, method)
+    }
+
+    // Scroll -----------------------------------------------------------------------------------------------------------------------------
+    static #ScrollStorage = new ListenerStorage('scroll')
+    
+    static async AddScrollEventListener(objRef, method) {
+        await this.#ScrollStorage.AddEventListener(objRef, method, true)
+    }
+
+    static async RemoveScrollEventListener(objRef, method) {
+        await this.#ScrollStorage.RemoveEventListener(objRef, method, true)
+    }
+
     // User select ------------------------------------------------------------------------------------------------------------------------
     static #NO_USER_SELECT_CLASS = 'no-user-select'
     

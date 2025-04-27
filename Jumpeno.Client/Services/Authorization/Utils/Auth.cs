@@ -99,7 +99,7 @@ public static class Auth {
                 // 3.2.2) Delete access token:
                 Token.DeleteAccess();
                 // 3.2.3) Reset profile:
-                ResetProfile();
+                await ResetProfile();
                 // 3.2.4) Show notification:
                 if (e.Code == Exceptions.InvalidToken.Code) Notification.Error(e.Message);
                 // 3.2.5) Return fail:
@@ -133,7 +133,7 @@ public static class Auth {
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
-                ResetProfile();
+                await ResetProfile();
                 // 2.4) Return fail:
                 return false;
             }
@@ -162,9 +162,9 @@ public static class Auth {
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
-                ResetProfile();
+                await ResetProfile();
                 // 2.4) Navigate to login:
-                await AuthPage.NavigateTo(I18N.Link<LoginPage>());
+                await AuthPage.NavigateTo(I18N.Link<LoginPage>(), forceLoad: true);
                 // 2.5) Throw back:
                 throw Exceptions.NotAuthenticated;
             }
@@ -178,7 +178,7 @@ public static class Auth {
             // 2) Delete access token:
             Token.DeleteAccess();
             // 3) Reset profile:
-            ResetProfile();
+            await ResetProfile();
             // 4) Navigate to login:
             await AuthPage.NavigateTo(I18N.Link<LoginPage>());
             // 5) Reload tabs:
@@ -187,22 +187,44 @@ public static class Auth {
     }
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task LoadProfile() {
-        if (Token.Access.role == ROLE.USER) {
-            // 1.1) Load user profile:
-            var profile = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
-            // 1.2) Validate response:
-            profile.Body.Check();
-            // 1.3) Store user profile:
-            User = profile.Body.Profile; Admin = null!;
-        } else {
-            // 2.1) Store admin profile:
-            User = null!; Admin = new(Token.Access.sub);
-        }
+    // Events:
+    private static event Action? ProfileUpdateEvent;
+    private static event Func<Task>? ProfileUpdateEventAsync;
+    private static readonly LockerSlim ProfileUpdateLock = AppEnvironment.IsClient ? new() : null!;
+    private static async Task InvokeUpdate() {
+        ProfileUpdateEvent?.Invoke();
+        if (ProfileUpdateEventAsync != null) await ProfileUpdateEventAsync.Invoke();
     }
-
-    public static void ResetProfile() {
-        User = null!; Admin = null!;
+    // Listeners:
+    public static async Task AddUpdateListener(Action listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEvent += listener);
+    public static async Task RemoveUpdateListener(Action listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEvent -= listener);
+    public static async Task AddUpdateListener(Func<Task> listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEventAsync += listener);
+    public static async Task RemoveUpdateListener(Func<Task> listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEventAsync -= listener);
+    
+    // Actions:
+    public static async Task LoadProfile() {
+        await ProfileUpdateLock.TryExclusive(async () => {
+            if (AppEnvironment.IsServer) return;
+            if (Token.Access.role == ROLE.USER) {
+                // 1.1) Load user profile:
+                var profile = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
+                // 1.2) Validate response:
+                profile.Body.Check();
+                // 1.3) Store user profile:
+                User = profile.Body.Profile; Admin = null!;
+            } else {
+                // 2.1) Store admin profile:
+                User = null!; Admin = new(Token.Access.sub);
+            }
+            await InvokeUpdate();
+        });
+    }
+    public static async Task ResetProfile() {
+        await ProfileUpdateLock.TryExclusive(async () => {
+            if (AppEnvironment.IsServer) return;
+            User = null!; Admin = null!;
+            await InvokeUpdate();
+        });
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------

@@ -180,7 +180,7 @@ Containers can be configured in:
 App is served on port mentioned in `Settings` section!
 
 ## Configuration Files
-This project includes two configuration files:
+This project includes 3 configuration files:
 
 For shared common settings:
 > /Jumpeno.Server/appsettings.json (Definitions)<br />
@@ -190,18 +190,15 @@ For server-specific secret configurations:
 > /Jumpeno.Shared/appsettings.json (Definitions)<br />
 > /Jumpeno.Shared/Services/Settings/AppSettings.cs (Use in code)
 
+<b>Environment variables</b> for services like database and email are set in:
+> .env
+
 ## Secrets
 <b>Secret information</b>, such as API keys, is defined together with server config in:
 > /Jumpeno.Server/appsettings.json
 
 These secrets are automatically initialized for development.<br />
 Server configuration is injected into the Docker image during a job inside GitHub workflows.<br />
-For testing purposes, you can create your own <b>local files</b> to override them:
-> /Jumpeno.Server/appsettings.Development.json<br />
-> /Jumpeno.Server/appsettings.Production.json
-
-<b>Environment variables</b> for services like database and email are set in:
-> .env
 
 ## Settings
 Deployed app must run on port `80` to work properly!<br />

@@ -103,7 +103,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             // 1) Create data URL:
             var q = new QueryParams();
             q.Set(GameValidator.CODE, code);
-            q.Set(UserValidator.NAME, JsonSerializer.Serialize(Auth.User));
+            q.Set(nameof(User), JsonSerializer.Serialize(Auth.User));
             q.Set(nameof(Connection.Device), JsonSerializer.Serialize(Window.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
             q.Set(nameof(Spectator), spectator);
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);
@@ -120,7 +120,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             HubConnection.Closed += OnConnectionClosed;
             // 4) Connect:
             await HubConnection.StartAsync();
-        } catch (Exception) {
+        } catch {
             await DisposeHub();
         }
         return IsConnected;

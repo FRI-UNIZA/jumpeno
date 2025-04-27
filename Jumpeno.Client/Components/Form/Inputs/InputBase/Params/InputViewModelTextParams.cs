@@ -6,7 +6,7 @@ public record InputViewModelTextParams(
     INPUT_TEXT_MODE TextMode = INPUT_TEXT_MODE.NORMAL, bool Trim = false, Predicate<string>? TextCheck = null,
     int? MaxLength = null,
     string DefaultValue = "",
-    EventDelegate<string>? OnChange = null
+    EventDelegate<string>? OnChange = null, EmptyDelegate? OnEnter = null
 ) : InputViewModelParams<string>(
-    ID, Name, Label, Placeholder, Secret, TextMode, Trim, TextCheck, MaxLength, 0, DefaultValue, OnChange
+    ID, Name, Label, Placeholder, Secret, TextMode, Trim, TextCheck, MaxLength, 0, DefaultValue, OnChange, OnEnter
 );

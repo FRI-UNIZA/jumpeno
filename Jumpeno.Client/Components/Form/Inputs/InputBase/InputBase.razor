@@ -23,6 +23,7 @@
                         @bind:get="@TempValue"
                         @bind:set="HandleInput"
                         @onblur="HandleChange"
+                        @onkeydown="HandleKeyDown"
                     />
                     @if (IconAfter is not null) { <div class="input-icon-after">@IconAfter</div> }
                     @if (AllowClear) {

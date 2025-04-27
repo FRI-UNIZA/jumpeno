@@ -1,0 +1,85 @@
+.modal-profile {
+    display: flex;
+    min-width: 100%;
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 0 64px;
+}
+
+.user-profile-image-wrap {
+    position: relative;
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    overflow: hidden;
+    border: 6px solid rgb(var(--color-base-invert));
+    box-shadow: 0 1px 8px 1px rgba(var(--color-base), 0.7);
+    background-color: rgb(var(--color-secondary-surface));
+}
+
+::deep .user-profile-image {
+    --image-width: 100px;
+    --image-height: 100px;
+    transform: scale(4) translate(37.2%, 36.8%);
+    pointer-events: none;
+}
+
+::deep .text.profile-name {
+    --text-align: center;
+}
+
+::deep .text.profile-email {
+    --text-align: center;
+    margin-top: -10px;
+}
+
+::deep .text.profile-activated {
+    --text-align: center;
+}
+::deep .user-activated-icon, ::deep .user-not-activated-icon {
+    position: relative;
+    font-size: 22px;
+    margin: 0 5px 0 -8px;
+    bottom: -2px;
+}
+::deep .user-activated-icon {
+    color: rgb(var(--color-success));
+}
+::deep .user-not-activated-icon {
+    color: rgb(var(--color-base-error));
+}
+.activated-box {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+/* Themes ------------------------------------------------------------------------------------------------------------------------------ */
+.light-theme .user-profile-image-wrap {
+    background-color: rgba(var(--color-base), 0.25);
+}
+
+/* Error ------------------------------------------------------------------------------------------------------------------------------- */
+.modal-error-content {
+    position: relative;
+    width: 100%;
+    min-height: 120px;
+    height: 40dvh;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+::deep .modal-error-text {
+    --text-align: center;
+}

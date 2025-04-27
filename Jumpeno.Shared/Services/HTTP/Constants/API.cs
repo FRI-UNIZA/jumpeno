@@ -18,6 +18,7 @@ public static class API {
         public static string AUTH_DELETE => $"{URL}/Auth/Delete";
         // User:
         public static string USER_REGISTER => $"{URL}/User/Register";
+        public static string USER_SEND_ACTIVATION => $"{URL}/User/SendActivation";
         public static string USER_ACTIVATE => $"{URL}/User/Activate";
         public static string USER_LOGIN => $"{URL}/User/Login";
         public static string USER_PASSWORD_RESET_REQUEST => $"{URL}/User/PasswordResetRequest";

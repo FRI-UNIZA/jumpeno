@@ -6,5 +6,5 @@ public abstract record InputViewModelParams<T> (
     INPUT_TEXT_MODE TextMode, bool Trim, Predicate<string>? TextCheck,
     int? MaxLength, int Decimals,
     T DefaultValue,
-    EventDelegate<T>? OnChange
+    EventDelegate<T>? OnChange, EmptyDelegate? OnEnter
 );

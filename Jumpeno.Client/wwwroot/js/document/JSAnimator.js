@@ -3,7 +3,7 @@ class JSAnimator {
     static #Lock = new Locker()
 
     static #GetID(objRef, method) {
-        return `${objRef.id}-${method}`
+        return `${objRef._id}-${method}`
     }
 
     static #CreateAnimator(objRef, method) {

@@ -6,7 +6,7 @@ public record InputViewModelLongParams(
     int? MaxLength = null,
     long MinValue = long.MinValue, long MaxValue = long.MaxValue,
     long DefaultValue = 0,
-    EventDelegate<long>? OnChange = null
+    EventDelegate<long>? OnChange = null, EmptyDelegate? OnEnter = null
 ) : InputViewModelParams<long>(
-    ID, Name, Label, Placeholder, Secret, INPUT_TEXT_MODE.NORMAL, true, null, MaxLength, 0, DefaultValue, OnChange
+    ID, Name, Label, Placeholder, Secret, INPUT_TEXT_MODE.NORMAL, true, null, MaxLength, 0, DefaultValue, OnChange, OnEnter
 );

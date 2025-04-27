@@ -83,7 +83,7 @@ public static class UserValidator {
         return errors;
     }
     public static string CheckPassword(string value, string? message = null) {
-        Checker.CheckValues(ValidateName(value), message); return value;
+        Checker.CheckValues(ValidatePassword(value), message); return value;
     }
 
     // Skin -------------------------------------------------------------------------------------------------------------------------------

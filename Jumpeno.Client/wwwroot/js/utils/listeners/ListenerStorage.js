@@ -8,7 +8,7 @@ class ListenerStorage {
     #Lock = new Locker()
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    constructor(event, createArgs, before = null, after = null) {
+    constructor(event, createArgs = () => null, before = null, after = null) {
         this.#Listeners = {}
         this.#Event = event
         this.#Before = before
@@ -18,7 +18,7 @@ class ListenerStorage {
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     #GetID(objRef, method) {
-        return `${objRef.id}-${method}`
+        return `${objRef._id}-${method}`
     }
 
     #CreateListener(objRef, method) {
@@ -36,20 +36,20 @@ class ListenerStorage {
     }
     
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    async AddEventListener(objRef, method) {
+    async AddEventListener(objRef, method, options = undefined) {
         await this.#Lock.Exclusive(async () => {
             const listener = this.#CreateListener(objRef, method)
             this.#Listeners[this.#GetID(objRef, method)] = listener
             if (Object.keys(this.#Listeners).length > 1) return
-            window.addEventListener(this.#Event, this.#InvokeListeners)
+            window.addEventListener(this.#Event, this.#InvokeListeners, options)
         })
     }
 
-    async RemoveEventListener(objRef, method) {
+    async RemoveEventListener(objRef, method, options = undefined) {
         await this.#Lock.Exclusive(async () => {
             delete this.#Listeners[this.#GetID(objRef, method)]
             if (Object.keys(this.#Listeners).length > 0) return
-            window.removeEventListener(this.#Event, this.#InvokeListeners)
+            window.removeEventListener(this.#Event, this.#InvokeListeners, options)
         })
     }
 }

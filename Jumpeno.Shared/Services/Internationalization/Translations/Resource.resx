@@ -543,9 +543,6 @@
   <data name="Invalid token." xml:space="preserve">
     <value />
   </data>
-  <data name="Account activated." xml:space="preserve">
-    <value />
-  </data>
   <data name="Jumpeno password reset" xml:space="preserve">
     <value />
   </data>
@@ -586,6 +583,42 @@
     <value />
   </data>
   <data name="We apologize, you are not logged in." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value />
+  </data>
+  <data name="My profile" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value />
+  </data>
+  <data name="User menu" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Admin menu" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Try again" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Account activated" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Account not activated" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Resend link" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Account already activated." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Activation email sent." xml:space="preserve">
     <value />
   </data>
 </root>

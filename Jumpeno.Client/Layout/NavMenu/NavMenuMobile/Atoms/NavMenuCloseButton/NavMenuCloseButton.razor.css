@@ -59,6 +59,12 @@
 }
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (max-width: 280px) {
+    .nav-menu-close-button {
+        margin-right: -8px;
+    }
+}
+
 @media (min-width: 768px) {
     .nav-menu-close-button {
         right: calc(var(--size-container-padding-tablet) * 1px);

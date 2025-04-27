@@ -1,0 +1,17 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+<div class="@ComputeClass()">
+    @if (Displayed) { <div id="@ID_START" class="@CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID_OPTIONS)" /> }
+    <button type="@BUTTON_TYPE.BUTTON.StringLower()" id="@ID_BUTTON" class="@CLASS_BUTTON" @onclick="Open" aria-label="@ComputeLabel()">
+        @DropDownButton
+    </button>
+    <div class="@CLASS_MENU">
+        <div class="@CLASS_MARK" />
+        <div id="@ID_OPTIONS" class="@CLASS_OPTIONS">
+            @Options
+        </div>
+    </div>
+    @if (Displayed) { <div id="@ID_END" class="@CLASS_END" tabindex="0" @onfocus="() => ActionHandler.SetFocus(ID_BUTTON)" /> }
+</div>

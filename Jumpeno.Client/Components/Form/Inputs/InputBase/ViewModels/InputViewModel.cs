@@ -28,6 +28,7 @@ public class InputViewModel<T> {
     public readonly T DefaultValue;
     public T Value { get; private set; }
     public readonly EventDelegate<T> OnChange;
+    public readonly EmptyDelegate OnEnter;
 
     public readonly InputErrorViewModel Error;
     public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) => viewModel?.Error;
@@ -57,6 +58,7 @@ public class InputViewModel<T> {
         DefaultValue = ConstrainedValue(@params.DefaultValue);
         Value = DefaultValue;
         OnChange = @params.OnChange is null ? new(v => {}) : @params.OnChange;
+        OnEnter = @params.OnEnter is null ? new(() => {}) : @params.OnEnter;
         
         Error = new InputErrorViewModel();
     }

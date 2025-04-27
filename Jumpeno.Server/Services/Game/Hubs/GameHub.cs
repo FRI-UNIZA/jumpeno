@@ -72,8 +72,8 @@ public class GameHub : Hub {
             throw new CoreException(new Error(GameValidator.CODE, "Code not set!"));
         var code = $"{queryCode}";
         // 2.2) User:
-        if (!ctx.Request.Query.TryGetValue(UserValidator.NAME, out var queryUser))
-            throw new CoreException(new Error(UserValidator.NAME, "User undefined!"));
+        if (!ctx.Request.Query.TryGetValue(nameof(User), out var queryUser))
+            throw new CoreException(new Error(nameof(User), "User undefined!"));
         var user = JsonSerializer.Deserialize<User>(queryUser!)!;
         // 2.3) Touch device:
         if (!ctx.Request.Query.TryGetValue(nameof(Connection.Device), out var queryDevice))
