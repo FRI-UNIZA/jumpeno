@@ -11,11 +11,7 @@
     left: 0;
     z-index: var(--z-index-menu);
     transition: transform calc(var(--transition-semi-ultra-fast) * 1ms);
-    box-shadow: 0 0 20px rgba(var(--color-base), 0.8);
-}
-
-.light-theme .nav-menu {
-    box-shadow: 0 0 20px rgba(var(--color-base), 0.3);
+    box-shadow: var(--shadow-nav-menu);
 }
 
 .nav-menu::before {

@@ -36,7 +36,6 @@ public partial class UserProfileModal {
         await PageLoader.Show(PAGE_LOADER_TASK.PROFILE);
         await LoadModal();
         await PageLoader.Hide(PAGE_LOADER_TASK.PROFILE);
-        // NOTE: Focus modal from refresh button:
         if (!IsError) ActionHandler.SetFocus(ModalRef.ID_DIALOG);
     }
 

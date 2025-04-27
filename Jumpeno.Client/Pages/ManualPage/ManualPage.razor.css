@@ -55,10 +55,7 @@
 }
 ::deep .manual-background .background-element {
     border-radius: 16px;
-    box-shadow: 0 12px 26px 5px rgba(var(--color-base), 0.4);
-}
-.light-theme * ::deep .manual-background .background-element {
-    box-shadow: 0 12px 20px 3px rgba(var(--color-base), 0.25);
+    box-shadow: var(--shadow-manual);
 }
 
 .manual-image-section {

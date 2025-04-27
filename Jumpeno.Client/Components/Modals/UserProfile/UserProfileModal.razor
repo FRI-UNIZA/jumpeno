@@ -3,7 +3,7 @@
 <Modal
     @ref="@ModalRef"
     Label="@I18N.T("My profile")"
-    MinWidth="500px"
+    MinWidth="460px"
     MaxWidth="1200px"
     NoFooter
 >
@@ -28,7 +28,7 @@
                                 <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
                                 @I18N.T("Account not activated")
                             </Paragraph>
-                            <Button Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
+                            <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
                                 <Text>@I18N.T("Resend link")</Text>
                             </Button>
                         </div>
@@ -37,7 +37,7 @@
         } else {
             <div class="modal-error-content">
                 <Paragraph Size="TEXT_SIZE.L" Class="modal-error-text">@I18N.T("Something went wrong.")</Paragraph>
-                <Button Size="BUTTON_SIZE.S" OnClick="Refresh">
+                <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="Refresh">
                     <Icon><AntIcon Type="sync" Theme="outline" /></Icon>
                     <Text>@I18N.T("Try again")</Text>
                 </Button>

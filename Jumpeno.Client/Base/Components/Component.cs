@@ -1,6 +1,17 @@
 namespace Jumpeno.Client.Base;
 
 public class Component : ComponentBase {
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [Parameter]
+    public string Class { get; set; } = "";
+
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    protected virtual CSSClass ComputeClass(string className = "") {
+        var c = new CSSClass(className);
+        c.Set(Class);
+        return c;
+    }
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private bool ParametersSet = false;
     protected sealed override void OnParametersSet() {

@@ -10,12 +10,12 @@ public class MainLayoutViewModel(MainLayout layout) {
     public void ShowNavigation() {
         NavigationDisplayed = true;
         Padding = true;
-        Layout.ChangeState();
+        Layout.NotifyState();
     }
 
     public void HideNavigation(bool keepPadding = true) {
         NavigationDisplayed = false;
         Padding = keepPadding;
-        Layout.ChangeState();
+        Layout.NotifyState();
     }
 }

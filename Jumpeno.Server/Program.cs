@@ -117,14 +117,14 @@ builder.Services.AddDbContextFactory<DB>(DB.Setup);
 var app = builder.Build();
 
 // Database migrations
-using (var scope = app.Services.CreateScope()) {
-    var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
-    while (!dbContext.Database.CanConnect()) {
-        Console.WriteLine("Waiting for database connection...");
-        await Task.Delay(5000);
-    }
-    dbContext.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope()) {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
+//     while (!dbContext.Database.CanConnect()) {
+//         Console.WriteLine("Waiting for database connection...");
+//         await Task.Delay(5000);
+//     }
+//     dbContext.Database.Migrate();
+// }
 
 // Apply the CORS middleware
 app.UseCors(ORIGIN_POLICY);

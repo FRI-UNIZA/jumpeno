@@ -4,14 +4,11 @@ namespace Jumpeno.Client.Themes;
 
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string NAME = typeof(ThemeProvider).Name;
+    public static readonly string NAME = nameof(ThemeProvider);
     public const string TEMPLATE_NAMESPACE = "Constants";
-    public static readonly BaseTheme DARK_THEME = new DarkTheme();
-    public static readonly BaseTheme LIGHT_THEME = new LightTheme();
-    public static readonly BaseTheme DEFAULT_THEME = DARK_THEME;
     public const string CLASSNAME_NO_THEME = "no-theme";
     public const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
-    public static bool THEME_AUTODETECT { get; private set; } // Set in appsettings.json
+    public static bool THEME_AUTODETECT { get; private set; }
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -22,7 +19,7 @@ public partial class ThemeProvider {
         get { return RequestStorage.Get<ThemeProvider>(NAME); }
         set { if (value == null) RequestStorage.Delete(NAME); else RequestStorage.Set(NAME, value); }
     }
-    private BaseTheme Theme = DEFAULT_THEME;
+    private BaseTheme Theme = THEME.DEFAULT;
     public static string ThemeCSSClass(string classname) {
         return $"{HttpUtility.HtmlEncode(classname).Replace("Theme", "").ToLower()}-theme";
     }
@@ -31,14 +28,14 @@ public partial class ThemeProvider {
     }
     public static string ThemeCSSClass() {
         var instance = Instance;
-        if (instance == null) return ThemeCSSClass(DEFAULT_THEME);
+        if (instance == null) return ThemeCSSClass(THEME.DEFAULT);
         return ThemeCSSClass(instance.Theme);
     }
     public static string ServerBodyClass() {
         var c = new CSSClass();
         var cookie = GetThemeCookie();
         if (cookie is null) {
-            c.Set(ThemeCSSClass(DEFAULT_THEME));
+            c.Set(ThemeCSSClass(THEME.DEFAULT));
             c.Set(CLASSNAME_NO_THEME);
         } else {
             c.Set(ThemeCSSClass(cookie));
@@ -53,12 +50,12 @@ public partial class ThemeProvider {
         var cookie = GetThemeCookie();
         if (THEME_AUTODETECT && cookie is null) {
             if (AppEnvironment.IsServer) {
-                Theme = DEFAULT_THEME;
+                Theme = THEME.DEFAULT;
             } else {
-                Theme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? DARK_THEME : LIGHT_THEME;
+                Theme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? THEME.DARK : THEME.LIGHT;
             }
         } else if (cookie is null) {
-            Theme = DEFAULT_THEME;
+            Theme = THEME.DEFAULT;
         } else {
             Theme = CreateThemeByName(cookie);
             if (!AppEnvironment.IsServer) {
@@ -98,7 +95,7 @@ public partial class ThemeProvider {
             var type = Type.GetType(fullyQualifiedName)!;
             return (BaseTheme) Activator.CreateInstance(type)!;
         } catch {
-            return DEFAULT_THEME;
+            return THEME.DEFAULT;
         }
     }
 
@@ -114,9 +111,7 @@ public partial class ThemeProvider {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangeTheme(BaseTheme theme) {
         try {
-            if (AppEnvironment.IsServer) {
-                throw new InvalidOperationException("Changing theme not allowed on the server!");
-            }
+            if (AppEnvironment.IsServer) throw new InvalidOperationException("Changing theme not allowed on the server!");
             if (theme.GetType().Name == Theme.GetType().Name) return;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
             await Task.Delay(Theme.TRANSITION_FAST);

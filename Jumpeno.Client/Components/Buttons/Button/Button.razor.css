@@ -23,6 +23,51 @@
     --button-transition-properties: color, background-color, box-shadow;
 }
 
+/* Variants ---------------------------------------------------------------------------------------------------------------------------- */
+.variant-primary ::deep > * > .surface-all {
+    --button-color: rgba(var(--color-button-primary));
+    --button-color-transition: rgba(var(--color-button-primary));
+    --button-background: rgba(var(--color-button-primary-surface));
+    --button-background-transition: rgba(var(--color-button-primary-surface-highlight));
+}
+.variant-primary:not(.no-shadow) ::deep > * > .surface-all {
+    --button-box-shadow: var(--shadow-button-primary);
+    --button-box-shadow-transition: var(--shadow-button-primary-transition);
+}
+
+.variant-secondary ::deep > * > .surface-all {
+    --button-color: rgba(var(--color-button-secondary));
+    --button-color-transition: rgba(var(--color-button-secondary));
+    --button-background: rgba(var(--color-button-secondary-surface));
+    --button-background-transition: rgba(var(--color-button-secondary-surface-highlight));
+}
+.variant-secondary:not(.no-shadow) ::deep > * > .surface-all {
+    --button-box-shadow: var(--shadow-button-secondary);
+    --button-box-shadow-transition: var(--shadow-button-secondary-transition);
+}
+
+.variant-tertiary ::deep > * > .surface-all {
+    --button-color: rgba(var(--color-button-tertiary));
+    --button-color-transition: rgba(var(--color-button-tertiary));
+    --button-background: rgba(var(--color-button-tertiary-surface));
+    --button-background-transition: rgba(var(--color-button-tertiary-surface-highlight));
+}
+.variant-tertiary:not(.no-shadow) ::deep > * > .surface-all {
+    --button-box-shadow: var(--shadow-button-tertiary);
+    --button-box-shadow-transition: var(--shadow-button-tertiary-transition);
+}
+
+.variant-quaternary ::deep > * > .surface-all {
+    --button-color: rgba(var(--color-button-quaternary));
+    --button-color-transition: rgba(var(--color-button-quaternary));
+    --button-background: rgba(var(--color-button-quaternary-surface));
+    --button-background-transition: rgba(var(--color-button-quaternary-surface-highlight));
+}
+.variant-quaternary:not(.no-shadow) ::deep > * > .surface-all {
+    --button-box-shadow: var(--shadow-button-quaternary);
+    --button-box-shadow-transition: var(--shadow-button-quaternary-transition);
+}
+
 /* Sizes ------------------------------------------------------------------------------------------------------------------------------- */
 .size-s ::deep > * > .surface-all {
     --button-height: 41px;
@@ -46,108 +91,4 @@
     --button-icon-size: 26px;
     --button-padding: 17px 34px;
     --button-gap: 11px;
-}
-
-/* DarkTheme --------------------------------------------------------------------------------------------------------------------------- */
-.variant-primary ::deep > * > .surface-primary {
-    --button-color: rgb(var(--color-secondary));
-    --button-color-transition: rgb(var(--color-secondary));
-    --button-background: rgb(var(--color-secondary-surface));
-    --button-background-transition: rgb(var(--color-secondary-surface-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.55);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.5);
-}
-.variant-secondary ::deep > * > .surface-primary {
-    --button-color: rgb(var(--color-primary));
-    --button-color-transition: rgb(var(--color-primary));
-    --button-background: rgb(var(--color-secondary-accent));
-    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-
-.variant-primary ::deep > * > .surface-secondary {
-    --button-color: rgb(var(--color-secondary-surface));
-    --button-color-transition: rgb(var(--color-secondary-surface));
-    --button-background: rgb(var(--color-secondary));
-    --button-background-transition: rgb(var(--color-secondary-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.55);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.5);
-}
-.variant-secondary ::deep > * > .surface-secondary {
-    --button-color: rgb(var(--color-primary));
-    --button-color-transition: rgb(var(--color-primary));
-    --button-background: rgb(var(--color-secondary-accent));
-    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-
-.variant-primary ::deep > * > .surface-floating {
-    --button-color: rgb(var(--color-floating-surface));
-    --button-color-transition: rgb(var(--color-floating-surface));
-    --button-background: rgb(var(--color-floating));
-    --button-background-transition: rgba(var(--color-floating), 0.9);
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
-}
-.variant-secondary ::deep > * > .surface-floating {
-    --button-color: rgb(var(--color-floating));
-    --button-color-transition: rgb(var(--color-floating));
-    --button-background: rgba(var(--color-floating-shade), 0.5);
-    --button-background-transition: rgba(var(--color-floating-shade), 0.8);
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
-}
-
-/* LightTheme -------------------------------------------------------------------------------------------------------------------------- */
-.light-theme .variant-primary ::deep > * > .surface-primary {
-    --button-color: rgb(var(--color-secondary));
-    --button-color-transition: rgb(var(--color-secondary));
-    --button-background: rgb(var(--color-secondary-surface));
-    --button-background-transition: rgb(var(--color-secondary-surface-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-.light-theme .variant-secondary ::deep > * > .surface-primary {
-    --button-color: rgb(var(--color-primary));
-    --button-color-transition: rgb(var(--color-primary));
-    --button-background: rgb(var(--color-secondary-accent));
-    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-
-.light-theme .variant-primary ::deep > * > .surface-secondary {
-    --button-color: rgb(var(--color-secondary-surface));
-    --button-color-transition: rgb(var(--color-secondary-surface));
-    --button-background: rgba(var(--color-secondary), 0.9);
-    --button-background-transition: rgba(var(--color-secondary-highlight), 0.9);
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-.light-theme .variant-secondary ::deep > * > .surface-secondary {
-    --button-color: rgb(var(--color-primary));
-    --button-color-transition: rgb(var(--color-primary));
-    --button-background: rgb(var(--color-secondary-accent));
-    --button-background-transition: rgb(var(--color-secondary-accent-highlight));
-    --button-box-shadow: 0px 2px 4px rgba(var(--color-base), 0.35);
-    --button-box-shadow-transition: 0px 2px 4px rgba(var(--color-base), 0.3);
-}
-
-.light-theme .variant-primary ::deep > * > .surface-floating {
-    --button-color: rgb(var(--color-floating-surface));
-    --button-color-transition: rgb(var(--color-floating-surface));
-    --button-background: rgb(var(--color-floating));
-    --button-background-transition: rgba(var(--color-floating), 0.9);
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
-}
-.light-theme .variant-secondary ::deep > * > .surface-floating {
-    --button-color: rgb(var(--color-floating));
-    --button-color-transition: rgb(var(--color-floating));
-    --button-background: rgba(var(--color-floating-shade), 0.5);
-    --button-background-transition: rgba(var(--color-floating-shade), 0.8);
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
 }

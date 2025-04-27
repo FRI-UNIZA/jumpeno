@@ -18,7 +18,7 @@ public class Program {
 
     // Paths ------------------------------------------------------------------------------------------------------------------------------
     private static readonly string ROOT = $"{Directory.GetCurrentDirectory()}/..";
-    private static readonly string CLASS_DIR = $"{ROOT}/Jumpeno.Client/Themes/Constants";
+    private static readonly string CLASS_DIR = $"{ROOT}/Jumpeno.Client/Themes/Themes";
     private const string CLASS_NAMESPACE = "Jumpeno.Client.Constants";
     private static readonly string CSS_PATH = $"{ROOT}/Jumpeno.Client/wwwroot/css/theme.css";
 
@@ -36,7 +36,8 @@ public class Program {
     private static (string Path, string Usings)[] DEPENDENCIES = [
         ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/SCROLLAREA_THEME.cs", ""),
         ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
-        ($"{ROOT}/Jumpeno.Client/Themes/Constants/BaseTheme.cs", USINGS)
+        ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBAColor.cs", "using System; using System.Text.Json.Serialization;"),
+        ($"{ROOT}/Jumpeno.Client/Themes/Themes/BaseTheme.cs", USINGS)
     ];
 
     // Generators -------------------------------------------------------------------------------------------------------------------------

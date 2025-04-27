@@ -100,7 +100,7 @@ public static class AuthPage {
 
     public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false) {
         Cache = true;
-        await Navigator.NavigateTo(url, forceLoad, replace);
+        await Navigator.NavigateTo(url, forceLoad, replace, NOTIFY.ALL);
         Cache = false;
     }
 }

@@ -17,7 +17,7 @@
     overflow: hidden;
     border: 6px solid rgb(var(--color-base-invert));
     box-shadow: 0 1px 8px 1px rgba(var(--color-base), 0.7);
-    background-color: rgb(var(--color-secondary-surface));
+    background-color: rgba(var(--color-profile-background));
 }
 
 ::deep .user-profile-image {
@@ -59,11 +59,6 @@
     align-items: center;
     gap: 12px;
     padding-top: 12px;
-}
-
-/* Themes ------------------------------------------------------------------------------------------------------------------------------ */
-.light-theme .user-profile-image-wrap {
-    background-color: rgba(var(--color-base), 0.25);
 }
 
 /* Error ------------------------------------------------------------------------------------------------------------------------------- */

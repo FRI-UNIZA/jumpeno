@@ -91,12 +91,7 @@
     right: var(--dropdown-options-right);
     bottom: -12px;
     border-radius: var(--dropdown-options-radius);
-    box-shadow: 0 0 16px rgba(var(--color-base), 0.3);
+    box-shadow: var(--shadow-dropdown-options);
     background-color: rgb(var(--color-base-invert));
     transform: translate(var(--dropdown-options-translate), 100%);
-}
-
-/* Themes ------------------------------------------------------------------------------------------------------------------------------ */
-.light-theme ::deep .dropdown-options {
-    box-shadow: 0 0 12px rgba(var(--color-base), 0.2);
 }

@@ -27,7 +27,7 @@ public class ButtonComponent : SurfaceComponent {
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     protected RenderFragment Render() => (RenderTreeBuilder builder) => {
         var sequence = 0;
-        builder.OpenComponent<ButtonBase>(sequence++);
+        builder.OpenComponent<ButtonElement>(sequence++);
         builder.AddAttribute(sequence++, "ID", ID);
         builder.AddAttribute(sequence++, "Parameters", Parameters);
         builder.AddAttribute(sequence++, "OnClick", OnClick);

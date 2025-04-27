@@ -6,7 +6,7 @@ public partial class AdminDropDown {
     public const string CLASS_PROFILE_IMAGE = "admin-dropdown-profile-image";
     public const string CLASS_ICON = "admin-dropdown-icon";
     // Duration:
-    public static readonly int TRANSITION_BUTTON = ThemeProvider.DEFAULT_THEME.TRANSITION_SLOW;
+    public static readonly int TRANSITION_BUTTON = THEME.DEFAULT.TRANSITION_SLOW;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private DropDown Ref { get; set; } = null!;
@@ -16,7 +16,7 @@ public partial class AdminDropDown {
     public async ValueTask DisposeAsync() => await Auth.RemoveUpdateListener(StateHasChanged);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task OpenSettings() => await Navigator.NavigateTo(I18N.Link<AdminPage>(), refreshUI: false);
+    public static async Task OpenSettings() => await Navigator.NavigateTo(I18N.Link<AdminPage>());
 
     public static async Task LogOut() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGOUT);

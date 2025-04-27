@@ -6,7 +6,7 @@ public partial class UserDropDown : IAsyncDisposable {
     public const string CLASS_PROFILE_IMAGE = "user-dropdown-profile-image";
     public const string CLASS_ICON = "user-dropdown-icon";
     // Duration:
-    public static readonly int TRANSITION_BUTTON = ThemeProvider.DEFAULT_THEME.TRANSITION_SLOW;
+    public static readonly int TRANSITION_BUTTON = THEME.DEFAULT.TRANSITION_SLOW;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private DropDown Ref { get; set; } = null!;

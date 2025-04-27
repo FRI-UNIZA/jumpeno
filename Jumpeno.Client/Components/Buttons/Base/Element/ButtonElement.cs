@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class ButtonBase {
+public partial class ButtonElement {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME = "button-component";
     public const string CLASSNAME_ELEMENT = "button-element";

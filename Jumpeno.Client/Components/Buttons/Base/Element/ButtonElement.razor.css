@@ -1,9 +1,10 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
 ::deep > .surface-all {
+    /* Size: */
     --button-width: auto;
     --button-height: auto;
     --button-padding: 12px;
-    --button-border-radius: 0px;
+    /* Content: */
     --button-font-family: var(--font-primary);
     --button-font-size: 16px;
     --button-font-weight: 400;
@@ -11,47 +12,26 @@
     --button-icon-size: 24px;
     --button-gap: 8px;
     --button-text-top: 0;
+    /* Color: */
+    --button-color: rgb(var(--color-secondary-accent));
+    --button-color-transition: rgb(var(--color-primary));
+    --button-background: rgb(var(--color-primary));
+    --button-background-transition: rgb(var(--color-secondary-accent));
+    /* Border: */
+    --button-border: none;
+    --button-border-radius: 0px;
+    --button-border-transition: none;
+    /* Shadow: */
+    --button-text-shadow: none;
+    --button-text-shadow-transition: none;
+    --button-box-shadow: none;
+    --button-box-shadow-transition: none;
+    /* Transition: */
     --button-transform: none;
     --button-transform-transition: none;
     --button-transition-properties: color, background-color;
     --button-transition-duration: calc(var(--transition-fast) * 1ms);
     --button-transition-timing: ease;
-}
-::deep > .surface-primary {
-    --button-color: rgb(var(--color-secondary-accent));
-    --button-color-transition: rgb(var(--color-primary));
-    --button-background: rgb(var(--color-primary));
-    --button-background-transition: rgb(var(--color-secondary-accent));
-    --button-border: none;
-    --button-border-transition: none;
-    --button-text-shadow: none;
-    --button-text-shadow-transition: none;
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
-}
-::deep > .surface-secondary {
-    --button-color: rgb(var(--color-primary));
-    --button-color-transition: rgb(var(--color-base));
-    --button-background: rgb(var(--color-secondary));
-    --button-background-transition: rgb(var(--color-secondary-accent));
-    --button-border: none;
-    --button-border-transition: none;
-    --button-text-shadow: none;
-    --button-text-shadow-transition: none;
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
-}
-::deep > .surface-floating {
-    --button-color: rgb(var(--color-floating-surface));
-    --button-color-transition: rgb(var(--color-floating));
-    --button-background: rgb(var(--color-floating));
-    --button-background-transition: rgb(var(--color-floating-accent));
-    --button-border: none;
-    --button-border-transition: none;
-    --button-text-shadow: none;
-    --button-text-shadow-transition: none;
-    --button-box-shadow: none;
-    --button-box-shadow-transition: none;
 }
 
 /* Styles ----------------------------------------------------------------------------------------------------------------------- */

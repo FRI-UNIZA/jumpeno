@@ -203,7 +203,7 @@ public static class Auth {
     
     // Actions:
     public static async Task LoadProfile() {
-        await ProfileUpdateLock.TryExclusive(async () => {
+        await ProfileUpdateLock.Exclusive(async () => {
             if (AppEnvironment.IsServer) return;
             if (Token.Access.role == ROLE.USER) {
                 // 1.1) Load user profile:
@@ -220,7 +220,7 @@ public static class Auth {
         });
     }
     public static async Task ResetProfile() {
-        await ProfileUpdateLock.TryExclusive(async () => {
+        await ProfileUpdateLock.Exclusive(async () => {
             if (AppEnvironment.IsServer) return;
             User = null!; Admin = null!;
             await InvokeUpdate();

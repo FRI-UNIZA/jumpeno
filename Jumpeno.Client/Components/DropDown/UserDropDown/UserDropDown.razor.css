@@ -13,8 +13,8 @@
 
 .user-dropdown ::deep .dropdown-button {
     border: 3px solid rgba(var(--color-base-invert), 0.9);
-    box-shadow: 0 0 2px 2px rgb(var(--color-primary));
-    background-color: rgb(var(--color-secondary-surface));
+    box-shadow: var(--shadow-user-dropdown-button);
+    background-color: rgba(var(--color-profile-background));
     transition: transform calc(var(--transition-slow) * 1ms),
                 box-shadow calc(var(--transition-fast) * 1ms);
 }
@@ -25,7 +25,7 @@
 
 .user-dropdown ::deep .dropdown-button:focus-visible {
     border: 3px solid rgb(var(--color-base-invert));
-    box-shadow: 0 0 2px 2px rgba(var(--color-base-invert), 0.8);
+    box-shadow: var(--shadow-user-dropdown-button-highlight);
 }
 
 .user-dropdown ::deep .image-component.user-dropdown-profile-image {
@@ -39,17 +39,6 @@
 
 .user-dropdown ::deep .user-dropdown-icon {
     margin-right: 10px;
-}
-
-/* Themes ------------------------------------------------------------------------------------------------------------------------------ */
-.light-theme .user-dropdown ::deep .dropdown-button {
-    background-color: rgba(var(--color-base), 0.25);
-    box-shadow: 0 0 3px 2px rgba(var(--color-primary), 0.5);
-}
-
-.light-theme .user-dropdown ::deep .dropdown-button:focus-visible {
-    border: 3px solid rgb(var(--color-base-invert));
-    box-shadow: 0 0 3px 3px rgba(var(--color-base), 0.5);
 }
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */

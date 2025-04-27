@@ -17,16 +17,24 @@ public class LayoutBase : LayoutComponentBase {
     }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    public virtual void Notify() {
+    public virtual void NotifyAll() {
         Key = !Key;
         ContentKey = !ContentKey;
         StateHasChanged();
     }
 
-    public void NotifyContent() {
+    public virtual void NotifyPage() {
         ContentKey = !ContentKey;
         StateHasChanged();
     }
 
-    public void ChangeState() => StateHasChanged();
+    public virtual void NotifyState() => StateHasChanged();
+
+    public void Notify(NOTIFY notify) {
+        switch (notify) {
+            case NOTIFY.ALL: NotifyAll(); break;
+            case NOTIFY.PAGE: NotifyPage(); break;
+            case NOTIFY.STATE: NotifyState(); break;
+        }
+    }
 }

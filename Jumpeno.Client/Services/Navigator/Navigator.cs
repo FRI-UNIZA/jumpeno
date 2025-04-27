@@ -13,7 +13,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private bool ProgramNavigation;
     private bool SettingQueries;
     private bool Loader = true;
-    private bool RefreshUI = true;
+    private NOTIFY Notify = NOTIFY.PAGE;
     private string PreviousURL;
     private TaskCompletionSource NavigationFinished;
     private const int MIN_LOADING_MS = 100;
@@ -109,8 +109,8 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         }
 
         if (ProgramNavigation) {
-            if (RefreshUI && !SettingQueries && URL.IsLocal(e.Location)) {
-                LayoutBase.Current.Notify();
+            if (!SettingQueries && URL.IsLocal(e.Location)) {
+                LayoutBase.Current.Notify(Notify);
             }
             NavigationFinished.TrySetResult();
         }
@@ -128,7 +128,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ProgramNavigation = false;
         SettingQueries = false;
         Loader = true;
-        RefreshUI = true;
+        Notify = NOTIFY.PAGE;
         IsPopState = false;
         
         foreach (var listener in AfterFinishListeners) {
@@ -141,7 +141,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private async Task Navigate(
         string url,
         bool forceLoad = false, bool replace = false, bool queries = false,
-        bool loader = true, bool refreshUI = true
+        bool loader = true, NOTIFY notify = NOTIFY.PAGE
     ) {
         await NavLock.TryLock();
 
@@ -155,7 +155,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
-        RefreshUI = refreshUI;
+        Notify = notify;
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
@@ -171,15 +171,15 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         await NavigationFinished.Task;
     }
 
-    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false, bool refreshUI = true) {
-        await Instance().Navigate(url, forceLoad, replace, queries: false, true, refreshUI);
+    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false, NOTIFY notify = NOTIFY.PAGE) {
+        await Instance().Navigate(url, forceLoad, replace, queries: false, true, notify);
     }
     public static void Refresh() {
         if (AppEnvironment.IsServer) ServerRefresh();
         else Instance().Manager.Refresh(forceReload: true);
     }
     public static async Task SetQueryParams(QueryParams queryParams) {
-        await Instance().Navigate(URL.SetQueryParams(queryParams), forceLoad: false, replace: true, queries: true, loader: false);
+        await Instance().Navigate(URL.SetQueryParams(queryParams), false, true, true, false, NOTIFY.NONE);
     }
 
     // State ------------------------------------------------------------------------------------------------------------------------------

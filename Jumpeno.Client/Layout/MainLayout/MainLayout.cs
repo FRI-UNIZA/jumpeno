@@ -17,9 +17,9 @@ public partial class MainLayout {
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly MainLayoutViewModel LayoutVM;
-    public override void Notify() {
+    public override void NotifyAll() {
         NavMenuMobileRef?.Notify();
-        base.Notify();
+        base.NotifyAll();
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

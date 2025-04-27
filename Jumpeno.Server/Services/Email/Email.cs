@@ -13,7 +13,7 @@ public static class Email {
 
     // Prepared content -------------------------------------------------------------------------------------------------------------------
     public static string LINK_CONTENT(string title, string paragraph, string button, string link) {
-        var theme = ThemeProvider.DEFAULT_THEME;
+        var theme = THEME.DEFAULT;
         var text = $"<h1>{title}</h1>";
         text += $"<p>{paragraph}</p>";
         text += $"<a href=\"{link}\" class=\"email-link\">{button}</a>";
@@ -22,14 +22,14 @@ public static class Email {
         text +=     $"p {{ font-family: {theme.FONT_PRIMARY}; font-size: 14px; margin: 0; }}";
         text +=     ".email-link {";
         text +=         "display: inline-flex; padding: 12px 18px; border-radius: 100px;";
-        text +=         $"background-color: rgb({theme.COLOR_BASE_ACCENT}); color: rgb({theme.COLOR_BASE}); cursor: pointer;";
+        text +=         $"background-color: rgb({theme.COLOR_SECONDARY_ACCENT}); color: rgb({theme.COLOR_PRIMARY}); cursor: pointer;";
         text +=         $"box-shadow: 0 1px 2px rgba({theme.COLOR_BASE}, 0.5);";
         text +=         $"font-family: {theme.FONT_PRIMARY}; font-size: 14px; font-weight: bold; text-decoration: none; letter-spacing: 0.8px;";
         text +=         "margin-top: 16px;";
         text +=         "transition: background-color 200ms;";
         text +=     "}";
         text +=     ".email-link:hover {";
-        text +=         $"background-color: rgb({theme.COLOR_BASE_ACCENT_HIGHLIGHT})";
+        text +=         $"background-color: rgb({theme.COLOR_SECONDARY_ACCENT_HIGHLIGHT})";
         text +=     "}";
         text += "</style>";
         return text;
