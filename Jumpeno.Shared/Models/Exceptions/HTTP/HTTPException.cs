@@ -10,6 +10,9 @@ public class HTTPException : Exception {
     // Code -------------------------------------------------------------------------------------------------------------------------------
     public int Code { get; set; }
 
+    // Client -----------------------------------------------------------------------------------------------------------------------------
+    public bool Client { get; private set; }
+
     // Headers ----------------------------------------------------------------------------------------------------------------------------
     public HttpResponseHeaders Headers { get; }
     public string? Header(string key) {
@@ -54,13 +57,18 @@ public class HTTPException : Exception {
     public void SetInner(Exception inner) => Reflex.SetField(typeof(Exception), this, "_innerException", inner);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public HTTPException(
-        int code = DEFAULT_CODE,
+    [JsonConstructor]
+    [Newtonsoft.Json.JsonConstructor]
+    protected HTTPException(
+        int code = DEFAULT_CODE, bool client = false,
         HttpResponseHeaders? headers = null, HttpContentHeaders? contentHeaders = null,
         string? message = null, List<Error>? errors = null, IDictionary? data = null
     ) {
         // Set code:
         Code = code;
+
+        // Set client:
+        Client = client;
 
         // Set headers:
         if (headers is not null) Headers = headers;
@@ -71,6 +79,7 @@ public class HTTPException : Exception {
         // Set message:
         if (message is not null) Message = message;
         else Message = DEFAULT_MESSAGE;
+        if (Client) Message = I18N.T(Message, unsplit: true);
 
         // Set errors:
         if (errors is not null) Errors = errors;
@@ -81,6 +90,12 @@ public class HTTPException : Exception {
         else Data = new Dictionary<object, object>();
     }
 
+    public HTTPException(
+        int code = DEFAULT_CODE,
+        HttpResponseHeaders? headers = null, HttpContentHeaders? contentHeaders = null,
+        string? message = null, List<Error>? errors = null, IDictionary? data = null
+    ) : this(code, AppEnvironment.IsClient, headers, contentHeaders, message, errors, data) {}
+
     public HTTPException(CoreException e, HttpResponseHeaders? headers = null, HttpContentHeaders? contentHeaders = null)
-    : this(e.Code, headers, contentHeaders, e.Message, e.Errors, e.Data) {}
+    : this(e.Code, AppEnvironment.IsClient, headers, contentHeaders, e.Message, e.Errors, e.Data) {}
 }

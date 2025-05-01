@@ -8,17 +8,19 @@ public class CoreException : Exception {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public int Code { get; set; } = DEFAULT_CODE;
     public List<Error> Errors { get; private set; }
+    public bool Client { get; private set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    protected CoreException(int code, string message, List<Error> errors) : base(message) { Code = code; Errors = errors; }
-    public CoreException() : base(DEFAULT_MESSAGE) => Errors = [];
+    [Newtonsoft.Json.JsonConstructor]
+    protected CoreException(int code, string message, List<Error> errors, bool client) : base(message) { Code = code; Errors = errors; Client = client; }
+    public CoreException() : base(DEFAULT_MESSAGE) { Errors = []; Client = AppEnvironment.IsClient; }
     public CoreException(Error error) : this([error]) {}
-    public CoreException(List<Error> errors) : base(DEFAULT_MESSAGE) => Errors = errors;
+    public CoreException(List<Error> errors) : base(DEFAULT_MESSAGE) { Errors = errors; Client = AppEnvironment.IsClient; }
 
     // Message ----------------------------------------------------------------------------------------------------------------------------
     public CoreException SetCode(int code) { Code = code; return this; }
-    public CoreException SetMessage(string message) { Reflex.SetField(typeof(Exception), this, "_message", message); return this; }
+    public CoreException SetMessage(string message) { Reflex.SetField(typeof(Exception), this, "_message", Client ? I18N.T(message, unsplit: true) : message); return this; }
 
     // Errors -----------------------------------------------------------------------------------------------------------------------------
     public void Add(Error error) => Errors.Add(error);

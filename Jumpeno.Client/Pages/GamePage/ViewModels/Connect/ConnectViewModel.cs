@@ -106,7 +106,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.URL), q);
             // 2) Create HUB:
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
-                if (Auth.IsRegisteredUser) options.Headers[HEADER.AUTHORIZATION] = Token.Access.raw;
+                try { options.Headers[HEADER.AUTHORIZATION] = Token.Access.raw; } catch {}
                 options.Headers[HEADER.ACCEPT_LANGUAGE] = I18N.Culture;
             }).Build();
             // 3) Add events:
@@ -120,7 +120,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             HubConnection.Closed += OnConnectionClosed;
             // 4) Connect:
             await HubConnection.StartAsync();
-        } catch (Exception e) {
+        } catch {
             await DisposeHub();
         }
         return IsConnected;
