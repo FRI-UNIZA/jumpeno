@@ -4,7 +4,7 @@ public class APIMiddleware(RequestDelegate next) {
     private readonly RequestDelegate Next = next;
 
     public async Task InvokeAsync(HttpContext ctx) {
-        if (!ctx.Request.Path.StartsWithSegments(AppSettings.Api.Base.Prefix, StringComparison.OrdinalIgnoreCase)) {
+        if (!ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX, StringComparison.OrdinalIgnoreCase)) {
             await Next(ctx); return;
         }
         // Get endpoint metadata:

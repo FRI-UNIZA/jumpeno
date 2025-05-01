@@ -2,9 +2,7 @@ namespace Jumpeno.Shared.Constants;
 
 public static class GAME_HUB {
     // Routes -----------------------------------------------------------------------------------------------------------------------------
-    public static readonly string ROUTE_EN = $"/en{HUB.PREFIX}{AppSettings.Hub.Game.URL}";
-    public static readonly string ROUTE_SK = $"/sk{HUB.PREFIX}{AppSettings.Hub.Game.URL}";
-    public static readonly Func<string> ROUTE_CULTURE = () => $"{HUB.CULTURE_PREFIX}{AppSettings.Hub.Game.URL}";
+    public static string URL => HUB.BASE.GAME;
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
     public const string KEY_UPDATE = "KeyUpdate";

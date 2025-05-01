@@ -40,7 +40,7 @@ if (builder.Environment.IsProduction()) {
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews(options => {
-    options.Conventions.Add(new ApiRoutePrefixConvention(AppSettings.Api.Base.Prefix));
+    options.Conventions.Add(new ApiRoutePrefixConvention(API.BASE.PREFIX));
 }).AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -54,7 +54,7 @@ if (builder.Environment.IsDevelopment()) {
 
         // Enable JWT Authentication in Swagger:
         options.AddSecurityDefinition(AUTH.BEARER, new OpenApiSecurityScheme {
-            Name = AUTH.HEADER,
+            Name = HEADER.AUTHORIZATION,
             Type = SecuritySchemeType.Http,
             Scheme = AUTH.BEARER,
             BearerFormat = AUTH.JWT,
@@ -146,8 +146,8 @@ AppEnvironment.Init(
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
         if (ctx == null) return false;
-        return ctx.Request.Path.StartsWithSegments(AppSettings.Api.Base.Prefix)
-            || ctx.Request.Path.StartsWithSegments(HUB.CULTURE_PREFIX);
+        return ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX)
+            || ctx.Request.Path.StartsWithSegments(HUB.BASE.PREFIX);
     },
     builder.Environment.IsDevelopment,
     T => app.Services.GetService(T)!

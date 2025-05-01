@@ -1,61 +1,65 @@
 namespace Jumpeno.Client.Services;
 
 public static class ErrorHandler {
+    // Translations -----------------------------------------------------------------------------------------------------------------------
+    private static string T(string key, bool translate) => translate ? I18N.T(key, unsplit: true) : key;
+    private static string T(string key, Dictionary<string, string> values, bool translate) => translate ? I18N.T(key, values, unsplit: true) : key;
+
     // Show only message notification -----------------------------------------------------------------------------------------------------
-    public static void Notify(string message) => Notification.Error(I18N.T(message, unsplit: true));
-    public static void Notify(CoreException exception) => Notification.Error(I18N.T(exception.Message, unsplit: true));
-    public static void Notify(CoreExceptionDTO exception) => Notification.Error(I18N.T(exception.Message, unsplit: true));
-    public static void Notify(HTTPException exception) => Notification.Error(I18N.T(exception.Message, unsplit: true));
+    public static void Notify(string message, bool translate = false) => Notification.Error(T(message, translate));
+    public static void Notify(CoreException exception, bool translate = false) => Notification.Error(T(exception.Message, translate));
+    public static void Notify(CoreExceptionDTO exception, bool translate = false) => Notification.Error(T(exception.Message, translate));
+    public static void Notify(HTTPException exception, bool translate = false) => Notification.Error(T(exception.Message, translate));
 
     // Show all error notifications -------------------------------------------------------------------------------------------------------
-    public static void NotifyErrors(List<Error> errors, string? fallback = null) {
-        if (errors.Count == 0 && fallback != null) Notify(fallback);
+    public static void NotifyErrors(List<Error> errors, string? fallback = null, bool translate = false) {
+        if (errors.Count == 0 && fallback != null) Notify(fallback, translate);
         foreach (var error in errors) {
-            Notification.Error(I18N.T(error.Message, error.Values, unsplit: true));
+            Notification.Error(T(error.Message, error.Values, translate));
         }
     }
-    public static void NotifyErrors(CoreException exception, bool fallback = false)
-        => NotifyErrors(exception.Errors, fallback ? exception.Message : null);
-    public static void NotifyErrors(CoreExceptionDTO exception, bool fallback = false)
-        => NotifyErrors(exception.Errors, fallback ? exception.Message : null);
-    public static void NotifyErrors(HTTPException exception, bool fallback = false)
-        => NotifyErrors(exception.Errors, fallback ? exception.Message : null);
+    public static void NotifyErrors(CoreException exception, bool fallback = false, bool translate = false)
+        => NotifyErrors(exception.Errors, fallback ? exception.Message : null, translate);
+    public static void NotifyErrors(CoreExceptionDTO exception, bool fallback = false, bool translate = false)
+        => NotifyErrors(exception.Errors, fallback ? exception.Message : null, translate);
+    public static void NotifyErrors(HTTPException exception, bool fallback = false, bool translate = false)
+        => NotifyErrors(exception.Errors, fallback ? exception.Message : null, translate);
     
     // Show message and all errors --------------------------------------------------------------------------------------------------------
-    public static void NotifyAll(CoreException exception) {
-        Notify(exception);
-        NotifyErrors(exception);
+    public static void NotifyAll(CoreException exception, bool translate = false) {
+        Notify(exception, translate);
+        NotifyErrors(exception, translate);
     }
-    public static void NotifyAll(CoreExceptionDTO exception) {
-        Notify(exception);
-        NotifyErrors(exception);
+    public static void NotifyAll(CoreExceptionDTO exception, bool translate = false) {
+        Notify(exception, translate);
+        NotifyErrors(exception, translate);
     }
-    public static void NotifyAll(HTTPException exception) {
-        Notify(exception);
-        NotifyErrors(exception);
+    public static void NotifyAll(HTTPException exception, bool translate = false) {
+        Notify(exception, translate);
+        NotifyErrors(exception, translate);
     }
 
     // Mark input fields with matching IDs ------------------------------------------------------------------------------------------------
-    public static void MarkInputs(List<Error> errors) {
+    public static void MarkInputs(List<Error> errors, bool translate = false) {
         foreach (var error in errors) {
-            Input<object>.TrySetError(error);
+            Input<object>.TrySetError(error, translate);
         }
     }
-    public static void MarkInputs(CoreException exception) => MarkInputs(exception.Errors);
-    public static void MarkInputs(CoreExceptionDTO exception) => MarkInputs(exception.Errors);
-    public static void MarkInputs(HTTPException exception) => MarkInputs(exception.Errors);
+    public static void MarkInputs(CoreException exception, bool translate = false) => MarkInputs(exception.Errors, translate);
+    public static void MarkInputs(CoreExceptionDTO exception, bool translate = false) => MarkInputs(exception.Errors, translate);
+    public static void MarkInputs(HTTPException exception, bool translate = false) => MarkInputs(exception.Errors, translate);
 
     // Complex exception handling ---------------------------------------------------------------------------------------------------------
-    public static void Display(CoreException exception) {
-        Notify(exception);
-        MarkInputs(exception);
+    public static void Display(CoreException exception, bool translate = false) {
+        Notify(exception, translate);
+        MarkInputs(exception, translate);
     }
-    public static void Display(CoreExceptionDTO exception) {
-        Notify(exception);
-        MarkInputs(exception);
+    public static void Display(CoreExceptionDTO exception, bool translate = false) {
+        Notify(exception, translate);
+        MarkInputs(exception, translate);
     }
-    public static void Display(HTTPException exception) {
-        Notify(exception);
-        MarkInputs(exception);
+    public static void Display(HTTPException exception, bool translate = false) {
+        Notify(exception, translate);
+        MarkInputs(exception, translate);
     }
 }

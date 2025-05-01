@@ -103,9 +103,12 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             q.Set(nameof(User), JsonSerializer.Serialize(Auth.User));
             q.Set(nameof(Connection.Device), JsonSerializer.Serialize(Window.IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER));
             q.Set(nameof(Spectator), spectator);
-            var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.ROUTE_CULTURE()), q);
+            var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.URL), q);
             // 2) Create HUB:
-            HubConnection = new HubConnectionBuilder().WithUrl(hubURL).Build();
+            HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
+                if (Auth.IsRegisteredUser) options.Headers[HEADER.AUTHORIZATION] = Token.Access.raw;
+                options.Headers[HEADER.ACCEPT_LANGUAGE] = I18N.Culture;
+            }).Build();
             // 3) Add events:
             HubConnection.On<Game, Player?>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
             HubConnection.On<RoundUpdate>(GAME_HUB.ROUND_UPDATE, GameUpdate);
@@ -117,7 +120,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             HubConnection.Closed += OnConnectionClosed;
             // 4) Connect:
             await HubConnection.StartAsync();
-        } catch {
+        } catch (Exception e) {
             await DisposeHub();
         }
         return IsConnected;
@@ -191,8 +194,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             if (exception is null) await DisposeGame();
             else {
                 if (exception.Type == EXCEPTION_TYPE.EXCEPTION) await DisposeGame();
-                ErrorHandler.NotifyErrors(exception, fallback: true);
-                ErrorHandler.MarkInputs(exception);
+                ErrorHandler.NotifyErrors(exception, fallback: true, translate: true);
+                ErrorHandler.MarkInputs(exception, translate: true);
             }
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
         });

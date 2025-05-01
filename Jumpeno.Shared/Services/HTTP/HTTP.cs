@@ -101,7 +101,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 var request = new HttpRequestMessage(method, url);
 
                 // Add authorization:
-                if (URL.IsLocal(url)) try { SetHeader(request, AUTH.HEADER, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
+                if (URL.IsLocal(url)) try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
 
                 // Add body:
                 if (
@@ -113,7 +113,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 }
 
                 // Add headers:
-                SetHeader(request, "Accept-Language", I18N.Culture);
+                SetHeader(request, HEADER.ACCEPT_LANGUAGE, I18N.Culture);
                 if (headers is not null) {
                     foreach (var header in headers) {
                         SetHeader(request, header.Key, header.Value);
@@ -121,7 +121,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 }
 
                 // Add content headers:
-                SetContentHeader(request, "Content-Type", CONTENT_TYPE.JSON);
+                SetContentHeader(request, HEADER.CONTENT_TYPE, CONTENT_TYPE.JSON);
                 if (contentHeaders is not null) {
                     foreach (var header in contentHeaders) {
                         SetContentHeader(request, header.Key, header.Value);

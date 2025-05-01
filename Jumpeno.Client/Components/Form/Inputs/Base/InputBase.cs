@@ -92,10 +92,10 @@ public partial class InputBase<T> {
         return (InputViewModel<T>?) ActiveInputManager.Get(id);
     }
 
-    public static void TrySetError(Error error) {
+    public static void TrySetError(Error error, bool translate = false) {
         InputErrorViewModel? errorVM = InputViewModel<object>.ErrorViewModel(ActiveInputManager.Get(error.ID));
         if (errorVM is null || errorVM.HasError) return;
-        errorVM.SetError(I18N.T(error.Message, error.Values, unsplit: true));
+        errorVM.SetError(translate ? I18N.T(error.Message, error.Values, unsplit: true) : error.Message);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

@@ -4,10 +4,7 @@ namespace Jumpeno.Server.Hubs;
 
 public class GameHub : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(WebApplication app) {
-        app.MapHub<GameHub>(GAME_HUB.ROUTE_EN);
-        app.MapHub<GameHub>(GAME_HUB.ROUTE_SK);
-    }
+    public static void Init(WebApplication app) => app.MapHub<GameHub>(GAME_HUB.URL);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static IHubContext<GameHub> Hub => AppEnvironment.GetService<IHubContext<GameHub>>();

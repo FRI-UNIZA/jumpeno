@@ -1,6 +1,13 @@
 namespace Jumpeno.Shared.Constants;
 
 public static class HUB {
-    public const string PREFIX = "/hub";
-    public static string CULTURE_PREFIX => $"/{I18N.Culture}{PREFIX}";
+    public static class BASE {
+        // URL ----------------------------------------------------------------------------------------------------------------------------
+        public static string PREFIX => AppSettings.Hub.Base.Prefix;
+        public static string URL => $"{AppSettings.Hub.Base.URL}{PREFIX}";
+
+        // Endpoints ----------------------------------------------------------------------------------------------------------------------
+        // Game:
+        public static string GAME => $"{URL}/Game";
+    }
 }

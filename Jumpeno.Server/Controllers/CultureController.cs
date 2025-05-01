@@ -46,8 +46,8 @@ public class CultureController : Controller {
     }
 
     public static string GetCultureString(List<string> languages, string defaultLanguage, HttpContext ctx) {
-        // 1) Page rendering (not API):
-        if (!URL.Path().StartsWith(API.BASE.URL)) {
+        // 1) Page rendering (not API nor HUB):
+        if (!URL.Path().StartsWith(API.BASE.PREFIX) && !URL.Path().StartsWith(HUB.BASE.PREFIX)) {
             // 1.1) Language by domain name:
             if (!I18N.USE_PREFIX) {
                 return I18N.GetLanguage(ctx.Request.Host.ToString());
@@ -66,27 +66,29 @@ public class CultureController : Controller {
 
             // 1.3) Check cookies:
             string? cookie = CookieStorage.Get(COOKIE_FUNCTIONAL.APP_CULTURE);
-            cookie = cookie is not null ? cookie : "null";
+            cookie = $"{cookie}";
             if (languages.Contains(cookie)) {
                 return cookie;
             }
         }
 
-        // 2) Check user settings:
-        string? acceptLanguage = ctx.Request.Headers.AcceptLanguage;
-        if (acceptLanguage is null || acceptLanguage.Trim() == "") {
-            return defaultLanguage;
-        }
-        var preferredLanguages = acceptLanguage.Split(",")
-            .Select(StringWithQualityHeaderValue.Parse)
-            .OrderByDescending(s => s.Quality.GetValueOrDefault(1))
-            .ToArray();
+        // 2) Check Accept-Language (HUB communicates in default):
+        if (!URL.Path().StartsWith(HUB.BASE.PREFIX)) {
+            string? acceptLanguage = ctx.Request.Headers.AcceptLanguage;
+            if (acceptLanguage is null || acceptLanguage.Trim() == "") {
+                return defaultLanguage;
+            }
+            var preferredLanguages = acceptLanguage.Split(",")
+                .Select(StringWithQualityHeaderValue.Parse)
+                .OrderByDescending(s => s.Quality.GetValueOrDefault(1))
+                .ToArray();
 
-        for (var i = 0; i < preferredLanguages.Count(); i++) {
-            string language = preferredLanguages[i].Value;
-            for (var j = 0; j < languages.Count; j++) {
-                if (language.StartsWith(languages[j])) {
-                    return languages[j];
+            for (var i = 0; i < preferredLanguages.Count(); i++) {
+                string language = preferredLanguages[i].Value;
+                for (var j = 0; j < languages.Count; j++) {
+                    if (language.StartsWith(languages[j])) {
+                        return languages[j];
+                    }
                 }
             }
         }
