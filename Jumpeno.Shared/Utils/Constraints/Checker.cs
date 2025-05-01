@@ -15,10 +15,7 @@ public static class Checker {
     public const string FIELD_EXISTS = "Already exists";
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    private static string Name(string name) {
-        if (name != "") name = $" \"{name}\"";
-        return name;
-    }
+    private static string Name(string name) => name != "" ? $" \"{name}\"" : name;
 
     // General ----------------------------------------------------------------------------------------------------------------------------
     public static void Check(bool condition, Error error, string? message = null) {
@@ -183,7 +180,13 @@ public static class Checker {
     }
 
     // Password ---------------------------------------------------------------------------------------------------------------------------
-    public static bool IsPassword(string value) => IsAlphaNum(value, ['.', ',', '-', '_', '@']);
+    public static bool IsBasicPassword(string value) => IsAlphaNum(value, ['.', ',', '-', '_', '@']);
+    public static void CheckBasicPassword(string value, string name = "") {
+        if (IsBasicPassword(value)) return;
+        throw new ArgumentException($"Value{Name(name)} is not a basic password!");
+    }
+
+    public static bool IsPassword(string value) => true;
     public static void CheckPassword(string value, string name = "") {
         if (IsPassword(value)) return;
         throw new ArgumentException($"Value{Name(name)} is not a password!");

@@ -74,6 +74,7 @@ public static class UserValidator {
     public static List<Error> ValidatePassword(string value) {
         var errors = Checker.Validate(value == null, new Error(PASSWORD, Checker.FIELD_UNDEFINED));
         if (errors.Count > 0) return errors; value = $"{value}";
+        Checker.Validate(errors, value.Trim() == "", new Error(PASSWORD, Checker.FIELD_EMPTY));
         Checker.Validate(errors, value.Length < PASSWORD_MIN_LENGTH || PASSWORD_MAX_LENGTH < value.Length, new Error(
             PASSWORD,
             "Length is not between I18N{min} and I18N{max}",

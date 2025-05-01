@@ -26,7 +26,6 @@ public partial class UserLoginForm {
         VMPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD,
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            Trim: true,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Name: nameof(UserValidator.PASSWORD).ToLower(),

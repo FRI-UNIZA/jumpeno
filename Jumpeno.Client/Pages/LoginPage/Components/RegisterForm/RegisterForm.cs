@@ -43,7 +43,6 @@ public partial class RegisterForm {
         VMPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD,
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            Trim: true,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Name: nameof(UserValidator.PASSWORD).ToLower(),
@@ -61,7 +60,6 @@ public partial class RegisterForm {
         VMConfirmPassword = new(new InputViewModelTextParams(
             ID: UserValidator.PASSWORD_CONFIRM,
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            Trim: true,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Name: nameof(UserValidator.PASSWORD_CONFIRM).ToLower(),
