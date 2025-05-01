@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 using System.Reflection;
 
-public partial class ModalProvider : IDisposable {
+public partial class ModalProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME_MODAL_PROVIDER_CONTENT = "modal-provider-content";
     // Timing:
@@ -29,11 +29,10 @@ public partial class ModalProvider : IDisposable {
         JS.InvokeVoid(JSModal.Init);
     }
 
-    public void Dispose() {
+    protected override void OnComponentDispose() {
         ModalLock.Dispose();
         ElementLock.Dispose();
         Disposed = true;
-        GC.SuppressFinalize(this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

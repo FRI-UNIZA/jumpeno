@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.ViewModels;
 
-#pragma warning disable CA1816
-
 public class ConnectViewModel(ConnectViewModelParams @params) {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string WATCH_QUERY = "watch";
@@ -14,6 +12,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     public static bool RunPresentation => IsPresentation && CookieStorage.CookiesAccepted;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
+    public bool Create { get; private set; } = @params.Create;
     private string URLCode => @params.URLCode() ?? "";
     private readonly EventDelegate<GameViewModel> OnConnect = @params.OnConnect ?? EventDelegate<GameViewModel>.EMPTY;
     private readonly EmptyDelegate OnDisconnect = @params.OnDisconnect ?? EmptyDelegate.EMPTY;
@@ -26,8 +25,6 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private bool IsConnected => HubConnection is not null && HubConnection.State == HubConnectionState.Connected;
     private bool IsConnecting = false;
     private readonly LockerSlim ConnectLock = new();
-    // History:
-    private record GamePageHistoryState(bool WasRedirect);
     // Game:
     private GameViewModel? GameVM = null;
     private TaskCompletionSource? GameViewTCS = new();
@@ -62,7 +59,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private event Func<string, Task>? URLCodeChanged;
     private readonly LockerSlim URLCodeChangedLock = new();
     private async Task InvokeURLCodeChanged(bool request = false) {
-        if (IsConnecting) return;
+        if (IsConnecting || await PageLoader.IsActiveTask(PAGE_LOADER_TASK.ANIMATION)) return;
         await URLCodeChangedLock.TryExclusive(async () => {
             if (URLCodeChanged == null || (!request && LastURLCode == URLCode)) return;
             await URLCodeChanged.Invoke(URLCode);
@@ -140,17 +137,18 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 await GameVM.PreRender();
 
                 // 2) Set URL:
-                var state = Navigator.State<GamePageHistoryState>();
+                var state = Navigator.State(GamePage.DEFAULT_HISTORY_STATE);
                 bool isCodeSet = URLCode != "";
                 var query = !GameVM.IsPlayer && IsPresentation ? $"?{PRESENT_QUERY}=true" : "";
-                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>([""]), replace: true, notify: NOTIFY.NONE);
+                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>(), replace: true, notify: NOTIFY.STATE);
                 else await Navigator.SetQueryParams(new());
+                Navigator.SetState(new GamePage.HistoryState(state.WasRedirect, Create));
                 await Navigator.NavigateTo(
                     URL.WithQuery(I18N.Link<GamePage>([GameVM.Game.Code]), query),
                     replace: state.WasRedirect && isCodeSet,
-                    notify: NOTIFY.NONE
+                    state: new GamePage.HistoryState(true, Create),
+                    notify: NOTIFY.STATE
                 );
-                Navigator.SetState<GamePageHistoryState>(new(true));
 
                 // 3) Update and render:
                 GameViewTCS = new TaskCompletionSource();
@@ -207,7 +205,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     private async Task OnPageLeave(NavigationEvent e) {
-        var pagePath = I18N.Link<GamePage>([""]);
+        var pagePath = I18N.Link<GamePage>();
         if (!((URL.Path(e.BeforeURL) != pagePath) && (URL.Path(e.AfterURL) == pagePath)) || IsConnecting) {
             return;
         }

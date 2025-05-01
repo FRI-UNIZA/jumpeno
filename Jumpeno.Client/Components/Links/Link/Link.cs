@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class Link : IAsyncDisposable {
+public partial class Link {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string UNDERLINE_CLASS = "underline";
     public const string DEFAULT_ACTIVE_CLASS = "active";
@@ -12,6 +12,8 @@ public partial class Link : IAsyncDisposable {
     public string ID { get; set; } = "";
     [Parameter]
     public string? Href { get; set; } = null;
+    [Parameter]
+    public bool HrefPrevent { get; set; } = false;
     [Parameter]
     public string Label { get; set; } = "";
     [Parameter]
@@ -66,16 +68,15 @@ public partial class Link : IAsyncDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public Link() => ID = ComponentService.GenerateID(ID_PREFIX);
-
-    protected override void OnParametersSet(bool firstTime) {
-        if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
+    protected override void OnComponentParametersSet(bool firstTime) {
+        if (!firstTime) return;
+        if (ID == "") ID = IDGenerator.Generate(ID_PREFIX);
         if (Label != "") AdditionalAttributes["aria-label"] = Label;
     }
 
-    protected override async Task OnInitializedAsync() => await Navigator.AddAfterEventListener(Notify);
+    protected override async Task OnComponentInitializedAsync() => await Navigator.AddAfterEventListener(Notify);
 
-    public virtual async ValueTask DisposeAsync() => await Navigator.RemoveAfterEventListener(Notify);
+    protected override async ValueTask OnComponentDisposeAsync() => await Navigator.RemoveAfterEventListener(Notify);
 
     private async Task OnClickEvent(MouseEventArgs e) => await OnClick.InvokeAsync(this);
 

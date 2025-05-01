@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 public partial class AriaPageAlert {
     // Attributes -------------------------------------------------------------------------------------------------------------------------

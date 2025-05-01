@@ -7,7 +7,7 @@ using AntDesign;
 /// Use class property to set width, height, max-width or max-height and background of scrollable area.
 /// This allows to use media or container queries.
 /// </summary>
-public partial class ScrollArea : IDisposable {
+public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const string MARK = "scroll-area";
 
@@ -24,9 +24,7 @@ public partial class ScrollArea : IDisposable {
     public bool OverflowX { get; set; }
     [Parameter]
     public bool OverflowY { get; set; }
-    // Class and content:
-    [Parameter]
-    public string Class { get; set; }
+    // Content:
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -53,10 +51,10 @@ public partial class ScrollArea : IDisposable {
         OverflowY = true;
         Class = "";
         ChildContent = null;
-        ID = ComponentService.GenerateID(MARK);
+        ID = IDGenerator.Generate(MARK);
     }
 
-    override protected void OnAfterRender(bool firstRender) {
+    override protected void OnComponentAfterRender(bool firstRender) {
         if (firstRender) {
             Areas.Add(ID, this);
             JS.InvokeVoid(
@@ -70,7 +68,7 @@ public partial class ScrollArea : IDisposable {
         }
     }
 
-    public void Dispose() {
+    protected override void OnComponentDispose() {
         if (AppEnvironment.IsServer) return;
         if (Listeners.Length > 0) {
             JS.InvokeVoid(JSScrollArea.RemoveScrollListener, ID);
@@ -78,7 +76,6 @@ public partial class ScrollArea : IDisposable {
         }
         JS.InvokeVoid(JSScrollArea.Destroy, ID);
         Areas.Remove(ID);
-        GC.SuppressFinalize(this);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class MainErrorBoundary : IAsyncDisposable {
+public partial class MainErrorBoundary {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -9,11 +9,11 @@ public partial class MainErrorBoundary : IAsyncDisposable {
     private ErrorBoundary? ErrorBoundary { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnComponentInitializedAsync() {
         await Navigator.AddAfterFinishEventListener(RecoveryListener);
     }
 
-    public async ValueTask DisposeAsync() {
+    protected override async ValueTask OnComponentDisposeAsync() {
         await Navigator.RemoveAfterFinishEventListener(RecoveryListener);
     }
 

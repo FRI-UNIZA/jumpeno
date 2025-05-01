@@ -16,7 +16,6 @@ public partial class SelectBase {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public string ID { get; set; } = "";
-
     // Content:
     [Parameter]
     public required string Label { get; set; }
@@ -26,11 +25,9 @@ public partial class SelectBase {
     public required List<SelectOption> Options { get; set; }
     [Parameter]
     public SelectOption DefaultValue { get; set; } = EMPTY_OPTION;
-    
     // Abilities:
     [Parameter]
     public bool Empty { get; set; } = false;
-
     // Styling:
     [Parameter]
     public string? MinWidth { get; set; } = null;
@@ -42,7 +39,6 @@ public partial class SelectBase {
     public string? MaxHeight { get; set; } = null;
     [Parameter]
     public SELECT_OPTION_ALIGN OptionAlign { get; set; } = SELECT_OPTION_ALIGN.LEFT;
-
     // Callbacks:
     [Parameter]
     public EventCallback<SelectEvent> OnSelect { get; set; } = EventCallback<SelectEvent>.Empty;
@@ -75,19 +71,18 @@ public partial class SelectBase {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet(bool firstTime) {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
-        if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
+        if (ID == "") ID = IDGenerator.Generate(ID_PREFIX);
         if (Options.Count < 1) throw new Exception("Select list can not be empty!");
-        DisplayedOptions = new List<SelectOption>(Options);
+        DisplayedOptions = [.. Options];
         Selected = DefaultValue;
         if (Empty) DisplayedOptions.Insert(0, EMPTY_OPTION);
         else if (DefaultValue == EMPTY_OPTION) Selected = Options[0];
     }
 
-    protected override void OnAfterRender(bool firstRender) {
-        if (firstRender) return;
-        SelectTCS.TrySetResult();
+    protected override void OnComponentAfterRender(bool firstRender) {
+        if (!firstRender) SelectTCS.TrySetResult();
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

@@ -6,7 +6,7 @@ class JSNavigator {
     )
 
     // State ------------------------------------------------------------------------------------------------------------------------------
-    static State = () => window.history.state || {}
+    static State = () => window.history.state || null
 
     static SetState = (state, url) => window.history.replaceState({ ...window.history.state, ...state}, "", url)
 }

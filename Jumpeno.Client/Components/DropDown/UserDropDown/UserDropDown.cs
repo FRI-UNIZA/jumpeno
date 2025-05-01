@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class UserDropDown : IAsyncDisposable {
+public partial class UserDropDown {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "user-dropdown";
     public const string CLASS_PROFILE_IMAGE = "user-dropdown-profile-image";
@@ -9,15 +9,10 @@ public partial class UserDropDown : IAsyncDisposable {
     public static readonly int TRANSITION_BUTTON = THEME.DEFAULT.TRANSITION_SLOW;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private DropDown Ref { get; set; } = null!;
-    private UserProfileModal UserProfileModalRef { get; set; } = null!;
-
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async Task OnInitializedAsync() => await Auth.AddUpdateListener(StateHasChanged);
-    public async ValueTask DisposeAsync() => await Auth.RemoveUpdateListener(StateHasChanged);
+    private ProfileModal ModalRef { get; set; } = null!;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public async Task OpenProfile() => await UserProfileModalRef.Open();
+    public async Task OpenProfile() => await ModalRef.Open();
 
     public static async Task LogOut() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGOUT);

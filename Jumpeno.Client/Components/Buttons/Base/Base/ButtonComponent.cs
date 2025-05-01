@@ -3,13 +3,13 @@ namespace Jumpeno.Client.Components;
 public class ButtonComponent : SurfaceComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "button";
-    public static readonly ButtonParameters DEFAULT_PARAMETERS = new();
+    public static readonly ButtonParams DEFAULT_PARAMS = new();
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public string ID { get; set; } = "";
     [Parameter]
-    public required OneOf<ButtonParameters, ButtonLinkParameters> Parameters { get; set; } = DEFAULT_PARAMETERS;
+    public required OneOf<ButtonParams, ButtonLinkParams> Params { get; set; } = DEFAULT_PARAMS;
     [Parameter]
     public EventCallback<ButtonComponent> OnClick { get; set; } = EventCallback<ButtonComponent>.Empty;
     [Parameter]
@@ -20,20 +20,20 @@ public class ButtonComponent : SurfaceComponent {
     public RenderFragment? IconAfter { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet(bool firstTime) {
-        if (ID == "") ID = ComponentService.GenerateID(ID_PREFIX);
+    protected override void OnComponentParametersSet(bool firstTime) {
+        if (ID == "") ID = IDGenerator.Generate(ID_PREFIX);
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    protected RenderFragment Render() => (RenderTreeBuilder builder) => {
+    protected RenderFragment Render() => builder => {
         var sequence = 0;
         builder.OpenComponent<ButtonElement>(sequence++);
-        builder.AddAttribute(sequence++, "ID", ID);
-        builder.AddAttribute(sequence++, "Parameters", Parameters);
-        builder.AddAttribute(sequence++, "OnClick", OnClick);
-        if (Icon is not null) builder.AddAttribute(sequence++, "Icon", Icon); 
-        if (Text is not null) builder.AddAttribute(sequence++, "Text", Text); 
-        if (IconAfter is not null) builder.AddAttribute(sequence++, "IconAfter", IconAfter); 
+        builder.AddAttribute(sequence++, nameof(ID), ID);
+        builder.AddAttribute(sequence++, nameof(Params), Params);
+        builder.AddAttribute(sequence++, nameof(OnClick), OnClick);
+        if (Icon is not null) builder.AddAttribute(sequence++, nameof(Icon), Icon); 
+        if (Text is not null) builder.AddAttribute(sequence++, nameof(Text), Text); 
+        if (IconAfter is not null) builder.AddAttribute(sequence++, nameof(IconAfter), IconAfter); 
         builder.CloseComponent();
     };
 }

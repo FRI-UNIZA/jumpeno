@@ -33,7 +33,6 @@ public partial class Modal {
     public bool NoFooter { get; set; }
     [Parameter]
     public RenderFragment? Footer { get; set; }
-
     // Dimensions:
     [Parameter]
     public string? MinWidth { get; set; }
@@ -43,11 +42,9 @@ public partial class Modal {
     public string? MinHeight { get; set; }
     [Parameter]
     public string? MaxHeight { get; set; }
-
     // Abilities:
     [Parameter]
     public bool Unclosable { get; set; } = false;
-
     // Callbacks:
     [Parameter]
     public EventCallback<Modal> OnBeforeOpen { get; set; } = EventCallback<Modal>.Empty;
@@ -57,12 +54,6 @@ public partial class Modal {
     public EventCallback<Modal> OnBeforeClose { get; set; } = EventCallback<Modal>.Empty;
     [Parameter]
     public EventCallback<Modal> OnAfterClose { get; set; } = EventCallback<Modal>.Empty;
-
-    // Styling:
-    [Parameter]
-    public string Class { get; set; } = "";
-    [Parameter]
-    public string Style { get; set; } = "";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string ID;
@@ -75,14 +66,14 @@ public partial class Modal {
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Modal() {
-        ID = ComponentService.GenerateID(ID_PREFIX);
+        ID = IDGenerator.Generate(ID_PREFIX);
         ID_DIALOG_START = $"{ID_DIALOG_START_PREFIX}-{ID}";
         ID_DIALOG = $"{ID_DIALOG_PREFIX}-{ID}";
         ID_DIALOG_END = $"{ID_DIALOG_END_PREFIX}-{ID}";
         State = MODAL_STATE.CLOSED;
     }
 
-    protected override async Task OnParametersSetAsync() {
+    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
         MaxWidth ??= "100vw";
         MaxHeight ??= "100vh";
         if (State == MODAL_STATE.OPEN) {

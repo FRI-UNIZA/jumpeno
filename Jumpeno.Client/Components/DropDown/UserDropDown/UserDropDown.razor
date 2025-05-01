@@ -1,19 +1,17 @@
 @namespace Jumpeno.Client.Components
 
-@inherits Component
-
-@if (Auth.IsRegisteredUser) {
+<AuthView Roles="[ROLE.USER]">
     <div class="@CLASS">
-        <DropDown @ref="Ref" Title="@I18N.T("User menu")">
+        <DropDown Title="@I18N.T("User menu")">
             <DropDownButton>
                 <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="@CLASS_PROFILE_IMAGE" />
             </DropDownButton>
             <Options>
-                <DropDownOption Ref="Ref" Label="@I18N.T("My profile")" Action="@new(OpenProfile)">
+                <DropDownOption Label="@I18N.T("My profile")" Action="@new(OpenProfile)">
                     <AntIcon Type="setting" Theme="outline" Class="@CLASS_ICON" Style="font-size: 18px;" />
                     <DropDownOptionText>@I18N.T("My profile")</DropDownOptionText>
                 </DropDownOption>
-                <DropDownOption Ref="Ref" Label="@I18N.T("Log out")" Action="@new(LogOut)">
+                <DropDownOption Label="@I18N.T("Log out")" Action="@new(LogOut)">
                     <AntIcon Type="logout" Theme="outline" Class="@CLASS_ICON" Style="margin-top: -1px;" />
                     <DropDownOptionText>@I18N.T("Log out")</DropDownOptionText>
                 </DropDownOption>
@@ -21,5 +19,5 @@
         </DropDown>
     </div>
 
-    <UserProfileModal @ref="@UserProfileModalRef" />
-}
+    <ProfileModal @ref="@ModalRef" />
+</AuthView>

@@ -10,7 +10,8 @@ public class ApiRoutePrefixConvention(string prefix) : IApplicationModelConventi
                     // NOTE: Combine existing route models with the global prefix
                     selector.AttributeRouteModel = AttributeRouteModel.CombineAttributeRouteModel(
                         Prefix,
-                        selector.AttributeRouteModel);
+                        selector.AttributeRouteModel
+                    );
                 } else {
                     selector.AttributeRouteModel = Prefix;
                 }

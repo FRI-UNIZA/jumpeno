@@ -8,8 +8,6 @@ public partial class InfoBox {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string Class { get; set; } = "";
-    [Parameter]
     public required string Type { get; set; }
     [Parameter]
     public required string Theme { get; set; }
@@ -17,9 +15,5 @@ public partial class InfoBox {
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public string ComputeClass() {
-        var c = new CSSClass(CLASS);
-        c.Set(Class);
-        return c;
-    }
+    public string ComputeClass() => ComputeClass(CLASS);
 }

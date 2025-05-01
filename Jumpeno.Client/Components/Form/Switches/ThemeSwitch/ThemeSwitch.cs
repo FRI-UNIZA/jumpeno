@@ -18,7 +18,7 @@ public partial class ThemeSwitch {
     private Switch SwitchRef = null!;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet(bool firstTime) => DefaultValue = Theme is LightTheme;
+    protected override void OnComponentParametersSet(bool firstTime) => DefaultValue = Theme is LightTheme;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task TriggerChange() {

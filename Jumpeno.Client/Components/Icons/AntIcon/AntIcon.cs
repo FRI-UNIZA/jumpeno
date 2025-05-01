@@ -9,8 +9,6 @@ public partial class AntIcon {
     [Parameter]
     public string Label { get; set; } = "";
     [Parameter]
-    public string? Style { get; set; } = null;
-    [Parameter]
     public EventCallback OnClick { get; set; } = EventCallback.Empty;
     [Parameter]
     public bool StopPropagation { get; set; } = false;

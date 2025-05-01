@@ -7,7 +7,6 @@ public partial class LoginPage {
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly LoginPageViewModel VM;
-    public void Notify() => StateHasChanged();
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public LoginPage() => VM = new(this);

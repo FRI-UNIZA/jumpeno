@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Components;
 
 using AntDesign;
 
-public partial class Notification : IDisposable {
+public partial class Notification {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASSNAME_ARIA = "ant-notification-aria-label";
     public const string CLASSNAME_SPACE = "ant-notification-message-space";
@@ -43,22 +43,21 @@ public partial class Notification : IDisposable {
         SetServerNotifications(notifications);
     }
 
-    protected sealed override void OnInitialized() {
+    protected sealed override void OnComponentInitialized() {
         PersistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
         if (ApplicationState.TryTakeFromJson<NotificationState>(nameof(GetServerNotifications), out var restored)) {
             SetServerNotifications(restored!.ServerNotifications);
         }
     }
-    protected override void OnAfterRender(bool firstRender) {
+    protected override void OnComponentAfterRender(bool firstRender) {
         if (!firstRender) return;
         foreach (var notification in GetServerNotifications()) {
             Display(notification);
         }
     }
-    public void Dispose() {
+    protected override void OnComponentDispose() {
         DisplayLock.Dispose();
         PersistingSubscription.Dispose();
-        GC.SuppressFinalize(this);
     }
 
     // Instance ---------------------------------------------------------------------------------------------------------------------------

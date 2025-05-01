@@ -1,11 +1,15 @@
-namespace Jumpeno.Client.Services;
+namespace Jumpeno.Client.Pages;
 
 #pragma warning disable CS4014
 
-public static class AuthPage {
+public partial class AuthPage {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static string LINK_LOGIN => I18N.Link<LoginPage>(); // User not authenticated
     public static string LINK_FALLBACK => I18N.Link<HomePage>(); // Role not allowed
+
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public static void Init(App app) => App = app;
@@ -16,39 +20,21 @@ public static class AuthPage {
     private static TaskCompletionSource StageTCS = new();
     public static Task NextStage() { try { Stage++; StageTCS = new(); return StageTCS.Task; } finally { App.Notify(); } }
     public static void FinishStage() => StageTCS.TrySetResult();
-    public static bool IsRendering() {
+    private static bool IsRendering() {
         if (AppEnvironment.IsServer) return true;
         else return Stage == INIT_STAGE.RENDERING;
     }
 
     // Layout -----------------------------------------------------------------------------------------------------------------------------
-    private class AuthState { public bool IsNotBlock; public bool IsAuthenticated; public bool IsAuthorized; }
-    private static readonly AuthState State = new();
-    private static bool Cache = false;
-
-    private static bool IsNotBlock(RenderFragment? body) {
-        if (!Cache) State.IsNotBlock = !Auth.IsRole(Page.RolesBlock(body));
-        return State.IsNotBlock;
-    }
-    private static bool IsAuthenticated(RenderFragment? body) {
-        if (!Cache) State.IsAuthenticated = Page.Roles(body).Length <= 0 || Auth.IsLoggedIn;
-        return State.IsAuthenticated;
-    }
+    private static bool IsNotBlock(RenderFragment? body) => !Auth.IsRole(Page.RolesBlock(body));
+    private static bool IsAuthenticated(RenderFragment? body) => Page.Roles(body).Length <= 0 || Auth.IsLoggedIn;
     private static bool IsAuthorized(RenderFragment? body) {
-        if (!Cache) {
-            var roles = Page.Roles(body);
-            if (roles.Length <= 0) State.IsAuthorized = true;
-            else {
-                State.IsAuthorized = false;
-                foreach (var role in roles) {
-                    if (Auth.IsRole(role)) {
-                        State.IsAuthorized = true;
-                        break;
-                    }
-                }
-            }
+        var roles = Page.Roles(body);
+        if (roles.Length <= 0) return true;
+        foreach (var role in roles) {
+            if (Auth.IsRole(role)) return true;
         }
-        return State.IsAuthorized;
+        return false;
     }
 
     private static RenderFragment? RenderError(Type error) => builder => { builder.OpenComponent(0, error); builder.CloseComponent(); };
@@ -96,11 +82,5 @@ public static class AuthPage {
                 return true;
             }
         });
-    }
-
-    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false) {
-        Cache = true;
-        await Navigator.NavigateTo(url, forceLoad, replace, NOTIFY.ALL);
-        Cache = false;
     }
 }

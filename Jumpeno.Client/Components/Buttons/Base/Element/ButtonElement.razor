@@ -3,10 +3,10 @@
 @inherits ButtonComponent
 
 <div class="@ComputeClass()">
-    @if (Parameters.IsT0) {
+    @if (Params.IsT0) {
         <button
             id="@ID"
-            type="@Parameters.AsT0.Type.StringLower()"
+            type="@Params.AsT0.Type.StringLower()"
             @onclick="@(async () => await OnClick.InvokeAsync(this))"
             @attributes="@AdditionalAttributes"
             class="@ComputeClass(@CLASSNAME_ELEMENT)"
@@ -16,12 +16,13 @@
     } else {
         <Link
             ID="@ID"
-            Href="@Parameters.AsT1.Href"
-            Label="@Parameters.AsT1.Label"
+            Href="@Params.AsT1.Href"
+            HrefPrevent="@Params.AsT1.HrefPrevent"
+            Label="@Params.AsT1.Label"
             OnClick="@(async () => await OnClick.InvokeAsync(this))"
-            Target="@Parameters.AsT1.Target"
-            Match="@Parameters.AsT1.Match"
-            ActiveClass="@Parameters.AsT1.ActiveClass"
+            Target="@Params.AsT1.Target"
+            Match="@Params.AsT1.Match"
+            ActiveClass="@Params.AsT1.ActiveClass"
             Class="@CLASSNAME_ELEMENT"
             ChildContent="@RenderChildContent()"
         />

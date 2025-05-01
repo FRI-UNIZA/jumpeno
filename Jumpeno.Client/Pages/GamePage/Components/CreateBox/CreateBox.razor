@@ -1,0 +1,39 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<AuthView Roles="[ROLE.USER]">
+    <div class="connect-box-component">
+        <Box Class="connect-box">
+            <div style="display: flex; width: 100%; flex-direction: column; align-items: center; gap: 30px;">
+                <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading">@I18N.T("Create game")</Heading1>
+                <Button Size="BUTTON_SIZE.M" Class="connect-button" OnClick="Create">
+                    <Icon><AntIcon Type="plus-circle" Theme="outline" /></Icon>
+                    <Text>@I18N.T("Create")</Text>
+                </Button>
+                <Link
+                    Href="@(I18N.Link<GamePage>())" HrefPrevent
+                    OnClick="GamePage.NavigateToConnect"
+                    Class="connect-link"
+                >
+                    <AntIcon Type="play-circle" Theme="outline" Class="connect-icon" />
+                    &nbsp;@I18N.T("Connect")&nbsp;
+                </Link>
+            </div>
+        </Box>
+    </div>
+</AuthView>
+<AuthViewBlock Roles="[ROLE.USER]">
+    <div class="error-page">
+        <Heading1 Size="TEXT_SIZE.XL" Class="error-page-heading">@I18N.T("Error 403")</Heading1>
+        <Paragraph Size="TEXT_SIZE.L" Class="error-page-paragraph">@I18N.T("You are not authorized to create games.")</Paragraph>
+        <Link
+            Href="@(I18N.Link<GamePage>())" HrefPrevent
+            OnClick="GamePage.NavigateToConnect"
+            Class="connect-link"
+        >
+            <AntIcon Type="play-circle" Theme="outline" Class="connect-icon" />
+            &nbsp;@I18N.T("Connect")&nbsp;
+        </Link>
+    </div>
+</AuthViewBlock>

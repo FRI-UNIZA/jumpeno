@@ -16,13 +16,13 @@ public partial class ButtonElement {
     protected CSSClass ComputeClass() => ComputeClass(CLASSNAME);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet(bool firstTime) {
-        var Label = Parameters.IsT0 ? Parameters.AsT0.Label : Parameters.AsT1.Label;
+    protected override void OnComponentParametersSet(bool firstTime) {
+        var Label = Params.IsT0 ? Params.AsT0.Label : Params.AsT1.Label;
         if (Label != "") AdditionalAttributes["aria-label"] = Label;
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private RenderFragment RenderIconBefore() => (RenderTreeBuilder builder) => {
+    private RenderFragment RenderIconBefore() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
         builder.AddAttribute(sequence++, "class", CLASSNAME_ICON_BEFORE);
@@ -30,7 +30,7 @@ public partial class ButtonElement {
         builder.CloseElement();
     };
 
-    private RenderFragment RenderText() => (RenderTreeBuilder builder) => {
+    private RenderFragment RenderText() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
         var @class = new CSSClass(CLASSNAME_TEXT);
@@ -41,7 +41,7 @@ public partial class ButtonElement {
         builder.CloseElement();
     };
 
-    private RenderFragment RenderIconAfter() => (RenderTreeBuilder builder) => {
+    private RenderFragment RenderIconAfter() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
         builder.AddAttribute(sequence++, "class", CLASSNAME_ICON_AFTER);
@@ -49,7 +49,7 @@ public partial class ButtonElement {
         builder.CloseElement();
     };
 
-    private RenderFragment RenderChildContent() => (RenderTreeBuilder builder) => {
+    private RenderFragment RenderChildContent() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
         builder.AddAttribute(sequence++, "class", CLASSNAME_CONTENT);

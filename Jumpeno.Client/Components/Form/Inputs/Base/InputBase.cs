@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 using System.Numerics;
 using System.Reflection;
 
-public partial class InputBase<T> : IDisposable {
+public partial class InputBase<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_INPUT_BASE = "input-base";
     public const string CLASS_INPUT_BASE_COMPONENT = "input-base-component";
@@ -75,7 +75,7 @@ public partial class InputBase<T> : IDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet(bool firstTime) {
+    protected override void OnComponentParametersSet(bool firstTime) {
         ActiveInputManager.Add(ViewModel.ID, ViewModel);
         DELIMITER = Delimiter.String();
         ViewModel.GetType().GetField("Notify", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(ViewModel, () => {
@@ -85,9 +85,7 @@ public partial class InputBase<T> : IDisposable {
         UpdateTempValue();
     }
 
-    public void Dispose() {
-        ActiveInputManager.Remove(ViewModel.ID);
-    }
+    protected override void OnComponentDispose() => ActiveInputManager.Remove(ViewModel.ID);
 
     // Methods static ---------------------------------------------------------------------------------------------------------------------
     public static InputViewModel<T>? ActiveViewModel(string id) {

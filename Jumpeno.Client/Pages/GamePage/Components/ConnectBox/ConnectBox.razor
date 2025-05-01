@@ -1,6 +1,6 @@
 @namespace Jumpeno.Client.Components
 
-@inherits Component
+@inherits BasicComponent
 
 @code {
     private string[] LoginMessage = I18N.Split(I18N.T("Or @I18N_SPLIT{}login@I18N_SPLIT{} to create new."));
@@ -24,10 +24,27 @@
                 <Text>@I18N.T("Watch")</Text>
             </Button>
         </div>
-        <Paragraph Class="connect-text">
-            @LoginMessage[0]
-            <Link Href="@(I18N.Link<LoginPage>())" Underline>@LoginMessage[1]</Link>
-            @LoginMessage[2]
-        </Paragraph>
+        <AuthView Roles="[ROLE.USER]">
+            <Link
+                Href="@(I18N.Link<GamePage>())" HrefPrevent
+                OnClick="GamePage.NavigateToCreate"
+                Class="create-link"
+            >
+                <AntIcon Type="plus-circle" Theme="outline" Class="create-icon" />
+                &nbsp;@I18N.T("Create new game")&nbsp;
+            </Link>
+        </AuthView>
+        <AuthView Roles="[ROLE.ADMIN]">
+            <div class="connect-gap" />
+        </AuthView>
+        <AuthViewBlock>
+            <Paragraph Class="connect-text">
+                @LoginMessage[0]
+                <Jumpeno.Client.Components.Link Href="@(I18N.Link<LoginPage>())" Underline>
+                    @LoginMessage[1]
+                </Jumpeno.Client.Components.Link>
+                @LoginMessage[2]
+            </Paragraph>
+        </AuthViewBlock>
     </Box>
 </div>

@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 public partial class CollapseItem : IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -35,18 +35,13 @@ public partial class CollapseItem : IDisposable {
     private bool RenderVar = true;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public CollapseItem() {
-        ID = ComponentService.GenerateID(CLASS_COLLAPSE_ITEM);
+    public CollapseItem() => ID = IDGenerator.Generate(CLASS_COLLAPSE_ITEM);
+
+    protected override void OnComponentAfterRender(bool firstRender) {
+        if (!firstRender) RenderVar = !RenderVar;
     }
 
-    protected override void OnAfterRender(bool firstRender) {
-        if (firstRender) return;
-        RenderVar = !RenderVar;
-    }
-
-    public void Dispose() {
-        Collapsed = true;
-    }
+    protected override void OnComponentDispose() => Collapsed = true;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Toggle() {

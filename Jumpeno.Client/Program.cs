@@ -70,7 +70,7 @@ CookieStorage.Init(
         JS.InvokeVoid(JSCookies.Delete, key, Cookie.NormDomain(domain), path);
     },
     async unclosable => {
-        var modal = RequestStorage.Get<CookieConsentModal>(nameof(CookieConsentModal));
+        var modal = RequestStorage.Get<CookieModal>(nameof(CookieModal));
         if (modal is null) return;
         await modal.OpenModal(unclosable);
     }

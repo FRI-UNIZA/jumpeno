@@ -5,11 +5,16 @@
 @switch(@Type) {
     case TEXT_TYPE.SPAN:
         <span class="@ComputeClass()" style="@Style" @attributes="AdditionalAttributes">@ChildContent</span>
-        break;
+    break;
     case TEXT_TYPE.PARAGRAPH:
         <p class="@ComputeClass()" style="@Style" @attributes="AdditionalAttributes">@ChildContent</p>
-        break;
+    break;
     case TEXT_TYPE.ANCHOR:
-        <a class="@ComputeClass()" style="@Style" @attributes="AdditionalAttributes">@ChildContent</a>
-        break;
+        <a
+            class="@ComputeClass()" style="@Style" @attributes="AdditionalAttributes"
+            @onclick:preventDefault="@((bool?) AdditionalAttributes?.GetValueOrDefault(nameof(Link.HrefPrevent)) ?? false)"
+         >
+            @ChildContent
+        </a>
+    break;
 }

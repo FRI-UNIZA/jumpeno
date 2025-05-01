@@ -1,25 +1,49 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class GamePage {
-    // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ROUTE_EN = "/en/game/{URLCode?}";
     public const string ROUTE_SK = "/sk/hra/{URLCode?}";
     public static string Link(string url, string code) => URL.ReplaceSegments(url, new() {{ 1, $"{code}" }});
+    // Navigator data:
+    public record NavData(bool Create) {
+        public static bool OpenCreate() {
+            var value = Navigator.Data<NavData>()?.Create;
+            if (value is bool v) return v;
+            var state = Navigator.State(DEFAULT_HISTORY_STATE);
+            return state.WasCreate;
+        }
+    }
+    public static readonly NavData DEFAULT_NAV_DATA = new(false);
+    // Navigator state:
+    public record HistoryState(bool WasRedirect, bool WasCreate);
+    public static readonly HistoryState DEFAULT_HISTORY_STATE = new(false, false);
+    // Navigation:
+    private static async Task NavigateTo(bool create) {
+        await PageLoader.Show(async () => {
+            await Navigator.NavigateTo(
+                I18N.Link<GamePage>(),
+                data: new NavData(create),
+                state: new HistoryState(false, create)
+            );
+        }, PAGE_LOADER_TASK.ANIMATION);
+    }
+    public static async Task NavigateToConnect() => await NavigateTo(false);
+    public static async Task NavigateToCreate() => await NavigateTo(true);
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public string? URLCode { get; set; }
-
     [CascadingParameter]
-    public required MainLayoutViewModel LayoutVM { get; set; }
+    public required AppLayoutVM LayoutVM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly ConnectViewModel ConnectVM;
     private GameViewModel? GameVM;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
         ConnectVM = new(new(
+            Create: NavData.OpenCreate(),
             URLCode: () => URLCode,
             OnConnect: new(OnConnect),
             OnDisconnect: new(OnDisconnect),
@@ -61,6 +85,4 @@ public partial class GamePage {
         LayoutVM?.ShowNavigation();
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
-
-    private void Notify() => StateHasChanged();
 }

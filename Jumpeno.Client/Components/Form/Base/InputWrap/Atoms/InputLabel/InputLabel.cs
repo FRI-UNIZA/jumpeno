@@ -1,5 +1,5 @@
 
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 public partial class InputLabel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -12,7 +12,5 @@ public partial class InputLabel {
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputeClass() {
-        return ComputeClass(CLASS_INPUT_LABEL);
-    }
+    private CSSClass ComputeClass() => ComputeClass(CLASS_INPUT_LABEL);
 }

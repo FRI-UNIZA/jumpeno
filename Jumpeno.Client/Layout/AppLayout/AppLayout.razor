@@ -1,0 +1,35 @@
+﻿@namespace Jumpeno.Client.Layouts
+
+@inherits ServiceComponent<AppLayout>
+
+<div @key="@Key" class="@ComputeClass()">
+    <CascadingValue Value="LayoutVM">
+        <NavMenuMobile
+            @ref="@NavMenuMobileRef"
+            MenuRef="@NavMenuRef"
+            OnMobileMenuOpen="OnMobileMenuOpen"
+            OnMobileMenuClose="OnMobileMenuClose"
+        >
+            <ScrollArea Id="@SCROLLAREA_ID.PAGE" AutoHide="SCROLLAREA_AUTOHIDE.MOVE" OverflowX="false" Class="page">
+                <Container Class="page-layout">
+                    <BackgroundImage URL="@IMAGE.BG_YELLOW" class="main-background" Preloaded />
+                    <NavMenu @ref="NavMenuRef" MobileRef="@NavMenuMobileRef" Display="LayoutVM.NavigationDisplayed" />
+                    <Container @key="PageKey" class="page-container">
+                        <Container
+                            Tag="main"
+                            Type="CONTAINER_TYPE.INLINE"
+                            Boundary PaddingVertical="LayoutVM.Padding"
+                            PaddingHorizontal="LayoutVM.Padding"
+                            Class="main-container"
+                        >
+                            <MainErrorBoundary>
+                                @ChildContent
+                            </MainErrorBoundary>
+                        </Container>
+                    </Container>
+                </Container>
+                <Footer Display="LayoutVM.NavigationDisplayed" />
+            </ScrollArea>
+        </NavMenuMobile>
+    </CascadingValue>
+</div>

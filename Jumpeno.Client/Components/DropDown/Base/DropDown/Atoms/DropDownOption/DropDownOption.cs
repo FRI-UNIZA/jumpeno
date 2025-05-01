@@ -5,7 +5,7 @@ public partial class DropDownOption {
     public const string CLASS = "dropdown-option";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [Parameter]
+    [CascadingParameter(Name = DropDown.PARAM_REF)]
     public required DropDown Ref { get; set; }
     [Parameter]
     public required string Label { get; set; }

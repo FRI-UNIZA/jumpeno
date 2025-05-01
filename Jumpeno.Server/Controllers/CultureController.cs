@@ -45,31 +45,34 @@ public class CultureController : Controller {
         };
     }
 
-    public static string GetCultureString(List<string> languages, string defaultLanguage, HttpContext ctx) {    
-        // (1) Language by domain name:
-        if (!I18N.USE_PREFIX) {
-            return I18N.GetLanguage(ctx.Request.Host.ToString());
+    public static string GetCultureString(List<string> languages, string defaultLanguage, HttpContext ctx) {
+        // 1) Page rendering (not API):
+        if (!URL.Path().StartsWith(API.BASE.URL)) {
+            // 1.1) Language by domain name:
+            if (!I18N.USE_PREFIX) {
+                return I18N.GetLanguage(ctx.Request.Host.ToString());
+            }
+
+            // 1.2) Check path:
+            string path = ctx.Request.Path;
+            path = path[1..];
+            int index = path.IndexOf('/');
+            if (index > -1) {
+                path = path[..path.IndexOf('/')];
+            }
+            if (languages.Contains(path)) {
+                return path;
+            }
+
+            // 1.3) Check cookies:
+            string? cookie = CookieStorage.Get(COOKIE_FUNCTIONAL.APP_CULTURE);
+            cookie = cookie is not null ? cookie : "null";
+            if (languages.Contains(cookie)) {
+                return cookie;
+            }
         }
 
-        // (2) Check path:
-        string path = ctx.Request.Path;
-        path = path[1..];
-        int index = path.IndexOf('/');
-        if (index > -1) {
-            path = path[..path.IndexOf('/')];
-        }
-        if (languages.Contains(path)) {
-            return path;
-        }
-
-        // (3) Check cookies:
-        string? cookie = CookieStorage.Get(COOKIE_FUNCTIONAL.APP_CULTURE);
-        cookie = cookie is not null ? cookie : "null";
-        if (languages.Contains(cookie)) {
-            return cookie;
-        }
-
-        // (4) Check user settings:
+        // 2) Check user settings:
         string? acceptLanguage = ctx.Request.Headers.AcceptLanguage;
         if (acceptLanguage is null || acceptLanguage.Trim() == "") {
             return defaultLanguage;
@@ -88,7 +91,7 @@ public class CultureController : Controller {
             }
         }
 
-        // (5) No match, default language:
+        // 3) No match, default language:
         return defaultLanguage;
     }
 

@@ -8,13 +8,6 @@ public partial class AdminDropDown {
     // Duration:
     public static readonly int TRANSITION_BUTTON = THEME.DEFAULT.TRANSITION_SLOW;
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private DropDown Ref { get; set; } = null!;
-
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async Task OnInitializedAsync() => await Auth.AddUpdateListener(StateHasChanged);
-    public async ValueTask DisposeAsync() => await Auth.RemoveUpdateListener(StateHasChanged);
-
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task OpenSettings() => await Navigator.NavigateTo(I18N.Link<AdminPage>());
 

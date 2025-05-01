@@ -25,6 +25,11 @@ public static class Auth {
         return false;
     }
 
+    // Processing -------------------------------------------------------------------------------------------------------------------------
+    public static bool Processing { get; private set; } = false;
+    private static void StartProcessing() => Processing = true;
+    private static async Task StopProcessing() { Processing = false; await InvokeUpdate(); }
+
     // Login anonymous --------------------------------------------------------------------------------------------------------------------
     public static void LogInAnonymous(string name, SKIN skin) => User = new User(name, skin);
     public static void LogOutAnonymous() => User = null!;
@@ -34,7 +39,8 @@ public static class Auth {
         await Window.Lock(async () => {
             Token.Data? access; try { access = Token.Access; } catch { access = null; }
             try {
-                // 1.1) Create body:
+                StartProcessing();
+                // 1.2) Create body:
                 var body = new UserLoginDTO(
                     Email: email,
                     Password: password
@@ -48,9 +54,9 @@ public static class Auth {
                 // 1.5) Store new access token:
                 Token.StoreAccess(login.Body.AccessToken);
                 // 1.6) Load profile:
-                await LoadProfile();
+                await LoadAuthProfile(false);
                 // 1.7) Redirect:
-                await AuthPage.NavigateTo(I18N.Link<HomePage>());
+                await Navigator.NavigateTo(I18N.Link<HomePage>());
                 // 1.8) Reload tabs:
                 Window.ReloadTabs();
             } catch {
@@ -59,6 +65,8 @@ public static class Auth {
                 else Token.StoreAccess(access.raw);
                 // 2.2) Rethrow:
                 throw;
+            } finally {
+                await StopProcessing();
             }
         }, WINDOW_LOCK.AUTHENTICATION);
     }
@@ -73,6 +81,7 @@ public static class Auth {
             if (token == null) return false;
             // 3) Send request:
             try {
+                StartProcessing();
                 // 3.1.1) Create data:
                 var body = new AuthRefreshDTO(
                     RefreshToken: token
@@ -88,7 +97,7 @@ public static class Auth {
                 // 3.1.7) Store access token:
                 Token.StoreAccess(refresh.Body.AccessToken);
                 // 3.1.8) Load profile:
-                await LoadProfile();
+                await LoadAuthProfile(false);
                 // 3.1.9) Reload tabs:
                 Window.ReloadTabs();
                 // 3.1.10) Return success:
@@ -99,7 +108,7 @@ public static class Auth {
                 // 3.2.2) Delete access token:
                 Token.DeleteAccess();
                 // 3.2.3) Reset profile:
-                await ResetProfile();
+                await ResetAuthProfile(false);
                 // 3.2.4) Show notification:
                 if (e.Code == Exceptions.InvalidToken.Code) Notification.Error(e.Message);
                 // 3.2.5) Return fail:
@@ -108,6 +117,7 @@ public static class Auth {
                 // 4) Update URL:
                 q.Remove(TOKEN_TYPE.REFRESH.String());
                 await Navigator.SetQueryParams(q);
+                await StopProcessing();
             }
         }, WINDOW_LOCK.AUTHENTICATION);
     }
@@ -115,6 +125,7 @@ public static class Auth {
     public static async Task<bool> TryLogInToken() {
         return await Window.Lock(async () => {
             try {
+                StartProcessing();
                 // 1.1) Request access token:
                 var refresh = await HTTP.Post<AuthRefreshDTOR>(API.BASE.AUTH_REFRESH);
                 // 1.2) Validate response:
@@ -124,7 +135,7 @@ public static class Auth {
                 // 1.4) Store access token:
                 Token.StoreAccess(refresh.Body.AccessToken);
                 // 1.5) Load profile:
-                await LoadProfile();
+                await LoadAuthProfile(false);
                 // 1.6) Return success:
                 return true;
             } catch (HTTPException e) {
@@ -133,9 +144,11 @@ public static class Auth {
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
-                await ResetProfile();
+                await ResetAuthProfile(false);
                 // 2.4) Return fail:
                 return false;
+            } finally {
+                await StopProcessing();
             }
         }, WINDOW_LOCK.AUTHENTICATION);
     }
@@ -143,6 +156,7 @@ public static class Auth {
     public static async Task Refresh(int iteration) {
         await Window.Lock(async () => {
             try {
+                StartProcessing();
                 // 1.1) Check iteration:
                 if (iteration > 1) throw new HTTPException(Exceptions.InvalidToken.Code);
                 // 1.2) Request access token:
@@ -162,69 +176,95 @@ public static class Auth {
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
-                await ResetProfile();
+                await ResetAuthProfile(false);
                 // 2.4) Navigate to login:
-                await AuthPage.NavigateTo(I18N.Link<LoginPage>(), forceLoad: true);
+                await Navigator.NavigateTo(I18N.Link<LoginPage>(), forceLoad: true);
                 // 2.5) Throw back:
                 throw Exceptions.NotAuthenticated;
+            } finally {
+                await StopProcessing();
             }
         }, WINDOW_LOCK.AUTHENTICATION);
     }
 
     public static async Task LogOut() {
         await Window.Lock(async () => {
-            // 1) Invalidate refresh token:
-            await RequestDelete();
-            // 2) Delete access token:
-            Token.DeleteAccess();
-            // 3) Reset profile:
-            await ResetProfile();
-            // 4) Navigate to login:
-            await AuthPage.NavigateTo(I18N.Link<LoginPage>());
-            // 5) Reload tabs:
-            Window.ReloadTabs();
+            try {
+                StartProcessing();
+                // 1) Invalidate refresh token:
+                await RequestDelete();
+                // 2) Delete access token:
+                Token.DeleteAccess();
+                // 3) Reset profile:
+                await ResetAuthProfile(false);
+                // 4) Navigate to login:
+                await Navigator.NavigateTo(I18N.Link<LoginPage>());
+                // 5) Reload tabs:
+                Window.ReloadTabs();
+            } finally {
+                await StopProcessing();
+            }
         }, WINDOW_LOCK.AUTHENTICATION);
     }
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
     // Events:
-    private static event Action? ProfileUpdateEvent;
-    private static event Func<Task>? ProfileUpdateEventAsync;
-    private static readonly LockerSlim ProfileUpdateLock = AppEnvironment.IsClient ? new() : null!;
+    private static event Action? UpdateEvent;
+    private static event Func<Task>? UpdateEventAsync;
+    private static readonly LockerSlim UpdateLock = AppEnvironment.IsClient ? new() : null!;
     private static async Task InvokeUpdate() {
-        ProfileUpdateEvent?.Invoke();
-        if (ProfileUpdateEventAsync != null) await ProfileUpdateEventAsync.Invoke();
+        if (AppEnvironment.IsServer) return;
+        UpdateEvent?.Invoke();
+        if (UpdateEventAsync != null) await UpdateEventAsync.Invoke();
     }
     // Listeners:
-    public static async Task AddUpdateListener(Action listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEvent += listener);
-    public static async Task RemoveUpdateListener(Action listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEvent -= listener);
-    public static async Task AddUpdateListener(Func<Task> listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEventAsync += listener);
-    public static async Task RemoveUpdateListener(Func<Task> listener) => await ProfileUpdateLock.TryExclusive(() => ProfileUpdateEventAsync -= listener);
-    
+    public static async Task AddUpdateListener(Action listener) => await (UpdateLock?.TryExclusive(() => UpdateEvent += listener) ?? Task.CompletedTask);
+    public static async Task RemoveUpdateListener(Action listener) => await (UpdateLock?.TryExclusive(() => UpdateEvent -= listener) ?? Task.CompletedTask);
+    public static async Task AddUpdateListener(Func<Task> listener) => await (UpdateLock?.TryExclusive(() => UpdateEventAsync += listener) ?? Task.CompletedTask);
+    public static async Task RemoveUpdateListener(Func<Task> listener) => await (UpdateLock?.TryExclusive(() => UpdateEventAsync -= listener) ?? Task.CompletedTask);
+    // Components:
+    public static async Task Register(Component component) => await AddUpdateListener(component.Notify);
+    public static bool Freezed(Component component) => Processing;
+    public static bool NotFreezed(Component component) => !Freezed(component);
+    public static async Task Unregister(Component component) => await RemoveUpdateListener(component.Notify);
     // Actions:
-    public static async Task LoadProfile() {
-        await ProfileUpdateLock.Exclusive(async () => {
-            if (AppEnvironment.IsServer) return;
-            if (Token.Access.role == ROLE.USER) {
-                // 1.1) Load user profile:
-                var profile = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
-                // 1.2) Validate response:
-                profile.Body.Check();
-                // 1.3) Store user profile:
-                User = profile.Body.Profile; Admin = null!;
-            } else {
-                // 2.1) Store admin profile:
-                User = null!; Admin = new(Token.Access.sub);
+    private static async Task LoadAuthProfile(bool processing = true) {
+        if (AppEnvironment.IsServer) return;
+        await UpdateLock.Exclusive(async () => {
+            try {
+                if (processing) StartProcessing();
+                if (Token.Access.role == ROLE.USER) {
+                    // 1.1) Load user profile:
+                    var profile = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
+                    // 1.2) Validate response:
+                    profile.Body.Check();
+                    // 1.3) Store user profile:
+                    User = profile.Body.Profile; Admin = null!;
+                } else {
+                    // 2.1) Store admin profile:
+                    User = null!; Admin = new(Token.Access.sub);
+                }
+            } finally {
+                if (processing) await StopProcessing();
             }
-            await InvokeUpdate();
+        });
+    }
+    public static async Task LoadProfile() {
+        if (AppEnvironment.IsServer) return;
+        await Window.Lock(async () => await LoadAuthProfile(), WINDOW_LOCK.AUTHENTICATION);
+    }
+
+    private static async Task ResetAuthProfile(bool processing = true) {
+        if (AppEnvironment.IsServer) return;
+        await UpdateLock.Exclusive(async () => {
+            if (processing) StartProcessing();
+            try { User = null!; Admin = null!; }
+            finally { if (processing) await StopProcessing(); }
         });
     }
     public static async Task ResetProfile() {
-        await ProfileUpdateLock.Exclusive(async () => {
-            if (AppEnvironment.IsServer) return;
-            User = null!; Admin = null!;
-            await InvokeUpdate();
-        });
+        if (AppEnvironment.IsServer) return;
+        await Window.Lock(async () => await ResetAuthProfile(), WINDOW_LOCK.AUTHENTICATION);
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------

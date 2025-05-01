@@ -17,7 +17,7 @@ public partial class CanvasPreRenderer {
         Add(CANVAS.MAP, Map.WIDTH, Map.HEIGHT);
     }
 
-    protected override async void OnAfterRender(bool firstRender) {
+    protected override async void OnComponentAfterRender(bool firstRender) {
         if (!firstRender) return;
         foreach (var canvas in List) {
             await CanvasReferrer.Set(canvas.ID, canvas.Ref);

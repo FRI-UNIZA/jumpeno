@@ -32,11 +32,9 @@ public partial class BackgroundImageBase {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public BackgroundImageBase() {
-        ID = ComponentService.GenerateID(ID_PREFIX);
-    }
+    public BackgroundImageBase() => ID = IDGenerator.Generate(ID_PREFIX);
 
-    protected override void OnParametersSet(bool firstTime) {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
         if (AppEnvironment.IsServer) {
             State = IMAGE_STATE.LOADING;

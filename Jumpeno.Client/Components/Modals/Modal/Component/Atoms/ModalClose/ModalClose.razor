@@ -1,5 +1,14 @@
-@namespace Jumpeno.Client.Atoms
+@namespace Jumpeno.Client.Components
 
-<button id="@ComputeID()" type="@BUTTON_TYPE.BUTTON.String()" class="@ComputeClass()" @onclick="@Modal.Close" aria-label="@I18N.T("Close")" inert="@ComputeInert()">
+@inherits BasicComponent
+
+<button
+    id="@ComputeID()"
+    type="@BUTTON_TYPE.BUTTON.String()"
+    class="@ComputeClass()"
+    @onclick="@Modal.Close"
+    aria-label="@I18N.T("Close")"
+    inert="@ComputeInert()"
+>
     <AntIcon Type="close" Theme="outline" Class="@CLASSNAME_ICON" />
 </button>

@@ -7,16 +7,8 @@ public partial class PageLoaderProgress {
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string? Class { get; set; }
-    [Parameter]
-    public string? Style { get; set; }
-    [Parameter]
     public double? Progress { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputeClass() {
-        var c = new CSSClass(CLASSNAME);
-        if (Class is not null) c.Set(Class);
-        return c;
-    }
+    private CSSClass ComputeClass() => ComputeClass(CLASSNAME);
 }

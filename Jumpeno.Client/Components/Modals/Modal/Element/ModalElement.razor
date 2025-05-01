@@ -1,5 +1,7 @@
 @namespace Jumpeno.Client.Components
 
+@inherits BasicComponent
+
 <div id="@Modal.ID" inert="@Inert" class="@ComputeClass()" style="@ComputeStyle()">
     <div id="@Modal.ID_DIALOG_START" class="@Modal.CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(Modal.ID_DIALOG)" />
     <Container Class="@Modal.CLASS_CONTAINER" Surface="SURFACE.FLOATING" PaddingHorizontal PaddingVertical>

@@ -46,6 +46,23 @@
     --button-width: 100%;
 }
 
+::deep .create-link {
+    margin: 8px 0 6px;
+    text-align: center;
+}
+::deep .create-icon {
+    position: relative;
+    font-size: 1.3em;
+    bottom: -0.1em;
+    right: -0.1em;
+}
+
+.connect-gap {
+    position: relative;
+    width: 100%;
+    height: 0px;
+}
+
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     .connect-box-component {
@@ -73,6 +90,10 @@
         flex-direction: row;
         gap: 14px;
     }
+
+    ::deep .settings-link {
+        margin: 8px 0 2px;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -88,5 +109,9 @@
 
     .connect-buttons {
         gap: 16px;
+    }
+
+    ::deep .settings-link {
+        margin: 10px 0 0;
     }
 }

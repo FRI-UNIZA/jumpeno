@@ -33,22 +33,23 @@ public static class URL {
 
     // Current URL methods ----------------------------------------------------------------------------------------------------------------
     public static Func<string> Url { get; private set; }
-    public static string Schema() { return Schema(Url()); }
-    public static string Host() { return Host(Url()); }
-    public static string Port() { return Port(Url()); }
-    public static string Domain() { return Domain(Url()); }
-    public static string BaseUrl() { return BaseUrl(Url()); }
-    public static string Path(bool keepEnd = false) { return Path(Url(), keepEnd); }
-    public static string Query() { return Query(Url()); }
-    public static string ToAbsolute(string url) { return ToAbsolute(BaseUrl(), url); }
-    public static string ToAbsolute() { return ToAbsolute(BaseUrl(), Url()); }
-    public static string ToRelative() { return ToRelative(Url()); }
-    public static string NoQuery() { return NoQuery(Url()); }
-    public static string WithQuery(string query) { return WithQuery(Url(), query); }
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes) { return GetQueryParams(arrayTypes, Url()); }
-    public static QueryParams GetQueryParams() { return GetQueryParams(Url()); }
-    public static string SetQueryParams(QueryParams queryParams) { return SetQueryParams(Url(), queryParams); }
-    public static string ReplaceSegments(Dictionary<int, string> segments) { return ReplaceSegments(Url(), segments); }
+    public static string Schema() => Schema(Url());
+    public static string Host() => Host(Url());
+    public static string Port() => Port(Url());
+    public static string Domain() => Domain(Url());
+    public static string BaseUrl() => BaseUrl(Url());
+    public static string Path(bool keepEnd = false) => Path(Url(), keepEnd);
+    public static string Query() => Query(Url());
+    public static string ToAbsolute(string url) => ToAbsolute(BaseUrl(), url);
+    public static string ToAbsolute() => ToAbsolute(BaseUrl(), Url());
+    public static string ToRelative() => ToRelative(Url());
+    public static string NoQuery() => NoQuery(Url());
+    public static string WithQuery(string query) => WithQuery(Url(), query);
+    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes) => GetQueryParams(arrayTypes, Url());
+    public static QueryParams GetQueryParams() => GetQueryParams(Url());
+    public static string SetQueryParams(QueryParams queryParams) => SetQueryParams(Url(), queryParams);
+    public static bool PathMatches(string url, bool exact = false) => PathMatches(Url(), url, exact);
+    public static string ReplaceSegments(Dictionary<int, string> segments) => ReplaceSegments(Url(), segments);
 
     // Custom URL methods -----------------------------------------------------------------------------------------------------------------
     public static string Schema(string url) {
@@ -148,6 +149,12 @@ public static class URL {
         return baseURL == "" || baseURL == BaseUrl();
     }
 
+    public static bool PathMatches(string url1, string url2, bool exact = false) {
+        var path1 = Path(url1).ToLower();
+        var path2 = Path(url2).ToLower();
+       return exact ? path1 == path2 : path2.StartsWith(path1) || path1.StartsWith(path2);
+    }
+
     // Segments ---------------------------------------------------------------------------------------------------------------------------
     public static string? GetSegment(string url, int index, bool noCulture = false, bool decode = false) {
         string? segment;
@@ -177,6 +184,16 @@ public static class URL {
         if (newPath == "") newPath = "/";
 
         return $"{baseUrl}{newPath}{query}";
+    }
+    public static string RemoveSegments(string url) {
+        do {
+            var index = url.IndexOf("/{");
+            if (index < 0) break;
+            var lastIndex = url.IndexOf('}', index);
+            if (lastIndex < 0) break;
+            url = url.Remove(index, lastIndex - index + 1);
+        } while (true);
+        return url;
     }
 
     // Encoding ---------------------------------------------------------------------------------------------------------------------------

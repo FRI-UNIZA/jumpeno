@@ -7,8 +7,6 @@ public partial class GameButton {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string Class { get; set; } = "";
-    [Parameter]
     public required EmptyDelegate Action { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; } = null;

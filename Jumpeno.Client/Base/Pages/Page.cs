@@ -10,11 +10,6 @@ public class Page : ComponentBase, IAsyncDisposable {
     public const string ROLES_NAME = "ROLES";
     public const string ROLES_BLOCK_NAME = "ROLES_BLOCK";
 
-    // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    // NOTE: Used to trigger page rerender on theme change! (Important for Image URL)
-    private BaseTheme? RenderTheme { get; set; }
-
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() => ComponentCount++;
@@ -121,6 +116,7 @@ public class Page : ComponentBase, IAsyncDisposable {
         ParametersSetAsync = true;
         await OnPageParametersSetAsync(firstTime);
     }
+    protected sealed override bool ShouldRender() => ShouldPageRender();
     protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
     protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnPageAfterRenderAsync(firstRender);
     public async ValueTask DisposeAsync() {
@@ -135,8 +131,12 @@ public class Page : ComponentBase, IAsyncDisposable {
     protected virtual Task OnPageInitializedAsync() => Task.CompletedTask;
     protected virtual void OnPageParametersSet(bool firstTime) {}
     protected virtual Task OnPageParametersSetAsync(bool firstTime) => Task.CompletedTask;
+    protected virtual bool ShouldPageRender() => true;
     protected virtual void OnPageAfterRender(bool firstRender) {}
     protected virtual Task OnPageAfterRenderAsync(bool firstRender) => Task.CompletedTask;
     protected virtual void OnPageDispose() {}
     protected virtual ValueTask OnPageDisposeAsync() => ValueTask.CompletedTask;
+
+    // Notification -----------------------------------------------------------------------------------------------------------------------
+    public void Notify() => StateHasChanged();
 }

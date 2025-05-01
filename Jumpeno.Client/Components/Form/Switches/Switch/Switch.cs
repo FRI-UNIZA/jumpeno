@@ -33,12 +33,12 @@ public partial class Switch {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Switch() {
-        ID = ComponentService.GenerateID(CLASSNAME);
+        ID = IDGenerator.Generate(CLASSNAME);
         ID_ELEMENT = $"{ID}-{CLASSNAME_ELEMENT}";
     }
 
-    protected override void OnParametersSet(bool firstTime) => Value = DefaultValue;
-    protected override void OnAfterRender(bool firstRender) {
+    protected override void OnComponentParametersSet(bool firstTime) => Value = DefaultValue;
+    protected override void OnComponentAfterRender(bool firstRender) {
         if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSSwitch.InitInstance, ID, CLASSNAME_ELEMENT, Label);
     }

@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 using System.Reflection;
 
-public partial class ModalElement : IDisposable {
+public partial class ModalElement {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public required BaseTheme Theme { get; set; }
@@ -52,7 +52,7 @@ public partial class ModalElement : IDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private MODAL_STATE LastState = MODAL_STATE.CLOSED;
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (LastState != MODAL_STATE.OPEN && Modal.State == MODAL_STATE.OPEN) {
             ModalProvider.NotifyOpen();
         }
@@ -62,7 +62,7 @@ public partial class ModalElement : IDisposable {
         JS.InvokeVoid(JSModal.Activate, Modal.ID);
     }
 
-    public void Dispose() {
+    protected override void OnComponentDispose() {
         ModalProvider.NotifyDispose(Modal);
     }
 

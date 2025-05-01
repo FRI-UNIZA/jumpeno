@@ -1,0 +1,72 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<Modal
+    @ref="@ModalRef"
+    Unclosable="@Unclosable"
+    Label="@I18N.T("Cookie settings")"
+    MinWidth="600px"
+    MaxWidth="600px"
+>
+    <Content>
+        <div class="consent-container">
+            <Collapse>
+                <CollapseItem Label="@I18N.T("Mandatory cookies")">
+                    <Title>
+                        <CollapseTitle>
+                            <div class="@COOKIE_TITLE_ID">
+                                @I18N.T("Mandatory cookies")
+                                <Switch Label="@I18N.T("Allow mandatory cookies")" DefaultValue="true" Disabled StopPropagation />
+                            </div>
+                        </CollapseTitle>
+                    </Title>
+                    <Content>
+                        <CollapseContent>
+                            @I18N.T("Mandatory cookies text")
+                        </CollapseContent>
+                    </Content>
+                </CollapseItem>
+                <CollapseItem Label="@I18N.T("Functional cookies")">
+                    <Title>
+                        <CollapseTitle>
+                            <div class="@COOKIE_TITLE_ID">
+                                @I18N.T("Functional cookies")
+                                <Switch
+                                    Label="@I18N.T("Allow functional cookies")"
+                                    DefaultValue="@IsSelected(typeof(COOKIE_FUNCTIONAL))"
+                                    OnChange="@((value) => { UpdateSelection(typeof(COOKIE_FUNCTIONAL), value); })"
+                                    StopPropagation
+                                />
+                            </div>
+                        </CollapseTitle>
+                    </Title>
+                    <Content>
+                        <CollapseContent>
+                            @I18N.T("Functional cookies text")
+                        </CollapseContent>
+                    </Content>
+                </CollapseItem>
+            </Collapse>
+            <Paragraph Size="TEXT_SIZE.S" Class="cookie-paragraph">
+                @I18N.T("Cookie message cookie files (Cookie message)")
+                <Link Href="@URL.Link(I18N.T("LINK_COOKIE"))" Target="LINK_TARGET.BLANK" Size="TEXT_SIZE.S" NoWrap Underline>
+                    @I18N.T("Cookie message cookie files (cookie files)")
+                </Link>
+            </Paragraph>
+        </div>
+    </Content>
+    <Footer>
+        <div class="consent-footer">
+            <Button Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
+                <Text>@I18N.T("Accept chosen")</Text>
+            </Button>
+            <Button Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES_REQUIRED))">
+                <Text>@I18N.T("Only mandatory")</Text>
+            </Button>
+            <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES))">
+                <Text>@I18N.T("Accept all")</Text>
+            </Button>
+        </div>
+    </Footer>
+</Modal>

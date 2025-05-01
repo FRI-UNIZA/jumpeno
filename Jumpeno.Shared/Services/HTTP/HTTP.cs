@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
-#pragma warning disable CA1816
 
 public class HTTP : StaticService<HTTP>, IDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -163,13 +162,13 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                     string jsonResponse = await response!.Content.ReadAsStringAsync();
                     var json = JObject.Parse(jsonResponse);
                     string message;
-                    try { message = json["Message"]!.ToString(); }
+                    try { message = json[nameof(HTTPException.Message)]!.ToString(); }
                     catch { message = ""; }
                     if (message is null || message == "") message = "Something went wrong.";
                     List<Error> errors;
-                    try { errors = json["Errors"]!.ToObject<List<Error>>()!; }
+                    try { errors = json[nameof(HTTPException.Errors)]!.ToObject<List<Error>>()!; }
                     catch { errors = []; }
-                    var data = json["Data"]!.ToObject<IDictionary>();
+                    var data = json[nameof(HTTPException.Data)]!.ToObject<IDictionary>();
                     exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, errors, data);
                 } catch {
                     exception = new HTTPException(code, response?.Headers, response?.Content.Headers, "Something went wrong.");

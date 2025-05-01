@@ -1,5 +1,7 @@
 @namespace Jumpeno.Client.Components
 
+@inherits BasicComponent
+
 <div id="@ID" aria-hidden="true">
     @foreach (var canvas in List) {
         <BECanvas @ref="canvas.Ref" Width="@canvas.Width" Height="@canvas.Height" />

@@ -3,23 +3,29 @@ namespace Jumpeno.Client.Services;
 using System.Diagnostics;
 
 #pragma warning disable CS8618
-#pragma warning disable CA1816
 
 public class Navigator : StaticService<Navigator>, IDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly NavigationManager Manager;
     private static Action<string, bool, bool> ServerRedirect;
     private static Action ServerRefresh;
-    private bool ProgramNavigation;
-    private bool SettingQueries;
+    // Stats:
+    private string PreviousURL = "";
+    private bool ProgramNavigation = false;
+    private bool SettingQueries = false;
+    // Data & state:
+    private object? NavData = null;
+    private object? NavState = null;
+    // Notify:
+    private NOTIFY? Notify = null;
+    // Loading:
     private bool Loader = true;
-    private NOTIFY Notify = NOTIFY.PAGE;
-    private string PreviousURL;
+    private const int MIN_LOADING = 175; // ms
+    private Stopwatch Watch = new();
     private TaskCompletionSource NavigationFinished;
-    private const int MIN_LOADING_MS = 100;
-    private Stopwatch Watch;
+    // Locks:
     private readonly LockerSlim NavLock = new();
-
+    // Listeners & interceptors:
     private readonly List<EventPredicate<NavigationEvent>> Blockers = [];
     private readonly List<EventDelegate<NavigationEvent>> BeforeListeners = [];
     private readonly List<EventDelegate<NavigationEvent>> AfterListeners = [];
@@ -32,8 +38,6 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             Manager.RegisterLocationChangingHandler(BeforeLocationChanged);
             Manager.LocationChanged += AfterLocationChanged;
         }
-        ProgramNavigation = false;
-        SettingQueries = false;
         Disposer = new(this, NavLock.Dispose);
     }
     private readonly Disposer Disposer;
@@ -47,13 +51,11 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ServerRefresh = serverRefresh;
     }
 
-    public static void Init() {
-        Init((string url, bool forceLoad, bool replace) => {}, () => {});
-    }
+    public static void Init() => Init((url, forceLoad, replace) => {}, () => {});
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private async ValueTask BeforeLocationChanged(LocationChangingContext ctx) {
-        if (!ProgramNavigation) await NavLock.TryLock();
+        if (ctx.IsNavigationIntercepted || IsPopState) await NavLock.TryLock();
         await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION, true);
         PreviousURL = URL.Url();
 
@@ -66,30 +68,12 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             }
         }
         
-        if (URL.IsLocal(ctx.TargetLocation)) {
-            if (!ProgramNavigation) {
-                var isSameURL = URL.Path(PreviousURL) == URL.Path(ctx.TargetLocation);
-                if (Page.Current.GetType() == typeof(Error404Page)) {
-                    ctx.PreventNavigation();
-                    NavLock.TryUnlock();
-                    await NavigateTo(ctx.TargetLocation);
-                    return;
-                }
-                
-                if (isSameURL && IsPopState) {
-                    ctx.PreventNavigation();
-                    NavLock.TryUnlock();
-                    await NavigateTo(ctx.TargetLocation, forceLoad: true, replace: true);
-                    return;
-                }
-
-                var isCurrentCulture = I18N.IsCurrentCultureUrl(ctx.TargetLocation);
-                if (isSameURL || !isCurrentCulture) {
-                    ctx.PreventNavigation();
-                    NavLock.TryUnlock();
-                    await NavigateTo(ctx.TargetLocation, replace: isCurrentCulture);
-                    return;
-                }
+        if (URL.IsLocal(ctx.TargetLocation) && !ProgramNavigation) {
+            if (Page.Current.GetType() == typeof(Error404Page) && PreviousURL == ctx.TargetLocation) {
+                ctx.PreventNavigation();
+                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+                NavLock.TryUnlock();
+                return;
             }
         }
 
@@ -108,28 +92,39 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             await listener.Invoke(new(PreviousURL, e.Location));
         }
 
-        if (ProgramNavigation) {
-            if (!SettingQueries && URL.IsLocal(e.Location)) {
-                LayoutBase.Current.Notify(Notify);
-            }
+        if (Notify is NOTIFY notify) {
+            AppLayout.Notify(notify);
             NavigationFinished.TrySetResult();
+        } else {
+            var samePage = URL.PathMatches(URL.Path(PreviousURL), URL.Path(e.Location));
+            if (ProgramNavigation) {
+                if (!SettingQueries && URL.IsLocal(e.Location)) {
+                    AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+                }
+                NavigationFinished.TrySetResult();
+            } else {
+                AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+            }
         }
 
-        if (Loader) {
-            Watch?.Stop();
-            if ((Watch?.ElapsedMilliseconds ?? 0) > MIN_LOADING_MS) {
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
-            } else {
-                await Task.Delay(MIN_LOADING_MS - (int) (Watch?.ElapsedMilliseconds ?? 0));
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
-            }
-        } else await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+        if (NavState != null) SetState(NavState);
 
         ProgramNavigation = false;
         SettingQueries = false;
+        NavData = null;
+        NavState = null;
+        Notify = null;
         Loader = true;
-        Notify = NOTIFY.PAGE;
         IsPopState = false;
+
+        if (Loader) {
+            Watch.Stop();
+            if (Watch.ElapsedMilliseconds <= MIN_LOADING) {
+                await Task.Delay(MIN_LOADING - (int)Watch.ElapsedMilliseconds);
+            }
+        }
+        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+        Loader = true;
         
         foreach (var listener in AfterFinishListeners) {
             await listener.Invoke(new(PreviousURL, e.Location));
@@ -141,7 +136,8 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private async Task Navigate(
         string url,
         bool forceLoad = false, bool replace = false, bool queries = false,
-        bool loader = true, NOTIFY notify = NOTIFY.PAGE
+        object? data = null, object? state = null, NOTIFY? notify = null,
+        bool loader = true
     ) {
         await NavLock.TryLock();
 
@@ -155,36 +151,53 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
+        NavData = data;
+        NavState = AppEnvironment.IsClient ? state : null;
         Notify = notify;
         NavigationFinished = new TaskCompletionSource();
 
         if (!queries && URL.IsLocal(url)) {
-            if (!I18N.IsCurrentCultureUrl(url) || Page.Current.GetType() == typeof(Error404Page)) {
-                forceLoad = true;
-            }
-            if (URL.Path(url) == URL.Path()) {
-                replace = true;
-            }
+            if (!I18N.IsCurrentCultureUrl(url)) forceLoad = true;
         }
 
         Manager.NavigateTo(url, forceLoad, replace);
         await NavigationFinished.Task;
     }
 
-    public static async Task NavigateTo(string url, bool forceLoad = false, bool replace = false, NOTIFY notify = NOTIFY.PAGE) {
-        await Instance().Navigate(url, forceLoad, replace, queries: false, true, notify);
-    }
+    public static async Task NavigateTo(
+        string url, bool forceLoad = false, bool replace = false,
+        object? data = null, object? state = null, NOTIFY? notify = null
+    ) => await Instance().Navigate(
+        url,
+        forceLoad, replace, queries: false,
+        data, state, notify,
+        loader: true
+    );
     public static void Refresh() {
         if (AppEnvironment.IsServer) ServerRefresh();
         else Instance().Manager.Refresh(forceReload: true);
     }
-    public static async Task SetQueryParams(QueryParams queryParams) {
-        await Instance().Navigate(URL.SetQueryParams(queryParams), false, true, true, false, NOTIFY.NONE);
+    public static async Task SetQueryParams(QueryParams queryParams) => await Instance().Navigate(
+        URL.SetQueryParams(queryParams),
+        forceLoad: false, replace: true, queries: true,
+        data: null, state: null, notify: null,
+        loader: false
+    );
+
+    // NOTE: Accessible only in constructor!
+    public static T? Data<T>() {
+        try { return (T?)Instance().NavData; }
+        catch { return default; }
+    }
+    public static T Data<T>(T fallback) {
+        try { return (T?)Instance().NavData ?? fallback; }
+        catch { return fallback; }
     }
 
-    // State ------------------------------------------------------------------------------------------------------------------------------
-    public static T State<T>() => JS.Invoke<T>(JSNavigator.State);
-    public static void SetState<T>(T state, string? url = null) => JS.InvokeVoid(JSNavigator.SetState, state, url);
+    // NOTE: Can also be set in NavitageTo and is client only!
+    public static T? State<T>() => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State) : default;
+    public static T State<T>(T fallback) => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State) ?? fallback : fallback;
+    public static void SetState<T>(T state, string? url = null) { if (AppEnvironment.IsClient) JS.InvokeVoid(JSNavigator.SetState, state, url); }
 
     // Pop state --------------------------------------------------------------------------------------------------------------------------
     public static bool IsPopState { get; private set; } = false;

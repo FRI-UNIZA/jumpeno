@@ -6,10 +6,6 @@ public partial class Image {
     [Parameter]
     public string Alt { get; set; } = "";
     [Parameter]
-    public string Class { get; set; } = "";
-    [Parameter]
-    public string Style { get; set; } = "";
-    [Parameter]
     public bool NotDraggable { get; set; } = false;
     [Parameter]
     public bool Transparent { get; set; } = false;

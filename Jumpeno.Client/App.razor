@@ -2,7 +2,7 @@
 
 @code {
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private CookieConsentModal CookieConsentModalRef = null!;
+    private CookieModal CookieModalRef = null!;
     
     public void Notify() => StateHasChanged();
 
@@ -23,19 +23,24 @@
             ServerPageLoader.Hide();
             await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
             // Init actions:
-            await Init.TryActivate();
-            await Init.TryPasswordReset();
+            await Initialization();
             // PageLoader:
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
             await PageLoader.AwaitAllLoaders();
             // Focus:
-            if (cookieModalOpen) ActionHandler.SetFocus(CookieConsentModalRef.GetDialogID());
+            if (cookieModalOpen) ActionHandler.SetFocus(CookieModalRef.GetDialogID());
             else ActionHandler.SetFocus(WebDocument.ID);
         } catch {
             // Initialization error:
             ServerPageLoader.Stop();
             Notification.Error(I18N.T("Something went wrong."));
         }
+    }
+
+    // Init actions -----------------------------------------------------------------------------------------------------------------------
+    public async Task Initialization() {
+        await Init.TryActivate();
+        await Init.TryPasswordReset();
     }
 }
 
@@ -47,22 +52,24 @@
         <ModalProvider>
             <WebDocument>
                 <DocTitle Value="@AppSettings.Name" />
-                @if (AuthPage.IsRendering()) {
-                    <Router AppAssembly="@typeof(App).Assembly">
-                        <Found Context="routeData">
-                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                        </Found>
-                        <NotFound>
-                            <LayoutView Layout="@typeof(MainLayout)">
-                                <Error404Page />
-                            </LayoutView>
-                        </NotFound>
-                    </Router>
-                }
+                <AuthPage>
+                    <AppLayout>
+                        <Router AppAssembly="@typeof(App).Assembly">
+                            <Found Context="routeData">
+                                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                            </Found>
+                            <NotFound>
+                                <LayoutView Layout="@typeof(MainLayout)">
+                                    <Error404Page />
+                                </LayoutView>
+                            </NotFound>
+                        </Router>
+                    </AppLayout>
+                </AuthPage>
             </WebDocument>
         </ModalProvider>
     </PageLoader>
     <AntDesign.AntContainer />
-    <CookieConsentModal @ref="@CookieConsentModalRef" />
+    <CookieModal @ref="@CookieModalRef" />
     <Notification />
 </ThemeProvider>

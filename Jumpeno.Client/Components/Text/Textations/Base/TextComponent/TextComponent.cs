@@ -8,7 +8,5 @@ public partial class TextComponent: SurfaceComponent {
     [Parameter]
     public bool NoWrap { get; set; } = false;
     [Parameter]
-    public string? Style { get; set; } = null;
-    [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }

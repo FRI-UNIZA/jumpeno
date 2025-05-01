@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class SelectCulture {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASSNAME = "select-culture";
+    public const string CLASS = "select-culture";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly List<SelectOption> Options = I18N.LANGUAGES.Select(x => new SelectOption(x, x.ToUpper())).ToList();
@@ -37,7 +37,7 @@ public partial class SelectCulture {
         if (page is not Error404Page) {
             if (page is Error401Page || page is Error403Page) {
                 try {
-                    var type = Page.Type(LayoutBase.Current.Body) ?? throw new InvalidOperationException();
+                    var type = Page.Type(Layout.Current.Body) ?? throw new InvalidOperationException();
                     page = ((Page?) Activator.CreateInstance(type)) ?? throw new InvalidCastException();
                 } catch {
                     Navigator.Refresh();
@@ -93,7 +93,7 @@ public partial class SelectCulture {
         // Request redirect:
         await Navigator.NavigateTo(URL.SetQueryParams(API.BASE.CULTURE_REDIRECT, q), forceLoad: true);
     }
-    protected override void OnAfterRender(bool firstRender) {
+    protected override void OnComponentAfterRender(bool firstRender) {
         if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSTempTitle.Remove);
     }

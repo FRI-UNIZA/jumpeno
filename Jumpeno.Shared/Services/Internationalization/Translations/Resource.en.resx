@@ -621,4 +621,16 @@
   <data name="Activation email sent." xml:space="preserve">
     <value>Activation email sent.</value>
   </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Create new game" xml:space="preserve">
+    <value>Create new game</value>
+  </data>
+  <data name="Create game" xml:space="preserve">
+    <value>Create game</value>
+  </data>
+  <data name="You are not authorized to create games." xml:space="preserve">
+    <value>You are not authorized to create games.</value>
+  </data>
 </root>

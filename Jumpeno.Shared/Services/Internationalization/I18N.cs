@@ -101,7 +101,8 @@ public class I18N {
     public static string[] Split(string value) => value.Split(SPLIT);
     public static string UnSplit(string value) => value.Replace(SPLIT, "");
 
-    public static string Link<T>() {
+    // Links ------------------------------------------------------------------------------------------------------------------------------
+    private static string PageLink<T>() {
         string link = typeof(T).GetField($"ROUTE_{Culture.ToUpper()}")!.GetValue(null)!.ToString()!;
         if (USE_PREFIX && link == $"/{Culture}") {
             return $"{link}/";
@@ -109,10 +110,15 @@ public class I18N {
         if (link.EndsWith('/')) {
             return link[..^1];
         }
+        return link;
+    }
+
+    public static string Link<T>() {
+        string link = URL.RemoveSegments(PageLink<T>());
         return URL.Encode(link);
     }
     public static string Link<T>(object[] parameters) {
-        var link = Link<T>();
+        var link = URL.Encode(PageLink<T>());
         if (USE_PREFIX && link.StartsWith($"/{Culture}")) {
             link = link[$"/{Culture}".Length..];
         }

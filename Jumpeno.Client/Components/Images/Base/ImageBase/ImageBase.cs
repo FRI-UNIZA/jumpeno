@@ -7,7 +7,7 @@ namespace Jumpeno.Client.Components;
 /// Other css properties (e.g. border-radius...) style as you wish.
 /// Modify component parameters to controll transparency, image transition and loading.
 /// </summary>
-public partial class ImageBase : IDisposable {
+public partial class ImageBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "image";
     public const string CLASSNAME = "image-component";
@@ -21,8 +21,6 @@ public partial class ImageBase : IDisposable {
     public required string URL { get; set; }
     [Parameter]
     public string Alt { get; set; } = "";
-    [Parameter]
-    public string Style { get; set; } = "";
     [Parameter]
     public bool Draggable { get; set; } = true;
     [Parameter]
@@ -38,7 +36,7 @@ public partial class ImageBase : IDisposable {
     private readonly Dictionary<string, object> AdditionalAttributes = [];
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private string ID = "";
+    private readonly string ID = null!;
     private IMAGE_STATE State = IMAGE_STATE.LOADING;
     protected CSSClass ComputeClass() {
         var c = ComputeClass(CLASSNAME);
@@ -53,11 +51,12 @@ public partial class ImageBase : IDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ImageBase() {
-        ID = ComponentService.GenerateID(ID_PREFIX);
+        if (AppEnvironment.IsServer) return;
+        ID = IDGenerator.Generate(ID_PREFIX);
         Images[ID] = this;
     }
 
-    protected override void OnParametersSet(bool firstTime) {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
         var alt = Alt.Trim();
         AdditionalAttributes["alt"] = alt;
@@ -72,12 +71,13 @@ public partial class ImageBase : IDisposable {
         } 
     }
 
-    override protected void OnAfterRender(bool firstRender) {
+    override protected void OnComponentAfterRender(bool firstRender) {
         if (AppEnvironment.IsServer || !firstRender) return;
         JS.InvokeVoid(JSImage.Init, ID);
     }
 
-    public void Dispose() {
+    protected override void OnComponentDispose() {
+        if (AppEnvironment.IsServer) return;
         Images.Remove(ID);
     }
     

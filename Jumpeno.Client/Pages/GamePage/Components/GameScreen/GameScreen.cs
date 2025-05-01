@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class GameScreen : IAsyncDisposable {
+public partial class GameScreen {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
     public required BaseTheme Theme { get; set; }
@@ -13,7 +13,7 @@ public partial class GameScreen : IAsyncDisposable {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         if (VM.IsWatching) {
             await VM.AddAfterUpdatesListener(AfterUpdates);
@@ -31,7 +31,7 @@ public partial class GameScreen : IAsyncDisposable {
         await VM.InitOnRender();
     }
 
-    public async ValueTask DisposeAsync() {
+    protected override async ValueTask OnComponentDisposeAsync() {
         if (!AppEnvironment.IsServer) {
             if (VM.IsWatching) {
                 await VM.RemoveAfterUpdatesListener(AfterUpdates);

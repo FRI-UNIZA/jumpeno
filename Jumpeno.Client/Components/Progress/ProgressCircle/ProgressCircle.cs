@@ -10,13 +10,9 @@ public partial class ProgressCircle {
     // Paramters --------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public double? Progress { get; set; } = null;
-    [Parameter]
-    public string? Style { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected CSSClass ComputeClass() {
-        return ComputeClass(CLASS);
-    }
+    protected CSSClass ComputeClass() => ComputeClass(CLASS);
     protected CSSStyle ComputeStyle() {
         var s = new CSSStyle(Style);
         if (Progress is not null) s.Set("--progress", $"{Progress}");

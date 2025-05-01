@@ -37,7 +37,7 @@ public class InputViewModel<T> {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private InputViewModel(InputViewModelParams<T> @params) {
-        ID = @params.ID is null ? ComponentService.GenerateID(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
+        ID = @params.ID is null ? IDGenerator.Generate(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
         Type = InitType(@params);
         Name = @params.Name;
         Label = @params.Label;

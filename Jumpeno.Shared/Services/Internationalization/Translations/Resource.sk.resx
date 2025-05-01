@@ -621,4 +621,16 @@
   <data name="Activation email sent." xml:space="preserve">
     <value>Aktivačný email odoslaný.</value>
   </data>
+  <data name="Create" xml:space="preserve">
+    <value>Vytvoriť</value>
+  </data>
+  <data name="Create new game" xml:space="preserve">
+    <value>Vytvoriť novú hru</value>
+  </data>
+  <data name="Create game" xml:space="preserve">
+    <value>Vytvoriť hru</value>
+  </data>
+  <data name="You are not authorized to create games." xml:space="preserve">
+    <value>Nemáte oprávnenie vytvárať hry.</value>
+  </data>
 </root>

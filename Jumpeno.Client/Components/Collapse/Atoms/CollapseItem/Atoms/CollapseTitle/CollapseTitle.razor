@@ -1,4 +1,4 @@
-@namespace Jumpeno.Client.Atoms
+@namespace Jumpeno.Client.Components
 
 @inherits SurfaceComponent
 
@@ -12,9 +12,7 @@
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected CSSClass ComputeClass() {
-        return ComputeClass(CLASS_COLLAPSE_TITLE);
-    }
+    protected CSSClass ComputeClass() => ComputeClass(CLASS_COLLAPSE_TITLE);
 }
 
 <div class="@ComputeClass()">

@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 public partial class InputError {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -17,7 +17,5 @@ public partial class InputError {
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputeClass() {
-        return ComputeClass(CLASS_INPUT_ERROR);
-    }
+    private CSSClass ComputeClass() => ComputeClass(CLASS_INPUT_ERROR);
 }

@@ -13,8 +13,6 @@ public partial class TextElementBase: SurfaceComponent {
     public bool NoWrap { get; set; } = false;
     [Parameter]
     public required bool Spacing { get; set; }
-    [Parameter]
-    public string? Style { get; set; } = null;
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter]

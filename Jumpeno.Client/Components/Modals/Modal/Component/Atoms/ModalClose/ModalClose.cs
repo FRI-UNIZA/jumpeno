@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 public partial class ModalClose {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -11,19 +11,16 @@ public partial class ModalClose {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool? LastUnclosable;
-    private string ComputeID() {
-        return $"{Modal.ID}-{CLASSNAME}";
-    }
+    private string ComputeID() => $"{Modal.ID}-{CLASSNAME}";
     private CSSClass ComputeClass() {
         var c = new CSSClass(CLASSNAME);
         if (Modal.Unclosable) c.Set("unclosable");
         return c;
     }
-    private bool ComputeInert() {
-        return Modal.Unclosable;
-    }
+    private bool ComputeInert() => Modal.Unclosable;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (Modal.Unclosable && LastUnclosable == false) {
             JS.InvokeVoid(JSModal.AdaptCloseFocus, Modal.ID, ComputeID());
         }

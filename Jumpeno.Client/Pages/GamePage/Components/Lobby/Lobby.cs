@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class Lobby : IDisposable {
+public partial class Lobby {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required GameViewModel VM { get; set; }
@@ -14,14 +14,11 @@ public partial class Lobby : IDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         await VM.InitOnRender();
         await VM.StartUpdating();
     }
 
-    public void Dispose() {
-        VM.StopUpdating();
-        GC.SuppressFinalize(this);
-    }
+    protected override void OnComponentDispose() => VM.StopUpdating();
 }

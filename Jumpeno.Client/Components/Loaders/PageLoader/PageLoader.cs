@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class PageLoader : IDisposable {
+public partial class PageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_CONTENT = "page-loader-content";
     public const string ID = "page-loader";
@@ -33,10 +33,7 @@ public partial class PageLoader : IDisposable {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public void Dispose() {
-        Lock.Dispose();
-        GC.SuppressFinalize(this);
-    }
+    protected override void OnComponentDispose() => Lock.Dispose();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private async Task OnChange() {

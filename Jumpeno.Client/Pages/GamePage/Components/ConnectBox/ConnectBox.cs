@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class ConnectBox : IAsyncDisposable {
+public partial class ConnectBox {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required ConnectViewModel VM { get; set; }
@@ -36,27 +36,26 @@ public partial class ConnectBox : IAsyncDisposable {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private readonly TaskCompletionSource InitTCS = new();
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnComponentInitializedAsync() {
         await InitAutoWatch();
         await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
         if (Auth.IsRegisteredUser) ShowName = false;
         InitTCS.TrySetResult();
     }
 
-    protected override async Task OnParametersSetAsync(bool firstTime) {
+    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
         if (!firstTime) return;
         await VM.AddURLCodeChangedListener(SetInputCode);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         await InitTCS.Task;
         await TryAutoWatch();
     }
 
-    public async ValueTask DisposeAsync() {
+    protected override async ValueTask OnComponentDisposeAsync() {
         await VM.RemoveURLCodeChangedListener(SetInputCode);
-        GC.SuppressFinalize(this);
     }
 
     // Auto-Watch -------------------------------------------------------------------------------------------------------------------------

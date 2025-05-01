@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class DropDown : IAsyncDisposable {
+public partial class DropDown {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "dropdown";
     public const string ID_START_PREFIX = "dropdown-start";
@@ -16,6 +16,8 @@ public partial class DropDown : IAsyncDisposable {
     public const string CLASS_OPTIONS = "dropdown-options";
 
     public const string CLASS_END = "dropdown-end";
+    // Parameters:
+    public const string PARAM_REF = "Ref";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -56,11 +58,11 @@ public partial class DropDown : IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------    
     public DropDown() {
-        SetIDs(ComponentService.GenerateID(ID_PREFIX));
+        SetIDs(IDGenerator.Generate(ID_PREFIX));
         Ref = DotNetObjectReference.Create(this);
     }
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnComponentInitializedAsync() {
         if (AppEnvironment.IsClient) {
             await Window.AddClickEventListener(Ref, OnClick);
             await Window.AddScrollEventListener(Ref, OnScroll);
@@ -69,12 +71,12 @@ public partial class DropDown : IAsyncDisposable {
         }
     }
 
-    protected override void OnParametersSet(bool firstTime) {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
         if (ID != null) SetIDs(ID);
     }
 
-    public async ValueTask DisposeAsync() {
+    protected override async ValueTask OnComponentDisposeAsync() {
         if (AppEnvironment.IsClient) {
             await Window.RemoveClickEventListener(Ref, OnClick);
             await Window.RemoveScrollEventListener(Ref, OnScroll);

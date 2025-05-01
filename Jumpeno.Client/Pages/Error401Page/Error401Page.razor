@@ -6,7 +6,12 @@
     <DocTitle Value="@I18N.T("401 Not authenticated")" />
     <Heading1 Size="TEXT_SIZE.XL" Class="error-page-heading">@I18N.T("Error 401")</Heading1>
     <Paragraph Size="TEXT_SIZE.L" Class="error-page-paragraph" Spacing>@I18N.T("We apologize, you are not logged in.")</Paragraph>
-    <Button Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.M" Parameters="@(new ButtonLinkParameters(Href: I18N.Link<LoginPage>()))">
+    <Button
+        Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.M"
+        Params="@(new ButtonLinkParams(
+            Href: I18N.Link<LoginPage>()
+        ))"
+    >
         <Icon><AntIcon Type="login" Theme="outline" /></Icon>
         <Text>@I18N.T("Log in")</Text>
     </Button>

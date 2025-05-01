@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Atoms;
+namespace Jumpeno.Client.Components;
 
 using System.Reflection;
 
@@ -11,7 +11,7 @@ public partial class DocTitle {
     private string Title { get; set; } = "";
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnParametersSet() {
+    protected override void OnComponentParametersSet(bool firstTime) {
         if (Title == Value) return;
         
         Type myClassType = typeof(WebDocument);

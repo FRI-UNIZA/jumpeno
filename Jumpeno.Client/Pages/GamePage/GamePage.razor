@@ -7,7 +7,11 @@
 <div class="game-page">
     <DocTitle Value="@I18N.T("Game")" />
     @if (GameVM is null) {
-        <ConnectBox VM="ConnectVM" />
+        if (!ConnectVM.Create) {
+            <ConnectBox VM="ConnectVM" />
+        } else {
+            <CreateBox VM="ConnectVM" />
+        }
     } else switch (GameVM.Game.State) {
         case GAME_STATE.LOBBY:
         case GAME_STATE.SCOREBOARD:
