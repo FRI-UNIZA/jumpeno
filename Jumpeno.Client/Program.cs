@@ -41,10 +41,9 @@ HTTP.Init(
         if (!Auth.IsLoggedIn) throw e;
         await Auth.Refresh(iteration);
     },
-    async e => {
-        if (e is HTTPException eHTTP) ErrorHandler.Display(eHTTP);
-        else if (e is CoreException eCore) ErrorHandler.Display(eCore);
-        else ErrorHandler.Notify(CoreException.DEFAULT_MESSAGE);
+    async (e, form) => {
+        if (e is AppException eApp) ErrorHandler.Display(eApp, form);
+        else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
     }
 );

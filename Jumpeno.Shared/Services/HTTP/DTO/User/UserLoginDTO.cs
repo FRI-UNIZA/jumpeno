@@ -3,11 +3,11 @@ namespace Jumpeno.Shared.Models;
 public record UserLoginDTO(
     string Email,
     string Password
-) {
+) : IValidable<UserLoginDTO> {
     public List<Error> Validate() {
-        var errors = UserValidator.ValidateEmail(Email);
-        errors.AddRange(UserValidator.ValidatePassword(Password));
+        var errors = UserValidator.ValidateEmail(Email, nameof(Email));
+        errors.AddRange(UserValidator.ValidatePassword(Password, nameof(Password)));
         return errors;
     }
-    public void Check(string? message = null) => Checker.CheckValues(Validate(), message);
+    public UserLoginDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
 }

@@ -19,11 +19,11 @@
             await AuthPage.AddRedirect();
             // Cookie modal:
             var cookieModalOpen = await CookieStorage.InitModal();
+            // Init actions:
+            await Initialize();
             // Server loader:
             ServerPageLoader.Hide();
             await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
-            // Init actions:
-            await Initialization();
             // PageLoader:
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
             await PageLoader.AwaitAllLoaders();
@@ -33,14 +33,15 @@
         } catch {
             // Initialization error:
             ServerPageLoader.Stop();
-            Notification.Error(I18N.T("Something went wrong."));
+            Notification.Error(MESSAGE.DEFAULT.T);
         }
     }
 
     // Init actions -----------------------------------------------------------------------------------------------------------------------
-    public async Task Initialization() {
+    public async Task Initialize() {
         await Init.TryActivate();
         await Init.TryPasswordReset();
+        await Init.TryAutoWatch();
     }
 }
 

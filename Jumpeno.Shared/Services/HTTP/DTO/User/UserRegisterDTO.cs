@@ -4,12 +4,12 @@ public record UserRegisterDTO(
     string Email,
     string Name,
     string Password
-) {
+) : IValidable<UserRegisterDTO> {
     public List<Error> Validate() {
-        var errors = UserValidator.ValidateEmail(Email);
-        errors.AddRange(UserValidator.ValidateName(Name));
-        errors.AddRange(UserValidator.ValidatePassword(Password));
+        var errors = UserValidator.ValidateEmail(Email, nameof(Email));
+        errors.AddRange(UserValidator.ValidateName(Name, true, nameof(Name)));
+        errors.AddRange(UserValidator.ValidatePassword(Password, nameof(Password)));
         return errors;
     }
-    public void Check(string? message = null) => Checker.CheckValues(Validate(), message);
+    public UserRegisterDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
 }

@@ -11,7 +11,7 @@ public partial class InputWrap {
     [Parameter]
     public required InputErrorViewModel ErrorVM { get; set; } 
     [Parameter]
-    public required string ID { get; set; }
+    public required string FormID { get; set; }
     [Parameter]
     public required string Label { get; set; }
     [Parameter]
@@ -38,12 +38,12 @@ public partial class InputWrap {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private void HandleErrorClick(MouseEventArgs e) {
-        ActionHandler.SetFocus(ID);
+        ActionHandler.SetFocus(FormID);
     }
 
     private void HandleErrorKeyDown(KeyboardEventArgs e) {
         if (e.Key == KEYBOARD.ENTER) {
-            ActionHandler.SetFocus(ID);
+            ActionHandler.SetFocus(FormID);
         }
     }
 }

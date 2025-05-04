@@ -10,12 +10,12 @@ public class UserController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status201Created)]
     public async Task<MessageDTOR> Register([FromBody] UserRegisterDTO body) {
         // 1) Validation:
-        body.Check();
+        body.Assert();
         // 2) Transaction:
         UserEntity user = null!;
         await DB.Transaction(async () => {
-            user = await UserEntity.Create(body.Email.ToLower(), body.Name);
-            await PasswordEntity.Create(user.ID, body.Password);
+            user = await UserEntity.Create(body.Email.ToLower(), body.Name, nameof(body.Email), nameof(body.Name));
+            await PasswordEntity.Create(user.ID, body.Password, passwordID: nameof(body.Password));
             await ActivationEntity.Create(user.ID);
         });
         // 3) Activation email:
@@ -31,9 +31,9 @@ public class UserController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> SendActivation() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         // 2) Check activation:
-        if (user.Activation == null) throw new CoreException().SetCode(404).SetMessage("Account already activated.");
+        if (user.Activation == null) throw EXCEPTION.NOT_FOUND.SetInfo("Account already activated.");
         // 3) Activation email:
         Email.SendActivation(user.Email, user.ID);
         // 4) Response:
@@ -48,14 +48,14 @@ public class UserController : ControllerBase {
     public async Task<MessageDTOR> Activate([FromBody] UserActivateDTO body) {
         // 1) Validation:
         try {
-            body.Check();
-            JWT.CheckActivation(body.ActivationToken);
+            body.Assert();
+            JWT.AssertActivation(body.ActivationToken);
             Token.StoreActivation(body.ActivationToken);
         } catch {
-            throw Exceptions.InvalidToken;
+            throw EXCEPTION.INVALID_TOKEN;
         }
         // 2) Activation:
-        if (!await ActivationEntity.Delete(Token.Activation.sub)) throw Exceptions.InvalidToken;
+        if (!await ActivationEntity.Delete(Token.Activation.sub, nameof(body.ActivationToken))) throw EXCEPTION.INVALID_TOKEN;
         // 3) Response:
         return new($"{I18N.T("Account activated")}.");
     }
@@ -67,11 +67,11 @@ public class UserController : ControllerBase {
     [ProducesResponseType(typeof(UserLoginDTOR), StatusCodes.Status200OK)]
     public async Task<UserLoginDTOR> Login([FromBody] UserLoginDTO body) {
         // 1) Validation:
-        body.Check();
+        body.Assert();
         // 2) Authentication:
-        var user = await UserEntity.ByEmailLeftJoinPassword(body.Email) ?? throw Exceptions.NotAuthenticated;
-        if (user.Password == null) throw Exceptions.NotAuthenticated;
-        if (!PasswordEntity.Validate(body.Password, user.Password.Salt, user.Password.Hash)) throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByEmailLeftJoinPassword(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        if (user.Password == null) throw EXCEPTION.NOT_AUTHENTICATED;
+        if (!PasswordEntity.Validate(body.Password, user.Password.Salt, user.Password.Hash)) throw EXCEPTION.NOT_AUTHENTICATED;
         // 3) Create tokens:
         var id = Guid.Parse(user.ID);
         var accessToken = JWT.GenerateUserAccess(id);
@@ -94,9 +94,9 @@ public class UserController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> PasswordResetRequest([FromBody] UserPasswordResetRequestDTO body) {
         // 1) Validation:
-        body.Check();
+        body.Assert();
         // 2) Authentication:
-        var user = await UserEntity.ByEmail(body.Email) ?? throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByEmail(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         // 3) Generate password:
         var g = new StringGenerator();
         var password = g.Generate(UserValidator.PASSWORD_GENERATOR_MIN_LENGTH, UserValidator.PASSWORD_GENERATOR_MAX_LENGTH, CHARS.ALPHA_NUM);
@@ -126,15 +126,15 @@ public class UserController : ControllerBase {
     public async Task<MessageDTOR> PasswordReset([FromBody] UserPasswordResetDTO body) {
         // 1) Validation:
         try {
-            body.Check();
-            JWT.CheckPasswordReset(body.ResetToken);
+            body.Assert();
+            JWT.AssertPasswordReset(body.ResetToken);
             Token.StorePasswordReset(body.ResetToken);
         } catch {
-            throw Exceptions.InvalidToken;
+            throw EXCEPTION.INVALID_TOKEN;
         }
         // 2) Password reset:
-        var user = await UserEntity.ByEmail(Token.PasswordReset.sub) ?? throw Exceptions.InvalidToken;
-        if (!await PasswordEntity.Update(user.ID, Token.PasswordReset.data)) throw Exceptions.InvalidToken;
+        var user = await UserEntity.ByEmail(Token.PasswordReset.sub, nameof(body.ResetToken)) ?? throw EXCEPTION.INVALID_TOKEN;
+        if (!await PasswordEntity.Update(user.ID, Token.PasswordReset.data, nameof(body.ResetToken), nameof(body.ResetToken))) throw EXCEPTION.INVALID_TOKEN;
         // 3) Response:
         return new(I18N.T("Password reset successful."));
     }
@@ -145,7 +145,7 @@ public class UserController : ControllerBase {
     [ProducesResponseType(typeof(UserProfileDTOR), StatusCodes.Status200OK)]
     public async Task<UserProfileDTOR> Profile() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         // 2) Cast to profile:
         var profile = new User(Guid.Parse(user.ID), user.Email, user.Name, (SKIN)user.Skin, user.Activation == null);
         // 3) Response:

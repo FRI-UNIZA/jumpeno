@@ -10,13 +10,13 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Login([FromBody] AdminLoginDTO body) {
         // 1) Validation:
-        body.Check();
+        body.Assert();
         // 2) Authentication:
         string? email = null;
         foreach (var adminEmail in ServerSettings.Auth.Admins) {
             if (body.Email == adminEmail) { email = adminEmail; break; } 
         }
-        if (email == null) throw Exceptions.NotAuthenticated;
+        if (email == null) throw EXCEPTION.NOT_AUTHENTICATED;
         // 3) Create refresh token:
         var refreshToken = JWT.GenerateAdminRefresh(email);
         // 4) Store refresh token:

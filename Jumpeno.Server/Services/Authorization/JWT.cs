@@ -106,21 +106,21 @@ public static class JWT {
             return false;
         }
     }
-    private static string Check(TOKEN_TYPE type, string secret, string token) {
-        return Validate(type, secret, token) ? token : throw Exceptions.NotAuthenticated;
+    private static string Assert(TOKEN_TYPE type, string secret, string token) {
+        return Validate(type, secret, token) ? token : throw EXCEPTION.NOT_AUTHENTICATED;
     }
 
     public static bool ValidateAccess(string token) => Validate(TOKEN_TYPE.ACCESS, ACCESS_SECRET, token);
-    public static string CheckAccess(string token) => Check(TOKEN_TYPE.ACCESS, ACCESS_SECRET, token);
+    public static string AssertAccess(string token) => Assert(TOKEN_TYPE.ACCESS, ACCESS_SECRET, token);
     
     public static bool ValidateRefresh(string token) => Validate(TOKEN_TYPE.REFRESH, REFRESH_SECRET, token);
-    public static string CheckRefresh(string token) => Check(TOKEN_TYPE.REFRESH, REFRESH_SECRET, token);
+    public static string AssertRefresh(string token) => Assert(TOKEN_TYPE.REFRESH, REFRESH_SECRET, token);
     
     public static bool ValidateActivation(string token) => Validate(TOKEN_TYPE.ACTIVATION, DATA_SECRET, token);
-    public static string CheckActivation(string token) => Check(TOKEN_TYPE.ACTIVATION, DATA_SECRET, token);
+    public static string AssertActivation(string token) => Assert(TOKEN_TYPE.ACTIVATION, DATA_SECRET, token);
     
     public static bool ValidatePasswordReset(string token) => Validate(TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, token);
-    public static string CheckPasswordReset(string token) => Check(TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, token);
+    public static string AssertPasswordReset(string token) => Assert(TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, token);
 
     // Refresh ----------------------------------------------------------------------------------------------------------------------------
     public static void SetRefreshTokenCookie(string token) {
@@ -172,10 +172,10 @@ public static class JWT {
         if (roleAttribute == null) return;
             
         var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
-        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw Exceptions.NotAuthenticated;
+        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw EXCEPTION.NOT_AUTHENTICATED;
         
         string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
-        if (!ValidateAccess(token)) throw Exceptions.NotAuthenticated;
+        if (!ValidateAccess(token)) throw EXCEPTION.NOT_AUTHENTICATED;
 
         Token.StoreAccess(token);
         bool allowed = false;
@@ -185,6 +185,6 @@ public static class JWT {
                 break;
             }
         }
-        if (!allowed) throw Exceptions.NotAuthorized;
+        if (!allowed) throw EXCEPTION.NOT_AUTHORIZED;
     }
 }

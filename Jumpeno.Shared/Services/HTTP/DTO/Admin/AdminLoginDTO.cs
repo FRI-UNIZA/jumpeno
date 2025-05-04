@@ -2,7 +2,7 @@ namespace Jumpeno.Shared.Models;
 
 public record AdminLoginDTO(
     string Email
-) {
-    public List<Error> Validate() => AdminValidator.ValidateEmail(Email);
-    public void Check(string? message = null) => Checker.CheckValues(Validate(), message);
+) : IValidable<AdminLoginDTO> {
+    public List<Error> Validate() => AdminValidator.ValidateEmail(Email, nameof(Email));
+    public AdminLoginDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
 }

@@ -23,7 +23,6 @@ global using Jumpeno.Client;
 global using Jumpeno.Client.Base;
 global using Jumpeno.Client.Constants;
 global using Jumpeno.Client.Models;
-global using Jumpeno.Client.Params;
 global using Jumpeno.Client.ViewModels;
 global using Jumpeno.Client.Layouts;
 global using Jumpeno.Client.Pages;

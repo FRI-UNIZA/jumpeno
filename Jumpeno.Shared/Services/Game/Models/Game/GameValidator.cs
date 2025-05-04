@@ -2,86 +2,78 @@ namespace Jumpeno.Shared.Utils;
 
 public static class GameValidator {
     // Code -------------------------------------------------------------------------------------------------------------------------------
-    public const string CODE = "Game.Code";
-
-    // Constants:
     public const byte CODE_LENGTH = 4;
 
-    public static List<Error> ValidateCode(string code) {
-        var errors = Checker.Validate(code.Length != CODE_LENGTH,
-            new Error(CODE, "Length must be equal to I18N{length}", new() {{"length", $"{CODE_LENGTH}"}})
+    public static List<Error> ValidateCode(string value, string id = "") {
+        var errors = Checker.Validate(value.Length != CODE_LENGTH,
+            ERROR.DEFAULT.SetID(id)
+            .SetInfo("Length must be equal to I18N{length}", new() {{ "length", CODE_LENGTH }})
         );
-        Checker.Validate(errors, !Checker.IsAlphaNum(code), new Error(CODE, "Code must be alphanumeric"));
-        Checker.Validate(errors, code.ToUpper() != code, new Error(CODE, "Code must be uppercase"));
+        Checker.Validate(errors, !Checker.IsAlphaNum(value), ERROR.DEFAULT.SetID(id).SetInfo("Code must be alphanumeric"));
+        Checker.Validate(errors, value.ToUpper() != value, ERROR.DEFAULT.SetID(id).SetInfo("Code must be uppercase"));
         return errors;
     }
-    public static void CheckCode(string code) => Checker.Check(ValidateCode(code));
+    public static string AssertCode(string value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateCode(value, id), exception ?? EXCEPTION.VALUES);
+    }
 
     // Name -------------------------------------------------------------------------------------------------------------------------------
-    public const string NAME = "Game.Name";
-    
-    // Constants:
     public const byte NAME_MIN_LENGTH = 3;
     public const byte NAME_MAX_LENGTH = 20;
 
-    public static List<Error> ValidateName(string name) {
-        name = name.Trim();
+    public static List<Error> ValidateName(string value, string id = "") {
+        value = value.Trim();
         var errors = Checker.Validate(
-            name.Length < NAME_MIN_LENGTH || NAME_MAX_LENGTH < name.Length,
-            new Error(
-                NAME,
-                "Length is not between I18N{min} and I18N{max}",
-                new() {{"min", $"{NAME_MIN_LENGTH}"}, {"max", $"{NAME_MAX_LENGTH}"}}
-            )
+            value.Length < NAME_MIN_LENGTH || NAME_MAX_LENGTH < value.Length,
+            ERROR.DEFAULT.SetID(id)
+            .SetInfo("Length is not between I18N{min} and I18N{max}", new() {{ "min", NAME_MIN_LENGTH }, { "max", NAME_MAX_LENGTH }})
         );
-        Checker.Validate(errors, !Checker.IsAlphaNum(name, ['.', ' ']), new Error(NAME, "Value contains not allowed character"));
-        Checker.Validate(errors, name.Length > 0 && name[0] == '.', new Error(NAME, "Value must not start with a dot"));
+        Checker.Validate(errors, !Checker.IsAlphaNum(value, ['.', ' ']), ERROR.DEFAULT.SetID(id).SetInfo("Value contains not allowed character"));
+        Checker.Validate(errors, value.Length > 0 && value[0] == '.', ERROR.DEFAULT.SetID(id).SetInfo("Value must not start with a dot"));
         return errors;
     }
-    public static void CheckName(string name) => Checker.Check(ValidateName(name));
+    public static string AssertName(string value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateName(value, id), exception ?? EXCEPTION.VALUES);
+    }
 
     // Capacity ---------------------------------------------------------------------------------------------------------------------------
-    public const string CAPACITY = "Game.Capacity";
-
-    // Constants:
     public const byte MIN_CAPACITY = 2;
     public const byte MAX_CAPACITY = 10;
 
-    public static List<Error> ValidateCapacity(byte capacity) => Checker.Validate(
-        capacity < MIN_CAPACITY || MAX_CAPACITY < capacity,
-        new Error(
-            CAPACITY, "Capacity not between I18N{min} and I18N{max}",
-            new() {{"min", $"{MIN_CAPACITY}"}, {"max", $"{MAX_CAPACITY}"}}
-        )
+    public static List<Error> ValidateCapacity(byte value, string id = "") => Checker.Validate(
+        value < MIN_CAPACITY || MAX_CAPACITY < value,
+        ERROR.DEFAULT.SetID(id)
+        .SetInfo("Capacity not between I18N{min} and I18N{max}", new() {{ "min", MIN_CAPACITY }, { "max", MAX_CAPACITY }})
     );
-    public static void CheckCapacity(byte capacity) => Checker.Check(ValidateCapacity(capacity));
+    public static byte AssertCapacity(byte value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateCapacity(value, id), exception ?? EXCEPTION.VALUES);
+    }
 
-    public static List<Error> ValidatePlayerCount(Game game) => Checker.Validate(
-        game.Capacity <= game.ActivePlayersCount,
-        new Error(CAPACITY, "The game is currently full!")
+    public static List<Error> ValidatePlayerCount(Game value, string id = "") => Checker.Validate(
+        value.Capacity <= value.ActivePlayersCount,
+        ERROR.DEFAULT.SetID(id).SetInfo("The game is currently full!")
     );
-    public static void CheckPlayerCount(Game game) => Checker.Check(ValidatePlayerCount(game));
+    public static Game AssertPlayerCount(Game value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidatePlayerCount(value, id), exception ?? EXCEPTION.VALUES);
+    }
 
     // Connection -------------------------------------------------------------------------------------------------------------------------
-    public const string CONNECTION = "Game.Connection";
-
-    public static List<Error> ValidateConnectionType(Connection connection) => Checker.Validate(
-        connection.GetType() != typeof(Connection),
-        new Error(CONNECTION, "Connection type invalid!")
+    public static List<Error> ValidateConnectionType(Connection value, string id = "") => Checker.Validate(
+        value.GetType() != typeof(Connection),
+        ERROR.DEFAULT.SetID(id).SetInfo("Connection type invalid!")
     );
-    public static void CheckConnectionType(Connection connection) => Checker.Check(ValidateConnectionType(connection));
+    public static Connection AssertConnectionType(Connection value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateConnectionType(value, id), exception ?? EXCEPTION.VALUES);
+    }
 
     // Spectators -------------------------------------------------------------------------------------------------------------------------
-    public const string SPECTATORS = "Game.Spectators";
-
-    // Constants:
     public const int MAX_SPECTATORS = 100;
 
-    public static List<Error> ValidateSpectatorCount(Game value) => Checker.Validate(
+    public static List<Error> ValidateSpectatorCount(Game value, string id = "") => Checker.Validate(
         MAX_SPECTATORS <= value.SpectatorCount,
-        new Error(SPECTATORS, "Game can not have more spectators!")
+        ERROR.DEFAULT.SetID(id).SetInfo("Game can not have more spectators!")
     );
-    public static Game CheckSpectatorCount(Game value, string? message = null) {
-        Checker.Check(ValidateSpectatorCount(value), message); return value;
+    public static Game AssertSpectatorCount(Game value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateSpectatorCount(value, id), exception ?? EXCEPTION.VALUES);
     }
 }

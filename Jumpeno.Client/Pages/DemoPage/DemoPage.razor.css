@@ -1,0 +1,27 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.demo-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.demo-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    max-width: 100%;
+    gap: 20px;
+}
+
+::deep .demo-heading.surface-all {
+    --text-align: center;
+}
+
+.demo-page > div:not(.demo-form) {
+    display: flex;
+    gap: 20px;
+}

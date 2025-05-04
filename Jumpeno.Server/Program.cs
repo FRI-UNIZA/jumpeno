@@ -178,11 +178,10 @@ app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
     (iteration, e) => throw e,
-    async e => {
+    async (e, form) => {
         if (AppEnvironment.IsController) return;
-        if (e is HTTPException eHTTP) ErrorHandler.Notify(eHTTP);
-        else if (e is CoreException eCore) ErrorHandler.Notify(eCore);
-        else ErrorHandler.Notify(CoreException.DEFAULT_MESSAGE);
+        if (e is AppException eApp) ErrorHandler.Notify(eApp);
+        else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
     },
     request => {

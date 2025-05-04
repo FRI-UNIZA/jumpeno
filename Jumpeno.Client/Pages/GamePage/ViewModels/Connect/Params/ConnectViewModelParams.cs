@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Params;
+namespace Jumpeno.Client.Models;
 
 public record struct ConnectViewModelParams(
     bool Create,

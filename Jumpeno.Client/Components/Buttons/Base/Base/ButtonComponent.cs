@@ -11,7 +11,7 @@ public class ButtonComponent : SurfaceComponent {
     [Parameter]
     public required OneOf<ButtonParams, ButtonLinkParams> Params { get; set; } = DEFAULT_PARAMS;
     [Parameter]
-    public EventCallback<ButtonComponent> OnClick { get; set; } = EventCallback<ButtonComponent>.Empty;
+    public EventCallback<ButtonClickEvent> OnClick { get; set; } = EventCallback<ButtonClickEvent>.Empty;
     [Parameter]
     public RenderFragment? Icon { get; set; }
     [Parameter]

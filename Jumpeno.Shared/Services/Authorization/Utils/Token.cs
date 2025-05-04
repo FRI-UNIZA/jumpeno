@@ -19,14 +19,14 @@ public class Token {
     ) {};
 
     // Token storage ----------------------------------------------------------------------------------------------------------------------
-    public static Data Access => RequestStorage.Get<Data>(TOKEN_TYPE.ACCESS.String()) ?? throw Exceptions.NotAuthenticated;
-    public static Data Refresh => RequestStorage.Get<Data>(TOKEN_TYPE.REFRESH.String()) ?? throw Exceptions.NotAuthenticated;
-    public static Data Activation => RequestStorage.Get<Data>(TOKEN_TYPE.ACTIVATION.String()) ?? throw Exceptions.NotAuthenticated;
-    public static Data PasswordReset => RequestStorage.Get<Data>(TOKEN_TYPE.PASSWORD_RESET.String()) ?? throw Exceptions.NotAuthenticated;
+    public static Data Access => RequestStorage.Get<Data>(TOKEN_TYPE.ACCESS.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data Refresh => RequestStorage.Get<Data>(TOKEN_TYPE.REFRESH.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data Activation => RequestStorage.Get<Data>(TOKEN_TYPE.ACTIVATION.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data PasswordReset => RequestStorage.Get<Data>(TOKEN_TYPE.PASSWORD_RESET.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
 
     private static void Store(string key, string token) {
-        if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw Exceptions.NotAuthenticated;
-        var data = Decode(token) ?? throw Exceptions.NotAuthenticated;
+        if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw EXCEPTION.NOT_AUTHENTICATED;
+        var data = Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         RequestStorage.Set(key, data);
     }
     public static void StoreAccess(string token) => Store(TOKEN_TYPE.ACCESS.String(), token);
@@ -35,7 +35,7 @@ public class Token {
     public static void StorePasswordReset(string token) => Store(TOKEN_TYPE.PASSWORD_RESET.String(), token);
     
     private static void Delete(string key) {
-        if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw Exceptions.NotAuthenticated;
+        if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw EXCEPTION.NOT_AUTHENTICATED;
         RequestStorage.Delete(key);
     }
     public static void DeleteAccess() => Delete(TOKEN_TYPE.ACCESS.String());

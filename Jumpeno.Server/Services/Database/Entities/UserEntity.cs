@@ -31,11 +31,14 @@ public class UserEntity {
     public PasswordEntity? Password { get; set; }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<UserEntity> Create(string email, string name) {
+    public static async Task<UserEntity> Create(
+        string email, string name,
+        string emailID = "", string nameID = ""
+    ) {
         // 1) Validation:
-        var errors = UserValidator.ValidateEmail(email);
-        errors.AddRange(UserValidator.ValidateName(name));
-        Checker.CheckValues(errors);
+        var errors = UserValidator.ValidateEmail(email, emailID);
+        errors.AddRange(UserValidator.ValidateName(name, true, nameID));
+        Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Create record:
         var at = DateTime.UtcNow;
         var record = new UserEntity() {
@@ -51,18 +54,21 @@ public class UserEntity {
         ctx.User.Add(record);
         // 3.2) Unique constraints:
         var result = await DB.Save(new() {
-            { INDEX_EMAIL, new Error(UserValidator.EMAIL, Checker.FIELD_EXISTS) },
-            { INDEX_NAME, new Error(UserValidator.NAME, Checker.FIELD_EXISTS) }
+            { INDEX_EMAIL, ERROR.EXISTS.SetID(emailID) },
+            { INDEX_NAME, ERROR.EXISTS.SetID(nameID) }
         });
-        Checker.CheckValues(result.errors);
+        Checker.Assert(result.errors, EXCEPTION.VALUES);
         // 4) Return record:
         return record;
     }
 
     // Read -------------------------------------------------------------------------------------------------------------------------------
-    public static async Task<UserEntity?> ByID(string id) {
+    public static async Task<UserEntity?> ByID(
+        string id,
+        string idID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckID(id);
+        UserValidator.AssertID(id, idID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = await ctx.User
@@ -70,9 +76,12 @@ public class UserEntity {
         // 3) Return record:
         return record;
     }
-    public static async Task<UserEntity?> ByIDLeftJoinActivation(string id) {
+    public static async Task<UserEntity?> ByIDLeftJoinActivation(
+        string id,
+        string idID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckID(id);
+        UserValidator.AssertID(id, idID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = ctx.User
@@ -82,9 +91,12 @@ public class UserEntity {
         return record;
     }
 
-    public static async Task<UserEntity?> ByEmail(string email) {
+    public static async Task<UserEntity?> ByEmail(
+        string email,
+        string emailID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckEmail(email);
+        UserValidator.AssertEmail(email, emailID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = await ctx.User
@@ -92,9 +104,12 @@ public class UserEntity {
         // 3) Return record:
         return record;
     }
-    public static async Task<UserEntity?> ByEmailLeftJoinPassword(string email) {
+    public static async Task<UserEntity?> ByEmailLeftJoinPassword(
+        string email,
+        string emailID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckEmail(email);
+        UserValidator.AssertEmail(email, emailID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = ctx.User

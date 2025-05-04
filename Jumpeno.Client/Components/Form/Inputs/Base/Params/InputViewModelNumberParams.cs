@@ -1,6 +1,7 @@
-namespace Jumpeno.Client.Params;
+namespace Jumpeno.Client.Models;
 
 public record InputViewModelLongParams(
+    string? Form = null,
     string? ID = null,
     string Name = "", string Label = "", string? Placeholder = null, bool Secret = false,
     int? MaxLength = null,
@@ -8,5 +9,5 @@ public record InputViewModelLongParams(
     long DefaultValue = 0,
     EventDelegate<long>? OnChange = null, EmptyDelegate? OnEnter = null
 ) : InputViewModelParams<long>(
-    ID, Name, Label, Placeholder, Secret, INPUT_TEXT_MODE.NORMAL, true, null, MaxLength, 0, DefaultValue, OnChange, OnEnter
+    Form, ID, Name, Label, Placeholder, Secret, INPUT_TEXT_MODE.NORMAL, true, null, MaxLength, 0, DefaultValue, OnChange, OnEnter
 );

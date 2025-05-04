@@ -3,42 +3,29 @@ namespace Jumpeno.Shared.Utils;
 using System.Text.RegularExpressions;
 
 public static class Checker {
-    // Constants --------------------------------------------------------------------------------------------------------------------------
-    // Message:
-    public const string MESSAGE_ERROR = "Something went wrong.";
-    public const string MESSAGE_VALUES = "Incorrect field values.";
-    // Field:
-    public const string FIELD_UNDEFINED = "Value undefined";
-    public const string FIELD_EMPTY = "Empty field";
-    public const string FIELD_FORMAT = "Wrong format";
-    public const string FIELD_NOT_MATCH = "Not a match";
-    public const string FIELD_EXISTS = "Already exists";
-
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static string Name(string name) => name != "" ? $" \"{name}\"" : name;
 
-    // General ----------------------------------------------------------------------------------------------------------------------------
-    public static void Check(bool condition, Error error, string? message = null) {
-        Check(Validate(condition, error), message);
-    }
-    public static void Check(List<Error> errors, string? message = null) {
-        if (errors.Count > 0) throw new CoreException(errors).SetMessage(message ?? MESSAGE_ERROR);
-    }
-    public static void CheckValues(bool condition, Error error, string? message = null) {
-        try { Check(condition, error, message ?? MESSAGE_VALUES); }
-        catch (CoreException e) { e.SetCode(400); throw; }
-    }
-    public static void CheckValues(List<Error> errors, string? message = null) {
-        try { Check(errors, message ?? MESSAGE_VALUES); }
-        catch (CoreException e) { e.SetCode(400); throw; }
-    }
-
-    public static List<Error> Validate(bool condition, Error error) {
+    // Validation -------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> Validate(bool condition, Error? error = null) {
         List<Error> errors = [];
-        Validate(errors, condition, error);
+        Validate(errors, condition, error ?? ERROR.DEFAULT);
         return errors;
     }
-    public static void Validate(List<Error> errors, bool condition, Error error) { if (condition) errors.Add(error); }
+    public static void Validate(List<Error> errors, bool condition, Error? error = null) { if (condition) errors.Add(error ?? ERROR.DEFAULT); }
+
+    // Assert -----------------------------------------------------------------------------------------------------------------------------
+    private static T Assert<T>(T value, List<Error> errors, AppException exception, bool force) {
+        if (errors.Count <= 0) return value;
+        if (force) throw exception.SetErrors(errors);
+        var e = errors.Count == 1 ? EXCEPTION.DEFAULT.SetInfo(errors[0].Info) : exception;
+        throw e.SetErrors(errors);
+    }
+    public static T Assert<T>(T value, List<Error> errors, AppException? exception = null) => Assert(value, errors, exception ?? EXCEPTION.DEFAULT, false);
+    public static void Assert(List<Error> errors, AppException? exception = null) => Assert(true, errors, exception);
+    // NOTE: Custom exception is used even for single error:
+    public static T AssertWith<T>(T value, List<Error> errors, AppException exception) => Assert(value, errors, exception, true);
+    public static void AssertWith(List<Error> errors, AppException exception) => AssertWith(true, errors, exception);
 
     // Null -------------------------------------------------------------------------------------------------------------------------------
     public static bool IsNotNull(object? value) => value is not null;
@@ -75,16 +62,16 @@ public static class Checker {
         name = name == "" ? " " : $" \"{name}\" ";
         throw new ArgumentException($"Value of argument{name}is empty!");
     }
-    public static List<Error> ValidateUndefined(string id, object? value) {
+    public static List<Error> ValidateUndefined(object? value, string id) {
         return Validate(
             value == null,
-            new Error(id, FIELD_UNDEFINED)
+            ERROR.DEFAULT.SetID(id).SetInfo(FIELD.UNDEFINED)
         );
     }
-    public static List<Error> ValidateEmpty(string id, object? value) {
+    public static List<Error> ValidateEmpty(object? value, string id) {
         return Validate(
             value == null || (value is string s && s.Trim() == ""),
-            new Error(id, FIELD_EMPTY)
+            ERROR.DEFAULT.SetID(id).SetInfo(FIELD.EMPTY)
         );
     }
 

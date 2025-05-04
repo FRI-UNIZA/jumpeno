@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Utils;
 
-public class ActiveInputManager {
+public class InputManager {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static readonly Dictionary<string, object> ViewModels = [];
 

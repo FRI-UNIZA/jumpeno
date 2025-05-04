@@ -50,7 +50,7 @@ public class GameHub : Hub {
 
     // Exceptions -------------------------------------------------------------------------------------------------------------------------
     private static async Task HandleException(IClientProxy proxy, Exception e) {
-        await proxy.SendAsync(GAME_HUB.ERROR, (e is CoreException exception ? exception : new CoreException()).DTO);
+        await proxy.SendAsync(GAME_HUB.ERROR, (e is AppException exception ? exception : EXCEPTION.DEFAULT).DTO);
         // NOTE: Client must close the connection!
     }
 
@@ -63,24 +63,38 @@ public class GameHub : Hub {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     private (string Code, User user, DEVICE_TYPE Device, bool Spectator) ReadConnectParams() {
         // 1) Context:
-        var ctx = Context.GetHttpContext() ?? throw new CoreException(new Error("Missing parameters!"));
-        // 2.1) Code:
-        if (!ctx.Request.Query.TryGetValue(GameValidator.CODE, out var queryCode))
-            throw new CoreException(new Error(GameValidator.CODE, "Code not set!"));
+        var ctx = Context.GetHttpContext() ?? throw EXCEPTION.CLIENT.SetInfo("Missing parameters!");
+        // 2.1) Validate code:
+        var errors = Checker.Validate(
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_CODE, out var queryCode),
+            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_CODE).SetInfo("Code not set!")
+        );
+        // 2.2) Validate user:
+        Checker.Validate(
+            errors,
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_USER, out var queryUser),
+            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_USER).SetInfo("User undefined!")
+        );
+        // 2.3) Validate touch device:
+        Checker.Validate(
+            errors,
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_DEVICE, out var queryDevice),
+            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_DEVICE).SetInfo("Device parameter not set!")
+        );
+        // 2.4) Validate spectator:
+        Checker.Validate(
+            errors,
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_SPECTATOR, out var querySpectator),
+            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_SPECTATOR).SetInfo("Spectator parameter not set!")
+        );
+        // 3) Check values:
+        Checker.AssertWith(errors, EXCEPTION.VALUES);
+        // 4) Read values:
         var code = $"{queryCode}";
-        // 2.2) User:
-        if (!ctx.Request.Query.TryGetValue(nameof(User), out var queryUser))
-            throw new CoreException(new Error(nameof(User), "User undefined!"));
         var user = JsonSerializer.Deserialize<User>(queryUser!)!;
-        // 2.3) Touch device:
-        if (!ctx.Request.Query.TryGetValue(nameof(Connection.Device), out var queryDevice))
-            throw new CoreException(new Error(nameof(Connection.Device), "Device parameter not set!"));
         var device = JsonSerializer.Deserialize<DEVICE_TYPE>(queryDevice!)!;
-        // 2.4) Spectator:
-        if (!ctx.Request.Query.TryGetValue(nameof(Spectator), out var querySpectator))
-            throw new CoreException(new Error(nameof(Spectator), "Spectator parameter not set!"));
         var spectator = bool.Parse(querySpectator!);
-        // 3) Return:
+        // 5) Return:
         return (code, user, device, spectator);
     }
 
@@ -144,12 +158,12 @@ public class GameHub : Hub {
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
-    public static async Task SendException(Game game, UPDATE_GROUP group, CoreException exception) {
+    public static async Task SendException(Game game, UPDATE_GROUP group, AppException exception) {
         try { await HandleException(Hub.Clients.Group(GroupName(game.Code, group)), exception); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
-    public static async Task SendException(Connection? connection, CoreException exception) {
+    public static async Task SendException(Connection? connection, AppException exception) {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
             await HandleException(Hub.Clients.Client(id), exception);

@@ -2,7 +2,10 @@ namespace Jumpeno.Client.ViewModels;
 
 public class InputViewModel<T> {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public readonly string Form;
     public readonly string ID;
+    public readonly string FormID;
+    public static string CreateFormID(string form, string id) => $"{form}.{id}";
     public readonly INPUT_TYPE Type;
 
     public readonly string Name;
@@ -37,7 +40,9 @@ public class InputViewModel<T> {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private InputViewModel(InputViewModelParams<T> @params) {
-        ID = @params.ID is null ? IDGenerator.Generate(InputBase<T>.CLASS_INPUT_BASE) : @params.ID;
+        Form = @params.Form is null ? IDGenerator.Generate(nameof(Form).ToLower()) : @params.Form;
+        ID = @params.ID is null ? IDGenerator.Generate(nameof(InputBase<object>)) : @params.ID;
+        FormID = CreateFormID(Form, ID);
         Type = InitType(@params);
         Name = @params.Name;
         Label = @params.Label;

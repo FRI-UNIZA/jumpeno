@@ -23,14 +23,17 @@ public class RefreshEntity {
     public required DateTime Expires { get; set; }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<RefreshEntity> Create(string token, string? id = null, string? origin = null) {
+    public static async Task<RefreshEntity> Create(
+        string token, string? id = null, string? origin = null,
+        string tokenID = "", string idID = "", string originID = ""
+    ) {
         // 1) Validation:
-        var errors = TokenValidator.ValidateToken(token);
-        if (id != null) errors.AddRange(UserValidator.ValidateID(id));
-        Checker.CheckValues(errors);
-        if (token == origin) throw new InvalidDataException($"Parameter \"{nameof(token)}\" equals \"{nameof(origin)}\".");
+        var errors = TokenValidator.ValidateToken(token, tokenID);
+        if (id != null) errors.AddRange(UserValidator.ValidateID(id, idID));
+        errors.AddRange(Checker.Validate(token == origin, ERROR.MATCH(nameof(token), nameof(origin)).SetID(originID)));
+        Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Read token:
-        var data = Shared.Utils.Token.Decode(token) ?? throw Exceptions.NotAuthenticated;
+        var data = Shared.Utils.Token.Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         if (id != null && id != data.sub) throw new InvalidDataException(nameof(UserEntity.ID));
         // 3) Create record:
         var record = new RefreshEntity() {
@@ -48,9 +51,12 @@ public class RefreshEntity {
     }
 
     // Read -------------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> IsValid(string token) {
+    public static async Task<bool> IsValid(
+        string token,
+        string tokenID = ""
+    ) {
         // 1) Validation:
-        TokenValidator.CheckToken(token);
+        TokenValidator.AssertToken(token, tokenID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = await ctx.Refresh
@@ -62,9 +68,12 @@ public class RefreshEntity {
         return record != null;
     }
 
-    public static async Task<RefreshEntity?> ByToken(string token) {
+    public static async Task<RefreshEntity?> ByToken(
+        string token,
+        string tokenID = ""
+    ) {
         // 1) Validation:
-        TokenValidator.CheckToken(token);
+        TokenValidator.AssertToken(token, tokenID);
         // 2) Select record:
         var ctx = await DB.Context();
         var record = await ctx.Refresh
@@ -74,9 +83,12 @@ public class RefreshEntity {
     }
 
     // Delete -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> Delete(string token) {
+    public static async Task<bool> Delete(
+        string token,
+        string tokenID = ""
+    ) {
         // 1) Validation:
-        TokenValidator.CheckToken(token);
+        TokenValidator.AssertToken(token, tokenID);
         // 2) Delete record:
         var ctx = await DB.Context();
         int rows = await ctx.Refresh
@@ -86,11 +98,14 @@ public class RefreshEntity {
         return rows > 0;
     }
 
-    public static async Task<bool> DeleteByOrigin(string origin, string? except = null) {
+    public static async Task<bool> DeleteByOrigin(
+        string origin, string? except = null,
+        string originID = "", string exceptID = ""
+    ) {
         // 1) Validation:
-        var errors = TokenValidator.ValidateToken(origin);
-        if (except != null) errors.AddRange(TokenValidator.ValidateToken(except));
-        Checker.CheckValues(errors);
+        var errors = TokenValidator.ValidateToken(origin, originID);
+        if (except != null) errors.AddRange(TokenValidator.ValidateToken(except, exceptID));
+        Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Delete records:
         var ctx = await DB.Context();
         int rows = await ctx.Refresh

@@ -40,6 +40,9 @@ public partial class GamePage {
     private readonly ConnectViewModel ConnectVM;
     private GameViewModel? GameVM;
 
+    // Views ------------------------------------------------------------------------------------------------------------------------------
+    public ComponentBase? View = null;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
         ConnectVM = new(new(

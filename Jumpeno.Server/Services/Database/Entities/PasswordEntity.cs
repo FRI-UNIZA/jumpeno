@@ -39,14 +39,17 @@ public class PasswordEntity {
     );
 
     public static bool Validate(string password, byte[] salt, byte[] hash)
-    => CryptographicOperations.FixedTimeEquals(HashPassword(password, salt), hash);
+        => CryptographicOperations.FixedTimeEquals(HashPassword(password, salt), hash);
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<PasswordEntity> Create(string id, string password) {
+    public static async Task<PasswordEntity> Create(
+        string id, string password,
+        string idID = "", string passwordID = ""
+    ) {
         // 1) Validation:
-        var errors = UserValidator.ValidateID(id);
-        errors.AddRange(UserValidator.ValidatePassword(password));
-        Checker.CheckValues(errors);
+        var errors = UserValidator.ValidateID(id, idID);
+        errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
+        Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Create record:
         var salt = GenerateSalt();
         var record = new PasswordEntity() {
@@ -65,11 +68,14 @@ public class PasswordEntity {
     }
 
     // Update -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> Update(string id, string password) {
+    public static async Task<bool> Update(
+        string id, string password,
+        string idID = "", string passwordID = ""
+    ) {
         // 1) Validation:
-        var errors = UserValidator.ValidateID(id);
-        errors.AddRange(UserValidator.ValidatePassword(password));
-        Checker.CheckValues(errors);
+        var errors = UserValidator.ValidateID(id, idID);
+        errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
+        Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Update record:
         var ctx = await DB.Context();
         var salt = GenerateSalt();

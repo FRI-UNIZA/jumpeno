@@ -633,4 +633,19 @@
   <data name="You are not authorized to create games." xml:space="preserve">
     <value>Nemáte oprávnenie vytvárať hry.</value>
   </data>
+  <data name="Connection type invalid!" xml:space="preserve">
+    <value>Nesprávny typ spojenia!</value>
+  </data>
+  <data name="Invalid value" xml:space="preserve">
+    <value>Nesprávna hodnota</value>
+  </data>
+  <data name="Equal values of I18N{value1} and I18N{value2}" xml:space="preserve">
+    <value>Zhoda hodnôt I18N{value1} a I18N{value2}</value>
+  </data>
+  <data name="Equal values" xml:space="preserve">
+    <value>Zhoda hodnôt</value>
+  </data>
+  <data name="Not a match of I18N{value1} and I18N{value2}" xml:space="preserve">
+    <value>Nezhoda hodnôt I18N{value1} a I18N{value2}</value>
+  </data>
 </root>

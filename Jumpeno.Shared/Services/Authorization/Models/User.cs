@@ -49,8 +49,8 @@ public class User {
     private User(Guid? id, string? email, string name, SKIN skin, bool activated) {
         ID = id;
         Email = email;
-        Name = UserValidator.CheckName(name, null, false);
-        Skin = UserValidator.CheckSkin(skin);
+        Name = UserValidator.AssertName(name, checkUnknown: false);
+        Skin = UserValidator.AssertSkin(skin);
         Activated = activated;
     }
     public User(Guid id, string email, string name, SKIN skin, bool activated) : this((Guid?) id, email, name, skin, activated) {}

@@ -2,7 +2,7 @@ namespace Jumpeno.Shared.Models;
 
 public record CookieSetDTO(
     List<string> AcceptedNames
-) {
-    public List<Error> Validate() => Checker.ValidateUndefined(nameof(AcceptedNames), AcceptedNames);
-    public void Check(string? message = null) => Checker.CheckValues(Validate(), message);
+) : IValidable<CookieSetDTO> {
+    public List<Error> Validate() => Checker.ValidateUndefined(AcceptedNames, nameof(AcceptedNames));
+    public CookieSetDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
 }

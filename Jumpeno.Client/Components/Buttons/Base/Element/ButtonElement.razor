@@ -7,7 +7,7 @@
         <button
             id="@ID"
             type="@Params.AsT0.Type.StringLower()"
-            @onclick="@(async () => await OnClick.InvokeAsync(this))"
+            @onclick="@(async e => await OnClick.InvokeAsync(new(this, e)))"
             @attributes="@AdditionalAttributes"
             class="@ComputeClass(@CLASSNAME_ELEMENT)"
         >
@@ -19,7 +19,7 @@
             Href="@Params.AsT1.Href"
             HrefPrevent="@Params.AsT1.HrefPrevent"
             Label="@Params.AsT1.Label"
-            OnClick="@(async () => await OnClick.InvokeAsync(this))"
+            OnClick="@(async e => await OnClick.InvokeAsync(new(this, e.Event)))"
             Target="@Params.AsT1.Target"
             Match="@Params.AsT1.Match"
             ActiveClass="@Params.AsT1.ActiveClass"

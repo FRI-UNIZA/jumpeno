@@ -6,15 +6,10 @@ using Newtonsoft.Json.Linq;
 #pragma warning disable CS8618
 
 public class HTTP : StaticService<HTTP>, IDisposable {
-    // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const int STATUS_FAILED = 600;
-    public const int STATUS_CANCELLED = 601;
-    public const int STATUS_PARSING_ERROR = 602;
-
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
-    private static Func<int, HTTPException, Task> OnRefresh;
-    private static Func<Exception, Task> OnError;
+    private static Func<int, AppException, Task> OnRefresh;
+    private static Func<Exception, string?, Task> OnError;
     private static Action<HttpRequestMessage>? AddClientCookies;
     private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
     private readonly LockerSlim TokenLock = new();
@@ -31,7 +26,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(
-        Func<int, HTTPException, Task> onRefresh, Func<Exception, Task> onError, Action<HttpRequestMessage>? addClientCookies = null
+        Func<int, AppException, Task> onRefresh, Func<Exception, string?, Task> onError, Action<HttpRequestMessage>? addClientCookies = null
     ) {
         if (Client is not null) return;
         Client = AppEnvironment.GetService<HttpClient>;
@@ -91,7 +86,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
             var instance = Instance();
             var requestID = GetRequestID(method, url);
             HttpResponseMessage? response;
-            int code;
+            int code = CODE.DEFAULT;
             var token = new CancellationTokenSource();
             try {            
                 // Add query parameters:
@@ -138,9 +133,9 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 response = await Client().SendAsync(request, token.Token);
                 code = (int) response.StatusCode;
             } catch (OperationCanceledException) {
-                throw new HTTPException(code: STATUS_CANCELLED, message: "Request cancelled.");
+                throw EXCEPTION.REQUEST_CANCELLED;
             } catch {
-                throw new HTTPException(code: STATUS_FAILED, message: "Request failed.");
+                throw EXCEPTION.REQUEST_FAILED;
             } finally {
                 await instance.RemoveToken(requestID, token);
             }
@@ -152,36 +147,46 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                     if (bodyAccess) return new HTTPResult<T>(code, response.Headers, response.Content.Headers, (await response.Content.ReadFromJsonAsync<T>())!);
                     return new HTTPHeadResult(code, response.Headers, response.Content.Headers);
                 } catch {
-                    var exception = new HTTPException(STATUS_PARSING_ERROR, response.Headers, response.Content.Headers, "Parsing error.");
+                    var exception = EXCEPTION.PARSING_ERROR
+                    .SetHeaders(response.Headers).SetContentHeaders(response.Content.Headers);
                     throw exception;
                 }
             } else {
                 // Error:
-                HTTPException exception;
+                AppException exception;
                 try {
                     string jsonResponse = await response!.Content.ReadAsStringAsync();
                     var json = JObject.Parse(jsonResponse);
-                    string message;
-                    try { message = json[nameof(HTTPException.Message)]!.ToString(); }
-                    catch { message = ""; }
-                    if (message is null || message == "") message = "Something went wrong.";
+                    // Info:
+                    TInfo info;
+                    try { info = json[nameof(AppException.Info)]!.ToObject<TInfo>()!; }
+                    catch { info = new(MESSAGE.DEFAULT); }
+                    // Errors:
                     List<Error> errors;
-                    try { errors = json[nameof(HTTPException.Errors)]!.ToObject<List<Error>>()!; }
+                    try { errors = json[nameof(AppException.Errors)]!.ToObject<List<Error>>()!; }
                     catch { errors = []; }
-                    var data = json[nameof(HTTPException.Data)]!.ToObject<IDictionary>();
-                    exception = new HTTPException(code, response?.Headers, response?.Content.Headers, message, errors, data);
+                    // Data:
+                    IDictionary data;
+                    try { data = json[nameof(AppException.Data)]!.ToObject<IDictionary>()!; }
+                    catch { data = new Dictionary<object, object>(); }
+                    // Code & headers:
+                    exception = EXCEPTION.DEFAULT.SetCode(code)
+                    .SetHeaders(response?.Headers).SetContentHeaders(response?.Content.Headers)
+                    .SetInfo(info).SetErrors(errors)
+                    .SetData(data);
                 } catch {
-                    exception = new HTTPException(code, response?.Headers, response?.Content.Headers, "Something went wrong.");
+                    exception = EXCEPTION.DEFAULT.SetCode(code)
+                    .SetHeaders(response?.Headers).SetContentHeaders(response?.Content.Headers);
                 }
                 // Try to refresh token:
-                if (exception.Code == Exceptions.NotAuthenticated.Code) await OnRefresh(iteration, exception);
+                if (exception.Code == EXCEPTION.NOT_AUTHENTICATED.Code) await OnRefresh(iteration, exception);
                 else throw exception;
             }
         }
-        throw new HTTPException(code: STATUS_FAILED, message: "Something went wrong.");
+        throw EXCEPTION.DEFAULT;
     }
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    // Tokens -----------------------------------------------------------------------------------------------------------------------------
     public static async Task ClearTokens() {
         var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
             foreach (var token in instance.Tokens.Values) CancelToken(token);
@@ -189,6 +194,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         });
     }
 
+    // Requests ---------------------------------------------------------------------------------------------------------------------------
     public static async Task<HTTPHeadResult> Head(
         string url,
         QueryParams? query = null, Dictionary<string, string>? headers = null
@@ -300,9 +306,11 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body);
     }
 
-    public static async Task Try(Func<Task> callback) {
-        try { await callback(); }
-        catch (HTTPException e) { if (e.Code != STATUS_CANCELLED) await OnError(e); }
-        catch (Exception e) { await OnError(e); }
+    // Try --------------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> Try(Func<Task> callback, string? form = null) {
+        try { await callback(); return true; }
+        catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
+        catch (Exception e) { await OnError(e, form); }
+        return false;
     }
 }

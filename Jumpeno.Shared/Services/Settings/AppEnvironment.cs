@@ -24,20 +24,20 @@ public static class AppEnvironment {
     public static bool IsProduction => !IsDevelopment;
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
-    public static List<Error> ValidateServer() => Checker.Validate(!IsServer, new Error("Not a server environment!"));
-    public static void CheckServer() => Checker.Check(ValidateServer());
+    public static List<Error> ValidateServer() => Checker.Validate(!IsServer, ERROR.DEFAULT.SetInfo("Not a server environment!"));
+    public static void CheckServer() => Checker.Assert(ValidateServer());
 
-    public static List<Error> ValidateClient() => Checker.Validate(IsServer, new Error("Not a client environment!"));
-    public static void CheckClient() => Checker.Check(ValidateClient());
+    public static List<Error> ValidateClient() => Checker.Validate(IsServer, ERROR.DEFAULT.SetInfo("Not a client environment!"));
+    public static void CheckClient() => Checker.Assert(ValidateClient());
     
-    public static List<Error> ValidateController() => Checker.Validate(!IsController, new Error("Not a controller!"));
-    public static void CheckController() => Checker.Check(ValidateController());
+    public static List<Error> ValidateController() => Checker.Validate(!IsController, ERROR.DEFAULT.SetInfo("Not a controller!"));
+    public static void CheckController() => Checker.Assert(ValidateController());
 
-    public static List<Error> ValidateDevelopment() => Checker.Validate(!IsDevelopment, new Error("Not a development environment!"));
-    public static void CheckDevelopment() => Checker.Check(ValidateDevelopment());
+    public static List<Error> ValidateDevelopment() => Checker.Validate(!IsDevelopment, ERROR.DEFAULT.SetInfo("Not a development environment!"));
+    public static void CheckDevelopment() => Checker.Assert(ValidateDevelopment());
 
-    public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, new Error("Not a production environment!"));
-    public static void CheckProduction() => Checker.Check(ValidateProduction());
+    public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, ERROR.DEFAULT.SetInfo("Not a production environment!"));
+    public static void CheckProduction() => Checker.Assert(ValidateProduction());
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private static Func<Type, object> GetServiceOfType { get; set; }

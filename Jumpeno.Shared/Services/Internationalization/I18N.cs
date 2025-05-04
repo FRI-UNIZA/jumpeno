@@ -72,20 +72,17 @@ public class I18N {
     }
 
     // Translations -----------------------------------------------------------------------------------------------------------------------
-    private static string T(string key, Dictionary<string, string>? values = null) {
-        if (values is null) {
-            return Localizer[key];
-        }
+    private static string T(string key, Dictionary<string, object>? values = null) {
+        if (values is null || values.Count == 0) return Localizer[key];
         try {
             string result = Localizer[key];
-
             do {
                 var index = result.IndexOf(ESCAPE_START);
                 if (index < 0) break;
                 int end = result.IndexOf(ESCAPE_END, index);
 
                 string name = result.Substring(index + ESCAPE_START.Length, end - (index + ESCAPE_START.Length));
-                result = result.Replace($"{ESCAPE_START}{name}{ESCAPE_END}", values[name]);
+                result = result.Replace($"{ESCAPE_START}{name}{ESCAPE_END}", $"{values[name]}");
             } while (true);
 
             return result;
@@ -93,10 +90,11 @@ public class I18N {
             return Localizer[key];
         }
     }
-    public static string T(string key, Dictionary<string, string>? values = null, bool unsplit = false) {
+    public static string T(string key, Dictionary<string, object>? values = null, bool unsplit = false) {
         if (unsplit) return UnSplit(T(key, values));
         else return T(key, values);
     }
+    public static string T(TInfo message, bool unsplit = false) => T(message.Key, message.Values, unsplit);
 
     public static string[] Split(string value) => value.Split(SPLIT);
     public static string UnSplit(string value) => value.Replace(SPLIT, "");

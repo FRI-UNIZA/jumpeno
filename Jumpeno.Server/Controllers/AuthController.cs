@@ -11,15 +11,15 @@ public class AuthController : ControllerBase {
     [ProducesResponseType(typeof(AuthRefreshDTOR), StatusCodes.Status200OK)]
     public async Task<AuthRefreshDTOR> Refresh([FromBody] AuthRefreshDTO? body) {
         // 1) Validation:
-        try { body?.Check(); } catch { throw Exceptions.InvalidToken; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw Exceptions.InvalidToken;
+        try { body?.Assert(); } catch { throw EXCEPTION.INVALID_TOKEN; }
+        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw EXCEPTION.INVALID_TOKEN;
         try {
-            JWT.CheckRefresh(token);
+            JWT.AssertRefresh(token);
             Token.StoreRefresh(token);
         } catch {
-            throw Exceptions.InvalidToken;
+            throw EXCEPTION.INVALID_TOKEN;
         }
-        if (!await RefreshEntity.IsValid(token)) throw Exceptions.InvalidToken;
+        if (!await RefreshEntity.IsValid(token, nameof(body.RefreshToken))) throw EXCEPTION.INVALID_TOKEN;
         // 2) Create new tokens:
         string accessToken;
         string refreshToken;
@@ -51,15 +51,15 @@ public class AuthController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Invalidate([FromBody] AuthInvalidateDTO? body) {
         // 1) Validation:
-        try { body?.Check(); } catch { throw Exceptions.InvalidToken; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw Exceptions.InvalidToken;
-        try { JWT.CheckRefresh(token); } catch { throw Exceptions.InvalidToken; }
+        try { body?.Assert(); } catch { throw EXCEPTION.INVALID_TOKEN; }
+        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw EXCEPTION.INVALID_TOKEN;
+        try { JWT.AssertRefresh(token); } catch { throw EXCEPTION.INVALID_TOKEN; }
         // 2) Delete origin with successors:
         await DB.Transaction(async () => {
-            var refresh = await RefreshEntity.ByToken(token) ?? throw Exceptions.InvalidToken;
+            var refresh = await RefreshEntity.ByToken(token, nameof(body.RefreshToken)) ?? throw EXCEPTION.INVALID_TOKEN;
             if (refresh.Origin == null) return;
-            await RefreshEntity.Delete(refresh.Origin);
-            await RefreshEntity.DeleteByOrigin(refresh.Origin, token);
+            await RefreshEntity.Delete(refresh.Origin, nameof(body.RefreshToken));
+            await RefreshEntity.DeleteByOrigin(refresh.Origin, token, nameof(body.RefreshToken), nameof(body.RefreshToken));
         });
         // 3) Response:
         return new(I18N.T("Token invalidated."));
@@ -73,11 +73,11 @@ public class AuthController : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Delete([FromBody] AuthDeleteDTO? body) {
         // 1) Validation:
-        try { body?.Check(); } catch { throw Exceptions.InvalidToken; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw Exceptions.InvalidToken;
-        try { JWT.CheckRefresh(token); } catch { throw Exceptions.InvalidToken; }
+        try { body?.Assert(); } catch { throw EXCEPTION.INVALID_TOKEN; }
+        var token = body?.RefreshToken ?? CookieStorage.Get(COOKIE_MANDATORY.APP_REFRESH_TOKEN) ?? throw EXCEPTION.INVALID_TOKEN;
+        try { JWT.AssertRefresh(token); } catch { throw EXCEPTION.INVALID_TOKEN; }
         // 2) Delete refresh token:
-        await RefreshEntity.Delete(token);
+        await RefreshEntity.Delete(token, nameof(body.RefreshToken));
         // 3) Delete cookie:
         JWT.DeleteRefreshTokenCookie();
         // 4) Response:

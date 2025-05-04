@@ -7,10 +7,11 @@ public class ErrorMiddleware(RequestDelegate next) {
 
     public async Task InvokeAsync(HttpContext ctx) {
         Exception? exception = null;
+        TInfo? info = null;
 
         try {
             await Next(ctx);
-        } catch (HTTPException e) {
+        } catch (AppException e) {
             ctx.Response.StatusCode = e.Code;
             foreach (var header in e.Headers) {
                 ctx.Response.Headers[header.Key] = header.Value.FirstOrDefault();
@@ -19,26 +20,21 @@ public class ErrorMiddleware(RequestDelegate next) {
                 ctx.Response.Headers[header.Key] = header.Value.FirstOrDefault();
             }
             exception = e;
-        } catch (CoreException e) {
-            ctx.Response.StatusCode = e.Code;
-            exception = e;
+            info = e.Info;
         } catch {
-            ctx.Response.StatusCode = 500;
-            exception = new CoreException();
+            ctx.Response.StatusCode = CODE.DEFAULT;
+            exception = EXCEPTION.DEFAULT;
+            info = MESSAGE.DEFAULT;
         }
 
         if (exception is not null) {
             ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON;
             var errors = exception switch {
-                HTTPException e => e.Errors,
-                CoreException e => e.Errors,
+                AppException e => e.Errors,
                 _ => []
             };
-            foreach (var error in errors) {
-                error.Message = I18N.T(error.Message, error.Values, unsplit: true);
-            }
             await ctx.Response.WriteAsync(JsonConvert.SerializeObject(new {
-                Message = I18N.T(exception.Message, unsplit: true),
+                Info = info,
                 Errors = errors,
                 exception.Data
             }));

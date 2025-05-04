@@ -5,6 +5,9 @@ public partial class UserLoginForm {
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
 
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<UserLoginForm>();
+
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPassword;
@@ -12,23 +15,25 @@ public partial class UserLoginForm {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public UserLoginForm() {
         VMEmail = new(new InputViewModelTextParams(
-            ID: UserValidator.EMAIL,
+            Form: FORM,
+            ID: nameof(UserLoginDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(UserValidator.EMAIL).ToLower(),
+            Name: nameof(UserLoginDTO.Email),
             Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Login)
         ));
         VMPassword = new(new InputViewModelTextParams(
-            ID: UserValidator.PASSWORD,
+            Form: FORM,
+            ID: nameof(UserLoginDTO.Password),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: nameof(UserValidator.PASSWORD).ToLower(),
+            Name: nameof(UserLoginDTO.Password),
             Label: I18N.T("Password"),
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
@@ -43,7 +48,7 @@ public partial class UserLoginForm {
         await HTTP.Try(async () => {
             await Auth.LogInUser(VMEmail.Value, VMPassword.Value);
             ActionHandler.PopFocus();
-        });
+        }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }
 }

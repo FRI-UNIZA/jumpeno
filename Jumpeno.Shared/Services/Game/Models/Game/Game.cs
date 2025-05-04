@@ -55,9 +55,9 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         Dictionary<byte, Player> players, List<Player> activePlayers, int spectatorCount
     ) {
         // Validation:
-        GameValidator.CheckCode(code);
-        GameValidator.CheckName(name);
-        GameValidator.CheckCapacity(capacity);
+        GameValidator.AssertCode(code);
+        GameValidator.AssertName(name);
+        GameValidator.AssertCapacity(capacity);
         // Settings:
         DisplayMode = displayMode;
         Mode = mode;
@@ -128,20 +128,24 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     // Player methods ---------------------------------------------------------------------------------------------------------------------
     public Player ConnectPlayer(Connection connection) {
         AppEnvironment.CheckServer();
-        GameValidator.CheckConnectionType(connection);
-        UserValidator.CheckUnknown(connection.User);
+        GameValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_USER);
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name != connection.User.Name) continue;
-                if (State == GAME_STATE.LOBBY) throw new CoreException(new Error("Player name is taken!"));
-                else throw new CoreException(new Error("The game is already running."));
+                if (State == GAME_STATE.LOBBY) {
+                    throw EXCEPTION.CLIENT.SetInfo("Player name is taken!")
+                    .SetErrors(ERROR.DEFAULT.SetID(GAME_HUB.PARAM_USER).SetInfo("Player name is taken!"));
+                } else {
+                    throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
+                }
             } else if (State == GAME_STATE.LOBBY || player.User.Equals(connection.User)) {
                 player.Synchronize(connection);
                 return player;
             }
         }
-        if (State == GAME_STATE.LOBBY) throw new CoreException(new Error("The game is currently full!"));
-        else throw new CoreException(new Error("The game is already running."));
+        if (State == GAME_STATE.LOBBY) throw EXCEPTION.CLIENT.SetInfo("The game is currently full!");
+        else throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
     }
 
     public Player? GetPlayerRef(byte id) {
@@ -217,9 +221,9 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     // Spectator methods ------------------------------------------------------------------------------------------------------------------
     public Spectator ConnectSpectator(Connection connection) {
         AppEnvironment.CheckServer();
-        GameValidator.CheckConnectionType(connection);
-        UserValidator.CheckUnknown(connection.User);
-        GameValidator.CheckSpectatorCount(this);
+        GameValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_USER);
+        GameValidator.AssertSpectatorCount(this, GAME_HUB.PARAM_SPECTATOR);
         SpectatorCount++;
         return new(connection);
     }

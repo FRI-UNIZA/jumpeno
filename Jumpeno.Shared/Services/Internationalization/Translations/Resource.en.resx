@@ -633,4 +633,19 @@
   <data name="You are not authorized to create games." xml:space="preserve">
     <value>You are not authorized to create games.</value>
   </data>
+  <data name="Connection type invalid!" xml:space="preserve">
+    <value>Connection type invalid!</value>
+  </data>
+  <data name="Invalid value" xml:space="preserve">
+    <value>Invalid value</value>
+  </data>
+  <data name="Equal values of I18N{value1} and I18N{value2}" xml:space="preserve">
+    <value>Equal values of I18N{value1} and I18N{value2}</value>
+  </data>
+  <data name="Equal values" xml:space="preserve">
+    <value>Equal values</value>
+  </data>
+  <data name="Not a match of I18N{value1} and I18N{value2}" xml:space="preserve">
+    <value>Not a match of I18N{value1} and I18N{value2}</value>
+  </data>
 </root>

@@ -13,9 +13,12 @@ public class ActivationEntity {
     public required UserEntity User { get; set; }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<ActivationEntity> Create(string id) {
+    public static async Task<ActivationEntity> Create(
+        string id,
+        string idID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckID(id);
+        UserValidator.AssertID(id, idID);
         // 2) Create record:
         var record = new ActivationEntity() {
             ID = id,
@@ -30,9 +33,12 @@ public class ActivationEntity {
     }
 
     // Delete -----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> Delete(string id) {
+    public static async Task<bool> Delete(
+        string id,
+        string idID = ""
+    ) {
         // 1) Validation:
-        UserValidator.CheckID(id);
+        UserValidator.AssertID(id, idID);
         // 2) Delete record:
         var ctx = await DB.Context();
         int rows = await ctx.Activation

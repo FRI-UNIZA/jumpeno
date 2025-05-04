@@ -23,8 +23,9 @@ public static class GameService {
     }
 
     private static GameEngine AssertEngine(string code) {
-        return FindEngine(code) ?? throw new CoreException([new Error(GameValidator.CODE, "Game code is incorrect!")])
-        .SetCode(400).SetMessage("Game code is incorrect!");
+        var engine = FindEngine(code);
+        List<Error> errors = Checker.Validate(engine == null, ERROR.DEFAULT.SetID(GAME_HUB.PARAM_CODE).SetInfo("Game code is incorrect!"));
+        return Checker.Assert(engine, errors)!;
     }
 
     private static async Task<GameContext> AddClient(GameEngine engine, Connection connection, bool spectator) {
@@ -34,17 +35,16 @@ public static class GameService {
     // Connection -------------------------------------------------------------------------------------------------------------------------
     public static async Task<GameContext> Connect(string code, Connection connection, bool spectator) {
         // 1) Validation:
-        CoreException e = new();
-        e.Add(GameValidator.ValidateCode(code));
-        e.Add(UserValidator.ValidateName(connection.User.Name));
-        if (e.HasErrors) throw e;
+        List<Error> errors = [];
+        errors.AddRange(GameValidator.ValidateCode(code, GAME_HUB.PARAM_CODE));
+        errors.AddRange(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_USER));
+        Checker.AssertWith(errors, EXCEPTION.VALUES);
         // 2) Connect client:
         return await AddClient(AssertEngine(code), connection, spectator);
     }
     public static async Task<GameContext> Connect(GameEngine engine, Connection connection, bool spectator) {
         // 1) Validation:
-        var e = new CoreException(UserValidator.ValidateName(connection.User.Name));
-        if (e.HasErrors) throw e;
+        Checker.AssertWith(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_USER), EXCEPTION.VALUES);
         // 2) Connect client:
         return await AddClient(engine, connection, spectator);
     }

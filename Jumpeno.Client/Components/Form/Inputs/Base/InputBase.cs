@@ -76,7 +76,7 @@ public partial class InputBase<T> {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentParametersSet(bool firstTime) {
-        ActiveInputManager.Add(ViewModel.ID, ViewModel);
+        InputManager.Add(ViewModel.FormID, ViewModel);
         DELIMITER = Delimiter.String();
         ViewModel.GetType().GetField("Notify", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(ViewModel, () => {
             UpdateTempValue();
@@ -85,17 +85,20 @@ public partial class InputBase<T> {
         UpdateTempValue();
     }
 
-    protected override void OnComponentDispose() => ActiveInputManager.Remove(ViewModel.ID);
+    protected override void OnComponentDispose() => InputManager.Remove(ViewModel.FormID);
 
     // Methods static ---------------------------------------------------------------------------------------------------------------------
     public static InputViewModel<T>? ActiveViewModel(string id) {
-        return (InputViewModel<T>?) ActiveInputManager.Get(id);
+        return (InputViewModel<T>?) InputManager.Get(id);
     }
 
-    public static void TrySetError(Error error, bool translate = false) {
-        InputErrorViewModel? errorVM = InputViewModel<object>.ErrorViewModel(ActiveInputManager.Get(error.ID));
+    public static void TrySetError(string form, Error error) {
+        if (form == null || form == "") return;
+        InputErrorViewModel? errorVM = InputViewModel<object>.ErrorViewModel(
+            InputManager.Get(InputViewModel<object>.CreateFormID(form, error.ID))
+        );
         if (errorVM is null || errorVM.HasError) return;
-        errorVM.SetError(translate ? I18N.T(error.Message, error.Values, unsplit: true) : error.Message);
+        errorVM.SetError(I18N.T(error.Info, unsplit: true));
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

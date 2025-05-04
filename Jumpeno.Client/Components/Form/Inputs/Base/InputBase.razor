@@ -6,11 +6,11 @@
 @code {
     protected RenderFragment Render() {
         return @<div class="@ComputeClassBase()">
-            <InputWrap ErrorVM="ViewModel.Error" ID="@ViewModel.ID" Label="@ViewModel.Label" HideLabel="HideLabel" Align="Align">
+            <InputWrap ErrorVM="ViewModel.Error" FormID="@ViewModel.FormID" Label="@ViewModel.Label" HideLabel="HideLabel" Align="Align">
                 <div class="@ComputeClassComponent()">
                     @if (Icon is not null) { <div class="input-icon-before">@Icon</div> }
                     <input
-                        id="@ViewModel.ID"
+                        id="@ViewModel.FormID"
                         name="@ViewModel.Name"
                         type="@ComputeType()"
                         class="@CLASS_INPUT_BASE_INPUT"
@@ -35,7 +35,7 @@
                                 aria-label="@I18N.T("Clear")"
                                 @onclick="@(async () => {
                                     await ViewModel.Clear();
-                                    ActionHandler.SetFocus(ViewModel.ID);
+                                    ActionHandler.SetFocus(ViewModel.FormID);
                                 })"
                             >
                                 <AntIcon Type="close" Theme="outline" />

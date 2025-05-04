@@ -10,42 +10,46 @@ public partial class RegisterForm {
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMPassword;
     private readonly InputViewModel<string> VMConfirmPassword;
-    
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<RegisterForm>();
     private bool Success = false;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public RegisterForm() {
         VMEmail = new(new InputViewModelTextParams(
-            ID: UserValidator.EMAIL,
+            Form: FORM,
+            ID: nameof(UserRegisterDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(UserValidator.EMAIL).ToLower(),
+            Name: nameof(UserRegisterDTO.Email),
             Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Register)
         ));
         VMPlayerName = new(new InputViewModelTextParams(
-            ID: UserValidator.NAME,
+            Form: FORM,
+            ID: nameof(UserRegisterDTO.Name),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
-            Name: nameof(UserValidator.NAME).ToLower(),
+            Name: nameof(UserRegisterDTO.Name),
             Label: I18N.T("Player name"),
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
             OnEnter: new(Register)
         ));
         VMPassword = new(new InputViewModelTextParams(
-            ID: UserValidator.PASSWORD,
+            Form: FORM,
+            ID: nameof(UserRegisterDTO.Password),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: nameof(UserValidator.PASSWORD).ToLower(),
+            Name: nameof(UserRegisterDTO.Password),
             Label: I18N.T("Password"),
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
@@ -58,11 +62,12 @@ public partial class RegisterForm {
             OnEnter: new(Register)
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
-            ID: UserValidator.PASSWORD_CONFIRM,
+            Form: FORM,
+            ID: "ConfirmPassword",
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: nameof(UserValidator.PASSWORD_CONFIRM).ToLower(),
+            Name: "ConfirmPassword",
             Label: I18N.T("Confirm password"),
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
@@ -83,13 +88,8 @@ public partial class RegisterForm {
             );
             // 2) Validation:
             var errors = body.Validate();
-            if (VMConfirmPassword.Value.Trim() == "") {
-                errors.Add(new Error(UserValidator.PASSWORD_CONFIRM, Checker.FIELD_EMPTY));
-            }
-            if (VMPassword.Value != VMConfirmPassword.Value) {
-                errors.Add(new Error(UserValidator.PASSWORD_CONFIRM, Checker.FIELD_NOT_MATCH));
-            }
-            Checker.CheckValues(errors);
+            errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
+            Checker.AssertWith(errors, EXCEPTION.VALUES);
             // 3) Send request:
             var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_REGISTER, body: body);
             // 4) Show result:
@@ -97,7 +97,7 @@ public partial class RegisterForm {
             Success = true;
             StateHasChanged();
             ActionHandler.PopFocus();
-        });
+        }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.REGISTRATION);
     }
 }

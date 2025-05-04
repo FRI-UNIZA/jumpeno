@@ -123,7 +123,7 @@ public class GameEngine : IUpdateable, IDisposable {
             ResetKeyUpdates();
             Game.Update(Game.NewRoundResetUpdate());
             GameHandle.Set();
-            await GameHub.SendException(Game, UPDATE_GROUP.ALL, new(new Error("You have been disconnected from the server.")));
+            await GameHub.SendException(Game, UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
         });
     }
 
@@ -359,7 +359,7 @@ public class GameEngine : IUpdateable, IDisposable {
             // 3) Finish round:
             await UpdateRound();
         } catch {
-            await GameHub.SendException(Game, UPDATE_GROUP.ALL, new(new Error("You have been disconnected from the server.")));
+            await GameHub.SendException(Game, UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
         } finally {
             GameLoopThread = null;
         }

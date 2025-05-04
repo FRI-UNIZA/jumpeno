@@ -17,7 +17,7 @@ public partial class Link {
     [Parameter]
     public string Label { get; set; } = "";
     [Parameter]
-    public EventCallback<Link> OnClick { get; set; } = EventCallback<Link>.Empty;
+    public EventCallback<LinkClickEvent> OnClick { get; set; } = EventCallback<LinkClickEvent>.Empty;
     [Parameter]
     public OneOf<LINK_TARGET, string> Target { get; set; } = LINK_TARGET.SELF;
     [Parameter]
@@ -78,12 +78,7 @@ public partial class Link {
 
     protected override async ValueTask OnComponentDisposeAsync() => await Navigator.RemoveAfterEventListener(Notify);
 
-    private async Task OnClickEvent(MouseEventArgs e) => await OnClick.InvokeAsync(this);
-
-    private async Task OnEnterEvent(KeyboardEventArgs e) {
-        if (e.Key != KEYBOARD.ENTER) return;
-        await OnClick.InvokeAsync(this);
-    }
+    private async Task OnClickEvent(MouseEventArgs e) => await OnClick.InvokeAsync(new(this, e));
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private void Notify(NavigationEvent e) => StateHasChanged();

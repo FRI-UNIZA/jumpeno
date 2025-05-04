@@ -8,19 +8,19 @@
     <DocTitle Value="@I18N.T("Game")" />
     @if (GameVM is null) {
         if (!ConnectVM.Create) {
-            <ConnectBox VM="ConnectVM" />
+            <ConnectBox @ref="View" VM="ConnectVM" />
         } else {
-            <CreateBox VM="ConnectVM" />
+            <CreateBox @ref="View" VM="ConnectVM" />
         }
     } else switch (GameVM.Game.State) {
         case GAME_STATE.LOBBY:
         case GAME_STATE.SCOREBOARD:
         case GAME_STATE.PAUSE:
-            <Lobby VM="GameVM" />
+            <Lobby @ref="View" VM="GameVM" />
         break;
         case GAME_STATE.GAMEPLAY:
         case GAME_STATE.SHRINKING:
-            <GameScreen VM="GameVM" />
+            <GameScreen @ref="View" VM="GameVM" />
         break;
     }
 </div>

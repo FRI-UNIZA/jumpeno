@@ -6,94 +6,82 @@ public partial class ConnectBox {
     public required ConnectViewModel VM { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private bool ShowName { get; set; } = true;
-    private readonly InputViewModel<string> VMCode = new(new InputViewModelTextParams(
-        ID: GameValidator.CODE,
-        TextMode: INPUT_TEXT_MODE.UPPERCASE,
-        Trim: true,
-        TextCheck: Checker.IsAlphaNum,
-        MaxLength: GameValidator.CODE_LENGTH,
-        Name: I18N.T("Game code"),
-        Label: I18N.T("Game code"),
-        Placeholder: I18N.T("Code"),
-        DefaultValue: ""
-    ));
+    public readonly string FORM = Form.Of<ConnectBox>();
+
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    private readonly InputViewModel<string> VMCode;
     private async Task SetInputCode(string urlCode) => await VMCode.SetValue(urlCode);
 
+    private readonly InputViewModel<string> VMName;
     private static string LastNameValue = "";
-    private readonly InputViewModel<string> VMName = new(new InputViewModelTextParams(
-        ID: UserValidator.NAME,
-        Trim: true,
-        TextCheck: Checker.IsAlphaNum,
-        MaxLength: UserValidator.NAME_MAX_LENGTH,
-        Name: I18N.T("Your name"),
-        Label: I18N.T("Your name"),
-        Placeholder: I18N.T("Your name"),
-        DefaultValue: "",
-        OnChange: new(value => LastNameValue = value)
-    ));
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public ConnectBox() {
+        VMCode = new(new InputViewModelTextParams(
+            Form: FORM,
+            ID: GAME_HUB.PARAM_CODE,
+            TextMode: INPUT_TEXT_MODE.UPPERCASE,
+            Trim: true,
+            TextCheck: Checker.IsAlphaNum,
+            MaxLength: GameValidator.CODE_LENGTH,
+            Name: GAME_HUB.PARAM_CODE,
+            Label: I18N.T("Game code"),
+            Placeholder: I18N.T("Code"),
+            DefaultValue: ""
+        ));
+        VMName = new(new InputViewModelTextParams(
+            Form: FORM,
+            ID: GAME_HUB.PARAM_USER,
+            Trim: true,
+            TextCheck: Checker.IsAlphaNum,
+            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            Name: GAME_HUB.PARAM_USER,
+            Label: I18N.T("Your name"),
+            Placeholder: I18N.T("Your name"),
+            DefaultValue: "",
+            OnChange: new(value => LastNameValue = value)
+        ));
+    }
+
     private readonly TaskCompletionSource InitTCS = new();
 
     protected override async Task OnComponentInitializedAsync() {
-        await InitAutoWatch();
         await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
-        if (Auth.IsRegisteredUser) ShowName = false;
-        InitTCS.TrySetResult();
     }
 
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
         if (!firstTime) return;
+        VM.RegisterForm(FORM);
         await VM.AddURLCodeChangedListener(SetInputCode);
-    }
-
-    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
-        if (!firstRender) return;
-        await InitTCS.Task;
-        await TryAutoWatch();
+        InitTCS.TrySetResult();
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
+        VM.UnregisterForm(FORM);
         await VM.RemoveURLCodeChangedListener(SetInputCode);
     }
 
     // Auto-Watch -------------------------------------------------------------------------------------------------------------------------
-    private static async Task InitAutoWatch() {
-        if (!ConnectViewModel.RunPresentation && !ConnectViewModel.RunAutoWatch) return;
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
-    }
+    public const string WATCH_QUERY = "Watch";
 
-    private async Task TryAutoWatch() {
-        // TODO: Implement reconnect hub:
-        if (ConnectViewModel.RunPresentation) await HandleWatch();
-        else if (ConnectViewModel.RunAutoWatch) await HandleWatch();
-    }
-
-    // Validation -------------------------------------------------------------------------------------------------------------------------
-    private bool Validate() {
-        var isValid = true;
-        var errors = GameValidator.ValidateCode(VMCode.Value);
-        if (errors.Count > 0) {
-            VMCode.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
-            isValid = false;
-        }
-        errors = UserValidator.ValidateName(VMName.Value);
-        if (errors.Count > 0) {
-            VMName.Error.SetError(I18N.T(errors[0].Message, errors[0].Values, true));
-            isValid = false;
-        }
-        return isValid;
+    public async Task<bool> TryAutoWatch() {
+        // 1) Wait for params initialization:
+        await InitTCS.Task;
+        // 2) Check query params:
+        if (!URL.GetQueryParams().IsTrue(WATCH_QUERY)) return false;
+        // 3) Remove query params:
+        var q = URL.GetQueryParams();
+        q.Remove(WATCH_QUERY);
+        await Navigator.SetQueryParams(q);
+        // 4) Check if cookie modal is displayed:
+        if (!CookieStorage.CookiesAccepted) return false;
+        // 5) Try connect as spectator:
+        await HandleWatch();
+        // 6) Return result:
+        return true;
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task HandlePlay() {
-        if (Validate()) await VM.ConnectRequest(new(VMCode.Value, VMName.Value), false);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_CONNECT);
-    }
-
-    private async Task HandleWatch() {
-        if (Validate()) await VM.ConnectRequest(new(VMCode.Value, VMName.Value), true);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_CONNECT);
-    }
+    private async Task HandlePlay() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value), false);
+    private async Task HandleWatch() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value), true);
 }

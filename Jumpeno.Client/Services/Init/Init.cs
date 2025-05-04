@@ -16,11 +16,11 @@ public static class Init {
                 ActivationToken: token
             );
             // 3.2) Validation:
-            body.Check();
+            body.Assert();
             // 3.3) Send request:
-            var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_ACTIVATE, body: body);
+            var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_ACTIVATE, body: body);
             // 3.4) Show result:
-            Notification.Success(result.Body.Message);
+            Notification.Success(response.Body.Message);
         });
         // 4) Update UI:
         q.Remove(TOKEN_TYPE.ACTIVATION.String());
@@ -44,7 +44,7 @@ public static class Init {
                 ResetToken: token
             );
             // 3.2) Validation:
-            body.Check();
+            body.Assert();
             // 3.3) Send request:
             var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_PASSWORD_RESET, body: body);
             // 3.4) Show result:
@@ -55,5 +55,13 @@ public static class Init {
         await Navigator.SetQueryParams(q);
         await PageLoader.Hide(PAGE_LOADER_TASK.PASSWORD_RESET);
         return true;
+    }
+
+    public static async Task<bool> TryAutoWatch() {
+        // 1) Check if view is rendered:
+        if (Page.Current is not GamePage page) return false;
+        if (page.View is not ConnectBox view) return false;
+        // 2) Try autowatch:
+        return await view.TryAutoWatch();
     }
 }
