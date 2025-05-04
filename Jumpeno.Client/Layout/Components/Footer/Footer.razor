@@ -8,7 +8,7 @@
             🎮
             <Span NoWrap>
                 @I18N.T("Have a nice game (Have a nice)")
-                <Link Href="@(I18N.Link<GamePage>())">
+                <Link Href="@(I18N.Link<GamePage>())" Class="footer-link">
                     @I18N.T("Have a nice game (game)")
                 </Link>
             </Span>
@@ -19,6 +19,7 @@
             <Link
                 Href="@URL.Link(I18N.T("LINK_FRI"))"
                 Target="LINK_TARGET.BLANK"
+                Class="footer-link"
             >
                 FRI&nbsp;UNIZA
             </Link>

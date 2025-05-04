@@ -25,6 +25,10 @@ footer:not(.display) {
     --text-align: center;
 }
 
+::deep .footer-link {
+    --font-weight: 600;
+}
+
 ::deep .copyright.surface-all {
     margin-top: 20px;
 }
