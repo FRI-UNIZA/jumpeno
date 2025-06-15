@@ -7,8 +7,6 @@ public partial class NavMenuMobile {
     public const double MOBILE_MENU_BREAKPOINT = 1200;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
     [Parameter]
     public required NavMenu MenuRef { get; set; }
     [Parameter]

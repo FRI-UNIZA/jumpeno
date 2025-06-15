@@ -4,10 +4,6 @@ public partial class CookieModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string COOKIE_TITLE_ID = "cookie-title";
 
-    // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
-
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
     private bool Unclosable = false;
@@ -62,7 +58,7 @@ public partial class CookieModal {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
             StateHasChanged();
-            await Task.Delay(Theme.TRANSITION_FAST);
+            await Task.Delay(AppTheme.TRANSITION_FAST);
             if (IsStateInitial(newSelected)) {
                 await ModalRef.Close();
                 return;

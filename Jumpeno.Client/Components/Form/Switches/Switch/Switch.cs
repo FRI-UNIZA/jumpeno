@@ -6,8 +6,6 @@ public partial class Switch {
     public const string CLASSNAME_ELEMENT = "switch-element";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
     [Parameter]
     public required string Label { get; set; }
     [Parameter]
@@ -48,7 +46,7 @@ public partial class Switch {
         if (Disabled) return;
         await PageLoader.Show(PAGE_LOADER_TASK.SWITCH, true);
         await OnChange.InvokeAsync(value);
-        await Task.Delay(Theme.TRANSITION_FAST);
+        await Task.Delay(AppTheme.TRANSITION_FAST);
         await PageLoader.Hide(PAGE_LOADER_TASK.SWITCH);
     }
 

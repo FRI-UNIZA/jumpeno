@@ -12,7 +12,7 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
-    public BaseTheme Theme { get; set; } = null!;
+    public BaseTheme AppTheme { get; set; } = null!;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;

@@ -2,8 +2,6 @@ namespace Jumpeno.Client.Components;
 
 public partial class GameScreen {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
     [Parameter]
     public required GameViewModel VM { get; set; }
 
@@ -230,7 +228,7 @@ public partial class GameScreen {
         if (!VM.IsWatching) return;
         using var ctx = await GameCanvasRef.CreateCanvas2DAsync();
         if (ctx == null) return;
-        await RenderLock.TryExclusive(async () => await VM.Game.Render(ctx, (VM.Player, Theme.FONT_PRIMARY)));
+        await RenderLock.TryExclusive(async () => await VM.Game.Render(ctx, (VM.Player, AppTheme.FONT_PRIMARY)));
     }
 
     // Game loop --------------------------------------------------------------------------------------------------------------------------

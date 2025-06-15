@@ -16,7 +16,7 @@ Services like <b>MariaDB</b>, <b>PHPMyAdmin</b> and <b>MailCatcher</b> run insid
 
 ## Installation
 Please make sure you have installed:
-- .NET 8.0
+- .NET 8.0.411 SDK
 - Docker Desktop
 - Microsoft Visual Studio 2022+ or Visual Studio Code
 - You can be prompted to install additional workloads

@@ -8,9 +8,7 @@ public partial class ThemeSwitch {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
-    [CascadingParameter]
-    public required Func<BaseTheme, Task> ChangeTheme { get; set; }
+    public required Func<BaseTheme, Task> ChangeAppTheme { get; set; }
     protected CSSClass ComputeClass() => ComputeClass(CLASSNAME);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
@@ -18,10 +16,10 @@ public partial class ThemeSwitch {
     private Switch SwitchRef = null!;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentParametersSet(bool firstTime) => DefaultValue = Theme is LightTheme;
+    protected override void OnComponentParametersSet(bool firstTime) => DefaultValue = AppTheme is LightTheme;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task TriggerChange() {
-        await ChangeTheme(Theme is DarkTheme ? new LightTheme() : new DarkTheme());
+        await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme());
     }
 }

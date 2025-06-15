@@ -9,8 +9,6 @@ public partial class CollapseItem : IDisposable {
     public const string CLASS_COLLAPSE_ITEM_CONTENT = "collapse-item-content";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
     [Parameter]
     public required RenderFragment Title { get; set; }
     [Parameter]
@@ -48,7 +46,7 @@ public partial class CollapseItem : IDisposable {
         await PageLoader.Show(PAGE_LOADER_TASK.COLLAPSE, true);
         Collapsed = !Collapsed;
         StateHasChanged();
-        await Task.Delay(Theme.TRANSITION_NORMAL);
+        await Task.Delay(AppTheme.TRANSITION_NORMAL);
         await PageLoader.Hide(PAGE_LOADER_TASK.COLLAPSE);
     }
 }

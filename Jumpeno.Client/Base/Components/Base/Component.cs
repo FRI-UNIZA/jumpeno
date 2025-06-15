@@ -3,6 +3,8 @@ namespace Jumpeno.Client.Base;
 // NOTE: Derive only specific base class
 public class Component : ComponentBase, IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [CascadingParameter]
+    public required BaseTheme AppTheme { get; set; }
     [Parameter]
     public string Class { get; set; } = "";
     [Parameter]

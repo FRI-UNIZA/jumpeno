@@ -4,8 +4,6 @@ using System.Reflection;
 
 public partial class ModalElement {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
-    public required BaseTheme Theme { get; set; }
     [Parameter]
     public required Modal Modal { get; set; }
     [Parameter]
