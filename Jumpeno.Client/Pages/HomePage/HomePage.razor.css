@@ -58,9 +58,9 @@
     font-size: 14px;
 }
 ::deep .contact-icon svg {
-    font-size: 18px;
-    margin-bottom: -2px;
-    margin-right: 6px;
+    font-size: 20px;
+    margin-bottom: -3px;
+    margin-right: 8px;
 }
 
 .action-buttons {
