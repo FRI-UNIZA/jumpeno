@@ -648,4 +648,7 @@
   <data name="Not a match of I18N{value1} and I18N{value2}" xml:space="preserve">
     <value>Not a match of I18N{value1} and I18N{value2}</value>
   </data>
+  <data name="Failed to send activation email." xml:space="preserve">
+    <value>Failed to send activation email.</value>
+  </data>
 </root>

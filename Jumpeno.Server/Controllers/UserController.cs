@@ -19,7 +19,7 @@ public class UserController : ControllerBase {
             await ActivationEntity.Create(user.ID);
         });
         // 3) Activation email:
-        Email.SendActivation(user.Email, user.ID);
+        Email.TrySendActivation(user.Email, user.ID);
         // 4) Response:
         Response.StatusCode = StatusCodes.Status201Created;
         return new(I18N.T("Registration successful."));

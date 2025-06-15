@@ -23,6 +23,11 @@
                 @I18N.T("Please send us your feedback (feedback)")
             </Link>
         </Paragraph>
+        <Paragraph Class="contact-text">
+            <Link Href="@($"mailto:{AppSettings.Email}")">
+                <AntIcon Type="send" Theme="outline" Class="contact-icon" />@AppSettings.Email
+            </Link>
+        </Paragraph>
         <div class="action-buttons">
             <Button Size="BUTTON_SIZE.M" Params="@(new ButtonLinkParams(
                 Href: I18N.Link<GamePage>(),

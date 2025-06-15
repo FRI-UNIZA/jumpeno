@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 24px;
+    gap: 20px;
     width: 100%;
     max-width: 540px;
     margin: 0;
@@ -46,6 +46,21 @@
 
 ::deep .feedback-text {
     text-align: center;
+}
+
+::deep .contact-text {
+    text-align: center;
+    margin-top: -16px;
+    font-size: 14px;
+    padding-bottom: 10px;
+}
+::deep .contact-text * {
+    font-size: 14px;
+}
+::deep .contact-icon svg {
+    font-size: 18px;
+    margin-bottom: -2px;
+    margin-right: 6px;
 }
 
 .action-buttons {
@@ -78,10 +93,6 @@
     .home-image-section {
         padding: 0 20px 4px;
     }
-
-    .home-text-section {
-        gap: 30px;
-    }
 }
 
 @media (min-width: 900px) {
@@ -97,8 +108,8 @@
     }
 
     ::deep .home-image {
-        --image-width: 360px;
-        --image-height: 360px;
+        --image-width: 380px;
+        --image-height: 380px;
         --image-max-width: 100%;
         --image-fit: contain;
         --image-position: center center;

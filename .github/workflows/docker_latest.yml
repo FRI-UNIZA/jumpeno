@@ -22,6 +22,11 @@ jobs:
               .Auth.JWT.AccessSecret = "${{ secrets.AUTH_JWT_ACCESS_SECRET }}" |
               .Auth.JWT.RefreshSecret = "${{ secrets.AUTH_JWT_REFRESH_SECRET }}" |
               .Auth.JWT.DataSecret = "${{ secrets.AUTH_JWT_DATA_SECRET }}" |
+              .Email.Host = "${{ secrets.EMAIL_HOST }}" |
+              .Email.Port = "${{ secrets.EMAIL_PORT }}" |
+              .Email.Password = "${{ secrets.EMAIL_PASSWORD }}" |
+              .Email.BackupKeys = "${{ secrets.EMAIL_BACKUP_KEYS }}" |
+              .Email.AppPassword = "${{ secrets.EMAIL_APP_PASSWORD }}" |
               .Email.Mailcatcher = "false"' \
           Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
           mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
@@ -38,14 +43,10 @@ jobs:
       - name: Tag images
         run: |
           docker tag jumpeno ghcr.io/fri-uniza/jumpeno/jumpeno:latest
-          docker tag database ghcr.io/fri-uniza/jumpeno/database:latest
-          docker tag phpmyadmin ghcr.io/fri-uniza/jumpeno/phpmyadmin:latest
       # Step 6:
       - name: Push images to GHCR
         run: |
           docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
-          docker push ghcr.io/fri-uniza/jumpeno/database:latest
-          docker push ghcr.io/fri-uniza/jumpeno/phpmyadmin:latest
   # Job 2:
   deploy:
     runs-on: ubuntu-latest

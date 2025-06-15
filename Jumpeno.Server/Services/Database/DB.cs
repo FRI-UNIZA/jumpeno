@@ -3,18 +3,7 @@
 public class DB : DbContext {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly string VERSION = ServerSettings.Database.Version;
-    public static readonly string HOST = ServerSettings.Database.Host;
-    public static readonly int PORT = ServerSettings.Database.Port;
-    public static readonly string USER = ServerSettings.Database.User;
-    public static readonly string PASSWORD = ServerSettings.Database.Password;
-    public static readonly string DATABASE = ServerSettings.Database.Database;
-    public static readonly string CONNECTION_STRING =
-          $"Server={HOST};"
-        + $"Database={DATABASE};"
-        + $"User={USER};"
-        + $"Password={PASSWORD};"
-        + $"Port={PORT}"
-    ;
+    public static readonly string CONNECTION_STRING = ServerSettings.Database.ConnectionString;
 
     // Configuration ----------------------------------------------------------------------------------------------------------------------
     public static void Setup(DbContextOptionsBuilder options) =>

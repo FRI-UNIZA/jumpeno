@@ -5,6 +5,7 @@ namespace Jumpeno.Shared.Services;
 public static class AppSettings {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public static string Name { get; private set; }
+    public static string Email { get; private set; }
     public static string Version { get; private set; }
     public static bool Prerender { get; private set; }
     public static bool Redirect { get; private set; }
@@ -47,6 +48,7 @@ public static class AppSettings {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
         Name = config.GetValue<string>("Name")!;
+        Email = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? config.GetValue<string>("Email")!;
         Version = config.GetValue<string>("Version")!;
         Prerender = config.GetValue<bool>("Prerender")!;
         Redirect = config.GetValue<bool>("Redirect")!;

@@ -1,5 +1,0 @@
-# Build image
-FROM phpmyadmin/phpmyadmin:5.2.2
-
-# Expose service
-EXPOSE 80

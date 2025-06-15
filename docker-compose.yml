@@ -6,15 +6,13 @@ services:
             context: .
             dockerfile: Dockerfile.jumpeno
         environment:
-            DB_HOST: ${DB_HOST}
-            DB_PORT: ${DB_PORT}
-            DB_DATABASE: ${DB_DATABASE}
-            DB_USER: ${DB_USER}
-            DB_PASSWORD: ${DB_PASSWORD}
+            ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
             EMAIL_HOST: ${EMAIL_HOST}
             EMAIL_PORT: ${EMAIL_PORT}
             EMAIL_ADDRESS: ${EMAIL_ADDRESS}
             EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+            EMAIL_BACKUP_KEYS: ${EMAIL_BACKUP_KEYS}
+            EMAIL_APP_PASSWORD: ${EMAIL_APP_PASSWORD}
         restart: always
         ports:
             - 80:80
@@ -32,18 +30,15 @@ services:
             - 3306:3306
         volumes:
             - ${DB_PATH}:/var/lib/mysql
-    phpmyadmin:
-        container_name: phpmyadmin
-        image: phpmyadmin
+    adminer:
+        container_name: adminer
+        image: adminer
         build:
             context: .
-            dockerfile: Dockerfile.phpmyadmin
-        environment:
-            PMA_HOST: ${DB_HOST}
-            PMA_PORT: ${DB_PORT}
+            dockerfile: Dockerfile.adminer
         restart: always
         ports:
-            - 8080:80
+            - 8080:8080
     mailcatcher:
         container_name: mailcatcher
         image: mailcatcher

@@ -1,5 +1,5 @@
 # Build image
-FROM mariadb:11.8.2
+FROM adminer:5.3.0
 
 # Expose service
-EXPOSE 3306
+EXPOSE 8080

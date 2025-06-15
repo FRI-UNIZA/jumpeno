@@ -23,17 +23,14 @@ public static class ServerSettings {
     }
     public static ServerSettingsDatabase Database { get; private set; } public class ServerSettingsDatabase {
         public string Version { get; init; }
-        public string Host { get; init; }
-        public int Port { get; init; }
-        public string Database { get; init; }
-        public string User { get; init; }
-        public string Password { get; init; }
+        public string ConnectionString { get; init; }
     }
     public static ServerSettingsEmail Email { get; private set; } public class ServerSettingsEmail {
         public string Host { get; init; }
         public int Port { get; init; }
-        public string Address { get; init; }
         public string Password { get; init; }
+        public string BackupKeys { get; init; }
+        public string AppPassword { get; init; }
         public bool Mailcatcher { get; init; }
     }
     public static ServerSettingsExpiration Expiration { get; private set; } public class ServerSettingsExpiration {
@@ -86,17 +83,14 @@ public static class ServerSettings {
         };
         Database = new() {
             Version = config.GetValue<string>("Database:Version")!,
-            Host = Environment.GetEnvironmentVariable("DB_HOST") ?? config.GetValue<string>("Database:Host")!,
-            Port = Environment.GetEnvironmentVariable("DB_PORT") is string portDB ? int.Parse(portDB) : config.GetValue<int>("Database:Port")!,
-            Database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? config.GetValue<string>("Database:Database")!,
-            User = Environment.GetEnvironmentVariable("DB_USER") ?? config.GetValue<string>("Database:User")!,
-            Password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? config.GetValue<string>("Database:Password")!
+            ConnectionString = config.GetConnectionString("DefaultConnection") ?? config.GetValue<string>("Database:ConnectionString")!
         };
         Email = new() {
             Host = Environment.GetEnvironmentVariable("EMAIL_HOST") ?? config.GetValue<string>("Email:Host")!,
             Port = Environment.GetEnvironmentVariable("EMAIL_PORT") is string portEmail ? int.Parse(portEmail) : config.GetValue<int>("Email:Port")!,
-            Address = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? config.GetValue<string>("Email:Address")!,
             Password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? config.GetValue<string>("Email:Password")!,
+            BackupKeys = Environment.GetEnvironmentVariable("EMAIL_BACKUP_KEYS") ?? config.GetValue<string>("Email:BackupKeys")!,
+            AppPassword = Environment.GetEnvironmentVariable("EMAIL_APP_PASSWORD") ?? config.GetValue<string>("Email:AppPassword")!,
             Mailcatcher = config.GetValue<bool>("Email:Mailcatcher")!
         };
         Expiration = new() {
