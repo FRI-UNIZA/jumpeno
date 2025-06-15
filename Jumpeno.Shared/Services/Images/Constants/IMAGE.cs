@@ -10,7 +10,7 @@ public static class IMAGE {
     // Images:
     public static string JUMPER_YELLOW => URL.ImageLink("images/jumper-yellow.png");
     public static string JUMPENO_PLAYERS => URL.ImageLink("images/jumpeno-players.png");
-    public static string KEYBOARD => URL.ImageLink("images/keyboard.png");
+    public static string KEYBOARD => URL.ImageLink("images/keyboard.png", true);
     public static string TILE => URL.ImageLink("images/tile.png");
     // Sprites:
     public static string SPRITE_MAGE_AIR => URL.ImageLink("sprites/mage-air.png");

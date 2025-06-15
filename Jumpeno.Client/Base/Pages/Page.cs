@@ -10,6 +10,10 @@ public class Page : ComponentBase, IAsyncDisposable {
     public const string ROLES_NAME = "ROLES";
     public const string ROLES_BLOCK_NAME = "ROLES_BLOCK";
 
+    // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [CascadingParameter]
+    public BaseTheme Theme { get; set; } = null!;
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() => ComponentCount++;
