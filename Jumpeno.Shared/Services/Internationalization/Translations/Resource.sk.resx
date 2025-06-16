@@ -651,4 +651,37 @@
   <data name="Failed to send activation email." xml:space="preserve">
     <value>Nepodarilo sa odoslať aktivačný email.</value>
   </data>
+  <data name="Active games" xml:space="preserve">
+    <value>Aktívne hry</value>
+  </data>
+  <data name="Testing" xml:space="preserve">
+    <value>Testovanie</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Databáza</value>
+  </data>
+  <data name="Use credentials from the connection string" xml:space="preserve">
+    <value>Použi údaje z connection stringu</value>
+  </data>
+  <data name="Credentials" xml:space="preserve">
+    <value>Údaje</value>
+  </data>
+  <data name="Emails, files and forms" xml:space="preserve">
+    <value>Správy, súbory a formuláre</value>
+  </data>
+  <data name="Two-factor authentication (2FA)" xml:space="preserve">
+    <value>Dvojfaktorová autentifikácia (2FA)</value>
+  </data>
+  <data name="Get your access from email admin." xml:space="preserve">
+    <value>Prístup získaš od správcu mailu.</value>
+  </data>
+  <data name="In case of emergency use the backup key." xml:space="preserve">
+    <value>V núdzi použi záložný kľúč.</value>
+  </data>
+  <data name="Generate and set new secret after!" xml:space="preserve">
+    <value>Potom vygeneruj a nastav nový secret!</value>
+  </data>
+  <data name="Backup keys" xml:space="preserve">
+    <value>Záložné kľúče</value>
+  </data>
 </root>

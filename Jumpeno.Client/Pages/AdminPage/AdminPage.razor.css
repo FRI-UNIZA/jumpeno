@@ -2,12 +2,118 @@
 .admin-page {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: stretch;
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px;
+    padding: 20px 0;
+}
+.feature-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+.service-panel {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
     width: 100%;
     gap: 20px;
 }
 
 ::deep .admin-heading {
     --text-align: center;
+}
+
+::deep .games-box {
+    --box-background: rgba(var(--color-primary-box), 0.6);
+}
+
+::deep .admin-title {
+    display: none;
+}
+
+::deep .db-box {
+    --box-direction: column;
+    --box-align-items: center;
+    --box-gap: 18px;
+}
+::deep .db-heading {
+    --text-align: center;
+}
+::deep .db-info {
+    font-size: 13px;
+    --text-align: center;
+    margin-top: -6px;
+}
+::deep .db-info b {
+    display: block;
+    font-size: 14px;
+    padding-bottom: 4px;
+}
+.db-buttons {
+    display: flex;
+    justify-content: stretch;
+    width: 100%;
+    max-width: 400px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+::deep .db-button {
+    flex-grow: 1;
+}
+::deep .db-button .button-component, ::deep .db-button .button-component .button-element {
+    width: 100%;
+}
+
+::deep .email-box {
+    --box-direction: column;
+    --box-align-items: center;
+    --box-gap: 18px;
+}
+::deep .email-heading {
+    --text-align: center;
+}
+::deep .email-info {
+    font-size: 13px;
+    --text-align: center;
+    margin-top: -6px;
+}
+::deep .email-info b {
+    display: block;
+    font-size: 14px;
+    padding-bottom: 4px;
+}
+.email-buttons {
+    display: flex;
+    justify-content: stretch;
+    width: 100%;
+    max-width: 400px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+::deep .email-button {
+    flex-grow: 1;
+}
+::deep .email-button .button-component, ::deep .email-button .button-component .button-element {
+    width: 100%;
+}
+::deep .email-factor-paragraph {
+    font-size: 13px;
+    --text-align: center;
+}
+
+/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+@media (min-width: 1200px) {
+    .admin-page {
+        flex-direction: row;
+    }
+    .service-panel {
+        width: 400px;
+    }
+
+    ::deep .admin-title {
+        display: block;
+    }
 }

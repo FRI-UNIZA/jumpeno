@@ -138,7 +138,6 @@ All migrations are stored in:
 (Ensure that new migration can be applied to existing data on the server!)<br />
 (In this order you can also tweak the migration in `{MigrationName}.cs` file.)
 
-
 ## Admin
 You can log into the web as administrator.<br />
 Here, you can manipulate the database, monitor the application, and run tests.

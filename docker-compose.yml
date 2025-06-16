@@ -9,7 +9,6 @@ services:
             ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
             EMAIL_HOST: ${EMAIL_HOST}
             EMAIL_PORT: ${EMAIL_PORT}
-            EMAIL_ADDRESS: ${EMAIL_ADDRESS}
             EMAIL_PASSWORD: ${EMAIL_PASSWORD}
             EMAIL_BACKUP_KEYS: ${EMAIL_BACKUP_KEYS}
             EMAIL_APP_PASSWORD: ${EMAIL_APP_PASSWORD}

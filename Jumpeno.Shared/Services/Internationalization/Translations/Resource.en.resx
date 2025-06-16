@@ -651,4 +651,37 @@
   <data name="Failed to send activation email." xml:space="preserve">
     <value>Failed to send activation email.</value>
   </data>
+  <data name="Active games" xml:space="preserve">
+    <value>Active games</value>
+  </data>
+  <data name="Testing" xml:space="preserve">
+    <value>Testing</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Use credentials from the connection string" xml:space="preserve">
+    <value>Use credentials from the connection string</value>
+  </data>
+  <data name="Credentials" xml:space="preserve">
+    <value>Credentials</value>
+  </data>
+  <data name="Emails, files and forms" xml:space="preserve">
+    <value>Emails, files and forms</value>
+  </data>
+  <data name="Two-factor authentication (2FA)" xml:space="preserve">
+    <value>Two-factor authentication (2FA)</value>
+  </data>
+  <data name="Get your access from email admin." xml:space="preserve">
+    <value>Get your access from email admin.</value>
+  </data>
+  <data name="In case of emergency use the backup key." xml:space="preserve">
+    <value>In case of emergency use the backup key.</value>
+  </data>
+  <data name="Generate and set new secret after!" xml:space="preserve">
+    <value>Generate and set new secret after!</value>
+  </data>
+  <data name="Backup keys" xml:space="preserve">
+    <value>Backup keys</value>
+  </data>
 </root>

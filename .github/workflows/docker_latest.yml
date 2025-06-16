@@ -31,19 +31,28 @@ jobs:
           Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
           mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
       # Step 3:
+      - name: Inject variables
+        run: |
+          # Modify appsettings.json
+          jq '.Email = "${{ vars.EMAIL_ADDRESS }}" |
+              .Links.Adminer = "${{ vars.DB_LINK }}" |
+              .Links.Email = "${{ vars.EMAIL_LINK }}"' \
+          Jumpeno.Shared/appsettings.json > Jumpeno.Shared/appsettings.tmp.json && \
+          mv Jumpeno.Shared/appsettings.tmp.json Jumpeno.Shared/appsettings.json
+      # Step 4:
       - name: Login to GitHub Container Registry (GHCR)
         env:
           GITHUB_USER: ${{ github.actor }}
           GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: docker login https://ghcr.io -u $GITHUB_USER -p $GITHUB_PASSWORD
-      # Step 4:
+      # Step 5:
       - name: Build images
         run: docker compose build
-      # Step 5:
+      # Step 6:
       - name: Tag images
         run: |
           docker tag jumpeno ghcr.io/fri-uniza/jumpeno/jumpeno:latest
-      # Step 6:
+      # Step 7:
       - name: Push images to GHCR
         run: |
           docker push ghcr.io/fri-uniza/jumpeno/jumpeno:latest
@@ -58,4 +67,4 @@ jobs:
       - name: Push with curl
         uses: wei/curl@master
         with:
-          args: -X POST -k ${{ secrets.PORTAINER_WEBHOOK_URL }}
+          args: -X POST -k ${{ vars.PORTAINER_WEBHOOK_URL }}

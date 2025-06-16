@@ -44,11 +44,15 @@ public static class AppSettings {
             public int Seconds { get; init; }
         }
     }
+    public static AppSettingsLinks Links { get; private set; } public class AppSettingsLinks {
+        public string Adminer { get; init; }
+        public string Email { get; init; }
+    }
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
         Name = config.GetValue<string>("Name")!;
-        Email = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? config.GetValue<string>("Email")!;
+        Email = config.GetValue<string>("Email")!;
         Version = config.GetValue<string>("Version")!;
         Prerender = config.GetValue<bool>("Prerender")!;
         Redirect = config.GetValue<bool>("Redirect")!;
@@ -79,6 +83,10 @@ public static class AppSettings {
             TouchDeviceNotifications = new() { PerSecond = config.GetValue<int>("Game:TouchDeviceNotifications:PerSecond")! },
             Round = new() { Minutes = config.GetValue<int>("Game:Round:Minutes")! },
             FinishDelay = new() { Seconds = config.GetValue<int>("Game:FinishDelay:Seconds")! }
+        };
+        Links = new() {
+            Adminer = config.GetValue<string>("Links:Adminer")!,
+            Email = config.GetValue<string>("Links:Email")!
         };
     }
 }
