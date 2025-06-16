@@ -13,6 +13,9 @@ public static class API {
         public static string CULTURE_REDIRECT => $"{URL}/Culture/Redirect";
         // Admin:
         public static string ADMIN_LOGIN => $"{URL}/Admin/Login";
+        public static string ADMIN_DB_CREDENTIALS => $"{URL}/Admin/DBCredentials";
+        public static string ADMIN_EMAIL_PASSWORD => $"{URL}/Admin/EmailPassword";
+        public static string ADMIN_EMAIL_BACKUP_KEYS => $"{URL}/Admin/EmailBackupKeys";
         // Auth:
         public static string AUTH_REFRESH => $"{URL}/Auth/Refresh";
         public static string AUTH_INVALIDATE => $"{URL}/Auth/Invalidate";

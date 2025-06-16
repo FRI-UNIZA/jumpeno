@@ -3,6 +3,7 @@ namespace Jumpeno.Server.Controllers;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
+[ApiController]
 [Route("[controller]/[action]")]
 public class CultureController : Controller {
     // Endpoints --------------------------------------------------------------------------------------------------------------------------

@@ -36,7 +36,8 @@
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>Adminer</Text>
                 </Button>
-                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="() => {}">
+                <CredentialsModal Label="@I18N.T("Credentials")" URL="@API.BASE.ADMIN_DB_CREDENTIALS" @ref="@DBCredentialsModalRef" />
+                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="OpenDBCredentials">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Credentials")</Text>
                 </Button>
@@ -56,9 +57,10 @@
                     Target: LINK_TARGET.BLANK
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
-                    <Text>GMail</Text>
+                    <Text>Email</Text>
                 </Button>
-                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="email-button" OnClick="() => {}">
+                <CredentialsModal Label="@I18N.T("Password")" URL="@API.BASE.ADMIN_EMAIL_PASSWORD" @ref="@EmailPasswordModalRef" />
+                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="email-button" OnClick="OpenEmailPassword">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Password")</Text>
                 </Button>
@@ -77,7 +79,8 @@
                     @I18N.T("Generate and set new secret after!")
                 </Paragraph>
             </div>
-            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="() => {}">
+            <CredentialsModal Label="@I18N.T("Backup keys")" URL="@API.BASE.ADMIN_EMAIL_BACKUP_KEYS" @ref="@EmailBackupKeysModalRef" />
+            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="OpenEmailBackupKeys">
                 <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                 <Text>@I18N.T("Backup keys")</Text>
             </Button>

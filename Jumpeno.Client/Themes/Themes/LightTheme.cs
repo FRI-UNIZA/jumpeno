@@ -74,7 +74,7 @@ public class LightTheme : BaseTheme {
     public override string SHADOW_MODAL_ENDING => "0 0 10px rgba(0, 0, 0, 0.1)";
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor COLOR_PROFILE_BACKGROUND => new(190, 190, 190);
+    public override RGBAColor COLOR_PROFILE_BACKGROUND => new(102, 102, 102);
     // Dropdown ---------------------------------------------------------------------------------------------------------------------------
     public override string SHADOW_DROPDOWN_OPTIONS => "0 0 12px rgba(0, 0, 0, 0.2)";
     // Admin dropdown ---------------------------------------------------------------------------------------------------------------------
