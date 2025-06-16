@@ -5,7 +5,7 @@ public partial class DemoPage {
     public const string ROUTE_EN = "/en/demo";
     public const string ROUTE_SK = "/sk/demo";
 
-    public const string PASSWORD = "FRIadm25";
+    public const string PASSWORD = "FRIdemo25";
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly InputViewModel<string> VMPassword;
