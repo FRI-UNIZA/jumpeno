@@ -152,39 +152,47 @@ public static class JWT {
     }
 
     // Authorization ----------------------------------------------------------------------------------------------------------------------
-    public static void Authorize(HttpContext ctx) {
-        // Get endpoint metadata
-        var endpoint = ctx.GetEndpoint();
-        if (endpoint == null) return;
-        
-        // Get controller and action metadata
-        var controllerActionDescriptor = endpoint.Metadata
-            .OfType<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()
-            .FirstOrDefault();
-        if (controllerActionDescriptor == null) return;
-        
-        // Get the method info
-        var methodInfo = controllerActionDescriptor.MethodInfo;
-        if (methodInfo == null) return;
-
-        // Get the custom RoleAttribute
-        var roleAttribute = methodInfo.GetCustomAttribute<RoleAttribute>();
-        if (roleAttribute == null) return;
-            
-        var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
-        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw EXCEPTION.NOT_AUTHENTICATED;
-        
-        string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
+    public static void Authorize(string token, ROLE[] roles) {
+        // Validate token:
         if (!ValidateAccess(token)) throw EXCEPTION.NOT_AUTHENTICATED;
-
+        // Store token:
         Token.StoreAccess(token);
+        // Check roles:
         bool allowed = false;
-        foreach (var role in roleAttribute.Allowed) {
+        foreach (var role in roles) {
             if (role == Token.Access.role) {
                 allowed = true;
                 break;
             }
         }
         if (!allowed) throw EXCEPTION.NOT_AUTHORIZED;
+    }
+    
+    public static void Authorize(HttpContext ctx) {
+        // Get endpoint metadata:
+        var endpoint = ctx.GetEndpoint();
+        if (endpoint == null) return;
+        
+        // Get controller and action metadata:
+        var controllerActionDescriptor = endpoint.Metadata
+            .OfType<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()
+            .FirstOrDefault();
+        if (controllerActionDescriptor == null) return;
+        
+        // Get the method info:
+        var methodInfo = controllerActionDescriptor.MethodInfo;
+        if (methodInfo == null) return;
+
+        // Get the custom RoleAttribute:
+        var roleAttribute = methodInfo.GetCustomAttribute<RoleAttribute>();
+        if (roleAttribute == null) return;
+            
+        // Get token:
+        var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
+        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw EXCEPTION.NOT_AUTHENTICATED;
+        string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
+
+        // Authorize:
+        Authorize(token, roleAttribute.Allowed);
     }
 }

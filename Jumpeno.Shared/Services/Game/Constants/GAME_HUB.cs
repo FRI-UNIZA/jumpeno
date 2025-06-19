@@ -5,10 +5,21 @@ public static class GAME_HUB {
     public static string URL => HUB.BASE.GAME;
 
     // Params -----------------------------------------------------------------------------------------------------------------------------
-    public const string PARAM_CODE = nameof(Game.Code);
-    public const string PARAM_USER = nameof(User);
-    public const string PARAM_DEVICE = nameof(Connection.Device);
-    public const string PARAM_SPECTATOR = nameof(Spectator);
+    public const string PARAM_GAME_PARAMS_TYPE = "GameParamsType";
+    public const string PARAM_GAME_PARAMS = "GameParams";
+    // User:
+    public const string PARAM_CODE = "Code";
+    public const string PARAM_DEVICE_TYPE = "DeviceType";
+    public const string PARAM_NAME = "Name";
+    public const string PARAM_SKIN = "Skin";
+    public const string PARAM_ACCESS_TOKEN = "AccessToken";
+    // Game:
+    public const string PARAM_GAME_NAME = "GameName";
+    public const string PARAM_MAP = "Map";
+    public const string PARAM_GAME_MODE = "GameMode";
+    public const string PARAM_DISPLAY_MODE = "DisplayMode";
+    public const string PARAM_CAPACITY = "Capacity";
+    public const string PARAM_ANONYMS = "Anonyms";
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
     public const string KEY_UPDATE = "KeyUpdate";

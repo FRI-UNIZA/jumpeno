@@ -37,14 +37,14 @@ public static class GameService {
         // 1) Validation:
         List<Error> errors = [];
         errors.AddRange(GameValidator.ValidateCode(code, GAME_HUB.PARAM_CODE));
-        errors.AddRange(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_USER));
+        errors.AddRange(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_NAME));
         Checker.AssertWith(errors, EXCEPTION.VALUES);
         // 2) Connect client:
         return await AddClient(AssertEngine(code), connection, spectator);
     }
     public static async Task<GameContext> Connect(GameEngine engine, Connection connection, bool spectator) {
         // 1) Validation:
-        Checker.AssertWith(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_USER), EXCEPTION.VALUES);
+        Checker.AssertWith(UserValidator.ValidateName(connection.User.Name, true, GAME_HUB.PARAM_NAME), EXCEPTION.VALUES);
         // 2) Connect client:
         return await AddClient(engine, connection, spectator);
     }

@@ -684,4 +684,7 @@
   <data name="Backup keys" xml:space="preserve">
     <value>Backup keys</value>
   </data>
+  <data name="Account is not activated!" xml:space="preserve">
+    <value>Account is not activated!</value>
+  </data>
 </root>

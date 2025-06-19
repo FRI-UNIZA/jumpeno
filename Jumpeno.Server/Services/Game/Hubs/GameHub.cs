@@ -61,41 +61,50 @@ public class GameHub : Hub {
     }
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    private (string Code, User user, DEVICE_TYPE Device, bool Spectator) ReadConnectParams() {
-        // 1) Context:
-        var ctx = Context.GetHttpContext() ?? throw EXCEPTION.CLIENT.SetInfo("Missing parameters!");
-        // 2.1) Validate code:
-        var errors = Checker.Validate(
-            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_CODE, out var queryCode),
-            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_CODE).SetInfo("Code not set!")
-        );
-        // 2.2) Validate user:
+    private async Task<(string? Code, bool Create, User user, DEVICE_TYPE Device, bool Spectator)> ReadConnectParams() {
+        // 1.1) Init context:
+        var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
+        // 1.2) Init errors:
+        List<Error> errors = [];
+
+        // 3.1) Validate type:
         Checker.Validate(
             errors,
-            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_USER, out var queryUser),
-            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_USER).SetInfo("User undefined!")
-        );
-        // 2.3) Validate touch device:
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_GAME_PARAMS_TYPE, out var queryType),
+            ERROR.EMPTY.SetID(GAME_HUB.PARAM_GAME_PARAMS_TYPE)
+        );        
+        // 3.2) Validate params:
         Checker.Validate(
             errors,
-            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_DEVICE, out var queryDevice),
-            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_DEVICE).SetInfo("Device parameter not set!")
+            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_GAME_PARAMS, out var queryParams),
+            ERROR.EMPTY.SetID(GAME_HUB.PARAM_GAME_PARAMS)
         );
-        // 2.4) Validate spectator:
-        Checker.Validate(
-            errors,
-            !ctx.Request.Query.TryGetValue(GAME_HUB.PARAM_SPECTATOR, out var querySpectator),
-            ERROR.DEFAULT.SetID(GAME_HUB.PARAM_SPECTATOR).SetInfo("Spectator parameter not set!")
-        );
-        // 3) Check values:
+        // 3.3) Check errors:
         Checker.AssertWith(errors, EXCEPTION.VALUES);
-        // 4) Read values:
-        var code = $"{queryCode}";
-        var user = JsonSerializer.Deserialize<User>(queryUser!)!;
-        var device = JsonSerializer.Deserialize<DEVICE_TYPE>(queryDevice!)!;
-        var spectator = bool.Parse(querySpectator!);
-        // 5) Return:
-        return (code, user, device, spectator);
+
+        // 4.1) Read params:
+        switch (JsonSerializer.Deserialize<GAME_PARAMS_TYPE>(queryType!)!) {
+            case GAME_PARAMS_TYPE.CREATE: {
+                var p = JsonSerializer.Deserialize<CreateGameParams>(queryParams!)!;
+                JWT.Authorize(p.AccessToken, [ROLE.USER]);
+                return (p.Code, true, await UserEntity.SelectCurrentActivatedUser(), p.Device, false);
+            }
+            case GAME_PARAMS_TYPE.ANONYMOUS_PLAYER: {
+                var p = JsonSerializer.Deserialize<AnonymousGameParams>(queryParams!)!;
+                return (p.Code, false, new(p.Name, p.Skin), p.Device, false);
+            }
+            case GAME_PARAMS_TYPE.SPECTATOR: {
+                var p = JsonSerializer.Deserialize<AnonymousGameParams>(queryParams!)!;
+                return (p.Code, false, new(p.Name, p.Skin), p.Device, true);
+            }
+            case GAME_PARAMS_TYPE.REGISTERED_PLAYER: {
+                var p = JsonSerializer.Deserialize<RegisteredGameParams>(queryParams!)!;
+                JWT.Authorize(p.AccessToken, [ROLE.USER]);
+                return (p.Code, false, await UserEntity.SelectCurrentActivatedUser(), p.Device, false);
+            }
+        }
+        // 4.2) Invalid type:
+        throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID(GAME_HUB.PARAM_GAME_PARAMS_TYPE));
     }
 
     // Connect ----------------------------------------------------------------------------------------------------------------------------
@@ -105,10 +114,16 @@ public class GameHub : Hub {
             // 1) Create TCS:
             ConnectTCS = new();
             // 2) Query parameters:
-            var (code, user, device, spectator) = ReadConnectParams();
-            // 3) Connect to game:
+            var (code, create, user, device, spectator) = await ReadConnectParams();
+            // 3) Connect to or create game:
             // NOTE: [Locked] BeforeConnected()
-            GameContext = await GameService.Connect(code, new(Context.ConnectionId, user, device), spectator);
+            if (create) {
+                throw EXCEPTION.SERVER.SetInfo("This functionality is not implemented yet.");
+            } else if (code != null) {
+                GameContext = await GameService.Connect(code, new(Context.ConnectionId, user, device), spectator);
+            } else {
+                throw EXCEPTION.VALUES.SetCode(CODE.SERVER).SetErrors(ERROR.EMPTY.SetID(GAME_HUB.PARAM_CODE));
+            }
             // NOTE: [Locked] AfterConnected(GameContext)
         } catch (Exception e) {
             // 4) Handle error:
@@ -154,8 +169,9 @@ public class GameHub : Hub {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
             await Hub.Clients.Client(id).SendAsync(update.HUB_ACTION, update);
+        } catch (Exception e) {
+            Console.Error.WriteLine(e);
         }
-        catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
     public static async Task SendException(Game game, UPDATE_GROUP group, AppException exception) {
@@ -167,8 +183,9 @@ public class GameHub : Hub {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
             await HandleException(Hub.Clients.Client(id), exception);
+        } catch (Exception e) {
+            Console.Error.WriteLine(e);
         }
-        catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
     // Disconnect -------------------------------------------------------------------------------------------------------------------------

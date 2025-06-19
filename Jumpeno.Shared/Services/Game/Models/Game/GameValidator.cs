@@ -4,8 +4,9 @@ public static class GameValidator {
     // Code -------------------------------------------------------------------------------------------------------------------------------
     public const byte CODE_LENGTH = 4;
 
-    public static List<Error> ValidateCode(string value, string id = "") {
-        var errors = Checker.Validate(value.Length != CODE_LENGTH,
+    public static List<Error> ValidateCode(string? value, string id = "") {
+        var errors = Checker.ValidateUndefined(value, id); value = $"{value}";
+        Checker.Validate(errors, value.Length != CODE_LENGTH,
             ERROR.DEFAULT.SetID(id)
             .SetInfo("Length must be equal to I18N{length}", new() {{ "length", CODE_LENGTH }})
         );
@@ -13,8 +14,8 @@ public static class GameValidator {
         Checker.Validate(errors, value.ToUpper() != value, ERROR.DEFAULT.SetID(id).SetInfo("Code must be uppercase"));
         return errors;
     }
-    public static string AssertCode(string value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateCode(value, id), exception ?? EXCEPTION.VALUES);
+    public static string AssertCode(string? value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateCode(value, id), exception ?? EXCEPTION.VALUES)!;
     }
 
     // Name -------------------------------------------------------------------------------------------------------------------------------

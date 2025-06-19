@@ -10,7 +10,7 @@ public partial class CreateBox {
         var implemented = false;
         // TODO: Implement the logic to create a game
         if (implemented) {
-            await VM.ConnectRequest(new(Game.DEFAULT_CODE, Auth.User.Name), false);
+            await VM.PlayRequest(new(Game.DEFAULT_CODE, Auth.User.Name));
         } else {
             Notification.Error(I18N.T("This functionality is not implemented yet."));
         }

@@ -141,6 +141,10 @@ public class Window {
 
     // Media ------------------------------------------------------------------------------------------------------------------------------
     public static bool IsTouchDevice => JS.Invoke<bool>(JSWindow.IsTouchDevice);
+    public static DEVICE_TYPE GetDeviceType() {
+        AppEnvironment.CheckClient();
+        return IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER;
+    }
 
     // Tab reload -------------------------------------------------------------------------------------------------------------------------
     public static void ReloadTabs() => JS.InvokeVoid(JSWindow.ReloadTabs);

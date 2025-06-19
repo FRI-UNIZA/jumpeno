@@ -30,6 +30,20 @@ public class UserEntity {
     public ActivationEntity? Activation { get; set; }
     public PasswordEntity? Password { get; set; }
 
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
+    public static async Task<User?> SelectUser(string id) {
+        var user = await ByIDLeftJoinActivation(id);
+        return user != null ? new(Guid.Parse(user.ID), user.Email, user.Name, (SKIN)user.Skin, user.Activation == null) : null;
+    }
+
+    public static async Task<User> SelectCurrentUser() => await SelectUser(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+
+    public static async Task<User> SelectCurrentActivatedUser() {
+        var user = await SelectCurrentUser();
+        if (!user.Activated) throw EXCEPTION.CLIENT.SetInfo("Account is not activated!");
+        return user;
+    }
+
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<UserEntity> Create(
         string email, string name,

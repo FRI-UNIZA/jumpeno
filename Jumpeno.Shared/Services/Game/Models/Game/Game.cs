@@ -129,13 +129,13 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public Player ConnectPlayer(Connection connection) {
         AppEnvironment.CheckServer();
         GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_USER);
+        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name != connection.User.Name) continue;
                 if (State == GAME_STATE.LOBBY) {
                     throw EXCEPTION.CLIENT.SetInfo("Player name is taken!")
-                    .SetErrors(ERROR.DEFAULT.SetID(GAME_HUB.PARAM_USER).SetInfo("Player name is taken!"));
+                    .SetErrors(ERROR.DEFAULT.SetID(GAME_HUB.PARAM_NAME).SetInfo("Player name is taken!"));
                 } else {
                     throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
                 }
@@ -222,8 +222,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public Spectator ConnectSpectator(Connection connection) {
         AppEnvironment.CheckServer();
         GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_USER);
-        GameValidator.AssertSpectatorCount(this, GAME_HUB.PARAM_SPECTATOR);
+        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
+        GameValidator.AssertSpectatorCount(this);
         SpectatorCount++;
         return new(connection);
     }

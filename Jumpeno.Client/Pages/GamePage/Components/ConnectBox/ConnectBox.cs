@@ -31,11 +31,11 @@ public partial class ConnectBox {
         ));
         VMName = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_USER,
+            ID: GAME_HUB.PARAM_NAME,
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
-            Name: GAME_HUB.PARAM_USER,
+            Name: GAME_HUB.PARAM_NAME,
             Label: I18N.T("Your name"),
             Placeholder: I18N.T("Your name"),
             DefaultValue: "",
@@ -82,6 +82,6 @@ public partial class ConnectBox {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task HandlePlay() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value), false);
-    private async Task HandleWatch() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value), true);
+    private async Task HandlePlay() => await VM.PlayRequest(new(VMCode.Value, VMName.Value));
+    private async Task HandleWatch() => await VM.WatchRequest(new(VMCode.Value, VMName.Value));
 }

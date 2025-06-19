@@ -684,4 +684,7 @@
   <data name="Backup keys" xml:space="preserve">
     <value>Záložné kľúče</value>
   </data>
+  <data name="Account is not activated!" xml:space="preserve">
+    <value>Účet nie je aktivovaný!</value>
+  </data>
 </root>
