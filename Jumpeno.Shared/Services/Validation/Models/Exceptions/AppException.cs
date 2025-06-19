@@ -84,5 +84,6 @@ public class AppException : Exception {
     ) {}
 
     // Data Transfer Object ---------------------------------------------------------------------------------------------------------------
+    [JsonIgnore][Newtonsoft.Json.JsonIgnore]
     public virtual AppExceptionDTO DTO => new(this);
 }

@@ -228,14 +228,14 @@ public static class Auth {
     public static bool NotFreezed(Component component) => !Freezed(component);
     public static async Task Unregister(Component component) => await RemoveUpdateListener(component.Notify);
     // Actions:
-    private static async Task LoadAuthProfile(bool processing = true) {
+    private static async Task LoadAuthProfile(bool processing = true, HTTPResult<UserProfileDTOR>? response = null) {
         if (AppEnvironment.IsServer) return;
         await UpdateLock.Exclusive(async () => {
             try {
                 if (processing) StartProcessing();
                 if (Token.Access.role == ROLE.USER) {
                     // 1.1) Load user profile:
-                    var response = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
+                    response ??= await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
                     // 1.2) Validate response:
                     response.Body.Assert();
                     // 1.3) Store user profile:
@@ -251,7 +251,8 @@ public static class Auth {
     }
     public static async Task LoadProfile() {
         if (AppEnvironment.IsServer) return;
-        await Window.Lock(async () => await LoadAuthProfile(), WINDOW_LOCK.AUTHENTICATION);
+        var response = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
+        await Window.Lock(async () => await LoadAuthProfile(true, response), WINDOW_LOCK.AUTHENTICATION);
     }
 
     private static async Task ResetAuthProfile(bool processing = true) {

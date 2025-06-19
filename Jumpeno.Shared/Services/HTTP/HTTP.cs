@@ -310,7 +310,34 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     public static async Task<bool> Try(Func<Task> callback, string? form = null) {
         try { await callback(); return true; }
         catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
-        catch (Exception e) { await OnError(e, form); }
+        catch (AggregateException e) {
+            foreach (var inner in e.InnerExceptions) {
+                if (inner is AppException app && app.Code == CODE.REQUEST_CANCELLED) continue;
+                await OnError(inner, form);
+            }
+        } catch (Exception e) { await OnError(e, form); }
         return false;
+    }
+
+    public static async Task<bool> TrySilent(Func<Task> callback) {
+        try { await callback(); return true; }
+        catch { return false; }
+    }
+
+    // Await ------------------------------------------------------------------------------------------------------------------------------
+    public static async Task Await(Task[] tasks) {
+        try {
+            await Task.WhenAll(tasks);
+        } catch {
+            var exceptions = new List<Exception>();
+            foreach (var task in tasks) {
+                if (task.Exception != null) {
+                    foreach (var e in task.Exception.InnerExceptions) {
+                        exceptions.Add(e);
+                    }
+                }
+            }
+            throw new AggregateException(exceptions);
+        }
     }
 }

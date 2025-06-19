@@ -17,22 +17,25 @@ public class HubAuth {
     }
 
     /// <summary>
-    ///     Handles expired token refresh on exception or returns silently.
-    ///     Exception is rethrown if handled.
+    ///     Handles expired token refresh on request exception.
+    ///     If refresh fails, exception is returned to display errors.
+    ///     Exception is rethrown if handled properly to finish error handling.
     /// </summary>
-    /// <param name="exception">Thrown exception</param>
+    /// <param name="exceptionDTO">Thrown exception DTO</param>
     /// <param name="dispose">Function to dispose Hub</param>
-    public async Task OnError(AppException exception, Func<Task> dispose) {
-        if (exception.Code != CODE.NOT_AUTHENTICATED) return;
-        if (Request == null) return;
+    /// <returns>Refresh exception if occured.</returns>
+    public async Task<AppException?> OnError(AppExceptionDTO exceptionDTO, Func<Task> dispose) {
+        if (exceptionDTO.Code != CODE.NOT_AUTHENTICATED) return null;
+        if (Request == null) return null;
         if (LastRequest != Request) {
             await dispose();
-            await Auth.Refresh(1);
+            try { await Auth.Refresh(1); }
+            catch (AppException e) { return e; }
             LastRequest = Request;
             await Request();
         } else {
             await Auth.Refresh(2);
         }
-        throw exception;
+        throw exceptionDTO.Exception;
     }
 }

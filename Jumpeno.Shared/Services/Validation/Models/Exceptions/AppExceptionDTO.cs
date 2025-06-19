@@ -27,7 +27,8 @@ public class AppExceptionDTO {
     ) {}
 
     // Exception --------------------------------------------------------------------------------------------------------------------------
-    public AppException Exception() => new AppException()
+    [JsonIgnore][Newtonsoft.Json.JsonIgnore]
+    public AppException Exception => new AppException()
         .SetCode(Code)
         .SetInfo(new(Info)).SetErrors(Errors)
         .SetData(Data);

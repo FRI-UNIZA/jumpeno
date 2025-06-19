@@ -237,17 +237,17 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     // Error handling ---------------------------------------------------------------------------------------------------------------------
-    private async Task HandleErrors(AppExceptionDTO? exception = null) {
+    private async Task HandleErrors(AppExceptionDTO? exceptionDTO = null) {
         await ConnectLock.TryExclusive(async () => {
-            if (exception is null) {
+            if (exceptionDTO is null) {
                 await DisposeGame();
             } else {
                 // 1) Authorization:
-                await Authorization.OnError(exception.Exception(), DisposeHub);
+                var exception = await Authorization.OnError(exceptionDTO, DisposeHub) ?? exceptionDTO.Exception;
                 // 2) Disconnect:
                 if (exception.Code == CODE.DISCONNECT) await DisposeGame();
                 // 3) Display errors:
-                ErrorHandler.Display(exception.Exception(), Form);
+                ErrorHandler.Display(exception, Form);
             }
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
         });
