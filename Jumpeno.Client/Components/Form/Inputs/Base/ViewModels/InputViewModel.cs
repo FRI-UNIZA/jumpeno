@@ -1,23 +1,14 @@
 namespace Jumpeno.Client.ViewModels;
 
-public class InputViewModel<T> {
+public class InputViewModel<T> : FormViewModel {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string Form;
-    public readonly string ID;
-    public readonly string FormID;
-    public static string CreateFormID(string form, string id) => $"{form}.{id}";
     public readonly INPUT_TYPE Type;
 
-    public readonly string Name;
-    public readonly string Label;
     public readonly string? Placeholder;
     private bool _Secret;
     public bool Secret {
         get { return _Secret; }
-        set {
-            _Secret = value;
-            Notify?.Invoke();
-        }
+        set { _Secret = value; Notify(); }
     }
 
     public readonly INPUT_TEXT_MODE TextMode;
@@ -33,19 +24,9 @@ public class InputViewModel<T> {
     public readonly EventDelegate<T> OnChange;
     public readonly EmptyDelegate OnEnter;
 
-    public readonly InputErrorViewModel Error;
-    public static InputErrorViewModel? ErrorViewModel(dynamic? viewModel) => viewModel?.Error;
-
-    private readonly Action? Notify = null;
-
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    private InputViewModel(InputViewModelParams<T> @params) {
-        Form = @params.Form is null ? IDGenerator.Generate(nameof(Form).ToLower()) : @params.Form;
-        ID = @params.ID is null ? IDGenerator.Generate(nameof(InputBase<object>)) : @params.ID;
-        FormID = CreateFormID(Form, ID);
+    private InputViewModel(InputViewModelParams<T> @params) : base(@params.Form, @params.ID) {
         Type = InitType(@params);
-        Name = @params.Name;
-        Label = @params.Label;
         Placeholder = @params.Placeholder;
         Secret = @params.Secret;
         TextMode = @params.TextMode;
@@ -64,8 +45,6 @@ public class InputViewModel<T> {
         Value = DefaultValue;
         OnChange = @params.OnChange is null ? new(v => {}) : @params.OnChange;
         OnEnter = @params.OnEnter is null ? new(() => {}) : @params.OnEnter;
-        
-        Error = new InputErrorViewModel();
     }
     public InputViewModel(InputViewModelTextParams @params) : this((InputViewModelParams<T>)(object) @params) {}
     public InputViewModel(InputViewModelLongParams @params) : this((InputViewModelParams<T>)(object) @params) {}
@@ -204,15 +183,13 @@ public class InputViewModel<T> {
         T previous = Value;
         Value = ConstrainedValue(value);
         if (!Value!.Equals(previous)) {
-            Error.ClearError();
+            Error.Clear();
             if (!skipEvent) {
                 await OnChange.Invoke(Value);
             }
         }
-        Notify?.Invoke();
+        React();
     }
 
-    public async Task Clear() {
-        await SetValue(DefaultValue);
-    }
+    public async Task Clear() => await SetValue(DefaultValue);
 }

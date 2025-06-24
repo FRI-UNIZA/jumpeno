@@ -6,13 +6,13 @@ public partial class RegisterForm {
     public required LoginPageViewModel VM { get; set; }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<RegisterForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMPassword;
     private readonly InputViewModel<string> VMConfirmPassword;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<RegisterForm>();
     private bool Success = false;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -24,8 +24,6 @@ public partial class RegisterForm {
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(UserRegisterDTO.Email),
-            Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Register)
@@ -37,8 +35,6 @@ public partial class RegisterForm {
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
-            Name: nameof(UserRegisterDTO.Name),
-            Label: I18N.T("Player name"),
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
             OnEnter: new(Register)
@@ -49,15 +45,13 @@ public partial class RegisterForm {
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: nameof(UserRegisterDTO.Password),
-            Label: I18N.T("Password"),
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
             OnChange: new(value => {
                 if (VMConfirmPassword == null) return;
                 if (VMConfirmPassword.Value != value) return;
-                VMConfirmPassword.Error.ClearError();
+                VMConfirmPassword.Error.Clear();
             }),
             OnEnter: new(Register)
         ));
@@ -67,8 +61,6 @@ public partial class RegisterForm {
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: "ConfirmPassword",
-            Label: I18N.T("Confirm password"),
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
             Secret: true,

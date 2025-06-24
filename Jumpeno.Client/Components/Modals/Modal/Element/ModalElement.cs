@@ -28,9 +28,7 @@ public partial class ModalElement {
         return c;
     }
 
-    public CSSStyle ComputeStyle() {
-        return new CSSStyle(Modal.Style);
-    }
+    public CSSStyle ComputeStyle() => new(Modal.Style);
 
     public CSSClass ComputeDialogClass() {
         var c = new CSSClass(Modal.CLASS_DIALOG);
@@ -60,15 +58,9 @@ public partial class ModalElement {
         JS.InvokeVoid(JSModal.Activate, Modal.ID);
     }
 
-    protected override void OnComponentDispose() {
-        ModalProvider.NotifyDispose(Modal);
-    }
+    protected override void OnComponentDispose() => ModalProvider.NotifyDispose(Modal);
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public void TriggerStateChange() {
-        StateHasChanged();
-    }
-
     public void StartClosing() {
         Type type = typeof(Modal);
         PropertyInfo? prop = type.GetProperty(nameof(Modal.State));

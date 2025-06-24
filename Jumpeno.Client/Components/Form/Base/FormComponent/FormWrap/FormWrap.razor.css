@@ -1,0 +1,55 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+.form-wrap {
+    --form-wrap-width: 100%;
+    --form-wrap-height: 100%;
+    --form-wrap-label-width: 100%;
+    --form-wrap-label-height: auto;
+    --form-wrap-content-width: auto;
+    --form-wrap-content-height: auto;
+}
+
+/* Delegation -------------------------------------------------------------------------------------------------------------------------- */
+.form-wrap ::deep .form-label {
+    --form-label-width: var(--form-wrap-label-width);
+    --form-label-height: var(--form-wrap-label-height);
+}
+
+.form-wrap ::deep .form-error {
+    --form-error-width: var(--form-wrap-content-width);
+    --form-error-height: var(--form-wrap-content-height);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+.form-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: var(--form-wrap-width);
+    height: var(--form-wrap-height);
+    pointer-events: none;
+    z-index: auto;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+.form-wrap.align-left ::deep .form-label {
+    --form-label-align: left;
+}
+.form-wrap.align-left ::deep .form-error {
+    --form-error-align: flex-start;
+}
+
+.form-wrap.align-center ::deep .form-label {
+    --form-label-align: center;
+}
+.form-wrap.align-center ::deep .form-error {
+    --form-error-align: center;
+}
+
+.form-wrap.align-right ::deep .form-label {
+    --form-label-align: right;
+}
+.form-wrap.align-right ::deep .form-error {
+    --form-error-align: flex-end;
+}

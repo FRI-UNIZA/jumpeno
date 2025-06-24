@@ -20,7 +20,7 @@ public static class ErrorHandler {
     public static void MarkInputs(string? form, List<Error> errors) {
         if (form == null || form == "") return;
         foreach (var error in errors) {
-            Input<object>.TrySetError(form, error);
+            FormManager.SetError(form, error);
         }
     }
     public static void MarkInputs(string? form, AppException exception) => MarkInputs(form, exception.Errors);

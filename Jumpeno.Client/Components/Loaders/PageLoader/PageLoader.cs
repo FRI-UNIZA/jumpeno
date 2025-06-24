@@ -68,7 +68,10 @@ public partial class PageLoader {
                     instance.NoLoaderTCS = new TaskCompletionSource();
                 }
                 await instance.OnChange();
-                if (firstLoader) ActionHandler.SetFocus(ID);
+                if (firstLoader) {
+                    ActionHandler.SetFocus(ID);
+                    Window.Inert();
+                }
             }
         });
     }
@@ -85,6 +88,7 @@ public partial class PageLoader {
                     if (!instance.PageLoaderDisplayed) {
                         instance.NoLoaderTCS.TrySetResult();
                         await ActionHandler.RestoreFocusAsync();
+                        Window.Inert();
                     }
                 }
             }

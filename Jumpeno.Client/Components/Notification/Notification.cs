@@ -151,9 +151,7 @@ public partial class Notification {
     }
     // Close ------------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
-    public static void JS_Close(string key) {
-        Instance().Service.Close(key);
-    }
+    public static void JS_Close(string key) => Instance().Service.Close(key);
 
     // Display notification ---------------------------------------------------------------------------------------------------------------
     public static void None(string title, string message, int? duration) {
@@ -163,15 +161,9 @@ public partial class Notification {
             NotificationType = NotificationType.None
         }, duration);
     }
-    public static void None(string title, string message) {
-        None(title, message, null);
-    }
-    public static void None(string message, int? duration) {
-        None(I18N.T("Notification"), message, duration);
-    }
-    public static void None(string message) {
-        None(message, (int?) null);
-    }
+    public static void None(string title, string message) => None(title, message, null);
+    public static void None(string message, int? duration) => None(I18N.T("Notification"), message, duration);
+    public static void None(string message) => None(message, (int?) null);
 
     public static void Success(string title, string message, int? duration) {
         OpenNotification(new NotificationConfig() {
@@ -180,15 +172,9 @@ public partial class Notification {
             NotificationType = NotificationType.Success
         }, duration);
     }
-    public static void Success(string title, string message) {
-        Success(title, message, null);
-    }
-    public static void Success(string message, int? duration) {
-        Success(I18N.T("Success"), message, duration);
-    }
-    public static void Success(string message) {
-        Success(message, (int?) null);
-    }
+    public static void Success(string title, string message) => Success(title, message, null);
+    public static void Success(string message, int? duration) => Success(I18N.T("Success"), message, duration);
+    public static void Success(string message) => Success(message, (int?) null);
     
     public static void Error(string title, string message, int? duration) {
         OpenNotification(new NotificationConfig() {
@@ -197,15 +183,9 @@ public partial class Notification {
             NotificationType = NotificationType.Error
         }, duration);
     }
-    public static void Error(string title, string message) {
-        Error(title, message, null);
-    }
-    public static void Error(string message, int? duration) {
-        Error(I18N.T("Error occurred"), message, duration);
-    }
-    public static void Error(string message) {
-        Error(message, (int?) null);
-    }
+    public static void Error(string title, string message) => Error(title, message, null);
+    public static void Error(string message, int? duration) => Error(I18N.T("Error occurred"), message, duration);
+    public static void Error(string message) => Error(message, (int?) null);
 
     public static void Warning(string title, string message, int? duration) {
         OpenNotification(new NotificationConfig() {
@@ -214,15 +194,9 @@ public partial class Notification {
             NotificationType = NotificationType.Warning
         }, duration);
     }
-    public static void Warning(string title, string message) {
-        Warning(title, message, null);
-    }
-    public static void Warning(string message, int? duration) {
-        Warning(I18N.T("Warning"), message, duration);
-    }
-    public static void Warning(string message) {
-        Warning(message, (int?) null);
-    }
+    public static void Warning(string title, string message) => Warning(title, message, null);
+    public static void Warning(string message, int? duration) => Warning(I18N.T("Warning"), message, duration);
+    public static void Warning(string message) => Warning(message, (int?) null);
 
     public static void Info(string title, string message, int? duration) {
         OpenNotification(new NotificationConfig() {
@@ -231,13 +205,7 @@ public partial class Notification {
             NotificationType = NotificationType.Info
         }, duration);
     }
-    public static void Info(string title, string message) {
-        Info(title, message, null);
-    }
-    public static void Info(string message, int? duration) {
-        Info(I18N.T("Information"), message, duration);
-    }
-    public static void Info(string message) {
-        Info(message, (int?) null);
-    }
+    public static void Info(string title, string message) => Info(title, message, null);
+    public static void Info(string message, int? duration) => Info(I18N.T("Information"), message, duration);
+    public static void Info(string message) => Info(message, (int?) null);
 }

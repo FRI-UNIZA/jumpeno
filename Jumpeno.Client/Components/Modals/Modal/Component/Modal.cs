@@ -3,12 +3,14 @@ namespace Jumpeno.Client.Components;
 public partial class Modal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "modal";
+    public const string ID_DIALOG_INIT_PREFIX = "modal-dialog-init";
     public const string ID_DIALOG_START_PREFIX = "modal-dialog-start";
     public const string ID_DIALOG_PREFIX = "modal-dialog";
     public const string ID_DIALOG_END_PREFIX = "modal-dialog-end";
 
     public const string CLASS_MODAL = ID_PREFIX;
     public const string CLASS_BACKDROP = "modal-backdrop";
+    public const string CLASS_INIT = "modal-init";
     public const string CLASS_START = "modal-start";
     public const string CLASS_CONTAINER = "modal-container";
     public const string CLASS_LOADING_INDICATOR = "modal-loading-indicator";
@@ -22,7 +24,7 @@ public partial class Modal {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Content:
     [Parameter]
-    public required string Label { get; set; }
+    public required OneOf<string, List<string>> Label { get; set; }
     [Parameter]
     public bool NoHeader { get; set; }
     [Parameter]
@@ -57,6 +59,7 @@ public partial class Modal {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string ID;
+    public readonly string ID_DIALOG_INIT;
     public readonly string ID_DIALOG_START;
     public readonly string ID_DIALOG;
     public readonly string ID_DIALOG_END;
@@ -67,6 +70,7 @@ public partial class Modal {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public Modal() {
         ID = IDGenerator.Generate(ID_PREFIX);
+        ID_DIALOG_INIT = $"{ID_DIALOG_INIT_PREFIX}-{ID}";
         ID_DIALOG_START = $"{ID_DIALOG_START_PREFIX}-{ID}";
         ID_DIALOG = $"{ID_DIALOG_PREFIX}-{ID}";
         ID_DIALOG_END = $"{ID_DIALOG_END_PREFIX}-{ID}";

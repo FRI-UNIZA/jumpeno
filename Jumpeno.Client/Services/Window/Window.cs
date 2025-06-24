@@ -139,6 +139,10 @@ public class Window {
     public static void DefaultTouchEnd() => JS.InvokeVoid(JSWindow.DefaultTouchEnd);
     public static async Task DefaultTouchEndAsync() => await JS.InvokeVoidAsync(JSWindow.DefaultTouchEnd);
 
+    // Inert ------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Temporary Chromium fix (Browser ignores inert attribute set in Blazor)</summary>
+    public static void Inert() => JS.InvokeVoid(JSWindow.Inert);
+
     // Media ------------------------------------------------------------------------------------------------------------------------------
     public static bool IsTouchDevice => JS.Invoke<bool>(JSWindow.IsTouchDevice);
     public static DEVICE_TYPE GetDeviceType() {

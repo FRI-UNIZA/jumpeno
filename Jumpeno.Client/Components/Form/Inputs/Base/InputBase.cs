@@ -1,7 +1,6 @@
 namespace Jumpeno.Client.Components;
 
 using System.Numerics;
-using System.Reflection;
 
 public partial class InputBase<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -12,11 +11,7 @@ public partial class InputBase<T> {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required InputViewModel<T> ViewModel { get; set; }
-    [Parameter]
-    public bool HideLabel { get; set; } = false;
-    [Parameter]
-    public INPUT_ALIGN Align { get; set; } = INPUT_ALIGN.LEFT;
+    public string Name { get; set; } = "";
     [Parameter]
     public bool AllowClear { get; set; } = false;
     [Parameter]
@@ -70,45 +65,22 @@ public partial class InputBase<T> {
         return c;
     }
 
-    protected int ComputeTabindexClear() {
-        return ValueIsDefault() ? -1 : 0;
-    }
+    protected int ComputeTabindexClear() => ValueIsDefault() ? -1 : 0;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentParametersSet(bool firstTime) {
-        InputManager.Add(ViewModel.FormID, ViewModel);
         DELIMITER = Delimiter.String();
-        ViewModel.GetType().GetField("Notify", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(ViewModel, () => {
+        FormViewModel.SetReact(ViewModel, () => {
             UpdateTempValue();
             StateHasChanged();
         });
         UpdateTempValue();
     }
 
-    protected override void OnComponentDispose() => InputManager.Remove(ViewModel.FormID);
-
-    // Methods static ---------------------------------------------------------------------------------------------------------------------
-    public static InputViewModel<T>? ActiveViewModel(string id) {
-        return (InputViewModel<T>?) InputManager.Get(id);
-    }
-
-    public static void TrySetError(string form, Error error) {
-        if (form == null || form == "") return;
-        InputErrorViewModel? errorVM = InputViewModel<object>.ErrorViewModel(
-            InputManager.Get(InputViewModel<object>.CreateFormID(form, error.ID))
-        );
-        if (errorVM is null || errorVM.HasError) return;
-        errorVM.SetError(I18N.T(error.Info, unsplit: true));
-    }
-
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private bool ValueIsDefault() {
-        return TempValue.Equals($"{ViewModel.DefaultValue}");
-    }
+    private bool ValueIsDefault() => TempValue.Equals($"{ViewModel.DefaultValue}");
     
-    private void UpdateTempValue() {
-        TempValue = FormatValue(ViewModel.Value);
-    }
+    private void UpdateTempValue() => TempValue = FormatValue(ViewModel.Value);
 
     private string FormatValue(T value) {
         var val = $"{value}";
@@ -184,7 +156,7 @@ public partial class InputBase<T> {
                 TempValue = isPositive ? $"{value}" : $"-{value}";
             }
         } catch { return; }
-        ViewModel.Error.ClearError();
+        ViewModel.Error.Clear();
         await OnInput.Invoke(TempValue);
     }
 

@@ -84,3 +84,8 @@
 ::deep .ant-click-animating-node {
     display: none;
 }
+
+::deep .ant-switch-handle::before {
+    left: 0 !important;
+    right: 0 !important;
+}

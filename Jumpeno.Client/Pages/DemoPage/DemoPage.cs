@@ -18,8 +18,6 @@ public partial class DemoPage {
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: 20,
-            Name: "Password",
-            Label: "Password",
             Placeholder: "Password",
             DefaultValue: "",
             Secret: true

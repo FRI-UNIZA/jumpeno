@@ -5,10 +5,8 @@ public partial class UserLoginForm {
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<UserLoginForm>();
-
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<UserLoginForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPassword;
     
@@ -21,8 +19,6 @@ public partial class UserLoginForm {
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(UserLoginDTO.Email),
-            Label: I18N.T("Email"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Login)
@@ -33,8 +29,6 @@ public partial class UserLoginForm {
             TextMode: INPUT_TEXT_MODE.NORMAL,
             TextCheck: Checker.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
-            Name: nameof(UserLoginDTO.Password),
-            Label: I18N.T("Password"),
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,

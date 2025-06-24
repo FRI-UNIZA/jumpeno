@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 public partial class SelectBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "select";
-    public const string CLASS_SELECT_INPUT_WRAP = "select-input-wrap";
+    public const string CLASS_SELECT_BASE = "select-base";
     public const string CLASS_SELECT_INPUT = "select-input";
     public const string CLASS_SELECT_INPUT_EMPTY = "select-input-empty";
     public const string CLASS_SELECT_INPUT_TEXT = "select-input-text";
@@ -14,20 +14,6 @@ public partial class SelectBase {
     public static readonly SelectOption EMPTY_OPTION = new(null, I18N.T("Empty"));
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [Parameter]
-    public string ID { get; set; } = "";
-    // Content:
-    [Parameter]
-    public required string Label { get; set; }
-    [Parameter]
-    public bool HideLabel { get; set; } = false;
-    [Parameter]
-    public required List<SelectOption> Options { get; set; }
-    [Parameter]
-    public SelectOption DefaultValue { get; set; } = EMPTY_OPTION;
-    // Abilities:
-    [Parameter]
-    public bool Empty { get; set; } = false;
     // Styling:
     [Parameter]
     public string? MinWidth { get; set; } = null;
@@ -39,46 +25,31 @@ public partial class SelectBase {
     public string? MaxHeight { get; set; } = null;
     [Parameter]
     public SELECT_OPTION_ALIGN OptionAlign { get; set; } = SELECT_OPTION_ALIGN.LEFT;
-    // Callbacks:
-    [Parameter]
-    public EventCallback<SelectEvent> OnSelect { get; set; } = EventCallback<SelectEvent>.Empty;
-    [Parameter]
-    public EventCallback<SelectEvent> OnCloseSelected { get; set; } = EventCallback<SelectEvent>.Empty;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private List<SelectOption> DisplayedOptions = [];
     private Modal ModalRef = null!;
-    public SelectOption Selected { get; private set; } = EMPTY_OPTION;
-    public SelectOption SelectedBefore { get; private set; } = EMPTY_OPTION;
+    private SelectOption SelectedBefore { get; set; } = EMPTY_OPTION;
     private TaskCompletionSource SelectTCS = new();
 
-    protected CSSClass ComputeWrapperClass() {
-        return ComputeClass(CLASS_SELECT_INPUT_WRAP);
-    }
-    protected CSSClass ComputeButtonClass() {
-        return ComputeClass(CLASS_SELECT_INPUT);
-    }
-    private static CSSStyle ComputeModalStyle() {
-        return new CSSStyle("--modal-padding-content: 0");
-    }
+    // CSS --------------------------------------------------------------------------------------------------------------------------------
+    protected CSSClass ComputeWrapClass() => ComputeClass(CLASS_SELECT_BASE);
+    protected CSSClass ComputeButtonClass() => ComputeClass(CLASS_SELECT_INPUT);
+    private static CSSStyle ComputeModalStyle() => new("--modal-padding-content: 0");
     private CSSClass ComputeOptionClass(SelectOption option) {
         var c = new CSSClass(CLASS_OPTION);
         if (IsSelected(option)) c.Set(CLASS_OPTION_SELECTED);
         return c;
     }
-    private CSSStyle ComputeOptionStyle() {
-        return new CSSStyle($"--option-align: {OptionAlign.StringLower()}");
-    }
+    private CSSStyle ComputeOptionStyle() => new($"--option-align: {OptionAlign.StringLower()}");
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
-        if (ID == "") ID = IDGenerator.Generate(ID_PREFIX);
-        if (Options.Count < 1) throw new Exception("Select list can not be empty!");
-        DisplayedOptions = [.. Options];
-        Selected = DefaultValue;
-        if (Empty) DisplayedOptions.Insert(0, EMPTY_OPTION);
-        else if (DefaultValue == EMPTY_OPTION) Selected = Options[0];
+        DisplayedOptions = [.. ViewModel.Options];
+        ViewModel.SetValue(ViewModel.DefaultValue);
+        if (ViewModel.Empty) DisplayedOptions.Insert(0, EMPTY_OPTION);
+        else if (ViewModel.DefaultValue == EMPTY_OPTION) ViewModel.SetValue(ViewModel.Options[0]);
     }
 
     protected override void OnComponentAfterRender(bool firstRender) {
@@ -86,26 +57,24 @@ public partial class SelectBase {
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private bool IsSelected(SelectOption option) {
-        return Selected == option;
-    }
+    private bool IsSelected(SelectOption option) => ViewModel.Value == option;
 
     private async Task SelectOption(SelectOption option) {
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         if (SelectedBefore != option) {
-            Selected = option;
+            ViewModel.SetValue(option);
             SelectTCS = new TaskCompletionSource();
             StateHasChanged();
             await SelectTCS.Task;
-            await OnSelect.InvokeAsync(new SelectEvent(SelectedBefore, Selected));
+            await ViewModel.OnSelect.Invoke(new SelectEvent(SelectedBefore, ViewModel.Value));
         }
         await ModalRef.Close();
-        ActionHandler.SetFocus(ID);
+        ActionHandler.SetFocus(ViewModel.FormID);
     }
 
     private async Task OpenModal() {
         await PageLoader.Show(PAGE_LOADER_TASK.SELECT, true);
-        SelectedBefore = Selected;
+        SelectedBefore = ViewModel.Value;
         await ModalRef.Open();
     }
 
@@ -116,8 +85,8 @@ public partial class SelectBase {
     }
 
     private async Task HandleAfterClose() {
-        if (SelectedBefore != Selected) {
-            await OnCloseSelected.InvokeAsync(new SelectEvent(SelectedBefore, Selected));
+        if (SelectedBefore != ViewModel.Value) {
+            await ViewModel.OnCloseSelected.Invoke(new SelectEvent(SelectedBefore, ViewModel.Value));
         }
     }
 }

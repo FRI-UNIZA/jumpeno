@@ -37,6 +37,7 @@
     z-index: var(--z-index-menu);
 }
 
+.nav-menu-mobile-init,
 .nav-menu-mobile-start,
 .nav-menu-mobile-end {
     position: fixed;

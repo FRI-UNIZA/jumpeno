@@ -6,6 +6,7 @@
     @ChildContent
 </div>
 
+<div class="nav-menu-mobile-init" tabindex="0" @onfocus="() => ActionHandler.SetFocus(ID)" inert="@(State != MENU_STATE.OPENED)" />
 <div class="nav-menu-mobile-start" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID)" inert="@(State != MENU_STATE.OPENED)" />
 <nav id="@ID" class="@ComputeClass()" tabindex="0" role="dialog" aria-label="@I18N.T("Mobile menu")" @onkeydown="OnKeyDown">
     <ScrollArea

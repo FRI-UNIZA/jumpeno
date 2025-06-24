@@ -73,6 +73,12 @@ public class DarkTheme : BaseTheme {
     public override string SHADOW_MODAL_DIALOG => "0 0 30px 0 rgba(0, 0, 0, 0.5)";
     public override string SHADOW_MODAL_ENDING => "0 0 10px rgba(0, 0, 0, 0.1)";
 
+    // Select culture ---------------------------------------------------------------------------------------------------------------------
+    public override string BORDER_SELECT_CULTURE => $"1px solid transparent";
+    public override string BORDER_SELECT_CULTURE_TRANSITION => $"1px solid transparent";
+    public override string SHADOW_SELECT_CULTURE => $"0 2px 6px rgba({COLOR_BASE}, 0.4)";
+    public override string SHADOW_SELECT_CULTURE_TRANSITION => $"0 2px 10px rgba({COLOR_BASE}, 0.8)";
+
     // Profile ----------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor COLOR_PROFILE_BACKGROUND => new(42, 33, 56);
     // Dropdown ---------------------------------------------------------------------------------------------------------------------------

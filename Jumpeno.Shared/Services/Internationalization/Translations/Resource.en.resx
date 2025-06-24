@@ -687,4 +687,19 @@
   <data name="Account is not activated!" xml:space="preserve">
     <value>Account is not activated!</value>
   </data>
+  <data name="Capacity" xml:space="preserve">
+    <value>Capacity</value>
+  </data>
+  <data name="players0" xml:space="preserve">
+    <value>players</value>
+  </data>
+  <data name="players1" xml:space="preserve">
+    <value>player</value>
+  </data>
+  <data name="players2+" xml:space="preserve">
+    <value>players</value>
+  </data>
+  <data name="players5+" xml:space="preserve">
+    <value>players</value>
+  </data>
 </root>

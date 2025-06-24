@@ -67,4 +67,6 @@ public static class JSWindow {
     public static readonly string ReloadTabs = $"{ClassName}.{nameof(ReloadTabs)}";
 
     public static readonly string Lock = $"{ClassName}.{nameof(Lock)}";
+
+    public static readonly string Inert = $"{ClassName}.{nameof(Inert)}";
 }

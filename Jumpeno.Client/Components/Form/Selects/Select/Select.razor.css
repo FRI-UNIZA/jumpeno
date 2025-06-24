@@ -1,38 +1,8 @@
 .select {
     position: relative;
     display: inline-flex;
-    width: var(--input-width, auto);
+    width: 100%;
     max-width: 100%;
-}
-
-.size-s ::deep .surface-all {
-    --input-height: 41px;
-    --input-font-size: 16px;
-    --input-padding: 10px;
-    --input-icon-size: 16px;
-
-    --input-label-font-size: 12px;
-    --input-label-gap: 1px;
-}
-
-.size-m ::deep .surface-all {
-    --input-height: 52px;
-    --input-font-size: 18px;
-    --input-padding: 18px;
-    --input-icon-size: 18px;
-    --input-border-radius: 8px;
-
-    --input-label-font-size: 13px;
-    --input-label-gap: 2px;
-}
-
-.size-l ::deep .surface-all {
-    --input-height: 64px;
-    --input-font-size: 24px;
-    --input-padding: 26px;
-    --input-icon-size: 24px;
-    --input-border-radius: 10px;
-
-    --input-label-font-size: 15px;
-    --input-label-gap: 3px;
+    max-height: 100%;
+    z-index: auto;
 }

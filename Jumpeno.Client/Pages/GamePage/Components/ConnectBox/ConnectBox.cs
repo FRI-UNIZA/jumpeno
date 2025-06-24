@@ -5,10 +5,8 @@ public partial class ConnectBox {
     [Parameter]
     public required ConnectViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<ConnectBox>();
-
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<ConnectBox>();
     private readonly InputViewModel<string> VMCode;
     private async Task SetInputCode(string urlCode) => await VMCode.SetValue(urlCode);
 
@@ -24,8 +22,6 @@ public partial class ConnectBox {
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: GameValidator.CODE_LENGTH,
-            Name: GAME_HUB.PARAM_CODE,
-            Label: I18N.T("Game code"),
             Placeholder: I18N.T("Code"),
             DefaultValue: ""
         ));
@@ -35,8 +31,6 @@ public partial class ConnectBox {
             Trim: true,
             TextCheck: Checker.IsAlphaNum,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
-            Name: GAME_HUB.PARAM_NAME,
-            Label: I18N.T("Your name"),
             Placeholder: I18N.T("Your name"),
             DefaultValue: "",
             OnChange: new(value => LastNameValue = value)

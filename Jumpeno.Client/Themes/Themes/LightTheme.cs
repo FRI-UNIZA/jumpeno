@@ -73,6 +73,12 @@ public class LightTheme : BaseTheme {
     public override string SHADOW_MODAL_DIALOG => "0 0 30px 0 rgba(0, 0, 0, 0.3)";
     public override string SHADOW_MODAL_ENDING => "0 0 10px rgba(0, 0, 0, 0.1)";
 
+    // Select culture ---------------------------------------------------------------------------------------------------------------------
+    public override string BORDER_SELECT_CULTURE => $"1px solid rgba({COLOR_BASE}, 0.2)";
+    public override string BORDER_SELECT_CULTURE_TRANSITION => $"1px solid rgba({COLOR_BASE}, 0.2)";
+    public override string SHADOW_SELECT_CULTURE => "none";
+    public override string SHADOW_SELECT_CULTURE_TRANSITION => $"0 1px 6px rgba({COLOR_BASE}, 0.3)";
+
     // Profile ----------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor COLOR_PROFILE_BACKGROUND => new(200, 200, 200);
     // Dropdown ---------------------------------------------------------------------------------------------------------------------------

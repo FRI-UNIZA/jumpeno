@@ -70,22 +70,20 @@ public partial class ModalProvider {
         if (element is null) return;
         instance.TCSOpen = new TaskCompletionSource();
         SetModalState(element.Modal, MODAL_STATE.OPEN);
-        element.TriggerStateChange();
+        element.Notify();
         await instance.TCSOpen.Task;
         await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
         ActionHandler.SetFocus(element.Modal.ID_DIALOG);
         await element.Modal.OnAfterOpen.InvokeAsync(element.Modal);
     }
 
-    public static void NotifyOpen() {
-        Instance().TCSOpen.TrySetResult();
-    }
+    public static void NotifyOpen() => Instance().TCSOpen.TrySetResult();
 
     // Notification:
     public static async Task NotifyElement(Modal modal) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
             instance.ElementDictionary.TryGetValue(modal.ID, out var element);
-            element?.TriggerStateChange(); 
+            element?.Notify(); 
         });
     }
 
@@ -145,7 +143,7 @@ public partial class ModalProvider {
         var element = Instance().ElementDictionary[id];
         SetModalState(element.Modal, element.Modal.CreatedLoading ? MODAL_STATE.LOADING : MODAL_STATE.OPENING);
         if (!element.Modal.CreatedLoading) await element.Modal.OnBeforeOpen.InvokeAsync(element.Modal);
-        element.TriggerStateChange();
+        element.Notify();
     }
     [JSInvokable]
     public static async Task JS_ModalOpened(string id) {

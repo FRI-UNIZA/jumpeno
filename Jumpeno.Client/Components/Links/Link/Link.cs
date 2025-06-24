@@ -19,6 +19,10 @@ public partial class Link {
     [Parameter]
     public EventCallback<LinkClickEvent> OnClick { get; set; } = EventCallback<LinkClickEvent>.Empty;
     [Parameter]
+    public EventCallback<LinkKeyEvent> OnKeyPress { get; set; } = EventCallback<LinkKeyEvent>.Empty;
+    [Parameter]
+    public EventCallback<LinkKeyEvent> OnEnter { get; set; } = EventCallback<LinkKeyEvent>.Empty;
+    [Parameter]
     public OneOf<LINK_TARGET, string> Target { get; set; } = LINK_TARGET.SELF;
     [Parameter]
     public LINK_MATCH Match { get; set; } = LINK_MATCH.PREFIX;
@@ -79,6 +83,10 @@ public partial class Link {
     protected override async ValueTask OnComponentDisposeAsync() => await Navigator.RemoveAfterEventListener(Notify);
 
     private async Task OnClickEvent(MouseEventArgs e) => await OnClick.InvokeAsync(new(this, e));
+    private async Task OnKeyPressEvent(KeyboardEventArgs e) {
+        if (e.Key == KEYBOARD.ENTER) await OnEnter.InvokeAsync(new(this, e));
+        await OnKeyPress.InvokeAsync(new(this, e));
+    }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private void Notify(NavigationEvent e) => StateHasChanged();

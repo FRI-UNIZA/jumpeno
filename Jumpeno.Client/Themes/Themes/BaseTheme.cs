@@ -79,6 +79,12 @@ public class BaseTheme {
     public virtual string SHADOW_MODAL_DIALOG { get; }
     public virtual string SHADOW_MODAL_ENDING { get; }
 
+    // Select culture ---------------------------------------------------------------------------------------------------------------------
+    public virtual string BORDER_SELECT_CULTURE { get; }
+    public virtual string BORDER_SELECT_CULTURE_TRANSITION { get; }
+    public virtual string SHADOW_SELECT_CULTURE { get; }
+    public virtual string SHADOW_SELECT_CULTURE_TRANSITION { get; }
+
     // Profile ----------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor COLOR_PROFILE_BACKGROUND { get; }
     // Dropdown ---------------------------------------------------------------------------------------------------------------------------

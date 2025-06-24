@@ -4,9 +4,12 @@ public partial class SelectCulture {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "select-culture";
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly List<SelectOption> Options = I18N.LANGUAGES.Select(x => new SelectOption(x, x.ToUpper())).ToList();
-    private readonly SelectOption DefaultValue = new(I18N.Culture, I18N.Culture.ToUpper());
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    private readonly SelectViewModel VM = new(new(
+        Options: [.. I18N.LANGUAGES.Select(x => new SelectOption(x, x.ToUpper()))],
+        DefaultValue: new(I18N.Culture, I18N.Culture.ToUpper()),
+        OnSelect: new(OnSelect)
+    ));
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public static void Init() {

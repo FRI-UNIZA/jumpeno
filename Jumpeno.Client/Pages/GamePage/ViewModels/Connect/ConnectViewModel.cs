@@ -93,9 +93,9 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     public async Task PlayRequest(ConnectData data) => await ConnectRequest(async () => {
         // 1) Validation:
         var errors = GameValidator.ValidateCode(data.Code, GAME_HUB.PARAM_CODE);
-        Checker.AssertWith(errors, EXCEPTION.VALUES);
         // 2) Connect request:
         if (Auth.IsRegisteredUser) {
+            Checker.AssertWith(errors, EXCEPTION.VALUES);
             await CreateConnection(
                 GAME_PARAMS_TYPE.REGISTERED_PLAYER,
                 new RegisteredGameParams(

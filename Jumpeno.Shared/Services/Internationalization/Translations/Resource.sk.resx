@@ -687,4 +687,19 @@
   <data name="Account is not activated!" xml:space="preserve">
     <value>Účet nie je aktivovaný!</value>
   </data>
+  <data name="Capacity" xml:space="preserve">
+    <value>Kapacita</value>
+  </data>
+  <data name="players0" xml:space="preserve">
+    <value>hráčov</value>
+  </data>
+  <data name="players1" xml:space="preserve">
+    <value>hráč</value>
+  </data>
+  <data name="players2+" xml:space="preserve">
+    <value>hráči</value>
+  </data>
+  <data name="players5+" xml:space="preserve">
+    <value>hráčov</value>
+  </data>
 </root>

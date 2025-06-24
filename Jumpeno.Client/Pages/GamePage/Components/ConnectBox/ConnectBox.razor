@@ -11,9 +11,9 @@
         <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading">@I18N.T("Connect to game")</Heading1>
         <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading connect-heading-mobile">@I18N.T("Connect")</Heading1>
         <div class="connect-input-box">
-            <Input ViewModel="VMCode" Size="INPUT_SIZE.L" Align="INPUT_ALIGN.CENTER" HideLabel />
+            <Input ViewModel="VMCode" Name="code" Label="@I18N.T("Game code")" HideLabel Size="INPUT_SIZE.L" Align="INPUT_ALIGN.CENTER" />
             <AuthViewBlock Roles="[ROLE.USER]">
-                <Input ViewModel="VMName" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.LEFT" AllowClear />
+                <Input ViewModel="VMName" Name="name" Label="@I18N.T("Your name")" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.LEFT" AllowClear />
             </AuthViewBlock>
         </div>
         <div class="connect-buttons">

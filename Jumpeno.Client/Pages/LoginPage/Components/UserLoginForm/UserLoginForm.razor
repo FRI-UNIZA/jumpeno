@@ -7,24 +7,24 @@
 <div class="user-login-form">
     <Heading1 Class="login-heading" Size="TEXT_SIZE.L">@I18N.T("Login")</Heading1>
     <div class="login-inputs">
-        <Input ViewModel="VMEmail" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete HideLabel />
-        <Input ViewModel="VMPassword" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" HideLabel />
+        <Input ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete />
+        <Input ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
     </div>
     <Button Size="BUTTON_SIZE.M" OnClick="Login">
         <Text>@I18N.T("Log in")</Text>
     </Button>
     <Paragraph Size="TEXT_SIZE.S" Class="register-block login-text">
         @I18N.T("Not a user?")&nbsp;
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.REGISTER)" Underline Class="login-text">
+        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.REGISTER)" OnEnter="() => VM.Show(LOGIN_FORM.REGISTER)" Underline Class="login-text">
             @I18N.T("Register")
         </Link>
     </Paragraph>
     <div class="login-options">
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" Class="login-text">
+        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" OnEnter="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" Class="login-text">
             &nbsp;@I18N.T("Reset password")&nbsp;
         </Link>
         <span class="option-delimiter">|</span>
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.ADMIN)" Class="login-text">
+        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.ADMIN)" OnEnter="() => VM.Show(LOGIN_FORM.ADMIN)" Class="login-text">
             <AntIcon Type="safety-certificate" Theme="outline" Class="icon-admin"/>&nbsp;@I18N.T("I am admin")&nbsp;
         </Link>
     </div>

@@ -3,14 +3,15 @@
 @inherits BasicComponent
 
 <div id="@Modal.ID" inert="@Inert" class="@ComputeClass()" style="@ComputeStyle()">
+    <div id="@Modal.ID_DIALOG_INIT" class="@Modal.CLASS_INIT" tabindex="0" @onfocus="() => ActionHandler.SetFocus(Modal.ID_DIALOG)" />
     <div id="@Modal.ID_DIALOG_START" class="@Modal.CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(Modal.ID_DIALOG)" />
     <Container Class="@Modal.CLASS_CONTAINER" Surface="SURFACE.FLOATING" PaddingHorizontal PaddingVertical>
         <PageLoaderIndicator Class="@Modal.CLASS_LOADING_INDICATOR" />
-        <section id="@Modal.ID_DIALOG" class="@ComputeDialogClass()" aria-label="@Modal.Label" role="dialog" tabindex="0" style="@ComputeDialogStyle()">
+        <section id="@Modal.ID_DIALOG" class="@ComputeDialogClass()" aria-label="@FormLabel.Main(Modal.Label)" role="dialog" tabindex="0" style="@ComputeDialogStyle()">
             @if (!Modal.NoHeader) {
                 <div class="@Modal.CLASS_HEADER">
                     @if (Modal.Header is null) {
-                        <ModalHeading>@Modal.Label</ModalHeading>
+                        <ModalHeading>@FormLabel.Render(Modal.Label)</ModalHeading>
                         <ModalClose Modal="Modal" />
                     } else {
                         @Modal.Header

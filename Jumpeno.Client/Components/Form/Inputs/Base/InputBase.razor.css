@@ -1,7 +1,12 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.input-base {
+.input-base {    
+    /* Size: */
+    --input-wrap-width: 100%;
+    --input-wrap-height: auto;
+    --input-label-width: 100%;
     --input-width: 100%;
-    --input-height: 100%;
+    --input-height: auto;
+    /* Style: */
     --input-padding: 10px;
     --input-border-radius: 6px;
     --input-font-family: var(--font-primary);
@@ -9,28 +14,22 @@
     --input-font-weight: 400;
     --input-line-height: 1;
     --input-text-align: left;
-
+    /* Clear: */
     --input-clear-size: 18px;
     --input-clear-padding: 6px;
     --input-clear-show-transition-duration: calc(var(--transition-fast) * 1ms);
     --input-clear-transition-duration: calc(var(--transition-fast) * 1ms);
-    
+    /* Icon: */
     --input-icon-size: 22px;
     --input-icon-gap-inner: 6px;
     --input-icon-gap-outer: 8px;
-    
+    /* Transition: */
     --input-transform: none;
     --input-transform-transition: none;
     --input-transition-properties: color, background-color, box-shadow, border-color, outline;
     --input-transition-duration: calc(var(--transition-fast) * 1ms);
     --input-transition-timing: ease;
-}
-
-.input-base ::deep .input-wrap .input-error {
-    --input-error-input-radius: var(--input-border-radius);
-}
-
-.input-base.surface-primary {
+    /* Colors: */
     --input-color: rgb(var(--color-primary));
     --input-color-transition: rgb(var(--color-primary));
     --input-color-placeholder: rgba(var(--color-primary-highlight), 0.6);
@@ -43,7 +42,7 @@
     --input-text-shadow-transition: none;
     --input-box-shadow: none;
     --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.4);
-
+    /* Clear colors: */
     --input-clear-color: rgb(var(--color-primary));
     --input-clear-color-transition: rgb(var(--color-base));
     --input-clear-background: rgb(var(--color-primary-shade), 0.7);
@@ -51,77 +50,20 @@
     --input-clear-box-shadow: none;
     --input-clear-box-shadow-transition: none;
 }
-.input-base.surface-secondary {
-    --input-color: rgb(var(--color-secondary-surface));
-    --input-color-transition: rgb(var(--color-secondary-surface));
-    --input-color-placeholder: rgba(var(--color-secondary-surface-highlight), 0.6);
-    --input-color-placeholder-transition: rgba(var(--color-secondary-surface-highlight), 0.6);
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-secondary-surface), 0.6);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 8px rgba(var(--color-base-invert), 0.9);
 
-    --input-clear-color: rgb(var(--color-secondary-surface));
-    --input-clear-color-transition: rgb(var(--color-base));
-    --input-clear-background: rgb(var(--color-secondary-shade), 0.4);
-    --input-clear-background-transition: rgb(var(--color-secondary-shade-strong), 0.4);
-    --input-clear-box-shadow: none;
-    --input-clear-box-shadow-transition: none;
-}
-.input-base.surface-floating {
-    --input-color: rgb(var(--color-floating));
-    --input-color-transition: rgb(var(--color-floating));
-    --input-color-placeholder: rgba(var(--color-floating-highlight), 0.6);
-    --input-color-placeholder-transition: rgba(var(--color-floating-highlight), 0.6);
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-base), 0.2);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.3);
-    
-    --input-clear-color: rgb(var(--color-floating));
-    --input-clear-color-transition: rgb(var(--color-base));
-    --input-clear-background: rgb(var(--color-floating-shade), 0.7);
-    --input-clear-background-transition: rgb(var(--color-floating-shade-strong), 0.6);
-    --input-clear-box-shadow: none;
-    --input-clear-box-shadow-transition: none;
-}
-
-.light-theme .input-base.surface-secondary {
-    --input-color: rgb(var(--color-floating));
-    --input-color-transition: rgb(var(--color-floating));
-    --input-color-placeholder: rgba(var(--color-floating-highlight), 0.6);
-    --input-color-placeholder-transition: rgba(var(--color-floating-highlight), 0.6);
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-base), 0.2);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.3);
-
-    --input-clear-color: rgb(var(--color-secondary));
-    --input-clear-color-transition: rgb(var(--color-base));
-    --input-clear-background: rgb(var(--color-secondary-shade), 0.6);
-    --input-clear-background-transition: rgb(var(--color-secondary-shade-strong), 0.5);
-    --input-clear-box-shadow: none;
-    --input-clear-box-shadow-transition: none;
+/* Delegation -------------------------------------------------------------------------------------------------------------------------- */
+.input-base ::deep .form-wrap {
+    --form-wrap-label-width: var(--input-label-width);
+    --form-wrap-content-width: var(--input-width);
+    --form-wrap-content-height: var(--input-height);
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 .input-base {
     display: flex;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    width: var(--input-wrap-width);
+    height: var(--input-wrap-height);
+    max-width: 100%;
     z-index: auto;
 }
 
@@ -130,15 +72,15 @@
     display: inline-flex;
     align-items: center;
     
-    width: var(--input-width);
-    height: var(--input-height);
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
 
     padding: 0;
-    border-radius: var(--input-border-radius);
-    overflow: hidden;
 
     background-color: var(--input-background);
-    border: var(--input-border);
+    border: none;
+    border-radius: var(--input-border-radius);
     box-shadow: var(--input-box-shadow);
 
     transform: var(--input-transform);
@@ -147,17 +89,16 @@
     transition-timing-function: var(--input-transition-timing);
 
     z-index: 0;
-    pointer-events: all;
 }
 
 .input-base-input {
     position: relative;
-    display: block;
+    display: flex;
     align-items: center;
     appearance: none;
 
-    width: var(--input-width);
-    height: var(--input-height);
+    width: 100%;
+    height: 100%;
     padding: var(--input-padding);
 
     font-family: var(--input-font-family);
@@ -171,10 +112,10 @@
     background-color: transparent;
 
     cursor: text;
-    border: none;
     outline: none;
+    border: var(--input-border);
+    border-radius: var(--input-border-radius);
     box-shadow: none;
-    border-radius: 0;
 
     transition-property: var(--input-transition-properties);
     transition-duration: var(--input-transition-duration);
@@ -188,47 +129,6 @@
 .input-base-input[type="password"]:not(:placeholder-shown) {
     font-weight: 600;
     letter-spacing: calc(0.25 * var(--input-font-size));
-}
-
-/* Align ------------------------------------------------------------------------------------------------------------------------------- */
-.align-left .input-base-input {
-    text-align: left;
-}
-.align-center .input-base-input {
-    text-align: center;
-}
-.align-right .input-base-input {
-    text-align: right;
-}
-
-/* TextMode ---------------------------------------------------------------------------------------------------------------------------- */
-.text-mode-lowercase .input-base-input {
-    text-transform: lowercase;
-}
-.text-mode-normal .input-base-input {
-    text-transform: none;
-}
-.text-mode-uppercase .input-base-input {
-    text-transform: uppercase;
-}
-
-/* States ------------------------------------------------------------------------------------------------------------------------------ */
-.input-base:hover .input-base-component,
-.input-base:focus-within .input-base-component {
-    background-color: var(--input-background-transition);
-    border: var(--input-border-transition);
-    box-shadow: var(--input-box-shadow-transition);
-    transform: var(--input-transform-transition);
-}
-
-.input-base:hover .input-base-input,
-.input-base:focus-within .input-base-input {
-    color: var(--input-color-transition);
-    text-shadow: var(--input-text-shadow-transition);
-}
-.input-base:hover .input-base-input::placeholder,
-.input-base:focus-within .input-base-input::placeholder {
-    color: var(--input-color-placeholder-transition);
 }
 
 /* Icons ------------------------------------------------------------------------------------------------------------------------------- */
@@ -341,4 +241,96 @@
     -webkit-background-clip: text !important;
     background-clip: text !important;
     transition: background-color 0s ease-in-out 1000s;
+}
+
+/* Sizes ------------------------------------------------------------------------------------------------------------------------------- */
+.input-base.size-s {
+    --input-height: 41px;
+    --input-font-size: 16px;
+    --input-padding: 10px 12px;
+    --input-border-radius: 6px;
+    --input-icon-size: 22px;
+    --input-icon-gap-inner: 6px;
+    --input-icon-gap-outer: 8px;
+
+    --input-clear-size: 18px;
+    --input-clear-padding: 6px;
+}
+
+.input-base.size-m {
+    --input-height: 52px;
+    --input-font-size: 18px;
+    --input-padding: 13px 16px;
+    --input-border-radius: 8px;
+    --input-icon-size: 30px;
+    --input-icon-gap-inner: 8px;
+    --input-icon-gap-outer: 10px;
+
+    --input-clear-size: 22px;
+    --input-clear-padding: 8px;
+}
+
+.input-base.size-l {
+    --input-height: 64px;
+    --input-font-size: 24px;
+    --input-padding: 16px 20px;
+    --input-icon-size: 24px;
+    --input-border-radius: 10px;
+    --input-icon-size: 40px;
+    --input-icon-gap-inner: 10px;
+    --input-icon-gap-outer: 14px;
+
+    --input-clear-size: 24px;
+    --input-clear-padding: 8px;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+.align-left .input-base-input {
+    text-align: left;
+}
+.align-center .input-base-input {
+    text-align: center;
+}
+.align-right .input-base-input {
+    text-align: right;
+}
+
+/* TextMode ---------------------------------------------------------------------------------------------------------------------------- */
+.text-mode-lowercase .input-base-input {
+    text-transform: lowercase;
+}
+.text-mode-normal .input-base-input {
+    text-transform: none;
+}
+.text-mode-uppercase .input-base-input {
+    text-transform: uppercase;
+}
+
+/* Active ------------------------------------------------------------------------------------------------------------------------------ */
+::deep .form-error:not(.disabled):hover .input-base-component,
+::deep .form-error:not(.disabled):has(:focus-visible) .input-base-component {
+    background-color: var(--input-background-transition);
+    box-shadow: var(--input-box-shadow-transition);
+    transform: var(--input-transform-transition);
+}
+::deep .form-error:not(.disabled):hover .input-base-input,
+::deep .form-error:not(.disabled):has(:focus-visible) .input-base-input {
+    color: var(--input-color-transition);
+    text-shadow: var(--input-text-shadow-transition);
+    border: var(--input-border-transition);
+}
+::deep .form-error:not(.disabled):hover .input-base-input::placeholder,
+::deep .form-error:not(.disabled):has(:focus-visible) .input-base-input::placeholder {
+    color: var(--input-color-placeholder-transition);
+}
+
+/* Error ------------------------------------------------------------------------------------------------------------------------------- */
+/* Default style */
+
+/* Disabled ---------------------------------------------------------------------------------------------------------------------------- */
+::deep .form-error.disabled {
+    background-color: rgba(225, 225, 225, 1.0);
+}
+.input-base.disabled .input-base-component {
+    opacity: 0.5;
 }

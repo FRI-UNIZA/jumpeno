@@ -5,10 +5,8 @@ public partial class PasswordResetForm {
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<PasswordResetForm>();
-
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<PasswordResetForm>();
     private readonly InputViewModel<string> VMEmail;
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -20,8 +18,6 @@ public partial class PasswordResetForm {
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(UserPasswordResetRequestDTO.Email),
-            Label: I18N.T("Email address verification"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Send)

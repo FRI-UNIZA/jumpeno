@@ -103,6 +103,7 @@
 .loading ::deep .modal-loading-indicator {
     display: inline-flex;
 }
+.modal-init,
 .modal-start,
 .modal-end {
     position: absolute;

@@ -6,7 +6,7 @@ public partial class CredentialsModal {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required string Label { get; set; }
+    public required OneOf<string, List<string>> Label { get; set; }
     [Parameter]
     public required string URL { get; set; }
 

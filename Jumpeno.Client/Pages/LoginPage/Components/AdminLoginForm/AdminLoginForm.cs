@@ -6,10 +6,10 @@ public partial class AdminLoginForm {
     public required LoginPageViewModel VM { get; set; }
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<AdminLoginForm>();
     private bool Verified = false;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<AdminLoginForm>();
     private readonly InputViewModel<string> VMEmail;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -21,8 +21,6 @@ public partial class AdminLoginForm {
             Trim: true,
             TextCheck: Checker.IsEmail,
             MaxLength: AdminValidator.EMAIL_MAX_LENGTH,
-            Name: nameof(AdminLoginDTO.Email),
-            Label: I18N.T("Email address verification"),
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(Send)

@@ -1,60 +1,59 @@
 @namespace Jumpeno.Client.Components
 
-@inherits SurfaceComponent
+@inherits FormComponent<SelectViewModel>
 
 @code {
-    protected RenderFragment Render() {
-        return @<Fragment>
-            <div class="@ComputeWrapperClass()">
-                @if (!HideLabel) { <InputLabel For="@ID">@Label</InputLabel> }
+    protected RenderFragment Render() => @<Fragment>
+        <div class="@ComputeWrapClass()" style="@Style">
+            <FormWrap Type="ERROR_TYPE.CONNECTED" ViewModel="ViewModel" Component="this">
                 <button
-                    id="@ID"
+                    id="@ViewModel.FormID"
                     type="@BUTTON_TYPE.BUTTON.String()"
                     aria-roledescription="combobox"
-                    aria-label="@($"{Label}, {I18N.T("Selected: I18N{option}", new() {{ "option", Selected.Label }})}")"
+                    aria-label="@($"{FormLabel.Main(Label)}, {I18N.T("Selected: I18N{option}", new() {{ "option", ViewModel.Value.Label }})}")"
+                    aria-invalid="@ViewModel.Error.HasError"
                     class="@ComputeButtonClass()"
                     @onclick="@OpenModal"
                 >
-                    @if (Selected == EMPTY_OPTION) {
+                    @if (ViewModel.Value == EMPTY_OPTION) {
                         <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
                     } else {
-                        <span class="@CLASS_SELECT_INPUT_TEXT">@Selected.Label</span>
+                        <span class="@CLASS_SELECT_INPUT_TEXT">@ViewModel.Value.Label</span>
                     }
                     <AntIcon Type="down" Theme="outline" Class="@CLASS_SELECT_INPUT_ICON" />
                 </button>
-            </div>
-
-            <Modal
-                @ref="@ModalRef"
-                Label="@Label"
-                NoFooter
-                MinWidth="@MinWidth"
-                MaxWidth="@MaxWidth"
-                MinHeight="@MinHeight"
-                MaxHeight="@MaxHeight"
-                Style="@ComputeModalStyle()"
-                OnBeforeOpen="@HandleBeforeOpen"
-                OnAfterClose="@HandleAfterClose"
-            >
-                <Content>
-                    <div class="@CLASS_OPTIONS">
-                        @foreach(var option in DisplayedOptions) {
-                            <button
-                                type="@BUTTON_TYPE.BUTTON.String()"
-                                role="option"
-                                aria-label="@option.Label"
-                                class="@ComputeOptionClass(option)"
-                                style="@ComputeOptionStyle()"
-                                @onclick="@(() => SelectOption(option))"
-                            >
-                                @(option == EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
-                            </button>
-                        }
-                    </div>
-                </Content>
-            </Modal>
-        </Fragment>;
-    }
+            </FormWrap>
+        </div>
+        <Modal
+            @ref="@ModalRef"
+            Label="Label"
+            NoFooter
+            MinWidth="@MinWidth"
+            MaxWidth="@MaxWidth"
+            MinHeight="@MinHeight"
+            MaxHeight="@MaxHeight"
+            Style="@ComputeModalStyle()"
+            OnBeforeOpen="@HandleBeforeOpen"
+            OnAfterClose="@HandleAfterClose"
+        >
+            <Content>
+                <div class="@CLASS_OPTIONS">
+                    @foreach(var option in DisplayedOptions) {
+                        <button
+                            type="@BUTTON_TYPE.BUTTON.String()"
+                            role="option"
+                            aria-label="@option.Label"
+                            class="@ComputeOptionClass(option)"
+                            style="@ComputeOptionStyle()"
+                            @onclick="@(() => SelectOption(option))"
+                        >
+                            @(option == EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
+                        </button>
+                    }
+                </div>
+            </Content>
+        </Modal>
+    </Fragment>;
 }
 
 @Render()

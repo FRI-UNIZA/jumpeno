@@ -7,6 +7,17 @@
         <Box Class="connect-box">
             <div style="display: flex; width: 100%; flex-direction: column; align-items: center; gap: 30px;">
                 <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading">@I18N.T("Create game")</Heading1>
+                <div style="display: flex; gap: 10px">
+                    <Input ViewModel="VMCode" Name="code" Label="@I18N.T("Game code")" Size="INPUT_SIZE.S" Align="INPUT_ALIGN.CENTER" />
+                    <Select
+                        ViewModel="VMSelectCapacity"
+                        Label="@I18N.T("Capacity")"
+                        Size="INPUT_SIZE.S"
+                        Align="INPUT_ALIGN.CENTER"
+                        OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                        MinWidth="300px"
+                    />
+                </div>
                 <Button Size="BUTTON_SIZE.M" Class="connect-button" OnClick="Create">
                     <Icon><AntIcon Type="plus-circle" Theme="outline" /></Icon>
                     <Text>@I18N.T("Create")</Text>
@@ -19,6 +30,8 @@
                     <AntIcon Type="play-circle" Theme="outline" Class="connect-icon" />
                     &nbsp;@I18N.T("Connect")&nbsp;
                 </Link>
+                <button @onclick="@(() => VMSelectCapacity.SetValue(new(4, $"4 {Format.OfPlayers(4)}")))">test</button>
+                <button @onclick="@(() => { VMCode.Disabled = !VMCode.Disabled; VMSelectCapacity.Disabled = !VMSelectCapacity.Disabled; })">test</button>
             </div>
         </Box>
     </div>

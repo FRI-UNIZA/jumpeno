@@ -183,6 +183,10 @@ class JSWindow {
     static PreventTouchEnd = () => document.body.addEventListener('touchend', this.#Prevent)
     static DefaultTouchEnd = () => document.body.removeEventListener('touchend', this.#Prevent)
 
+    // Inert ------------------------------------------------------------------------------------------------------------------------------
+    // NOTE: Temporary Chromium fix (Browser ignores inert attribute set in Blazor)
+    static Inert = () => document.querySelectorAll('[inert]').forEach(el => el.setAttribute('inert', ''));
+
     // Media ------------------------------------------------------------------------------------------------------------------------------
     static IsTouchDevice = () => window.matchMedia('(pointer: coarse) and (hover: none)').matches
 

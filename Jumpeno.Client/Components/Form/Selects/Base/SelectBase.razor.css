@@ -1,7 +1,12 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.surface-all {
-    --input-width: auto;
+.select-base {
+    /* Size: */
+    --input-wrap-width: 100%;
+    --input-wrap-height: auto;
+    --input-label-width: 100%;
+    --input-width: 100%;
     --input-height: auto;
+    /* Style: */
     --input-padding: 10px;
     --input-border-radius: 6px;
     --input-font-family: var(--font-primary);
@@ -15,14 +20,7 @@
     --input-transition-properties: color, background-color, box-shadow;
     --input-transition-duration: calc(var(--transition-fast) * 1ms);
     --input-transition-timing: ease;
-
-    --input-label-font-size: 12px;
-    --input-label-font-weight: 400;
-    --input-label-line-height: 1.5;
-    --input-label-align: left;
-    --input-label-gap: 1px;
-}
-.surface-primary {
+    /* Colors: */
     --input-color: rgb(var(--color-primary));
     --input-color-transition: rgb(var(--color-primary));
     --input-background: rgb(var(--color-base-invert));
@@ -33,68 +31,34 @@
     --input-text-shadow-transition: none;
     --input-box-shadow: none;
     --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.4);
-
-    --input-label-color: rgb(var(--color-primary));
-}
-.surface-secondary {
-    --input-color: rgb(var(--color-secondary-surface));
-    --input-color-transition: rgb(var(--color-secondary-surface));
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-secondary-surface), 0.6);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 8px rgba(var(--color-base-invert), 0.9);
-
-    --input-label-color: rgb(var(--color-secondary));
-}
-.surface-floating {
-    --input-color: rgb(var(--color-floating));
-    --input-color-transition: rgb(var(--color-floating));
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-base), 0.2);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.3);
-
-    --input-label-color: rgb(var(--color-floating));
 }
 
-.light-theme .surface-secondary {
-    --input-color: rgb(var(--color-floating));
-    --input-color-transition: rgb(var(--color-floating));
-    --input-background: rgb(var(--color-base-invert));
-    --input-background-transition: rgb(var(--color-base-invert));
-    --input-border: 1px solid rgba(var(--color-base), 0.2);
-    --input-border-transition: 1px solid rgba(var(--color-base), 0.2);
-    --input-text-shadow: none;
-    --input-text-shadow-transition: none;
-    --input-box-shadow: none;
-    --input-box-shadow-transition: 0 0 5px rgba(var(--color-base), 0.3);
+/* Delegation -------------------------------------------------------------------------------------------------------------------------- */
+.select-base ::deep .form-wrap {
+    --form-wrap-label-width: var(--input-label-width);
+    --form-wrap-content-width: var(--input-width);
+    --form-wrap-content-height: var(--input-height);
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.select-input-wrap {
+.select-base {
     position: relative;
     display: inline-flex;
     flex-direction: column;
-    width: var(--input-width);
+
+    width: var(--input-wrap-width);
+    height: var(--input-wrap-height);
     max-width: 100%;
-    gap: var(--input-label-gap);
 }
 
 .select-input {
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
-
-    width: var(--input-width);
-    height: var(--input-height);
+    
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
 
     padding: var(--input-padding);
     border-radius: var(--input-border-radius);
@@ -133,23 +97,6 @@
 ::deep .select-input-icon svg {
     width: var(--input-icon-size);
     height: var(--input-icon-size);
-}
-.select-input:hover,
-.select-input:focus-visible {
-    color: var(--input-color-transition);
-    background-color: var(--input-background-transition);
-    border: var(--input-border-transition);
-    text-shadow: var(--input-text-shadow-transition);
-    box-shadow: var(--input-box-shadow-transition);
-    transform: var(--input-transform-transition);
-}
-
-::deep .input-label.surface-all {
-    --label-font-size: var(--input-label-font-size);
-    --label-font-weight: var(--input-label-font-weight);
-    --label-line-height: var(--input-label-line-height);
-    --label-align: var(--input-label-align);
-    --label-color: var(--input-label-color);
 }
 
 .options {
@@ -196,6 +143,52 @@
 .option.option-selected:hover,
 .option.option-selected:focus-visible {
     background-color: rgba(var(--color-floating), 0.4);
+}
+
+/* Sizes ------------------------------------------------------------------------------------------------------------------------------- */
+.select-base.size-s {
+    --input-height: 41px;
+    --input-font-size: 16px;
+    --input-padding: 10px;
+    --input-icon-size: 16px;
+}
+
+.select-base.size-m {
+    --input-height: 52px;
+    --input-font-size: 18px;
+    --input-padding: 18px;
+    --input-icon-size: 18px;
+    --input-border-radius: 8px;
+}
+
+.select-base.size-l {
+    --input-height: 64px;
+    --input-font-size: 24px;
+    --input-padding: 26px;
+    --input-icon-size: 24px;
+    --input-border-radius: 10px;
+}
+
+/* Active ------------------------------------------------------------------------------------------------------------------------------ */
+::deep .form-error:not(.disabled):hover .select-input,
+::deep .form-error:not(.disabled):has(:focus-visible) .select-input {
+    color: var(--input-color-transition);
+    background-color: var(--input-background-transition);
+    border: var(--input-border-transition);
+    text-shadow: var(--input-text-shadow-transition);
+    box-shadow: var(--input-box-shadow-transition);
+    transform: var(--input-transform-transition);
+}
+
+/* Error ------------------------------------------------------------------------------------------------------------------------------- */
+/* Default style */
+
+/* Disabled ---------------------------------------------------------------------------------------------------------------------------- */
+::deep .form-error.disabled {
+    background-color: rgba(225, 225, 225, 1.0);
+}
+.select-base.disabled .select-input {
+    opacity: 0.5;
 }
 
 /* Media ------------------------------------------------------------------------------------------------------------------------------- */
