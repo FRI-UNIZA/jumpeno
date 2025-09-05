@@ -9,9 +9,10 @@ namespace Jumpeno.Client.Components;
 public partial class ImageBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "image";
-    public const string CLASSNAME = "image";
-    public const string CLASSNAME_TRANSPARENT = "transparent";
-    public const string CLASSNAME_NO_TRANSITION = "no-transition";
+    // Class:
+    public const string CLASS = "image";
+    public const string CLASS_TRANSPARENT = "transparent";
+    public const string CLASS_NO_TRANSITION = "no-transition";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -41,10 +42,10 @@ public partial class ImageBase {
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASSNAME, Base)
+        .Set(CLASS, Base)
         .Set(State)
-        .Set(CLASSNAME_TRANSPARENT, Transparent)
-        .Set(CLASSNAME_NO_TRANSITION, NoTransition);
+        .Set(CLASS_TRANSPARENT, Transparent)
+        .Set(CLASS_NO_TRANSITION, NoTransition);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

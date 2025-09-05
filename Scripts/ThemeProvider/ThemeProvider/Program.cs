@@ -6,8 +6,9 @@ using Jumpeno.Shared.Utils;
 
 public class Program {
     // Classes ----------------------------------------------------------------------------------------------------------------------------
-    private const string CLASS_BASE = "BaseTheme";
-    private static readonly List<(string CLASS, string CLASSNAME)> THEMES = [
+    private const string NAMESPACE = "Jumpeno.Client.Constants";
+    private const string CLASSNAME_BASE = "BaseTheme";
+    private static readonly List<(string CLASSNAME, string CSS_CLASS)> THEMES = [
         ("LightTheme", "light-theme"),
         ("DarkTheme", "dark-theme")
     ];
@@ -21,14 +22,13 @@ public class Program {
     private const string VARIABLE_PREFIX = "theme";
 
     // CSS --------------------------------------------------------------------------------------------------------------------------------
-    private const string CLASSNAME_NO_THEME = "no-theme";
-    private const string CLASSNAME_THEME_UPDATED = "theme-updated";
-    private const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
+    private const string CLASS_NO_THEME = "no-theme";
+    private const string CLASS_THEME_UPDATED = "theme-updated";
+    private const string CLASS_THEME_TRANSITION_CONTAINER = "theme-transition-container";
 
     // Paths ------------------------------------------------------------------------------------------------------------------------------
     private static readonly string ROOT = $"{Directory.GetCurrentDirectory()}/..";
     private static readonly string CLASS_DIR = $"{ROOT}/Jumpeno.Client/Themes/Themes";
-    private const string CLASS_NAMESPACE = "Jumpeno.Client.Constants";
     private static readonly string CSS_PATH = $"{ROOT}/Jumpeno.Client/wwwroot/css/theme.css";
 
     // Dependencies -----------------------------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public class Program {
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Property:
     private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{name.ToLower().Replace("_", "-")}";
-    private static string TransformValue(string className, string name, object value) {
+    private static string TransformValue(string className, string name, object? value) {
         return value == null ? throw new ArgumentNullException($"{className}.{name}") : $"{value}";
     }
     // Surface:
@@ -69,7 +69,7 @@ public class Program {
     private static string AddRule(string rule) => $"\n    {rule};";
 
     // Generators -------------------------------------------------------------------------------------------------------------------------
-    private static string GenerateNoTheme() => $"body.{CLASSNAME_NO_THEME} {{ opacity: 0; }}\n";
+    private static string GenerateNoTheme() => $"body.{CLASS_NO_THEME} {{ opacity: 0; }}\n";
 
     private static string GenerateThemeTransition() {        
         string content = "@keyframes fade-in-theme { 0% { opacity: 0; } 100% { opacity: 1; }}\n";
@@ -84,7 +84,7 @@ public class Program {
     
     private static string GenerateConstants(string className) {
         // 1) Initialization:
-        var type = Reflex.CompileClass(CLASS_DIR, CLASS_NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
+        var type = Reflex.CompileClass(CLASS_DIR, NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
         var instance = Reflex.CreateInstance<object>(type);
         
         Dictionary<string, string> constants = new();
@@ -93,7 +93,7 @@ public class Program {
         foreach (var property in Reflex.GetMembers(instance)) {
             string propertyName = TransformName(property.Name);
             if (property.IsVirtual) continue;
-            string propertyValue = TransformValue(CLASS_BASE, property.Name, property.Value);
+            string propertyValue = TransformValue(CLASSNAME_BASE, property.Name, property.Value);
             constants[propertyName] = propertyValue;
         }
 
@@ -108,9 +108,9 @@ public class Program {
         return content;
     }
 
-    private static string GenerateVariables(string className, string bodyClassName) {
+    private static string GenerateVariables(string className, string cssClass) {
         // 1) Initialization:
-        var type = Reflex.CompileClass(CLASS_DIR, CLASS_NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
+        var type = Reflex.CompileClass(CLASS_DIR, NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
         var instance = Reflex.CreateInstance<object>(type);
         Dictionary<string, Dictionary<string, string>> surfaces = new();
 
@@ -137,8 +137,8 @@ public class Program {
         // 3) Add variables:
         string content = "";
         foreach (var s in surfaces) {
-            content += $"body.{bodyClassName}.{s.Key},\n";
-            content += $"body.{bodyClassName} .{s.Key} {{";
+            content += $"body.{cssClass}.{s.Key},\n";
+            content += $"body.{cssClass} .{s.Key} {{";
             foreach (var v in s.Value) {
                 content += AddRule(CSSRule(v.Key, v.Value));
             }
@@ -155,10 +155,10 @@ public class Program {
         string content = 
             GenerateNoTheme() + "\n" +
             GenerateThemeTransition() + "\n" +
-            GenerateConstants(THEMES[0].CLASS);
+            GenerateConstants(THEMES[0].CLASSNAME);
         // 2) Add themes:
         foreach (var THEME in THEMES) {
-            content += "\n" + GenerateVariables(THEME.CLASS, THEME.CLASSNAME);
+            content += "\n" + GenerateVariables(THEME.CLASSNAME, THEME.CSS_CLASS);
         }
         // 3) Write to file:
         File.WriteAllText(CSS_PATH, content);

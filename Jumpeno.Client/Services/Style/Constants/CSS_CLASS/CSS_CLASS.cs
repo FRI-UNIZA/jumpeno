@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Constants;
 
-public partial class CLASS {
+public partial class CSS_CLASS {
     // No display -------------------------------------------------------------------------------------------------------------------------
     public const string NO_DISPLAY = "no-display";
 

@@ -2,8 +2,9 @@ namespace Jumpeno.Client.Components;
 
 public partial class PageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_CONTENT = "page-loader-content";
     public const string ID = "page-loader";
+    // Class:
+    public const string CLASS_CONTENT = "page-loader-content";
     public const string CLASS_BEFORE = "page-loader-before";
     public const string CLASS_AFTER = "page-loader-after";
     public const string CLASS_DISPLAYED = "displayed";
@@ -27,11 +28,7 @@ public partial class PageLoader {
     private TaskCompletionSource RenderTCS = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public CSSClass ComputeClassContent() {
-        var c = new CSSClass(CLASS_CONTENT);
-        c.Set(ThemeProvider.CLASSNAME_THEME_TRANSITION_CONTAINER);
-        return c;
-    }
+    public CSSClass ComputeContentClass() => new CSSClass(CLASS_CONTENT).Set(ThemeProvider.CLASS_THEME_TRANSITION_CONTAINER);
 
     public override CSSClass ComputeClass() {
         return base.ComputeClass()

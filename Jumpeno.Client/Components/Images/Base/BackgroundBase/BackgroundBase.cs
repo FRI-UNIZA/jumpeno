@@ -3,9 +3,10 @@ namespace Jumpeno.Client.Components;
 public partial class BackgroundBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "background";
-    public const string CLASSNAME = "background";
-    public const string CLASSNAME_IMG = "background-loader-image";
-    public const string CLASSNAME_ELEMENT = "background-element";
+    // Class:
+    public const string CLASS = "background";
+    public const string CLASS_IMG = "background-loader-image";
+    public const string CLASS_ELEMENT = "background-element";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -26,10 +27,10 @@ public partial class BackgroundBase {
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASSNAME, Base)
+        .Set(CLASS, Base)
         .Set(State)
-        .Set(ImageBase.CLASSNAME_TRANSPARENT, Transparent)
-        .Set(ImageBase.CLASSNAME_NO_TRANSITION, NoTransition);
+        .Set(ImageBase.CLASS_TRANSPARENT, Transparent)
+        .Set(ImageBase.CLASS_NO_TRANSITION, NoTransition);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

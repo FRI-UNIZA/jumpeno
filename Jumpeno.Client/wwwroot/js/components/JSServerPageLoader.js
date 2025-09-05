@@ -1,8 +1,11 @@
 class JSServerPageLoader {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
     static ID = "server-page-loader"
+    // Class:
     static CLASS_HIDDEN = "hidden"
     static CLASS_STOPPED = "stopped"
 
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     static Hide() {
         const loader = document.getElementById(this.ID)
         if (!loader) return

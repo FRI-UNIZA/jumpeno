@@ -1,4 +1,4 @@
-class CLASS {
+class CSS_CLASS {
     // No display -------------------------------------------------------------------------------------------------------------------------
     static NO_DISPLAY = 'no-display'
 
@@ -18,4 +18,4 @@ class CLASS {
     static OVERSCROLL_NONE = 'overscroll-none'
 }
 
-window.CLASS = CLASS
+window.CSS_CLASS = CSS_CLASS

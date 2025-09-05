@@ -2,7 +2,7 @@
 
 @inherits ServiceComponent<ModalProvider>
 
-<div class="@CLASSNAME_MODAL_PROVIDER_CONTENT" inert="@(ModalList.Count > 0)">
+<div class="@CLASS_CONTENT" inert="@(ModalList.Count > 0)">
     @ChildContent
 </div>
 @for (var i = 0; i < ModalList.Count; i++) {

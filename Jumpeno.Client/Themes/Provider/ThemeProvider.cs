@@ -5,9 +5,12 @@ namespace Jumpeno.Client.Themes;
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly string NAME = nameof(ThemeProvider);
+    // Namespace:
     public const string TEMPLATE_NAMESPACE = "Constants";
-    public const string CLASSNAME_NO_THEME = "no-theme";
-    public const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
+    // Class:
+    public const string CLASS_NO_THEME = "no-theme";
+    public const string CLASS_THEME_TRANSITION_CONTAINER = "theme-transition-container";
+    // Autodetect:
     public static bool THEME_AUTODETECT { get; private set; }
     // Cascade:
     public const string CASCADE_APP_THEME = $"{nameof(ThemeProvider)}.{nameof(CASCADE_APP_THEME)}";
@@ -40,7 +43,7 @@ public partial class ThemeProvider {
         var cookie = GetThemeCookie();
         if (cookie is null) {
             c.Set(ThemeCSSClass(THEME.DEFAULT));
-            c.Set(CLASSNAME_NO_THEME);
+            c.Set(CLASS_NO_THEME);
         } else {
             c.Set(ThemeCSSClass(cookie));
         }

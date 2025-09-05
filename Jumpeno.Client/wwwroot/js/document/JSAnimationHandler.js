@@ -1,15 +1,20 @@
 class JSAnimationHandler {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    // Mark:
     static #MARK = '; blazor-animation-handler: active; '
+    // Pseudo styles:
+    static #PSEUDO_STYLES_ID = 'pseudo-styles'
+    // Class:
+    static CLASS_IMUNE_TRANSITION = "animation-handler-imune-transition"
+    static CLASS_IMUNE_ANIMATION = "animation-handler-imune-animation";
+
+    // Disablers --------------------------------------------------------------------------------------------------------------------------
     static #TRANSITION_DISABLER = (timing) => `${this.#MARK}transition: ${timing} !important`
     static #LastTransitionDisabler = null;
     static #ANIMATION_DISABLER = `${this.#MARK}animation: none !important`
     static #LastAnimationDisabler = null;
 
-    static IMUNE_TRANSITION_CLASSNAME = "animation-handler-imune-transition"
-    static IMUNE_ANIMATION_CLASSNAME = "animation-handler-imune-animation";
-
-    static #PSEUDO_STYLES_ID = 'pseudo-styles'
-
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     static #SetPseudoElementStyle(selector, pseudoElement, style) {
         // Create a style element if it doesn't exist
         let styleSheet = document.getElementById(this.#PSEUDO_STYLES_ID)
@@ -67,7 +72,7 @@ class JSAnimationHandler {
         else this.#LastTransitionDisabler = this.#TRANSITION_DISABLER('none')
 
         document.querySelectorAll('*').forEach(el => {
-            if (el.classList.contains(this.IMUNE_TRANSITION_CLASSNAME)) return
+            if (el.classList.contains(this.CLASS_IMUNE_TRANSITION)) return
             el.setAttribute('style', this.#ElementStyle(el) + this.#LastTransitionDisabler)
             this.#SetPseudoElementStyle(el.tagName, '::before', this.#LastTransitionDisabler)
             this.#SetPseudoElementStyle(el.tagName, '::after', this.#LastTransitionDisabler)
@@ -87,7 +92,7 @@ class JSAnimationHandler {
         this.#LastAnimationDisabler = this.#ANIMATION_DISABLER
 
         document.querySelectorAll('*').forEach(el => {
-            if (el.classList.contains(this.IMUNE_ANIMATION_CLASSNAME)) return
+            if (el.classList.contains(this.CLASS_IMUNE_ANIMATION)) return
             el.setAttribute('style', this.#ElementStyle(el) + this.#LastAnimationDisabler)
         })
     }

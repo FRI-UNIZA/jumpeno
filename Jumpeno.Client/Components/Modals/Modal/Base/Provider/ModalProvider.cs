@@ -4,7 +4,7 @@ using System.Reflection;
 
 public partial class ModalProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASSNAME_MODAL_PROVIDER_CONTENT = "modal-provider-content";
+    public const string CLASS_CONTENT = "modal-provider-content";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, ModalElement> ElementDictionary = [];

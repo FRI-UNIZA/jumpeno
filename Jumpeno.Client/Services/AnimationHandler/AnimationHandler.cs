@@ -1,8 +1,9 @@
 namespace Jumpeno.Client.Services;
 
 public class AnimationHandler {
-    public const string IMUNE_TRANSITION_CLASSNAME = JSAnimationHandler.IMUNE_TRANSITION_CLASSNAME;
-    public const string IMUNE_ANIMATION_CLASSNAME = JSAnimationHandler.IMUNE_ANIMATION_CLASSNAME;
+    // Class ------------------------------------------------------------------------------------------------------------------------------
+    public const string CLASS_IMUNE_TRANSITION = JSAnimationHandler.CLASS_IMUNE_TRANSITION;
+    public const string CLASS_IMUNE_ANIMATION = JSAnimationHandler.CLASS_IMUNE_ANIMATION;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void SetTransitions(string timing = "") => JS.InvokeVoid(JSAnimationHandler.SetTransitions, timing);

@@ -3,8 +3,8 @@ namespace Jumpeno.Client.Constants;
 public static class JSAnimationHandler {
     public static readonly string ClassName = nameof(JSAnimationHandler);
 
-    public const string IMUNE_TRANSITION_CLASSNAME = "animation-handler-imune-transition";
-    public const string IMUNE_ANIMATION_CLASSNAME = "animation-handler-imune-animation";
+    public const string CLASS_IMUNE_TRANSITION = "animation-handler-imune-transition";
+    public const string CLASS_IMUNE_ANIMATION = "animation-handler-imune-animation";
 
     public static readonly string SetTransitions = $"{ClassName}.{nameof(SetTransitions)}";
     public static readonly string DisableTransitions = $"{ClassName}.{nameof(DisableTransitions)}";

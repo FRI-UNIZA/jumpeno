@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 public static class Reflex {
     // Compilation ------------------------------------------------------------------------------------------------------------------------
     public static Type CompileClass(
-        string classDir, string classNamespace, string className, string usings,
+        string classDir, string @namespace, string className, string usings,
         PortableExecutableReference[]? references = null,
         (string Path, string Usings)[]? dependencies = null
     ) {
@@ -40,7 +40,7 @@ public static class Reflex {
         var assembly = Assembly.Load(ms.ToArray());
 
         // Get the dynamically created type
-        var type = assembly.GetType($"{classNamespace}.{className}") ?? throw new Exception("Could not create type!");
+        var type = assembly.GetType($"{@namespace}.{className}") ?? throw new Exception("Could not create type!");
         return type;
     }
 

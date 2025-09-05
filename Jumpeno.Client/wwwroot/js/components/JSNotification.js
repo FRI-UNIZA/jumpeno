@@ -1,6 +1,8 @@
 class JSNotification {
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
     static #timeouts = {}
 
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     static #CloseNotification(key) {
         DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.NOTIFICATION.CLOSE, key);
     }

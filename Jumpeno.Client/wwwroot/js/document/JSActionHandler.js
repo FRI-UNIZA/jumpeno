@@ -1,6 +1,8 @@
 class JSActionHandler {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
     static #FOCUS_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
     static #FocusIDs = [];
     static #Autocomplete = [];
     static #NotAriaHidden = [];

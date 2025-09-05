@@ -41,7 +41,7 @@
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <script src="@AppEnvironment.Import("js/bundle.js")"></script>
         } else {
-            <script src="@AppEnvironment.Import("js/constants/CLASS.js")"></script>
+            <script src="@AppEnvironment.Import("js/constants/CSS_CLASS.js")"></script>
             <script src="@AppEnvironment.Import("js/utils/locks/Mutex.js")"></script>
             <script src="@AppEnvironment.Import("js/utils/locks/models/LockToken.js")"></script>
             <script src="@AppEnvironment.Import("js/utils/locks/Locker.js")"></script>

@@ -6,14 +6,17 @@ var {
 } = OverlayScrollbarsGlobal;
 
 class JSScrollArea {
-    static #CUSTOM_THEME_CLASSNAME = 'scroll-area-custom-theme'
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    static #CLASS_CUSTOM_THEME = 'scroll-area-custom-theme'
     static #CLASS_SCROLLBAR = 'os-scrollbar'
 
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
     static #ScrollAreas = {}
     static #CurrentTheme = null
     static #CustomThemes = {}
     static #Listeners = {}
 
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     static #GetViewPort(id) {
         return this.#ScrollAreas[id]?.elements()?.viewport
     }
@@ -36,7 +39,7 @@ class JSScrollArea {
             target: element
         }, {
             scrollbars: {
-                theme: theme ? `${theme} ${this.#CUSTOM_THEME_CLASSNAME}` : `${this.#CurrentTheme}`,
+                theme: theme ? `${theme} ${this.#CLASS_CUSTOM_THEME}` : `${this.#CurrentTheme}`,
                 autoHide
             },
             overflow: {
@@ -58,7 +61,7 @@ class JSScrollArea {
         if (this.#CurrentTheme) {
             const areas = document.getElementsByClassName(this.#CurrentTheme);
             [...areas].forEach(area => {
-                if (!area.classList.contains(this.#CUSTOM_THEME_CLASSNAME)) {
+                if (!area.classList.contains(this.#CLASS_CUSTOM_THEME)) {
                     area.classList.remove(this.#CurrentTheme)
                     area.classList.add(theme)
                 }
@@ -86,14 +89,14 @@ class JSScrollArea {
 
     static HideScrollbars(id) {
         this.#ForEachScrollbar(id, scrollbar => {
-            scrollbar.classList.remove(CLASS.NO_DISPLAY)
-            scrollbar.classList.add(CLASS.NO_DISPLAY)
+            scrollbar.classList.remove(CSS_CLASS.NO_DISPLAY)
+            scrollbar.classList.add(CSS_CLASS.NO_DISPLAY)
         })
     }
 
     static ShowScrollbars(id) {
         this.#ForEachScrollbar(id, scrollbar => {
-            scrollbar.classList.remove(CLASS.NO_DISPLAY)
+            scrollbar.classList.remove(CSS_CLASS.NO_DISPLAY)
         })
     }
 

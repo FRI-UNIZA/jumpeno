@@ -1,7 +1,9 @@
 class JSModal {
-    static #CLASSNAME_DIALOG = "modal-dialog"
-    static #CLASSNAME_BACKDROP = "modal-backdrop"
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    static #CLASS_DIALOG = "modal-dialog"
+    static #CLASS_BACKDROP = "modal-backdrop"
 
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     static Init() {
         window.addEventListener("keydown", async e => {
             if (e.key === 'Escape' || e.code === 'Escape') {
@@ -18,7 +20,7 @@ class JSModal {
     static Activate(id) {
         const modal = document.getElementById(id)
         if (!modal) return
-        const dialog = modal.querySelector(`.${this.#CLASSNAME_DIALOG}`)
+        const dialog = modal.querySelector(`.${this.#CLASS_DIALOG}`)
         if (!dialog) return
         const listener = async () => await this.#OnOpen(id, dialog, listener)
         dialog.addEventListener("animationend", listener)
@@ -38,7 +40,7 @@ class JSModal {
     static Deactivate(id, loading = false) {
         const modal = document.getElementById(id)
         if (!modal) return
-        const element = modal.querySelector(loading ? `.${this.#CLASSNAME_BACKDROP}` : `.${this.#CLASSNAME_DIALOG}`)
+        const element = modal.querySelector(loading ? `.${this.#CLASS_BACKDROP}` : `.${this.#CLASS_DIALOG}`)
         if (!element) return
         const listener = async () => await this.#OnClose(id, element, listener)
         element.addEventListener("animationend", listener)
@@ -49,7 +51,7 @@ class JSModal {
         const closeButton = document.getElementById(closeID)
         if (activeElement && activeElement == closeButton) {
             const modal = document.getElementById(modalID)
-            const dialog = modal.querySelector(`.${this.#CLASSNAME_DIALOG}`)
+            const dialog = modal.querySelector(`.${this.#CLASS_DIALOG}`)
             if (!dialog) return
             dialog.focus()
         }

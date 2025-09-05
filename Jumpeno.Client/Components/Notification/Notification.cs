@@ -6,8 +6,10 @@ using AntDesign;
 
 public partial class Notification {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASSNAME_ARIA = "ant-notification-aria-label";
-    public const string CLASSNAME_SPACE = "ant-notification-message-space";
+    // Class:
+    public const string CLASS_ARIA = "ant-notification-aria-label";
+    public const string CLASS_SPACE = "ant-notification-message-space";
+    // Delay:
     public const int ARIA_DELAY_START = 0;
     public const int ARIA_DELAY_INCREMENT = 1000;
 
@@ -116,7 +118,7 @@ public partial class Notification {
     private static RenderFragment CreateDescriptionFragment(string description) => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "div");
-        builder.AddAttribute(sequence++, "class", CLASSNAME_SPACE);
+        builder.AddAttribute(sequence++, "class", CLASS_SPACE);
         builder.AddContent(sequence++, description);
         builder.CloseElement();
     };

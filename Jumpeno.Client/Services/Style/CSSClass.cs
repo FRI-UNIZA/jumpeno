@@ -51,8 +51,8 @@ public class CSSClass {
     // Operators --------------------------------------------------------------------------------------------------------------------------
     public override string ToString() {
         var value = "";
-        foreach (var className in Classes) {
-            value = $"{value} {className.Key}";
+        foreach (var @class in Classes) {
+            value = $"{value} {@class.Key}";
         }
         return value.Trim();
     }

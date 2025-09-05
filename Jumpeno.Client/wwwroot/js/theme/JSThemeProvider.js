@@ -1,12 +1,13 @@
 class JSThemeProvider {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
     static #THEME_SUFFIX = "-theme";
 
-    static #CLASSNAME_NO_THEME = "no-theme";
-    static #CLASSNAME_DARK_THEME = "dark-theme";
-    static #CLASSNAME_LIGHT_THEME = "light-theme";
+    static #CLASS_NO_THEME = "no-theme";
+    static #CLASS_DARK_THEME = "dark-theme";
+    static #CLASS_LIGHT_THEME = "light-theme";
 
-    static #CLASSNAME_THEME_UPDATED = "theme-updated";
-    static #CLASSNAME_SETTING_THEME = "setting-theme";
+    static #CLASS_THEME_UPDATED = "theme-updated";
+    static #CLASS_SETTING_THEME = "setting-theme";
 
     static #THEME_SWITCH_ELEMENT_CLASS = "theme-switch-element";
 
@@ -14,7 +15,7 @@ class JSThemeProvider {
     static async Init(autodetect, key) {
         var theme = this.#ThemeCSSClass(JSCookies.Get(key))
         if (autodetect && !theme) this.#SetupPreferred();
-        else if (document.body.classList.contains(this.#CLASSNAME_NO_THEME)) this.#SetupGiven(theme);
+        else if (document.body.classList.contains(this.#CLASS_NO_THEME)) this.#SetupGiven(theme);
     }
 
     // Setup ------------------------------------------------------------------------------------------------------------------------------
@@ -22,19 +23,19 @@ class JSThemeProvider {
         const switches = document.querySelectorAll(`.${this.#THEME_SWITCH_ELEMENT_CLASS} > button`)
         switches.forEach(component => {
             component.classList.remove('ant-switch-checked')
-            if (theme !== this.#CLASSNAME_LIGHT_THEME) return
+            if (theme !== this.#CLASS_LIGHT_THEME) return
             component.classList.add('ant-switch-checked')
         })
     }
     
     static #SetupTheme(theme, callback) {
         JSAnimationHandler.DisableTransitions()
-        document.body.classList.remove(this.#CLASSNAME_DARK_THEME)
-        document.body.classList.remove(this.#CLASSNAME_LIGHT_THEME)
+        document.body.classList.remove(this.#CLASS_DARK_THEME)
+        document.body.classList.remove(this.#CLASS_LIGHT_THEME)
         this.#SetupThemeSwitch(theme)
         callback()
         JSImage.UpdateTheme(theme, this.#THEME_SUFFIX)
-        document.body.classList.remove(this.#CLASSNAME_NO_THEME)
+        document.body.classList.remove(this.#CLASS_NO_THEME)
         setTimeout(() => {
             JSAnimationHandler.RestoreTransitions()
             JSAnimationHandler.RenderFrames(3)
@@ -42,14 +43,14 @@ class JSThemeProvider {
     }
 
     static #SetupPreferred() {
-        const theme = this.DarkThemePreferred() ? this.#CLASSNAME_DARK_THEME : this.#CLASSNAME_LIGHT_THEME
+        const theme = this.DarkThemePreferred() ? this.#CLASS_DARK_THEME : this.#CLASS_LIGHT_THEME
         this.#SetupTheme(theme, () => {
             document.body.classList.add(theme)
         });
     }
 
     static #SetupGiven(theme) {
-        theme = theme ? theme : this.#CLASSNAME_DARK_THEME
+        theme = theme ? theme : this.#CLASS_DARK_THEME
         this.#SetupTheme(theme, () => {
             document.body.classList.add(theme)
         });
@@ -68,20 +69,20 @@ class JSThemeProvider {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     static SetCustomTheme(classname) {
-        document.body.classList.remove(this.#CLASSNAME_DARK_THEME)
-        document.body.classList.remove(this.#CLASSNAME_LIGHT_THEME)
+        document.body.classList.remove(this.#CLASS_DARK_THEME)
+        document.body.classList.remove(this.#CLASS_LIGHT_THEME)
         document.body.classList.add(classname)
     }
 
     static StartSettingTheme() {
-        document.body.classList.remove(this.#CLASSNAME_THEME_UPDATED)
-        document.body.classList.add(this.#CLASSNAME_THEME_UPDATED)
-        document.body.classList.remove(this.#CLASSNAME_SETTING_THEME)
-        document.body.classList.add(this.#CLASSNAME_SETTING_THEME)
+        document.body.classList.remove(this.#CLASS_THEME_UPDATED)
+        document.body.classList.add(this.#CLASS_THEME_UPDATED)
+        document.body.classList.remove(this.#CLASS_SETTING_THEME)
+        document.body.classList.add(this.#CLASS_SETTING_THEME)
     }
 
     static FinishSettingTheme() {
-        document.body.classList.remove(this.#CLASSNAME_SETTING_THEME)
+        document.body.classList.remove(this.#CLASS_SETTING_THEME)
     }
 }
 
