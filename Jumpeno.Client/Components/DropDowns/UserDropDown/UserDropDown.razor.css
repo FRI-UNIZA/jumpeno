@@ -1,0 +1,63 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.dropdown.user-dropdown {
+    --dropdown-options-right: -48px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown.user-dropdown .dropdown-button {
+    /* Size: */
+    width: 40px;
+    height: 40px;
+    /* Style: */
+    border-radius: 100%;
+    border: 3px solid var(--theme-dropdown-user-border-color);
+    background-color: var(--theme-dropdown-user-background);
+    box-shadow: var(--theme-dropdown-user-box-shadow);
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-slow) * 1ms),
+                box-shadow calc(var(--theme-transition-fast) * 1ms);
+}
+
+::deep.dropdown.user-dropdown .image.user-dropdown-profile-image {
+    /* Position: */
+    --image-fit: contain;
+    --image-position: 0 0;
+    /* Size: */
+    --image-width: 100%;
+    --image-height-ratio: 100%;
+    /* Transform: */
+    transform: scale(-1, 1) scale(4.4) translate(37.2%, 38%);
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.dropdown.user-dropdown .user-dropdown-icon {
+    /* Size: */
+    margin-right: 10px;
+}
+
+/* Styles [focus] ---------------------------------------------------------------------------------------------------------------------- */
+::deep.dropdown.user-dropdown .dropdown-button:focus-visible {
+    /* Style: */
+    border-color: var(--theme-dropdown-user-highlight-border-color);
+    box-shadow: var(--theme-dropdown-user-highlight-box-shadow);
+}
+
+/* Styles [displayed] ------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown.user-dropdown.displayed .dropdown-button {
+    /* Transform: */
+    transform: rotate(-360deg);
+}
+
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.dropdown.user-dropdown {
+        --dropdown-options-right: -8px;
+    }
+
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.dropdown.user-dropdown .dropdown-button {
+        width: 44px;
+        height: 44px;
+    }
+}

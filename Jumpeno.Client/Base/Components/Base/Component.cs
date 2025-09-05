@@ -3,22 +3,26 @@ namespace Jumpeno.Client.Base;
 // NOTE: Derive only specific base class
 public class Component : ComponentBase, IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
+    [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
     public required BaseTheme AppTheme { get; set; }
+    [Parameter]
+    public bool Base { get; set; } = true;
     [Parameter]
     public string Class { get; set; } = "";
     [Parameter]
-    public string? Style { get; set; } = null;
+    public string Style { get; set; } = "";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected virtual CSSClass ComputeClass(string className = "") {
-        var c = new CSSClass(className);
-        c.Set(Class);
-        return c;
-    }
+    private Disabler? Disabler = null;
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public virtual CSSClass ComputeClass() => new CSSClass().Set(Class).Set(Disabler?.CSSClass);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnInitialized() => OnComponentInitialized();
+    protected override void OnInitialized() {
+        Disabler = this is IDisabledComponent component ? new(component) : null;
+        OnComponentInitialized();
+    }
     protected override async Task OnInitializedAsync() => await OnComponentInitializedAsync();
     private bool ParametersSet = false;
     protected override void OnParametersSet() {
@@ -33,7 +37,10 @@ public class Component : ComponentBase, IAsyncDisposable {
     }
     protected override bool ShouldRender() => ShouldComponentRender();
     protected override void OnAfterRender(bool firstRender) => OnComponentAfterRender(firstRender);
-    protected override async Task OnAfterRenderAsync(bool firstRender) => await OnComponentAfterRenderAsync(firstRender);
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (Disabler != null) await Disabler.OnViewRender();
+        await OnComponentAfterRenderAsync(firstRender);
+    }
     public void Dispose() {}
     public virtual async ValueTask DisposeAsync() {
         OnComponentDispose();

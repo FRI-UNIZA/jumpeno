@@ -1,0 +1,24 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.radio.radio-button.variant-primary.size {
+    /* Size: */
+    --field-passive-padding-x: 0px;
+    --field-passive-padding-y: 0px;
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio.radio-button.variant-primary.size-s .radio-group {
+    /* Display: */
+    gap: 10px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio.radio-button.variant-primary.size-m .radio-group {
+    /* Display: */
+    gap: 12px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio.radio-button.variant-primary.size-l .radio-group {
+    /* Display: */
+    gap: 14px;
+}

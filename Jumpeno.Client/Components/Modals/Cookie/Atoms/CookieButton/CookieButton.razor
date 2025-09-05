@@ -1,0 +1,13 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<button
+    type="@BUTTON_TYPE.BUTTON.String()"
+    id="@ID"
+    class="@ComputeClass()"
+    style="@Style"
+    @onclick="@OpenModal"
+>
+    <span>@I18N.T("Cookies")</span>
+</button>

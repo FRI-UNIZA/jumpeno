@@ -1,0 +1,81 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.background {
+    /* Position: */
+    --background-size: auto;
+    --background-position: 0 0;
+    --background-repeat: repeat;
+    --background-attachment: scroll;
+    /* Style: */
+    --background-color: var(--theme-background-light-color);
+    --loading-transition-color: var(--theme-background-dark-color);
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes background-pulse {
+    0% { background-color: var(--loading-transition-color); }
+    50% { background-color: var(--background-color); }
+    100% { background-color: var(--loading-transition-color); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.background .background-loader-image {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Size: */
+    width: 10px;
+    height: 10px;
+    /* Style: */
+    opacity: 0;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.background {
+    /* Position: */
+    position: absolute;
+    z-index: -1;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    background-color: var(--background-color);
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.background .background-element {
+    /* Position: */
+    position: absolute;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    background-size: var(--background-size);
+    background-position: var(--background-position);
+    background-repeat: var(--background-repeat);
+    background-attachment: var(--background-attachment);
+    opacity: 1;
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-fast) * 1ms);
+}
+
+::deep.background.loading {
+    /* Animations: */
+    animation: background-pulse 2s infinite;
+}
+::deep.background.loading .background-element {
+    /* Style: */
+    opacity: 0;
+}
+
+::deep.background.transparent {
+    /* Style: */
+    background-color: transparent;
+    /* Animations: */
+    animation: none;
+}
+
+::deep.background.no-transition .background-element {
+    /* Animations: */
+    transition: none;
+}

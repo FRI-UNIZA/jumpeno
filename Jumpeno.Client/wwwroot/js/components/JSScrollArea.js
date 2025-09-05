@@ -8,7 +8,6 @@ var {
 class JSScrollArea {
     static #CUSTOM_THEME_CLASSNAME = 'scroll-area-custom-theme'
     static #CLASS_SCROLLBAR = 'os-scrollbar'
-    static #CLASS_NO_DISPLAY = 'no-display'
 
     static #ScrollAreas = {}
     static #CurrentTheme = null
@@ -87,14 +86,14 @@ class JSScrollArea {
 
     static HideScrollbars(id) {
         this.#ForEachScrollbar(id, scrollbar => {
-            scrollbar.classList.remove(this.#CLASS_NO_DISPLAY)
-            scrollbar.classList.add(this.#CLASS_NO_DISPLAY)
+            scrollbar.classList.remove(CLASS.NO_DISPLAY)
+            scrollbar.classList.add(CLASS.NO_DISPLAY)
         })
     }
 
     static ShowScrollbars(id) {
         this.#ForEachScrollbar(id, scrollbar => {
-            scrollbar.classList.remove(this.#CLASS_NO_DISPLAY)
+            scrollbar.classList.remove(CLASS.NO_DISPLAY)
         })
     }
 

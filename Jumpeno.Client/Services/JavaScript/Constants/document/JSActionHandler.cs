@@ -17,6 +17,8 @@ public static class JSActionHandler {
     public static readonly string Clear = $"{ClassName}.{nameof(Clear)}";
     public static readonly string DisableKeyboardActions = $"{ClassName}.{nameof(DisableKeyboardActions)}";
     public static readonly string EnableKeyboardActions = $"{ClassName}.{nameof(EnableKeyboardActions)}";
+    public static readonly string InputCursorPosition = $"{ClassName}.{nameof(InputCursorPosition)}";
+    public static readonly string SetInputCursorPosition = $"{ClassName}.{nameof(SetInputCursorPosition)}";
     public static readonly string DisableTabs = $"{ClassName}.{nameof(DisableTabs)}";
     public static readonly string PopTabs = $"{ClassName}.{nameof(PopTabs)}";
     public static readonly string EnableTabs = $"{ClassName}.{nameof(EnableTabs)}";

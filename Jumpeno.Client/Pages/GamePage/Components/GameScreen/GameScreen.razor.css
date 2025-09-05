@@ -1,19 +1,13 @@
-/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
-@keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.game-screen {
-    /* Constants (set in style attribute): */
+::deep.game-screen {
+    /* Constants [GameScreenDimension] (set in style attribute): */
     --min-canvas-border-width: none;
     --min-info-padding-top: none;
     --min-info-text-size: none;
     --min-time-width: none;
     --min-controls-padding-top: none;
     --min-control-height: none;
-    /* Attributes (set in style attribute): */
+    /* Attributes [GameScreenDimension] (set in style attribute): */
     --canvas-width: none;
     --canvas-height: none;
     --canvas-background-color: none;
@@ -30,137 +24,228 @@
     --arrows-gap: max(calc(var(--canvas-width) * var(--arrows-gap-part) * 1px), var(--min-arrows-gap));
 }
 
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes game-screen-fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 /* Game screen ------------------------------------------------------------------------------------------------------------------------- */
-.game-screen {
+::deep.game-screen {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.canvas-box {
+::deep.game-screen .canvas-box {
+    /* Position: */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    overflow: hidden;
+    /* Size: */
     width: calc(var(--canvas-box-width) * 1px);
     height: calc((var(--canvas-height) + var(--canvas-border)) * 1px);
     padding: 0;
+    margin: calc(var(--canvas-border) * 1px);
+    /* Style: */
+    background: var(--theme-game-screen-canvas-background);
     border-width: calc(var(--canvas-border) * 1px);
     border-style: solid;
     border-color: rgba(var(--canvas-background-color), 0.4);
     border-radius: calc(var(--canvas-border) * 1.7px);
-    margin: calc(var(--canvas-border) * 1px);
-    background: rgb(var(--color-base));
-    box-shadow: 0 calc(var(--canvas-height) * 0.0025px)
-                calc(var(--canvas-height) * 0.025px) calc(var(--canvas-height) * 0.01px)
-                rgba(var(--color-base), 0.8);
+    box-shadow: var(--theme-game-screen-canvas-box-shadow);
+    /* Content: */
+    overflow: hidden;
+    /* Base: */
+    font-size: calc(var(--canvas-height) * 1px);
 }
 
-::deep canvas {
+::deep.game-screen canvas {
+    /* Position: */
     position: absolute;
-    border: none;
-    outline: none;
-    background: transparent;
+    /* Size: */
     padding: 0;
     margin: 0;
+    /* Style: */
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
 /* Game info --------------------------------------------------------------------------------------------------------------------------- */
-.game-info {
+::deep.game-screen .game-info {
+    /* Position: */
     position: relative;
+    z-index: 1;
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: calc(var(--canvas-box-width) * 1px);
     max-width: 100vw;
     padding: max(calc(var(--info-height) * 0.25px), calc(var(--min-info-padding-top) * 1px)) 0 0;
+    /* Actions: */
     user-select: none;
     -webkit-user-select: none;
-    z-index: 1;
 }
 
-.keyboard-display-box {
+/* Game info > Keyboard ---------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen .keyboard-display-box {
+    /* Position: */
     position: absolute;
+    left: 0;
+    z-index: 1;
+    /* Display: */
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    /* Size: */
     width: calc(50% - var(--time-width) * 0.5px);
-    left: 0;
-    z-index: 1;
     padding-right: calc(var(--canvas-width) * 0.045px);
 }
-::deep .keyboard-display-button {
+
+::deep.game-screen .keyboard-display-button {
+    /* Variables: */
     --font-size: max(var(--info-height) * 0.25, var(--min-info-text-size));
+    /* Display: */
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: calc(var(--font-size) * 0.6px);
+    /* Size: */
     width: auto;
     padding: 0 4px;
+    /* Content: */
     font-size: calc(var(--font-size) * 1px);
     font-weight: 600;
     white-space: nowrap;
+    /* Style: */
     opacity: 1;
-    transition: opacity calc(var(--transition-ultra-fast) * 1ms);
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-ultra-fast) * 1ms);
 }
-::deep .keyboard-display-button.active {
+
+::deep.game-screen .keyboard-display-button.active {
+    /* Style: */
     opacity: 0.65;
 }
-::deep .keyboard-display-image {
-    --image-height: calc(max(var(--info-height) * 0.28, var(--min-info-text-size)) * 1.8px);
-    --image-width: calc(var(--image-height) * 1.2);
+
+::deep.game-screen .keyboard-display-image {
+    /* Position: */
     --image-fit: contain;
     --image-position: center;
+    /* Size: */
+    --image-height: calc(max(var(--info-height) * 0.28, var(--min-info-text-size)) * 1.8px);
+    --image-width: calc(var(--image-height) * 1.2);
 }
-.keyboard-display-text {
+
+::deep.game-screen .keyboard-display-text {
+    /* Display: */
     display: none;
 }
 
-.game-time {
+@media (min-width: 480px) {
+    ::deep.game-screen .keyboard-display-box {
+        /* Size: */
+        padding-right: 0;
+    }
+
+    ::deep.game-screen .keyboard-display-text {
+        /* Display: */
+        display: inline;
+    }
+}
+
+/* Game info > Game time --------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen .game-time {
+    /* Size: */
     padding: 0;
     margin: 0;
+    /* Content: */
     font-size: max(calc(var(--info-height) * 0.5px), calc(var(--min-info-text-size) * 1px));
     font-weight: 600;
     text-align: center;
+    /* Actions: */
     cursor: pointer;
 }
-.game-time:active {
+
+::deep.game-screen .game-time:active {
+    /* Style: */
     opacity: 0.65;
 }
-.game-connected {
+
+/* Game info > Trademark --------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen .trademark {
+    /* Position: */
+    position: absolute;
+    /* Size: */
+    padding: 0;
+    margin: 0;
+    /* Content: */
+    font-size: calc(max(var(--info-height) * 0.3, var(--min-info-text-size) * 0.8) * 1px);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+::deep.game-screen .trademark.project-name {
+    /* Size: */
+    margin-right: max(calc(var(--canvas-width) * 0.37px), 140px);
+}
+
+::deep.game-screen .trademark.faculty-name {
+    /* Size: */
+    margin-left: max(calc(var(--canvas-width) * 0.37px), 140px);
+}
+
+/* Game info > Connection -------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen .game-connected {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     align-self: flex-end;
 }
-.game-connected .connect-text {
-    font-size: max(calc(var(--info-height) * 0.3px), calc(var(--min-info-text-size) * 1px));
-    font-weight: 500;
+
+::deep.game-screen .game-connected .connect-text {
+    /* Size: */
     max-width: 100vw;
     padding: 0 var(--control-padding) 0;
     margin-bottom: max(calc(var(--info-height) * 0.7px), 12px);
+    /* Content: */
+    font-size: max(calc(var(--info-height) * 0.3px), calc(var(--min-info-text-size) * 1px));
+    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-::deep .game-connected .connect-icon svg {
+
+::deep.game-screen .game-connected .connect-icon svg {
+    /* Variables: */
     --icon-size: max(calc(var(--info-height) * 1px), calc(var(--min-info-text-size) * 3px)); 
+    /* Size: */
     width: var(--icon-size);
     height: var(--icon-size);
 }
 
-.game-ping {
+::deep.game-screen .game-ping {
+    /* Position: */
     position: absolute;
+    right: 0;
+    /* Display: */
     display: block;
+    /* Size: */
     width: calc(50% - var(--time-width) * 0.5px);
     padding: 0 10px 0 0;
     margin: 0;
-    right: 0;
+    /* Content: */
     font-size: max(calc(var(--info-height) * 0.3px), var(--min-info-text-size) * 1px);
     font-weight: 500;
     text-align: left;
@@ -168,204 +253,190 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.game-ping strong {
+
+::deep.game-screen .game-ping strong {
+    /* Content: */
     font-weight: 700;
 }
 
-.trademark {
-    position: absolute;
-    font-size: calc(max(var(--info-height) * 0.3, var(--min-info-text-size) * 0.8) * 1px);
-    font-weight: 600;
-    padding: 0;
-    margin: 0;
-    white-space: nowrap;
-}
-.trademark.project-name {
-    margin-right: max(calc(var(--canvas-width) * 0.37px), 140px);
-}
-.trademark.faculty-name {
-    margin-left: max(calc(var(--canvas-width) * 0.37px), 140px);
-}
-
 /* Game controls ----------------------------------------------------------------------------------------------------------------------- */
-.game-controls {
+::deep.game-screen .game-controls {
+    /* Display: */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Size: */
     width: calc(var(--canvas-box-width) * 1px);
     max-width: 100vw;
     padding-top: max(calc(var(--info-height) * 0.25px + var(--control-button-height) * 0.1px), calc(var(--min-info-padding-top) * 2px));
     padding-bottom: calc(var(--control-button-height) * 0.2px);
     margin: auto auto 0;
+    /* Style: */
     opacity: 1;
-    animation: fade-in calc(var(--transition-semi-ultra-fast) * 1ms) forwards;
+    /* Animations: */
+    animation: game-screen-fade-in calc(var(--theme-transition-semi-ultra-fast) * 1ms) forwards;
 }
-.game-controls.hidden {
+
+::deep.game-screen .game-controls.hidden {
+    /* Display: */
     display: none !important;
 }
 
-.arrows {
+::deep.game-screen .arrows {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     justify-content: center;
     gap: var(--arrows-gap);
+    /* Size: */
     width: 50%;
     min-width: 50%;
     padding-left: var(--control-padding);
     padding-right: var(--control-padding);
 }
-.abilities {
+
+::deep.game-screen .abilities {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     justify-content: center;
+    /* Size: */
     width: 50%;
     padding-left: var(--control-padding);
     padding-right: var(--control-padding);
 }
 
-.control-wrap {
+::deep.game-screen .control-wrap {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: inline-flex;
+    /* Size: */
     max-width: 100%;
     padding: calc(var(--arrows-gap) / 2);
     margin: calc(var(--arrows-gap) / -2);
 }
-.control {
+
+/* Game controls > Control ------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen .control {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: calc(var(--control-button-height) * 1px);
     height: calc(var(--control-button-height) * 1px);
+    /* Style: */
+    color: var(--theme-game-screen-control-color);
+    background: var(--theme-game-screen-control-background);
+    box-shadow: var(--theme-game-screen-control-box-shadow);
     border: none;
     border-radius: calc(var(--control-button-height) * 0.1px);
     outline: none;
+    /* Actions: */
     cursor: pointer;
-    color: rgb(var(--color-secondary));
-    background-color: rgb(var(--color-secondary-surface));
-    --control-shadow-color: rgb(var(--color-base));
-    --control-shadow-color-pressed: rgba(var(--color-base), 0.7);
-    box-shadow: 0
-                calc(var(--control-button-height) * 0.04px)
-                calc(var(--control-button-height) * 0.16px)
-                calc(var(--control-button-height) * 0.02px)
-                var(--control-shadow-color);
-    transition: opacity calc(var(--transition-semi-bolt) * 1ms);
+    /* Animations: */
+    transition-property: color, background, box-shadow;
+    transition-duration: calc(var(--theme-transition-semi-bolt) * 1ms); 
+    transition-timing-function: ease;
+    /* Base: */
+    font-size: calc(var(--control-button-height) * 1px);
 }
-.light-theme .control {
-    color: rgba(var(--color-secondary), 0.7);
-    --control-shadow-color: rgba(var(--color-base), 0.2);
-    --control-shadow-color-pressed: rgba(var(--color-base), 0.14);
-}
-.control.pressed {
-    background-color: rgba(var(--color-secondary-surface), 0.7);
-    --control-shadow-color: var(--control-shadow-color-pressed);
-}
-.space {
+
+::deep.game-screen .control.space {
+    /* Display: */
+    flex-shrink: 1;
+    /* Size: */
     width: calc(var(--control-button-height) * 2.5px);
     max-width: 100%;
-    flex-shrink: 1;
 }
-::deep .control-icon svg {
+
+::deep.game-screen .control-icon svg {
+    /* Variables: */
     --icon-size: calc(var(--control-button-height) * 0.5px);
+    /* Size: */
     width: var(--icon-size, 0);
     height: var(--icon-size, 0);
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
-@media (min-width: 480px) {
-    .keyboard-display-box {
-        padding-right: 0;
-    }
-    .keyboard-display-text {
-        display: inline;
-    }
+/* Game controls > Control [pressed] --------------------------------------------------------------------------------------------------- */
+::deep.game-screen .control.pressed {
+    /* Style: */
+    color: var(--theme-game-screen-control-pressed-color);
+    background: var(--theme-game-screen-control-pressed-background);
+    box-shadow: var(--theme-game-screen-control-pressed-box-shadow);
 }
 
-/* States ------------------------------------------------------------------------------------------------------------------------------ */
-/* State [host] ------------------------------------------------------------------------------------------------------------------------ */
-.game-screen:not(.host) .game-time { pointer-events: none; }
+/* Syles [host] ------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-screen:not(.host) .game-time { pointer-events: none; }
 
-/* State [watching] -------------------------------------------------------------------------------------------------------------------- */
-.game-screen:not(.watching) .canvas-box { display: none; }
-.game-screen:not(.watching) .game-info { padding-top: 0; }
-.game-screen:not(.watching) .keyboard-display-box { margin-top: calc(var(--info-height) * 0.6px); }
-.game-screen.watching .game-connected { display: none; }
-.game-screen:not(.watching) .game-time { display: none; }
-.game-screen:not(.watching) .game-ping { margin-top: calc(var(--info-height) * 0.6px); }
+/* Styles [watching] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen:not(.watching) .canvas-box { display: none; }
+::deep.game-screen:not(.watching) .game-info { padding-top: 0; }
+::deep.game-screen:not(.watching) .keyboard-display-box { margin-top: calc(var(--info-height) * 0.6px); }
+::deep.game-screen.watching .game-connected { display: none; }
+::deep.game-screen:not(.watching) .game-time { display: none; }
+::deep.game-screen:not(.watching) .game-ping { margin-top: calc(var(--info-height) * 0.6px); }
 
-/* State [player] ---------------------------------------------------------------------------------------------------------------------- */
-.game-screen:not(.player) .keyboard-display-box { display: none; }
-.game-screen:not(.player) .game-ping { display: none; }
-.game-screen:not(.player) .game-controls { display: none; }
-.game-screen.player .trademark { display: none; }
+/* Styles [player] --------------------------------------------------------------------------------------------------------------------- */
+::deep.game-screen:not(.player) .keyboard-display-box { display: none; }
+::deep.game-screen:not(.player) .game-ping { display: none; }
+::deep.game-screen:not(.player) .game-controls { display: none; }
+::deep.game-screen.player .trademark { display: none; }
 
-/* Media state [device rotate] --------------------------------------------------------------------------------------------------------- */
-@media (max-height: 479.98px) and (orientation: landscape) {
-    .game-screen.watching.player > ::deep * {
-        display: none;
-    }
-    .game-screen.watching.player ::deep .flip-device {
-        display: flex;
-    }
-}
-
-/* Media state [device small] ---------------------------------------------------------------------------------------------------------- */
-@media (max-width: 269.98px) or (max-height: 269.98px) {
-    .game-screen.watching > ::deep * {
-        display: none !important;
-    }
-    .game-screen.watching ::deep .small-device {
-        display: flex !important;
-    }
-}
-
-@media (max-width: 269.98px) or (max-height: 219.98px) {
-    .game-screen:not(.watching) > ::deep * {
-        display: none !important;
-    }
-    .game-screen:not(.watching) ::deep .small-device {
-        display: flex !important;
-    }
-}
-
-/* Media state [player] improved mobile controls --------------------------------------------------------------------------------------- */
-.game-screen:not(.watching) {
+/* Styles [player][improved mobile controls] ------------------------------------------------------------------------------------------- */
+::deep.game-screen:not(.watching) {
     --arrows-gap: max(min(calc(var(--arrows-gap-part) * 100vw), calc(var(--control-button-height) * 0.3px)), var(--min-arrows-gap));
 }
-.game-screen:not(.watching) .game-controls {
+
+::deep.game-screen:not(.watching) .game-controls {
     width: 100vw !important;
 }
-.game-screen:not(.watching) .arrows {
+
+::deep.game-screen:not(.watching) .arrows {
     justify-content: flex-start;
     padding-left: 5vw;
 }
-.game-screen:not(.watching) .abilities {
+
+::deep.game-screen:not(.watching) .abilities {
     justify-content: flex-end;
     padding-right: 5vw;
 }
 
 @media (min-width: 330px) and (min-height: 180px) {
-    .game-screen:not(.watching) {
-        --min-control-height: 60 !important;
-    }
+    ::deep.game-screen:not(.watching) { --min-control-height: 60 !important; }
 }
 
 @media (min-width: 380px) and (min-height: 180px) {
-    .game-screen:not(.watching) {
-        --min-control-height: 70 !important;
-    }
+    ::deep.game-screen:not(.watching) { --min-control-height: 70 !important; }
 }
 
 @media (min-width: 440px) and (min-height: 200px) {
-    .game-screen:not(.watching) {
-        --min-control-height: 80 !important;
-    }
+    ::deep.game-screen:not(.watching) { --min-control-height: 80 !important; }
 }
 
 @media (min-width: 520px) and (min-height: 250px) {
-    .game-screen:not(.watching) {
-        --min-control-height: 90 !important;
-    }
+    ::deep.game-screen:not(.watching) { --min-control-height: 90 !important; }
+}
+
+/* Media [device rotate] --------------------------------------------------------------------------------------------------------------- */
+@media (max-height: 479.98px) and (orientation: landscape) {
+    ::deep.game-screen.watching.player > * { display: none; }
+    ::deep.game-screen.watching.player .flip-device { display: flex; }
+}
+
+/* Media [device small] ---------------------------------------------------------------------------------------------------------------- */
+@media (max-width: 269.98px) or (max-height: 269.98px) {
+    ::deep.game-screen.watching > * { display: none !important; }
+    ::deep.game-screen.watching .small-device { display: flex !important; }
+}
+
+@media (max-width: 269.98px) or (max-height: 219.98px) {
+    ::deep.game-screen:not(.watching) > * { display: none !important; }
+    ::deep.game-screen:not(.watching) .small-device { display: flex !important; }
 }

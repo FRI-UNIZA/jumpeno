@@ -1,0 +1,266 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal {
+    /* Modal size: */
+    --modal-min-width: 0;
+    --modal-max-width: 100vw;
+    --modal-min-height: 0;
+    --modal-max-height: 100vh;
+    /* Modal padding: */
+    --modal-padding: 16px;
+    --modal-padding-header: var(--modal-padding);
+    --modal-padding-header-mobile: var(--modal-padding-header);
+    --modal-padding-header-tablet: var(--modal-padding-header);
+    --modal-padding-header-desktop: var(--modal-padding-header);
+    --modal-padding-content: var(--modal-padding);
+    --modal-padding-content-mobile: var(--modal-padding-content);
+    --modal-padding-content-tablet: var(--modal-padding-content);
+    --modal-padding-content-desktop: var(--modal-padding-content);
+    --modal-padding-footer: var(--modal-padding);
+    --modal-padding-footer-mobile: var(--modal-padding-footer);
+    --modal-padding-footer-tablet: var(--modal-padding-footer);
+    --modal-padding-footer-desktop: var(--modal-padding-footer);
+    /* Margin: */
+    --modal-margin: var(--theme-size-container-padding-mobile);
+    /* Animations: */
+    --modal-transition-speed: var(--theme-transition-semi-fast);
+    /* Base: */
+    --modal-base-size: 1px;
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes modal-fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes modal-zoom-in {
+    0% { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes modal-fade-out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@keyframes modal-zoom-out {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.7); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal {
+    /* Position: */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--theme-z-index-modal);
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100vw;
+    height: 100dvh;
+}
+
+::deep.modal .modal-backdrop {
+    /* Position: */
+    position: absolute;
+    z-index: 0;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    background-color: var(--theme-body-backdrop);
+}
+
+::deep.modal .modal-dialog {
+    /* Position: */
+    z-index: 1;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    min-width: min(var(--modal-min-width), var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
+    max-width: min(var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
+    min-height: min(var(--modal-min-height), calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    min-height: min(var(--modal-min-height), calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    max-height: min(calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    /* Style: */
+    color: var(--theme-text-color);
+    background-color: var(--theme-surface-background);
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    box-shadow: var(--theme-modal-dialog-box-shadow);
+    /* Content: */
+    overflow: hidden;
+    /* Actions: */
+    pointer-events: all;
+    /* Base: */
+    font-size: var(--modal-base-size);
+}
+
+::deep.modal .modal-container {
+    /* Position: */
+    z-index: 1;
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.modal .modal-header {
+    /* Position: */
+    z-index: 1;
+    /* Display: */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 18px;
+    /* Size: */
+    padding: var(--modal-padding-header-mobile);
+    /* Style: */
+    box-shadow: var(--theme-modal-ending-box-shadow);
+    /* Base: */
+    font-size: var(--modal-base-size);
+}
+
+::deep.modal .modal-scroll {
+    /* Display: */
+    flex-grow: 1;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+}
+::deep.modal .modal-scroll .os-scrollbar {
+    /* Variables: */
+    --os-padding-axis: 6px;
+}
+::deep.modal .modal-content {
+    /* Position: */
+    z-index: 0;
+    /* Display: */
+    display: flex;
+    flex-wrap: wrap;
+    /* Size: */
+    padding: var(--modal-padding-content-mobile);
+}
+
+::deep.modal .modal-footer {
+    /* Position: */
+    z-index: 1;
+    /* Display: */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-shrink: 0;
+    /* Size: */
+    padding: var(--modal-padding-footer-mobile);
+    /* Style: */
+    box-shadow: var(--theme-modal-ending-box-shadow);
+    /* Content: */
+    font-size: 1px;
+}
+
+/* Focus trap -------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal .modal-init,
+::deep.modal .modal-start,
+::deep.modal .modal-end {
+    /* Position: */
+    position: absolute;
+    z-index: 0;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    outline: none;
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Styles [pre-open] ------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.pre-open .modal-dialog {
+    /* Style: */
+    opacity: 0;
+}
+
+/* Styles [opening] -------------------------------------------------------------------------------------------------------------------- */
+::deep.modal .modal-backdrop {
+    /* Animations: */
+    animation: modal-fade-in calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+::deep.modal .modal-loading-indicator {
+    /* Animations: */
+    animation: modal-fade-in calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+::deep.modal:not(.pre-open):not(.loading):not(.closing-loading) .modal-dialog {
+    /* Animations: */
+    animation: modal-zoom-in calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+/* Styles [loading] -------------------------------------------------------------------------------------------------------------------- */
+::deep.modal .modal-loading-indicator {
+    /* Position: */
+    position: absolute;
+    z-index: 1;
+    /* Display: */
+    display: none;
+}
+
+::deep.modal.loading .modal-dialog,
+::deep.modal.closing-loading .modal-dialog {
+    /* Style: */
+    opacity: 0;
+}
+
+::deep.modal.loading .modal-loading-indicator {
+    /* Display: */
+    display: inline-flex;
+}
+
+/* Styles [closing] -------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.closing .modal-backdrop {
+    /* Animations: */
+    animation: modal-fade-out calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+::deep.modal.closing:not(.pre-open):not(.loading):not(.closing-loading) .modal-dialog {
+    /* Animations: */
+    animation: modal-zoom-out calc(var(--modal-transition-speed) * 1ms) forwards;
+}
+
+@media (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal {
+        /* Modal padding: */
+        --modal-padding: 17px;
+        /* Margin: */
+        --modal-margin: var(--theme-size-container-padding-tablet);
+    }
+    
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal .modal-header { padding: var(--modal-padding-header-tablet); }
+    ::deep.modal .modal-scroll .os-scrollbar { --os-padding-axis: 5px; }
+    ::deep.modal .modal-content { padding: var(--modal-padding-content-tablet); }
+    ::deep.modal .modal-footer { padding: var(--modal-padding-footer-tablet); }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal {
+        /* Modal padding: */
+        --modal-padding: 18px;
+        /* Margin: */
+        --modal-margin: var(--theme-size-container-padding-desktop);
+    }
+    
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal .modal-header { padding: var(--modal-padding-header-desktop); }
+    ::deep.modal .modal-scroll .os-scrollbar { --os-padding-axis: 4px; }
+    ::deep.modal .modal-content { padding: var(--modal-padding-content-desktop); }
+    ::deep.modal .modal-footer { padding: var(--modal-padding-footer-desktop); }
+}

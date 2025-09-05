@@ -4,46 +4,35 @@
     <Modal
         @ref="@ModalRef"
         Label="@I18N.T("My profile")"
-        MinWidth="460px"
-        MaxWidth="1200px"
         NoFooter
+        Class="profile-modal"
     >
         <Content>
-            @if (!IsError) {
-                <div class="modal-profile">
-                    <div class="user-profile-image-wrap">
-                        <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="user-profile-image" />
+            <div class="profile-content">
+                <div class="user-profile-image-wrap">
+                    <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="user-profile-image" />
+                </div>
+                <Heading1 Class="profile-name">@Auth.User.Name</Heading1>
+                <Paragraph Class="profile-email">@Auth.User.Email</Paragraph>
+                @if (Auth.User.Activated) {
+                    <div class="activated-box">
+                        <Paragraph Class="profile-activated">
+                            <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
+                            @I18N.T("Account activated")
+                        </Paragraph>
                     </div>
-                    <Heading1 Class="profile-name">@Auth.User.Name</Heading1>
-                    <Paragraph Class="profile-email">@Auth.User.Email</Paragraph>
-                        @if (Auth.User.Activated) {
-                            <div class="activated-box">
-                                <Paragraph Class="profile-activated">
-                                    <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
-                                    @I18N.T("Account activated")
-                                </Paragraph>
-                            </div>
-                        } else {
-                            <div class="activated-box">
-                                <Paragraph Class="profile-activated">
-                                    <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
-                                    @I18N.T("Account not activated")
-                                </Paragraph>
-                                <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
-                                    <Text>@I18N.T("Resend link")</Text>
-                                </Button>
-                            </div>
-                        }
-                </div>
-            } else {
-                <div class="modal-error-content">
-                    <Paragraph Size="TEXT_SIZE.L" Class="modal-error-text">@MESSAGE.DEFAULT.T</Paragraph>
-                    <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="Refresh">
-                        <Icon><AntIcon Type="sync" Theme="outline" /></Icon>
-                        <Text>@I18N.T("Try again")</Text>
-                    </Button>
-                </div>
-            }
+                } else {
+                    <div class="activated-box">
+                        <Paragraph Class="profile-activated">
+                            <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
+                            @I18N.T("Account not activated")
+                        </Paragraph>
+                        <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
+                            <Text>@I18N.T("Resend link")</Text>
+                        </Button>
+                    </div>
+                }
+            </div>
         </Content>
     </Modal>
 </AuthView>

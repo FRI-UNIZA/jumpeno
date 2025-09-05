@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Services;
 
-using System.Diagnostics;
-
 #pragma warning disable CS8618
 
 public class Navigator : StaticService<Navigator>, IDisposable {
@@ -21,7 +19,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     // Loading:
     private bool Loader = true;
     private const int MIN_LOADING = 175; // ms
-    private Stopwatch Watch = new();
+    private readonly MinWatch MinLoadingWatch = new(MIN_LOADING);
     private TaskCompletionSource NavigationFinished;
     // Locks:
     private readonly LockerSlim NavLock = new();
@@ -79,7 +77,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (Loader) {
             await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
-            Watch = Stopwatch.StartNew();
+            MinLoadingWatch.Start();
         }
 
         foreach (var listener in BeforeListeners) {
@@ -87,7 +85,12 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         }
     }
 
+    private TaskCompletionSource PageRenderedTCS = new();
+    protected static void PageRendered() => Instance().PageRenderedTCS.TrySetResult();
+    public const string PAGE_RENDERED = nameof(PageRendered);
+
     private async void AfterLocationChanged (object? sender, LocationChangedEventArgs e) {
+        if (Notify != NOTIFY.STATE && !SettingQueries) PageRenderedTCS = new();
         foreach (var listener in AfterListeners) {
             await listener.Invoke(new(PreviousURL, e.Location));
         }
@@ -109,20 +112,16 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (NavState != null) SetState(NavState);
 
+        if (Notify != NOTIFY.STATE && !SettingQueries) await PageRenderedTCS.Task;
+
         ProgramNavigation = false;
         SettingQueries = false;
         NavData = null;
         NavState = null;
         Notify = null;
-        Loader = true;
         IsPopState = false;
 
-        if (Loader) {
-            Watch.Stop();
-            if (Watch.ElapsedMilliseconds <= MIN_LOADING) {
-                await Task.Delay(MIN_LOADING - (int)Watch.ElapsedMilliseconds);
-            }
-        }
+        if (Loader) await MinLoadingWatch.Task;
         await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
         Loader = true;
         

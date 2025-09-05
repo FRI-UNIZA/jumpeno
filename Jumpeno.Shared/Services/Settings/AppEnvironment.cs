@@ -3,19 +3,6 @@ namespace Jumpeno.Shared.Services;
 #pragma warning disable CS8618
 
 public static class AppEnvironment {
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(
-        Func<bool> isServer,
-        Func<bool> isController,
-        Func<bool> isDevelopment,
-        Func<Type, object> getService
-    ) {
-        IsServerCheck = isServer;
-        IsControllerCheck = isController;
-        IsDevelopmentCheck = isDevelopment;
-        GetServiceOfType = getService;
-    }
-
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public static bool IsServer => IsServerCheck(); private static Func<bool> IsServerCheck;
     public static bool IsClient => !IsServer;
@@ -39,8 +26,21 @@ public static class AppEnvironment {
     public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, ERROR.DEFAULT.SetInfo("Not a production environment!"));
     public static void CheckProduction() => Checker.Assert(ValidateProduction());
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Func<Type, object> GetServiceOfType { get; set; }
     public static T GetService<T>() => (T) GetServiceOfType(typeof(T));
     public static string Import(string url) => $"{url}?v={AppSettings.Version}";
+
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    public static void Init(
+        Func<bool> isServer,
+        Func<bool> isController,
+        Func<bool> isDevelopment,
+        Func<Type, object> getService
+    ) {
+        IsServerCheck = isServer;
+        IsControllerCheck = isController;
+        IsDevelopmentCheck = isDevelopment;
+        GetServiceOfType = getService;
+    }
 }

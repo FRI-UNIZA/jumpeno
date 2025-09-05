@@ -1,119 +1,168 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.admin-page {
+::deep.admin-page {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: stretch;
     align-items: flex-start;
-    width: 100%;
     gap: 20px;
+    /* Size: */
+    width: 100%;
     padding: 20px 0;
 }
-.feature-panel {
+
+::deep.admin-page .feature-panel {
+    /* Position: */
+    order: 2;
+    /* Display: */
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 20px;
+    /* Size: */
+    width: 100%;
 }
-.service-panel {
+
+::deep.admin-page .service-panel {
+    /* Position: */
+    order: 1;
+    /* Display: */
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 100%;
     gap: 20px;
+    /* Size: */
+    width: 100%;
 }
 
-::deep .admin-heading {
-    --text-align: center;
+::deep.admin-page .heading.admin-heading {
+    /* Content: */
+    text-align: center;
 }
 
-::deep .games-box {
-    --box-background: rgba(var(--color-primary-box), 0.6);
+/* Styles > DB ------------------------------------------------------------------------------------------------------------------------- */
+::deep.admin-page .box.db-box {
+    /* Display: */
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
 }
 
-::deep .admin-title {
-    display: none;
+::deep.admin-page .heading.db-heading {
+    /* Content: */
+    text-align: center;
 }
 
-::deep .db-box {
-    --box-direction: column;
-    --box-align-items: center;
-    --box-gap: 18px;
-}
-::deep .db-heading {
-    --text-align: center;
-}
-::deep .db-info {
-    font-size: 13px;
-    --text-align: center;
+::deep.admin-page .paragraph.db-info {
+    /* Size: */
     margin-top: -6px;
+    /* Content: */
+    text-align: center;
 }
-::deep .db-info b {
+
+::deep.admin-page .paragraph.db-info b {
+    /* Display: */
     display: block;
-    font-size: 14px;
+    /* Size: */
     padding-bottom: 4px;
 }
-.db-buttons {
+
+::deep.admin-page .db-buttons {
+    /* Display: */
     display: flex;
     justify-content: stretch;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Size: */
     width: 100%;
     max-width: 400px;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-::deep .db-button {
-    flex-grow: 1;
-}
-::deep .db-button .button-component, ::deep .db-button .button-component .button-element {
-    width: 100%;
 }
 
-::deep .email-box {
-    --box-direction: column;
-    --box-align-items: center;
-    --box-gap: 18px;
+::deep.admin-page .button-component.button.db-button {
+    /* Display: */
+    flex-grow: 1;
 }
-::deep .email-heading {
-    --text-align: center;
+
+/* Styles > Email ---------------------------------------------------------------------------------------------------------------------- */
+::deep.admin-page .box.email-box {
+    /* Display: */
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
 }
-::deep .email-info {
-    font-size: 13px;
-    --text-align: center;
+
+::deep.admin-page .heading.email-heading {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.admin-page .paragraph.email-info {
+    /* Size: */
     margin-top: -6px;
+    /* Content: */
+    text-align: center;
 }
-::deep .email-info b {
+
+::deep.admin-page .paragraph.email-info b {
+    /* Display: */
     display: block;
-    font-size: 14px;
+    /* Size: */
     padding-bottom: 4px;
 }
-.email-buttons {
+
+::deep.admin-page .email-buttons {
+    /* Display: */
     display: flex;
     justify-content: stretch;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Size: */
     width: 100%;
     max-width: 400px;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-::deep .email-button {
-    flex-grow: 1;
-}
-::deep .email-button .button-component, ::deep .email-button .button-component .button-element {
-    width: 100%;
-}
-::deep .email-factor-paragraph {
-    font-size: 13px;
-    --text-align: center;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.admin-page .button-component.button.email-button {
+    /* Display: */
+    flex-grow: 1;
+}
+
+::deep.admin-page .paragraph.email-factor-paragraph {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.admin-page .map-box {
+    /* Display: */
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+::deep.admin-page .heading.map-heading {
+    /* Content: */
+    text-align: center;
+}
+
 @media (min-width: 1200px) {
-    .admin-page {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.admin-page {
+        /* Display: */
         flex-direction: row;
     }
-    .service-panel {
+
+    ::deep.admin-page .feature-panel {
+        /* Position: */
+        order: 1;
+    }
+
+    ::deep.admin-page .service-panel {
+        /* Position: */
+        order: 2;
+        /* Size: */
         width: 400px;
     }
 
-    ::deep .admin-title {
+    ::deep.admin-page .heading.admin-title {
+        /* Display: */
         display: block;
     }
 }

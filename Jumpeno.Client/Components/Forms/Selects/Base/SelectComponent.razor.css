@@ -1,0 +1,298 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.select .select-input {
+    /* Display: */
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    /* Style: */
+    border-radius: var(--field-border-radius);
+    outline: none;
+    /* Content: */
+    overflow: hidden;
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.select .select-input-empty {
+    /* Size: */
+    width: 0;
+    /* Content: */
+    font-size: var(--select-font-size);
+}
+
+::deep.field.select .select-input-text {
+    /* Size: */
+    max-width: 100%;
+    /* Content: */
+    font-size: var(--select-font-size);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+::deep.field.select .select-input-icon svg {
+    /* Size: */
+    width: var(--select-icon-size);
+    height: var(--select-icon-size);
+}
+
+/* Search ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.select-options-modal .field.input.input-search.select-input-search {
+    /* Position: */
+    z-index: 2;
+    /* Size: */
+    width: 200px;
+    min-width: 100%;
+    /* Style: */
+    --field-border-radius: 0;
+}
+
+::deep.modal.select-options-modal .field.input.input-search.variant.size.select-input-search .input-element {
+    /* Style: */
+    border-width: 1px 0;
+}
+
+/* Options ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-options-modal {
+    /* Variables: */
+    --option-font-size: 14px;
+    --option-padding-horizontal: calc(0.87 * var(--option-font-size));
+    --option-padding-vertical: 14px;
+    /* Size: */
+    --modal-padding-content: 0;
+}
+
+::deep.modal.select-options-modal .select-options {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.modal.select-options-modal .select-option {
+    /* Size: */
+    width: 100%;
+    padding: var(--option-padding-vertical) var(--option-padding-horizontal);
+    /* Style: */
+    color: var(--theme-select-option-color);
+    background: var(--theme-select-option-background);
+    border: none;
+    outline: none;
+    /* Actions: */
+    cursor: pointer;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: var(--option-font-size);
+    line-height: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Animations: */
+    transition-property: color, background;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.modal.select-options-modal .select-option:not(:last-child) {
+    /* Style: */
+    border-bottom: 1px solid var(--theme-select-option-divider-color);
+}
+
+@media (min-width: 768px) {
+    /* Media > Options ----------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.select-options-modal {
+        --option-font-size: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Options ----------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.select-options-modal {
+        --option-font-size: 16px;
+    }
+}
+
+/* Options [highlight] ----------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-options-modal .select-option:not(.select-option-selected):hover,
+::deep.modal.select-options-modal .select-option:not(.select-option-selected):focus-visible {
+    /* Style: */
+    color: var(--theme-select-option-highlight-color);
+    background: var(--theme-select-option-highlight-background);
+}
+
+/* Options [selected] ------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.select-options-modal .select-option.select-option-selected {
+    /* Style: */
+    color: var(--theme-select-option-active-color);
+    background: var(--theme-select-option-active-background);
+}
+
+/* Options [selected][highlight] ------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-options-modal .select-option.select-option-selected:hover,
+::deep.modal.select-options-modal .select-option.select-option-selected:focus-visible {
+    /* Style: */
+    color: var(--theme-select-option-active-highlight-color);
+    background: var(--theme-select-option-active-highlight-background);
+}
+
+/* Options [empty] --------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-options-modal .select-empty-text {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: block;
+    /* Size: */
+    width: 100%;
+    padding: 20px var(--option-padding-horizontal);
+    margin: 0;
+    /* Style: */
+    color: var(--theme-text-color);
+    border: none;
+    outline: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: var(--option-font-size);
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Options [empty][focus] -------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-options-modal .select-empty-text:focus-visible {
+    /* Style: */
+    color: var(--theme-text-highlight-color);
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.select.align-left .select-input { justify-content: space-between; }
+
+::deep.field.select.align-center .select-input { justify-content: center; }
+
+::deep.field.select.align-right .select-input { justify-content: flex-end; }
+
+/* OptionAlign ------------------------------------------------------------------------------------------------------------------------- */
+::deep.select-options-modal.select-option-align-left .select-option { text-align: left; }
+
+::deep.select-options-modal.select-option-align-center .select-option { text-align: center; }
+
+::deep.select-options-modal.select-option-align-right .select-option { text-align: right; }
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary .select-input {
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Style: */
+    color: var(--theme-form-primary-color);
+    background: var(--theme-form-primary-background);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-form-primary-border-color);
+    text-shadow: var(--theme-form-primary-text-shadow);
+    box-shadow: var(--theme-form-primary-box-shadow);
+    /* Animations: */
+    transition-property: color, background, border-color, text-shadow, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: pointer;
+}
+
+::deep.field.select.variant-primary .select-input-text.select-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-placeholder-color);
+    /* Animations: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+/* Variant [primary][highlight] -------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary:not(.disabled):has(:hover) .select-input,
+::deep.field.select.variant-primary:not(.disabled):has(:focus-visible) .select-input {
+    /* Style: */
+    color: var(--theme-form-primary-highlight-color);
+    background: var(--theme-form-primary-highlight-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    text-shadow: var(--theme-form-primary-highlight-text-shadow);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.select.variant-primary:not(.disabled):has(:hover) .select-input-text.select-input-placeholder,
+::deep.field.select.variant-primary:not(.disabled):has(:focus-visible) .select-input-text.select-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-highlight-placeholder-color);
+}
+
+/* Variant [primary][disabled] --------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary.disabled .select-input {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-color);
+    background: var(--theme-form-primary-disabled-background);
+    border-color: var(--theme-form-primary-disabled-border-color);
+    text-shadow: var(--theme-form-primary-disabled-text-shadow);
+    box-shadow: var(--theme-form-primary-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+::deep.field.select.variant-primary.disabled .select-input-text.select-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-placeholder-color);
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary.size-s {
+    /* Variables: */
+    --select-font-size: 16px;
+    --select-icon-size: 16px;
+}
+::deep.field.select.variant-primary.size-s .select-input {
+    /* Size: */
+    padding: 10px;
+}
+::deep.field.select.variant-primary.size-s .select-input-text {
+    /* Size: */
+    margin-right: 4px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary.size-m {
+    /* Variables: */
+    --select-font-size: 18px;
+    --select-icon-size: 18px;
+}
+::deep.field.select.variant-primary.size-m .select-input {
+    /* Size: */
+    padding: 18px;
+}
+::deep.field.select.variant-primary.size-m .select-input-text {
+    /* Size: */
+    margin-right: 5px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select.variant-primary.size-l {
+    /* Variables: */
+    --select-font-size: 24px;
+    --select-icon-size: 24px;
+}
+::deep.field.select.variant-primary.size-l .select-input {
+    /* Size: */
+    padding: 26px;
+}
+::deep.field.select.variant-primary.size-l .select-input-text {
+    /* Size: */
+    margin-right: 6px;
+}

@@ -21,7 +21,7 @@ public partial class UserLoginForm {
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
-            OnEnter: new(Login)
+            OnEnter: new(async e => await Login())
         ));
         VMPassword = new(new InputViewModelTextParams(
             Form: FORM,
@@ -32,7 +32,7 @@ public partial class UserLoginForm {
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
-            OnEnter: new(Login)
+            OnEnter: new(async e => await Login())
         ));
     }
 

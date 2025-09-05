@@ -1,0 +1,46 @@
+@namespace Jumpeno.Client.Components
+
+@typeparam T
+@inherits FormField<InputViewModel<T>>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.AUTOHIDE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <div class="@CLASS_CONTAINER" inert="@Disabled">
+            @if (Icon is not null) { <div class="input-icon-before">@Icon</div> }
+            <input
+                id="@ViewModel.FormID"
+                name="@Name"
+                type="@ComputeType()"
+                class="@CLASS_INPUT_ELEMENT"
+                placeholder="@ViewModel.Placeholder"
+                aria-label="@HTML.Label.First(Label)"
+                aria-invalid="@ViewModel.Error.HasError"
+                inputmode="@ComputeInputMode()"
+                autocomplete="@ComputeAutocomplete()"
+                @bind:event="oninput"
+                @bind:get="@InputValue"
+                @bind:set="HandleInput"
+                @onblur="HandleChange"
+                @onkeydown="HandleKeyDown"
+            />
+            @if (AllowClear) {
+                <div class="input-clear">
+                    <button
+                        type="buttton"
+                        class="input-clear-button"
+                        tabindex="@ComputeTabindexClear()"
+                        aria-label="@I18N.T("Clear")"
+                        @onclick="@(async () => await InvokeUpdate())"
+                    >
+                        <ThumbButton Class="input-clear-thumb" />
+                        <AntIcon Type="close" Theme="outline" />
+                    </button>
+                </div>
+            }
+            @if (IconAfter is not null) { <div class="input-icon-after">@IconAfter</div> }
+        </div>
+    </Fragment>;
+}
+
+@Render()

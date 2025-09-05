@@ -1,0 +1,8 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div id="server-page-loader" class="@ComputeClass()" style="@Style" tabindex="0" role="status" aria-label="@I18N.T("Loading")">
+    <h1 class="server-page-loader-title" aria-hidden="true">@AppSettings.Name</h1>
+    <Loader Class="server-page-loader-indicator" />
+</div>

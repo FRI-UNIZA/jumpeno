@@ -3,7 +3,7 @@
 @inherits BasicComponent
 
 <div class="@ComputeClass()">
-    <div class="no-display">@RenderVar</div>
+    <div class="@CLASS.NO_DISPLAY">@RenderVar</div>
     <div
         id="@ID_TITLE"
         class="@CLASS_COLLAPSE_ITEM_TITLE"
@@ -15,9 +15,11 @@
         tabindex="0"
         aria-label="@Label"
     >
-        @Title
+        <CollapseTitle>@Title</CollapseTitle>
     </div>
     <div id="@ID_CONTENT" class="@CLASS_COLLAPSE_ITEM_CONTENT_WRAP" inert="@Collapsed">
-        <div class="@CLASS_COLLAPSE_ITEM_CONTENT" tabindex="0">@Content</div>
+        <div class="@CLASS_COLLAPSE_ITEM_CONTENT" tabindex="0">
+            <CollapseContent>@Content</CollapseContent>
+        </div>
     </div>
 </div>

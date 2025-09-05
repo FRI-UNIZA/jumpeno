@@ -1,31 +1,43 @@
-.page-loader {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.page-loader {
+    /* Position: */
     position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--theme-z-index-page-loader);
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background: rgba(var(--color-base), 0.5);
-    top: 0;
-    left: 0;
-    z-index: var(--z-index-page-loader);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity calc(var(--transition-semi-bolt) * 1ms) ease-in;
+    /* Style: */
+    background: var(--theme-body-backdrop);
     outline: none;
+    opacity: 0;
+    /* Actions: */
     cursor: default;
+    pointer-events: none;
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-semi-bolt) * 1ms) ease-in;
 }
 
-.displayed {
+/* Styles [displayed] ------------------------------------------------------------------------------------------------------------------ */
+::deep.page-loader.displayed {
+    /* Style: */
     opacity: 1;
+    /* Actions: */
     pointer-events: all;
 }
 
-.page-loader:not(.displayed) {
-    transition: opacity calc(var(--transition-ultra-fast) * 1ms) ease-out;
+::deep.page-loader:not(.displayed) {
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-ultra-fast) * 1ms) ease-out;
 }
 
-.displayed.custom-loader {
+::deep.page-loader.displayed.custom-loader {
+    /* Style: */
     opacity: 0;
 }

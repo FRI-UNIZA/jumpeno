@@ -3,7 +3,7 @@
 @inherits ServiceComponent<Notification>
 
 @foreach (var notification in AriaNotifications) {
-    <p aria-live="assertive" role="alert">
+    <p class="notification-aria" aria-live="assertive" role="alert">
         @($"{notification.Title}: {notification.Message}")
     </p>
 }

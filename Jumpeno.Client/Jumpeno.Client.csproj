@@ -19,6 +19,14 @@
         <TrimmerRootAssembly Include="Jumpeno.Shared" />
     </ItemGroup>
 
+    <PropertyGroup>
+        <ActiveDebugProfile>https</ActiveDebugProfile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="**/*.razor.css" CssScope="global" />
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <DefineConstants>CLIENT_DEVELOPMENT</DefineConstants>
     </PropertyGroup>

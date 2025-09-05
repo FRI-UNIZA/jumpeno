@@ -1,0 +1,20 @@
+@namespace Jumpeno.Client.Components
+
+@inherits WritingComponent
+
+<a
+    id="@ID"
+    class="@ComputeClass()"
+    style="@Style"
+    href="@Href"
+    target="@ComputeTarget()"
+    aria-disabled="@Disabled"
+    tabindex="@(Disabled ? -1 : TabIndex)"
+    role="@Role.String()"
+    @onclick="OnClickEvent"
+    @onclick:preventDefault="@(Disabled || HrefPrevent)"
+    @onkeypress="OnKeyPressEvent"
+    @attributes="@Attributes"
+>
+    @ChildContent
+</a>

@@ -1,0 +1,71 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.designer-page {
+    --surface-gap: 20px;
+    --surface-padding: 10px;
+    --surface-radius: 4px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.designer-page {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: var(--surface-gap);
+    /* Size: */
+    width: 100%;
+}
+
+::deep.designer-page .heading.designer-heading-main {
+    /* Size: */
+    margin-bottom: calc(0.3em - var(--surface-gap));
+    /* Content: */
+    text-align: center;
+}
+
+::deep.designer-page .designer-surface {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--surface-gap) / 2);
+    /* Size: */
+    padding: var(--surface-padding);
+    /* Style: */
+    background-color: var(--theme-surface-background);
+    border-radius: var(--surface-radius);
+    box-shadow: 0 4px 30px -20px rgba(0, 0, 0, 0.5);
+}
+::deep.designer-page .designer-surface.surface-primary {
+    /* Style: */
+    background-color: transparent;
+}
+
+::deep.designer-page .designer-container {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    padding: 20px;
+    /* Style: */
+    border-radius: 4px;
+}
+
+@media (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.designer-page {
+        --surface-gap: 30px;
+        --surface-padding: 15px;
+        --surface-radius: 7px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.designer-page {
+        --surface-gap: 40px;
+        --surface-padding: 20px;
+        --surface-radius: 10px;
+    }
+}

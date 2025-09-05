@@ -1,0 +1,106 @@
+@namespace Jumpeno.Client.Components
+
+@inherits FormField<SelectMultiViewModel>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
+    protected override RenderFragment? RenderField() => @<Fragment>
+        <button
+            id="@ViewModel.FormID"
+            type="@BUTTON_TYPE.BUTTON.String()"
+            aria-roledescription="multi-select"
+            aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
+            aria-invalid="@ViewModel.Error.HasError"
+            class="@CLASS_SELECT_INPUT"
+            disabled="@Disabled"
+            @onclick="@OpenModal"
+        >
+            @if (ViewModel.Value.Count == 0) {
+                if (ViewModel.Placeholder == null) {
+                    <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
+                } else {
+                    <span class="@CLASS_SELECT_INPUT_TEXT @CLASS_SELECT_INPUT_PLACEHOLDER">@ViewModel.Placeholder</span>
+                }
+            } else {
+                <span class="@CLASS_SELECT_INPUT_TEXT">@ViewModel.Value.Values.FirstOrDefault()?.Label</span>
+            }
+            <div class="@CLASS_SELECT_INPUT_INDICATORS">
+                @if (ViewModel.Value.Count > 1) {
+                    <span class="@CLASS_SELECT_INPUT_COUNT">
+                        <span class="@CLASS_SELECT_INPUT_PLUS">+</span>
+                        @(ViewModel.Value.Count - 1)
+                    </span>
+                }
+                <AntIcon Type="down" Theme="outline" Class="@CLASS_SELECT_INPUT_ICON" />
+            </div>
+        </button>
+        <Modal
+            @ref="@ModalRef"
+            Surface="ModalSurface"
+            Label="Label"
+            Class="@ComputeModalClass()"
+            OnBeforeClose="@HandleBeforeClose"
+            OnAfterClose="@HandleAfterClose"
+        >
+            <SubHeader>
+                @if (ViewModel.Search) {
+                    <InputSearch
+                        ViewModel="ViewModel.SearchVM"
+                        Variant="FORM_VARIANT.PRIMARY"
+                        Size="SearchSize"
+                        Align="SearchAlign"
+                        Label="@I18N.T("Search")"
+                        Class="@CLASS_SELECT_INPUT_SEARCH"
+                    />
+                }
+            </SubHeader>
+            <Content>
+                <div class="@CLASS_OPTIONS" role="listbox">
+                    @if (DisplayedOptions.Count > 0) {
+                        var index = 0;
+                        @foreach(var option in DisplayedOptions) {
+                            var isSelected = DisplayedValue.ContainsKey(option.Label);
+                            <button
+                                @key="option.Label"
+                                id="@($"{ViewModel.FormID}-{index++}")"
+                                type="@BUTTON_TYPE.BUTTON.String()"
+                                role="option"
+                                aria-label="@HTML.Label.OptionAria(option.Label, isSelected)"
+                                aria-selected="@HTML.Label.OptionAriaActive(isSelected)"
+                                class="@ComputeOptionClass(option)"
+                                @onclick="@(async () => await SelectOption(option, isSelected))"
+                            >
+                                <AntIcon Type="minus-circle" Theme="outline" Class="@ComputeMarkerClass(isSelected, false)" />
+                                <AntIcon Type="plus-circle" Theme="outline" Class="@ComputeMarkerClass(isSelected, true)" />
+                                @option.Label
+                            </button>
+                        }
+                    } else {
+                        <p tabindex="0" class="@CLASS_SELECT_EMPTY_TEXT">-- @I18N.T("No data") --</p>
+                    }
+                </div>
+            </Content>
+            <Footer>
+                <WebLink
+                    Role="WEBLINK_ROLE.BUTTON"
+                    Size="TEXT_SIZE.M"
+                    NoWrap
+                    OnClick="ClearSelect"
+                    OnEnter="ClearSelect"
+                >
+                    @I18N.T("Clear")
+                </WebLink>
+                <Button
+                    Variant="BUTTON_VARIANT.QUATERNARY"
+                    Size="BUTTON_SIZE.S"
+                    NoShadow
+                    OnClick="ConfirmSelect"
+                >
+                    <Text>@I18N.T("OK")</Text>
+                </Button>
+            </Footer>
+        </Modal>
+    </Fragment>;
+}
+
+@Render()

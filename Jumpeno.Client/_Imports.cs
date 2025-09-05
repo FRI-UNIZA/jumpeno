@@ -29,6 +29,7 @@ global using Jumpeno.Client.Pages;
 global using Jumpeno.Client.Components;
 global using Jumpeno.Client.Services;
 global using Jumpeno.Client.Utils;
+global using Jumpeno.Client.Interfaces;
 global using Jumpeno.Client.Themes;
 
 global using Jumpeno.Shared;

@@ -9,6 +9,9 @@ public partial class ThemeProvider {
     public const string CLASSNAME_NO_THEME = "no-theme";
     public const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
     public static bool THEME_AUTODETECT { get; private set; }
+    // Cascade:
+    public const string CASCADE_APP_THEME = $"{nameof(ThemeProvider)}.{nameof(CASCADE_APP_THEME)}";
+    public const string CASCADE_CHANGE_APP_THEME = $"{nameof(ThemeProvider)}.{nameof(CASCADE_CHANGE_APP_THEME)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -32,7 +35,8 @@ public partial class ThemeProvider {
         return ThemeCSSClass(instance.AppTheme);
     }
     public static string ServerBodyClass() {
-        var c = new CSSClass();
+        var c = new CSSClass("body")
+        .SetSurface(SURFACE.PRIMARY);
         var cookie = GetThemeCookie();
         if (cookie is null) {
             c.Set(ThemeCSSClass(THEME.DEFAULT));
@@ -62,7 +66,7 @@ public partial class ThemeProvider {
                 SetThemeCookie(AppTheme);
             }
         }        
-        ScrollArea.SetTheme(AppTheme.SCROLL_THEME);
+        ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
@@ -99,29 +103,19 @@ public partial class ThemeProvider {
         }
     }
 
-    // Render -----------------------------------------------------------------------------------------------------------------------------
-    public static string RenderThemeVariables(BaseTheme theme) {
-        var output = "";
-        foreach (var property in Reflex.GetMembers(theme)) {
-            output = $"{output}--{@property.Name.ToLower().Replace("_", "-")}: {@property.Value};\n";
-        }
-        return output;
-    }
-
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangeAppTheme(BaseTheme theme) {
         try {
             if (AppEnvironment.IsServer) throw new InvalidOperationException("Changing theme not allowed on the server!");
             if (theme.GetType().Name == AppTheme.GetType().Name) return;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
-            await Task.Delay(AppTheme.TRANSITION_FAST);
             SetThemeCookie(theme);
             AppTheme = theme;
             JS.InvokeVoid(JSThemeProvider.StartSettingTheme);
             JS.InvokeVoid(JSThemeProvider.SetCustomTheme, ThemeCSSClass(AppTheme));
-            ScrollArea.SetTheme(AppTheme.SCROLL_THEME);
+            ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
             StateHasChanged();
-            await Task.Delay(1);
+            await Task.Yield();
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
         } catch {
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);

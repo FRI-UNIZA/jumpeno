@@ -51,7 +51,7 @@ public static class Reflex {
     }
 
     // Getters ----------------------------------------------------------------------------------------------------------------------------
-    public static IEnumerable<(string Name, object Value)> GetMembers(object instance) {
+    public static IEnumerable<(string Name, object? Value, bool IsField, bool IsVirtual)> GetMembers(object instance) {
         // Ensure model is not null
         if (instance == null) yield break;
 
@@ -60,15 +60,16 @@ public static class Reflex {
         // Get all public properties
         var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
         foreach (var property in properties) {
-            var value = property.GetValue(instance) ?? "null";
-            yield return (property.Name, value);
+            var value = property.GetValue(instance);
+            var getMethod = property.GetGetMethod();
+            yield return (property.Name, value, false, getMethod != null && getMethod.IsVirtual && !getMethod.IsFinal);
         }
 
         // Get all public fields
         var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
         foreach (var field in fields) {
-            var value = field.GetValue(instance) ?? "null";
-            yield return (field.Name, value);
+            var value = field.GetValue(instance);
+            yield return (field.Name, value, true, false);
         }
     }
 
@@ -76,5 +77,36 @@ public static class Reflex {
     public static void SetField<T>(Type type, object instance, string name, T value) {
         FieldInfo field = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)!;
         field?.SetValue(instance, value);
+    }
+
+    // Calls ------------------------------------------------------------------------------------------------------------------------------
+    // Static:
+    public static T Invoke<T>(Type type, string method, object?[]? parameters = null) {
+        MethodInfo? mi = type.GetMethod(
+            method,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
+        ) ?? throw new InvalidOperationException("Method not found");
+        return (T)mi.Invoke(null, parameters)!;
+    }
+    public static void InvokeVoid(Type type, string method, object?[]? parameters = null) {
+        Invoke<dynamic>(type, method, parameters);
+    }
+    public static async Task InvokeVoidAsync(Type type, string method, object?[]? parameters = null) {
+        await Invoke<Task>(type, method, parameters);
+    }
+
+    // Instance:
+    public static T Invoke<T>(object obj, string method, object?[]? parameters = null) {
+        MethodInfo? mi = obj.GetType().GetMethod(
+            method,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+        ) ?? throw new InvalidOperationException("Method not found");
+        return (T)mi.Invoke(obj, parameters)!;
+    }
+    public static void InvokeVoid(object obj, string method, object?[]? parameters = null) {
+        Invoke<dynamic>(obj, method, parameters);
+    }
+    public static async Task InvokeVoidAsync(object obj, string method, object?[]? parameters = null) {
+        await Invoke<Task>(obj, method, parameters);
     }
 }

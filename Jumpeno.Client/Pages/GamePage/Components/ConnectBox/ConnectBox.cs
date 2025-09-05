@@ -8,7 +8,7 @@ public partial class ConnectBox {
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<ConnectBox>();
     private readonly InputViewModel<string> VMCode;
-    private async Task SetInputCode(string urlCode) => await VMCode.SetValue(urlCode);
+    private void SetInputCode(string urlCode) => VMCode.SetValue(urlCode);
 
     private readonly InputViewModel<string> VMName;
     private static string LastNameValue = "";
@@ -33,26 +33,27 @@ public partial class ConnectBox {
             MaxLength: UserValidator.NAME_MAX_LENGTH,
             Placeholder: I18N.T("Your name"),
             DefaultValue: "",
-            OnChange: new(value => LastNameValue = value)
+            OnChange: new(e => LastNameValue = e.After)
         ));
     }
 
     private readonly TaskCompletionSource InitTCS = new();
 
-    protected override async Task OnComponentInitializedAsync() {
-        await VMName.SetValue(LastNameValue == "" ? User.GenerateName() : LastNameValue);
+    protected override void OnComponentInitialized() {
+        LastNameValue = LastNameValue == "" ? User.GenerateName() : LastNameValue;
+        VMName.SetValue(LastNameValue);
     }
 
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
         if (!firstTime) return;
         VM.RegisterForm(FORM);
-        await VM.AddURLCodeChangedListener(SetInputCode);
+        await VM.AddURLCodeChangedListener(EventDelegate<string>.Task(SetInputCode));
         InitTCS.TrySetResult();
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
         VM.UnregisterForm(FORM);
-        await VM.RemoveURLCodeChangedListener(SetInputCode);
+        await VM.RemoveURLCodeChangedListener(EventDelegate<string>.Task(SetInputCode));
     }
 
     // Auto-Watch -------------------------------------------------------------------------------------------------------------------------

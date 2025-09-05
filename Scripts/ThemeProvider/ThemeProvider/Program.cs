@@ -6,15 +6,24 @@ using Jumpeno.Shared.Utils;
 
 public class Program {
     // Classes ----------------------------------------------------------------------------------------------------------------------------
-    private const string CLASS_DARK = "DarkTheme";
-    private const string CLASS_LIGHT = "LightTheme";
+    private const string CLASS_BASE = "BaseTheme";
+    private static readonly List<(string CLASS, string CLASSNAME)> THEMES = [
+        ("LightTheme", "light-theme"),
+        ("DarkTheme", "dark-theme")
+    ];
+
+    // Surfaces ---------------------------------------------------------------------------------------------------------------------------
+    private const string SURFACE_SUFFIX = "surface";
+    private const string SURFACE_DIVIDER = "--";
+    private const string SURFACE_PRIMARY = "surface-primary";
+
+    // Variables --------------------------------------------------------------------------------------------------------------------------
+    private const string VARIABLE_PREFIX = "theme";
 
     // CSS --------------------------------------------------------------------------------------------------------------------------------
-    public const string CLASSNAME_NO_THEME = "no-theme";
-    public const string CLASSNAME_DARK_THEME = "dark-theme";
-    public const string CLASSNAME_LIGHT_THEME = "light-theme";
-    public const string CLASSNAME_THEME_UPDATED = "theme-updated";
-    public const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
+    private const string CLASSNAME_NO_THEME = "no-theme";
+    private const string CLASSNAME_THEME_UPDATED = "theme-updated";
+    private const string CLASSNAME_THEME_TRANSITION_CONTAINER = "theme-transition-container";
 
     // Paths ------------------------------------------------------------------------------------------------------------------------------
     private static readonly string ROOT = $"{Directory.GetCurrentDirectory()}/..";
@@ -33,45 +42,125 @@ public class Program {
         MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location),
         MetadataReference.CreateFromFile(Assembly.Load("System.Text.Json").Location)
     ];
-    private static (string Path, string Usings)[] DEPENDENCIES = [
+    private static readonly (string Path, string Usings)[] DEPENDENCIES = [
         ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/SCROLLAREA_THEME.cs", ""),
         ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBAColor.cs", "using System; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Client/Themes/Themes/BaseTheme.cs", USINGS)
     ];
 
-    // Generators -------------------------------------------------------------------------------------------------------------------------
-    private static string GenerateVariables(string className, string bodyClassName) {
-        // 1) Create instance:
-        var type = Reflex.CompileClass(CLASS_DIR, CLASS_NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
-        var instance = Reflex.CreateInstance<object>(type);
-        // 2) Create content:
-        string content = $"body.{bodyClassName} {{";
-        foreach (var property in Reflex.GetMembers(instance)) {
-            content = $"{content}\n    --{@property.Name.ToLower().Replace("_", "-")}: {@property.Value};";
-        }
-        return $"{content}\n}}\n";
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
+    // Property:
+    private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{name.ToLower().Replace("_", "-")}";
+    private static string TransformValue(string className, string name, object value) {
+        return value == null ? throw new ArgumentNullException($"{className}.{name}") : $"{value}";
     }
+    // Surface:
+    private static string? SurfaceName(string name) {
+        var pos = name.LastIndexOf("--");
+        if (pos <= 0) return null;
+        var surfaceName = name.Substring(pos + 2);
+        return surfaceName;
+    }
+    private static string RemoveSurface(string name, string surface) => name.Substring(0, name.Length - $"{SURFACE_DIVIDER}{surface}".Length);
+    private static string AddSurface(string name, string surface) => $"{name}{SURFACE_DIVIDER}{surface}";
+    // CSS:
+    private static string CSSRule(string name, string value) => $"{name}: {value}";
+    private static string AddRule(string rule) => $"\n    {rule};";
 
-    public static string GenerateThemeTransition() {        
+    // Generators -------------------------------------------------------------------------------------------------------------------------
+    private static string GenerateNoTheme() => $"body.{CLASSNAME_NO_THEME} {{ opacity: 0; }}\n";
+
+    private static string GenerateThemeTransition() {        
         string content = "@keyframes fade-in-theme { 0% { opacity: 0; } 100% { opacity: 1; }}\n";
         content = $"{content}.theme-updated .theme-transition-container {{\n";
-        content = $"{content}    animation: fade-in-theme calc(var(--transition-extra-slow) * 1ms) forwards;\n";
+        content = $"{content}    animation: fade-in-theme calc(var(--theme-transition-extra-slow) * 1ms) forwards;\n";
         content = $"{content}}}\n";
         content = $"{content}.setting-theme .theme-transition-container {{\n";
         content = $"{content}    display: none !important;\n";
         content = $"{content}}}\n";
         return content;
     }
+    
+    private static string GenerateConstants(string className) {
+        // 1) Initialization:
+        var type = Reflex.CompileClass(CLASS_DIR, CLASS_NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
+        var instance = Reflex.CreateInstance<object>(type);
+        
+        Dictionary<string, string> constants = new();
+
+        // 2) Divide constants:
+        foreach (var property in Reflex.GetMembers(instance)) {
+            string propertyName = TransformName(property.Name);
+            if (property.IsVirtual) continue;
+            string propertyValue = TransformValue(CLASS_BASE, property.Name, property.Value);
+            constants[propertyName] = propertyValue;
+        }
+
+        // 3) Add constants:
+        string content = "body {";
+        foreach (var c in constants) {
+            content += AddRule(CSSRule(c.Key, c.Value));
+        }
+        content += "\n}\n";
+
+        // 4) Return result:
+        return content;
+    }
+
+    private static string GenerateVariables(string className, string bodyClassName) {
+        // 1) Initialization:
+        var type = Reflex.CompileClass(CLASS_DIR, CLASS_NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
+        var instance = Reflex.CreateInstance<object>(type);
+        Dictionary<string, Dictionary<string, string>> surfaces = new();
+
+        // 2) Divide variables:
+        foreach (var property in Reflex.GetMembers(instance)) {
+            string propertyName = TransformName(property.Name);
+            string propertyValue = TransformValue(className, property.Name, property.Value);
+            // 2.1) Constants:
+            if (!property.IsVirtual) continue;
+            // 2.2) Variables:
+            var surfaceName = SurfaceName(propertyName);
+            if (surfaceName == null) {
+                // 2.2.1) Common variables:
+                if (!surfaces.ContainsKey(SURFACE_PRIMARY)) surfaces[SURFACE_PRIMARY] = new();
+                surfaces[SURFACE_PRIMARY][propertyName] = propertyValue;
+            } else {
+                // 2.2.2) Surface variables:
+                if (!surfaces.ContainsKey(surfaceName)) surfaces[surfaceName] = new();
+                string propertySurfaceName = RemoveSurface(propertyName, surfaceName);
+                surfaces[surfaceName][propertySurfaceName] = propertyValue;
+            }
+        }
+
+        // 3) Add variables:
+        string content = "";
+        foreach (var s in surfaces) {
+            content += $"body.{bodyClassName}.{s.Key},\n";
+            content += $"body.{bodyClassName} .{s.Key} {{";
+            foreach (var v in s.Value) {
+                content += AddRule(CSSRule(v.Key, v.Value));
+            }
+            content += "\n}\n";
+        }
+
+        // 4) Return result:
+        return content;
+    }
 
     // Entry point ------------------------------------------------------------------------------------------------------------------------
     public static void Main(string[] args) {
-        // 1) Create values:
-        var noTheme = $"body.{CLASSNAME_NO_THEME} {{ opacity: 0; }}\n";
-        var themeTransition = GenerateThemeTransition();
-        var darkVars = GenerateVariables(CLASS_DARK, CLASSNAME_DARK_THEME);
-        var lightVars = GenerateVariables(CLASS_LIGHT, CLASSNAME_LIGHT_THEME);
-        // 2) Write to file:
-        File.WriteAllText(CSS_PATH, $"{noTheme}\n{themeTransition}\n{darkVars}\n{lightVars}");
+        // 1) Init constants:
+        string content = 
+            GenerateNoTheme() + "\n" +
+            GenerateThemeTransition() + "\n" +
+            GenerateConstants(THEMES[0].CLASS);
+        // 2) Add themes:
+        foreach (var THEME in THEMES) {
+            content += "\n" + GenerateVariables(THEME.CLASS, THEME.CLASSNAME);
+        }
+        // 3) Write to file:
+        File.WriteAllText(CSS_PATH, content);
     }
 }

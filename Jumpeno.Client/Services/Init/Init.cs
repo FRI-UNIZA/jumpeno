@@ -1,7 +1,16 @@
 namespace Jumpeno.Client.Services;
 
+/// <summary>Actions that run on app start.</summary>
 public static class Init {
-    public static async Task<bool> TryActivate() {
+    /* Initialization ------------------------------------------------------------------------------------------------------------------ */
+    public static async Task Run() {
+        await TryActivate();
+        await TryPasswordReset();
+        await TryAutoWatch();
+    }
+
+    /* Activation ---------------------------------------------------------------------------------------------------------------------- */
+    private static async Task<bool> TryActivate() {
         // 1) Check environment:
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
@@ -29,7 +38,8 @@ public static class Init {
         return true;
     }
 
-    public static async Task<bool> TryPasswordReset() {
+    /* Password reset ------------------------------------------------------------------------------------------------------------------ */
+    private static async Task<bool> TryPasswordReset() {
         // 1) Check environment:
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
@@ -57,7 +67,8 @@ public static class Init {
         return true;
     }
 
-    public static async Task<bool> TryAutoWatch() {
+    /* AutoWatch ----------------------------------------------------------------------------------------------------------------------- */
+    private static async Task<bool> TryAutoWatch() {
         // 1) Check if view is rendered:
         if (Page.Current is not GamePage page) return false;
         if (page.View is not ConnectBox view) return false;

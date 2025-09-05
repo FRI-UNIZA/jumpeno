@@ -1,0 +1,18 @@
+@namespace Jumpeno.Client.Components
+
+@{ #pragma warning disable CS8887 }
+
+@inherits BasicComponent
+
+<div id="@ImagePreloader.ID" aria-hidden="true" style="@Style">
+    <style>
+        @RenderStyles()
+    </style>
+    @foreach (var image in ImagePreloader.List) {
+        ElementReference reference;
+        <img
+            @ref="reference" src="@image.URL" alt="" loading="eager" aria-hidden="true" style="display: none;"
+            onload="@(() => ImageReferrer.Set(image.URL, () => reference))"
+        />
+    }
+</div>

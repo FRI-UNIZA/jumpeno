@@ -1,80 +1,94 @@
-.modal-profile {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.profile-modal {
+    /* Size: */
+    --modal-min-width: 460px;
+    --modal-max-width: 1200px;
+    /* Base: */
+    --modal-profile-base-size: 1px;
+}
+
+::deep.modal.profile-modal .profile-content {
+    /* Display: */
     display: flex;
-    min-width: 100%;
-    max-width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 20px;
+    /* Size: */
+    min-width: 100%;
+    max-width: 100%;
     padding: 30px 0 54px;
 }
 
-.user-profile-image-wrap {
+::deep.modal.profile-modal .profile-content .user-profile-image-wrap {
+    /* Position: */
     position: relative;
+    /* Size: */
     width: 112px;
     height: 112px;
+    /* Style: */
     border-radius: 100%;
+    background-color: var(--theme-modal-profile-avatar-background);
+    border: 6px solid var(--theme-modal-profile-avatar-border-color);
+    box-shadow: var(--theme-modal-profile-avatar-box-shadow);
+    /* Content: */
     overflow: hidden;
-    border: 6px solid rgb(var(--color-base-invert));
-    box-shadow: 0 1px 8px 1px rgba(var(--color-base), 0.7);
-    background-color: rgba(var(--color-profile-background));
+    /* Base: */
+    font-size: var(--modal-profile-base-size);
 }
 
-::deep .user-profile-image {
+::deep.modal.profile-modal .profile-content .image.user-profile-image {
+    /* Size: */
     --image-width: 100px;
     --image-height: 100px;
+    /* Transform: */
     transform: scale(4) translate(37.2%, 36.8%);
+    /* Actions: */
     pointer-events: none;
 }
 
-::deep .text.profile-name {
-    --text-align: center;
+::deep.modal.profile-modal .profile-content .heading.profile-name {
+    /* Content: */
+    text-align: center;
 }
 
-::deep .text.profile-email {
-    --text-align: center;
+::deep.modal.profile-modal .profile-content .paragraph.profile-email {
+    /* Size: */
     margin-top: -10px;
+    /* Content: */
+    text-align: center;
 }
 
-::deep .text.profile-activated {
-    --text-align: center;
+::deep.modal.profile-modal .profile-content .paragraph.profile-activated {
+    /* Content: */
+    text-align: center;
 }
-::deep .user-activated-icon, ::deep .user-not-activated-icon {
+::deep.modal.profile-modal .profile-content .user-activated-icon,
+::deep.modal.profile-modal .profile-content .user-not-activated-icon {
+    /* Position: */
     position: relative;
-    font-size: 22px;
-    margin: 0 5px 0 -8px;
     bottom: -2px;
+    /* Size: */
+    margin: 0 5px 0 -8px;
+    /* Content: */
+    font-size: 22px;
 }
-::deep .user-activated-icon {
-    color: rgb(var(--color-success));
+::deep.modal.profile-modal .profile-content .user-activated-icon {
+    /* Style: */
+    color: var(--theme-status-success-accent-color);
 }
-::deep .user-not-activated-icon {
-    color: rgb(var(--color-base-error));
+::deep.modal.profile-modal .profile-content .user-not-activated-icon {
+    /* Style: */
+    color: var(--theme-status-danger-accent-color);
 }
-.activated-box {
+::deep.modal.profile-modal .profile-content .activated-box {
+    /* Display: */
     display: flex;
-    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    padding-top: 12px;
-}
-
-/* Error ------------------------------------------------------------------------------------------------------------------------------- */
-.modal-error-content {
-    position: relative;
+    /* Size: */
     width: 100%;
-    min-height: 120px;
-    height: 40dvh;
-    max-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
-::deep .modal-error-text {
-    --text-align: center;
+    padding-top: 12px;
 }

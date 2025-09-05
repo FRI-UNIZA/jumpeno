@@ -1,5 +1,6 @@
 class JSModal {
     static #CLASSNAME_DIALOG = "modal-dialog"
+    static #CLASSNAME_BACKDROP = "modal-backdrop"
 
     static Init() {
         window.addEventListener("keydown", async e => {
@@ -29,18 +30,18 @@ class JSModal {
         })
     }
 
-    static async #OnClose(id, dialog, listener) {
-        dialog.removeEventListener("animationend", listener)
+    static async #OnClose(id, element, listener) {
+        element.removeEventListener("animationend", listener)
         await DotNet.invokeMethodAsync(DOTNET.NAMESPACE.CLIENT, DOTNET.MODAL_PROVIDER.MODAL_CLOSED, id)
     }
 
-    static Deactivate(id) {
+    static Deactivate(id, loading = false) {
         const modal = document.getElementById(id)
         if (!modal) return
-        const dialog = modal.querySelector(`.${this.#CLASSNAME_DIALOG}`)
-        if (!dialog) return
-        const listener = async () => await this.#OnClose(id, dialog, listener)
-        dialog.addEventListener("animationend", listener)
+        const element = modal.querySelector(loading ? `.${this.#CLASSNAME_BACKDROP}` : `.${this.#CLASSNAME_DIALOG}`)
+        if (!element) return
+        const listener = async () => await this.#OnClose(id, element, listener)
+        element.addEventListener("animationend", listener)
     }
 
     static AdaptCloseFocus(modalID, closeID) {

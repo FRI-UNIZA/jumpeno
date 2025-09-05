@@ -1,23 +1,28 @@
-.info-box {
-    /* NOTE: Use flex to show */
-    display: none;
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.info-box {
+    /* Display: */
+    display: none; /* NOTE: Use flex to show */
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: calc(var(--size-container-padding-mobile) * 1px);
+    /* Size: */
+    padding: calc(var(--theme-size-container-padding-mobile) * 1px);
 }
 
-::deep .info-icon svg {
+::deep.info-box .info-icon svg {
+    /* Size: */
     min-width: 60px;
     min-height: 60px;
     width: min(30vw, 30vh);
     height: min(30vw, 30vh);
 }
 
-.info-text {
-    font-size: max(16px, min(6vw, 6vh));
-    font-weight: 500;
+::deep.info-box .info-text {
+    /* Size: */
     padding-top: max(10px, min(2vw, 2vh));
     margin: 0;
+    /* Content: */
+    font-size: max(16px, min(6vw, 6vh));
+    font-weight: 500;
     text-align: center;
 }

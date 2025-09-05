@@ -74,6 +74,7 @@ public static class CookieStorage {
         return false;
     }
 
+    // Accepted ---------------------------------------------------------------------------------------------------------------------------
     private static bool IsAcceptedBy(Enum key, List<Type> accepted) {
         return accepted.Contains(key.GetType());
     }
@@ -95,13 +96,7 @@ public static class CookieStorage {
         return AreAcceptedBy(keys, accepted);
     }
 
-    // Cookie consent ---------------------------------------------------------------------------------------------------------------------
-    public static bool CookiesAccepted => GetAcceptedCookies().Count > 0;
-    
-    public static async Task OpenModal() {
-        await OpenConsentModal(false);
-    }
-
+    // Cookie consent ---------------------------------------------------------------------------------------------------------------------    
     public static async Task<bool> InitModal() {
         var accepted = GetAcceptedCookies();
         if (accepted.Count > 0) {
@@ -112,6 +107,10 @@ public static class CookieStorage {
             return true;
         }
     }
+    
+    public static async Task OpenModal() => await OpenConsentModal(false);
+
+    public static bool CookiesAccepted => GetAcceptedCookies().Count > 0;
 
     public static void AcceptCookieConsent(List<Type> accept) {
         List<Type> acceptedCookies = [];
@@ -127,7 +126,7 @@ public static class CookieStorage {
                 var name = cookie.ToString() ?? "";
                 COOKIE.DOMAIN.TryGetValue(name, out var domain);
                 COOKIE.PATH.TryGetValue(name, out var path);
-                DeleteCookie((Enum) cookie, domain, path);
+                DeleteCookie((Enum)cookie, domain, path);
             }
         }
     }

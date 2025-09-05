@@ -1,0 +1,13 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown-option-text {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: block;
+    /* Size: */
+    max-width: 100%;
+    /* Content: */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,15 @@
+::deep#project-image-preloader {
+    /* Position: */
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    /* Size: */
+    width: 100px;
+    height: 100px;
+    /* Style: */
+    opacity: 0;
+    /* Content: */
+    overflow: hidden;
+    /* Actions: */
+    pointer-events: none;
+}

@@ -1,9 +1,12 @@
-.app-web-document {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.app-web-document {
+    /* Position: */
     position: absolute;
     top: 0;
     left: 0;
+    z-index: -1;
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    z-index: -1;
 }

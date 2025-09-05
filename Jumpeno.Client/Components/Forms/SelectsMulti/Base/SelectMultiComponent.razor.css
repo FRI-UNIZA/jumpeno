@@ -1,0 +1,451 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.select-multi .select-multi-input {
+    /* Display: */
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    /* Style: */
+    border-radius: var(--field-border-radius);
+    outline: none;
+    /* Content: */
+    overflow: hidden;
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.select-multi .select-multi-input-empty {
+    /* Size: */
+    width: 0;
+    /* Content: */
+    font-size: var(--select-font-size);
+}
+
+::deep.field.select-multi .select-multi-input-text {
+    /* Size: */
+    max-width: 100%;
+    /* Content: */
+    font-size: var(--select-font-size);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+::deep.field.select-multi .select-multi-input-icon svg {
+    /* Size: */
+    width: var(--select-icon-size);
+    height: var(--select-icon-size);
+}
+
+::deep.field.select-multi .select-multi-input-indicators {
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+::deep.field.select-multi .select-multi-input-count {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    /* Content: */
+    font-size: var(--select-count-font-size);
+    white-space: nowrap;
+}
+
+/* Search ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.select-multi-options-modal .field.input.input-search.select-multi-input-search {
+    /* Position: */
+    z-index: 2;
+    /* Size: */
+    width: 200px;
+    min-width: 100%;
+    /* Style: */
+    --field-border-radius: 0;
+}
+
+::deep.modal.select-multi-options-modal .field.input.input-search.variant.size.select-multi-input-search .input-element {
+    /* Style: */
+    border-width: 1px 0;
+}
+
+/* Options ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-multi-options-modal {
+    /* Variables: */
+    --modal-padding-content: 0;
+    --option-font-size: 14px;
+    --option-padding-horizontal: calc(0.87 * var(--option-font-size));
+    --option-padding-vertical: 14px;
+    --option-marker-size: calc(1.25 * var(--option-font-size));
+    --option-marker-padding: calc(2 * var(--option-padding-horizontal) + var(--option-marker-size));
+}
+
+::deep.modal.select-multi-options-modal .select-multi-options {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.modal.select-multi-options-modal .select-multi-option {
+    /* Position: */
+    position: relative;
+    /* Size: */
+    width: 100%;
+    padding: var(--option-padding-vertical) var(--option-padding-horizontal);
+    /* Style: */
+    color: var(--theme-select-option-color);
+    background: transparent;
+    border: none;
+    outline: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: var(--option-font-size);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    /* Actions: */
+    cursor: pointer;
+    background: var(--theme-select-option-background);
+    /* Animations: */
+    transition-property: color, background;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.modal.select-multi-options-modal .select-multi-option:not(:last-child) {
+    /* Style: */
+    border-bottom: 1px solid var(--theme-select-option-divider-color);
+}
+
+::deep.modal.select-multi-options-modal .select-multi-option-marker {
+    /* Position: */
+    position: absolute;
+    top: 50%;
+    /* Display: */
+    display: inline-block;
+    /* Style: */
+    opacity: 0;
+    /* Transform: */
+    transform: translateY(-50%);
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-fast) * 1ms) ease;
+}
+::deep.modal.select-multi-options-modal .select-multi-option-marker svg {
+    /* Size: */
+    width: var(--option-marker-size);
+    height: var(--option-marker-size);
+}
+::deep.modal.select-multi-options-modal .select-multi-option-marker.select-multi-option-marker-displayed {
+    /* Style: */
+    opacity: 1;
+}
+
+::deep.modal.select-multi-options-modal .modal-footer {
+    /* Display: */
+    justify-content: space-between;
+    gap: 10px;
+}
+
+@media (min-width: 768px) {
+    /* Media > Options ----------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.select-multi-options-modal {
+        --option-font-size: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Options ----------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.select-multi-options-modal {
+        --option-font-size: 16px;
+    }
+}
+
+/* Options [highlight] ----------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-multi-options-modal .select-multi-option:not(.select-multi-option-selected):hover,
+::deep.modal.select-multi-options-modal .select-multi-option:not(.select-multi-option-selected):focus-visible {
+    color: var(--theme-select-option-highlight-color);
+    background: var(--theme-select-option-highlight-background);
+}
+
+/* Options [selected] ------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.select-multi-options-modal .select-multi-option.select-multi-option-selected {
+    color: var(--theme-select-option-active-color);
+    background: var(--theme-select-option-active-background);
+}
+
+/* Options [selected][highlight] ------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-multi-options-modal .select-multi-option.select-multi-option-selected:hover,
+::deep.modal.select-multi-options-modal .select-multi-option.select-multi-option-selected:focus-visible {
+    color: var(--theme-select-option-active-highlight-color);
+    background: var(--theme-select-option-active-highlight-background);
+}
+
+/* Options [empty] --------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-multi-options-modal .select-multi-empty-text {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: block;
+    /* Size: */
+    width: 100%;
+    padding: 20px var(--option-padding-horizontal);
+    margin: 0;
+    /* Style: */
+    color: var(--theme-text-color);
+    border: none;
+    outline: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: var(--option-font-size);
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Options [empty][focus] -------------------------------------------------------------------------------------------------------------- */
+::deep.modal.select-multi-options-modal .select-multi-empty-text:focus-visible {
+    /* Style: */
+    color: var(--theme-text-highlight-color);
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.align-left .select-multi-input { justify-content: space-between; }
+
+::deep.field.select-multi.align-center .select-multi-input { justify-content: center; }
+
+::deep.field.select-multi.align-right .select-multi-input { justify-content: flex-end; }
+
+/* OptionAlign ------------------------------------------------------------------------------------------------------------------------- */
+::deep.select-multi-options-modal.select-option-align-left .select-multi-option {
+    /* Size: */
+    padding-left: var(--option-marker-padding);
+    /* Content: */
+    text-align: left;
+}
+::deep.select-multi-options-modal.select-option-align-left .select-multi-option .select-multi-option-marker {
+    /* Position: */
+    left: var(--option-padding-horizontal);
+    right: auto;
+}
+
+::deep.select-multi-options-modal.select-option-align-center .select-multi-option {
+    /* Size: */
+    padding-left: var(--option-marker-padding);
+    padding-right: var(--option-marker-padding);
+    /* Content: */
+    text-align: center;
+}
+::deep.select-multi-options-modal.select-option-align-center .select-multi-option .select-multi-option-marker {
+    /* Position: */
+    left: var(--option-padding-horizontal);
+    right: auto;
+}
+
+::deep.select-multi-options-modal.select-option-align-right .select-multi-option {
+    /* Size: */
+    padding-right: var(--option-marker-padding);
+    /* Content: */
+    text-align: right;
+}
+::deep.select-multi-options-modal.select-option-align-right .select-multi-option .select-multi-option-marker {
+    /* Position: */
+    left: auto;
+    right: var(--option-padding-horizontal);
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.variant-primary .select-multi-input {
+    /* Style: */
+    color: var(--theme-form-primary-color);
+    background: var(--theme-form-primary-background);
+    border-color: var(--theme-form-primary-border-color);
+    text-shadow: var(--theme-form-primary-text-shadow);
+    box-shadow: var(--theme-form-primary-box-shadow);
+    border-width: 1px;
+    border-style: solid;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Animations: */
+    transition-property: color, background, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: pointer;
+}
+
+::deep.field.select-multi.variant-primary .select-multi-input-text.select-multi-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-placeholder-color);
+    /* Animations: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.field.select-multi.variant-primary .select-multi-input-count {
+    /* Size: */
+    padding: calc(0.36 * var(--select-count-font-size))
+             calc(0.57 * var(--select-count-font-size))
+             calc(0.36 * var(--select-count-font-size))
+             calc(0.29 * var(--select-count-font-size));
+    /* Style: */
+    color: var(--theme-select-multi-primary-count-color);
+    background: var(--theme-select-multi-primary-count-background);
+    text-shadow: var(--theme-select-multi-primary-count-text-shadow);
+    box-shadow: var(--theme-select-multi-primary-count-box-shadow);
+    border-radius: 100px;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    letter-spacing: normal;
+}
+
+::deep.field.select-multi.variant-primary .select-multi-input-plus {
+    /* Style: */
+    color: var(--theme-select-multi-primary-count-plus-color);
+    text-shadow: var(--theme-select-multi-primary-count-plus-text-shadow);
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    letter-spacing: normal;
+}
+
+/* Variant [primary][highlight] -------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi:not(.disabled):has(:hover) .select-multi-input,
+::deep.field.select-multi:not(.disabled):has(:focus-visible) .select-multi-input {
+    /* Style: */
+    color: var(--theme-form-primary-highlight-color);
+    background: var(--theme-form-primary-highlight-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    text-shadow: var(--theme-form-primary-highlight-text-shadow);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.select-multi:not(.disabled):has(:hover) .select-multi-input-text.select-multi-input-placeholder,
+::deep.field.select-multi:not(.disabled):has(:focus-visible) .select-multi-input-text.select-multi-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-highlight-placeholder-color);
+}
+
+/* Variant [primary][disabled] --------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.variant-primary.disabled .select-multi-input {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-color);
+    background: var(--theme-form-primary-disabled-background);
+    border-color: var(--theme-form-primary-disabled-border-color);
+    text-shadow: var(--theme-form-primary-disabled-text-shadow);
+    box-shadow: var(--theme-form-primary-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+::deep.field.select-multi.variant-primary.disabled .select-multi-input-text.select-multi-input-placeholder {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-placeholder-color);
+}
+
+::deep.field.select-multi.variant-primary.disabled .select-multi-input-count {
+    /* Style: */
+    color: var(--theme-select-multi-primary-disabled-count-color);
+    background: var(--theme-select-multi-primary-disabled-count-background);
+    text-shadow: var(--theme-select-multi-primary-disabled-count-text-shadow);
+    box-shadow: var(--theme-select-multi-primary-disabled-count-box-shadow);
+}
+
+::deep.field.select-multi.variant-primary.disabled .select-multi-input-plus {
+    /* Style: */
+    color: var(--theme-select-multi-primary-disabled-count-plus-color);
+    text-shadow: var(--theme-select-multi-primary-disabled-count-plus-text-shadow);
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.variant-primary.size-s {
+    /* Variables: */
+    --select-font-size: 16px;
+    --select-icon-size: 16px;
+    --select-count-font-size: 14px;
+}
+::deep.field.select-multi.variant-primary.size-s .select-multi-input {
+    /* Size: */
+    padding: 10px;
+}
+::deep.field.select-multi.variant-primary.size-s .select-multi-input-text {
+    /* Size: */
+    margin-right: 4px;
+}
+::deep.field.select-multi.variant-primary.size-s .select-multi-input-indicators {
+    /* Display: */
+    gap: 4px;
+}
+::deep.field.select-multi.variant-primary.size-s .select-multi-input-plus {
+    /* Content: */
+    font-size: 14px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.variant-primary.size-m {
+    /* Variables: */
+    --select-font-size: 18px;
+    --select-icon-size: 18px;
+    --select-count-font-size: 16px;
+}
+::deep.field.select-multi.variant-primary.size-m .select-multi-input {
+    /* Size: */
+    padding: 18px;
+}
+::deep.field.select-multi.variant-primary.size-m .select-multi-input-text {
+    /* Size: */
+    margin-right: 5px;
+}
+::deep.field.select-multi.variant-primary.size-m .select-multi-input-indicators {
+    /* Display: */
+    gap: 5px;
+}
+::deep.field.select-multi.variant-primary.size-m .select-multi-input-plus {
+    /* Content: */
+    font-size: 16px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.select-multi.variant-primary.size-l {
+    /* Variables: */
+    --select-font-size: 24px;
+    --select-icon-size: 24px;
+    --select-count-font-size: 20px;
+}
+::deep.field.select-multi.variant-primary.size-l .select-multi-input {
+    /* Size: */
+    padding: 26px;
+}
+::deep.field.select-multi.variant-primary.size-l .select-multi-input-text {
+    /* Size: */
+    margin-right: 6px;
+}
+::deep.field.select-multi.variant-primary.size-l .select-multi-input-indicators {
+    /* Display: */
+    gap: 6px;
+}
+::deep.field.select-multi.variant-primary.size-l .select-multi-input-plus {
+    /* Content: */
+    font-size: 20px;
+}

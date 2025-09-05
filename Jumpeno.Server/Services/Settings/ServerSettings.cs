@@ -62,7 +62,7 @@ public static class ServerSettings {
         }
     }
 
-    // Initializer ------------------------------------------------------------------------------------------------------------------------
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config) {
         Port = config.GetValue<int>("Port");
         AllowedHosts = config.GetValue<string>("AllowedHosts")!;

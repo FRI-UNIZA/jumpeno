@@ -1,0 +1,255 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.switch .switch-element {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    flex-shrink: 0;
+    order: 2;
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.switch .switch-element::before {
+    /* Position: */
+    position: absolute;
+    /* Content: */
+    content: "";
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.switch .switch-element::after {
+    /* Position: */
+    position: absolute;
+    /* Display: */
+    display: inline-block;
+    /* Content: */
+    content: "";
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.switch .switch-description {
+    /* Display: */
+    display: inline-block;
+    flex-shrink: 1;
+    /* Size: */
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    /* Content: */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Actions: */
+    cursor: text;
+}
+
+/* Active Description ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.switch.active-description .switch-description { cursor: var(--switch-cursor); }
+
+/* Position ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.position-start .switch-description { order: 3; }
+
+::deep.field.switch.position-end .switch-description { order: 1; }
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.align-left .field-content { justify-content: flex-start; }
+
+::deep.field.switch.align-center .field-content { justify-content: center; }
+
+::deep.field.switch.align-right .field-content { justify-content: flex-end; }
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary {
+    /* Size: */
+    --switch-padding: 2px;
+    /* Style: */
+    --switch-outline-width: 2px;
+    /* Actions: */
+    --switch-cursor: pointer;
+}
+
+::deep.field.switch.variant-primary .switch-element {
+    /* Size: */
+    width: var(--switch-element-width);
+    height: var(--switch-element-height);
+    /* Style: */
+    background: var(--theme-switch-primary-background);
+    border: none;
+    border-radius: var(--switch-radius);
+    outline: none;
+    box-shadow: none;
+    /* Animations: */
+    transition-property: background;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease-in-out;
+    /* Actions: */
+    cursor: var(--switch-cursor);
+}
+
+::deep.field.switch.variant-primary .switch-element::before {
+    /* Position: */
+    left: calc(-1 * var(--switch-outline-width));
+    top: calc(-1 * var(--switch-outline-width));
+    /* Size: */
+    width: calc(100% + 2 * var(--switch-outline-width));
+    height: calc(100% + 2 * var(--switch-outline-width));
+    /* Style: */
+    background: transparent;
+    border-style: solid;
+    border-width: var(--switch-outline-width);
+    border-color: transparent;
+    border-radius: calc(var(--switch-radius) + var(--switch-outline-width));
+    box-shadow: none;
+    /* Animations: */
+    transition-property: border-color, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.field.switch.variant-primary .switch-element::after {
+    /* Position: */
+    left: var(--switch-padding);
+    top: var(--switch-padding);
+    /* Size: */
+    width: var(--switch-bullet-width);
+    height: var(--switch-bullet-height);
+    /* Style: */
+    background: var(--theme-switch-primary-bullet-background);
+    border-radius: var(--switch-bullet-radius);
+    /* Animations: */
+    transition-property: transform;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease-in-out;
+}
+
+::deep.field.switch.variant-primary .switch-description {
+    /* Style: */
+    color: var(--theme-form-primary-description-color);
+    border: none;
+    outline: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Animations: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+/* Variant [primary][checked] ---------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary.checked .switch-element {
+    background: var(--theme-switch-primary-checked-background);
+}
+
+::deep.field.switch.variant-primary.checked .switch-element::after {
+    transform: translateX(calc(var(--switch-element-width) - var(--switch-bullet-width) - 2 * var(--switch-padding)));
+}
+
+/* Variant [primary][focus] ------------------------------------------------------------------------------------------------------------ */
+::deep.field.switch.variant-primary:not(.disabled) > .field-content:has(:focus-visible) .switch-element::before {
+    border-color: var(--theme-switch-primary-focus-outline-color);
+    box-shadow: var(--theme-switch-primary-focus-outline-shadow);
+}
+
+/* Variant [primary][disabled] --------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary.disabled {
+    /* Actions: */
+    --switch-cursor: not-allowed;
+}
+
+::deep.field.switch.variant-primary.disabled .switch-element {
+    /* Style: */
+    background: var(--theme-switch-primary-disabled-background);
+}
+
+::deep.field.switch.variant-primary.disabled .switch-element::after {
+    /* Style: */
+    background: var(--theme-switch-primary-disabled-bullet-background);
+}
+
+::deep.field.switch.variant-primary.disabled .switch-description {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-description-color);
+}
+
+/* Variant [primary][disabled][checked] ------------------------------------------------------------------------------------------------ */
+::deep.field.switch.variant-primary.disabled.checked .switch-element {
+    /* Style: */
+    background: var(--theme-switch-primary-disabled-checked-background);
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary.size-s {
+    /* Size: */
+    --switch-element-width: 30px;
+    --switch-element-height: 16px;
+    --switch-radius: 8px;
+    /* Bullet: */
+    --switch-bullet-width: 12px;
+    --switch-bullet-height: 12px;
+    --switch-bullet-radius: 100%;
+}
+
+::deep.field.switch.variant-primary.size-s .field-content {
+    /* Display: */
+    gap: 7px;
+}
+
+::deep.field.switch.variant-primary.size-s .switch-description {
+    /* Content: */
+    font-size: 12px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary.size-m {
+    /* Size: */
+    --switch-element-width: 44px;
+    --switch-element-height: 22px;
+    --switch-radius: 11px;
+    /* Bullet: */
+    --switch-bullet-width: 18px;
+    --switch-bullet-height: 18px;
+    --switch-bullet-radius: 100%;
+}
+
+::deep.field.switch.variant-primary.size-m .field-content {
+    /* Display: */
+    gap: 9px;
+}
+
+::deep.field.switch.variant-primary.size-m .switch-description {
+    /* Content: */
+    font-size: 14px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.switch.variant-primary.size-l {
+    /* Size: */
+    --switch-element-width: 54px;
+    --switch-element-height: 26px;
+    --switch-radius: 13px;
+    /* Bullet: */
+    --switch-bullet-width: 22px;
+    --switch-bullet-height: 22px;
+    --switch-bullet-radius: 100%;
+}
+
+::deep.field.switch.variant-primary.size-l .field-content {
+    /* Display: */
+    gap: 11px;
+}
+
+::deep.field.switch.variant-primary.size-l .switch-description {
+    /* Content: */
+    font-size: 16px;
+}

@@ -1,68 +1,61 @@
 /* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
-@keyframes fade-in {
+@keyframes nav-menu-mobile-fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
-@keyframes fade-out {
+@keyframes nav-menu-mobile-fade-out {
     0% { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(1.3); }
 }
 
-/* State ------------------------------------------------------------------------------------------------------------------------------- */
-.closed {
-    display: none;
-    animation: none;
-}
-.opening {
-    display: flex;
-    animation: fade-in calc(var(--transition-fast) * 1ms) forwards;
-}
-.opened {
-    display: flex;
-    animation: none;
-}
-.closing {
-    display: flex;
-    animation: fade-out calc(var(--transition-normal) * 1ms) forwards;
-}
-
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.nav-menu-mobile {
+::deep.nav-menu-mobile {
+    /* Position: */
     position: fixed;
     top: 0;
     left: 0;
+    z-index: var(--theme-z-index-menu);
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    z-index: var(--z-index-menu);
 }
 
-.nav-menu-mobile-init,
-.nav-menu-mobile-start,
-.nav-menu-mobile-end {
+::deep.nav-menu-mobile .nav-menu-mobile-init,
+::deep.nav-menu-mobile .nav-menu-mobile-start,
+::deep.nav-menu-mobile .nav-menu-mobile-end {
+    /* Position: */
     position: fixed;
-    pointer-events: none;
+    /* Size: */
     width: 0;
     height: 0;
+    /* Actions: */
+    pointer-events: none;
 }
 
-::deep .scroll-area-nav-menu {
+::deep.nav-menu-mobile .scroll-area-nav-menu {
+    /* Position: */
     position: relative;
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background: rgb(var(--color-secondary-surface));
+    /* Style: */
+    background: var(--theme-surface-background);
 }
 
-::deep .nav-menu-mobile-container {
+::deep.nav-menu-mobile .nav-menu-mobile-container {
+    /* Position: */
     position: relative;
+    top: 0;
+    left: 0;
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
-    top: 0;
-    left: 0;
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
@@ -71,42 +64,79 @@
     padding-bottom: 60px;
 }
 
-::deep .menu-controls.mobile {
+::deep.nav-menu-mobile .menu-controls.mobile {
+    /* Display: */
     display: flex;
     flex-direction: column;
-    width: 100%;
     align-items: center;
     gap: 26px;
+    /* Size: */
+    width: 100%;
     margin-top: 34px;
 }
 
-::deep .menu-controls.mobile .surface-all {
-    --button-width: 100%;
+::deep.nav-menu-mobile .menu-controls.mobile .button-component.menu-button {
+    /* Size: */
+    width: 100%;
 }
 
-::deep .menu-controls.mobile .menu-links {
+::deep.nav-menu-mobile .menu-controls.mobile .menu-links {
+    /* Display: */
     display: flex;
     flex-direction: column;
+    gap: 14px;
+    /* Size: */
     width: 100%;
     max-width: 400px;
-    gap: 14px;
 }
 
-::deep .menu-controls.mobile .settings-container {
+::deep.nav-menu-mobile .menu-controls.mobile .settings-container {
+    /* Display: */
     display: flex;
-    width: 100%;
-    max-width: 400px;
     justify-content: center;
     align-items: center;
     gap: 40px;
+    /* Size: */
+    width: 100%;
+    max-width: 400px;
     margin-top: 24px;
 }
 
-::deep .menu-controls.mobile .settings-area {
+::deep.nav-menu-mobile .menu-controls.mobile .settings-area {
+    /* Display: */
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
-    margin-top: -1px;
     gap: 40px;
+    /* Size: */
+    margin-top: -1px;
+}
+
+/* State ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.nav-menu-mobile.closed {
+    /* Display: */
+    display: none;
+    /* Animations: */
+    animation: none;
+}
+
+::deep.nav-menu-mobile.opening {
+    /* Display: */
+    display: flex;
+    /* Animations: */
+    animation: nav-menu-mobile-fade-in calc(var(--theme-transition-fast) * 1ms) forwards;
+}
+
+::deep.nav-menu-mobile.opened {
+    /* Display: */
+    display: flex;
+    /* Animations: */
+    animation: none;
+}
+
+::deep.nav-menu-mobile.closing {
+    /* Display: */
+    display: flex;
+    /* Animations: */
+    animation: nav-menu-mobile-fade-out calc(var(--theme-transition-normal) * 1ms) forwards;
 }

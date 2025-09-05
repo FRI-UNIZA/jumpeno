@@ -1,0 +1,35 @@
+@namespace Jumpeno.Client.Pages
+
+@inherits Page
+@attribute [Route(DesignerPage.ROUTE_EN)]
+@attribute [Route(DesignerPage.ROUTE_SK)]
+
+@code {
+    private RenderFragment Render(DesignerSurface surface) => @<Fragment>
+        <Container Class="@ClassSurface(surface.Surface)">
+            <Heading2 Size="TEXT_SIZE.S" Spacing Class="@CLASS_HEADING">@surface.Surface</Heading2>
+            <div class="@CLASS_CONTAINER">
+                <PlayGround />
+            </div>
+            @foreach (var child in surface.Iterator) {
+                @Render(child)
+            }
+        </Container>
+    </Fragment>;
+
+    private RenderFragment Render() => @<Fragment>
+        @foreach (var surface in Surfaces) {
+            @Render(surface)
+        }
+    </Fragment>;
+}
+
+@if (AppEnvironment.IsDevelopment) {
+    <DocTitle Value="@I18N.T("Designer")" />
+    <div class="@CLASS_PAGE">
+        <Heading1 Spacing Class="@CLASS_HEADING_MAIN">@nameof(SURFACE)</Heading1>
+        @Render()
+    </div>
+} else {
+    <Error404Page />
+}

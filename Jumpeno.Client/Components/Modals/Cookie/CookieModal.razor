@@ -6,53 +6,39 @@
     @ref="@ModalRef"
     Unclosable="@Unclosable"
     Label="@I18N.T("Cookie settings")"
-    MinWidth="600px"
-    MaxWidth="600px"
+    Class="@CLASS"
 >
     <Content>
         <div class="consent-container">
-            <Collapse>
+            <Collapse Surface="COLLAPSE_SURFACE.FLOATING_COLLAPSE">
                 <CollapseItem Label="@I18N.T("Mandatory cookies")">
                     <Title>
-                        <CollapseTitle>
-                            <div class="@COOKIE_TITLE_ID">
-                                @I18N.T("Mandatory cookies")
-                                <Switch Label="@I18N.T("Allow mandatory cookies")" DefaultValue="true" Disabled StopPropagation />
-                            </div>
-                        </CollapseTitle>
+                        <div class="@CLASS_COOKIE_TITLE">
+                            @I18N.T("Mandatory cookies")
+                            <SwitchField ViewModel="SwitchMandatoryVM" Label="@I18N.T("Allow mandatory cookies")" AutoSize NoError Disabled />
+                        </div>
                     </Title>
                     <Content>
-                        <CollapseContent>
-                            @I18N.T("Mandatory cookies text")
-                        </CollapseContent>
+                        @I18N.T("Mandatory cookies text")
                     </Content>
                 </CollapseItem>
                 <CollapseItem Label="@I18N.T("Functional cookies")">
                     <Title>
-                        <CollapseTitle>
-                            <div class="@COOKIE_TITLE_ID">
-                                @I18N.T("Functional cookies")
-                                <Switch
-                                    Label="@I18N.T("Allow functional cookies")"
-                                    DefaultValue="@IsSelected(typeof(COOKIE_FUNCTIONAL))"
-                                    OnChange="@((value) => { UpdateSelection(typeof(COOKIE_FUNCTIONAL), value); })"
-                                    StopPropagation
-                                />
-                            </div>
-                        </CollapseTitle>
+                        <div class="@CLASS_COOKIE_TITLE">
+                            @I18N.T("Functional cookies")
+                            <SwitchField ViewModel="SwitchFunctionalVM" Label="@I18N.T("Allow functional cookies")" AutoSize NoError />
+                        </div>
                     </Title>
                     <Content>
-                        <CollapseContent>
-                            @I18N.T("Functional cookies text")
-                        </CollapseContent>
+                        @I18N.T("Functional cookies text")
                     </Content>
                 </CollapseItem>
             </Collapse>
             <Paragraph Size="TEXT_SIZE.S" Class="cookie-paragraph">
                 @I18N.T("Cookie message cookie files (Cookie message)")
-                <Link Href="@URL.Link(I18N.T("LINK_COOKIE"))" Target="LINK_TARGET.BLANK" Size="TEXT_SIZE.S" NoWrap Underline>
+                <WebLink Href="@URL.Link(I18N.T("LINK_COOKIE"))" Target="WEBLINK_TARGET.BLANK" Size="TEXT_SIZE.S" NoWrap Underline>
                     @I18N.T("Cookie message cookie files (cookie files)")
-                </Link>
+                </WebLink>
             </Paragraph>
         </div>
     </Content>

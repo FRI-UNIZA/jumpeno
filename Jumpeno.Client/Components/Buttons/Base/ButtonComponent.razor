@@ -1,0 +1,40 @@
+@namespace Jumpeno.Client.Components
+
+@inherits Component
+
+@code {
+    protected RenderFragment Render() => @<Fragment>
+        @if (Params.IsT0) {
+            <button
+                id="@ID"
+                type="@Params.AsT0.Type.StringLower()"
+                @onclick="@(async e => await OnClick.InvokeAsync(new(this, e)))"
+                @attributes="@Attributes"
+                class="@ComputeClass()"
+                disabled="@Disabled"
+            >
+                @RenderChildContent()
+            </button>
+        } else {
+            <WebLink
+                ID="@ID"
+                Href="@Params.AsT1.Href"
+                HrefPrevent="@Params.AsT1.HrefPrevent"
+                Label="@Params.AsT1.Label"
+                Base="false"
+                Variant="null"
+                Size="null"
+                Align="null"
+                OnClick="@(async e => await OnClick.InvokeAsync(new(this, e.Event)))"
+                Target="@Params.AsT1.Target"
+                Match="@Params.AsT1.Match"
+                ActiveClass="@Params.AsT1.ActiveClass"
+                Class="@ComputeClass()"
+                ChildContent="@RenderChildContent()"
+                Disabled="Disabled"
+            />
+        }
+    </Fragment>;
+}
+
+@Render()

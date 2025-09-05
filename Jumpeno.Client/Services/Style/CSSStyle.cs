@@ -19,8 +19,8 @@ public class CSSStyle {
     private readonly Dictionary<string, string> Styles = [];
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public CSSStyle(string? styles) {
-        styles = styles is null ? "" : styles;
+    public CSSStyle(string? styles = null, bool? apply = true) {
+        styles = styles is null || apply != true ? "" : styles;
         var arr = styles.Split(';');
         for (int i = 0; i < arr.Length; i++) {
             var index = arr[i].LastIndexOf(':');
@@ -31,7 +31,6 @@ public class CSSStyle {
             Styles[property] = value;
         }
     }
-    public CSSStyle() : this("") {}
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public string? Get(string property) {
@@ -54,15 +53,19 @@ public class CSSStyle {
         return DoubleValue(value);
     }
 
-    public void Set(string property, string value) {
+    public CSSStyle Set(string property, string? value, bool? apply = true) {
+        if (value == null || apply != true) return this;
         property = property.Trim();
         value = value.Trim();
-        if (property == "" || value == "") return;
+        if (property == "" || value == "") return this;
         Styles[property] = value;
+        return this;
     }
 
-    public bool Remove(string property) {
-        return Styles.Remove(property.Trim());
+    public CSSStyle Remove(string property, bool? apply = true) {
+        if (apply != true) return this;
+        Styles.Remove(property.Trim());
+        return this;
     }
 
     // Operators --------------------------------------------------------------------------------------------------------------------------

@@ -2,18 +2,18 @@
 
 @inherits BasicComponent
 
-<div class="@ComputeClass()" @onfocusin="OnFocusIn" @onfocusout="OnFocusOut">
+<div class="@ComputeClass()" style="@Style" @onfocusin="OnFocusIn" @onfocusout="OnFocusOut">
     <div class="menu-links">
         <MenuButton ID="@(Mobile ? FIRST_LINK_ID_MOBILE : FIRST_LINK_ID)" Params="@(new ButtonLinkParams(
             Href: I18N.Link<HomePage>(),
-            Match: LINK_MATCH.ALL
+            Match: WEBLINK_MATCH.ALL
         ))">
             <Icon><AntIcon Type="home" Theme="outline" Style="top: -1px" /></Icon>
             <Text>@I18N.T("Home")</Text>
         </MenuButton>
         <MenuButton Params="@(new ButtonLinkParams(
             Href: I18N.Link<ManualPage>(),
-            Match: LINK_MATCH.ALL
+            Match: WEBLINK_MATCH.ALL
         ))">
             <Icon><AntIcon Type="question" Theme="outline" /></Icon>
             <Text>@I18N.T("Manual")</Text>
@@ -26,8 +26,8 @@
         </MenuButton>
         <MenuButton Params="@(new ButtonLinkParams(
             Href: I18N.T("LINK_FEEDBACK"),
-            Target: LINK_TARGET.BLANK,
-            Match: LINK_MATCH.ALL
+            Target: WEBLINK_TARGET.BLANK,
+            Match: WEBLINK_MATCH.ALL
         ))">
             <Icon><AntIcon Type="book" Theme="outline" /></Icon>
             <Text>@I18N.T("Feedback")</Text>
@@ -35,7 +35,7 @@
         <AuthViewBlock>
             <MenuButton Params="@(new ButtonLinkParams(
                 Href: I18N.Link<LoginPage>(),
-                Match: LINK_MATCH.ALL
+                Match: WEBLINK_MATCH.ALL
             ))">
                 <Icon><AntIcon Type="login" Theme="outline" /></Icon>
                 <Text>@I18N.T("Log in")</Text>
@@ -44,7 +44,7 @@
         <AuthView>
             <MenuButton Params="@(new ButtonLinkParams(
                 Href: I18N.Link<ChatPage>(),
-                Match: LINK_MATCH.ALL
+                Match: WEBLINK_MATCH.ALL
             ))">
                 <Icon><AntIcon Type="message" Theme="outline" /></Icon>
                 <Text>@I18N.T("Chat")</Text>
@@ -54,8 +54,8 @@
     <div class="settings-container">
         <SelectCulture />
         <div class="settings-area">
-            <ThemeSwitch />
-            <CookieConsentButton />
+            <SwitchTheme />
+            <CookieButton />
         </div>
     </div>
 </div>

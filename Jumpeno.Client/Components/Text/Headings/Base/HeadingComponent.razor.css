@@ -1,0 +1,83 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.heading {
+    --max-lines: unset;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.heading {
+    /* Position: */
+    position: relative;
+    z-index: 0;
+    /* Display: */
+    display: block;
+    display: -webkit-box;
+    /* Size: */
+    width: 100%;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    /* Content: */
+    text-align: left;
+    text-decoration: none;
+    word-break: break-word;
+    -webkit-box-orient: vertical;
+    line-clamp: var(--max-lines);
+    -webkit-line-clamp: var(--max-lines);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* NoWrap ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.heading.no-wrap {
+    display: block;
+}
+
+/* Spacing ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.heading.spacing:not(:first-child) {
+    padding-top: var(--spacing-top);
+}
+
+::deep.heading.spacing:not(:last-child) {
+    margin-bottom: var(--spacing-bottom);
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.heading.variant-primary {
+    /* Style: */
+    color: var(--theme-text-color);
+    background: transparent;
+    text-shadow: none;
+    box-shadow: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Spacing: */
+    --spacing-top: 0.25em;
+    --spacing-bottom: 0.25em;
+}
+
+/* Variant [primary][size] ------------------------------------------------------------------------------------------------------------- */
+::deep.heading.variant-primary.size-xs { font-size: 12px; }
+::deep.heading.variant-primary.size-s { font-size: 16px; }
+::deep.heading.variant-primary.size-m { font-size: 22px; }
+::deep.heading.variant-primary.size-l { font-size: 28px; }
+::deep.heading.variant-primary.size-xl { font-size: 34px; }
+
+@media (min-width: 768px) {
+    ::deep.heading.variant-primary.size-xs { font-size: 12px; }
+    ::deep.heading.variant-primary.size-s { font-size: 19px; }
+    ::deep.heading.variant-primary.size-m { font-size: 26px; }
+    ::deep.heading.variant-primary.size-l { font-size: 33px; }
+    ::deep.heading.variant-primary.size-xl { font-size: 40px; }
+}
+
+@media (min-width: 1200px) {
+    ::deep.heading.variant-primary.size-xs { font-size: 12px; }
+    ::deep.heading.variant-primary.size-s { font-size: 20px; }
+    ::deep.heading.variant-primary.size-m { font-size: 28px; }
+    ::deep.heading.variant-primary.size-l { font-size: 36px; }
+    ::deep.heading.variant-primary.size-xl { font-size: 42px; }
+}

@@ -1,78 +1,84 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.surface-all {
-    --collapse-font-size-title: 14px;
-    --collapse-icon-gap: 6px;
-    --collapse-icon-size: 24px;
-    --collapse-icon-svg: 12px;
-}
-.surface-primary {
-    --title-color: rgb(var(--color-primary));
-    --title-icon-color: rgba(var(--color-base), 0.6);
-    --title-icon-background: rgba(var(--color-primary-shade-strong), 0.25);
-}
-.surface-secondary {
-    --title-color: rgb(var(--color-secondary));
-    --title-icon-color: rgb(var(--color-secondary-surface));
-    --title-icon-background: rgba(var(--color-secondary), 0.8);
-}
-.surface-floating {
-    --title-color: rgb(var(--color-base));
-    --title-icon-color: rgb(var(--color-base));
-    --title-icon-background: rgb(var(--color-floating-shade));
+::deep.collapse-title {
+    --collapse-title-icon-size: 24px;
+    --collapse-title-icon-svg: 12px;
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.collapse-title {
+::deep.collapse-title {
+    /* Display: */
     display: flex;
     align-items: center;
-    gap: var(--collapse-icon-gap);
-    word-break: break-word;
-    font-family: var(--font-primary);
-    font-size: var(--collapse-font-size-title);
+    gap: 6px;
+    /* Size: */
+    margin: 0;
+    /* Style: */
+    color: var(--collapse-color);
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
-    color: var(--title-color);
-    margin: 0;
+    word-break: break-word;
 }
 
-.collapse-icon {
+::deep.collapse-title .collapse-icon {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
     align-self: flex-start;
     flex-shrink: 0;
-    color: var(--title-icon-color);
-    background-color: var(--title-icon-background);
-    width: var(--collapse-icon-size);
-    height: var(--collapse-icon-size);
+    /* Size: */
+    width: var(--collapse-title-icon-size);
+    height: var(--collapse-title-icon-size);
+    /* Style: */
+    color: var(--collapse-icon-color);
+    background-color: var(--collapse-icon-background);
     border-radius: 50%;
-    transition: transform calc(var(--transition-normal) * 1ms) ease;
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-normal) * 1ms) ease;
 }
 
-.collapse-icon ::deep svg {
-    width: var(--collapse-icon-svg);
-    height: var(--collapse-icon-svg);
+::deep.collapse-title .collapse-icon svg {
+    /* Size: */
+    width: var(--collapse-title-icon-svg);
+    height: var(--collapse-title-icon-svg);
 }
 
-.item-collapsed .collapse-icon {
+::deep.collapse-item.item-collapsed .collapse-title .collapse-icon {
+    /* Transform: */
     transform: rotate(-180deg);
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .surface-all {
-        --collapse-font-size-title: 15px;
-        --collapse-icon-gap: 8px;
-        --collapse-icon-size: 27px;
-        --collapse-icon-svg: 14px;
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.collapse-title {
+        --collapse-title-icon-size: 27px;
+        --collapse-title-icon-svg: 14px;
+    }
+
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.collapse-title {
+        /* Display: */
+        gap: 8px;
+        /* Content: */
+        font-size: 15px;
     }
 }
 
 @media (min-width: 1200px) {
-    .surface-all {
-        --collapse-font-size-title: 16px;
-        --collapse-icon-gap: 10px;
-        --collapse-icon-size: 30px;
-        --collapse-icon-svg: 16px;
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.collapse-title {
+        --collapse-title-icon-size: 30px;
+        --collapse-title-icon-svg: 16px;
+    }
+
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.collapse-title {
+        /* Display: */
+        gap: 10px;
+        /* Content: */
+        font-size: 16px;
     }
 }

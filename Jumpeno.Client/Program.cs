@@ -1,6 +1,6 @@
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-// Configure the app to load appsettings.json from the Shared project
+// Load appsettings.json from the Shared project:
 var assembly = typeof(AppSettings).Assembly;
 using var stream = assembly.GetManifestResourceStream("Jumpeno.Shared.appsettings.json")
 ?? throw new FileNotFoundException("Shared configuration file not found.");

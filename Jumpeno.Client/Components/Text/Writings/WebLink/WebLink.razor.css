@@ -1,0 +1,41 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.web-link {
+    /* Display: */
+    display: inline;
+    /* Size: */
+    width: auto;
+}
+
+/* Underline --------------------------------------------------------------------------------------------------------------------------- */
+::deep.web-link.underline {
+    /* Content: */
+    text-decoration: underline;
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.web-link.variant-primary {
+    /* Content: */
+    font-weight: 600;
+    /* Style: */
+    color: var(--theme-text-accent-color);
+    /* Actions: */
+    cursor: pointer;
+    /* Transition: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease-in-out;
+}
+
+/* Variant [primary][highlight] */
+::deep.web-link.variant-primary:not(.disabled):hover,
+::deep.web-link.variant-primary:not(.disabled):focus-visible {
+    color: var(--theme-text-accent-highlight-color);
+}
+
+/* Variant [primary][disabled] */
+::deep.web-link.variant-primary.disabled {
+    /* Style: */
+    color: var(--theme-text-disabled-color);
+    /* Actions: */
+    cursor: not-allowed
+}

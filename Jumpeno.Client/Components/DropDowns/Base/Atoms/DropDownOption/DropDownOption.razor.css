@@ -1,0 +1,62 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown-option {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    justify-content: var(--dropdown-option-justify);
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    padding: var(--dropdown-option-padding);
+    margin: 0;
+    /* Style: */
+    border: none;
+    outline: none;
+    background: var(--theme-dropdown-options-background);
+    /* Content: */
+    font-size: var(--dropdown-option-font-size);
+    white-space: nowrap;
+    /* Animations: */
+    transition: background calc(var(--theme-transition-fast) * 1ms);
+    /* Actions: */
+    cursor: pointer;
+}
+
+::deep.dropdown-option:first-child {
+    /* Style: */
+    border-radius: var(--dropdown-options-radius) var(--dropdown-options-radius) 0 0;
+}
+
+::deep.dropdown-option:last-child {
+    /* Style: */
+    border-radius: 0 0 var(--dropdown-options-radius) var(--dropdown-options-radius);
+}
+
+::deep.dropdown-option:not(:last-child) {
+    /* Size: */
+    margin-bottom: 1px;
+}
+
+::deep.dropdown-option:not(:last-child):after {
+    /* Position: */
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: 100%;
+    height: 1px;
+    /* Style: */
+    background: var(--theme-dropdown-options-divider-color);
+    /* Content: */
+    content: "";
+}
+
+/* Styles [highlight] ------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown-option:hover,
+::deep.dropdown-option:focus-visible {
+    /* Style: */
+    background: var(--theme-dropdown-options-highlight-background);
+}

@@ -5,6 +5,7 @@ class JSActionHandler {
     static #Autocomplete = [];
     static #NotAriaHidden = [];
 
+    // Autocomplete -----------------------------------------------------------------------------------------------------------------------
     static DisableAutocomplete() {
         const activeElement = document.activeElement;
         if (activeElement && activeElement.id !== undefined && activeElement.tagName.toLowerCase() === 'input') {
@@ -33,6 +34,7 @@ class JSActionHandler {
         }
     }
 
+    // Focus ------------------------------------------------------------------------------------------------------------------------------
     static #BlurActiveFocus() {
         const activeElement = document.activeElement
         if (activeElement && activeElement.id !== undefined) {
@@ -75,7 +77,7 @@ class JSActionHandler {
 
     static GetRestoreID() {
         if (this.#FocusIDs.length == 0) return null
-        return this.#FocusIDs[this.#FocusIDs.length - 1];
+        return this.#FocusIDs[this.#FocusIDs.length - 1].id;
     }
 
     static #SetFocusOnElement(element) {
@@ -110,6 +112,7 @@ class JSActionHandler {
         else focusableElements[focusableElements.length - 1].focus()
     }
 
+    // Keyboard ---------------------------------------------------------------------------------------------------------------------------
     static #DisableKeyboard(event) {
         event.stopImmediatePropagation();
         event.preventDefault();
@@ -123,6 +126,20 @@ class JSActionHandler {
         document.removeEventListener('keydown', this.#DisableKeyboard, true)
     }
 
+    // Input ------------------------------------------------------------------------------------------------------------------------------
+    static InputCursorPosition(id) {
+        const input = document.getElementById(id)
+        if (!input) return null
+        return input.selectionStart
+    }
+
+    static SetInputCursorPosition(id, position) {
+        const input = document.getElementById(id)
+        if (!input) return
+        input.setSelectionRange(position, position)
+    }
+
+    // Tabs -------------------------------------------------------------------------------------------------------------------------------
     static DisableTabs(exceptID, exceptData) {
         let selector = '*:not([aria-hidden="true"]):not(html):not(body)'
         if (exceptID) selector = `${selector}:not(#${exceptID})`
@@ -163,6 +180,7 @@ class JSActionHandler {
         })
     }
 
+    // Inert ------------------------------------------------------------------------------------------------------------------------------
     static SetInert(selector) {
         const elements = document.querySelectorAll(selector)
         if (!elements) return
@@ -180,6 +198,7 @@ class JSActionHandler {
         })
     }
 
+    // Click ------------------------------------------------------------------------------------------------------------------------------
     static Click(selector) {
         const element = document.querySelector(selector)
         if (!element) return

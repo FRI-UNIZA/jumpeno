@@ -1,0 +1,30 @@
+@namespace Jumpeno.Client.Components
+
+@typeparam T
+@inherits RadioOption<T>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.PASSIVE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <button
+            id="@ViewModel.FormID"
+            type="@BUTTON_TYPE.BUTTON.String()"
+            class="@CLASS_ELEMENT"
+            role="radio"
+            aria-label="@HTML.Label.Aria(Label, IsSelected)"
+            aria-checked="@HTML.Label.AriaActive(IsSelected)"
+            disabled="@Disabled"
+            @onclick="Set"
+        />
+        @if (Description != null) {
+            <div
+                class="@CLASS_DESCRIPTION"
+                @onclick="@(ActiveDescription ? async () => await Set() : () => {})"
+            >
+                @Description
+            </div>
+        }
+    </Fragment>;
+}
+
+@Render()

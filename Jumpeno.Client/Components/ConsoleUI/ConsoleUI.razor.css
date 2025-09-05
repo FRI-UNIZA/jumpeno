@@ -1,22 +1,40 @@
-#console-ui {
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep#console-ui {
+    --console-left: auto;
+    --console-top: auto;
+    --console-right: auto;
+    --console-bottom: auto;
+    --console-width: auto;
+    --console-height: auto;
+    --console-events: all;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep#console-ui {
+    /* Position: */
     position: fixed;
+    left: var(--console-left);
+    top: var(--console-top);
+    right: var(--console-right);
+    bottom: var(--console-bottom);
+    z-index: var(--theme-z-index-console-ui);
+    /* Display: */
     display: flex;
     flex-direction: column;
-    left: var(--console-left, "auto");
-    top: var(--console-top, "auto");
-    right: var(--console-right, "auto");
-    bottom: var(--console-bottom, "auto");
-    width: var(--console-width, "auto");
-    height: var(--console-height, "auto");
-    pointer-events: var(--console-events, "all");
+    /* Size: */
+    width: var(--console-width);
+    height: var(--console-height);
     padding: 4px 8px;
-    background-color: rgba(var(--color-base), 0.8);
-    color: rgb(var(--color-base-invert));
-    z-index: var(--z-index-console-ui);
+    /* Style: */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgb(255, 255, 255);
+    border-radius: 3px;
+    box-shadow: 0 0 10px 2px rgb(0, 0, 0);
+    /* Content: */
     font-size: 12px;
     word-wrap: break-word;
     overflow-x: hidden;
     overflow-y: auto;
-    border-radius: 3px;
-    box-shadow: 0 0 10px 2px rgb(var(--color-base));
+    /* Actions: */
+    pointer-events: var(--console-events);
 }

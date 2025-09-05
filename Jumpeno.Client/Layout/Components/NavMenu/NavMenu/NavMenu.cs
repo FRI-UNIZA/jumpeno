@@ -11,6 +11,8 @@ public partial class NavMenu {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
+    public NAV_MENU_SURFACE Surface { get; set; } = NAV_MENU_SURFACE.SECONDARY;
+    [Parameter]
     public required NavMenuMobile MobileRef { get; set; }
     [Parameter]
     public bool Display { get; set; } = true;
@@ -26,11 +28,13 @@ public partial class NavMenu {
     private void OnControlsFocusIn() => ControlsFocused = true;
     private void OnControlsFocusOut() => ControlsFocused = false;
 
-    private string ComputeClass() {
-        var c = new CSSClass(CLASS);
-        if (Display) c.Set(DISPLAY_CLASS);
-        if (Hidden) c.Set(HIDDEN_CLASS);
-        return c;
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS, Base)
+        .SetSurface(Surface)
+        .Set(DISPLAY_CLASS, Display)
+        .Set(HIDDEN_CLASS, Hidden);
     }
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

@@ -1,57 +1,115 @@
-.collapse-item {
-    font-family: var(--font-primary);
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.collapse-item {
+    /* Size: */
+    --collapse-border-radius: 6px;
+    --collapse-padding: 12px;
+    /* Style: */
+    --collapse-color: var(--theme-collapse-text-color);
+    --collapse-icon-color: var(--theme-collapse-icon-color);
+    --collapse-icon-background: var(--theme-collapse-icon-background);
+    --collapse-background: var(--theme-collapse-background);
+    --collapse-focus-border-color: transparent;
+    --collapse-focus-shadow: var(--theme-collapse-focus-box-shadow);
+    /* Base: */
+    --base-size: 1px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.collapse-item {
+    /* Style: */
+    color: var(--collapse-color);
+    background-color: var(--collapse-background);
+    border-radius: var(--collapse-border-radius);
+    /* Content: */
+    font-family: var(--theme-font-primary);
     font-weight: 400;
     line-height: 1.5;
-    border-radius: var(--collapse-gap);
-    color: var(--collapse-color);
-    background-color: var(--collapse-background-color);
 }
 
-.collapse-item-title {
+::deep.collapse-item .collapse-item-title {
+    /* Size: */
     padding: var(--collapse-padding);
-    cursor: pointer;
-    font-size: var(--collapse-font-size-title);
     margin: -2px;
+    /* Style: */
     border: 2px solid transparent;
-    border-radius: var(--collapse-gap) var(--collapse-gap) 0 0;
+    border-radius: var(--collapse-border-radius) var(--collapse-border-radius) 0 0;
     outline: none;
-}
-.collapse-item-title:focus-visible {
-    border: 2px solid var(--collapse-outline);
-    box-shadow: 0 0 10px var(--collapse-outline-shadow);
-}
-.item-collapsed .collapse-item-title {
-    border-radius: var(--collapse-gap);
+    /* Actions: */
+    cursor: pointer;
+    /* Base: */
+    font-size: var(--base-size);
 }
 
-.collapse-item-content-wrap {
+::deep.collapse-item .collapse-item-content-wrap {
+    /* Display: */
     display: grid;
     grid-template-rows: 1fr;
-    transition: grid-template-rows calc(var(--transition-normal) * 1ms) ease;
+    /* Animations: */
+    transition: grid-template-rows calc(var(--theme-transition-normal) * 1ms) ease;
 }
 
-.item-collapsed .collapse-item-content-wrap {
+::deep.collapse-item .collapse-item-content {
+    /* Size: */
+    padding: 0 var(--collapse-padding);
+    margin: -2px;
+    /* Style: */
+    border: 2px solid transparent;
+    border-radius: 0 0 var(--collapse-border-radius) var(--collapse-border-radius);
+    outline: none;
+    /* Content: */
+    overflow: hidden;
+    /* Base: */
+    font-size: 1px;
+}
+
+::deep.collapse-item .collapse-item-content::after {
+    /* Display: */
+    display: block;
+    /* Size: */
+    width: 100%;
+    height: var(--collapse-padding);
+    /* Content: */
+    content: "";
+}
+
+/* Styles [focus] ---------------------------------------------------------------------------------------------------------------------- */
+::deep.collapse-item .collapse-item-title:focus-visible {
+    /* Style: */
+    border: 2px solid var(--collapse-focus-border-color);
+    box-shadow: var(--collapse-focus-shadow);
+}
+
+::deep.collapse-item .collapse-item-content:focus-visible {
+    /* Style: */
+    border: 2px solid var(--collapse-focus-border-color);
+    box-shadow: var(--collapse-focus-shadow);
+}
+
+/* Styles [collapsed] ------------------------------------------------------------------------------------------------------------------ */
+::deep.collapse-item.item-collapsed .collapse-item-title {
+    /* Style: */
+    border-radius: var(--collapse-border-radius);
+}
+
+::deep.collapse-item.item-collapsed .collapse-item-content-wrap {
+    /* Display: */
     grid-template-rows: 0fr;
 }
 
-.collapse-item-content {
-    font-size: var(--collapse-font-size);
-    padding: 0 var(--collapse-padding);
-    margin: 0;
-    overflow: hidden;
-    margin: -2px;
-    border: 2px solid transparent;
-    border-radius: 0 0 var(--collapse-gap) var(--collapse-gap);
-    outline: none;
-}
-.collapse-item-content:focus-visible {
-    border: 2px solid var(--collapse-outline);
-    box-shadow: 0 0 10px var(--collapse-outline-shadow);
+@media (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.collapse-item {
+        /* Size: */
+        --collapse-border-radius: 7px;
+        --collapse-padding: 14px;
+    }
 }
 
-.collapse-item-content::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: var(--collapse-padding);
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.collapse-item {
+        /* Size: */
+        --collapse-border-radius: 8px;
+        --collapse-padding: 16px;
+    }
 }

@@ -702,4 +702,34 @@
   <data name="players5+" xml:space="preserve">
     <value>players</value>
   </data>
+  <data name="Designer" xml:space="preserve">
+    <value>Designer</value>
+  </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>Cookies</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="No data" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="Selected total: I18N{count}" xml:space="preserve">
+    <value>Selected total: I18N{count}</value>
+  </data>
+  <data name="Selected: I18N{option}, plus: I18N{count}" xml:space="preserve">
+    <value>Selected: I18N{option}, plus: I18N{count}</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Game maps" xml:space="preserve">
+    <value>Game maps</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Manage</value>
+  </data>
 </root>

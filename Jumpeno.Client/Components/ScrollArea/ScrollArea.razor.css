@@ -1,17 +1,48 @@
-.scroll-area {
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.body.os-scrollbar,
+::deep.body .os-scrollbar {
+    --os-size: 8px;
+    --os-padding-axis: 3px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.scroll-area {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: inline-flex !important;
     flex-direction: row;
     justify-content: stretch;
     align-items: stretch;
+    /* Content: */
     overflow: hidden;
 }
 
-.scroll-area-content {
+::deep.scroll-area-content {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     flex-direction: column;
+    /* Size: */
     width: 100%;
     height: 100%;
+    /* Content: */
     overflow: visible !important;
+}
+
+@media all and (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.body.os-scrollbar,
+    ::deep.body .os-scrollbar {
+        --os-size: 10px;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.body.os-scrollbar,
+    ::deep.body .os-scrollbar {
+        --os-size: 11px;
+    }
 }

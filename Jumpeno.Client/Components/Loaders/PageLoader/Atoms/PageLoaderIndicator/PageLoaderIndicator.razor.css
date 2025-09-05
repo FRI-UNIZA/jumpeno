@@ -1,0 +1,13 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.page-loader-indicator {
+    /* Display: */
+    display: inline-flex;
+}
+
+::deep.page-loader-indicator .page-loader-element {
+    /* Size: */
+    --size: 56;
+    /* Style: */
+    --color: var(--theme-page-loader-color);
+    --background: var(--theme-page-loader-background);
+}

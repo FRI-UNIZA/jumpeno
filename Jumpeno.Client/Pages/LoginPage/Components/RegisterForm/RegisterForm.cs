@@ -26,7 +26,7 @@ public partial class RegisterForm {
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
-            OnEnter: new(Register)
+            OnEnter: new(async e => await Register())
         ));
         VMPlayerName = new(new InputViewModelTextParams(
             Form: FORM,
@@ -37,7 +37,7 @@ public partial class RegisterForm {
             MaxLength: UserValidator.NAME_MAX_LENGTH,
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
-            OnEnter: new(Register)
+            OnEnter: new(async e => await Register())
         ));
         VMPassword = new(new InputViewModelTextParams(
             Form: FORM,
@@ -48,12 +48,12 @@ public partial class RegisterForm {
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
-            OnChange: new(value => {
+            OnChange: new(e => {
                 if (VMConfirmPassword == null) return;
-                if (VMConfirmPassword.Value != value) return;
+                if (VMConfirmPassword.Value != e.After) return;
                 VMConfirmPassword.Error.Clear();
             }),
-            OnEnter: new(Register)
+            OnEnter: new(async e => await Register())
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
             Form: FORM,
@@ -64,7 +64,7 @@ public partial class RegisterForm {
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
             Secret: true,
-            OnEnter: new(Register)
+            OnEnter: new(async e => await Register())
         ));
     }
 

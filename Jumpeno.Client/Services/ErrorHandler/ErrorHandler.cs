@@ -19,7 +19,10 @@ public static class ErrorHandler {
     // Mark input fields with matching IDs ------------------------------------------------------------------------------------------------
     public static void MarkInputs(string? form, List<Error> errors) {
         if (form == null || form == "") return;
+        Dictionary<string, bool> UsedIDs = [];
         foreach (var error in errors) {
+            if (UsedIDs.ContainsKey(error.ID)) continue;
+            UsedIDs[error.ID] = true;
             FormManager.SetError(form, error);
         }
     }

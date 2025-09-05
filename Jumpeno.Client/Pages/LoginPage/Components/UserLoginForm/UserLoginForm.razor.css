@@ -1,42 +1,54 @@
-.user-login-form {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.user-login-form {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+    /* Size: */
     width: 400px;
     max-width: 100%;
-    gap: 20px;
 }
 
-::deep .login-heading.surface-all {
-    --text-align: center;
+::deep.user-login-form .heading.login-heading {
+    /* Content: */
+    text-align: center;
 }
 
-.login-inputs {
+::deep.user-login-form .login-inputs {
+    /* Display: */
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 10px;
+    /* Size: */
+    width: 100%;
 }
 
-::deep .register-block {
-    --text-align: center;
+::deep.user-login-form .paragraph.register-block {
+    /* Content: */
+    text-align: center;
+    /* Size: */
     margin-bottom: -8px
 }
 
-.login-options {
+::deep.user-login-form .login-options {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6px;
 }
 
-.option-delimiter {
+::deep.user-login-form .option-delimiter {
+    /* Position: */
     position: relative;
     top: -2px;
 }
 
-::deep .icon-admin {
+::deep.user-login-form .icon-admin {
+    /* Position: */
     position: relative;
-    font-size: 15px;
     bottom: -1px;
+    /* Content: */
+    font-size: 15px;
 }

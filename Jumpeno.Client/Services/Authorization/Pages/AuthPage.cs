@@ -37,7 +37,12 @@ public partial class AuthPage {
         return false;
     }
 
-    private static RenderFragment? RenderError(Type error) => builder => { builder.OpenComponent(0, error); builder.CloseComponent(); };
+    private static RenderFragment? RenderError(Type error) => builder => {
+        builder.OpenComponent(0, error);
+        builder.SetKey(URL.Path());
+        builder.CloseComponent();
+    };
+
     public static RenderFragment? Render(RenderFragment? body) {
         if (!IsNotBlock(body)) return RenderError(typeof(Error403Page));
         else if (!IsAuthenticated(body)) return RenderError(typeof(Error401Page));

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class CollapseItem : IDisposable {
+public partial class CollapseItem {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_COLLAPSE_ITEM = "collapse-item";
     public const string CLASS_ITEM_COLLAPSED = "item-collapsed";
@@ -18,23 +18,22 @@ public partial class CollapseItem : IDisposable {
     [Parameter]
     public bool Collapsed { get; set; } = true;
     
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
     private readonly string ID;
     private string ID_TITLE => $"{ID}-{CLASS_COLLAPSE_ITEM_TITLE}";
     private string ID_CONTENT => $"{ID}-{CLASS_COLLAPSE_ITEM_CONTENT}";
-    protected CSSClass ComputeClass() {
-        var c = new CSSClass(CLASS_COLLAPSE_ITEM);
-        if (Collapsed) c.Set(CLASS_ITEM_COLLAPSED);
-        return c;
-    }
 
-    // Rendering --------------------------------------------------------------------------------------------------------------------------
-    // NOTE: Fix of auto-height transition not applied to scrollbars
-    private bool RenderVar = true;
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS_COLLAPSE_ITEM, Base)
+        .Set(CLASS_ITEM_COLLAPSED, Collapsed);
+    }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CollapseItem() => ID = IDGenerator.Generate(CLASS_COLLAPSE_ITEM);
 
+    // NOTE: Fix of auto-height transition not applied to scrollbars
+    private bool RenderVar = true;
     protected override void OnComponentAfterRender(bool firstRender) {
         if (!firstRender) RenderVar = !RenderVar;
     }

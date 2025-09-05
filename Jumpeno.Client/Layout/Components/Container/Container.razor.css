@@ -1,1 +1,64 @@
-/* Styles defined globally in app.css */
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.container {
+    --container-padding: calc(var(--theme-size-container-padding-mobile) * 1px);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.container {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    /* Size: */
+    width: 100%;
+    margin: auto;
+}
+
+/* Type -------------------------------------------------------------------------------------------------------------------------------- */
+::deep.container.container-inline {
+    /* Display: */
+    container-type: inline-size;
+}
+
+::deep.container.container-size {
+    /* Display: */
+    container-type: size;
+}
+
+/* Boundary ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.container.boundary {
+    /* Size: */
+    max-width: calc(var(--theme-size-container-max-width) * 1px);
+}
+
+/* Padding ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.container.padding-vertical {
+    /* Size: */
+    padding-top: var(--container-padding);
+    padding-bottom: var(--container-padding);
+}
+
+::deep.container.padding-horizontal {
+    /* Size: */
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+}
+
+@media (min-width: 768px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.container {
+        --container-padding: calc(var(--theme-size-container-padding-tablet) * 1px);
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.container {
+        --container-padding: calc(var(--theme-size-container-padding-desktop) * 1px);
+    }
+}

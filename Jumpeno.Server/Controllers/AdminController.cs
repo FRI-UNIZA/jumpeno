@@ -22,17 +22,7 @@ public class AdminController : ControllerBase {
         // 4) Store refresh token:
         await RefreshEntity.Create(refreshToken);
         // 5) Send token:
-        var q = new QueryParams(); q.Set(TOKEN_TYPE.REFRESH.String(), refreshToken);
-        Email.Send(
-            email,
-            I18N.T("Jumpeno login"),
-            Email.LINK_CONTENT(
-                I18N.T("Jumpeno login"),
-                I18N.T("Hello, here is your login link:"),
-                I18N.T("Log in"),
-                URL.ToAbsolute(URL.SetQueryParams(I18N.Link<LoginPage>(), q))
-            )
-        );
+        Email.SendAdminLogin(email, refreshToken);
         // 6) Send response:
         return new(I18N.T("Token was sent to your email."));
     }

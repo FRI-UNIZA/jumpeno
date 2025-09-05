@@ -104,7 +104,7 @@ public static class Auth {
                 return true;
             } catch (AppException e) {
                 // 3.2.1) Throw only if fatal:
-                CheckInvalidToken(e);
+                AssertInvalidToken(e);
                 // 3.2.2) Delete access token:
                 Token.DeleteAccess();
                 // 3.2.3) Reset profile:
@@ -140,7 +140,7 @@ public static class Auth {
                 return true;
             } catch (AppException e) {
                 // 2.1) Throw only if fatal:
-                CheckInvalidToken(e);
+                AssertInvalidToken(e);
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
@@ -172,7 +172,7 @@ public static class Auth {
                 Token.StoreAccess(response.Body.AccessToken);
             } catch (AppException e) {
                 // 2.1) Intercept not authenticated:
-                CheckInvalidToken(e);
+                AssertInvalidToken(e);
                 // 2.2) Delete access token:
                 Token.DeleteAccess();
                 // 2.3) Reset profile:
@@ -269,16 +269,16 @@ public static class Auth {
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------
-    private static void CheckInvalidToken(AppException e) {
+    private static void AssertInvalidToken(AppException e) {
         if (e.Code == CODE.INVALID_TOKEN) return;
         else throw e;
     }
     private static async Task RequestInvalidate() {
         try { await HTTP.Delete(API.BASE.AUTH_INVALIDATE); }
-        catch (AppException e) { CheckInvalidToken(e); }
+        catch (AppException e) { AssertInvalidToken(e); }
     }
     private static async Task RequestDelete() {
         try { await HTTP.Delete(API.BASE.AUTH_DELETE); }
-        catch (AppException e) { CheckInvalidToken(e); }
+        catch (AppException e) { AssertInvalidToken(e); }
     }
 }

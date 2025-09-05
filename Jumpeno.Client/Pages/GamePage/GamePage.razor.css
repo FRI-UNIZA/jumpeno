@@ -1,6 +1,9 @@
-.game-page {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-page {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100%;
 }

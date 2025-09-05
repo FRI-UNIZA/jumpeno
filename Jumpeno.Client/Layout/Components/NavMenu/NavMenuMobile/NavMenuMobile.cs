@@ -8,6 +8,8 @@ public partial class NavMenuMobile {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
+    public NAV_MENU_SURFACE? Surface { get; set; } = NAV_MENU_SURFACE.SECONDARY;
+    [Parameter]
     public required NavMenu MenuRef { get; set; }
     [Parameter]
     public EventCallback OnMobileMenuOpen { get; set; } = EventCallback.Empty;
@@ -23,23 +25,13 @@ public partial class NavMenuMobile {
     private MENU_STATE State { get; set; } = MENU_STATE.CLOSED;
     private readonly LockerSlim Lock = new();
     private TaskCompletionSource StateTCS { get; set; } = null!;
-    private string ComputeClass() {
-        var c = new CSSClass(CLASS);
-        switch (State) {
-            case MENU_STATE.CLOSED:
-                c.Set("closed");
-                break;
-            case MENU_STATE.OPENING:
-                c.Set("opening");
-                break;
-            case MENU_STATE.OPENED:
-                c.Set("opened");
-                break;
-            case MENU_STATE.CLOSING:
-                c.Set("closing");
-                break;
-        }
-        return c;
+    
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS, Base)
+        .SetSurface(Surface)
+        .Set(State);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

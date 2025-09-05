@@ -3,7 +3,6 @@
 @code {
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private CookieModal CookieModalRef = null!;
-    
     public void Notify() => StateHasChanged();
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -20,7 +19,7 @@
             // Cookie modal:
             var cookieModalOpen = await CookieStorage.InitModal();
             // Init actions:
-            await Initialize();
+            await Init.Run();
             // Server loader:
             ServerPageLoader.Hide();
             await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
@@ -35,13 +34,6 @@
             ServerPageLoader.Stop();
             Notification.Error(MESSAGE.DEFAULT.T);
         }
-    }
-
-    // Init actions -----------------------------------------------------------------------------------------------------------------------
-    public async Task Initialize() {
-        await Init.TryActivate();
-        await Init.TryPasswordReset();
-        await Init.TryAutoWatch();
     }
 }
 

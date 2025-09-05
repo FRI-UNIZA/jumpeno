@@ -1,0 +1,31 @@
+@namespace Jumpeno.Client.Components
+
+@typeparam T where T : FormViewModel
+@inherits Component
+
+@code {
+    protected RenderFragment Render() => @<Fragment>
+        <div
+            class="@ComputeClass()"
+            style="@Style"
+            @onmousedown:stopPropagation="@(!Propagate)"
+            @onmouseup:stopPropagation="@(!Propagate)"
+            @onclick:stopPropagation="@(!Propagate)"
+            @onkeydown:stopPropagation="@(!Propagate)"
+            @onkeyup:stopPropagation="@(!Propagate)"
+            @onkeypress:stopPropagation="@(!Propagate)"
+        >
+            <div class="@CLASS_CONTENT">
+                @RenderField()
+            </div>
+            <FormError
+                Type="@FormErrorType"
+                ViewModel="@ViewModel.Error"
+                Align="Align"
+                ErrorAlign="ErrorAlign"
+                NoError="NoError"
+                NoMessage="NoMessage"
+            />
+        </div>
+    </Fragment>;
+}

@@ -2,8 +2,8 @@
 
 @inherits ServiceComponent<AppLayout>
 
-<div @key="@Key" class="@ComputeClass()">
-    <CascadingValue Value="LayoutVM">
+<div @key="@Key" class="@ComputeClass()" style="@Style">
+    <CascadingValue Name="@CASCADE_APP_LAYOUT" Value="LayoutVM">
         <NavMenuMobile
             @ref="@NavMenuMobileRef"
             MenuRef="@NavMenuRef"
@@ -12,7 +12,7 @@
         >
             <ScrollArea Id="@SCROLLAREA_ID.PAGE" AutoHide="SCROLLAREA_AUTOHIDE.MOVE" OverflowX="false" Class="page">
                 <Container Class="page-layout">
-                    <BackgroundImage URL="@IMAGE.BG_YELLOW" class="main-background" Preloaded />
+                    <Background URL="@IMAGE.BG_YELLOW" class="main-layout-background" Preloaded />
                     <NavMenu @ref="NavMenuRef" MobileRef="@NavMenuMobileRef" Display="LayoutVM.NavigationDisplayed" />
                     <Container @key="PageKey" class="page-container">
                         <Container
@@ -20,7 +20,7 @@
                             Type="CONTAINER_TYPE.INLINE"
                             Boundary PaddingVertical="LayoutVM.Padding"
                             PaddingHorizontal="LayoutVM.Padding"
-                            Class="main-container"
+                            Class="main-layout-container"
                         >
                             <MainErrorBoundary>
                                 @ChildContent

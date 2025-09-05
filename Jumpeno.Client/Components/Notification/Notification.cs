@@ -137,6 +137,7 @@ public partial class Notification {
         }
         config.Duration = 0;
         config.Key = Guid.NewGuid().ToString();
+        config.ClassName = SURFACE.FLOATING.CSSClass();
         var instance = Instance();
         instance.DisplayAriaNotification(
             config.NotificationType, config.Message.AsT0.Trim(), config.Description.AsT0.Trim(), (int?) config.Duration

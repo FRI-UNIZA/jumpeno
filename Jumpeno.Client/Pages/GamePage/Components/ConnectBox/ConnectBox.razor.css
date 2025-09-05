@@ -1,117 +1,161 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.connect-box-component {
+::deep.connect-box {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100%;
     padding: 6px 0;
 }
 
-::deep .connect-box {
-    --box-direction: column;
-    --box-justify-content: center;
-    --box-align-items: center;
-    --box-gap: 20px;
-    --box-width: 400px;
+::deep.connect-box .box.connect-form {
+    /* Display: */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    /* Size: */
+    width: 400px;
 }
 
-.connect-input-box {
+::deep.connect-box .connect-input-box {
+    /* Display: */
     display: flex;
-    width: 100%;
     flex-direction: column;
     gap: 8px;
+    /* Size: */
+    width: 100%;
     margin-bottom: 2px;
 }
 
-::deep .connect-heading {
+::deep.connect-box .heading.connect-heading {
+    /* Display: */
     display: none;
-    --text-align: center;
+    /* Content: */
+    text-align: center;
 }
-::deep .connect-heading.connect-heading-mobile {
+
+::deep.connect-box .heading.connect-heading.connect-heading-mobile {
+    /* Display: */
     display: block;
 }
 
-::deep .connect-text {
-    --text-align: center;
-}
-
-.connect-buttons {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
-}
-
-::deep .connect-button {
-    --button-width: 100%;
-}
-
-::deep .create-link {
-    margin: 8px 0 6px;
+::deep.connect-box .paragraph.connect-text {
+    /* Content: */
     text-align: center;
 }
-::deep .create-icon {
-    position: relative;
-    font-size: 1.3em;
-    bottom: -0.1em;
-    right: -0.1em;
+
+::deep.connect-box .connect-buttons {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Size: */
+    width: 100%;
 }
 
-.connect-gap {
+::deep.connect-box .connect-button {
+    /* Size: */
+    width: 100%;
+}
+
+::deep.connect-box .web-link.create-link {
+    /* Size: */
+    margin: 8px 0 6px;
+    /* Content: */
+    text-align: center;
+}
+::deep.connect-box .create-icon {
+    /* Position: */
     position: relative;
+    bottom: -0.1em;
+    right: -0.1em;
+    /* Content: */
+    font-size: 1.3em;
+}
+
+::deep.connect-box .connect-gap {
+    /* Position: */
+    position: relative;
+    /* Size: */
     width: 100%;
     height: 0px;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .connect-box-component {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.connect-box {
+        /* Size: */
         padding: 30px 0;
     }
 
-    ::deep .connect-box {
-        --box-gap: 24px;
-        --box-width: 450px;
+    ::deep.connect-box .box.connect-form {
+        /* Display: */
+        gap: 24px;
+        /* Size: */
+        width: 450px;
     }
 
-    ::deep .connect-heading {
+    ::deep.connect-box .heading.connect-heading {
+        /* Display: */
         display: block;
     }
-    ::deep .connect-heading.connect-heading-mobile {
+
+    ::deep.connect-box .heading.connect-heading.connect-heading-mobile {
+        /* Display: */
         display: none;
     }
 
-    .connect-input-box {
+    ::deep.connect-box .connect-input-box {
+        /* Display: */
         gap: 12px;
+        /* Size: */
         margin-bottom: 4px;
     }
 
-    .connect-buttons {
+    ::deep.connect-box .connect-buttons {
+        /* Display: */
         flex-direction: row;
         gap: 14px;
     }
 
-    ::deep .settings-link {
+    ::deep.connect-box .connect-button {
+        /* Display: */
+        flex-shrink: 1;
+        /* Size: */
+        width: 100%;
+    }
+
+    ::deep.connect-box .web-link.settings-link {
+        /* Size: */
         margin: 8px 0 2px;
     }
 }
 
 @media (min-width: 1200px) {
-    ::deep .connect-box {
-        --box-gap: 28px;
-        --box-width: 500px;
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.connect-box .box.connect-form {
+        /* Display: */
+        gap: 28px;
+        /* Size: */
+        width: 500px;
     }
 
-    .connect-input-box {
+    ::deep.connect-box .connect-input-box {
+        /* Display: */
         gap: 16px;
+        /* Size: */
         margin-bottom: 6px;
     }
 
-    .connect-buttons {
+    ::deep.connect-box .connect-buttons {
+        /* Display: */
         gap: 16px;
     }
 
-    ::deep .settings-link {
+    ::deep.connect-box .web-link.settings-link {
+        /* Size: */
         margin: 10px 0 0;
     }
 }

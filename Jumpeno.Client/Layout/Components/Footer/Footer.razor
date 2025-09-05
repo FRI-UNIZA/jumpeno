@@ -2,31 +2,29 @@
 
 @inherits BasicComponent
 
-<footer class="@ComputeClass()">
-    <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="footer-container">
-        <Paragraph Class="footer-text">
-            🎮
-            <Span NoWrap>
-                @I18N.T("Have a nice game (Have a nice)")
-                <Link Href="@(I18N.Link<GamePage>())" Class="footer-link">
-                    @I18N.T("Have a nice game (game)")
-                </Link>
-            </Span>
-            ✊
-        </Paragraph>
-        <Paragraph Class="footer-text copyright">
-            @I18N.T("Students from")
-            <Link
-                Href="@URL.Link(I18N.T("LINK_FRI"))"
-                Target="LINK_TARGET.BLANK"
-                Class="footer-link"
-            >
-                FRI&nbsp;UNIZA
-            </Link>
-            <Span NoWrap>© 2020 - @DateTime.Now.Year</Span>
-        </Paragraph>
-        <Paragraph Size="TEXT_SIZE.S" NoWrap Class="footer-text version">
-            @I18N.T("Version"): @AppSettings.Version
-        </Paragraph>
-    </Container>
-</footer>
+<Container Tag="footer" Type="CONTAINER_TYPE.INLINE" Boundary PaddingHorizontal Class="@ComputeClass()" Style="@Style">
+    <Paragraph Class="footer-text">
+        🎮
+        <TextSpan NoWrap>
+            @I18N.T("Have a nice game (Have a nice)")
+            <WebLink Href="@(I18N.Link<GamePage>())" Class="footer-link">
+                @I18N.T("Have a nice game (game)")
+            </WebLink>
+        </TextSpan>
+        ✊
+    </Paragraph>
+    <Paragraph Class="footer-text copyright">
+        @I18N.T("Students from")
+        <WebLink
+            Href="@URL.Link(I18N.T("LINK_FRI"))"
+            Target="WEBLINK_TARGET.BLANK"
+            Class="footer-link"
+        >
+            FRI&nbsp;UNIZA
+        </WebLink>
+        <TextSpan NoWrap>© 2020 - @DateTime.Now.Year</TextSpan>
+    </Paragraph>
+    <Paragraph Size="TEXT_SIZE.S" NoWrap Class="footer-text version">
+        @I18N.T("Version"): @AppSettings.Version
+    </Paragraph>
+</Container>

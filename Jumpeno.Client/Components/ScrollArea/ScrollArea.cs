@@ -10,6 +10,7 @@ using AntDesign;
 public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const string MARK = "scroll-area";
+    private const string CONTENT_CLASS = $"{MARK}-content";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
@@ -33,15 +34,11 @@ public partial class ScrollArea {
     private Action<ScrollAreaPosition>[] Listeners = [];
     private static readonly Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners = [];
 
-    private string CSSClass() {
-        return new CSSClass($"{MARK} {Class}".Trim());
-    }
-    private static string CSSContentClass() {
-        return $"{MARK}-content";
-    }
-    private static string GetThemeString(SCROLLAREA_THEME theme) {
-        return theme.ToString()!.ToLower().Replace("_", "-");
-    }
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
+    private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    private string CSSClass() => new CSSClass(MARK).Set(Class, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {

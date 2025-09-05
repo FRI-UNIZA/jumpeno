@@ -19,14 +19,14 @@
         </article>
         <Paragraph Class="feedback-text">
             @I18N.T("Please send us your feedback (Please send us your)")
-            <Link Href="@I18N.T("LINK_FEEDBACK")" Target="LINK_TARGET.BLANK" Underline>
+            <WebLink Href="@I18N.T("LINK_FEEDBACK")" Target="WEBLINK_TARGET.BLANK" Underline>
                 @I18N.T("Please send us your feedback (feedback)")
-            </Link>
+            </WebLink>
         </Paragraph>
         <Paragraph Class="contact-text">
-            <Link Href="@($"mailto:{AppSettings.Email}")">
+            <WebLink Href="@($"mailto:{AppSettings.Email}")">
                 <AntIcon Type="mail" Theme="fill" Class="contact-icon" />@AppSettings.Email
-            </Link>
+            </WebLink>
         </Paragraph>
         <div class="action-buttons">
             <Button Size="BUTTON_SIZE.M" Params="@(new ButtonLinkParams(

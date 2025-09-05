@@ -1,39 +1,61 @@
-.admin-login-form {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.admin-login-form {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+    /* Size: */
     width: 400px;
     max-width: 100%;
-    gap: 20px;
 }
 
-::deep .admin-heading.surface-all {
-    --text-align: center;
+::deep.admin-login-form .heading.admin-heading {
+    /* Content: */
+    text-align: center;
 }
 
-.verification-box {
+::deep.admin-login-form .form-inputs {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.admin-login-form .verification-box {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* Size: */
     padding: 8px 0 16px;
 }
 
-::deep .verification-icon {
-    font-size: 100px;
+::deep.admin-login-form .verification-icon {
+    /* Size: */
     padding-bottom: 16px;
+    /* Content: */
+    font-size: 100px;
 }
 
-::deep .verification-text {
-    --text-align: center;
+::deep.admin-login-form .paragraph.verification-text {
+    /* Content: */
+    text-align: center;
 }
 
-::deep .verification-text-info {
-    --text-align: center;
+::deep.admin-login-form .paragraph.verification-text-info {
+    /* Size: */
     padding-top: 2px;
+    /* Content: */
+    text-align: center;
 }
 
-::deep .icon-login {
+::deep.admin-login-form .icon-login {
+    /* Position: */
     position: relative;
-    font-size: 15px;
+    /* Size: */
     bottom: -1px;
+    /* Content: */
+    font-size: 15px;
 }

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Origin policy
+// Origin policy:
 const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
     options.AddPolicy(ORIGIN_POLICY, policy => {
@@ -21,9 +21,9 @@ builder.Services.AddAntiforgery(options => {
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
-// appsettings.json
+// appsettings.json:
 ServerSettings.Init(builder.Configuration);
-// Configure the app to load appsettings.json from the Shared project
+// Load appsettings.json from the Shared project:
 var sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Shared", "appsettings.json");
 if (!File.Exists(sharedSettingsPath)) sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.shared.json");
 var sharedConfig = new ConfigurationBuilder()
@@ -37,7 +37,7 @@ if (builder.Environment.IsProduction()) {
     builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(ServerSettings.Port));
 }
 
-// Add services to the container.
+// Add services to the container:
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews(options => {
     options.Conventions.Add(new ApiRoutePrefixConvention(API.BASE.PREFIX));
@@ -88,11 +88,11 @@ if (builder.Environment.IsDevelopment()) {
     });
 }
 
-// Localization
+// Localization:
 builder.Services.AddLocalization();
 builder.Services.Configure(CultureController.SetupAction());
 
-// Ant-Design
+// Ant-Design:
 builder.Services.AddAntDesign();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(o => {
     if (builder.Environment.IsDevelopment()) {
@@ -100,7 +100,7 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(o => {
     }
 });
 
-// HttpClient
+// HttpClient:
 builder.Services.AddSingleton(sp => {
     var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
     var request = httpContextAccessor.HttpContext!.Request;
@@ -108,15 +108,15 @@ builder.Services.AddSingleton(sp => {
     return new HttpClient { BaseAddress = new Uri(baseAddress) };
 });
 
-// SignalR & Hubs
+// SignalR & Hubs:
 builder.Services.AddSignalR();
 
-// Database
+// Database:
 builder.Services.AddDbContextFactory<DB>(DB.Setup);
 
 var app = builder.Build();
 
-// Database migrations
+// Database migrations:
 using (var scope = app.Services.CreateScope()) {
     var dbContext = scope.ServiceProvider.GetRequiredService<DB>();
     while (!dbContext.Database.CanConnect()) {
@@ -126,10 +126,10 @@ using (var scope = app.Services.CreateScope()) {
     dbContext.Database.Migrate();
 }
 
-// Apply the CORS middleware
+// Apply the CORS middleware:
 app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();
-// Configure Forwarded Headers Middleware
+// Configure Forwarded Headers Middleware:
 var forwardedHeadersOptions = new ForwardedHeadersOptions {
     ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
                        Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | 

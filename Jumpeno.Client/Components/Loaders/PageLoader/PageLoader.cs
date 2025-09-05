@@ -8,8 +8,13 @@ public partial class PageLoader {
     public const string CLASS_AFTER = "page-loader-after";
     public const string CLASS_DISPLAYED = "displayed";
     public const string CLASS_CUSTOM = "custom-loader";
+    // Cascade:
+    public const string CASCADE_PAGE_LOADER_DISPLAYED = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_DISPLAYED)}";
+    public const string CASCADE_PAGE_LOADER_TASKS = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_TASKS)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
+    [Parameter]
+    public PAGE_LOADER_SURFACE? Surface { get; set; } = PAGE_LOADER_SURFACE.SECONDARY;
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -20,16 +25,20 @@ public partial class PageLoader {
     private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = [];
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
     public CSSClass ComputeClassContent() {
         var c = new CSSClass(CLASS_CONTENT);
         c.Set(ThemeProvider.CLASSNAME_THEME_TRANSITION_CONTAINER);
         return c;
     }
-    public CSSClass ComputeClass() {
-        var c = new CSSClass(ID);
-        if (PageLoaderDisplayed) c.Set(CLASS_DISPLAYED);
-        if (GlobalLoaders.Count == 0) c.Set(CLASS_CUSTOM);
-        return c;
+
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(ID, Base)
+        .SetSurface(Surface)
+        .Set(CLASS_DISPLAYED, PageLoaderDisplayed)
+        .Set(CLASS_CUSTOM, GlobalLoaders.Count == 0);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -64,6 +73,7 @@ public partial class PageLoader {
             instance.UpdateGlobalLoaders(task, custom);
             if (!AppEnvironment.IsServer) {
                 if (firstLoader) {
+                    ActionHandler.DisableKeyboardActions();
                     ActionHandler.SaveActiveElement();
                     instance.NoLoaderTCS = new TaskCompletionSource();
                 }
@@ -87,6 +97,7 @@ public partial class PageLoader {
                     await instance.OnChange();
                     if (!instance.PageLoaderDisplayed) {
                         instance.NoLoaderTCS.TrySetResult();
+                        ActionHandler.EnableKeyboardActions();
                         await ActionHandler.RestoreFocusAsync();
                         Window.Inert();
                     }
@@ -106,6 +117,7 @@ public partial class PageLoader {
         catch {}
     }
 
+    // Callbacks --------------------------------------------------------------------------------------------------------------------------
     private static async Task WithActiveLoader(EmptyDelegate callback) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
             if (instance.PageLoaderTasks.Count <= 0) return;
@@ -119,6 +131,7 @@ public partial class PageLoader {
         await WithActiveLoader(new EmptyDelegate(callback));
     }
 
+    // Task -------------------------------------------------------------------------------------------------------------------------------
     public static async Task AwaitAllLoaders() {
         if (AppEnvironment.IsServer) return;
         var instance = Instance(); await instance.Lock.TryExclusive(async token => {
@@ -127,6 +140,13 @@ public partial class PageLoader {
             token.Unlock();
             await tcs;
         });
+    }
+
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> IsActive() {
+        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
+            return instance.PageLoaderTasks.Count > 0;
+        }, false);
     }
 
     public static async Task<bool> IsActiveTask(PAGE_LOADER_TASK task) {

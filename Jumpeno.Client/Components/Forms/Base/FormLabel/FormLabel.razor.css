@@ -1,0 +1,83 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.form-label {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    flex-direction: column;
+    /* Size: */
+    width: auto;
+    height: auto;
+}
+
+::deep.form-label .form-label-element {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-block;
+    /* Size: */
+    width: 100%;
+    height: auto;
+    margin: 0;
+    /* Content: */
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+::deep.form-label .form-label-element .form-label-text {
+    /* Content: */
+    cursor: text;
+}
+
+::deep.form-label .form-label-content {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.form-label.align-left .form-label-element { text-align: left; }
+
+::deep.form-label.align-center .form-label-element { text-align: center; }
+
+::deep.form-label.align-right .form-label-element { text-align: right; }
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.form-label.variant-primary {
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+}
+
+::deep.form-label.variant-primary .form-label-element {
+    /* Style: */
+    color: var(--theme-text-color);
+}
+
+/* Variant [primary][size-s] */
+::deep.form-label.variant-primary.size-s .form-label-element {
+    /* Size: */
+    padding-bottom: 1px;
+    /* Content: */
+    font-size: 12px;
+}
+/* Variant [primary][size-m] */
+::deep.form-label.variant-primary.size-m .form-label-element {
+    /* Size: */
+    padding-bottom: 2px;
+    /* Content: */
+    font-size: 13px;
+}
+/* Variant [primary][size-l] */
+::deep.form-label.variant-primary.size-l .form-label-element {
+    /* Size: */
+    padding-bottom: 3px;
+    /* Content: */
+    font-size: 15px;
+}

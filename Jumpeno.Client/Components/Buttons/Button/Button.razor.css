@@ -1,94 +1,204 @@
-/* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.button {
-    --button-width: auto;
-    --button-height: auto;
-}
-
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.button {
-    display: inline-flex;
-    width: var(--button-width);
-    height: var(--button-height);
-    --button-propagate-width: var(--button-width);
-    --button-propagate-height: var(--button-height);
-    max-width: 100%;
+::deep.button-component.button {
+    /* Style: */
+    border-radius: 100px;
+    /* Animations: */
+    transition-property: color, background, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+::deep.button-component.button .button-text {
+    /* Content: */
+    font-weight: 500;
 }
 
-::deep > .surface-all > .surface-all {
-    --button-width: var(--button-propagate-width);
-    --button-height: var(--button-propagate-height);
-    --button-font-weight: 500;
-    --button-border-radius: 100px;
-    --button-text-top: 2px;
-    --button-transition-properties: color, background-color, box-shadow;
-}
-
-/* Variants ---------------------------------------------------------------------------------------------------------------------------- */
-.variant-primary ::deep > * > .surface-all {
-    --button-color: rgba(var(--color-button-primary));
-    --button-color-transition: rgba(var(--color-button-primary));
-    --button-background: rgba(var(--color-button-primary-surface));
-    --button-background-transition: rgba(var(--color-button-primary-surface-highlight));
-}
-.variant-primary:not(.no-shadow) ::deep > * > .surface-all {
-    --button-box-shadow: var(--shadow-button-primary);
-    --button-box-shadow-transition: var(--shadow-button-primary-transition);
-}
-
-.variant-secondary ::deep > * > .surface-all {
-    --button-color: rgba(var(--color-button-secondary));
-    --button-color-transition: rgba(var(--color-button-secondary));
-    --button-background: rgba(var(--color-button-secondary-surface));
-    --button-background-transition: rgba(var(--color-button-secondary-surface-highlight));
-}
-.variant-secondary:not(.no-shadow) ::deep > * > .surface-all {
-    --button-box-shadow: var(--shadow-button-secondary);
-    --button-box-shadow-transition: var(--shadow-button-secondary-transition);
-}
-
-.variant-tertiary ::deep > * > .surface-all {
-    --button-color: rgba(var(--color-button-tertiary));
-    --button-color-transition: rgba(var(--color-button-tertiary));
-    --button-background: rgba(var(--color-button-tertiary-surface));
-    --button-background-transition: rgba(var(--color-button-tertiary-surface-highlight));
-}
-.variant-tertiary:not(.no-shadow) ::deep > * > .surface-all {
-    --button-box-shadow: var(--shadow-button-tertiary);
-    --button-box-shadow-transition: var(--shadow-button-tertiary-transition);
-}
-
-.variant-quaternary ::deep > * > .surface-all {
-    --button-color: rgba(var(--color-button-quaternary));
-    --button-color-transition: rgba(var(--color-button-quaternary));
-    --button-background: rgba(var(--color-button-quaternary-surface));
-    --button-background-transition: rgba(var(--color-button-quaternary-surface-highlight));
-}
-.variant-quaternary:not(.no-shadow) ::deep > * > .surface-all {
-    --button-box-shadow: var(--shadow-button-quaternary);
-    --button-box-shadow-transition: var(--shadow-button-quaternary-transition);
-}
-
-/* Sizes ------------------------------------------------------------------------------------------------------------------------------- */
-.size-s ::deep > * > .surface-all {
-    --button-height: 41px;
-    --button-font-size: 13px;
+/* Size [size-s] ----------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.size-s {
+    /* Variables: */
+    --base-size: 0.8px;
     --button-icon-size: 18px;
-    --button-padding: 9px 22px;
     --button-gap: 7px;
+    /* Size: */
+    height: 41px;
+    padding: 9px 22px;
+}
+::deep.button-component.button.size-s .button-text {
+    /* Size: */
+    margin-top: 1px;
+    /* Content: */
+    font-size: 13px;
 }
 
-.size-m ::deep > * > .surface-all {
-    --button-height: 52px;
-    --button-font-size: 16px;
+/* Size [size-m] ----------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.size-m {
+    /* Variables: */
+    --base-size: 1px;
     --button-icon-size: 22px;
-    --button-padding: 13px 28px;
     --button-gap: 9px;
+    /* Size: */
+    height: 52px;
+    padding: 13px 28px;
+}
+::deep.button-component.button.size-m .button-text {
+    /* Content: */
+    font-size: 16px;
+    /* Size: */
+    margin-top: 1px;
 }
 
-.size-l ::deep > * > .surface-all {
-    --button-height: 64px;
-    --button-font-size: 19px;
+/* Size [size-l] ----------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.size-l {
+    /* Variables: */
+    --base-size: 1.2px;
     --button-icon-size: 26px;
-    --button-padding: 17px 34px;
     --button-gap: 11px;
+    /* Size: */
+    height: 64px;
+    padding: 17px 34px;
+}
+::deep.button-component.button.size-l .button-text {
+    /* Content: */
+    font-size: 19px;
+    /* Size: */
+    margin-top: 1px;
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-primary {
+    /* Style: */
+    color: var(--theme-button-primary-color);
+    background: var(--theme-button-primary-background);
+}
+::deep.button-component.button.variant-primary:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-primary-box-shadow);
+}
+
+/* Variant [primary][highlight] */
+::deep.button-component.button.variant-primary:not(.disabled):hover,
+::deep.button-component.button.variant-primary:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-primary-highlight-color);
+    background: var(--theme-button-primary-highlight-background);
+}
+::deep.button-component.button.variant-primary:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-primary:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-primary-highlight-box-shadow);
+}
+
+/* Variant [primary][disabled] */
+::deep.button-component.button.variant-primary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-primary.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
+}
+
+/* Variant [secondary] ----------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-secondary {
+    /* Style: */
+    color: var(--theme-button-secondary-color);
+    background: var(--theme-button-secondary-background);
+}
+::deep.button-component.button.variant-secondary:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-secondary-box-shadow);
+}
+
+/* Variant [secondary][highlight] */
+::deep.button-component.button.variant-secondary:not(.disabled):hover,
+::deep.button-component.button.variant-secondary:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-secondary-highlight-color);
+    background: var(--theme-button-secondary-highlight-background);
+}
+::deep.button-component.button.variant-secondary:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-secondary:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-secondary-highlight-box-shadow);
+}
+
+/* Variant [secondary][disabled] */
+::deep.button-component.button.variant-secondary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-secondary.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
+}
+
+/* Variant [tertiary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-tertiary {
+    /* Style: */
+    color: var(--theme-button-tertiary-color);
+    background: var(--theme-button-tertiary-background);
+}
+::deep.button-component.button.variant-tertiary:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-tertiary-box-shadow);
+}
+
+/* Variant [tertiary][highlight] */
+::deep.button-component.button.variant-tertiary:not(.disabled):hover,
+::deep.button-component.button.variant-tertiary:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-tertiary-highlight-color);
+    background: var(--theme-button-tertiary-highlight-background);
+}
+::deep.button-component.button.variant-tertiary:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-tertiary:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-tertiary-highlight-box-shadow);
+}
+
+/* Variant [tertiary][disabled] */
+::deep.button-component.button.variant-tertiary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-tertiary.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
+}
+
+/* Variant [quaternary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-quaternary {
+    /* Style: */
+    color: var(--theme-button-quaternary-color);
+    background: var(--theme-button-quaternary-background);
+}
+::deep.button-component.button.variant-quaternary:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-quaternary-box-shadow);
+}
+
+/* Variant [quaternary][highlight] */
+::deep.button-component.button.variant-quaternary:not(.disabled):hover,
+::deep.button-component.button.variant-quaternary:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-quaternary-highlight-color);
+    background: var(--theme-button-quaternary-highlight-background);
+}
+::deep.button-component.button.variant-quaternary:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-quaternary:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-quaternary-highlight-box-shadow);
+}
+
+/* Variant [quaternary][disabled] */
+::deep.button-component.button.variant-quaternary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-quaternary.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
 }

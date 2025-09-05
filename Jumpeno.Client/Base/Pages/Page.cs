@@ -11,7 +11,7 @@ public class Page : ComponentBase, IAsyncDisposable {
     public const string ROLES_BLOCK_NAME = "ROLES_BLOCK";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter]
+    [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
     public BaseTheme AppTheme { get; set; } = null!;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
@@ -31,12 +31,13 @@ public class Page : ComponentBase, IAsyncDisposable {
         try { return (body?.Target as RouteView)?.RouteData?.PageType; }
         catch { return null; }
     }
-    public static Type? Type(string url) {
+    public static Type? Type(string noSegmentPath) {
         return PageTypes.FirstOrDefault(t => {
             try {
                 foreach (var lang in I18N.LANGUAGES) {
                     string link = t.GetField($"{ROUTE_PREFIX}_{lang.ToUpper()}")!.GetValue(null)!.ToString()!;
-                    if (link.Equals(url, StringComparison.CurrentCultureIgnoreCase)) return true;
+                    link = URL.RemoveSegments(link);
+                    if (link.Equals(noSegmentPath, StringComparison.CurrentCultureIgnoreCase)) return true;
                 }
                 return false;
             } catch {
@@ -122,11 +123,15 @@ public class Page : ComponentBase, IAsyncDisposable {
     }
     protected sealed override bool ShouldRender() => ShouldPageRender();
     protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnPageAfterRenderAsync(firstRender);
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
+        await OnPageAfterRenderAsync(firstRender);
+        if (!firstRender) return;
+        if (Auth.Processing) return;
+        Reflex.InvokeVoid(typeof(Navigator), Navigator.PAGE_RENDERED);
+    }
     public async ValueTask DisposeAsync() {
         OnPageDispose();
         await OnPageDisposeAsync();
-        await HTTP.ClearTokens();
         GC.SuppressFinalize(this);
     }
 

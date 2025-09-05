@@ -1,6 +1,6 @@
 @namespace Jumpeno.Client.Components
 
-@inherits SurfaceComponent
+@inherits BasicComponent
 
 <div id="@ID" class="@ComputeClass()" style="@Style">
     <div class="image-ratio" />
@@ -9,7 +9,7 @@
         src="@URL"
         loading="@Loading.StringLower()"
         draggable="@Draggable.ToString().ToLower()"
-        @attributes="@AdditionalAttributes"
+        @attributes="@Attributes"
     />
     <div class="error-icon-wrapper" aria-hidden="true">
         <AntDesign.Icon Type="file-image" Theme="outline" class="error-icon" />

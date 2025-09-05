@@ -6,8 +6,10 @@ public partial class Box {
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
+    public BOX_SURFACE? Surface { get; set; } = BOX_SURFACE.PRIMARY_BOX;
+    [Parameter]
     public required RenderFragment ChildContent { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputeClass() => ComputeClass(CLASS);
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).SetSurface(Surface);
 }

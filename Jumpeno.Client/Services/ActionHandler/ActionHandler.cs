@@ -26,6 +26,10 @@ public class ActionHandler {
     public static async Task DisableKeyboardActionsAsync() => await JS.InvokeVoidAsync(JSActionHandler.DisableKeyboardActions);
     public static void EnableKeyboardActions() => JS.InvokeVoid(JSActionHandler.EnableKeyboardActions);
     public static async Task EnableKeyboardActionsAsync() => await JS.InvokeVoidAsync(JSActionHandler.EnableKeyboardActions);
+    public static int? InputCursorPosition(string id) => JS.Invoke<int>(JSActionHandler.InputCursorPosition, id);
+    public static async Task<int?> InputCursorPositionAsync(string id) => await JS.InvokeAsync<int>(JSActionHandler.InputCursorPosition, id);
+    public static void SetInputCursorPosition(string id, int position) => JS.InvokeVoid(JSActionHandler.SetInputCursorPosition, id, position);
+    public static async Task SetInputCursorPositionAsync(string id, int position) => await JS.InvokeVoidAsync(JSActionHandler.SetInputCursorPosition, id, position);
     public static void DisableTabs(string exceptID = "", string exceptData = "") => JS.InvokeVoid(JSActionHandler.DisableTabs, exceptID, exceptData);
     public static async Task DisableTabsAsync(string exceptID = "", string exceptData = "") => await JS.InvokeVoidAsync(JSActionHandler.DisableTabs, exceptID, exceptData);
     public static void PopTabs() => JS.InvokeVoid(JSActionHandler.PopTabs);

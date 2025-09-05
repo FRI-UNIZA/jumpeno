@@ -8,16 +8,16 @@
 
 <div class="nav-menu-mobile-init" tabindex="0" @onfocus="() => ActionHandler.SetFocus(ID)" inert="@(State != MENU_STATE.OPENED)" />
 <div class="nav-menu-mobile-start" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID)" inert="@(State != MENU_STATE.OPENED)" />
-<nav id="@ID" class="@ComputeClass()" tabindex="0" role="dialog" aria-label="@I18N.T("Mobile menu")" @onkeydown="OnKeyDown">
+<nav id="@ID" class="@ComputeClass()" style="@Style" tabindex="0" role="dialog" aria-label="@I18N.T("Mobile menu")" @onkeydown="OnKeyDown">
     <ScrollArea
         @ref="@ScrollAreaRef"
         OverflowX="false"
         Class="scroll-area-nav-menu"
         AutoHide="SCROLLAREA_AUTOHIDE.MOVE"
-        Theme="@AppTheme.SCROLL_THEME_MENU"
+        Theme="@AppTheme.NAV_MENU_MOBILE_SCROLL_THEME"
     >
         <NavMenuCloseButton OnClick="@Close" />
-        <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="nav-menu-mobile-container">
+        <Container Type="CONTAINER_TYPE.INLINE" Boundary PaddingHorizontal Class="nav-menu-mobile-container">
             <LogoLink />
             <MenuControls Mobile Close="Close" />
         </Container>

@@ -1,0 +1,10 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div class="@ComputeClass()" style="@Style">
+    <p class="@CLASS_ELEMENT">
+        <span class="@CLASS_TEXT">@HTML.Label.Render(Label)</span>
+    </p>
+    <div class="@CLASS_CONTENT">@ChildContent</div>
+</div>

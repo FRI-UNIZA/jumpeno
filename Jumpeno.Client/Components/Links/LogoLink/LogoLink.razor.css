@@ -1,63 +1,63 @@
-.link-logo {
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-::deep .logo-link.surface-all {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.logo-link {
+    /* Display: */
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
+    /* Size: */
     padding: 5px 13px 5px 10px;
+    border-radius: 8px;
+    /* Style: */
+    color: var(--theme-logo-link-color);
+    background: var(--theme-logo-link-background);
+    box-shadow: var(--theme-logo-link-box-shadow);
+    /* Content: */
     font-size: 20px;
     font-weight: 500;
-    border-radius: 8px;
-    transition-property: background-color, box-shadow;
-    transition-duration: calc(var(--transition-fast) * 1ms);
-}
-::deep .logo-link.surface-primary {
-    --color: rgb(var(--color-primary));
-    --color-transition: rgb(var(--color-primary));
-}
-::deep .logo-link.surface-secondary {
-    --color: rgb(var(--color-secondary));
-    --color-transition: rgb(var(--color-secondary));
-}
-::deep .logo-link.surface-floating {
-    --color: rgb(var(--color-floating));
-    --color-transition: rgb(var(--color-floating));
-}
-::deep .logo-link.surface-primary:focus-visible {
-    background-color: rgba(var(--color-primary), 0.15);
-    box-shadow: 0 1px 6px rgba(var(--color-base), 0.4);
-}
-::deep .logo-link.surface-secondary:focus-visible {
-    background-color: rgba(var(--color-secondary), 0.08);
-    box-shadow: 0 1px 6px rgba(var(--color-base), 0.4);
-}
-::deep .logo-link.surface-floating:focus-visible {
-    background-color: rgba(var(--color-floating, 0.15));
-    box-shadow: 0 1px 6px rgba(var(--color-base), 0.4);
+    white-space: nowrap;
+    /* Actions: */
+    cursor: pointer;
+    /* Animations: */
+    transition-property: color, background, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease-in-out;
 }
 
-::deep .logo-image {
-    --image-width: 40px;
-    --image-height: 40px;
+::deep.logo-link .logo-image {
+    /* Position: */
     --image-fit: contain;
     --image-position: 0 center;
+    /* Size: */
+    --image-width: 40px;
+    --image-height: 40px;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+/* Styles [focus] ---------------------------------------------------------------------------------------------------------------------- */
+::deep.logo-link:focus-visible {
+    /* Style: */
+    color: var(--theme-logo-link-focus-color);
+    background: var(--theme-logo-link-focus-background);
+    box-shadow: var(--theme-logo-link-focus-box-shadow);
+}
+
 @media (min-width: 480px) {
-    .nav-menu .link-logo {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu .logo-link {
+        /* Position: */
         position: absolute;
         left: 50%;
+        /* Transform: */
         transform: translateX(-50%);
     }
 }
 
 @media (min-width: 1200px) {
-    .nav-menu .link-logo {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu .logo-link {
+        /* Position: */
         position: relative;
         left: 0;
+        /* Transform: */
         transform: none;
     }
 }

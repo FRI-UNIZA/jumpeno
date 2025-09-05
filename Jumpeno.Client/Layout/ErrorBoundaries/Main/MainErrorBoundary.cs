@@ -10,11 +10,11 @@ public partial class MainErrorBoundary {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnComponentInitializedAsync() {
-        await Navigator.AddAfterFinishEventListener(RecoveryListener);
+        await Navigator.AddAfterEventListener(RecoveryListener);
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
-        await Navigator.RemoveAfterFinishEventListener(RecoveryListener);
+        await Navigator.RemoveAfterEventListener(RecoveryListener);
     }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------

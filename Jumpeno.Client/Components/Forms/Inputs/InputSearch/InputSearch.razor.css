@@ -1,0 +1,44 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.input.input-search .input-search-button {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: var(--input-icon-size);
+    height: var(--input-icon-size);
+    /* Style: */
+    background: transparent;
+    border: none;
+    border-radius: 100%;
+    outline: none;
+}
+
+::deep.field.input.input-search .thumb-button.input-search-thumb {
+    /* Variables: */
+    --width: min(calc(1.45 * var(--input-icon-size)), var(--input-clear-thumb-size));
+    --height: min(calc(1.82 * var(--input-icon-size)), var(--input-clear-thumb-size));
+    --right: calc(var(--input-icon-gap-outer) / -2);
+}
+
+::deep.field.input.input-search .input-search-icon {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: var(--input-icon-size);
+    height: var(--input-icon-size);
+    /* Style: */
+    border-radius: 100%;
+}
+
+::deep.field.input.input-search .input-search-icon svg {
+    /* Size: */
+    width: calc(var(--input-icon-size) * 0.9);
+    height: calc(var(--input-icon-size) * 0.9);
+}

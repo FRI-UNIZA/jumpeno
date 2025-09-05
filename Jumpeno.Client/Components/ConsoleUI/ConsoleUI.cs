@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-/* NOTE: A component to display log messages on devices that are difficult to debug. */
+/// <summary>A component to display log messages on devices that are difficult to debug.</summary>
 public partial class ConsoleUI {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID = "console-ui";

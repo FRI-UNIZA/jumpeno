@@ -1,6 +1,9 @@
-#project-canvas-pre-renderer {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep#project-canvas-pre-renderer {
+    /* Position: */
     position: fixed;
     top: 100vh;
     left: 0;
+    /* Display: */
     display: none;
 }

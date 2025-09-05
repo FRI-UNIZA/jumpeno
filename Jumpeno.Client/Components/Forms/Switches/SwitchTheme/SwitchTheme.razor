@@ -1,0 +1,20 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<SwitchComponent
+    ViewModel="SwitchVM"
+    Label="@I18N.T("Light theme")"
+    Variant="FORM_VARIANT.PRIMARY"
+    Size="FORM_SIZE.S"
+    Class="@ComputeClass()"
+    Style="@Style"
+    Position="SWITCH_POSITION.END"
+    ActiveDescription
+    AutoSize
+    NoError
+>
+    <Description>
+        <AntIcon Type="fire" Theme="outline" Class="switch-theme-icon" />
+    </Description>
+</SwitchComponent>

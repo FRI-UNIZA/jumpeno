@@ -5,6 +5,8 @@ public partial class AppLayout {
     private const string CLASS = "main-layout";
     private const string CLASS_NO_NAVIGATION = "no-navigation";
     private const string INERT_SELECTOR = $"#{WebDocument.ID}";
+    // Cascade:
+    public const string CASCADE_APP_LAYOUT = $"{nameof(AppLayout)}.{nameof(CASCADE_APP_LAYOUT)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -13,10 +15,12 @@ public partial class AppLayout {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private NavMenu NavMenuRef = null!;
     private NavMenuMobile NavMenuMobileRef = null!;
-    private CSSClass ComputeClass() {
-        var c = ComputeClass(CLASS);
-        if (!LayoutVM.NavigationDisplayed) c.Set(CLASS_NO_NAVIGATION);
-        return c;
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS, Base)
+        .Set(CLASS_NO_NAVIGATION, !LayoutVM.NavigationDisplayed);
     }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
@@ -42,6 +46,6 @@ public partial class AppLayout {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private void OnMobileMenuOpen() => ActionHandler.SetInert(INERT_SELECTOR);
-    private void OnMobileMenuClose() => ActionHandler.RemoveInert(INERT_SELECTOR);
+    private static void OnMobileMenuOpen() => ActionHandler.SetInert(INERT_SELECTOR);
+    private static void OnMobileMenuClose() => ActionHandler.RemoveInert(INERT_SELECTOR);
 }

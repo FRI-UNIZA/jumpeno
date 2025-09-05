@@ -1,0 +1,53 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.writing {
+    /* Position: */
+    position: relative;
+    z-index: 0;
+    /* Size: */
+    height: auto;
+    padding: 0;
+    margin: 0;
+    /* Content: */
+    text-align: left;
+    text-decoration: none;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.writing.variant-primary {
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+}
+
+/* Variant [primary][spacing]: */
+::deep.writing.variant-primary {
+    --spacing-bottom: 0.6em;
+}
+
+/* Variant [primary][size]: */
+::deep.writing.variant-primary.size-xs { font-size: 11px; }
+::deep.writing.variant-primary.size-s { font-size: 12px; }
+::deep.writing.variant-primary.size-m { font-size: 14px; }
+::deep.writing.variant-primary.size-l { font-size: 17px; }
+::deep.writing.variant-primary.size-xl { font-size: 20px; }
+
+@media (min-width: 768px) {
+    ::deep.writing.variant-primary.size-xs { font-size: 11px; }
+    ::deep.writing.variant-primary.size-s { font-size: 12px; }
+    ::deep.writing.variant-primary.size-m { font-size: 15px; }
+    ::deep.writing.variant-primary.size-l { font-size: 18px; }
+    ::deep.writing.variant-primary.size-xl { font-size: 21px; }
+}
+
+@media (min-width: 1200px) {
+    ::deep.writing.variant-primary.size-xs { font-size: 11px; }
+    ::deep.writing.variant-primary.size-s { font-size: 13px; }
+    ::deep.writing.variant-primary.size-m { font-size: 16px; }
+    ::deep.writing.variant-primary.size-l { font-size: 19px; }
+    ::deep.writing.variant-primary.size-xl { font-size: 22px; }
+}

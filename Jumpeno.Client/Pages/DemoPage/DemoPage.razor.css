@@ -1,27 +1,41 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.demo-page {
+::deep.demo-page {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
     gap: 20px;
+    /* Size: */
+    width: 100%;
 }
 
-.demo-form {
+::deep.demo-page .demo-form {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+    /* Size: */
     width: 400px;
     max-width: 100%;
-    gap: 20px;
 }
 
-::deep .demo-heading.surface-all {
-    --text-align: center;
+::deep.demo-page .form-inputs {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
 }
 
-.demo-page > div:not(.demo-form) {
+::deep.demo-page .heading.demo-heading {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.demo-page > div:not(.demo-form) {
+    /* Display: */
     display: flex;
     gap: 20px;
 }

@@ -1,0 +1,120 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component {
+    /* Content: */
+    --button-icon-size: 24px;
+    --button-gap: 8px;
+    /* Base: */
+    --base-size: 1px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.button-component {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    /* Size: */
+    max-width: 100%;
+    padding: 12px;
+    margin: 0;
+    /* Style: */
+    color: white;
+    background: black;
+    border: none;
+    outline: none;
+    text-shadow: none;
+    box-shadow: none;
+    /* Content: */
+    text-align: center;
+    line-height: 1;
+    text-decoration: none;
+    overflow: hidden;
+    /* Actions: */
+    cursor: pointer;
+    /* Base: */
+    font-size: var(--base-size);
+}
+
+::deep.button-component .button-content {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    /* Size: */
+    max-width: 100%;
+}
+
+::deep.button-component .button-text {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline;
+    align-items: center;
+    /* Size: */
+    max-width: 100%;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Icons ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component .button-icon-before,
+::deep.button-component .button-icon-after {
+    /* Position: */
+    position: relative;
+    top: 0;
+    /* Display: */
+    display: block;
+}
+::deep.button-component .button-icon-before > span,
+::deep.button-component .button-icon-after > span {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: block;
+}
+::deep.button-component .button-icon-before svg,
+::deep.button-component .button-icon-after svg {
+    /* Display: */
+    display: block;
+    /* Size: */
+    width: var(--button-icon-size);
+    height: var(--button-icon-size);
+}
+
+::deep.button-component .button-icon-before + .button-icon-after {
+    /* Size: */
+    margin-left: var(--button-gap)
+}
+
+::deep.button-component .button-text.has-icon-before {
+    /* Size: */
+    margin-left: var(--button-gap);
+}
+::deep.button-component .button-text.has-icon-after {
+    /* Size: */
+    margin-right: var(--button-gap);
+}
+
+/* Styles [disabled] ------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.disabled {
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+::deep.button-component.disabled .button-icon-before > *:not(.button-icon) {
+    /* Style: */
+    opacity: 0.2 !important;
+}

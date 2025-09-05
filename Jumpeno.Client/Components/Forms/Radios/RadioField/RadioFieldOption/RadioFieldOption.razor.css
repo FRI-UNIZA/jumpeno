@@ -1,0 +1,298 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio-field-option .radio-field-option-element {
+    /* Position: */
+    position: relative;
+    order: 2;
+    /* Display: */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+::deep.field.radio-field-option .radio-field-option-element::before {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-shrink: 0;
+}
+
+::deep.field.radio-field-option .radio-field-option-description {
+    /* Display: */
+    display: inline-block;
+    flex-shrink: 1;
+    /* Size: */
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    /* Content: */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Actions: */
+    cursor: text;
+}
+
+/* Active Description ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio-field-option.active-description .radio-field-option-description { cursor: var(--radio-option-cursor); }
+
+/* Position ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.position-start .radio-field-option-description { order: 3; }
+
+::deep.field.radio-field-option.position-end .radio-field-option-description { order: 1; }
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.align-left .field-content { justify-content: flex-start; }
+
+::deep.field.radio-field-option.align-center .field-content { justify-content: center; }
+
+::deep.field.radio-field-option.align-right .field-content { justify-content: flex-end; }
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary {
+    /* Animations: */
+    --radio-option-transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    --radio-option-transition-timing: ease;
+    /* Actions: */
+    --radio-option-cursor: pointer;
+}
+
+::deep.field.radio-field-option.variant-primary .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-form-primary-background);
+    border-style: solid;
+    border-width: 1px; 
+    border-color: var(--theme-form-primary-border-color);;
+    border-radius: 100%;
+    box-shadow: var(--theme-form-primary-box-shadow);
+    outline: none;
+    /* Actions: */
+    cursor: var(--radio-option-cursor);
+    /* Animations: */
+    transition-property: background, box-shadow, border-color;
+    transition-duration: var(--radio-option-transition-duration);
+    transition-timing-function: var(--radio-option-transition-timing);
+    /* Base: */
+    font-size: var(--radio-option-base-size);
+}
+
+::deep.field.radio-field-option.variant-primary .radio-field-option-element::before {
+    /* Style: */
+    background: transparent;
+    border-radius: 100%;
+    /* Content: */
+    content: "";
+    /* Animations: */
+    transition-property: background;
+    transition-duration: var(--radio-option-transition-duration);
+    transition-timing-function: var(--radio-option-transition-timing);
+}
+
+::deep.field.radio-field-option.variant-primary .radio-field-option-description {
+    /* Style: */
+    color: var(--theme-form-primary-description-color);
+    border: none;
+    outline: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Animations: */
+    transition-property: color;
+    transition-duration: var(--radio-option-transition-duration);
+    transition-timing-function: var(--radio-option-transition-timing);
+}
+
+/* Variant [primary][selected] --------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.selected .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-background);
+    border-color: var(--theme-form-primary-border-color);
+    box-shadow: var(--theme-form-primary-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary.selected .radio-field-option-element::before {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-mark-color);
+}
+
+/* Variant [primary][hover] ------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio-field-option.variant-primary:not(.disabled) .radio-field-option-element:hover,
+::deep.field.radio-field-option.variant-primary.active-description:not(.disabled) .field-content:has(:hover) .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-form-primary-highlight-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary:not(.disabled) .radio-field-option-element:hover::before,
+::deep.field.radio-field-option.variant-primary.active-description:not(.disabled) .field-content:has(:hover) .radio-field-option-element::before {
+    /* Style: */
+    background: transparent;
+}
+
+/* Variant [primary][hover][selected] -------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.selected:not(.disabled) .radio-field-option-element:hover,
+::deep.field.radio-field-option.variant-primary.active-description.selected:not(.disabled) .field-content:has(:hover) .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary.selected:not(.disabled) .radio-field-option-element:hover::before,
+::deep.field.radio-field-option.variant-primary.active-description.selected:not(.disabled) .field-content:has(:hover) .radio-field-option-element::before {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-mark-color);
+}
+
+/* Variant [primary][focus] ------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio-field-option.variant-primary:not(.disabled) .field-content:has(:focus-visible) .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-form-primary-highlight-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary:not(.disabled) .field-content:has(:focus-visible) .radio-field-option-element::before {
+    /* Style: */
+    background: transparent;
+}
+
+/* Variant [primary][focus][selected] -------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.selected:not(.disabled) .field-content:has(:focus-visible) .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-background);
+    border-color: var(--theme-form-primary-highlight-border-color);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary.selected:not(.disabled) .field-content:has(:focus-visible) .radio-field-option-element::before {
+    /* Style: */
+    background: var(--theme-radio-primary-selected-mark-color);
+}
+
+/* Variant [primary][disabled] --------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.disabled {
+    /* Actions: */
+    --radio-option-cursor: not-allowed;
+}
+
+::deep.field.radio-field-option.variant-primary.disabled .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-form-primary-disabled-background);
+    border-color: var(--theme-form-primary-disabled-border-color);
+    box-shadow: var(--theme-form-primary-disabled-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary.disabled .radio-field-option-element::before {
+    /* Style: */
+    background: transparent;
+}
+
+::deep.field.radio-field-option.variant-primary.disabled .radio-field-option-description {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-description-color);
+}
+
+/* Variant [primary][disabled][selected] ----------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.disabled.selected .radio-field-option-element {
+    /* Style: */
+    background: var(--theme-radio-primary-disabled-selected-background);
+    border-color: var(--theme-form-primary-disabled-border-color);
+    box-shadow: var(--theme-form-primary-disabled-box-shadow);
+}
+
+::deep.field.radio-field-option.variant-primary.disabled.selected .radio-field-option-element::before {
+    /* Style: */
+    background: var(--theme-radio-primary-disabled-selected-mark-color);
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.size-s {
+    /* Base: */
+    --radio-option-base-size: 0.6px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-s .field-content {
+    /* Display: */
+    gap: 7px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-s .radio-field-option-element {
+    /* Size: */
+    width: 16px;
+    height: 16px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-s .radio-field-option-element::before {
+    /* Size: */
+    width: 8px;
+    height: 8px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-s .radio-field-option-description {
+    /* Content: */
+    font-size: 12px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.size-m {
+    /* Base: */
+    --radio-option-base-size: 0.8px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-m .field-content {
+    /* Display: */
+    gap: 9px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-m .radio-field-option-element {
+    /* Size: */
+    width: 22px;
+    height: 22px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-m .radio-field-option-element::before {
+    /* Size: */
+    width: 10px;
+    height: 10px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-m .radio-field-option-description {
+    /* Content: */
+    font-size: 14px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.radio-field-option.variant-primary.size-l {
+    /* Base: */
+    --radio-option-base-size: 1px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-l .field-content {
+    /* Display: */
+    gap: 11px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-l .radio-field-option-element {
+    /* Size: */
+    width: 26px;
+    height: 26px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-l .radio-field-option-element::before {
+    /* Size: */
+    width: 12px;
+    height: 12px;
+}
+
+::deep.field.radio-field-option.variant-primary.size-l .radio-field-option-description {
+    /* Content: */
+    font-size: 16px;
+}

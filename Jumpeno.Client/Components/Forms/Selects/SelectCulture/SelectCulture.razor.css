@@ -1,0 +1,51 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.select.select-culture {
+    /* Style: */
+    --field-border-radius: 4px;
+    /* Base: */
+    --field-base-size: 1px;
+}
+
+::deep.field.select.select-culture .select-input {
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Style: */
+    color: var(--theme-select-culture-color);
+    background: var(--theme-select-culture-background);
+    border-width: 1em;
+    border-style: solid;
+    border-color: var(--theme-select-culture-border-color);
+    box-shadow: var(--theme-select-culture-box-shadow);
+    /* Animations: */
+    transition-property: color, background, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: pointer;
+}
+
+/* Styles [highlight] ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.select.select-culture:not(.disabled):has(:hover) .select-input,
+::deep.field.select.select-culture:not(.disabled):has(:focus-visible) .select-input {
+    /* Style: */
+    color: var(--theme-select-culture-highlight-color);
+    background: var(--theme-select-culture-highlight-background);
+    border-color: var(--theme-select-culture-highlight-border-color);
+    box-shadow: var(--theme-select-culture-highlight-box-shadow);
+}
+
+/* Styles [size] ----------------------------------------------------------------------------------------------------------------------- */
+::deep.field.select.select-culture {
+    --select-font-size: 13px;
+    --select-icon-size: 14px;
+}
+::deep.field.select.select-culture .select-input {
+    padding: 8px;
+}
+::deep.field.select.select-culture .select-input-text {
+    margin-right: 3px;
+}

@@ -17,10 +17,10 @@ public partial class MenuControls {
     [Parameter]
     public Action OnFocusOut { get; set; } = () => {};
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputeClass() {
-        var c = new CSSClass(CLASS);
-        if (Mobile) c.Set(CLASS_MOBILE);
-        return c;
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS, Base)
+        .Set(CLASS_MOBILE, Mobile);
     }
 }

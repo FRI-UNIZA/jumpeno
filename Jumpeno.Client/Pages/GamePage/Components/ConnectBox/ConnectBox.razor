@@ -6,14 +6,16 @@
     private string[] LoginMessage = I18N.Split(I18N.T("Or @I18N_SPLIT{}login@I18N_SPLIT{} to create new."));
 }
 
-<div class="connect-box-component">
-    <Box Class="connect-box">
+<div class="connect-box">
+    <Box Class="connect-form">
         <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading">@I18N.T("Connect to game")</Heading1>
         <Heading1 Size="TEXT_SIZE.L" Spacing Class="connect-heading connect-heading-mobile">@I18N.T("Connect")</Heading1>
         <div class="connect-input-box">
-            <Input ViewModel="VMCode" Name="code" Label="@I18N.T("Game code")" HideLabel Size="INPUT_SIZE.L" Align="INPUT_ALIGN.CENTER" />
+            <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Game code")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" />
             <AuthViewBlock Roles="[ROLE.USER]">
-                <Input ViewModel="VMName" Name="name" Label="@I18N.T("Your name")" Size="INPUT_SIZE.M" Align="INPUT_ALIGN.LEFT" AllowClear />
+                <FormLabel Label="@I18N.T("Your name")">
+                    <InputField ViewModel="VMName" Name="name" Label="@I18N.T("Your name")" AllowClear />
+                </FormLabel>
             </AuthViewBlock>
         </div>
         <div class="connect-buttons">
@@ -27,14 +29,14 @@
             </Button>
         </div>
         <AuthView Roles="[ROLE.USER]">
-            <Link
+            <WebLink
                 Href="@(I18N.Link<GamePage>())" HrefPrevent
                 OnClick="GamePage.NavigateToCreate"
                 Class="create-link"
             >
                 <AntIcon Type="plus-circle" Theme="outline" Class="create-icon" />
                 &nbsp;@I18N.T("Create new game")&nbsp;
-            </Link>
+            </WebLink>
         </AuthView>
         <AuthView Roles="[ROLE.ADMIN]">
             <div class="connect-gap" />
@@ -42,9 +44,9 @@
         <AuthViewBlock>
             <Paragraph Class="connect-text">
                 @LoginMessage[0]
-                <Jumpeno.Client.Components.Link Href="@(I18N.Link<LoginPage>())" Underline>
+                <WebLink Href="@(I18N.Link<LoginPage>())" Underline>
                     @LoginMessage[1]
-                </Jumpeno.Client.Components.Link>
+                </WebLink>
                 @LoginMessage[2]
             </Paragraph>
         </AuthViewBlock>

@@ -1,130 +1,157 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.image-component {
+::deep.image {
+    /* Size: */
     --image-width: auto;
     --image-height: auto;
     --image-height-ratio: 0%;
     --image-max-width: 100%;
+    /* Position: */
     --image-fit: fill;
     --image-position: center center;
-}
-.image-component.surface-primary {
-    --image-color-loading-light: rgb(var(--color-primary-shade));
-    --image-color-loading-dark: rgb(var(--color-primary-shade-strong));
-    --image-color-error: rgb(var(--color-primary-shade-strong));
-    --image-icon-color: rgb(var(--color-primary-shade-invert));
-}
-.image-component.surface-secondary {
-    --image-color-loading-light: rgb(var(--color-secondary-shade));
-    --image-color-loading-dark: rgb(var(--color-secondary-shade-strong));
-    --image-color-error: rgb(var(--color-secondary-shade-strong));
-    --image-icon-color: rgb(var(--color-secondary-shade-invert));
-}
-.image-component.surface-floating {
-    --image-color-loading-light: rgb(var(--color-floating-shade));
-    --image-color-loading-dark: rgb(var(--color-floating-shade-strong));
-    --image-color-error: rgb(var(--color-floating-shade-strong));
-    --image-icon-color: rgb(var(--color-floating-shade-invert));
+    /* Style: */
+    --image-color-loading-light: var(--theme-image-light-color);
+    --image-color-loading-dark: var(--theme-image-dark-color);
+    --image-color-error: var(--theme-image-error-color);
+    --image-icon-color: var(--theme-image-icon-color);
 }
 
 /* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
-@keyframes pulse {
+@keyframes image-pulse {
     0% { background-color: var(--image-color-loading-light); }
     50% { background-color: var(--image-color-loading-dark); }
     100% { background-color: var(--image-color-loading-light); }
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.image-component {
+::deep.image {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: var(--image-width);
     height: var(--image-height);
     max-width: var(--image-max-width);
+    /* Content: */
     overflow: hidden;
 }
 
-.image-ratio {
+::deep.image .image-ratio {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: block;
-    padding-left: var(--image-width-ratio);
+    /* Size: */
     padding-top: var(--image-height-ratio);
+    /* Actions: */
     pointer-events: none;
 }
 
-.image-component.loading::after {
-    content: "";
+::deep.image.loading::after {
+    /* Position: */
     position: absolute;
+    /* Display: */
     display: block;
+    /* Size: */
     inset: 0;
-    animation: pulse 2s infinite;
+    /* Content: */
+    content: "";
+    /* Animations: */
+    animation: image-pulse 2s infinite;
 }
 
-.image-component::after, .image-component.loading.transparent::after {
+::deep.image::after, ::deep.image.loading.transparent::after {
+    /* Content: */
     content: none;
+    /* Animations: */
     animation: none;
 }
 
-.image-element {
+::deep.image .image-element {
+    /* Position: */
     position: absolute;
+    /* Display: */
     display: block;
+    /* Size: */
     width: 100%;
     height: 100%;
+    /* Style: */
     opacity: 1;
-    transition: opacity calc(var(--transition-fast) * 1ms) ease-in-out;
+    /* Content: */
     object-fit: var(--image-fit);
     object-position: var(--image-position);
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-fast) * 1ms) ease-in-out;
 }
 
-.no-transition > .image-element {
+::deep.image.no-transition > .image-element {
+    /* Animations: */
     transition: none;
 }
 
-.loading > .image-element, .error > .image-element {
+::deep.image.loading > .image-element, ::deep.image.error > .image-element {
+    /* Style: */
     opacity: 0;
 }
 
-.error .image-element {
+::deep.image.error .image-element {
+    /* Animations: */
     transition: none;
 }
 
-.error::before {
-    content: "";
+::deep.image.error::before {
+    /* Position: */
     position: absolute;
+    /* Display: */
     display: block;
+    /* Size: */
     inset: 0;
+    /* Style: */
     background-color: var(--image-color-error);
+    /* Content: */
+    content: "";
 }
 
-.error.transparent::before {
+::deep.image.error.transparent::before {
+    /* Content: */
     content: none;
 }
 
-.error-icon-wrapper {
+::deep.image .error-icon-wrapper {
+    /* Position: */
     position: absolute;
+    /* Display: */
     display: none;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100%;
     height: 100%;
 }
 
-::deep .error-icon {
+::deep.image .error-icon {
+    /* Position: */
     position: absolute;
+    /* Display: */
     display: block;
+    /* Size: */
     width: 70%;
     height: 70%;
     max-width: 130px;
     max-height: 130px;
+    /* Style: */
     color: var(--image-icon-color);
 }
 
-::deep .error-icon > svg {
+::deep.image .error-icon > svg {
+    /* Size: */
     width: 100%;
     height: 100%;
 }
 
-.error > .error-icon-wrapper {
+::deep.image.error > .error-icon-wrapper {
+    /* Display: */
     display: flex;
 }

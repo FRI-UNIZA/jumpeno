@@ -33,6 +33,7 @@ public static class URL {
 
     // Current URL methods ----------------------------------------------------------------------------------------------------------------
     public static Func<string> Url { get; private set; }
+    public static string Lang() => Lang(Url());
     public static string Schema() => Schema(Url());
     public static string Host() => Host(Url());
     public static string Port() => Port(Url());
@@ -52,6 +53,17 @@ public static class URL {
     public static string ReplaceSegments(Dictionary<int, string> segments) => ReplaceSegments(Url(), segments);
 
     // Custom URL methods -----------------------------------------------------------------------------------------------------------------
+    public static string Lang(string url) {
+        var path = Path(url);
+        if (path.Length < 3) return "";
+        var index = path.IndexOf('/', 1);
+        if (index < 1) {
+            if (path.StartsWith('/') && path.Length > 1) return path[1..];
+            return "";
+        }
+        return path[1..index];
+    }
+    
     public static string Schema(string url) {
         var index = url.IndexOf(SCHEMA_DIVIDER);
         if (index >= 0) {

@@ -1,0 +1,34 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio {
+    /* Display: */
+    flex-shrink: 0;
+}
+
+::deep.field.radio .radio-group {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    padding: 0;
+}
+
+/* FormError > Styles ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.radio.error-passive.variant.size {
+    /* Size: */
+    padding: 0;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.radio.align-left > .field-content { justify-content: flex-start; }
+
+::deep.field.radio.align-center > .field-content { justify-content: center; }
+
+::deep.field.radio.align-right > .field-content { justify-content: flex-end; }

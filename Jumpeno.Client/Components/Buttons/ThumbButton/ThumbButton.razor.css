@@ -1,0 +1,42 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.thumb-button {
+    /* Position: */
+    --left: 0;
+    --top: 0;
+    --right: 0;
+    --bottom: 0;
+    /* Size: */
+    --width: 40px;
+    --height: 40px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.thumb-button {
+    /* Position: */
+    position: absolute;
+    /* Display: */
+    display: block;
+    flex-shrink: 0;
+    /* Size: */
+    width: var(--width);
+    height: var(--height);
+    margin-left: var(--left);
+    margin-top: var(--top);
+    margin-right: var(--right);
+    margin-bottom: var(--bottom);
+    /* Style: */
+    background: transparent;
+    border: none;
+    outline: none;
+    /* Actions: */
+    cursor: default;
+    pointer-events: all;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.thumb-button {
+        /* Actions: */
+        pointer-events: none;
+    }
+}

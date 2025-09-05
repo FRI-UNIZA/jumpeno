@@ -9,7 +9,9 @@
     @if (VMPassword.Value != PASSWORD) {
         <div class="demo-form">
             <Heading1 Class="demo-heading">Admin</Heading1>
-            <Input ViewModel="VMPassword" Name="password" Label="@("Password")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
+            <div class="form-inputs">
+                <InputField ViewModel="VMPassword" Name="password" Label="@("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+            </div>
             <Button Size="BUTTON_SIZE.M" OnClick="Login">
                 <Text>Log in</Text>
             </Button>

@@ -1,6 +1,6 @@
 @namespace Jumpeno.Client.Components
 
-@inherits SurfaceComponent
+@inherits BasicComponent
 
 @code {
     // Constants --------------------------------------------------------------------------------------------------------------------------
@@ -12,10 +12,10 @@
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected CSSClass ComputeClass() => ComputeClass(CLASS_COLLAPSE_TITLE);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS_COLLAPSE_TITLE, Base);
 }
 
-<div class="@ComputeClass()">
+<div class="@ComputeClass()" style="@Style">
     <div class="@CLASS_COLLAPSE_ICON">
         <AntIcon Type="down" Theme="outline" />
     </div>

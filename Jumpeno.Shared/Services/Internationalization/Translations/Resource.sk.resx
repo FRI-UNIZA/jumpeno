@@ -702,4 +702,34 @@
   <data name="players5+" xml:space="preserve">
     <value>hráčov</value>
   </data>
+  <data name="Designer" xml:space="preserve">
+    <value>Dizajnér</value>
+  </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>Cookies</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Hľadať</value>
+  </data>
+  <data name="No data" xml:space="preserve">
+    <value>Žiadne dáta</value>
+  </data>
+  <data name="Selected total: I18N{count}" xml:space="preserve">
+    <value>Zvolené celkom: I18N{count}</value>
+  </data>
+  <data name="Selected: I18N{option}, plus: I18N{count}" xml:space="preserve">
+    <value>Zvolené: I18N{option}, plus: I18N{count}</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Zvolené</value>
+  </data>
+  <data name="Game maps" xml:space="preserve">
+    <value>Herné mapy</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Spravovať</value>
+  </data>
 </root>

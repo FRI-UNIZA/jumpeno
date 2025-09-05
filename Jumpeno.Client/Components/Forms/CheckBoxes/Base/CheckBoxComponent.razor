@@ -1,0 +1,32 @@
+@namespace Jumpeno.Client.Components
+
+@inherits FormField<CheckBoxViewModel>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.PASSIVE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <button
+            id="@ViewModel.FormID"
+            type="@BUTTON_TYPE.BUTTON.String()"
+            class="@CLASS_ELEMENT"
+            role="checkbox"
+            aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"
+            aria-checked="@HTML.Label.AriaActive(ViewModel.Value)"
+            @onclick="ChangeValue"
+            disabled="@Disabled"
+        >
+            @if (Icon != null) { @Icon }
+            else { <div class="@CLASS_ICON" /> }
+        </button>
+        @if (Description != null) {
+            <div
+                class="@CLASS_DESCRIPTION"
+                @onclick="@(ActiveDescription ? async () => await ChangeValue() : () => {})"
+            >
+                @Description
+            </div>
+        }
+    </Fragment>;
+}
+
+@Render()

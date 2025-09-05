@@ -9,26 +9,25 @@
         <div class="register-box">
             <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
             <div class="register-inputs">
-                <Input ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete />
-                <Input ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
-                <Input ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
-                <Input ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
+                <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
+                <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
             </div>
             <Button Size="BUTTON_SIZE.M" OnClick="Register">
                 <Text>@I18N.T("Register")</Text>
             </Button>
-            <Paragraph Size="TEXT_SIZE.S" Class="register-block login-text">
+            <Paragraph Size="TEXT_SIZE.S" Class="register-block">
                 @I18N.T("Have an account?")&nbsp;
-                <Jumpeno.Client.Components.Link
+                <WebLink
                     Size="TEXT_SIZE.S"
                     NoWrap
                     OnClick="() => VM.Show(LOGIN_FORM.USER)"
                     OnEnter="() => VM.Show(LOGIN_FORM.USER)"
                     Underline
-                    Class="login-text"
                 >
                     @I18N.T("Log in")
-                </Jumpeno.Client.Components.Link>
+                </WebLink>
             </Paragraph>
         </div>
     } else {
@@ -40,15 +39,15 @@
                 <Paragraph Class="activation-text-info">@I18N.T("Activation link was sent to your email address.")</Paragraph>
                 <Paragraph Class="activation-text-info">(@I18N.T("You can always ask for new one in profile."))</Paragraph>
             </div>
-            <Jumpeno.Client.Components.Link
+            <WebLink
                 Size="TEXT_SIZE.S"
                 NoWrap
                 OnClick="() => VM.Show(LOGIN_FORM.USER)"
                 OnEnter="() => VM.Show(LOGIN_FORM.USER)"
-                Class="login-text register-redirect"
+                Class="register-redirect"
             >
                 <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Log in")&nbsp;
-            </Jumpeno.Client.Components.Link>
+            </WebLink>
         </div>
     }
 </div>

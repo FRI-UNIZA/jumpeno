@@ -1,0 +1,67 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.dropdown.admin-dropdown {
+    --dropdown-options-right: -48px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown.admin-dropdown .dropdown-button {
+    /* Size: */
+    width: 38px;
+    height: 38px;
+    /*Style: */
+    border-radius: 100%;
+    border: 3px solid var(--theme-dropdown-admin-border-color);
+    box-shadow: var(--theme-dropdown-admin-box-shadow);
+    background-color: var(--theme-dropdown-admin-background);
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-slow) * 1ms),
+                box-shadow calc(var(--theme-transition-fast) * 1ms);
+}
+
+::deep.dropdown.admin-dropdown .admin-dropdown-profile-image {
+    /* Position: */
+    position: relative;
+    top: 2px;
+    /* Style: */
+    color: var(--theme-dropdown-admin-border-color);
+    /* Content: */
+    font-size: 26px;
+}
+
+::deep.dropdown.admin-dropdown .admin-dropdown-icon {
+    /* Size: */
+    margin-right: 10px;
+}
+
+/* Styles [focus] ---------------------------------------------------------------------------------------------------------------------- */
+::deep.dropdown.admin-dropdown .dropdown-button:focus-visible {
+    /* Style: */
+    border-color: var(--theme-dropdown-admin-highlight-border-color);
+    box-shadow: var(--theme-dropdown-admin-highlight-box-shadow);
+}
+
+/* Styles [displayed] ------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown.admin-dropdown.displayed .dropdown-button {
+    /* Transform: */
+    transform: rotate(-360deg);
+}
+
+@media (min-width: 1200px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.dropdown.admin-dropdown {
+        --dropdown-options-right: -8px;
+    }
+
+    ::deep.dropdown.admin-dropdown .dropdown-button {
+        /* Size: */
+        width: 42px;
+        height: 42px;
+    }
+
+    ::deep.dropdown.admin-dropdown .admin-dropdown-profile-image {
+        /* Position: */
+        top: 2px;
+        /* Content: */
+        font-size: 28px;
+    }
+}

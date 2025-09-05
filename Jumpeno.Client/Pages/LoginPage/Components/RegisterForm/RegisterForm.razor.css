@@ -1,89 +1,108 @@
-.register-form {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.register-form {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100%;
 }
 
-.register-box {
+::deep.register-form .register-box {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+    /* Size: */
     width: 400px;
     max-width: 100%;
-    gap: 20px;
 }
 
-::deep .register-heading.surface-all {
-    --text-align: center;
+::deep.register-form .heading.register-heading {
+    /* Content: */
+    text-align: center;
 }
 
-.register-inputs {
+::deep.register-form .register-inputs {
+    /* Display: */
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 10px;
+    /* Size: */
+    width: 100%;
 }
 
-::deep .register-block {
-    --text-align: center;
-    margin-bottom: -8px
+::deep.register-form .paragraph.register-block {
+    /* Size: */
+    margin-bottom: -8px;
+    /* Content: */
+    text-align: center;
 }
 
-.register-success-box {
+::deep.register-form .register-success-box {
+    /* Display: */
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
 }
 
-.activation-box {
+::deep.register-form .activation-box {
+    /* Position: */
     position: relative;
+    /* Size: */
     margin-bottom: 20px;
+    /* Content: */
     text-align: center;
 }
 
-::deep .register-icon {
-    font-size: 76px;
+::deep.register-form .register-icon {
+    /* Size: */
     margin-top: 10px;
-    color: rgb(var(--color-success));
+    /* Style: */
+    color: var(--theme-status-success-accent-color);
+    /* Content: */
+    font-size: 76px;
 }
 
-::deep .icon-admin {
-    position: relative;
-    font-size: 15px;
-    bottom: -1px;
-}
-
-::deep .activation-text {
+::deep.register-form .paragraph.activation-text {
+    /* Content: */
     font-size: 16px;
-    --font-weight: 600;
+    font-weight: 600;
     text-align: center;
 }
 
-::deep .activation-text-info {
+::deep.register-form .paragraph.activation-text-info {
+    /* Content: */
     font-size: 14px;
     text-align: center;
 }
 
-::deep .icon-login {
+::deep.register-form .icon-login {
+    /* Position: */
     position: relative;
-    font-size: 17px;
+    /* Size: */
     bottom: -1px !important;
+    /* Content: */
+    font-size: 17px;
 }
 
-::deep .register-redirect {
+::deep.register-form .web-link.register-redirect {
+    /* Content: */
     font-size: 15px !important;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    ::deep .activation-text {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.register-form .paragraph.activation-text {
+        /* Content: */
         font-size: 17px;
     }
 
-    ::deep .activation-text-info {
+    ::deep.register-form .paragraph.activation-text-info {
+        /* Content: */
         font-size: 15px;
     }
 }

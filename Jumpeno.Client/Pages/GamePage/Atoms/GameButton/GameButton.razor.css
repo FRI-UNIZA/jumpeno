@@ -1,8 +1,12 @@
-.game-button {
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-button {
+    /* Size: */
     padding: 0;
     margin: 0;
+    /* Style: */
+    background: transparent;
     border: none;
     outline: none;
-    background: transparent;
+    /* Actions: */
     cursor: pointer;
 }

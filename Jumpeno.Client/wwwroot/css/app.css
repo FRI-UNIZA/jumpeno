@@ -1,125 +1,33 @@
-/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 html, body {
+    /* Position: */
     position: fixed;
-    font-family: var(--font-primary);
-    font-size: 16px;
+    /* Size: */
     width: 100vw !important;
     height: 100vh;
     height: 100dvh;
     margin: 0;
     padding: 0;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: 16px;
     overflow: hidden;
+    /* Actions: */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
 }
 
-body:not(.no-theme) {
-    background-color: rgb(var(--color-secondary-surface));
+body {
+    /* Style: */
+    background-color: var(--theme-body-background);
 }
 
 ::selection {
-    color: rgb(var(--color-selection));
-    background: rgb(var(--color-selection-background));
+    /* Style: */
+    color: var(--theme-body-selection-color);
+    background: var(--theme-body-selection-background);
 }
 
 * {
+    /* Display: */
     box-sizing: border-box;
-    z-index: 0;
-}
-
-/* General ----------------------------------------------------------------------------------------------------------------------------- */
-.no-display {
-    display: none !important;
-}
-
-/* User select ------------------------------------------------------------------------------------------------------------------------- */
-.no-user-select {
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-/* Touch actions [extended in scrollbars] ---------------------------------------------------------------------------------------------- */
-.touch-action-auto {
-    touch-action: auto;
-}
-
-.touch-action-none {
-    touch-action: none;
-}
-
-.touch-action-pan {
-    touch-action: pan-x pan-y;
-}
-
-.touch-action-pinch-zoom {
-    touch-action: pinch-zoom;
-}
-
-.touch-action-manipulation {
-    touch-action: manipulation;
-}
-
-/* Overscroll [extended in scrollbars] ------------------------------------------------------------------------------------------------- */
-.overscroll-auto {
-    overscroll-behavior: auto;
-}
-
-.overscroll-contain {
-    overscroll-behavior: contain;
-}
-
-.overscroll-none {
-    overscroll-behavior: none;
-}
-
-/* Container --------------------------------------------------------------------------------------------------------------------------- */
-.container {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    width: 100%;
-    margin: auto;
-    --container-padding: calc(var(--size-container-padding-mobile) * 1px);
-}
-
-.container.container-inline {
-    container-type: inline-size;
-}
-
-.container.container-size {
-    container-type: size;
-}
-
-.container.boundary {
-    max-width: calc(var(--size-container-max-width) * 1px);
-}
-
-.container.padding-vertical {
-    padding-top: var(--container-padding);
-    padding-bottom: var(--container-padding);
-}
-
-.container.padding-horizontal {
-    padding-left: var(--container-padding);
-    padding-right: var(--container-padding);
-}
-
-/* Container media --------------------------------------------------------------------------------------------------------------------- */
-@media (min-width: 768px) {
-    .container {
-        --container-padding: calc(var(--size-container-padding-tablet) * 1px);
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        --container-padding: calc(var(--size-container-padding-desktop) * 1px);
-    }
 }

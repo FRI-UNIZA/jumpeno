@@ -49,7 +49,7 @@ public class GameScreenDimension() {
         CanvasWidth = (int) (CanvasHeight / CANVAS_HEIGHT_RATIO * CANVAS_WIDTH_RATIO);
     }
 
-    // CSS --------------------------------------------------------------------------------------------------------------------------------
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
     public CSSStyle CSSVariables() {
         var s = new CSSStyle();
         // Constants:

@@ -3,16 +3,13 @@ namespace Jumpeno.Client.Components;
 /// <summary>
 /// Usage:
 /// To set dimensions and colors redefine css variables in custom css class passed as component parameter.
-/// (Custom css class must be defined with ::deep selector)
 /// Other css properties (e.g. border-radius...) style as you wish.
 /// Modify component parameters to controll transparency, image transition and loading.
 /// </summary>
 public partial class ImageBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "image";
-    public const string CLASSNAME = "image-component";
-    public const string CLASSNAME_LOADING = "loading";
-    public const string CLASSNAME_ERROR = "error";
+    public const string CLASSNAME = "image";
     public const string CLASSNAME_TRANSPARENT = "transparent";
     public const string CLASSNAME_NO_TRANSITION = "no-transition";
 
@@ -32,22 +29,23 @@ public partial class ImageBase {
     [Parameter]
     public IMAGE_LOADING Loading { get; set; } = IMAGE_LOADING.LAZY;
     [Parameter]
-    public Action<bool> OnLoadingFinish { get; set; } = (bool success) => {};
-    private readonly Dictionary<string, object> AdditionalAttributes = [];
+    public Action<bool> OnLoadingFinish { get; set; } = success => {};
+    private readonly Dictionary<string, object> Attributes = [];
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly string ID = null!;
     private IMAGE_STATE State = IMAGE_STATE.LOADING;
-    protected CSSClass ComputeClass() {
-        var c = ComputeClass(CLASSNAME);
-        if (State == IMAGE_STATE.LOADING) c.Set(CLASSNAME_LOADING);
-        else if (State == IMAGE_STATE.ERROR) c.Set(CLASSNAME_ERROR);
-        if (Transparent) c.Set(CLASSNAME_TRANSPARENT);
-        if (NoTransition) c.Set(CLASSNAME_NO_TRANSITION);
-        return c;
-    }
     
     private static readonly Dictionary<string, ImageBase> Images = [];
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASSNAME, Base)
+        .Set(State)
+        .Set(CLASSNAME_TRANSPARENT, Transparent)
+        .Set(CLASSNAME_NO_TRANSITION, NoTransition);
+    }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ImageBase() {
@@ -59,8 +57,8 @@ public partial class ImageBase {
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
         var alt = Alt.Trim();
-        AdditionalAttributes["alt"] = alt;
-        if (alt == "") AdditionalAttributes["aria-hidden"] = "true";
+        Attributes["alt"] = alt;
+        if (alt == "") Attributes["aria-hidden"] = "true";
         if (AppEnvironment.IsServer) {
             State = IMAGE_STATE.LOADING;
         } else {
@@ -72,7 +70,7 @@ public partial class ImageBase {
     }
 
     override protected void OnComponentAfterRender(bool firstRender) {
-        if (AppEnvironment.IsServer || !firstRender) return;
+        if (!firstRender) return;
         JS.InvokeVoid(JSImage.Init, ID);
     }
 

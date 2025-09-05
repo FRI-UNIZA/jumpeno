@@ -13,12 +13,8 @@ public partial class AntIcon {
     [Parameter]
     public bool StopPropagation { get; set; } = false;
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private string? ComputeRole() {
-        return Label == "" ? null : "img";
-    }
-
-    private string? ComputeLabel() {
-        return Label == "" ? null : Label;
-    }
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    private string? ComputeRole() => Label == "" ? null : "img";
+    private string? ComputeLabel() => Label == "" ? null : Label;
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(BUTTON_ICON.CLASS);
 }

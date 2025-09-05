@@ -1,38 +1,31 @@
-/* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.surface-all {
-    --collapse-font-size: 12px;
-}
-.surface-primary {
-    --title-color: rgb(var(--color-base));
-}
-.surface-secondary {
-    --title-color: rgb(var(--color-secondary));
-}
-.surface-floating {
-    --title-color: rgb(var(--color-base));
-}
-
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.collapse-content {
+::deep.collapse-content {
+    /* Display: */
     display: block;
-    word-break: break-word;
-    font-family: var(--font-primary);
-    font-size: var(--collapse-font-size);
+    /* Size: */
+    margin: 0;
+    /* Style: */
+    color: var(--collapse-color);
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.5;
-    color: var(--title-color);
-    margin: 0;
+    word-break: break-word;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .surface-all {
-        --collapse-font-size: 13px;
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.collapse-content {
+        /* Content: */
+        font-size: 13px;
     }
 }
 
 @media (min-width: 1200px) {
-    .surface-all {
-        --collapse-font-size: 14px;
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.collapse-content {
+        /* Content: */
+        font-size: 14px;
     }
 }

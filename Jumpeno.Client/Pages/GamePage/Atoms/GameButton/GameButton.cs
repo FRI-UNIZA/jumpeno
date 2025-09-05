@@ -14,11 +14,11 @@ public partial class GameButton {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public bool Active { get; private set; } = false;
 
-    public string ComputeClass() {
-        var c = new CSSClass(CLASS);
-        if (Active) c.Set(CLASS_ACTIVE);
-        c.Set(Class);
-        return c;
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() {
+        return base.ComputeClass()
+        .Set(CLASS, Base)
+        .Set(CLASS_ACTIVE, Active);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

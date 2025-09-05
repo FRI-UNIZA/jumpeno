@@ -1,0 +1,15 @@
+@namespace Jumpeno.Client.Components
+
+@{
+    var url = URL.Url();
+    var baseURL = URL.BaseUrl();
+    foreach (var lang in AppSettings.Language.Languages) {
+        var langURL = $"{baseURL}/{lang}/";
+        if (url == baseURL || url == langURL) {
+            foreach (var culture in AppSettings.Language.Languages) {
+                <link rel="alternate" hreflang="@(culture)" href="@($"{baseURL}/{culture}/")" />
+            }
+            break;
+        }
+    }
+}

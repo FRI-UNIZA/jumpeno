@@ -12,14 +12,14 @@ In-game communication is handled through <b>SignalR</b> hubs (WebSocket).
 
 The project is divided into <b>client</b>, <b>server</b> and <b>shared</b> part.
 
-Services like <b>MariaDB</b>, <b>PHPMyAdmin</b> and <b>MailCatcher</b> run inside <b>Docker</b>.
+Services like <b>MariaDB</b>, <b>Adminer</b> and <b>MailCatcher</b> run inside <b>Docker</b>.
 
 ## Installation
 Please make sure you have installed:
 - .NET 8.0.411 SDK
 - Docker Desktop
 - Microsoft Visual Studio 2022+ or Visual Studio Code
-- You can be prompted to install additional workloads
+- You can be prompted to install additional workloads or updates
 
 ## Before you start (Docker)
 To provide server-like environment, all parts of the application run in <b>Docker</b>.<br />
@@ -58,6 +58,11 @@ And run this command:
 The app is now accessible on other devices via the URL: "https://192.168.1.12:7284".
 
 (Replace `192.168.1.12` with the local IP address of your computer)
+
+## Local network (Docker)
+You can run desktop Docker container on "http://localhost:80".
+
+Certain features require HTTPS. If you want to access it from other device, setup reverse proxy with self signed SSL/TLS certificate.
 
 ## Debug
 Use the built-in debugger in your IDE.
@@ -113,8 +118,8 @@ This project uses <b>MariaDB</b> running on port `3306`.<br />
 DB logic and all local files are stored under:
 > /Jumpeno.Server/Services/Database
 
-### PHPMyAdmin
-For data preview and manipulation use <b>PHPMyAdmin</b>.<br />
+### Adminer
+For data preview and manipulation use <b>Adminer</b>.<br />
 This service runs locally on `{web-url}:8080`.<br />
 You can also log in through Jumpeno web admin.
 
@@ -136,7 +141,7 @@ All migrations are stored in:
 
 [4] Migrations run automatically on app start.<br />
 (Ensure that new migration can be applied to existing data on the server!)<br />
-(In this order you can also tweak the migration in `{MigrationName}.cs` file.)
+(To achieve it, you can also tweak the migration in `{MigrationName}.cs` file.)
 
 ## Admin
 You can log into the web as administrator.<br />
@@ -153,8 +158,25 @@ There is a container named <b>MailCatcher</b> to view emails in local developmen
 To send emails to <b>MailCatcher</b> use port `1025`.<br />
 To view emails go to `{web-url}:1080`.
 
+## Design system
+All components are designed for reusability and styled using <b>theme variables</b> for any surface. <b>Component that creates surface has surface class</b> which provides all the <b>CSS variables</b> for given surface.
+
+You can define surfaces in the `SURFACE` enum, then use `__SURFACE` suffix in theme definition to set colors and shadows specifically for that surface.
+
+To style a component, place it temporarily in:
+> DesignerPage > Playground
+
+To see the outcome on all possible surfaces, visit:
+`/en/designer` or `/sk/designer`.
+
+<b>Recommended:</b> To set component classes, utilize methods of <b>CSSClass!</b>
+
 ## APIDoc (Swagger)
-<b>Swagger</b> tool is used for documentation, allowing you to test endpoints, including those requiring authorization. In the development environment, the API documentation is accessible at `{web-url}/swagger`.
+<b>Swagger</b> tool is used for documentation.
+
+This allows you to test API endpoints, including those requiring authorization.
+
+In the development environment, the API documentation is accessible at URL: `/swagger`.
 
 ## CI/CD
 There is a CI/CD pipeline configured using GitHub Actions:
@@ -172,22 +194,22 @@ Containers can be configured in:
 > /Dockerfile.database<br />
 > /Dockerfile.jumpeno<br />
 > /Dockerfile.mailcatcher<br />
-> /Dockerfile.phpmyadmin
+> /Dockerfile.adminer
 
 > /docker-compose.yml
 
 App is served on port mentioned in `Settings` section!
 
-## Configuration Files
+## Configuration files
 This project includes 3 configuration files:
 
 For shared common settings:
-> /Jumpeno.Server/appsettings.json (Definitions)<br />
-> /Jumpeno.Server/Services/Settings/ServerSettings.cs (Use in code)
-
-For server-specific secret configurations:
 > /Jumpeno.Shared/appsettings.json (Definitions)<br />
 > /Jumpeno.Shared/Services/Settings/AppSettings.cs (Use in code)
+
+For server-specific secret configurations:
+> /Jumpeno.Server/appsettings.json (Definitions)<br />
+> /Jumpeno.Server/Services/Settings/ServerSettings.cs (Use in code)
 
 <b>Environment variables</b> for services like database and email are set in:
 > .env
@@ -233,7 +255,7 @@ These programs can run automatically as part of the project’s build and run ac
 
 For example, `ThemeProvider` automatically generates theme CSS variables from C# code.
 
-## Learn More
-This project was bootstrapped with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).
+## Learn more
+This project is developed with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).
 
 You can learn more in the [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website).

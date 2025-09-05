@@ -1,0 +1,17 @@
+@namespace Jumpeno.Client.Components
+
+@typeparam T
+@inherits FormField<RadioViewModel<T>>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.PASSIVE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <CascadingValue Name="@CASCADE_REF" TValue="RadioComponent<T>" Value="this" >
+            <div class="@CLASS_GROUP" role="radiogroup">
+                @ChildContent
+            </div>
+        </CascadingValue>
+    </Fragment>;
+}
+
+@Render()

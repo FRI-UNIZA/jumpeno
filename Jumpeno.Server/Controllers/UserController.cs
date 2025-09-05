@@ -101,19 +101,7 @@ public class UserController : ControllerBase {
         var g = new StringGenerator();
         var password = g.Generate(UserValidator.PASSWORD_GENERATOR_MIN_LENGTH, UserValidator.PASSWORD_GENERATOR_MAX_LENGTH, CHARS.ALPHA_NUM);
         // 4) Send email:
-        var q = new QueryParams(); q.Set(TOKEN_TYPE.PASSWORD_RESET.String(), JWT.GeneratePasswordReset(user.Email, password));
-        Email.Send(
-            user.Email,
-            I18N.T("Jumpeno password reset"),
-            Email.LINK_CONTENT(
-                I18N.T("Jumpeno password reset"),
-                $"{I18N.T("Hello, confirm that your password can be reset to:")}"
-                + "<br><br>"
-                + $"<b>{password}</b>",
-                I18N.T("Confirm reset"),
-                URL.ToAbsolute(URL.SetQueryParams(I18N.Link<LoginPage>(), q))
-            )
-        );
+        Email.SendPasswordReset(user.Email, password, JWT.GeneratePasswordReset(user.Email, password));
         // 5) Send response:
         return new(I18N.T("Check your email address."));
     }

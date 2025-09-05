@@ -1,50 +1,71 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.consent-container {
+::deep.modal.cookie-modal {
+    /* Size: */
+    --modal-min-width: 600px;
+    --modal-max-width: 600px;
+}
+
+::deep.modal.cookie-modal .consent-container {
+    /* Display: */
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.cookie-title {
+::deep.modal.cookie-modal .consent-container .cookie-title {
+    /* Display: */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     gap: 8px;
+    /* Size: */
+    width: 100%;
 }
 
-::deep .cookie-paragraph {
+::deep.modal.cookie-modal .consent-container .paragraph.cookie-paragraph {
+    /* Size: */
     max-width: 400px;
     margin: auto;
+    /* Content: */
     text-align: center;
 }
 
-.consent-footer {
+::deep.modal.cookie-modal .consent-footer {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: stretch;
     align-items: center;
-    width: 100%;
     gap: 8px;
+    /* Size: */
+    width: 100%;
 }
 
-.consent-footer ::deep .surface-all {
-    --button-width: 100%;
+::deep.modal.cookie-modal .consent-footer .button-component.button {
+    /* Display: */
+    flex-shrink: 1;
+    /* Size: */
+    width: 100%;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .cookie-title {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.cookie-modal .consent-container .cookie-title {
+        /* Display: */
         gap: 10px;
     }
-    .consent-footer {
+
+    ::deep.modal.cookie-modal .consent-footer {
+        /* Display: */
         flex-direction: row;
         gap: 16px;
     }
 }
 
 @media (min-width: 1200px) {
-    .cookie-title {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.cookie-modal .consent-container .cookie-title {
+        /* Display: */
         gap: 12px;
     }
 }

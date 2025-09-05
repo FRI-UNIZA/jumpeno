@@ -3,6 +3,8 @@ namespace Jumpeno.Client.Pages;
 public partial class GamePage {
     public const string ROUTE_EN = "/en/game/{URLCode?}";
     public const string ROUTE_SK = "/sk/hra/{URLCode?}";
+
+    // Navigation -------------------------------------------------------------------------------------------------------------------------
     public static string Link(string url, string code) => URL.ReplaceSegments(url, new() {{ 1, $"{code}" }});
     // Navigator data:
     public record NavData(bool Create) {
@@ -33,7 +35,7 @@ public partial class GamePage {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public string? URLCode { get; set; }
-    [CascadingParameter]
+    [CascadingParameter(Name = AppLayout.CASCADE_APP_LAYOUT)]
     public required AppLayoutVM LayoutVM { get; set; }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------

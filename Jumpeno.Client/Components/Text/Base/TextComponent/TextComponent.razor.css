@@ -1,0 +1,7 @@
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.text.text-align-left { text-align: left; }
+::deep.text.text-align-center { text-align: center; }
+::deep.text.text-align-right { text-align: right; }
+
+/* NoWrap ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.text.no-wrap { white-space: nowrap; }

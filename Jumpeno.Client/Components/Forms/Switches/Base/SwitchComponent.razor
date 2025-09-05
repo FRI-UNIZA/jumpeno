@@ -1,0 +1,29 @@
+@namespace Jumpeno.Client.Components
+
+@inherits FormField<SwitchViewModel>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.PASSIVE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <button
+            id="@ViewModel.FormID"
+            type="@BUTTON_TYPE.BUTTON.String()"
+            class="@CLASS_SWITCH_ELEMENT"
+            role="switch"
+            aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"
+            aria-checked="@HTML.Label.AriaActive(ViewModel.Value)"
+            @onclick="ChangeValue"
+            disabled="@Disabled"
+        />
+        @if (Description != null) {
+            <div
+                class="@CLASS_SWITCH_DESCRIPTION"
+                @onclick="@(ActiveDescription ? async () => await ChangeValue() : () => {})"
+            >
+                @Description
+            </div>
+        }
+    </Fragment>;
+}
+
+@Render()

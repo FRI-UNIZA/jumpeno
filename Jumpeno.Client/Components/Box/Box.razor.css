@@ -1,51 +1,41 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.box {
-    --box-direction: row;
-    --box-justify-content: flex-start;
-    --box-align-items: flex-start;
-    --box-gap: 0;
-    --box-width: auto;
-    --box-min-width: auto;
-    --box-max-width: 100%;
-    --box-height: auto;
-    --box-min-height: auto;
-    --box-max-height: 100%;
-    --box-padding: 24px;
-    --box-radius: 20px;
-    --box-background: rgb(var(--color-primary-box));
-    --box-filter: none;
-    --box-shadow: var(--shadow-box-default);
+::deep.box {
+    --base-size: 1px;
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.box {
+::deep.box {
+    /* Display: */
     display: flex;
-    flex-direction: var(--box-direction);
-    justify-content: var(--box-justify-content);
-    align-items: var(--box-align-items);
-    gap: var(--box-gap);
-    width: var(--box-width);
-    min-width: var(--box-min-width);
-    max-width: var(--box-max-width);
-    height: var(--box-height);
-    min-height: var(--box-min-height);
-    max-height: var(--box-max-height);
-    padding: var(--box-padding);
-    border-radius: var(--box-radius);
-    background: var(--box-background);
-    backdrop-filter: var(--box-filter);
-    box-shadow: var(--box-shadow);
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    /* Size: */
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    padding: 24px;
+    /* Style: */
+    border-radius: 20px;
+    background: var(--theme-box-background);
+    box-shadow: var(--theme-box-box-shadow);
+    /* Base: */
+    font-size: var(--base-size);
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .box {
-        --box-padding: 36px;
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.box {
+        /* Size: */
+        padding: 36px;
     }
 }
 
 @media (min-width: 1200px) {
-    .box {
-        --box-padding: 50px;
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.box {
+        /* Size: */
+        padding: 50px;
     }
 }

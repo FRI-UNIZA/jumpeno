@@ -14,6 +14,6 @@ public partial class InfoBox {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public string ComputeClass() => ComputeClass(CLASS);
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
 }

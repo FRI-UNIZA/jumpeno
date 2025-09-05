@@ -60,6 +60,7 @@ class JSAnimationHandler {
         else this.#LastTransitionDisabler = null
     }
 
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     static SetTransitions(timing) {
         if (this.#LastTransitionDisabler) return
         if (timing) this.#LastTransitionDisabler = this.#TRANSITION_DISABLER(`all ${timing}`)
@@ -95,6 +96,7 @@ class JSAnimationHandler {
         this.#Restore(true)
     }
 
+    // Animation end ----------------------------------------------------------------------------------------------------------------------
     static async #OnAnimationEndListener(element, objRef, method, listener) {
         element.removeEventListener("animationend", listener)
         try { await objRef.invokeMethodAsync(method) } catch {}
@@ -106,6 +108,19 @@ class JSAnimationHandler {
         element.addEventListener("animationend", listener)
     }
 
+    // Transition end ---------------------------------------------------------------------------------------------------------------------
+    static async #OnTransitionEndListener(element, objRef, method, listener) {
+        element.removeEventListener("transitionend", listener)
+        try { await objRef.invokeMethodAsync(method) } catch {}
+    }
+    static CallOnTransitionEnd(selector, objRef, method) {
+        const element = document.querySelector(selector)
+        if (!element) return
+        let listener = async () => await this.#OnTransitionEndListener(element, objRef, method, listener)
+        element.addEventListener("transitionend", listener)
+    }
+
+    // Frames -----------------------------------------------------------------------------------------------------------------------------
     static RenderFrames(count) {
         if (count <= 0) return
         setTimeout(() => requestAnimationFrame(() => this.RenderFrames(--count)), 0)

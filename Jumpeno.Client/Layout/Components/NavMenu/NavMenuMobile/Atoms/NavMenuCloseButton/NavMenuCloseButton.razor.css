@@ -1,72 +1,90 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.nav-menu-close-button {
+::deep.nav-menu-close-button {
+    /* Position: */
     position: absolute;
     top: 19px;
-    right: calc(var(--size-container-padding-mobile) * 1px);
-    margin-top: -4px;
+    right: calc(var(--theme-size-container-padding-mobile) * 1px);
+    z-index: 2;
+    /* Display: */
     display: flex;
-    width: 46px;
-    height: 46px;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    opacity: 0.92;
-    background-color: transparent;
+    /* Size: */
+    width: 46px;
+    height: 46px;
+    padding: 5px;
+    margin-top: -4px;
+    /* Style: */
+    background: transparent;
     border: 2px solid transparent;
     border-radius: 6px;
     outline: none;
-    padding: 5px;
+    opacity: 0.92;
+    /* Content: */
+    font-size: 1px;
+    /* Actions: */
     cursor: pointer;
-    z-index: 2;
-    transition-property: color, background-color, box-shadow, opacity;
-    transition-duration: calc(var(--transition-fast) * 1ms);
+    /* Animations: */
+    transition-property: color, background, box-shadow, opacity;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
     transition-timing-function: ease;
 }
 
-.nav-menu-close-button-line {
-    display: block;
+::deep.nav-menu-close-button-line {
+    /* Position: */
     position: absolute;
+    /* Display: */
+    display: block;
+    /* Size: */
     width: calc(100% - 10px);
     height: 4px;
-    background-color: rgb(var(--color-secondary));
+    /* Style: */
+    background: var(--theme-nav-menu-mobile-button-color);
     border-radius: 100px;
-    transition-property: background-color, filter;
-    transition-duration: calc(var(--transition-fast) * 1ms);
+    /* Animations: */
+    transition-property: background;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
 }
-.light-theme .nav-menu-close-button:not(:hover):not(:focus-visible) .nav-menu-close-button-line {
-    filter: brightness(1.6);
-}
-.nav-menu-close-button-line:first-child {
+::deep.nav-menu-close-button-line:first-child {
+    /* Transform: */
     transform: rotate(45deg);
 }
-.nav-menu-close-button-line:last-child {
+::deep.nav-menu-close-button-line:last-child {
+    /* Transform: */
     transform: rotate(-45deg);
 }
 
-.closing .nav-menu-close-button {
+::deep.nav-menu-mobile.closing .nav-menu-close-button {
+    /* Display: */
     display: none;
 }
 
-/* State ------------------------------------------------------------------------------------------------------------------------------- */
-.nav-menu-close-button:hover .nav-menu-close-button-line,
-.nav-menu-close-button:focus-visible .nav-menu-close-button-line {
-    background-color: rgb(var(--color-secondary-highlight));
+/* Styles [highlight] ------------------------------------------------------------------------------------------------------------------ */
+::deep.nav-menu-close-button:hover .nav-menu-close-button-line,
+::deep.nav-menu-close-button:focus-visible .nav-menu-close-button-line {
+    /* Style: */
+    background: var(--theme-nav-menu-mobile-button-highlight-color);
 }
 
-.nav-menu-close-button:focus-visible {
-    background-color: rgba(var(--color-secondary), 0.08);
-    box-shadow: 0 1px 6px rgba(var(--color-base), 0.4);
+::deep.nav-menu-close-button:focus-visible {
+    /* Style: */
+    background: var(--theme-nav-menu-mobile-button-focus-background);
+    box-shadow: var(--theme-nav-menu-mobile-button-focus-box-shadow);
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (max-width: 280px) {
-    .nav-menu-close-button {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu-close-button {
+        /* Size: */
         margin-right: -8px;
     }
 }
 
 @media (min-width: 768px) {
-    .nav-menu-close-button {
-        right: calc(var(--size-container-padding-tablet) * 1px);
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu-close-button {
+        /* Position: */
+        right: calc(var(--theme-size-container-padding-tablet) * 1px);
     }
 }

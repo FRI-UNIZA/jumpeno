@@ -1,7 +1,16 @@
 @namespace Jumpeno.Client.Components
 
-@inherits TextComponentWithSpacing
+@inherits TextSpacingComponent
 
-<HeadingElement Type="HEADING_TYPE.H1" Variant="Variant" Size="Size" NoWrap="NoWrap" Spacing="Spacing" Class="@Class" Style="@Style">
+<HeadingComponent
+    Type="HEADING_TYPE.H1"
+    Base="Base"
+    Variant="Variant"
+    Size="Size"
+    Align="Align"
+    Spacing="Spacing"
+    Class="@Class"
+    Style="@Style"
+>
     @ChildContent
-</HeadingElement>
+</HeadingComponent>

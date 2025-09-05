@@ -1,0 +1,20 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+@if (Type != null) {
+    <div class="@ComputeClass()" style="@Style">
+        <div class="@CLASS_OUTLINE" />
+        <p
+            class="@CLASS_MESSAGE"
+            tabindex="@(ViewModel.HasError ? 0 : -1)"
+            aria-hidden="@($"{!ViewModel.HasError}".ToLower())"
+            aria-roledescription="@I18N.T("Error")"
+            title="@ViewModel.Message"
+            @onclick="OnClick"
+            @onkeydown="OnKeyDown"
+        >
+            @ViewModel.Message
+        </p>
+    </div>
+}

@@ -101,75 +101,65 @@ class JSWindow {
         await this.#ScrollStorage.RemoveEventListener(objRef, method, true)
     }
 
-    // User select ------------------------------------------------------------------------------------------------------------------------
-    static #NO_USER_SELECT_CLASS = 'no-user-select'
-    
+    // User select ------------------------------------------------------------------------------------------------------------------------    
     static BlockUserSelect() {
-        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
-        document.body.classList.add(this.#NO_USER_SELECT_CLASS)
+        document.body.classList.remove(CLASS.NO_USER_SELECT)
+        document.body.classList.add(CLASS.NO_USER_SELECT)
     }
 
     static AllowUserSelect() {
-        document.body.classList.remove(this.#NO_USER_SELECT_CLASS)
+        document.body.classList.remove(CLASS.NO_USER_SELECT)
     }
 
     // Touch actions ----------------------------------------------------------------------------------------------------------------------
-    static #TOUCH_ACTION_AUTO = 'touch-action-auto'
     static TouchActionAutoOn() {
-        document.body.classList.remove(this.#TOUCH_ACTION_AUTO)
-        document.body.classList.add(this.#TOUCH_ACTION_AUTO)
+        document.body.classList.remove(CLASS.TOUCH_ACTION_AUTO)
+        document.body.classList.add(CLASS.TOUCH_ACTION_AUTO)
     }
-    static TouchActionAutoOff = () => document.body.classList.remove(this.#TOUCH_ACTION_AUTO)
+    static TouchActionAutoOff = () => document.body.classList.remove(CLASS.TOUCH_ACTION_AUTO)
 
-    static #TOUCH_ACTION_NONE = 'touch-action-none'
     static TouchActionNoneOn() {
-        document.body.classList.remove(this.#TOUCH_ACTION_NONE)
-        document.body.classList.add(this.#TOUCH_ACTION_NONE)
+        document.body.classList.remove(CLASS.TOUCH_ACTION_NONE)
+        document.body.classList.add(CLASS.TOUCH_ACTION_NONE)
     }
-    static TouchActionNoneOff = () => document.body.classList.remove(this.#TOUCH_ACTION_NONE)
+    static TouchActionNoneOff = () => document.body.classList.remove(CLASS.TOUCH_ACTION_NONE)
 
-    static #TOUCH_ACTION_PAN = 'touch-action-pan'
     static TouchActionPanOn() {
-        document.body.classList.remove(this.#TOUCH_ACTION_PAN)
-        document.body.classList.add(this.#TOUCH_ACTION_PAN)
+        document.body.classList.remove(CLASS.TOUCH_ACTION_PAN)
+        document.body.classList.add(CLASS.TOUCH_ACTION_PAN)
     }
-    static TouchActionPanOff = () => document.body.classList.remove(this.#TOUCH_ACTION_PAN)
+    static TouchActionPanOff = () => document.body.classList.remove(CLASS.TOUCH_ACTION_PAN)
 
-    static #TOUCH_ACTION_PINCH_ZOOM = 'touch-action-pinch-zoom'
     static TouchActionPinchZoomOn() {
-        document.body.classList.remove(this.#TOUCH_ACTION_PINCH_ZOOM)
-        document.body.classList.add(this.#TOUCH_ACTION_PINCH_ZOOM)
+        document.body.classList.remove(CLASS.TOUCH_ACTION_PINCH_ZOOM)
+        document.body.classList.add(CLASS.TOUCH_ACTION_PINCH_ZOOM)
     }
-    static TouchActionPinchZoomOff = () => document.body.classList.remove(this.#TOUCH_ACTION_PINCH_ZOOM)
+    static TouchActionPinchZoomOff = () => document.body.classList.remove(CLASS.TOUCH_ACTION_PINCH_ZOOM)
 
-    static #TOUCH_ACTION_MANIPULATION = 'touch-action-manipulation'
     static TouchActionManipulationOn() {
-        document.body.classList.remove(this.#TOUCH_ACTION_MANIPULATION)
-        document.body.classList.add(this.#TOUCH_ACTION_MANIPULATION)
+        document.body.classList.remove(CLASS.TOUCH_ACTION_MANIPULATION)
+        document.body.classList.add(CLASS.TOUCH_ACTION_MANIPULATION)
     }
-    static TouchActionManipulationOff = () => document.body.classList.remove(this.#TOUCH_ACTION_MANIPULATION)
+    static TouchActionManipulationOff = () => document.body.classList.remove(CLASS.TOUCH_ACTION_MANIPULATION)
 
     // Overscroll -------------------------------------------------------------------------------------------------------------------------
-    static #OVERSCROLL_AUTO = 'overscroll-auto'
     static OverscrollAutoOn() {
-        document.body.classList.remove(this.#OVERSCROLL_AUTO)
-        document.body.classList.add(this.#OVERSCROLL_AUTO)
+        document.body.classList.remove(CLASS.OVERSCROLL_AUTO)
+        document.body.classList.add(CLASS.OVERSCROLL_AUTO)
     }
-    static OverscrollAutoOff = () => document.body.classList.remove(this.#OVERSCROLL_AUTO)
+    static OverscrollAutoOff = () => document.body.classList.remove(CLASS.OVERSCROLL_AUTO)
 
-    static #OVERSCROLL_CONTAIN = 'overscroll-contain'
     static OverscrollContainOn() {
-        document.body.classList.remove(this.#OVERSCROLL_CONTAIN)
-        document.body.classList.add(this.#OVERSCROLL_CONTAIN)
+        document.body.classList.remove(CLASS.OVERSCROLL_CONTAIN)
+        document.body.classList.add(CLASS.OVERSCROLL_CONTAIN)
     }
-    static OverscrollContainOff = () => document.body.classList.remove(this.#OVERSCROLL_CONTAIN)
+    static OverscrollContainOff = () => document.body.classList.remove(CLASS.OVERSCROLL_CONTAIN)
 
-    static #OVERSCROLL_NONE = 'overscroll-none'
     static OverscrollNoneOn() {
-        document.body.classList.remove(this.#OVERSCROLL_NONE)
-        document.body.classList.add(this.#OVERSCROLL_NONE)
+        document.body.classList.remove(CLASS.OVERSCROLL_NONE)
+        document.body.classList.add(CLASS.OVERSCROLL_NONE)
     }
-    static OverscrollNoneOff = () => document.body.classList.remove(this.#OVERSCROLL_NONE)
+    static OverscrollNoneOff = () => document.body.classList.remove(CLASS.OVERSCROLL_NONE)
 
     // Prevents ---------------------------------------------------------------------------------------------------------------------------
     static #Prevent = e => { if (e.cancelable) e.preventDefault() }

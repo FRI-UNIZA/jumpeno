@@ -1,0 +1,20 @@
+@namespace Jumpeno.Client.Components
+
+<AuthView Roles="[ROLE.USER]">
+    <DropDown @ref="DropDownRef" Title="@I18N.T("User menu")" Class="@CLASS">
+        <DropDownButton>
+            <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="@CLASS_PROFILE_IMAGE" />
+        </DropDownButton>
+        <Options>
+            <DropDownOption Label="@I18N.T("My profile")" Action="OpenProfile">
+                <AntIcon Type="setting" Theme="outline" Class="@CLASS_ICON" Style="font-size: 18px;" />
+                <DropDownOptionText>@I18N.T("My profile")</DropDownOptionText>
+            </DropDownOption>
+            <DropDownOption Label="@I18N.T("Log out")" Action="LogOut">
+                <AntIcon Type="logout" Theme="outline" Class="@CLASS_ICON" Style="margin-top: -1px;" />
+                <DropDownOptionText>@I18N.T("Log out")</DropDownOptionText>
+            </DropDownOption>
+        </Options>
+    </DropDown>
+    <ProfileModal @ref="@ModalRef" />
+</AuthView>

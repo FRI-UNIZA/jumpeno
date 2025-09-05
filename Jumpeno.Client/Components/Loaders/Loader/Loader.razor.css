@@ -1,34 +1,30 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
-.surface-all {
+::deep.loader {
+    /* Size: */
     --size: 30;
-}
-.surface-primary {
-    --color: rgb(var(--color-primary));
-    --background: rgba(var(--color-primary), 0.4);
-}
-.surface-secondary {
-    --color: rgb(var(--color-secondary));
-    --background: rgba(var(--color-secondary), 0.4);
-}
-.surface-floating {
-    --color: rgb(var(--color-primary));
-    --background: rgba(var(--color-primary), 0.4);
+    /* Style: */
+    --color: var(--theme-loader-color);
+    --background: var(--theme-loader-background);
 }
 
 /* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
-@keyframes spinner {
+@keyframes loader-spinner {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.loader {
-    border-radius: 50%;
-    animation: spinner 1s infinite linear;
+::deep.loader {
+    /* Display: */
+    flex-shrink: 0;
+    /* Size: */
     width: calc(var(--size) * 1px);
     height: calc(var(--size) * 1px);
+    /* Style: */
+    border-radius: 50%;
     border: calc(var(--size) / 6 * 1px) solid;
     border-color: var(--background);
     border-right-color: var(--color);
-    flex-shrink: 0;
+    /* Animations: */
+    animation: loader-spinner 1s infinite linear;
 }

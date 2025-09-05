@@ -2,7 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class CookieModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string COOKIE_TITLE_ID = "cookie-title";
+    public const string CLASS = "cookie-modal";
+    public const string CLASS_COOKIE_TITLE = "cookie-title";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
@@ -11,13 +12,29 @@ public partial class CookieModal {
     private Dictionary<Type, bool> Selected = [];
     public string GetDialogID() => ModalRef.ID_DIALOG;
 
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public readonly string FORM = Form.Of<CookieModal>();
+    private readonly SwitchViewModel SwitchMandatoryVM;
+    private readonly SwitchViewModel SwitchFunctionalVM;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
+    public CookieModal() {
+        SwitchMandatoryVM = new(new(
+            Form: FORM,
+            ID: nameof(SwitchMandatoryVM),
+            DefaultValue: true
+        ));
+        SwitchFunctionalVM = new(new(
+            Form: FORM,
+            ID: nameof(SwitchFunctionalVM),
+            DefaultValue: true,
+            OnChange: new(e => UpdateSelection(typeof(COOKIE_FUNCTIONAL), e.Value))
+        ));
+    }
     protected override void OnComponentInitialized() => RequestStorage.Set(nameof(CookieModal), this);
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private static Dictionary<Type, bool> ToDictionary(List<Type> list) {
-        return list.ToDictionary(c => c, c => true);
-    }
+    private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
 
     private void InitSelected() {
         var acceptedCookies = CookieStorage.GetAcceptedCookies();
@@ -28,12 +45,13 @@ public partial class CookieModal {
             Initial = ToDictionary(acceptedCookies);
         }
         Selected = ToDictionary(acceptedCookies);
+        SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE_FUNCTIONAL)));
     }
 
     private bool IsStateInitial(Dictionary<Type, bool> accept) {
         return Initial.Count == accept.Count
-               && !Initial.Except(accept).Any()
-               && !accept.Except(Initial).Any();
+        && !Initial.Except(accept).Any()
+        && !accept.Except(Initial).Any();
     }
     
     public async Task OpenModal(bool unclosable) {
@@ -43,9 +61,7 @@ public partial class CookieModal {
         await ModalRef.Open();
     }
 
-    private bool IsSelected(Type cookieType) {
-        return Selected.ContainsKey(cookieType);
-    }
+    private bool IsSelected(Type cookieType) => Selected.ContainsKey(cookieType);
 
     private void UpdateSelection(Type cookieType, bool accept) {
         if (accept) Selected[cookieType] = true;
@@ -57,6 +73,7 @@ public partial class CookieModal {
         await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE_FUNCTIONAL)));
             StateHasChanged();
             await Task.Delay(AppTheme.TRANSITION_FAST);
             if (IsStateInitial(newSelected)) {

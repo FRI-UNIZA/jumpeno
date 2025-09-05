@@ -1,0 +1,131 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.dropdown {
+    /* Options: */
+    --dropdown-options-right: auto;
+    --dropdown-options-left: auto;
+    --dropdown-options-translate: 0%;
+    --dropdown-options-radius: 10px;
+    --dropdown-options-min-width: 60px;
+    --dropdown-options-max-width: 400px;
+    /* Option: */
+    --dropdown-option-font-size: 16px;
+    --dropdown-option-padding: 10px 18px;
+    --dropdown-option-justify: flex-start;
+    /* Base: */
+    --base-size: 1px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+}
+
+::deep.dropdown .dropdown-button {
+    /* Position: */
+    position: relative;
+    /* Size: */
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    /* Style: */
+    border: none;
+    outline: none;
+    background-color: transparent;
+    /* Content: */
+    overflow: hidden;
+    /* Actions: */
+    cursor: pointer;
+    /* Base: */
+    font-size: var(--base-size);
+}
+
+::deep.dropdown .dropdown-start,
+::deep.dropdown .dropdown-end {
+    /* Position: */
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    /* Style: */
+    outline: none;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.dropdown .dropdown-menu {
+    /* Position: */
+    position: absolute;
+    bottom: 0;
+    z-index: var(--theme-z-index-dropdown);
+    /* Display: */
+    display: none;
+    /* Size: */
+    width: 100%;
+    /* Style: */
+    opacity: 0;
+    /* Animations: */
+    transition: display calc(var(--theme-transition-fast) * 1ms) allow-discrete,
+                opacity calc(var(--theme-transition-fast) * 1ms);
+}
+
+::deep.dropdown .dropdown-mark {
+    /* Position: */
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: 20px;
+    height: 20px;
+    /* Content: */
+    font-size: 1px;
+    /* Style: */
+    background: var(--theme-dropdown-options-background);
+    box-shadow: var(--theme-dropdown-mark-box-shadow);
+    /* Transform: */
+    transform: translateX(-50%) rotateZ(45deg);
+}
+
+::deep.dropdown .dropdown-options {
+    /* Position: */
+    position: absolute;
+    left: var(--dropdown-options-left);
+    right: var(--dropdown-options-right);
+    bottom: -12px;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    min-width: var(--dropdown-options-min-width);
+    max-width: var(--dropdown-options-max-width);
+    min-height: 24px;
+    /* Style: */
+    border-radius: var(--dropdown-options-radius);
+    background: var(--theme-dropdown-options-background);
+    box-shadow: var(--theme-dropdown-options-box-shadow);
+    /* Content: */
+    overflow: hidden;
+    /* Transform: */
+    transform: translate(var(--dropdown-options-translate), 100%);
+    /* Base: */
+    font-size: var(--base-size);
+}
+
+/* Styles [displayed] ------------------------------------------------------------------------------------------------------------------ */
+::deep.dropdown.displayed .dropdown-menu {
+    /* Display: */
+    display: flex;
+    /* Style: */
+    opacity: 1;
+}
+
+@starting-style {
+    ::deep.dropdown.displayed .dropdown-menu {
+        /* Style: */
+        opacity: 0;
+    }
+}

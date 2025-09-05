@@ -20,7 +20,7 @@ public partial class PasswordResetForm {
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
-            OnEnter: new(Send)
+            OnEnter: new(async e => await Send())
         ));
     }
 

@@ -2,8 +2,8 @@
 
 @inherits BasicComponent
 
-<nav class="@ComputeClass()">
-    <Container Type="CONTAINER_TYPE.INLINE" Surface="SURFACE.SECONDARY" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
+<nav class="@ComputeClass()" style="@Style">
+    <Container Type="CONTAINER_TYPE.INLINE" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
         <LogoLink />
         <div class="@CLASS_NAVIGATION">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />

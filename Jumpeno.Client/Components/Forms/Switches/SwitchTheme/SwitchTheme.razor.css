@@ -1,0 +1,21 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.switch.switch-theme.variant.size {
+    /* Size: */
+    --switch-element-width: 30px;
+}
+
+::deep.field.switch.switch-theme.variant.size .field-content {
+    /* Display: */
+    gap: 4px;
+}
+
+::deep.field.switch.switch-theme.variant.size .switch-description {
+    /* Content: */
+    line-height: 1;
+}
+
+::deep.field.switch.switch-theme.variant.size .switch-description .switch-theme-icon svg {
+    /* Size: */
+    width: 23px;
+    height: 23px;
+}

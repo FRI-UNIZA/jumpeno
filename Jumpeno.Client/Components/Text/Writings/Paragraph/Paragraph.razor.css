@@ -1,0 +1,30 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.paragraph {
+    --max-lines: unset;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.paragraph {
+    /* Display: */
+    display: block;
+    display: -webkit-box;
+    /* Size: */
+    width: 100%;
+    /* Content: */
+    -webkit-box-orient: vertical;
+    line-clamp: var(--max-lines);
+    -webkit-line-clamp: var(--max-lines);
+}
+
+/* NoWrap ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.paragraph.no-wrap {
+    display: block;
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.paragraph.variant-primary {
+    /* Content: */
+    font-weight: 400;
+    /* Style: */
+    color: var(--theme-text-color);
+}

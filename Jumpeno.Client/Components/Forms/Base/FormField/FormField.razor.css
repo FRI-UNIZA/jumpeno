@@ -1,0 +1,98 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field {
+    /* Position: */
+    position: relative;
+    z-index: auto;
+    /* Display: */
+    display: inline-flex;
+    /* Size: */
+    width: auto;
+    max-width: 100%;
+    height: var(--field-height);
+    /* Style: */
+    border-radius: var(--field-border-radius, 0);
+    /* Actions: */
+    pointer-events: none;
+    /* Base: */
+    font-size: var(--field-base-size, 1px);
+}
+
+/* FormLabel > Styles ------------------------------------------------------------------------------------------------------------------ */
+::deep.form-label .field {
+    /* Size: */
+    width: 100%;
+}
+
+/* FormError > Styles ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.error-passive.variant.size {
+    /* Size: */
+    padding: 0 var(--field-passive-padding-x);
+}
+
+/* Content ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.field > .field-content {
+    /* Position: */
+    position: relative;
+    z-index: auto;
+    /* Display: */
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    /* Style: */
+    border-radius: var(--field-border-radius, 0);
+    /* Actions: */
+    pointer-events: none;
+    /* Base: */
+    font-size: var(--field-base-size, 1px);
+}
+
+::deep.field > .field-content > * {
+    /* Actions: */
+    pointer-events: all;
+}
+
+/* AutoSize ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.variant.size.auto-size {
+    /* Size: */
+    height: auto;
+    padding: 0;
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.variant-primary.size-s {
+    /* Size: */
+    --field-height: 41px;
+    --field-passive-padding-x: 10px;
+    --field-passive-padding-y: 8px;
+    /* Style: */
+    --field-border-radius: 6px;
+    /* Base: */
+    --field-base-size: 0.8px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.variant-primary.size-m {
+    /* Size: */
+    --field-height: 52px;
+    --field-passive-padding-x: 13px;
+    --field-passive-padding-y: 11px;
+    /* Style: */
+    --field-border-radius: 8px;
+    /* Base: */
+    --field-base-size: 1px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.variant-primary.size-l {
+    /* Size: */
+    --field-height: 64px;
+    --field-passive-padding-x: 16px;
+    --field-passive-padding-y: 14px;
+    /* Style: */
+    --field-border-radius: 10px;
+    /* Base: */
+    --field-base-size: 1.2px;
+}

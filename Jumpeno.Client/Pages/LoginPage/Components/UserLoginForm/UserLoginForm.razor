@@ -7,25 +7,25 @@
 <div class="user-login-form">
     <Heading1 Class="login-heading" Size="TEXT_SIZE.L">@I18N.T("Login")</Heading1>
     <div class="login-inputs">
-        <Input ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" Autocomplete />
-        <Input ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" HideLabel Size="INPUT_SIZE.M" Align="INPUT_ALIGN.CENTER" />
+        <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
+        <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
     </div>
     <Button Size="BUTTON_SIZE.M" OnClick="Login">
         <Text>@I18N.T("Log in")</Text>
     </Button>
-    <Paragraph Size="TEXT_SIZE.S" Class="register-block login-text">
+    <Paragraph Size="TEXT_SIZE.S" Class="register-block">
         @I18N.T("Not a user?")&nbsp;
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.REGISTER)" OnEnter="() => VM.Show(LOGIN_FORM.REGISTER)" Underline Class="login-text">
+        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.REGISTER)" OnEnter="() => VM.Show(LOGIN_FORM.REGISTER)" Underline>
             @I18N.T("Register")
-        </Link>
+        </WebLink>
     </Paragraph>
     <div class="login-options">
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" OnEnter="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" Class="login-text">
+        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" OnEnter="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)">
             &nbsp;@I18N.T("Reset password")&nbsp;
-        </Link>
+        </WebLink>
         <span class="option-delimiter">|</span>
-        <Link Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.ADMIN)" OnEnter="() => VM.Show(LOGIN_FORM.ADMIN)" Class="login-text">
+        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.ADMIN)" OnEnter="() => VM.Show(LOGIN_FORM.ADMIN)">
             <AntIcon Type="safety-certificate" Theme="outline" Class="icon-admin"/>&nbsp;@I18N.T("I am admin")&nbsp;
-        </Link>
+        </WebLink>
     </div>
 </div>

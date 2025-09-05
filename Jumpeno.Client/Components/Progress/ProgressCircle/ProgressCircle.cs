@@ -1,4 +1,3 @@
-
 namespace Jumpeno.Client.Components;
 
 public partial class ProgressCircle {
@@ -11,11 +10,11 @@ public partial class ProgressCircle {
     [Parameter]
     public double? Progress { get; set; } = null;
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected CSSClass ComputeClass() => ComputeClass(CLASS);
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+
     protected CSSStyle ComputeStyle() {
-        var s = new CSSStyle(Style);
-        if (Progress is not null) s.Set("--progress", $"{Progress}");
-        return s;
+        return new CSSStyle(Style)
+        .Set("--progress", $"{Progress}", Progress is not null);
     }
 }

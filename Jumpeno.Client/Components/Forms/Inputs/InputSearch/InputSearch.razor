@@ -1,0 +1,33 @@
+@namespace Jumpeno.Client.Components
+
+@inherits FormField<InputSearchViewModel>
+
+<InputComponent
+    ViewModel="ViewModel.InputVM"
+    Name="@Name"
+    Label="Label"
+    Variant="Variant"
+    Size="Size"
+    Align="Align"
+    Disabled="Disabled"
+    Propagate="Propagate"
+    AllowClear
+    Class="@ComputeClass()"
+    Style="@Style"
+    Icon="Icon"
+>
+    <IconAfter>
+        <button
+            type="@BUTTON_TYPE.BUTTON.StringLower()"
+            class="@INPUT_ICON.CLASS input-search-button"
+            aria-label="@I18N.T("Search")"
+            @onclick="async () => {
+                await ViewModel.Search(ViewModel.InputVM.Value);
+                ActionHandler.SetFocus(ViewModel.InputVM.FormID);
+            }"
+        >
+            <ThumbButton Class="input-search-thumb" />
+            <AntIcon Type="search" Theme="outline" Class="input-search-icon" />
+        </button>
+    </IconAfter>
+</InputComponent>

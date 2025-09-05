@@ -23,7 +23,7 @@ public partial class AdminLoginForm {
             MaxLength: AdminValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
-            OnEnter: new(Send)
+            OnEnter: new(async e => await Send())
         ));
     }
 

@@ -1,0 +1,441 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.field.input .input-container {
+    /* Position: */
+    position: relative;
+    z-index: 0;
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    /* Style: */
+    border-radius: var(--field-border-radius);
+    /* Base: */
+    font-size: var(--field-base-size);
+}
+
+::deep.field.input .input-element {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    align-items: center;
+    appearance: none;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    padding: var(--input-padding);
+    /* Style: */
+    color: var(--input-color);
+    border-radius: var(--field-border-radius);
+}
+
+::deep.field.input .input-element::placeholder {
+    /* Style: */
+    color: var(--input-placeholder-color);
+}
+
+/* Icons ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.icon-before .input-element {
+    /* Size: */
+    padding-left: calc(var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+::deep.field.input.icon-after .input-element {
+    /* Size: */
+    padding-right: calc(var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+
+::deep.field.input .input-icon-before,
+::deep.field.input .input-icon-after {
+    /* Position: */
+    position: absolute;
+    z-index: 1;
+    /* Display: */
+    display: flex;
+    /* Content: */
+    font-size: var(--input-icon-size);
+    /* Actions: */
+    pointer-events: none;
+}
+::deep.field.input .input-icon-before {
+    /* Position: */
+    left: var(--input-icon-gap-outer);
+}
+::deep.field.input .input-icon-after {
+    /* Position: */
+    right: var(--input-icon-gap-outer);
+}
+::deep.field.input .input-icon-before > *,
+::deep.field.input .input-icon-after > * {
+    /* Actions: */
+    pointer-events: all;
+}
+
+::deep.field.input {
+    /* Variables: */
+    --icon-text-color: var(--input-placeholder-color);
+}
+::deep.field.input .input-icon-text {
+    /* Style: */
+    color: var(--icon-text-color);
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Clear ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input .input-clear {
+    /* Position: */
+    position: absolute;
+    right: var(--input-icon-gap-outer);
+    top: 0;
+    bottom: 0;
+    /* Display: */
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    min-width: var(--input-clear-size);
+    width: var(--input-clear-size);
+    max-width: var(--input-clear-size);
+    height: 100%;
+    /* Style: */
+    opacity: 1;
+    /* Actions: */
+    pointer-events: none;
+}
+::deep.field.input.value-default .input-clear {
+    /* Style: */
+    opacity: 0;
+}
+
+::deep.field.input .input-clear-button {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    appearance: none;
+    /* Size: */
+    min-width: var(--input-clear-size);
+    width: var(--input-clear-size);
+    max-width: var(--input-clear-size);
+    min-height: var(--input-clear-size);
+    height: var(--input-clear-size);
+    max-height: var(--input-clear-size);
+    /* Style: */
+    border: none;
+    outline: none;
+    /* Content: */
+    font-size: 0;
+    line-height: 0;
+    flex-shrink: 0;
+    /* Actions: */
+    pointer-events: all;
+}
+::deep.field.input.value-default .input-clear-button {
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.field.input .thumb-button.input-clear-thumb {
+    /* Size: */
+    --width: var(--input-clear-thumb-size);
+    --height: var(--input-clear-thumb-size);
+}
+
+::deep.field.input .input-clear-button svg {
+    /* Size: */
+    width: calc(var(--input-clear-size) - var(--input-clear-padding));
+    height: calc(var(--input-clear-size) - var(--input-clear-padding));
+}
+
+/* Clear indentation ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.allow-clear:not(.align-right) .input-element {
+    padding-right: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-outer));
+}
+::deep.field.input.icon-after.allow-clear:not(.align-right) .input-element {
+    padding-right: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+::deep.field.input.icon-after:not(.align-right) .input-clear {
+    right: calc(var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+
+::deep.field.input.allow-clear.align-center:not(.icon-before):not(.icon-after) .input-element {
+    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size));
+}
+::deep.field.input.allow-clear.align-center:not(.icon-before).icon-after .input-element {
+    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size));
+}
+::deep.field.input.allow-clear.align-center.icon-before:not(.icon-after) .input-element {
+    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size) - var(--input-icon-size));
+}
+::deep.field.input.allow-clear.align-center.icon-after.icon-before .input-element {
+    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size));
+}
+::deep.field.input:not(.allow-clear).align-center.icon-before:not(.icon-after) .input-element {
+    text-indent: calc(-1 * var(--input-icon-size));
+}
+::deep.field.input:not(.allow-clear).align-center:not(.icon-before).icon-after .input-element {
+    text-indent: var(--input-icon-size);
+}
+
+::deep.field.input.allow-clear.align-right .input-element {
+    padding-left: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-outer));
+}
+::deep.field.input.icon-before.allow-clear.align-right .input-element {
+    padding-left: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+::deep.field.input.icon-before.align-right .input-clear {
+    left: calc(var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
+}
+
+/* Autofill ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input .input-element:-webkit-autofill,
+::deep.field.input .input-element:-webkit-autofill:hover, 
+::deep.field.input .input-element:-webkit-autofill:focus, 
+::deep.field.input .input-element:-webkit-autofill:active  {
+    /* Style: */
+    color: var(--input-color) !important;
+    -webkit-text-fill-color: var(--input-color) !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    /* Animations: */
+    transition: background 0s ease-in-out 100000s;
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.align-left .input-element { text-align: left; }
+::deep.field.input.align-center .input-element { text-align: center; }
+::deep.field.input.align-right .input-element { text-align: right; }
+::deep.field.input.align-right .input-clear {
+    right: auto;
+    left: var(--input-icon-gap-outer);
+}
+
+/* TextMode ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.text-mode-lowercase .input-element { text-transform: lowercase; }
+::deep.field.input.text-mode-normal .input-element { text-transform: none; }
+::deep.field.input.text-mode-uppercase .input-element { text-transform: uppercase; }
+
+/* Disabled ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.disabled .input-clear { display: none; }
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary {
+    /* Style: */
+    --input-color: var(--theme-form-primary-color);
+    --input-placeholder-color: var(--theme-form-primary-placeholder-color);
+    /* Actions: */
+    cursor: default;
+}
+
+::deep.field.input.variant-primary .input-container {
+    /* Style: */
+    background: var(--theme-form-primary-background);
+    border: none;
+    box-shadow: var(--theme-form-primary-box-shadow);
+    /* Animations: */
+    transition-property: background, box-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.field.input.variant-primary .input-element {
+    /* Style: */
+    background: transparent;
+    outline: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-form-primary-border-color);
+    text-shadow: var(--theme-form-primary-text-shadow);
+    box-shadow: none;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: var(--input-font-size);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-decoration: none;
+    /* Animations: */
+    transition-property: color, text-shadow, border-color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: text;
+}
+::deep.field.input.variant-primary .input-element::placeholder {
+    /* Animations: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.field.input.variant-primary .input-element[type="password"]:not(:placeholder-shown) {
+    /* Content: */
+    font-weight: 600;
+    letter-spacing: calc(0.25 * var(--input-font-size));
+}
+
+::deep.field.input.variant-primary .input-icon-before,
+::deep.field.input.variant-primary .input-icon-after {
+    /* Variables: */
+    --icon-color: var(--theme-form-primary-icon-color);
+}
+::deep.field.input.variant-primary .input-icon-before > .input-icon,
+::deep.field.input.variant-primary .input-icon-after > .input-icon {
+    /* Style: */
+    color: var(--icon-color);
+    /* Animations: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: pointer;
+}
+
+::deep.field.input.variant-primary .input-clear {
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-fast) * 1ms) ease;
+}
+::deep.field.input.variant-primary .input-clear-button {
+    /* Style: */
+    color: var(--theme-form-primary-clear-color);
+    background: var(--theme-form-primary-clear-background);
+    box-shadow: var(--theme-form-primary-clear-box-shadow);
+    border-radius: 100%;
+    /* Animations: */
+    transition-property: color, background;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+    /* Actions: */
+    cursor: pointer;
+}
+
+/* Variant [primary][highlight] -------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary:not(.disabled):has(:hover),
+::deep.field.input.variant-primary:not(.disabled):has(:focus-visible) {
+    /* Style: */
+    --input-color: var(--theme-form-primary-highlight-color);
+    --input-placeholder-color: var(--theme-form-primary-highlight-placeholder-color);
+    /* Actions: */
+    cursor: default;
+}
+
+::deep.field.input.variant-primary:not(.disabled):has(:hover) .input-container,
+::deep.field.input.variant-primary:not(.disabled):has(:focus-visible) .input-container {
+    /* Style: */
+    background: var(--theme-form-primary-highlight-background);
+    box-shadow: var(--theme-form-primary-highlight-box-shadow);
+}
+
+::deep.field.input.variant-primary:not(.disabled):has(:hover) .input-element {
+    /* Style: */
+    border-color: var(--theme-form-primary-highlight-border-color);
+    text-shadow: var(--theme-form-primary-highlight-text-shadow);
+}
+
+::deep.field.input.variant-primary:not(.disabled) .input-icon-before:hover,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-after:hover,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-before:focus-visible,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-after:focus-visible {
+    /* Variables: */
+    --icon-color: var(--theme-form-primary-icon-highlight-color);
+}
+::deep.field.input.variant-primary:not(.disabled) .input-icon-before > *.input-icon:hover,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-after > *.input-icon:hover,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-before > *.input-icon:focus-visible,
+::deep.field.input.variant-primary:not(.disabled) .input-icon-after > *.input-icon:focus-visible {
+    /* Style: */
+    color: var(--icon-color);
+}
+
+::deep.field.input.variant-primary:not(.disabled) .input-clear-button:hover,
+::deep.field.input.variant-primary:not(.disabled) .input-clear-button:focus-visible {
+    /* Style: */
+    color: var(--theme-form-primary-clear-highlight-color);
+    background: var(--theme-form-primary-clear-highlight-background);
+    box-shadow: var(--theme-form-primary-clear-highlight-box-shadow);
+}
+
+/* Variant [primary][disabled] --------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary.disabled {
+    /* Style: */
+    --input-color: var(--theme-form-primary-disabled-color);
+    --input-placeholder-color: var(--theme-form-primary-disabled-placeholder-color);
+    /* Actions: */
+    cursor: not-allowed;
+    pointer-events: all;
+}
+
+::deep.field.input.variant-primary.disabled .input-container {
+    /* Style: */
+    background: var(--theme-form-primary-disabled-background);
+    box-shadow: var(--theme-form-primary-disabled-box-shadow);
+}
+
+::deep.field.input.variant-primary.disabled .input-element {
+    /* Style: */
+    border-color: var(--theme-form-primary-disabled-border-color);
+    text-shadow: var(--theme-form-primary-disabled-text-shadow);
+}
+
+::deep.field.input.variant-primary.disabled .input-icon-before > *.input-icon,
+::deep.field.input.variant-primary.disabled .input-icon-after > *.input-icon {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-icon-color);
+}
+::deep.field.input.variant-primary.disabled .input-icon-before > *.input-icon,
+::deep.field.input.variant-primary.disabled .input-icon-after > *.input-icon {
+    /* Style: */
+    color: var(--theme-form-primary-disabled-icon-color);
+}
+
+::deep.field.input.variant-primary.disabled .input-icon-before > *:not(.input-icon),
+::deep.field.input.variant-primary.disabled .input-icon-after > *:not(.input-icon) {
+    /* Style: */
+    opacity: 0.2 !important;
+}
+
+/* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary.size-s {
+    /* Variables: */
+    --input-padding: 10px 12px;
+    --input-font-size: 16px;
+    --input-icon-size: 22px;
+    --input-icon-gap-inner: 6px;
+    --input-icon-gap-outer: 8px;
+    --input-clear-size: 18px;
+    --input-clear-thumb-size: 40px;
+    --input-clear-padding: 6px;
+}
+
+/* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary.size-m {
+    /* Variables: */
+    --input-padding: 13px 16px;
+    --input-font-size: 18px;
+    --input-icon-size: 26px;
+    --input-icon-gap-inner: 8px;
+    --input-icon-gap-outer: 10px;
+    --input-clear-size: 22px;
+    --input-clear-thumb-size: 40px;
+    --input-clear-padding: 8px;
+}
+
+/* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.input.variant-primary.size-l {
+    /* Variables: */
+    --input-padding: 16px 20px;
+    --input-font-size: 24px;
+    --input-icon-size: 32px;
+    --input-icon-gap-inner: 10px;
+    --input-icon-gap-outer: 14px;
+    --input-clear-size: 24px;
+    --input-clear-thumb-size: 40px;
+    --input-clear-padding: 8px;
+}

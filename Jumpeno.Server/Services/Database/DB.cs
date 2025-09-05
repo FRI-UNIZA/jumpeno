@@ -62,7 +62,7 @@ public class DB : DbContext {
     }
 
     // Server context ---------------------------------------------------------------------------------------------------------------------
-    // NOTE: Server must run DB operations in UseServerContext hook
+    // NOTE: Autonomous server database operations must run in UseServerContext hook
     private static DB ServerContext = null!;
     private static readonly Locker ServerContextLock = new();
     public static async Task UseServerContext(Func<Task> action) {

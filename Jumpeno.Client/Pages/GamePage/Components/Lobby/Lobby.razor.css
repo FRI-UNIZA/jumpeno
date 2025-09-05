@@ -1,12 +1,13 @@
-/* Variables [Aspect ratio] ------------------------------------------------------------------------------------------------------------ */
-.lobby {
+/* Variables [aspect ratio] ------------------------------------------------------------------------------------------------------------ */
+::deep.lobby {
     --lobby-width: 90vw;
     --lobby-height: 67.5vw;
     --lobby-padding: 5vw;
     --lobby-size: var(--lobby-width);
 }
+
 @media (min-aspect-ratio: 12 / 9) {
-    .lobby {
+    ::deep.lobby {
         --lobby-width: 120dvh;
         --lobby-height: 90dvh;
         --lobby-padding: 5dvh;
@@ -14,8 +15,8 @@
     }
 }
 
-/* Variables [Components] -------------------------------------------------------------------------------------------------------------- */
-.lobby {
+/* Variables [components] -------------------------------------------------------------------------------------------------------------- */
+::deep.lobby {
     /* Panels: */
     --lobby-gap: calc(var(--lobby-size) * 0.03);
     --lobby-primary-width: calc(var(--lobby-width) * 0.68 - var(--lobby-gap) / 2);
@@ -23,16 +24,15 @@
     /* Boxes: */
     --lobby-box-padding: calc(var(--lobby-size) * 0.04);
     --lobby-box-radius: calc(var(--lobby-size) * 0.017);
-    --lobby-box-shadow: 0 calc(var(--lobby-size) * 0.006)
-                        calc(var(--lobby-size) * 0.018) 0
-                        rgba(var(--color-base), 0.2);
+    --lobby-box-base-size: var(--lobby-size);
+    --lobby-box-shadow: var(--theme-lobby-box-shadow);
     /* Game box: */
     --game-box-height: calc(var(--lobby-height) * 0.174);
     --game-box-padding-vertical: calc(var(--lobby-height) * 0.046);
     --game-box-inside-height: calc(var(--game-box-height) - 2 * var(--game-box-padding-vertical));
     --game-name-height: calc(var(--game-box-inside-height) * 0.5);
     --game-gap-height: calc(var(--game-box-inside-height) * 0.22);
-    --game-info-height: calc(var(--game-box-inside-height) * 0.28);;
+    --game-info-height: calc(var(--game-box-inside-height) * 0.28);
     /* Round line: */
     --round-line-height: calc(var(--lobby-height) * 0.055) + var(--lobby-gap);
     --round-line-inside-height: calc(var(--round-line-height) - var(--lobby-gap));
@@ -51,309 +51,423 @@
 }
 
 /* General styles ---------------------------------------------------------------------------------------------------------------------- */
-.lobby {
+::deep.lobby {
+    /* Position: */
     position: relative;
+    justify-content: center;
+    align-items: flex-start;
+    /* Display: */
     display: flex;
     flex-direction: row;
     gap: var(--lobby-gap);
+    /* Size: */
     width: var(--lobby-width);
     height: var(--lobby-height);
-    justify-content: center;
-    align-items: flex-start;
 }
 
-.lobby-panel {
+::deep.lobby .lobby-panel {
+    /* Display: */
     display: flex;
     flex-direction: column;
     gap: var(--lobby-gap);
 }
-.lobby-panel.primary {
+::deep.lobby .lobby-panel.primary {
+    /* Size: */
     width: var(--lobby-primary-width);
 }
-.lobby-panel.secondary {
+::deep.lobby .lobby-panel.secondary {
+    /* Size: */
     width: var(--lobby-secondary-width);
     height: 100%;
 }
 
-::deep .lobby-box {
-    --box-padding: var(--lobby-box-padding);
-    --box-radius: var(--lobby-box-radius);
-    --box-shadow: var(--lobby-box-shadow);
+::deep.lobby .box.lobby-box {
+    /* Variables: */
+    --base-size: var(--lobby-box-base-size);
+    /* Size: */
+    padding: var(--lobby-box-padding);
+    /* Style: */
+    border-radius: var(--lobby-box-radius);
+    box-shadow: var(--lobby-box-shadow);
 }
 
-.lobby-text {
-    line-height: 1;
-    white-space: nowrap;
+::deep.lobby .lobby-text {
+    /* Size: */
     width: 100%;
     padding: 0;
     margin: 0;
+    /* Content: */
+    line-height: 1;
+    white-space: nowrap;
 }
 
 /* Game box ---------------------------------------------------------------------------------------------------------------------------- */
-::deep .lobby-box.game {
-    --box-direction: column;
-    --box-width: 100%;
-    --box-max-width: 100%;
-    --box-padding: var(--game-box-padding-vertical) var(--lobby-box-padding);
+::deep.lobby .lobby-box.game {
+    /* Display: */
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+    max-width: 100%;
+    padding: var(--game-box-padding-vertical) var(--lobby-box-padding);
 }
-.lobby-text.game-name {
+
+::deep.lobby .lobby-text.game-name {
+    /* Size: */
+    padding-top: calc(var(--game-gap-height) * 2);
+    padding-bottom: calc(var(--game-gap-height) * 2);
+    margin: calc(var(--game-gap-height) * -2) 0 calc(var(--game-gap-height) * -1);
+    /* Content: */
     font-size: var(--game-name-height);
     font-weight: 600;
-    padding-top: calc(var(--game-gap-height) * 2);
-    margin: calc(var(--game-gap-height) * -2) 0 calc(var(--game-gap-height) * -1);
-    padding-bottom: calc(var(--game-gap-height) * 2);
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.game-info {
+
+::deep.lobby .game-info {
+    /* Display: */
     display: flex;
-    width: 100%;
-    height: var(--game-info-height);
     justify-content: space-between;
     align-items: center;
+    /* Size: */
+    width: 100%;
+    height: var(--game-info-height);
 }
-.lobby-text.game-code {
+
+::deep.lobby .lobby-text.game-code {
+    /* Size: */
     width: 50%;
+    /* Content: */
     font-size: var(--game-info-height);
 }
-.lobby-text.game-code *:not(b) {
+
+::deep.lobby .lobby-text.game-code *:not(b) {
+    /* Style: */
     opacity: 0.7;
 }
-.lobby-text.game-code b {
+
+::deep.lobby .lobby-text.game-code b {
+    /* Content: */
     font-weight: 600;
 }
-.lobby-text.spectators {
+
+::deep.lobby .lobby-text.spectators {
+    /* Display: */
     display: inline-flex;
     justify-content: flex-end;
     align-items: center;
     gap: calc(var(--game-info-height) * 0.4);
+    /* Size: */
     width: 50%;
+    padding: 0;
+    /* Content: */
     font-size: var(--game-info-height);
     font-weight: 600;
-    padding: 0;
     text-align: right;
 }
-::deep .watch-icon {
+
+::deep.lobby .watch-icon {
+    /* Content: */
     font-size: calc(var(--game-info-height) * 1.5);
 }
 
 /* Round line -------------------------------------------------------------------------------------------------------------------------- */
-@keyframes GameStateAnimation {
+@keyframes lobby-game-state-animation {
     0% { opacity: 0.4; }
     50% { opacity: 1; }
     100% { opacity: 0.4; }
 }
-.round-line {
+
+::deep.lobby .round-line {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    /* Size: */
     width: 100%;
     margin: calc(var(--lobby-gap) * -0.5) 0;
     height: var(--round-line-inside-height);
 }
-.game-round {
+
+::deep.lobby .game-round {
+    /* Position: */
     position: absolute;
+    /* Size: */
     width: auto;
-    font-size: calc(var(--round-line-inside-height) * 0.5);
-    line-height: 1;
-    font-weight: 500;
-    white-space: nowrap;
-    margin: 0;
     padding-left: var(--lobby-box-padding);
+    margin: 0;
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.5);
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
 }
-.game-round b {
+
+::deep.lobby .game-round b {
+    /* Content: */
     font-weight: 700;
 }
-.game-state {
+
+::deep.lobby .game-state {
+    /* Size: */
     width: 100%;
     margin: 0;
-    text-align: center;
+    /* Style: */
+    color: var(--theme-game-state-color);
+    text-shadow: var(--theme-game-state-text-shadow);
+    /* Content: */
     font-size: calc(var(--round-line-inside-height) * 0.66);
     line-height: 1;
     font-weight: 700;
     letter-spacing: calc(var(--lobby-width) * 0.0025);
     text-transform: uppercase;
     white-space: nowrap;
-    color: rgba(var(--color-base-invert), 1);
-    text-shadow: calc(var(--round-line-inside-height) * 0.06)
-                 calc(var(--round-line-inside-height) * 0.03)
-                 calc(var(--round-line-inside-height) * 0.16)
-                 rgba(var(--color-base), 0.8);
-    animation: GameStateAnimation 1.5s infinite ease-in-out;
+    text-align: center;
+    /* Animations: */
+    animation: lobby-game-state-animation 1.5s infinite ease-in-out;
 }
 
 /* Players box ------------------------------------------------------------------------------------------------------------------------- */
-::deep .lobby-box.players {
-    --box-direction: column;
-    --box-width: 100%;
-    --box-height: var(--player-box-height);
+::deep.lobby .lobby-box.players {
+    /* Display: */
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+    height: var(--player-box-height);
 }
-.player-titles {
+
+::deep.lobby .player-titles {
+    /* Display: */
     display: flex;
     justify-content: space-between;
+    /* Size: */
     width: 100%;
     height: var(--player-title-height);
     padding-bottom: var(--player-title-margin);
 }
-.lobby-text.player-title {
+
+::deep.lobby .lobby-text.player-title {
+    /* Size: */
+    width: auto;
+    /* Content: */
     font-size: var(--player-title-inside-height);
     font-weight: 500;
-    width: auto;
 }
-.player-table {
+
+::deep.lobby .player-table {
+    /* Display: */
     display: flex;
     flex-direction: column;
+    /* Size: */
     width: 100%;
 }
-.player-line {
+
+::deep.lobby .player-line {
+    /* Position: */
     position: relative;
-    width: 100%;
-    height: var(--player-line-height);
+    /* Display: */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 calc(var(--player-line-height) * 0.3);
     gap: calc(var(--player-line-height) * 0.4);
+    /* Size: */
+    width: 100%;
+    height: var(--player-line-height);
+    padding: 0 calc(var(--player-line-height) * 0.3);
+    /* Style: */
     border-radius: calc(var(--player-line-height) * 0.2);
+    /* Content: */
     font-size: calc(var(--player-line-height) * 0.4);
 }
-.player-line.current {
+
+::deep.lobby .player-line.current {
+    /* Size: */
     margin: calc(var(--player-line-height) * 0.05) 0;
     height: calc(var(--player-line-height) * 0.9);
-    background: rgba(var(--color-secondary-accent), 0.7);
+    /* Style: */
+    background: var(--theme-lobby-line-background);
 }
-.player-presence {
+
+::deep.lobby .player-line .player-presence {
+    /* Position: */
     position: relative;
+    /* Display: */
+    flex-shrink: 0;
+    /* Size: */
     width: calc(var(--player-line-height) * 0.24);
     height: calc(var(--player-line-height) * 0.24);
-    background-color: rgb(var(--color-base-success));
-    box-shadow: calc(var(--player-line-height) * 0.02)
-                calc(var(--player-line-height) * 0.02)
-                calc(var(--player-line-height) * 0.05)
-                rgba(var(--color-base), 0.7);
-    flex-shrink: 0;
-    border-radius: 50%;
     margin-right: calc(var(--player-line-height) * -0.15);
+    /* Style: */
+    background: var(--theme-status-success-neon-color);
+    border-radius: 50%;
+    box-shadow: var(--theme-lobby-presence-box-shadow);
+    /* Content: */
+    font-size: var(--player-line-height);
 }
-.disconnected .player-presence {
-    background-color: rgb(var(--color-base-error));
+
+::deep.lobby .player-line.disconnected .player-presence {
+    /* Style: */
+    background: var(--theme-status-danger-neon-color);
 }
-.player-name {
-    width: auto;
-    height: var(--player-line-height);
-    line-height: var(--player-line-height);
-    max-width: calc(100% - 100px);
+
+::deep.lobby .player-name {
+    /* Display: */
     flex-shrink: 0;
+    /* Size: */
+    width: auto;
+    max-width: calc(100% - 100px);
+    height: var(--player-line-height);
+    /* Content: */
+    line-height: var(--player-line-height);
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.player-line-dash {
+
+::deep.lobby .player-line-dash {
+    /* Position: */
     position: relative;
+    /* Display: */
     display: block;
+    /* Size: */
     width: 100%;
-    border-bottom: 1px dashed rgba(var(--color-base), 0.14);
+    /* Style: */
+    border-bottom: 1px dashed var(--theme-lobby-dash-color);
 }
-.player-score {
-    width: auto;
+
+::deep.lobby .player-score {
+    /* Display: */
     flex-shrink: 0;
+    /* Size: */
+    width: auto;
 }
-.lobby-text.players-empty {
-    font-size: calc(var(--player-line-height) * 0.35);
-    color: rgba(var(--color-base), 0.4);
+
+::deep.lobby .lobby-text.players-empty {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
     width: 100%;
     height: var(--player-table-height);
+    /* Content: */
+    font-size: calc(var(--player-line-height) * 0.35);
+    /* Style: */
+    color: var(--theme-lobby-empty-color);
 }
-.player-table:not(:empty) + .lobby-text.players-empty {
+
+::deep.lobby .player-table:not(:empty) + .lobby-text.players-empty {
+    /* Display: */
     display: none;
 }
 
 /* QRCode box -------------------------------------------------------------------------------------------------------------------------- */
-::deep .lobby-box.qrcode {
-    --box-background: rgb(var(--color-base-invert));
-    --box-padding: calc(var(--lobby-width) * 0.02);
+::deep.lobby .lobby-box.qrcode {
+    /* Size: */
+    padding: calc(var(--lobby-width) * 0.02);
+    /* Style: */
+    background: var(--theme-qr-code-background);
 }
-::deep .qrcode-image {
+
+::deep.lobby .qrcode-image {
+    /* Position: */
+    --image-fit: contain;
+    --image-position: center center;
+    /* Size: */
     --image-width: 100%;
     --image-height: auto;
     --image-height-ratio: 100%;
-    --image-fit: contain;
-    --image-position: center center;
 }
 
 /* Chat box ---------------------------------------------------------------------------------------------------------------------------- */
-::deep .lobby-box.chat {
-    --box-height: var(--chat-box-height);
-    --box-align-items: center;
+::deep.lobby .lobby-box.chat {
+    /* Display: */
+    align-items: center;
+    /* Size: */
+    height: var(--chat-box-height);
 }
-.chat-message {
-    font-size: calc(var(--lobby-height) * 0.02);
+
+::deep.lobby .chat-message {
+    /* Size: */
     width: 100%;
     margin: 0;
+    /* Content: */
+    font-size: calc(var(--lobby-height) * 0.02);
     text-align: center;
 }
 
-/* Media state [mobile view] ----------------------------------------------------------------------------------------------------------- */
-@media (max-width: 767.98px) or (max-height: 575.98px) {
-    /* Variables [Aspect ratio]--------------------------------------------------------------------------------------------------------- */
-    .lobby {
-        --lobby-width: min(90vw, calc(100vw - 2px * var(--size-container-padding-mobile)));
+@media (max-width: 1000px) or (max-height: 780px) {
+    /* Media [mobile view] > Variables [aspect ratio]----------------------------------------------------------------------------------- */
+    ::deep.lobby {
+        --lobby-width: min(90vw, calc(100vw - 2px * var(--theme-size-container-padding-mobile)));
         --lobby-height: 576px;
-        --lobby-padding: max(2vw, var(--size-container-padding-mobile) * 1px);
+        --lobby-padding: max(2vw, var(--theme-size-container-padding-mobile) * 1px);
         --lobby-size: 768px;
     }
-    /* Variables [Components] ---------------------------------------------------------------------------------------------------------- */
-    .lobby {
+
+    /* Media [mobile view] > Variables [components] ------------------------------------------------------------------------------------ */
+    ::deep.lobby {
         /* Panels: */
         --lobby-primary-width: var(--lobby-width);
         --lobby-secondary-width: 0;
+        /* Game box: */
+        --game-info-height: calc(var(--game-box-inside-height) * 0.3);
+        /* Player box: */
+        --player-line-height: 38px;
     }
-    /* General styles ------------------------------------------------------------------------------------------------------------------ */
-    .lobby {
+
+    /* Media [mobile view] > General styles -------------------------------------------------------------------------------------------- */
+    ::deep.lobby {
+        /* Size: */
         height: auto;
         padding: var(--lobby-padding) 0;
     }
-    .lobby-panel.secondary {
+
+    ::deep.lobby .lobby-panel.secondary {
+        /* Display: */
         display: none;
     }
-    .lobby-text.game-name {
+    
+    ::deep.lobby .lobby-text.game-name {
+        /* Content: */
         text-align: center;
     }
-    /* Players box --------------------------------------------------------------------------------------------------------------------- */
-    ::deep .lobby-box.players {
-        --box-height: auto;
+
+    /* Media [mobile view] > Players box ----------------------------------------------------------------------------------------------- */
+    ::deep.lobby .lobby-box.players {
+        /* Size: */
+        height: auto;
     }
-    .lobby-text.players-empty {
-        font-size: calc(var(--player-line-height) * 0.48);
+
+    ::deep.lobby .lobby-text.players-empty {
+        /* Size: */
         height: auto;
         padding: 24px 0 30px;
+        /* Content: */
+        font-size: calc(var(--player-line-height) * 0.48);
     }
 }
 
-/* Media state [small mobile] ---------------------------------------------------------------------------------------------------------- */
 @media (max-width: 479.98px) {
-    .lobby {
-        --lobby-box-padding: calc(var(--size-container-padding-mobile) * 1px + 4px);
+    /* Media [small mobile] > Variables [components] ----------------------------------------------------------------------------------- */
+    ::deep.lobby {
+        /* Boxes: */
+        --lobby-box-padding: calc(var(--theme-size-container-padding-mobile) * 1px + 4px);
+        /* Player box: */
         --player-line-height: 33px;
     }
 }
 
-/* Media state [round state shift on small mobile] ------------------------------------------------------------------------------------- */
 @media (max-width: 379.98px) {
-    .game-round {
+    /* Media [round state shift on small mobile] > Round line -------------------------------------------------------------------------- */
+    ::deep.lobby .game-round {
+        /* Position: */
         position: relative;
     }
 }
 
-/* Media state [device small] ---------------------------------------------------------------------------------------------------------- */
 @media (max-width: 269.98px) or (max-height: 269.98px) {
-    .lobby > ::deep * {
-        display: none !important;
-    }
-    .lobby ::deep .small-device {
-        display: flex !important;
-    }
+    /* Media [device small] > General styles ------------------------------------------------------------------------------------------- */
+    ::deep.lobby > * { display: none !important; }
+    ::deep.lobby .small-device { display: flex !important; }
 }

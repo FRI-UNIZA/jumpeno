@@ -1,43 +1,51 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-::deep .page {
+::deep.main-layout .scroll-area.page {
+    /* Position: */
     position: relative;
+    /* Size: */
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background: rgb(var(--color-secondary-surface));
 }
 
-::deep .main-background.surface-all {
+::deep.main-layout .background.main-layout-background {
+    /* Position: */
     --background-position: center 0;
-    --background-color: rgb(var(--color-primary-surface));
-    --loading-transition-color: rgb(var(--color-primary-surface));
+    --background-color: var(--theme-surface-background);
+    /* Style: */
+    --loading-transition-color: var(--theme-surface-background);
 }
 
-::deep .main-container {
+::deep.main-layout .container.main-layout-container {
+    /* Position: */
     position: relative;
-    min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-mobile) * 1px);
-    min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-mobile) * 1px);
+    /* Display: */
     justify-content: stretch;
     align-items: stretch;
     align-content: stretch;
+    /* Size: */
+    min-height: calc(100vh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-mobile) * 1px);
+    min-height: calc(100dvh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-mobile) * 1px);
 }
 
-.no-navigation ::deep .main-container {
+::deep.main-layout.no-navigation .container.main-layout-container {
+    /* Size: */
     min-height: 100vh;
     min-height: 100dvh;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    ::deep .main-container {
-        min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-tablet) * 1px);
-        min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-tablet) * 1px);
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.main-layout .container.main-layout-container {
+        min-height: calc(100vh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-tablet) * 1px);
+        min-height: calc(100dvh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-tablet) * 1px);
     }
 }
 
 @media (min-width: 1200px) {    
-    ::deep .main-container {
-        min-height: calc(100vh - var(--size-header-height) * 1px - var(--size-footer-height-desktop) * 1px);
-        min-height: calc(100dvh - var(--size-header-height) * 1px - var(--size-footer-height-desktop) * 1px);
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.main-layout .container.main-layout-container {
+        min-height: calc(100vh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-desktop) * 1px);
+        min-height: calc(100dvh - var(--theme-size-header-height) * 1px - var(--theme-size-footer-height-desktop) * 1px);
     }
 }

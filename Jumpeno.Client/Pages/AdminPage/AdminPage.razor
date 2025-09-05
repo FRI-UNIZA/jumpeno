@@ -9,13 +9,13 @@
 <div class="admin-page">
     <div class="feature-panel">
         <Heading2 Class="admin-heading">@I18N.T("Active games")</Heading2>
-        <Box Class="games-box">
-            <div style="width: 100%; padding: 40px 0; text-align: center">
+        <Box Surface="BOX_SURFACE.PRIMARY_GLASS">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 440px; padding: 40px 0;">
                 <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin: 0 auto 30px; transform: translateX(14px)" />
                 <Paragraph Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
             </div>
         </Box>
-        <div style="display: flex; flex-direction: column; width: 100%; padding: 60px 0; gap: 20px">
+        <div style="display: flex; flex-direction: column; width: 100%; padding: 100px 0; gap: 20px">
             <Heading2 Class="admin-heading">@I18N.T("Testing")</Heading2>
             <Paragraph Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
         </div>
@@ -31,7 +31,7 @@
             <div class="db-buttons">
                 <Button Size="BUTTON_SIZE.S" Class="db-button" Params="@(new ButtonLinkParams(
                     Href: AppSettings.Links.Adminer,
-                    Target: LINK_TARGET.BLANK
+                    Target: WEBLINK_TARGET.BLANK
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>Adminer</Text>
@@ -47,17 +47,17 @@
             <Heading2 Size="TEXT_SIZE.M" Class="email-heading">
                 <AntIcon Type="mail" Theme="outline" />&nbsp;@I18N.T("Email")
             </Heading2>
-            <Paragraph Class="email-info">
+            <Paragraph Size="TEXT_SIZE.S" Class="email-info">
                 <b>@AppSettings.Email</b>
                 @I18N.T("Emails, files and forms"):
             </Paragraph>
             <div class="email-buttons">
                 <Button Size="BUTTON_SIZE.S" Class="email-button" Params="@(new ButtonLinkParams(
                     Href: AppSettings.Links.Email,
-                    Target: LINK_TARGET.BLANK
+                    Target: WEBLINK_TARGET.BLANK
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
-                    <Text>Email</Text>
+                    <Text>@I18N.T("Email")</Text>
                 </Button>
                 <CredentialsModal Label="@I18N.T("Password")" URL="@API.BASE.ADMIN_EMAIL_PASSWORD" @ref="@EmailPasswordModalRef" />
                 <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="email-button" OnClick="OpenEmailPassword">
@@ -66,16 +66,16 @@
                 </Button>
             </div>
             <div>
-                <Paragraph Class="email-factor-paragraph" Style="font-weight: 600; font-size: 14px" Spacing>
+                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph" Style="font-weight: 600; font-size: 14px" Spacing>
                     <AntIcon Type="info-circle" Theme="outline" />&nbsp;@I18N.T("Two-factor authentication (2FA)")
                 </Paragraph>
-                <Paragraph Class="email-factor-paragraph">
+                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
                     @I18N.T("Get your access from email admin.")
                 </Paragraph>
-                <Paragraph Class="email-factor-paragraph">
+                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
                     @I18N.T("In case of emergency use the backup key.")
                 </Paragraph>
-                <Paragraph Class="email-factor-paragraph">
+                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
                     @I18N.T("Generate and set new secret after!")
                 </Paragraph>
             </div>
@@ -83,6 +83,17 @@
             <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="OpenEmailBackupKeys">
                 <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                 <Text>@I18N.T("Backup keys")</Text>
+            </Button>
+        </Box>
+        <Box Class="map-box">
+            <Heading2 Size="TEXT_SIZE.M" Class="map-heading">
+                <AntIcon Type="picture" Theme="outline" />&nbsp;@I18N.T("Game maps")
+            </Heading2>
+            <Button Size="BUTTON_SIZE.S" Class="map-button" Params="@(new ButtonLinkParams(
+                Href: I18N.Link<MapsPage>()
+            ))">
+                <Icon><AntIcon Type="arrow-right" Theme="outline" /></Icon>
+                <Text>@I18N.T("Manage")</Text>
             </Button>
         </Box>
     </div>

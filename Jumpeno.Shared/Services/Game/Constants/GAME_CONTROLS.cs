@@ -1,12 +1,9 @@
 namespace Jumpeno.Shared.Constants;
 
 public enum GAME_CONTROLS {
-    [StringValue("ArrowLeft")]
-    LEFT,
-    [StringValue("ArrowRight")]
-    RIGHT,
-    [StringValue(" ")]
-    SPACE
+    [StringValue("ArrowLeft")] LEFT,
+    [StringValue("ArrowRight")] RIGHT,
+    [StringValue(" ")] SPACE
 }
 
 public static class GameControlsExtension {

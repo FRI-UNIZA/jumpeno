@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Constants;
 
 public enum MENU_STATE {
-    CLOSED,
-    OPENING,
-    OPENED,
-    CLOSING
+    [CSSClass("closed")] CLOSED,
+    [CSSClass("opening")] OPENING,
+    [CSSClass("opened")] OPENED,
+    [CSSClass("closing")] CLOSING
 }

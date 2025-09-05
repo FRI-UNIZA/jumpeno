@@ -1,7 +1,7 @@
 class JSImage {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    static #BACKGROUND_COMPONENT_CLASS = 'background-component'
-    static #COMPONENT_CLASS = 'image-component'
+    static #BACKGROUND_COMPONENT_CLASS = 'background'
+    static #COMPONENT_CLASS = 'image'
     static #BACKGROUND_ELEMENT_CLASS = 'background-element'
     static #ELEMENT_CLASS = 'image-element'
     static #LOADING_CLASS = 'loading'
@@ -10,16 +10,16 @@ class JSImage {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     static #InvokeOnLoad(id, component, jsOnly) {
         component.classList.remove(this.#LOADING_CLASS)
-        if (jsOnly) return;
-        DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.IMAGE.ON_LOAD, id);
+        if (jsOnly) return
+        DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.IMAGE.ON_LOAD, id)
     }
 
     static #InvokeOnError(id, component, jsOnly) {
         if (!component.classList.contains(this.#ERROR_CLASS)) {
             component.classList.add(this.#ERROR_CLASS)
         }
-        if (jsOnly) return;
-        DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.IMAGE.ON_ERROR, id);
+        if (jsOnly) return
+        DotNet.invokeMethod(DOTNET.NAMESPACE.CLIENT, DOTNET.IMAGE.ON_ERROR, id)
     }
 
     // Theme update -----------------------------------------------------------------------------------------------------------------------

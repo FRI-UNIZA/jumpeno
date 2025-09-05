@@ -1,25 +1,20 @@
 namespace Jumpeno.Shared.Constants;
 
 public enum COOKIE_MANDATORY {
-    [StringValue("App.CookiesAccepted")]
-    APP_COOKIES_ACCEPTED,
-    [StringValue("AspNetCore.Antiforgery")]
-    ASP_NET_CORE_ANTIFORGERY,
-    [StringValue("App.RefreshToken")]
-    APP_REFRESH_TOKEN
+    [StringValue("App.CookiesAccepted")] APP_COOKIES_ACCEPTED,
+    [StringValue("AspNetCore.Antiforgery")] ASP_NET_CORE_ANTIFORGERY,
+    [StringValue("App.RefreshToken")] APP_REFRESH_TOKEN
 }
 
 public enum COOKIE_FUNCTIONAL {
-    [StringValue("App.Culture")]
-    APP_CULTURE,
-    [StringValue("App.Theme")]
-    APP_THEME
+    [StringValue("App.Culture")] APP_CULTURE,
+    [StringValue("App.Theme")] APP_THEME
 }
 
 public static class COOKIE {
     public const string NAMESPACE = "Jumpeno.Shared.Constants";
 
-    // NOTE: Use enum ToString() value as key to save cookie domain and path.
+    // NOTE: Use enum StringValue as key to save cookie domain and path.
     // (Default domain and path values do not have to be specified.)
     public static readonly Dictionary<string, string> DOMAIN = [];
     public static readonly Dictionary<string, string> PATH = [];

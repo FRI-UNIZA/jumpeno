@@ -5,6 +5,22 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ActiveDebugProfile>https</ActiveDebugProfile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="AntDesign" Version="0.20.4.2" />
         <PackageReference Include="MailKit" Version="4.11.0" />
@@ -38,9 +54,4 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-    <PropertyGroup>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591</NoWarn>
-    </PropertyGroup>
 </Project>

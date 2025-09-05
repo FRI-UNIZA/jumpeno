@@ -2,8 +2,8 @@
 
 @inherits ServiceComponent<PageLoader>
 
-<CascadingValue Value="PageLoaderDisplayed">
-<CascadingValue Value="PageLoaderTasks">
+<CascadingValue Name="@CASCADE_PAGE_LOADER_DISPLAYED" Value="PageLoaderDisplayed">
+<CascadingValue Name="@CASCADE_PAGE_LOADER_TASKS" Value="PageLoaderTasks">
     <div class="@ComputeClassContent()" inert="@PageLoaderDisplayed">
         @ChildContent
     </div>
@@ -13,6 +13,7 @@
 <div
     id="@ID"
     class="@ComputeClass()"
+    style="@Style"
     aria-live="off"
     aria-label="@I18N.T("Loading")"
     role="status"

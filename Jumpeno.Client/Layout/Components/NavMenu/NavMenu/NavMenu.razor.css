@@ -1,50 +1,57 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.nav-menu {
-    display: flex;
+::deep.nav-menu {
+    /* Position: */
     position: sticky;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(var(--color-secondary-surface));
-    width: 100vw;
-    height: 75px;
     top: 0;
     left: 0;
-    z-index: var(--z-index-menu);
-    transition: transform calc(var(--transition-semi-ultra-fast) * 1ms);
-    box-shadow: var(--shadow-nav-menu);
+    z-index: var(--theme-z-index-menu);
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100vw;
+    height: 75px;
+    /* Style: */
+    background: var(--theme-surface-background);
+    box-shadow: var(--theme-nav-menu-box-shadow);
+    /* Content: */
+    font-size: 1px;
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-semi-ultra-fast) * 1ms);
 }
 
-.nav-menu::before {
-    content: "";
+::deep.nav-menu::before {
+    /* Position: */
     position: absolute;
-    display: block;
-    width: 100vw;
-    height: 100px;
     top: -75px;
     z-index: -1;
-    background-color: rgb(var(--color-secondary-surface));
+    /* Display: */
+    display: block;
+    /* Size: */
+    width: 100vw;
+    height: 100px;
+    /* Style: */
+    background: var(--theme-surface-background);
+    /* Content: */
+    content: "";
 }
 
-.nav-menu:not(.display) {
-    display: none;
-}
-
-.nav-menu.hidden {
-    transform: translateY(-75px);
-    transition: transform calc(var(--transition-semi-fast) * 1ms);
-}
-
-::deep .nav-menu-container {
+::deep.nav-menu .container.nav-menu-container {
+    /* Position: */
     position: relative;
+    /* Display: */
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
+    /* Size: */
     width: 100%;
     height: 75px;
 }
 
-.navigation {
+::deep.nav-menu .navigation {
+    /* Display: */
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -52,62 +59,91 @@
     gap: 8px;
 }
 
-::deep .menu-controls {
+::deep.nav-menu .menu-controls {
+    /* Display: */
     display: none;
     align-items: center;
     gap: 26px;
 }
 
-::deep .menu-links {
+::deep.nav-menu .menu-links {
+    /* Display: */
     display: flex;
     gap: 14px;
 }
 
-::deep .settings-container {
+::deep.nav-menu .settings-container {
+    /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 26px;
 }
 
-::deep .settings-area {
+::deep.nav-menu .settings-area {
+    /* Display: */
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    /* Size: */
     margin-top: -1px;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
+/* Display ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.nav-menu:not(.display) {
+    /* Display: */
+    display: none;
+}
+
+/* Hidden ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.nav-menu.hidden {
+    /* Transform: */
+    transform: translateY(-75px);
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-semi-fast) * 1ms);
+}
+
 @media (max-width: 300px) {
-    ::deep .nav-menu-container {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu .container.nav-menu-container {
+        /* Size: */
         padding-left: 2vw;
     }
 }
 
 @media (min-width: 480px) {
-    ::deep .nav-menu-container {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu .container.nav-menu-container {
+        /* Display: */
         justify-content: flex-end;
     }
 }
 
 @media (min-width: 992px) {
-    .nav-menu.hidden {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu.hidden {
+        /* Transform: */
         transform: none;
+        /* Animations: */
         transition: none;
     }
 }
 
 @media (min-width: 1200px) {
-    ::deep .nav-menu-container {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.nav-menu .container.nav-menu-container {
+        /* Display: */
         justify-content: space-between;
     }
 
-    ::deep .menu-controls {
+    ::deep.nav-menu .menu-controls {
+        /* Display: */
         display: flex;
     }
 
-    .navigation {
+    ::deep.nav-menu .navigation {
+        /* Display: */
         gap: 22px;
     }
 }

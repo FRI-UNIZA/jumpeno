@@ -1,0 +1,71 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal-close {
+    /* Display: */
+    --close-justify: flex-start;
+    --close-align: flex-start;
+    /* Size: */
+    --close-padding: 4px;
+    --close-size: 16px;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal-close {
+    /* Display: */
+    display: inline-flex;
+    padding: var(--close-padding);
+    justify-self: var(--close-justify);
+    align-self: var(--close-align);
+    /* Styles: */
+    color: var(--theme-modal-control-color);
+    background-color: var(--theme-modal-control-background);
+    box-shadow: var(--theme-modal-control-box-shadow);
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    /* Actions: */
+    cursor: pointer;
+    /* Animations: */
+    transition-property: color, background-color, opacity;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+}
+
+::deep.modal-close .modal-close-icon svg {
+    /* Size: */
+    width: var(--close-size);
+    height: var(--close-size);
+}
+
+/* Styles [unclosable] ----------------------------------------------------------------------------------------------------------------- */
+::deep.modal-close.unclosable {
+    /* Style: */
+    opacity: 0;
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Styles [highlight] ------------------------------------------------------------------------------------------------------------------ */
+::deep.modal-close:hover,
+::deep.modal-close:focus-visible {
+    /* Style: */
+    color: var(--theme-modal-control-highlight-color);
+    background-color: var(--theme-modal-control-highlight-background);
+    box-shadow: var(--theme-modal-control-highlight-box-shadow);
+}
+
+@media (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal-close {
+        /* Size: */
+        --close-padding: 5px;
+        --close-size: 17px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal-close {
+        /* Size: */
+        --close-padding: 6px;
+        --close-size: 18px;
+    }
+}

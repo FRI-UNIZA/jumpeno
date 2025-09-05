@@ -3,16 +3,18 @@ namespace Jumpeno.Client.Components;
 public partial class WebDocument {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID = "app-web-document";
+    // Cascade:
+    public const string CASCADE_TITLE = $"{nameof(WebDocument)}.{nameof(CASCADE_TITLE)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private string DocumentTitle = "";
+    protected string DocumentTitle = "";
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private static void SetTitle(string title) {
+    protected static void SetTitle(string title) {
         var instance = Instance();
         instance.DocumentTitle = title;
         AriaPageAlert.Notify(instance.DocumentTitle);

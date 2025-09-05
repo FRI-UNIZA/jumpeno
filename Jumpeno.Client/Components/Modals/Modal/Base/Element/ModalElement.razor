@@ -1,0 +1,36 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div id="@Modal.ID" inert="@Inert" class="@ComputeClass()" style="@ComputeStyle()">
+    <div id="@Modal.ID_DIALOG_INIT" class="@Modal.CLASS_INIT" tabindex="0" @onfocus="() => ActionHandler.SetFocus(Modal.ID_DIALOG)" />
+    <div id="@Modal.ID_DIALOG_START" class="@Modal.CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(Modal.ID_DIALOG)" />
+    <Container Class="@Modal.CLASS_CONTAINER" PaddingHorizontal PaddingVertical>
+        <PageLoaderIndicator Class="@Modal.CLASS_LOADING_INDICATOR" />
+        <section id="@Modal.ID_DIALOG" class="@ComputeDialogClass()" aria-label="@HTML.Label.First(Modal.Label)" role="dialog" tabindex="0">
+            @if (!Modal.NoHeader) {
+                <div class="@Modal.CLASS_HEADER">
+                    @if (Modal.Header is null) {
+                        <ModalHeading>@HTML.Label.Render(Modal.Label)</ModalHeading>
+                        <ModalClose Modal="Modal" />
+                    } else {
+                        @Modal.Header
+                    }
+                </div>
+            }
+            @Modal.SubHeader
+            <ScrollArea @ref="@Modal.ScrollAreaRef" OverflowX="false" Class="@Modal.CLASS_SCROLL">
+                <div class="@Modal.CLASS_CONTENT">
+                    @Modal.Content
+                </div>
+            </ScrollArea>
+            @if (!Modal.NoFooter) {
+                <div class="@Modal.CLASS_FOOTER">
+                    @Modal.Footer
+                </div>
+            }
+        </section>
+    </Container>
+    <div id="@Modal.ID_DIALOG_END" class="@Modal.CLASS_END" tabindex="0" @onfocus="() => ActionHandler.SetFocus(Modal.ID_DIALOG)" />
+    <div class="@Modal.CLASS_BACKDROP" @onclick="@(async () => { if (!Modal.Unclosable) await Modal.Close(); })" />
+</div>

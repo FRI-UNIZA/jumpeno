@@ -1,0 +1,175 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.form-error {
+    /* Border: */
+    --field-border-radius-default: 0;
+    --form-error-border-width: 2px;
+    --form-error-border-color: var(--theme-status-danger-box-outline-color);
+    --form-error-border-highlight-color: var(--theme-status-danger-box-highlight-outline-color);
+    /* Message: */
+    --form-error-message-margin: 10px;
+    --form-error-message-radius: 6px;
+    --form-error-message-focus-scale: 1.04;
+    --form-error-message-color: var(--theme-status-danger-box-color);
+    --form-error-message-highlight-color: var(--theme-status-danger-box-highlight-color);
+    --form-error-message-background: var(--theme-status-danger-box-background);
+    --form-error-message-highlight-background: var(--theme-status-danger-box-highlight-background);
+    /* Animations: */
+    --form-error-transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    --form-error-transition-timing: ease;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.form-error {
+    /* Position: */
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: auto;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    /* Style: */
+    border-radius: var(--field-border-radius, var(--field-border-radius-default));
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.form-error > .form-error-outline {
+    /* Position: */
+    position: absolute;
+    /* Display: */
+    display: inline-flex;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    margin: 0;
+    /* Style: */
+    border-radius: var(--field-border-radius, var(--field-border-radius-default));
+    border: var(--form-error-border-width) solid var(--form-error-border-color);
+    opacity: 0;
+    /* Animations: */
+    transition: opacity var(--form-error-transition-duration) var(--form-error-transition-timing);
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.form-error > .form-error-message {
+    /* Position: */
+    position: absolute;
+    top: 100%;
+    z-index: var(--theme-z-index-form-error);
+    /* Display: */
+    display: block;
+    /* Size: */
+    max-width: calc(100% - 2 * var(--form-error-message-margin));
+    padding: 2px 8px;
+    margin-left: var(--form-error-message-margin);
+    margin-right: var(--form-error-message-margin);
+    margin-top: -10px;
+    /* Style: */
+    color: var(--form-error-message-color);
+    background: var(--form-error-message-background);
+    border: var(--form-error-border-width) solid var(--form-error-border-color);
+    border-radius: var(--form-error-message-radius);
+    outline: none;
+    opacity: 0;
+    /* Content: */
+    font-family: var(--theme-font-primary);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Animations: */
+    transition-property: opacity, background, border-color, transform;
+    transition-duration: var(--form-error-transition-duration);
+    transition-timing-function: var(--form-error-transition-timing);
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.form-error:not(.error-passive) > .form-error-message {
+    /* Actions: */
+    cursor: pointer;
+}
+
+/* FormField > Styles ------------------------------------------------------------------------------------------------------------------ */
+::deep.field.error-passive.variant.size.auto-size > .form-error {
+    /* Position: */
+    left: calc(-1 * var(--field-passive-padding-x));
+    top: calc(-1 * var(--field-passive-padding-y));
+    /* Size: */
+    width: calc(100% + 2 * var(--field-passive-padding-x));
+    height: calc(100% + 2 * var(--field-passive-padding-y));
+}
+
+/* Align ------------------------------------------------------------------------------------------------------------------------------- */
+::deep.form-error.align-left { align-items: flex-start; }
+::deep.form-error.align-center { align-items: center; }
+::deep.form-error.align-right { align-items: flex-end; }
+
+/* Display ----------------------------------------------------------------------------------------------------------------------------- */
+::deep.form-error.no-error { display: none; }
+::deep.form-error.no-message > .form-error-message { display: none; }
+
+/* Styles [error] ---------------------------------------------------------------------------------------------------------------------- */
+::deep.field.error > .form-error > .form-error-outline {
+    /* Style: */
+    opacity: 1;
+}
+
+::deep.field.error > .form-error > .form-error-message {
+    /* Style: */
+    opacity: 1;
+    /* Actions: */
+    pointer-events: all;
+}
+
+/* Styles [error][highlight] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.error:has(:hover) > .form-error:not(.error-passive) > .form-error-outline,
+::deep.field.error:has(:focus-visible) > .form-error:not(.error-passive) > .form-error-outline {
+    /* Style: */
+    border-color: var(--form-error-border-highlight-color);
+}
+
+::deep.field.error:has(:hover) > .form-error:not(.error-passive) > .form-error-message,
+::deep.field.error:has(:focus-visible) > .form-error:not(.error-passive) > .form-error-message {
+    /* Style: */
+    color: var(--form-error-message-highlight-color);
+    background: var(--form-error-message-highlight-background);
+    border-color: var(--form-error-border-highlight-color);
+}
+
+/* Styles [error][focus] --------------------------------------------------------------------------------------------------------------- */
+::deep.field.error > .form-error > .form-error-message:focus-visible {
+    /* Transform: */
+    transform: scale(var(--form-error-message-focus-scale));
+}
+
+/* Styles [error][auto-hide] ----------------------------------------------------------------------------------------------------------- */
+::deep.field.error:has(:focus-visible) > .form-error.error-autohide > .form-error-message {
+    /* Style: */
+    opacity: 0;
+    /* Actions: */
+    pointer-events: none;
+}
+::deep.field.error:has(:focus-visible) > .form-error.error-autohide > .form-error-message:focus-visible {
+    /* Style: */
+    opacity: 1;
+}
+::deep.field.error:has(:focus-visible) > .form-error.error-autohide > .form-error-message:focus {
+    /* Actions: */
+    pointer-events: all;
+}
+
+/* Styles [disabled] ------------------------------------------------------------------------------------------------------------------- */
+::deep.field.disabled > .form-error {
+    /* Display: */
+    display: none !important;
+}

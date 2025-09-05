@@ -1,29 +1,35 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-.error-boundary {
+::deep.error-boundary {
+    /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 26px;
+    /* Size: */
     width: 100%;
     padding: 40px 0;
-    min-height: var(--content-min-height-fallback);
-    min-height: calc(var(--content-min-height) - 2 * 40px);
 }
 
-h1 {
-    margin-bottom: 24px;
+::deep.error-boundary .heading.error-boundary-heading {
+    /* Size: */
+    margin-bottom: 6px;
+    /* Content: */
+    text-align: center;
 }
 
-/* Media ------------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    .error-boundary {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.error-boundary {
+        /* Size: */
         padding: 60px 0;
     }
 }
 
 @media (min-width: 1200px) {
-    .error-boundary {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.error-boundary {
+        /* Size: */
         padding: 80px 0;
     }
 }

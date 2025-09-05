@@ -1,0 +1,75 @@
+/* No display -------------------------------------------------------------------------------------------------------------------------- */
+::deep.body.no-display,
+::deep.body .no-display {
+    /* Display: */
+    display: none !important;
+}
+
+/* No user select ---------------------------------------------------------------------------------------------------------------------- */
+::deep.body.no-user-select,
+::deep.body .no-user-select {
+    /* Actions: */
+    -webkit-user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Touch actions ----------------------------------------------------------------------------------------------------------------------- */
+::deep.body.touch-action-auto,
+::deep.body.touch-action-auto [data-overlayscrollbars-viewport],
+::deep.body .touch-action-auto {
+    /* Actions: */
+    touch-action: auto !important;
+}
+
+::deep.body.touch-action-none,
+::deep.body.touch-action-none [data-overlayscrollbars-viewport],
+::deep.body .touch-action-none {
+    /* Actions: */
+    touch-action: none !important;
+}
+
+::deep.body.touch-action-pan,
+::deep.body.touch-action-pan [data-overlayscrollbars-viewport],
+::deep.body .touch-action-pan {
+    /* Actions: */
+    touch-action: pan-x pan-y !important;
+}
+
+::deep.body.touch-action-pinch-zoom,
+::deep.body.touch-action-pinch-zoom [data-overlayscrollbars-viewport],
+::deep.body .touch-action-pinch-zoom {
+    /* Actions: */
+    touch-action: pinch-zoom !important;
+}
+
+::deep.body.touch-action-manipulation,
+::deep.body.touch-action-manipulation [data-overlayscrollbars-viewport],
+::deep.body .touch-action-manipulation {
+    /* Actions: */
+    touch-action: manipulation !important;
+}
+
+/* Overscroll -------------------------------------------------------------------------------------------------------------------------- */
+::deep.body.overscroll-auto,
+::deep.body.overscroll-auto [data-overlayscrollbars-viewport],
+::deep.body .overscroll-auto {
+    /* Actions: */
+    overscroll-behavior: auto !important;
+}
+
+::deep.body.overscroll-contain,
+::deep.body.overscroll-contain [data-overlayscrollbars-viewport],
+::deep.body .overscroll-contain {
+    /* Actions: */
+    overscroll-behavior: contain !important;
+}
+
+::deep.body.overscroll-none,
+::deep.body.overscroll-none [data-overlayscrollbars-viewport],
+::deep.body .overscroll-none {
+    /* Actions: */
+    overscroll-behavior: none !important;
+}
