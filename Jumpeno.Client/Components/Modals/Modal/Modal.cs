@@ -7,7 +7,7 @@ public partial class Modal {
     public const string ID_DIALOG_START_PREFIX = "modal-dialog-start";
     public const string ID_DIALOG_PREFIX = "modal-dialog";
     public const string ID_DIALOG_END_PREFIX = "modal-dialog-end";
-
+    // Class:
     public const string CLASS_MODAL = ID_PREFIX;
     public const string CLASS_BACKDROP = "modal-backdrop";
     public const string CLASS_INIT = "modal-init";
@@ -16,6 +16,7 @@ public partial class Modal {
     public const string CLASS_LOADING_INDICATOR = "modal-loading-indicator";
     public const string CLASS_DIALOG = "modal-dialog";
     public const string CLASS_HEADER = "modal-header";
+    public const string CLASS_SUB_HEADER = "modal-sub-header";
     public const string CLASS_SCROLL = "modal-scroll";
     public const string CLASS_CONTENT = "modal-content";
     public const string CLASS_FOOTER = "modal-footer";

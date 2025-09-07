@@ -18,7 +18,11 @@
                     }
                 </div>
             }
-            @Modal.SubHeader
+            @if (Modal.SubHeader != null) {
+                <div class="@Modal.CLASS_SUB_HEADER">
+                    @Modal.SubHeader
+                </div>
+            }
             <ScrollArea @ref="@Modal.ScrollAreaRef" OverflowX="false" Class="@Modal.CLASS_SCROLL">
                 <div class="@Modal.CLASS_CONTENT">
                     @Modal.Content

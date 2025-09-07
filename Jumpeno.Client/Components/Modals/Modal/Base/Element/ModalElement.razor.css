@@ -21,6 +21,8 @@
     --modal-padding-footer-desktop: var(--modal-padding-footer);
     /* Margin: */
     --modal-margin: var(--theme-size-container-padding-mobile);
+    /* Border radius: */
+    --modal-border-radius: 8px;
     /* Animations: */
     --modal-transition-speed: var(--theme-transition-semi-fast);
     /* Base: */
@@ -87,8 +89,8 @@
     max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
     /* Style: */
     color: var(--theme-text-color);
-    background-color: var(--theme-surface-background);
-    border-radius: 8px;
+    background: var(--theme-surface-background);
+    border-radius: var(--modal-border-radius);
     outline: none;
     border: none;
     box-shadow: var(--theme-modal-dialog-box-shadow);
@@ -123,9 +125,25 @@
     /* Size: */
     padding: var(--modal-padding-header-mobile);
     /* Style: */
+    background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
     /* Base: */
     font-size: var(--modal-base-size);
+}
+
+::deep.modal .modal-sub-header {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    /* Style: */
+    background: var(--theme-surface-background);
+    border: none;
+    outline: none;
 }
 
 ::deep.modal .modal-scroll {
@@ -147,6 +165,8 @@
     flex-wrap: wrap;
     /* Size: */
     padding: var(--modal-padding-content-mobile);
+    /* Style: */
+    background: var(--theme-surface-background);
 }
 
 ::deep.modal .modal-footer {
@@ -160,6 +180,7 @@
     /* Size: */
     padding: var(--modal-padding-footer-mobile);
     /* Style: */
+    background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
     /* Content: */
     font-size: 1px;

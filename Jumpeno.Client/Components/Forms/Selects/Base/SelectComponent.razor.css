@@ -66,6 +66,16 @@
     --modal-padding-content: 0;
 }
 
+::deep.modal.select-options-modal .modal-dialog {
+    /* Style: */
+    background: transparent;
+}
+
+::deep.modal.select-options-modal .modal-content {
+    /* Style: */
+    background: transparent;
+}
+
 ::deep.modal.select-options-modal .select-options {
     /* Display: */
     display: flex;
@@ -102,6 +112,11 @@
 ::deep.modal.select-options-modal .select-option:not(:last-child) {
     /* Style: */
     border-bottom: 1px solid var(--theme-select-option-divider-color);
+}
+
+::deep.modal.select-options-modal .select-option:last-child {
+    /* Style: */
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
 }
 
 @media (min-width: 768px) {
