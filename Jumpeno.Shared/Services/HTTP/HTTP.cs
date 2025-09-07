@@ -10,6 +10,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
     private static Func<Exception, string?, Task> OnError;
+    private static Func<Func<Task<bool>>, Task<bool>> TabSync;
     private static Action<HttpRequestMessage>? AddClientCookies;
     private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
     private readonly LockerSlim TokenLock = new();
@@ -26,12 +27,16 @@ public class HTTP : StaticService<HTTP>, IDisposable {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(
-        Func<int, AppException, Task> onRefresh, Func<Exception, string?, Task> onError, Action<HttpRequestMessage>? addClientCookies = null
+        Func<int, AppException, Task> onRefresh,
+        Func<Exception, string?, Task> onError,
+        Func<Func<Task<bool>>, Task<bool>> tabSync,
+        Action<HttpRequestMessage>? addClientCookies = null
     ) {
         if (Client is not null) return;
         Client = AppEnvironment.GetService<HttpClient>;
         OnRefresh = onRefresh;
         OnError = onError;
+        TabSync = tabSync;
         AddClientCookies = addClientCookies;
     }
 
@@ -306,22 +311,43 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body);
     }
 
-    // Try --------------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> Try(Func<Task> callback, string? form = null) {
-        try { await callback(); return true; }
-        catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
-        catch (AggregateException e) {
-            foreach (var inner in e.InnerExceptions) {
-                if (inner is AppException app && app.Code == CODE.REQUEST_CANCELLED) continue;
-                await OnError(inner, form);
-            }
-        } catch (Exception e) { await OnError(e, form); }
-        return false;
+    // Session ----------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Wrap any session inside to sync browser tabs.</summary>
+    /// <param name="callback">Request delegate.</param>
+    /// <returns>Task to await.</returns>
+    public static async Task Session(Func<Task> callback) {
+        await TabSync(async () => {
+            await callback();
+            return true;
+        });
     }
 
+    /// <summary>Wrap all HTTP requests inside to sync browser tabs and respond to errors.</summary>
+    /// <param name="callback">Request delegate.</param>
+    /// <param name="form">Form id to display errors on.</param>
+    /// <returns>A task to await that returns true if no error occurs.</returns>
+    public static async Task<bool> Try(Func<Task> callback, string? form = null) {
+        return await TabSync(async () => {
+            try { await callback(); return true; }
+            catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
+            catch (AggregateException e) {
+                foreach (var inner in e.InnerExceptions) {
+                    if (inner is AppException app && app.Code == CODE.REQUEST_CANCELLED) continue;
+                    await OnError(inner, form);
+                }
+            } catch (Exception e) { await OnError(e, form); }
+            return false;
+        });
+    }
+
+    /// <summary>Try with no error response. (useful for analytics)</summary>
+    /// <param name="callback">Request delegate.</param>
+    /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> TrySilent(Func<Task> callback) {
-        try { await callback(); return true; }
-        catch { return false; }
+        return await TabSync(async () => {
+            try { await callback(); return true; }
+            catch { return false; }
+        });
     }
 
     // Await ------------------------------------------------------------------------------------------------------------------------------

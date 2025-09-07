@@ -12,7 +12,9 @@
         try {
             if (!firstRender) { AuthPage.FinishStage(); return; }
             // Authorization:
-            if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
+            await HTTP.Session(async () => {
+                if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
+            });
             await AuthPage.NextStage();
             await AuthPage.ChangePath();
             await AuthPage.AddRedirect();

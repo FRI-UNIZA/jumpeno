@@ -184,6 +184,7 @@ HTTP.Init(
         else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
     },
+    async callback => await callback(),
     request => {
         var ctx = ServerContext.Instance;
         var cookies = ctx.Request.Cookies;

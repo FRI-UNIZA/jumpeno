@@ -154,38 +154,48 @@ public class Window {
     public static void ReloadTabs() => JS.InvokeVoid(JSWindow.ReloadTabs);
 
     // Web locks --------------------------------------------------------------------------------------------------------------------------
+    private static readonly Dictionary<WINDOW_LOCK, WindowLockAction> LockActions = AppEnvironment.IsServer ? null! : [];
     private static readonly LockerSlim WindowLocker = AppEnvironment.IsServer ? null! : new();
-    private static (TaskCompletionSource TCS, dynamic action, Exception? e, object? response) LockAction;
 
     [JSInvokable]
     public static async Task JS_Lock(WINDOW_LOCK id) {
+        WindowLockAction lockAction = null!;
+        await WindowLocker.Exclusive(() => lockAction = LockActions[id]);
         try {
-            if (LockAction.action is EmptyDelegate action) await action.Invoke();
-            else LockAction.response = await LockAction.action.Invoke();
+            if (lockAction.Action is EmptyDelegate action) await action.Invoke();
+            else lockAction.Response = await lockAction.Action.Invoke();
+        } catch (Exception e) {
+            lockAction.Exception = e;
         }
-        catch (Exception e) { LockAction.e = e; }
-        finally { LockAction.TCS.SetResult(); }
     }
-    private static async Task Lock(object action, WINDOW_LOCK id) {
+    private static async Task<R> Lock<R>(object action, WINDOW_LOCK id) {
+        // 1) Check client:
         AppEnvironment.CheckClient();
-        await WindowLocker.Exclusive(async () => {
-            LockAction = (new(), action, null, null);
-            try {
-                await JS.InvokeVoidAsync(JSWindow.Lock, id);
-                await LockAction.TCS.Task;
-            } catch {}
-            Exception? e = LockAction.e;
-            LockAction = (null!, null!, null, LockAction.response);
-            if (e != null) throw e;
+        // 2) Get permission & create action:
+        WindowLockAction? prevAction = null;
+        WindowLockAction? lockAction = null;
+        do {
+            await WindowLocker.Exclusive(() => {
+                LockActions.TryGetValue(id, out prevAction);
+                if (prevAction is null) {
+                    lockAction = new(new(), action);
+                    LockActions[id] = lockAction;
+                }
+            });
+            if (prevAction is not null) await prevAction.TCS.Task;
+        } while (lockAction is null);
+        // 3) Execute action under lock:
+        await JS.InvokeVoidAsync(JSWindow.Lock, id);
+        // 4) Release action:
+        return await WindowLocker.Exclusive(() => {
+            LockActions.Remove(id);
+            lockAction.TCS.SetResult();
+            if (lockAction.Exception != null) throw lockAction.Exception;
+            return (R)lockAction.Response!;
         });
     }
-    private static async Task Lock(EmptyDelegate action, WINDOW_LOCK id) => await Lock((object) action, id);
-    private static async Task<R> Lock<R>(EmptyResponse<R> action, WINDOW_LOCK id) {
-        await Lock((object) action, id);
-        var response = (R) LockAction.response!;
-        LockAction.response = null;
-        return response;
-    }
+    private static async Task Lock(EmptyDelegate action, WINDOW_LOCK id) { await Lock<object?>(action, id); }
+    private static async Task<R> Lock<R>(EmptyResponse<R> action, WINDOW_LOCK id) => (await Lock<R>((object)action, id))!;
 
     public static async Task Lock(Action action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) => await Lock(new EmptyDelegate(action), id);
     public static async Task TryLock(Action action, WINDOW_LOCK id = WINDOW_LOCK.DEFAULT) {

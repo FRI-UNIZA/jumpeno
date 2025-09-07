@@ -29,12 +29,12 @@ public class HubAuth {
         if (Request == null) return null;
         if (LastRequest != Request) {
             await dispose();
-            try { await Auth.Refresh(1); }
+            try { await HTTP.Session(async () => await Auth.Refresh(1)); }
             catch (AppException e) { return e; }
             LastRequest = Request;
             await Request();
         } else {
-            await Auth.Refresh(2);
+            await HTTP.Session(async () => await Auth.Refresh(2));
         }
         throw exceptionDTO.Exception;
     }

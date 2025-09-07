@@ -45,7 +45,8 @@ HTTP.Init(
         if (e is AppException eApp) ErrorHandler.Display(eApp, form);
         else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
-    }
+    },
+    async callback => await Window.Lock(callback, WINDOW_LOCK.HTTP)
 );
 CookieStorage.Init(
     key => {
