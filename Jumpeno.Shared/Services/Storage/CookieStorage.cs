@@ -23,13 +23,21 @@ public static class CookieStorage {
         OpenConsentModal = openConsentModal;
     }
 
-    // Cookie types -----------------------------------------------------------------------------------------------------------------------
-    public static List<Type> ConvertToTypes(List<string> acceptedNames) {
+    // Types ------------------------------------------------------------------------------------------------------------------------------
+    private static bool IsCookieType<Type>(Type keyType) {
+        if (keyType is null) return false;
+        foreach (var cookieType in COOKIE.TYPES) {
+            if (keyType.Equals(cookieType)) return true;
+        }
+        return false;
+    }
+
+    private static List<Type> ConvertToTypes(List<string> acceptedNames) {
         List<Type> accepted = [];
         foreach (var name in acceptedNames) {
             Type? type;
-            try { type = Type.GetType($"{COOKIE.NAMESPACE}.{name}"); }
-            catch { type = null; }
+            try { type = Type.GetType($"{typeof(COOKIE).FullName}+{name}"); }
+            catch { continue; }
             if (type is null) continue;
             try { if (IsCookieType(type)) accepted.Add(type); }
             catch { continue; }
@@ -37,44 +45,7 @@ public static class CookieStorage {
         return accepted;
     }
 
-    public static List<Type> CacheAcceptedCookies(List<Type> accepted) {
-        RequestStorage.Set(nameof(GetAcceptedCookies), accepted);
-        return accepted;
-    }
-
-    public static List<Type> GetAcceptedCookies() {
-        var cachedAccepted = RequestStorage.Get<List<Type>>(nameof(GetAcceptedCookies));
-        if (cachedAccepted is not null) return cachedAccepted;
-
-        var json = GetCookie(COOKIE_MANDATORY.APP_COOKIES_ACCEPTED);
-        if (json is null) return CacheAcceptedCookies([]);
-        
-        var acceptedNames = JsonConvert.DeserializeObject<List<string>>(json);
-        if (acceptedNames is null) return CacheAcceptedCookies([]);
-
-        return CacheAcceptedCookies(ConvertToTypes(acceptedNames));
-    }
-
-    private static void SetAcceptedCookies(List<Type> accepted) {
-        List<string> names = accepted.Select(x => x.Name).ToList();
-        var json = JsonConvert.SerializeObject(names);
-        SetCookie(new Cookie(
-            COOKIE_MANDATORY.APP_COOKIES_ACCEPTED,
-            json,
-            DateTimeOffset.UtcNow.AddYears(1)
-        ));
-        CacheAcceptedCookies(accepted);
-    }
-
-    private static bool IsCookieType<Type>(Type keyType) {
-        foreach (var cookieType in COOKIE.TYPES) {
-            if (keyType is null) return false;
-            if (keyType.Equals(cookieType)) return true;
-        }
-        return false;
-    }
-
-    // Accepted ---------------------------------------------------------------------------------------------------------------------------
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
     private static bool IsAcceptedBy(Enum key, List<Type> accepted) {
         return accepted.Contains(key.GetType());
     }
@@ -84,8 +55,9 @@ public static class CookieStorage {
         }
         return true;
     }
-
-    private static bool IsAccepted(Enum[] keys) {
+    // General:
+    private static bool IsAccepted(Enum key) => AreAccepted([key]);
+    private static bool AreAccepted(Enum[] keys) {
         var allRequired = AreAcceptedBy(keys, COOKIE.TYPES_REQUIRED);
         if (allRequired) return true;
 
@@ -96,22 +68,47 @@ public static class CookieStorage {
         return AreAcceptedBy(keys, accepted);
     }
 
-    // Cookie consent ---------------------------------------------------------------------------------------------------------------------    
-    public static async Task<bool> InitModal() {
-        var accepted = GetAcceptedCookies();
-        if (accepted.Count > 0) {
-            SetAcceptedCookies(accepted);
-            return false;
+    // Accepted ---------------------------------------------------------------------------------------------------------------------------
+    public static List<Type> GetAcceptedCookies() {
+        var json = GetCookie(COOKIE.MANDATORY.APP_COOKIES_ACCEPTED);
+        if (json is null) return [];
+        
+        var acceptedNames = JsonConvert.DeserializeObject<List<string>>(json);
+        if (acceptedNames is null) return [];
+
+        return ConvertToTypes(acceptedNames);
+    }
+
+    private static void SetAcceptedCookies(List<Type> accepted) {
+        List<string> names = accepted.Select(x => x.Name).ToList();
+        if (names.Count <= 0) {
+            DeleteCookie(COOKIE.MANDATORY.APP_COOKIES_ACCEPTED);
         } else {
-            await OpenConsentModal(true);
-            return true;
+            var json = JsonConvert.SerializeObject(names);
+            SetCookie(new Cookie(
+                COOKIE.MANDATORY.APP_COOKIES_ACCEPTED,
+                json,
+                DateTimeOffset.UtcNow.AddYears(1)
+            ));
         }
     }
-    
+
+    // Cookie modal -----------------------------------------------------------------------------------------------------------------------
+    private static bool ModalInitialized = false;
+    public static bool ModalOpenOnInit { get; private set; }
+
+    public static async Task<bool> InitModal() {
+        if (ModalInitialized) throw new InvalidOperationException("Already initialized!");
+        else ModalInitialized = true;
+        var accepted = await HTTP.Sync(GetAcceptedCookies);
+        ModalOpenOnInit = accepted.Count <= 0;
+        if (ModalOpenOnInit) await OpenConsentModal(true);
+        return ModalOpenOnInit;
+    }
+
     public static async Task OpenModal() => await OpenConsentModal(false);
 
-    public static bool CookiesAccepted => GetAcceptedCookies().Count > 0;
-
+    // Cookie consent ---------------------------------------------------------------------------------------------------------------------
     public static void AcceptCookieConsent(List<Type> accept) {
         List<Type> acceptedCookies = [];
         foreach (var accepted in accept) {
@@ -122,15 +119,21 @@ public static class CookieStorage {
         SetAcceptedCookies(acceptedCookies);
         var unacceptedCookies = COOKIE.TYPES.Except(acceptedCookies);
         foreach (var type in unacceptedCookies) {
-            foreach (var cookie in Enum.GetValues(type)) {
-                var name = cookie.ToString() ?? "";
-                COOKIE.DOMAIN.TryGetValue(name, out var domain);
-                COOKIE.PATH.TryGetValue(name, out var path);
-                DeleteCookie((Enum)cookie, domain, path);
+            foreach (Enum cookie in Enum.GetValues(type)) {
+                COOKIE.ORIGIN.TryGetValue(cookie, out var origins);
+                if (origins == null) {
+                    DeleteCookie(cookie);
+                } else {
+                    foreach (var (DOMAIN, PATH) in origins) {
+                        DeleteCookie(cookie, DOMAIN, PATH);
+                    }
+                }
             }
         }
     }
-    
+
+    public static void AcceptCookieConsent(List<string> accept) => AcceptCookieConsent(ConvertToTypes(accept));
+
     // Cookie usage -----------------------------------------------------------------------------------------------------------------------
     private static string? GetCookie(Enum key) {
         var keyValue = key.String();
@@ -138,7 +141,7 @@ public static class CookieStorage {
         return GetItem(keyValue);
     }
     public static string? Get(Enum key) {
-        if (!IsAccepted([key])) return null;
+        if (!IsAccepted(key)) return null;
         return GetCookie(key);
     }
 
@@ -154,7 +157,7 @@ public static class CookieStorage {
         SetItem(cookie);
     }
     public static void Set(Cookie cookie) {
-        if (!IsAccepted([cookie.Key])) return;
+        if (!IsAccepted(cookie.Key)) return;
         SetCookie(cookie);
     }
 
@@ -163,19 +166,17 @@ public static class CookieStorage {
         Checker.CheckEmptyString(keyValue, name: "key");
         DeleteItem(
             keyValue,
-            domain is null ? Cookie.DEFAULT_DOMAIN : domain,
-            path is null ? Cookie.DEFAULT_PATH : path
+            domain is null ? COOKIE.DEFAULT_DOMAIN : domain,
+            path is null ? COOKIE.DEFAULT_PATH : path
         );
     }
     public static void Delete(Enum key, string? domain = null, string? path = null) {
-        if (!IsAccepted([key])) return;
+        if (!IsAccepted(key)) return;
         DeleteCookie(key, domain, path);
     }
 
     private static async Task ExecWithCookie(Enum[] cookieType, EmptyDelegate callback) {
-        foreach (var type in cookieType) {
-            if (!IsAccepted([type])) return;
-        }
+        if (!AreAccepted(cookieType)) return;
         await callback.Invoke();
     }
     public static async Task WithCookie(Enum[] cookieType, Func<Task> callback) {
@@ -183,5 +184,11 @@ public static class CookieStorage {
     }
     public static async Task WithCookie(Enum[] cookieType, Action callback) {
         await ExecWithCookie(cookieType, new(callback));
+    }
+    public static async Task WithCookie(Enum cookieType, Func<Task> callback) {
+        await ExecWithCookie([cookieType], new(callback));
+    }
+    public static async Task WithCookie(Enum cookieType, Action callback) {
+        await ExecWithCookie([cookieType], new(callback));
     }
 }

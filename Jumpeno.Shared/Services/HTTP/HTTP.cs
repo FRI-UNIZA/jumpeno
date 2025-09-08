@@ -10,7 +10,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
     private static Func<Exception, string?, Task> OnError;
-    private static Func<Func<Task<bool>>, Task<bool>> TabSync;
+    private static Func<EmptyResponse<bool>, Task<bool>> TabLock;
     private static Action<HttpRequestMessage>? AddClientCookies;
     private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
     private readonly LockerSlim TokenLock = new();
@@ -29,14 +29,14 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     public static void Init(
         Func<int, AppException, Task> onRefresh,
         Func<Exception, string?, Task> onError,
-        Func<Func<Task<bool>>, Task<bool>> tabSync,
+        Func<EmptyResponse<bool>, Task<bool>> tabLock,
         Action<HttpRequestMessage>? addClientCookies = null
     ) {
         if (Client is not null) return;
         Client = AppEnvironment.GetService<HttpClient>;
         OnRefresh = onRefresh;
         OnError = onError;
-        TabSync = tabSync;
+        TabLock = tabLock;
         AddClientCookies = addClientCookies;
     }
 
@@ -192,6 +192,8 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     }
 
     // Tokens -----------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Call to cancel all pending requests.</summary>
+    /// <returns>Task to await.</returns>
     public static async Task ClearTokens() {
         var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
             foreach (var token in instance.Tokens.Values) CancelToken(token);
@@ -311,23 +313,46 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body);
     }
 
-    // Session ----------------------------------------------------------------------------------------------------------------------------
-    /// <summary>Wrap any session inside to sync browser tabs.</summary>
-    /// <param name="callback">Request delegate.</param>
+    // Sync -------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
+    /// <param name="callback">Delegated action to synchronize.</param>
     /// <returns>Task to await.</returns>
-    public static async Task Session(Func<Task> callback) {
-        await TabSync(async () => {
-            await callback();
-            return true;
-        });
+    public static async Task Sync(Func<Task> callback) {
+        await TabLock(new(async () => { await callback(); return true; }));
     }
 
+    /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
+    /// <param name="callback">Delegated action to synchronize.</param>
+    /// <returns>Task to await.</returns>
+    public static async Task Sync(Action callback) {
+        await TabLock(new(() => { callback(); return true; }));
+    }
+
+    /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
+    /// <param name="callback">Delegated action to synchronize.</param>
+    /// <returns>Task to await with response.</returns>
+    public static async Task<R> Sync<R>(Func<Task<R>> callback) {
+        R? response = default;
+        await TabLock(new(async () => { response = await callback(); return true; }));
+        return response!;
+    }
+
+    /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
+    /// <param name="callback">Delegated action to synchronize.</param>
+    /// <returns>Task to await with response.</returns>
+    public static async Task<R> Sync<R>(Func<R> callback) {
+        R? response = default;
+        await TabLock(new(() => { response = callback(); return true; }));
+        return response!;
+    }
+
+    // Try --------------------------------------------------------------------------------------------------------------------------------
     /// <summary>Wrap all HTTP requests inside to sync browser tabs and respond to errors.</summary>
     /// <param name="callback">Request delegate.</param>
     /// <param name="form">Form id to display errors on.</param>
     /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> Try(Func<Task> callback, string? form = null) {
-        return await TabSync(async () => {
+        return await TabLock(new(async () => {
             try { await callback(); return true; }
             catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
             catch (AggregateException e) {
@@ -337,20 +362,24 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 }
             } catch (Exception e) { await OnError(e, form); }
             return false;
-        });
+        }));
     }
 
-    /// <summary>Try with no error response. (useful for analytics)</summary>
+    /// <summary>Try with no error response. (useful for requests like analytics)</summary>
     /// <param name="callback">Request delegate.</param>
     /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> TrySilent(Func<Task> callback) {
-        return await TabSync(async () => {
+        return await TabLock(new(async () => {
             try { await callback(); return true; }
             catch { return false; }
-        });
+        }));
     }
 
     // Await ------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Use to await multiple concurrent requests.</summary>
+    /// <param name="tasks">Request tasks.</param>
+    /// <returns>Task to await.</returns>
+    /// <exception cref="AggregateException">Aggregated exceptions of every failed request.</exception>
     public static async Task Await(Task[] tasks) {
         try {
             await Task.WhenAll(tasks);

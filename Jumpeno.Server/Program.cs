@@ -17,7 +17,7 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.Secure = CookieSecurePolicy.Always; // Enforce secure cookies
 });
 builder.Services.AddAntiforgery(options => {
-    options.Cookie.Name = COOKIE_MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
+    options.Cookie.Name = COOKIE.MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
@@ -184,7 +184,7 @@ HTTP.Init(
         else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
     },
-    async callback => await callback(),
+    async callback => await callback.Invoke(),
     request => {
         var ctx = ServerContext.Instance;
         var cookies = ctx.Request.Cookies;

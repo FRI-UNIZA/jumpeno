@@ -1,7 +1,8 @@
 ﻿@namespace Jumpeno.Client
 
 @code {
-    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    // Views ------------------------------------------------------------------------------------------------------------------------------
+    private ThemeProvider ThemeProviderRef = null!;
     private CookieModal CookieModalRef = null!;
     public void Notify() => StateHasChanged();
 
@@ -12,12 +13,16 @@
         try {
             if (!firstRender) { AuthPage.FinishStage(); return; }
             // Authorization:
-            await HTTP.Session(async () => {
+            await HTTP.Sync(async () => {
                 if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
             });
             await AuthPage.NextStage();
             await AuthPage.ChangePath();
             await AuthPage.AddRedirect();
+            // Theme:
+            await ThemeProviderRef.Initialization;
+            // Culture:
+            await SelectCulture.Init();
             // Cookie modal:
             var cookieModalOpen = await CookieStorage.InitModal();
             // Init actions:
@@ -39,7 +44,7 @@
     }
 }
 
-<ThemeProvider>
+<ThemeProvider @ref="ThemeProviderRef">
     <ImagePreloader />
     <CanvasPreRenderer />
     <AriaPageAlert />
@@ -65,6 +70,6 @@
         </ModalProvider>
     </PageLoader>
     <AntDesign.AntContainer />
-    <CookieModal @ref="@CookieModalRef" />
+    <CookieModal @ref="CookieModalRef" />
     <Notification />
 </ThemeProvider>

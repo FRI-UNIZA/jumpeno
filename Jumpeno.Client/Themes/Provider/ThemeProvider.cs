@@ -5,9 +5,8 @@ namespace Jumpeno.Client.Themes;
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly string NAME = nameof(ThemeProvider);
-    // Namespace:
-    public const string TEMPLATE_NAMESPACE = "Constants";
     // Class:
+    public const string CLASS_BODY = "body";
     public const string CLASS_NO_THEME = "no-theme";
     public const string CLASS_THEME_TRANSITION_CONTAINER = "theme-transition-container";
     // Autodetect:
@@ -38,7 +37,8 @@ public partial class ThemeProvider {
         return ThemeCSSClass(instance.AppTheme);
     }
     public static string ServerBodyClass() {
-        var c = new CSSClass("body")
+        AppEnvironment.CheckServer();
+        var c = new CSSClass(CLASS_BODY)
         .SetSurface(SURFACE.PRIMARY);
         var cookie = GetThemeCookie();
         if (cookie is null) {
@@ -49,58 +49,62 @@ public partial class ThemeProvider {
         }
         return c;
     }
-    
+
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    // AppSettings:
+    public static void Init() => THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
+    // Component:
+    private readonly TaskCompletionSource InitTCS = new();
+    public Task Initialization => InitTCS.Task;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ThemeProvider() => Instance = this;
 
-    protected override void OnInitialized() {
-        var cookie = GetThemeCookie();
-        if (THEME_AUTODETECT && cookie is null) {
-            if (AppEnvironment.IsServer) {
+    protected override async Task OnInitializedAsync() {
+        await HTTP.Sync(() => {
+            var cookie = GetThemeCookie();
+            if (THEME_AUTODETECT && cookie is null) {
+                if (AppEnvironment.IsServer) {
+                    AppTheme = THEME.DEFAULT;
+                } else {
+                    AppTheme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? THEME.DARK : THEME.LIGHT;
+                }
+            } else if (cookie is null) {
                 AppTheme = THEME.DEFAULT;
             } else {
-                AppTheme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? THEME.DARK : THEME.LIGHT;
+                AppTheme = CreateThemeByName(cookie);
+                if (!AppEnvironment.IsServer) {
+                    SetThemeCookie(AppTheme);
+                }
             }
-        } else if (cookie is null) {
-            AppTheme = THEME.DEFAULT;
-        } else {
-            AppTheme = CreateThemeByName(cookie);
-            if (!AppEnvironment.IsServer) {
-                SetThemeCookie(AppTheme);
-            }
-        }        
-        ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
+            ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
+            InitTCS.SetResult();
+        });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) return;
+        if (!await PageLoader.IsActiveTask(PAGE_LOADER_TASK.THEME_CHANGE)) return;
         await Task.Delay(AppTheme.TRANSITION_FAST);
         await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
     }
 
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init() => THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
-
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static string? GetThemeCookie() => CookieStorage.Get(COOKIE_FUNCTIONAL.APP_THEME);
-
+    // Get cookie:
+    private static string? GetThemeCookie() => CookieStorage.Get(COOKIE.FUNCTIONAL.APP_THEME);
+    // Set cookie:
     private static void SetThemeCookie(string className) {
         CookieStorage.Set(new Cookie(
-            COOKIE_FUNCTIONAL.APP_THEME,
+            COOKIE.FUNCTIONAL.APP_THEME,
             className,
             DateTimeOffset.UtcNow.AddYears(1)
         ));
     }
-
     private static void SetThemeCookie(BaseTheme theme) => SetThemeCookie(theme.GetType().Name);
-
-    public static BaseTheme CreateThemeByName(string className) {
+    // Theme by name:
+    private static BaseTheme CreateThemeByName(string className) {
         try {
-            string ns = typeof(ThemeProvider).Namespace!;
-            ns = ns.Substring(0, ns.LastIndexOf('.'));
-            string fullyQualifiedName = $"{ns}.{TEMPLATE_NAMESPACE}.{className}";
-            var type = Type.GetType(fullyQualifiedName)!;
-            return (BaseTheme) Activator.CreateInstance(type)!;
+            var type = Type.GetType($"{typeof(BaseTheme).Namespace}.{className}")!;
+            return (BaseTheme)Activator.CreateInstance(type)!;
         } catch {
             return THEME.DEFAULT;
         }
@@ -112,7 +116,7 @@ public partial class ThemeProvider {
             if (AppEnvironment.IsServer) throw new InvalidOperationException("Changing theme not allowed on the server!");
             if (theme.GetType().Name == AppTheme.GetType().Name) return;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
-            SetThemeCookie(theme);
+            await HTTP.Sync(() => SetThemeCookie(theme));
             AppTheme = theme;
             JS.InvokeVoid(JSThemeProvider.StartSettingTheme);
             JS.InvokeVoid(JSThemeProvider.SetCustomTheme, ThemeCSSClass(AppTheme));

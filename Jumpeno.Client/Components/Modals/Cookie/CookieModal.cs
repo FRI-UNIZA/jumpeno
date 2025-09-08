@@ -28,38 +28,13 @@ public partial class CookieModal {
             Form: FORM,
             ID: nameof(SwitchFunctionalVM),
             DefaultValue: true,
-            OnChange: new(e => UpdateSelection(typeof(COOKIE_FUNCTIONAL), e.Value))
+            OnChange: new(e => UpdateSelection(typeof(COOKIE.FUNCTIONAL), e.Value))
         ));
     }
     protected override void OnComponentInitialized() => RequestStorage.Set(nameof(CookieModal), this);
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
-
-    private void InitSelected() {
-        var acceptedCookies = CookieStorage.GetAcceptedCookies();
-        if (acceptedCookies.Count <= 0) {
-            acceptedCookies = COOKIE.TYPES;
-            Initial = [];
-        } else {
-            Initial = ToDictionary(acceptedCookies);
-        }
-        Selected = ToDictionary(acceptedCookies);
-        SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE_FUNCTIONAL)));
-    }
-
-    private bool IsStateInitial(Dictionary<Type, bool> accept) {
-        return Initial.Count == accept.Count
-        && !Initial.Except(accept).Any()
-        && !accept.Except(Initial).Any();
-    }
-    
-    public async Task OpenModal(bool unclosable) {
-        Unclosable = unclosable;
-        InitSelected();
-        StateHasChanged();
-        await ModalRef.Open();
-    }
 
     private bool IsSelected(Type cookieType) => Selected.ContainsKey(cookieType);
 
@@ -68,14 +43,46 @@ public partial class CookieModal {
         else Selected.Remove(cookieType);
     }
 
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    private async Task InitSelected(bool unclosable) {
+        await HTTP.Sync(() => {
+            // Get cookies:
+            var acceptedCookies = CookieStorage.GetAcceptedCookies();
+            // Init:
+            if (unclosable && acceptedCookies.Count <= 0) {
+                acceptedCookies = COOKIE.TYPES;
+                Initial = [];
+            } else {
+                Initial = ToDictionary(acceptedCookies);
+            }
+            // Select:
+            Selected = ToDictionary(acceptedCookies);
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.FUNCTIONAL)));
+        });
+    }
+
+    private bool IsStateInitial(Dictionary<Type, bool> accept) {
+        return Initial.Count == accept.Count
+        && !Initial.Except(accept).Any()
+        && !accept.Except(Initial).Any();
+    }
+
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    public async Task OpenModal(bool unclosable) {
+        Unclosable = unclosable;
+        await InitSelected(unclosable);
+        StateHasChanged();
+        await ModalRef.Open();
+    }
+
     private async Task AcceptCookies(List<Type> accept) {
         await PageLoader.Show(PAGE_LOADER_TASK.COOKIE_CONSENT);
         await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
-            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE_FUNCTIONAL)));
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.FUNCTIONAL)));
             StateHasChanged();
-            await Task.Delay(AppTheme.TRANSITION_FAST);
+            await Task.Delay(AppTheme.TRANSITION_FAST); // NOTE: Switch transition
             if (IsStateInitial(newSelected)) {
                 await ModalRef.Close();
                 return;
@@ -84,7 +91,6 @@ public partial class CookieModal {
                 AcceptedNames: [.. accept.Select(x => x.Name)]
             );
             await HTTP.Patch(API.BASE.COOKIE_SET, body: body);
-            CookieStorage.CacheAcceptedCookies(accept);
             await ModalRef.Close();
         });
         await PageLoader.Hide(PAGE_LOADER_TASK.COOKIE_CONSENT);

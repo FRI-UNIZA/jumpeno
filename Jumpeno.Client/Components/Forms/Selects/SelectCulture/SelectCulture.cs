@@ -27,14 +27,16 @@ public partial class SelectCulture {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static void Init() {
-        var cookie = CookieStorage.Get(COOKIE_FUNCTIONAL.APP_CULTURE);
-        if (cookie is null) return;
-        CookieStorage.Set(new Cookie(
-            COOKIE_FUNCTIONAL.APP_CULTURE,
-            cookie,
-            DateTimeOffset.UtcNow.AddYears(1)
-        ));
+    public static async Task Init() {
+        await HTTP.Sync(() => {
+            var cookie = CookieStorage.Get(COOKIE.FUNCTIONAL.APP_CULTURE);
+            if (cookie is null) return;
+            CookieStorage.Set(new Cookie(
+                COOKIE.FUNCTIONAL.APP_CULTURE,
+                cookie,
+                DateTimeOffset.UtcNow.AddYears(1)
+            ));
+        });
     }
 
     private static async Task ChangeCulture(SelectEvent ev) {

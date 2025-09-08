@@ -16,7 +16,7 @@ public class CultureController : Controller {
     public IActionResult Redirect(string culture, string redirectURI) {
         if (culture != null) {
             CookieStorage.Set(new Cookie(
-                COOKIE_FUNCTIONAL.APP_CULTURE,
+                COOKIE.FUNCTIONAL.APP_CULTURE,
                 culture,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -66,7 +66,7 @@ public class CultureController : Controller {
             }
 
             // 1.3) Check cookies:
-            string? cookie = CookieStorage.Get(COOKIE_FUNCTIONAL.APP_CULTURE);
+            string? cookie = CookieStorage.Get(COOKIE.FUNCTIONAL.APP_CULTURE);
             cookie = $"{cookie}";
             if (languages.Contains(cookie)) {
                 return cookie;

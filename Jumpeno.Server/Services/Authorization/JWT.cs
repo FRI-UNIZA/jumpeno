@@ -126,19 +126,19 @@ public static class JWT {
     public static void SetRefreshTokenCookie(string token) {
         var expires = DateTimeOffset.UtcNow.AddMilliseconds(EXPIRATION_REFRESH);
         var cookie = new Cookie(
-            COOKIE_MANDATORY.APP_REFRESH_TOKEN, token,
+            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_REFRESH, httpOnly: true, secure: true
         );
         CookieStorage.Set(cookie);
         cookie = new Cookie(
-            COOKIE_MANDATORY.APP_REFRESH_TOKEN, token,
+            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_INVALIDATE, httpOnly: true, secure: true
         );
         CookieStorage.Set(cookie);
         cookie = new Cookie(
-            COOKIE_MANDATORY.APP_REFRESH_TOKEN, token,
+            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_DELETE, httpOnly: true, secure: true
         );
@@ -146,9 +146,9 @@ public static class JWT {
     }
 
     public static void DeleteRefreshTokenCookie() {
-        CookieStorage.Delete(COOKIE_MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
-        CookieStorage.Delete(COOKIE_MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
-        CookieStorage.Delete(COOKIE_MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
+        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
+        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
+        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
     }
 
     // Authorization ----------------------------------------------------------------------------------------------------------------------

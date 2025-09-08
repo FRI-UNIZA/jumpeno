@@ -12,7 +12,7 @@ public class CookieController : ControllerBase {
         // 1) Validation:
         body.Validate();
         // 2) Set cookies:
-        CookieStorage.AcceptCookieConsent(CookieStorage.ConvertToTypes(body.AcceptedNames));
+        CookieStorage.AcceptCookieConsent(body.AcceptedNames);
         // 3) Response:
         return new(I18N.T("Cookies accepted."));
     }

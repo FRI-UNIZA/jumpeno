@@ -69,7 +69,7 @@ public partial class ConnectBox {
         q.Remove(WATCH_QUERY);
         await Navigator.SetQueryParams(q);
         // 4) Check if cookie modal is displayed:
-        if (!CookieStorage.CookiesAccepted) return false;
+        if (CookieStorage.ModalOpenOnInit) return false;
         // 5) Try connect as spectator:
         await HandleWatch();
         // 6) Return result:

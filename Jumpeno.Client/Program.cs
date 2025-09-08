@@ -46,7 +46,7 @@ HTTP.Init(
         else ErrorHandler.Notify(EXCEPTION.DEFAULT);
         await Task.CompletedTask;
     },
-    async callback => await Window.Lock(callback, WINDOW_LOCK.HTTP)
+    async callback => await Window.Lock(callback.Invoke, WINDOW_LOCK.HTTP)
 );
 CookieStorage.Init(
     key => {
@@ -76,6 +76,5 @@ CookieStorage.Init(
     }
 );
 ThemeProvider.Init();
-SelectCulture.Init();
 
 await app.RunAsync();
