@@ -1,0 +1,36 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<Modal
+    @ref="@ModalRef"
+    Label="@(Label ?? I18N.T("Confirmation"))"
+    Class="@ComputeClass()"
+>
+    <Content>
+        <div class="confirm-content">
+            <div class="confirm-icon-wrap">
+                @if (Icon != null) @Icon
+                else { <AntIcon Type="warning" Theme="outline" Class="confirm-icon" /> }
+            </div>
+            <Paragraph Class="confirm-text">
+                @if (Message != null) @Message
+                else @I18N.T("Are you sure you want to continue?")
+            </Paragraph>
+        </div>
+    </Content>
+    <Footer>
+        <Button Class="confirm-button" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="Close">
+            <Text>
+                @if (TextCancel != null) @TextCancel
+                else @I18N.T("Cancel")
+            </Text>
+        </Button>
+        <Button Class="confirm-button" Variant="Danger ? BUTTON_VARIANT.DANGER : BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="Confirm">
+            <Text>
+                @if (TextOK != null) @TextOK
+                else @I18N.T("OK")
+            </Text>
+        </Button>
+    </Footer>
+</Modal>

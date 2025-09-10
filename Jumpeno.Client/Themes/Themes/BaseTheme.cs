@@ -251,6 +251,16 @@ public class BaseTheme {
     public virtual RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_BACKGROUND { get; }
     public virtual string BUTTON_QUATERNARY_HIGHLIGHT_BOX_SHADOW { get; }
 
+    // Button [danger] --------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BUTTON_DANGER_COLOR { get; }
+    public virtual RGBAColor BUTTON_DANGER_BACKGROUND { get; }
+    public virtual string BUTTON_DANGER_BOX_SHADOW { get; }
+
+    // Button [danger][highlight]:
+    public virtual RGBAColor BUTTON_DANGER_HIGHLIGHT_COLOR { get; }
+    public virtual RGBAColor BUTTON_DANGER_HIGHLIGHT_BACKGROUND { get; }
+    public virtual string BUTTON_DANGER_HIGHLIGHT_BOX_SHADOW { get; }
+
     // Button [disabled] ------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BUTTON_DISABLED_COLOR { get; }
     public virtual RGBAColor BUTTON_DISABLED_BACKGROUND { get; }

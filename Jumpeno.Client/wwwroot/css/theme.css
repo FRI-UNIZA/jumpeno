@@ -140,6 +140,12 @@ body.light-theme .surface-primary {
     --theme-button-quaternary-highlight-color: rgba(236, 240, 241, 1);
     --theme-button-quaternary-highlight-background: rgba(72, 63, 86, 1);
     --theme-button-quaternary-highlight-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.3);
+    --theme-button-danger-color: rgba(255, 255, 255, 1);
+    --theme-button-danger-background: rgba(217, 26, 29, 1);
+    --theme-button-danger-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.35);
+    --theme-button-danger-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-danger-highlight-background: rgba(237, 43, 46, 1);
+    --theme-button-danger-highlight-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.3);
     --theme-button-disabled-color: rgba(190, 190, 190, 1);
     --theme-button-disabled-background: rgba(240, 240, 240, 1);
     --theme-button-disabled-box-shadow: 0 2em 2em rgba(0, 0, 0, 0.2);
@@ -496,6 +502,12 @@ body.dark-theme .surface-primary {
     --theme-button-quaternary-highlight-color: rgba(236, 240, 241, 1);
     --theme-button-quaternary-highlight-background: rgba(72, 63, 86, 1);
     --theme-button-quaternary-highlight-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.5);
+    --theme-button-danger-color: rgba(255, 255, 255, 1);
+    --theme-button-danger-background: rgba(217, 26, 29, 1);
+    --theme-button-danger-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.55);
+    --theme-button-danger-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-danger-highlight-background: rgba(237, 43, 46, 1);
+    --theme-button-danger-highlight-box-shadow: 0 2em 4em rgba(0, 0, 0, 0.5);
     --theme-button-disabled-color: rgba(190, 190, 190, 1);
     --theme-button-disabled-background: rgba(240, 240, 240, 1);
     --theme-button-disabled-box-shadow: 0 2em 2em rgba(0, 0, 0, 0.2);

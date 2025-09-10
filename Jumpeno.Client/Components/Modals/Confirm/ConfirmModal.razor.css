@@ -1,0 +1,105 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.confirm-modal {
+    /* Display: */
+    --confirm-footer-gap: 12px;
+    /* Style: */
+    --confirm-color: var(--theme-status-warning-accent-highlight-color);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.confirm-modal {
+    /* Size: */
+    --modal-min-width: 340px;
+    --modal-max-width: 500px;
+}
+
+::deep.modal.confirm-modal .confirm-content {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    /* Size: */
+    width: 100%;
+    padding: 10px 0;
+}
+
+::deep.modal.confirm-modal .confirm-content .confirm-icon-wrap {
+    /* Display: */
+    display: flex;
+    /* Size: */
+    margin-top: -6px;
+    /* Style: */
+    color: var(--confirm-color);
+    /* Content: */
+    font-size: 70px;
+}
+
+::deep.modal.confirm-modal .confirm-content .paragraph.confirm-text {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.modal.confirm-modal .modal-footer {
+    /* Display: */
+    justify-content: stretch;
+    flex-wrap: wrap;
+    gap: 8px var(--confirm-footer-gap);
+}
+
+::deep.modal.confirm-modal .modal-footer .confirm-button {
+    /* Display: */
+    flex-shrink: 1;
+    flex-grow: 1;
+    /* Size: */
+    width: fit-content;
+    min-width: calc(50% - var(--confirm-footer-gap) / 2);
+}
+
+/* Danger ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.confirm-modal.danger {
+    /* Style: */
+    --confirm-color: var(--theme-status-danger-accent-highlight-color);
+}
+
+@media (min-width: 768px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.confirm-modal {
+        /* Display: */
+        --confirm-footer-gap: 13px;
+    }
+
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.confirm-modal .confirm-content {
+        /* Display: */
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 20px;
+        /* Size: */
+        padding: 0 10px;
+    }
+
+    ::deep.modal.confirm-modal .confirm-content .confirm-icon-wrap {
+        /* Display: */
+        align-self: flex-start;
+        /* Size: */
+        margin-top: 0;
+        /* Content: */
+        font-size: 50px;
+    }
+
+    ::deep.modal.confirm-modal .confirm-content .paragraph.confirm-text {
+        /* Content: */
+        text-align: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Variables --------------------------------------------------------------------------------------------------------------- */
+    ::deep.modal.confirm-modal {
+        /* Display: */
+        --confirm-footer-gap: 14px;
+    }
+}

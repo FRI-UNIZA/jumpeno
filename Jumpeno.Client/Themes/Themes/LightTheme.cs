@@ -201,6 +201,16 @@ public class LightTheme : BaseTheme {
     public override RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_BACKGROUND => new(72, 63, 86);
     public override string BUTTON_QUATERNARY_HIGHLIGHT_BOX_SHADOW => BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW;
 
+    // Button [danger] --------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor BUTTON_DANGER_COLOR => new(255, 255, 255);
+    public override RGBAColor BUTTON_DANGER_BACKGROUND => new(217, 26, 29);
+    public override string BUTTON_DANGER_BOX_SHADOW => BUTTON_PRIMARY_BOX_SHADOW;
+
+    // Button [danger][highlight]:
+    public override RGBAColor BUTTON_DANGER_HIGHLIGHT_COLOR => new(255, 255, 255);
+    public override RGBAColor BUTTON_DANGER_HIGHLIGHT_BACKGROUND => new(237, 43, 46);
+    public override string BUTTON_DANGER_HIGHLIGHT_BOX_SHADOW => BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW;
+
     // Button [disabled] ------------------------------------------------------------------------------------------------------------------
     public override RGBAColor BUTTON_DISABLED_COLOR => new(190, 190, 190);
     public override RGBAColor BUTTON_DISABLED_BACKGROUND => new(240, 240, 240);

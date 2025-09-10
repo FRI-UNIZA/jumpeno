@@ -16,9 +16,9 @@
     --modal-padding-content-tablet: var(--modal-padding-content);
     --modal-padding-content-desktop: var(--modal-padding-content);
     --modal-padding-footer: var(--modal-padding);
-    --modal-padding-footer-mobile: var(--modal-padding-footer);
-    --modal-padding-footer-tablet: var(--modal-padding-footer);
-    --modal-padding-footer-desktop: var(--modal-padding-footer);
+    --modal-padding-footer-mobile: 14px var(--modal-padding-footer);
+    --modal-padding-footer-tablet: 14px var(--modal-padding-footer);
+    --modal-padding-footer-desktop: 15px var(--modal-padding-footer);
     /* Margin: */
     --modal-margin: var(--theme-size-container-padding-mobile);
     /* Border radius: */

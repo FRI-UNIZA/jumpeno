@@ -129,7 +129,8 @@ public partial class ModalProvider {
         await instance.TCSDispose.Task;
         
         await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
-        await ActionHandler.RestoreFocusAsync();
+        if (await PageLoader.IsActive()) ActionHandler.PopFocus();
+        else await ActionHandler.RestoreFocusAsync();
         await modal.OnAfterClose.InvokeAsync(modal);
         if (withLock) instance.ModalLock.TryUnlock();
     }

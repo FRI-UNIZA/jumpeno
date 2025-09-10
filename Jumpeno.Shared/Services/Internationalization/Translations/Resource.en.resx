@@ -732,4 +732,13 @@
   <data name="Manage" xml:space="preserve">
     <value>Manage</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="Are you sure you want to continue?" xml:space="preserve">
+    <value>Are you sure you want to continue?</value>
+  </data>
 </root>

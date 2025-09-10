@@ -202,3 +202,38 @@
     /* Style: */
     box-shadow: var(--theme-button-disabled-box-shadow);
 }
+
+/* Variant [danger] -------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-danger {
+    /* Style: */
+    color: var(--theme-button-danger-color);
+    background: var(--theme-button-danger-background);
+}
+::deep.button-component.button.variant-danger:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-danger-box-shadow);
+}
+
+/* Variant [danger][highlight] */
+::deep.button-component.button.variant-danger:not(.disabled):hover,
+::deep.button-component.button.variant-danger:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-danger-highlight-color);
+    background: var(--theme-button-danger-highlight-background);
+}
+::deep.button-component.button.variant-danger:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-danger:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-danger-highlight-box-shadow);
+}
+
+/* Variant [danger][disabled] */
+::deep.button-component.button.variant-danger.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-danger.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
+}
