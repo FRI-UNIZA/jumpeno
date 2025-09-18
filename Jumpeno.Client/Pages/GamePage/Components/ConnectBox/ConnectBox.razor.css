@@ -47,17 +47,23 @@
 }
 
 ::deep.connect-box .connect-buttons {
+    /* Variables: */
+    --connect-buttons-gap: 12px;
     /* Display: */
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--connect-buttons-gap);
     /* Size: */
     width: 100%;
 }
 
 ::deep.connect-box .connect-button {
+    /* Display: */
+    flex-shrink: 1;
+    flex-grow: 1;
     /* Size: */
-    width: 100%;
+    min-width: calc(50% - var(--connect-buttons-gap) / 2);
 }
 
 ::deep.connect-box .web-link.create-link {
@@ -115,16 +121,10 @@
     }
 
     ::deep.connect-box .connect-buttons {
+        /* Variables: */
+        --connect-buttons-gap: 14px;
         /* Display: */
         flex-direction: row;
-        gap: 14px;
-    }
-
-    ::deep.connect-box .connect-button {
-        /* Display: */
-        flex-shrink: 1;
-        /* Size: */
-        width: 100%;
     }
 
     ::deep.connect-box .web-link.settings-link {
@@ -150,8 +150,8 @@
     }
 
     ::deep.connect-box .connect-buttons {
-        /* Display: */
-        gap: 16px;
+        /* Variables: */
+        --connect-buttons-gap: 16px;
     }
 
     ::deep.connect-box .web-link.settings-link {
