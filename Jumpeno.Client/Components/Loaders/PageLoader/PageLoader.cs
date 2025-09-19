@@ -11,7 +11,8 @@ public partial class PageLoader {
     public const string CLASS_CUSTOM = "custom-loader";
     // Cascade:
     public const string CASCADE_PAGE_LOADER_DISPLAYED = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_DISPLAYED)}";
-    public const string CASCADE_PAGE_LOADER_TASKS = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_TASKS)}";
+    // Min loading time:
+    public const uint MIN_LOADING = 150; // ms
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -24,11 +25,12 @@ public partial class PageLoader {
     private readonly LockerSlim Lock = new();
     private readonly Dictionary<PAGE_LOADER_TASK, bool> PageLoaderTasks = new() {{ PAGE_LOADER_TASK.INITIAL, true }};
     private readonly Dictionary<PAGE_LOADER_TASK, bool> GlobalLoaders = [];
+    private readonly MinWatch MinWatch = new(MIN_LOADING);
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public CSSClass ComputeContentClass() => new CSSClass(CLASS_CONTENT).Set(ThemeProvider.CLASS_THEME_TRANSITION_CONTAINER);
+    public static CSSClass ComputeContentClass() => new CSSClass(CLASS_CONTENT).Set(ThemeProvider.CLASS_THEME_TRANSITION_CONTAINER);
 
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
@@ -63,13 +65,16 @@ public partial class PageLoader {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task Show(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT, bool custom = false) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
+            // 1) Set tasks:
             instance.PageLoaderTasks[task] = true;
-            // Focus handling:
+            instance.UpdateGlobalLoaders(task, custom);
+            // 2) Set loading:
             var firstLoader = !instance.PageLoaderDisplayed;
             instance.PageLoaderDisplayed = true;
-            instance.UpdateGlobalLoaders(task, custom);
-            if (!AppEnvironment.IsServer) {
+            // 3) Client actions:
+            if (AppEnvironment.IsClient) {
                 if (firstLoader) {
+                    instance.MinWatch.Start();
                     ActionHandler.DisableKeyboardActions();
                     ActionHandler.SaveActiveElement();
                     instance.NoLoaderTCS = new TaskCompletionSource();
@@ -83,52 +88,74 @@ public partial class PageLoader {
         });
     }
 
-    public static async Task Hide(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
+    public static async Task Hide(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT, bool minLoading = true) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
+            if (!instance.PageLoaderDisplayed) return;
+            // 1) Remove tasks:
             instance.PageLoaderTasks.Remove(task);
-            // Focus handling:
-            if (instance.PageLoaderDisplayed) {
-                instance.PageLoaderDisplayed = instance.PageLoaderTasks.Count > 0;
-                instance.RemoveGlobalLoader(task);
-                if (!AppEnvironment.IsServer) {
-                    await instance.OnChange();
-                    if (!instance.PageLoaderDisplayed) {
-                        instance.NoLoaderTCS.TrySetResult();
-                        ActionHandler.EnableKeyboardActions();
-                        await ActionHandler.RestoreFocusAsync();
-                        Window.Inert();
-                    }
+            instance.RemoveGlobalLoader(task);
+            // 2) Check loading:
+            var lastLoader = instance.PageLoaderTasks.Count <= 0;
+            // 3) Update state:
+            if (AppEnvironment.IsClient) {
+                if (lastLoader) {
+                    if (minLoading) await instance.MinWatch.Task;
+                    instance.PageLoaderDisplayed = false;
                 }
+                await instance.OnChange();
+                if (lastLoader) {
+                    instance.NoLoaderTCS.TrySetResult();
+                    ActionHandler.EnableKeyboardActions();
+                    await ActionHandler.RestoreFocusAsync();
+                    Window.Inert();
+                }
+            } else {
+                instance.PageLoaderDisplayed = !lastLoader;
             }
         });
     }
 
-    public static async Task Show(Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
-        await Show(task);
+    public static async Task Show(
+        Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT,
+        bool custom = false, bool minLoading = true
+    ) {
+        await Show(task, custom);
         try { await action(); }
-        finally { await Hide(task); }
+        finally { await Hide(task, minLoading); }
     }
 
-    public static async Task Try(Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT) {
-        try { await Show(action, task); }
+    public static async Task Try(
+        Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT,
+        bool custom = false, bool minLoading = true
+    ) {
+        try { await Show(action, task, custom, minLoading); }
         catch {}
     }
 
-    // Callbacks --------------------------------------------------------------------------------------------------------------------------
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> IsActive() {
+        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
+            return instance.PageLoaderDisplayed;
+        }, false);
+    }
+
+    public static async Task<bool> IsActiveTask(PAGE_LOADER_TASK task) {
+        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
+            return instance.PageLoaderTasks.ContainsKey(task);
+        }, false);
+    }
+
+    // Conditionals -----------------------------------------------------------------------------------------------------------------------
     private static async Task WithActiveLoader(EmptyDelegate callback) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
-            if (instance.PageLoaderTasks.Count <= 0) return;
+            if (!instance.PageLoaderDisplayed) return;
             await callback.Invoke();
         });
     }
-    public static async Task WithActiveLoader(Action callback) {
-        await WithActiveLoader(new EmptyDelegate(callback));
-    }
-    public static async Task WithActiveLoader(Func<Task> callback) {
-        await WithActiveLoader(new EmptyDelegate(callback));
-    }
+    public static async Task WithActiveLoader(Action callback) => await WithActiveLoader(new EmptyDelegate(callback));
+    public static async Task WithActiveLoader(Func<Task> callback) => await WithActiveLoader(new EmptyDelegate(callback));
 
-    // Task -------------------------------------------------------------------------------------------------------------------------------
+    // Await ------------------------------------------------------------------------------------------------------------------------------
     public static async Task AwaitAllLoaders() {
         if (AppEnvironment.IsServer) return;
         var instance = Instance(); await instance.Lock.TryExclusive(async token => {
@@ -137,19 +164,6 @@ public partial class PageLoader {
             token.Unlock();
             await tcs;
         });
-    }
-
-    // Predicates -------------------------------------------------------------------------------------------------------------------------
-    public static async Task<bool> IsActive() {
-        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
-            return instance.PageLoaderTasks.Count > 0;
-        }, false);
-    }
-
-    public static async Task<bool> IsActiveTask(PAGE_LOADER_TASK task) {
-        var instance = Instance(); return await instance.Lock.TryExclusive(() => {
-            return instance.PageLoaderTasks.ContainsKey(task);
-        }, false);
     }
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------

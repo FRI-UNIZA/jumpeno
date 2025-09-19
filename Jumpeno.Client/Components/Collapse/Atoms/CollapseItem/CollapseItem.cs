@@ -46,6 +46,6 @@ public partial class CollapseItem {
         Collapsed = !Collapsed;
         StateHasChanged();
         await Task.Delay(AppTheme.TRANSITION_NORMAL);
-        await PageLoader.Hide(PAGE_LOADER_TASK.COLLAPSE);
+        await PageLoader.Hide(PAGE_LOADER_TASK.COLLAPSE, false);
     }
 }

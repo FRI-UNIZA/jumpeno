@@ -82,7 +82,7 @@ public partial class SelectCulture {
             try { pageURI = page.CustomURL($"{value}", pageURI); }
             catch (Exception e) {
                 Notification.Error(e.Message);
-                await PageLoader.Hide(PAGE_LOADER_TASK.CULTURE_CHANGE);
+                await PageLoader.Hide(PAGE_LOADER_TASK.CULTURE_CHANGE, false);
                 return;
             } 
             path = I18N.USE_PREFIX ? $"/{CultureInfo.CurrentCulture}{pageURI}" : pageURI;

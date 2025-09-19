@@ -29,7 +29,7 @@
             await Init.Run();
             // Server loader:
             ServerPageLoader.Hide();
-            await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL);
+            await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL, false);
             // PageLoader:
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
             await PageLoader.AwaitAllLoaders();

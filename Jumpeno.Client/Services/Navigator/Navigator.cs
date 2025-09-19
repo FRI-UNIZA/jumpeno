@@ -60,7 +60,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         foreach (var blocker in Blockers) {
             if (!await blocker.Invoke(new(PreviousURL, ctx.TargetLocation))) {
                 ctx.PreventNavigation();
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
                 NavLock.TryUnlock();
                 return;
             }
@@ -69,7 +69,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         if (URL.IsLocal(ctx.TargetLocation) && !ProgramNavigation) {
             if (Page.Current.GetType() == typeof(Error404Page) && PreviousURL == ctx.TargetLocation) {
                 ctx.PreventNavigation();
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
                 NavLock.TryUnlock();
                 return;
             }
@@ -122,7 +122,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         IsPopState = false;
 
         if (Loader) await MinLoadingWatch.Task;
-        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION);
+        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
         Loader = true;
         
         foreach (var listener in AfterFinishListeners) {

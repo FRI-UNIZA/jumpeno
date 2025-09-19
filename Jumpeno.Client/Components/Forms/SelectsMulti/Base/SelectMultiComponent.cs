@@ -106,7 +106,7 @@ public partial class SelectMultiComponent {
         ValueChanged = false;
         LastValue = [];
         await ModalRef.Open();
-        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT);
+        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT, false);
     }
 
     // Search -----------------------------------------------------------------------------------------------------------------------------

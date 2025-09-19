@@ -56,7 +56,7 @@ public partial class ConfirmModal {
             await ModalRef.Close();
             await Action.Invoke();
         } finally {
-            await PageLoader.Hide(PAGE_LOADER_TASK.CONFIRM);
+            await PageLoader.Hide(PAGE_LOADER_TASK.CONFIRM, Loader);
         }
     }
 }

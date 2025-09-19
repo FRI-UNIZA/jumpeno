@@ -89,7 +89,7 @@ public partial class NavMenuMobile {
             await StateTCS.Task;
 
             objRef.Dispose();
-            await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
+            await PageLoader.Hide(PAGE_LOADER_TASK.MENU, false);
 
             ActionHandler.SetFocus(ID);
 
@@ -114,7 +114,7 @@ public partial class NavMenuMobile {
             await StateTCS.Task;
 
             objRef.Dispose();
-            await PageLoader.Hide(PAGE_LOADER_TASK.MENU);
+            await PageLoader.Hide(PAGE_LOADER_TASK.MENU, false);
         
             var windowSize = Window.GetSize();
             if (windowSize.Width < MOBILE_MENU_BREAKPOINT) {

@@ -88,7 +88,7 @@ public partial class SelectComponent {
     private async Task HandleBeforeOpen() {
         var pos = ModalRef.ScrollAreaRef.ItemPosition($".{CLASS_OPTION_SELECTED}");
         ModalRef.ScrollAreaRef.ScrollTo(0, pos.Top - pos.Height);
-        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT);
+        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT, false);
     }
 
     // Search -----------------------------------------------------------------------------------------------------------------------------

@@ -13,12 +13,8 @@ public class Interval(EmptyDelegate action, int time) : Delay(action, time) {
         timeDelay.StartExecution();
         return timeDelay;
     }
-    public static new Interval Set(Func<Task> action, int time) {
-        return Set(new EmptyDelegate(action), time);
-    }
-    public static new Interval Set(Action action, int time) {
-        return Set(new EmptyDelegate(action), time);
-    }
+    public static new Interval Set(Func<Task> action, int time) => Set(new EmptyDelegate(action), time);
+    public static new Interval Set(Action action, int time) => Set(new EmptyDelegate(action), time);
 
     public static void Clear(Interval? interval) {
         if (interval is null) return;

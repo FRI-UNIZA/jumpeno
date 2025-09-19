@@ -3,11 +3,9 @@
 @inherits ServiceComponent<PageLoader>
 
 <CascadingValue Name="@CASCADE_PAGE_LOADER_DISPLAYED" Value="PageLoaderDisplayed">
-<CascadingValue Name="@CASCADE_PAGE_LOADER_TASKS" Value="PageLoaderTasks">
     <div class="@ComputeContentClass()" inert="@PageLoaderDisplayed">
         @ChildContent
     </div>
-</CascadingValue>
 </CascadingValue>
 <div class="@CLASS_BEFORE" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(ID))" />
 <div

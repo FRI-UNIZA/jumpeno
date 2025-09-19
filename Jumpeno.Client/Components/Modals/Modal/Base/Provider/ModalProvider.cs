@@ -72,7 +72,7 @@ public partial class ModalProvider {
         SetModalState(element.Modal, MODAL_STATE.OPEN);
         element.Notify();
         await instance.TCSOpen.Task;
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
+        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
         ActionHandler.SetFocus(element.Modal.ID_DIALOG);
         await element.Modal.OnAfterOpen.InvokeAsync(element.Modal);
     }
@@ -112,7 +112,7 @@ public partial class ModalProvider {
         element?.StartClosing();
         await instance.TCSDispose.Task;
         
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
+        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
         await ActionHandler.RestoreFocusAsync();
         instance.ModalLock.TryUnlock();
     }
@@ -128,7 +128,7 @@ public partial class ModalProvider {
         element?.StartClosing();
         await instance.TCSDispose.Task;
         
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL);
+        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
         if (await PageLoader.IsActive()) ActionHandler.PopFocus();
         else await ActionHandler.RestoreFocusAsync();
         await modal.OnAfterClose.InvokeAsync(modal);

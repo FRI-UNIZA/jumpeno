@@ -24,9 +24,7 @@ public class Delay {
         }
     }
 
-    protected virtual async void StartExecution() {
-        await ExecuteTimeout();
-    }
+    protected virtual async void StartExecution() => await ExecuteTimeout();
 
     // Static methods ---------------------------------------------------------------------------------------------------------------------
     protected static Delay Set(EmptyDelegate action, int time) {
@@ -34,12 +32,8 @@ public class Delay {
         timeDelay.StartExecution();
         return timeDelay;
     }
-    public static Delay Set(Func<Task> action, int time) {
-        return Set(new EmptyDelegate(action), time);
-    }
-    public static Delay Set(Action action, int time) {
-        return Set(new EmptyDelegate(action), time);
-    }
+    public static Delay Set(Func<Task> action, int time) => Set(new EmptyDelegate(action), time);
+    public static Delay Set(Action action, int time) => Set(new EmptyDelegate(action), time);
 
     public static void Clear(Delay? delay) {
         if (delay is null) return;
