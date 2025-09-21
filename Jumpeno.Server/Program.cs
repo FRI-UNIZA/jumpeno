@@ -146,10 +146,19 @@ AppEnvironment.Init(
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
         if (ctx == null) return false;
-        return ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX)
-            || ctx.Request.Path.StartsWithSegments(HUB.BASE.PREFIX);
+        return ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX);
     },
-    builder.Environment.IsDevelopment,
+    () => {
+        var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
+        HttpContext ctx = accessor.HttpContext!;
+        if (ctx == null) return false;
+        return ctx.Request.Path.StartsWithSegments(HUB.BASE.PREFIX);
+    },
+    #if IS_DEVELOPMENT
+        () => true,
+    #else
+        () => false,
+    #endif
     T => app.Services.GetService(T)!
 );
 RequestStorage.Init(

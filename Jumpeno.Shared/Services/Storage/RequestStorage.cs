@@ -37,6 +37,14 @@ public static class RequestStorage {
         return (T?) GetValue(key);
     }
 
+    public static T Access<T>(string key, T initial) {
+        var data = Get<T>(key);
+        if (data != null) return data;
+        data = initial!;
+        Set(key, data);
+        return data;
+    }
+
     public static void Set(string key, object o) {
         Checker.CheckEmptyString(key, name: "key");
         if (AppEnvironment.IsServer) { SetServerItem(key, o); }

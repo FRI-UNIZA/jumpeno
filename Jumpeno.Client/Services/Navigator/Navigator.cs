@@ -170,7 +170,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         url,
         forceLoad, replace, queries: false,
         data, state, notify,
-        loader: true
+        loader: !forceLoad
     );
     public static void Refresh() {
         if (AppEnvironment.IsServer) ServerRefresh();

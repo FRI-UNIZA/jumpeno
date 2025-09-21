@@ -23,16 +23,16 @@
         <ActiveDebugProfile>https</ActiveDebugProfile>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <DefineConstants>IS_DEVELOPMENT</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DefineConstants>IS_PRODUCTION</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Update="**/*.razor.css" CssScope="global" />
     </ItemGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <DefineConstants>CLIENT_DEVELOPMENT</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <DefineConstants>CLIENT_PRODUCTION</DefineConstants>
-    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AntDesign" Version="1.0.0" />

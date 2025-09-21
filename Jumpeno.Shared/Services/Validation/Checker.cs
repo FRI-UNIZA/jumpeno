@@ -1,4 +1,4 @@
-namespace Jumpeno.Shared.Utils;
+namespace Jumpeno.Shared.Services;
 
 using System.Text.RegularExpressions;
 
@@ -17,8 +17,8 @@ public static class Checker {
     // Assert -----------------------------------------------------------------------------------------------------------------------------
     private static T Assert<T>(T value, List<Error> errors, AppException exception, bool force) {
         if (errors.Count <= 0) return value;
-        if (force) throw exception.SetErrors(errors);
-        var e = errors.Count == 1 ? EXCEPTION.DEFAULT.SetInfo(errors[0].Info) : exception;
+        if (force) throw new AppException(exception).SetErrors(errors);
+        var e = errors.Count == 1 ? new AppException(exception).SetInfo(errors[0].Info) : new AppException(exception);
         throw e.SetErrors(errors);
     }
     public static T Assert<T>(T value, List<Error> errors, AppException? exception = null) => Assert(value, errors, exception ?? EXCEPTION.DEFAULT, false);

@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Components;
 
-using AntDesign;
-
 /// <summary>
 /// Usage:
 /// Use class property to set width, height, max-width or max-height and background of scrollable area.
@@ -11,6 +9,9 @@ public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const string MARK = "scroll-area";
     private const string CONTENT_CLASS = $"{MARK}-content";
+    // RequestStorage keys:
+    private const string KEY_AREAS = $"{nameof(ScrollArea)}.{nameof(Areas)}";
+    private const string KEY_REGISTER_LISTENERS = $"{nameof(ScrollArea)}.{nameof(RegisterListeners)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
@@ -30,9 +31,12 @@ public partial class ScrollArea {
     public RenderFragment? ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static readonly Dictionary<string, ScrollArea> Areas = [];
+    private static Dictionary<string, ScrollArea> Areas =>
+        RequestStorage.Access<Dictionary<string, ScrollArea>>(KEY_AREAS, []);
+    // Listeners:
     private Action<ScrollAreaPosition>[] Listeners = [];
-    private static readonly Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners = [];
+    private static Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners =>
+        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(KEY_REGISTER_LISTENERS, []);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");
@@ -153,7 +157,7 @@ public partial class ScrollArea {
         if (AppEnvironment.IsServer) return;
         var area = GetArea(id);
         if (area is not null) {
-            area.Listeners = area.Listeners.Remove(listener);
+            area.Listeners = [.. area.Listeners.Except([listener])];
             if (area.Listeners.Length <= 0) {
                 JS.InvokeVoid(JSScrollArea.RemoveScrollListener, id);
                 area.Listeners = [];
@@ -161,7 +165,7 @@ public partial class ScrollArea {
         } else {
             var reg = GetRegisterListeners(id);
             if (reg is null) return;
-            else RegisterListeners[id] = reg.Remove(listener);
+            else RegisterListeners[id] = [.. reg.Except([listener])];
         }
     }
     public void RemoveScrollListener(Action<ScrollAreaPosition> listener) => RemoveScrollListener(ID, listener);

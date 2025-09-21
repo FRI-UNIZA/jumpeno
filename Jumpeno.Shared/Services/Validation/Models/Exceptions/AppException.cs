@@ -83,6 +83,13 @@ public class AppException : Exception {
         new Dictionary<object, object>()
     ) {}
 
+    public AppException(AppException exception) : this(
+        exception.Code,
+        exception.Headers, exception.ContentHeaders,
+        exception.Info, exception.Errors,
+        exception.Data
+    ) {}
+
     // Data Transfer Object ---------------------------------------------------------------------------------------------------------------
     [JsonIgnore][Newtonsoft.Json.JsonIgnore]
     public virtual AppExceptionDTO DTO => new(this);

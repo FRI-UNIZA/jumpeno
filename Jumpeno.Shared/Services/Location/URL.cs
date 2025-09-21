@@ -272,9 +272,9 @@ public static class URL {
         if (encode) return Encode(url);
         else return url;
     }
-    public static string ImageLink(string file, bool theme = false, bool culture = false) {
+    public static string FileLink(string file, bool theme = false, bool culture = false) {
         if (theme) file = AppendTheme(file);
         if (culture) file = AppendCulture(file);
-        return Encode($"/images/{file}?v={AppSettings.Version}");
+        return Encode($"{file}?v={AppSettings.Version}");
     }
 }

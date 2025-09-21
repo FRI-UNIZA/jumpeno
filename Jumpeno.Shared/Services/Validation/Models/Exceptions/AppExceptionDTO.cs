@@ -20,7 +20,14 @@ public class AppExceptionDTO {
         Errors = errors;
         Data = data;
     }
+
     public AppExceptionDTO(AppException exception) : this(
+        exception.Code,
+        new(exception.Info), exception.Errors,
+        exception.Data
+    ) {}
+
+    public AppExceptionDTO(AppExceptionDTO exception) : this(
         exception.Code,
         new(exception.Info), exception.Errors,
         exception.Data

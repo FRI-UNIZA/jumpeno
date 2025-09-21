@@ -18,7 +18,8 @@ var app = builder.Build();
 AppEnvironment.Init(
     () => false,
     () => false,
-    #if CLIENT_DEVELOPMENT
+    () => false,
+    #if IS_DEVELOPMENT
         () => true,
     #else
         () => false,
