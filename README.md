@@ -16,10 +16,10 @@ Services like <b>MariaDB</b>, <b>Adminer</b> and <b>MailCatcher</b> run inside <
 
 ## Installation
 Please make sure you have installed:
-- .NET 8.0.411 SDK
-- Docker Desktop
-- Microsoft Visual Studio 2022+ or Visual Studio Code
-- You can be prompted to install additional workloads or updates
+- [.NET 9.0.305 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Microsoft Visual Studio 2022+ or Visual Studio Code](https://visualstudio.microsoft.com/downloads/)
+- Project workloads (Run in terminal: `dotnet workload restore`)
 
 ## Before you start (Docker)
 To provide server-like environment, all parts of the application run in <b>Docker</b>.<br />
@@ -258,4 +258,4 @@ For example, `ThemeProvider` automatically generates theme CSS variables from C#
 ## Learn more
 This project is developed with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).
 
-You can learn more in the [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0&WT.mc_id=dotnet-35129-website).
+You can learn more in the [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-9.0).
