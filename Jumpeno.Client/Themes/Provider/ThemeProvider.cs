@@ -90,11 +90,11 @@ public partial class ThemeProvider {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Get cookie:
-    private static string? GetThemeCookie() => CookieStorage.Get(COOKIE.FUNCTIONAL.APP_THEME);
+    private static string? GetThemeCookie() => CookieStorage.Get(COOKIE.PREFERENCES.APP_THEME);
     // Set cookie:
     private static void SetThemeCookie(string className) {
         CookieStorage.Set(new Cookie(
-            COOKIE.FUNCTIONAL.APP_THEME,
+            COOKIE.PREFERENCES.APP_THEME,
             className,
             DateTimeOffset.UtcNow.AddYears(1)
         ));

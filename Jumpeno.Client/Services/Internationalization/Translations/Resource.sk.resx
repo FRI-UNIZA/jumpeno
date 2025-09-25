@@ -207,8 +207,8 @@
   <data name="Accept chosen" xml:space="preserve">
     <value>Prijať vybraté</value>
   </data>
-  <data name="Allow functional cookies" xml:space="preserve">
-    <value>Povoliť funkčné cookies</value>
+  <data name="Allow preference cookies" xml:space="preserve">
+    <value>Povoliť preferenčné cookies</value>
   </data>
   <data name="Allow mandatory cookies" xml:space="preserve">
     <value>Povoliť nevyhnutné cookies</value>
@@ -225,10 +225,10 @@
   <data name="Empty" xml:space="preserve">
     <value>Prázdne</value>
   </data>
-  <data name="Functional cookies" xml:space="preserve">
-    <value>Funkčné cookies</value>
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferencie</value>
   </data>
-  <data name="Functional cookies text" xml:space="preserve">
+  <data name="Preference cookies text" xml:space="preserve">
     <value>Tieto súbory cookie webovým stránkam umožňujú zapamätať si Vaše preferencie, záujmy alebo minulé položky, pre ktoré ste sa rozhodli počas ich prehliadania alebo aj Vašu geografickú polohu. Môžeme Vám tak prispôsobiť našu webovú stránku a poskytnúť jej lepšiu prezentáciu. Na základe Vašej geografickej polohy Vám napríklad vieme poskytnúť webovú stránku vo Vašom jazyku alebo si zapamätať preferované nastavenia farieb. Tieto cookies Vás osobne neidentifikujú.</value>
   </data>
   <data name="Mandatory cookies" xml:space="preserve">

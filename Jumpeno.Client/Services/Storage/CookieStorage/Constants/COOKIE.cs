@@ -11,7 +11,7 @@ public static class COOKIE {
     
     public static readonly List<Type> TYPES = [
         typeof(COOKIE.MANDATORY),
-        typeof(COOKIE.FUNCTIONAL)
+        typeof(COOKIE.PREFERENCES)
     ];
     
     // Cookies ----------------------------------------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ public static class COOKIE {
         [StringValue("App.RefreshToken")] APP_REFRESH_TOKEN
     }
 
-    public enum FUNCTIONAL {
+    public enum PREFERENCES {
         [StringValue("App.Culture")] APP_CULTURE,
         [StringValue("App.Theme")] APP_THEME
     }

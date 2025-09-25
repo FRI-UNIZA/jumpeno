@@ -72,7 +72,7 @@
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
             JSActionHandler.SetFocus(JSServerPageLoader.ID);
-            JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE.FUNCTIONAL.APP_THEME.String()");
+            JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE.PREFERENCES.APP_THEME.String()");
             JSTempTitle.Add();
             JSWindow.Init();
             JSNavigator.Init();

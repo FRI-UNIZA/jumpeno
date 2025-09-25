@@ -207,8 +207,8 @@
   <data name="Accept chosen" xml:space="preserve">
     <value>Accept chosen</value>
   </data>
-  <data name="Allow functional cookies" xml:space="preserve">
-    <value>Allow functional cookies</value>
+  <data name="Allow preference cookies" xml:space="preserve">
+    <value>Allow preference cookies</value>
   </data>
   <data name="Allow mandatory cookies" xml:space="preserve">
     <value>Allow mandatory cookies</value>
@@ -225,10 +225,10 @@
   <data name="Empty" xml:space="preserve">
     <value>Empty</value>
   </data>
-  <data name="Functional cookies" xml:space="preserve">
-    <value>Functional cookies</value>
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferences</value>
   </data>
-  <data name="Functional cookies text" xml:space="preserve">
+  <data name="Preference cookies text" xml:space="preserve">
     <value>These cookies allow websites to remember your preferences, interests or past items, for which you decided while browsing them or also your geographical location. In this way, we can adapt our website to you and provide a better presentation. Based on your geographic location, for example, we can provide you with a website in your language or remember your preferred color settings. These cookies do not identify you personally.</value>
   </data>
   <data name="Mandatory cookies" xml:space="preserve">

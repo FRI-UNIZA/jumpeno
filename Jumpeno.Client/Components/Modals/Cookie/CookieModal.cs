@@ -28,7 +28,7 @@ public partial class CookieModal {
             Form: FORM,
             ID: nameof(SwitchFunctionalVM),
             DefaultValue: true,
-            OnChange: new(e => UpdateSelection(typeof(COOKIE.FUNCTIONAL), e.Value))
+            OnChange: new(e => UpdateSelection(typeof(COOKIE.PREFERENCES), e.Value))
         ));
     }
     protected override void OnComponentInitialized() => RequestStorage.Set(nameof(CookieModal), this);
@@ -57,7 +57,7 @@ public partial class CookieModal {
             }
             // Select:
             Selected = ToDictionary(acceptedCookies);
-            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.FUNCTIONAL)));
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.PREFERENCES)));
         });
     }
 
@@ -80,7 +80,7 @@ public partial class CookieModal {
         await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
-            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.FUNCTIONAL)));
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.PREFERENCES)));
             StateHasChanged();
             await Task.Delay(AppTheme.TRANSITION_FAST); // NOTE: Switch transition
             if (IsStateInitial(newSelected)) {

@@ -207,7 +207,7 @@
   <data name="Accept chosen" xml:space="preserve">
     <value />
   </data>
-  <data name="Allow functional cookies" xml:space="preserve">
+  <data name="Allow preference cookies" xml:space="preserve">
     <value />
   </data>
   <data name="Allow mandatory cookies" xml:space="preserve">
@@ -225,10 +225,10 @@
   <data name="Empty" xml:space="preserve">
     <value />
   </data>
-  <data name="Functional cookies" xml:space="preserve">
+  <data name="Preferences" xml:space="preserve">
     <value />
   </data>
-  <data name="Functional cookies text" xml:space="preserve">
+  <data name="Preference cookies text" xml:space="preserve">
     <value />
   </data>
   <data name="Mandatory cookies" xml:space="preserve">
