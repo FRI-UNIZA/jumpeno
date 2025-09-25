@@ -16,7 +16,6 @@ RUN npm install -g clean-css-cli terser
 # Copy project files
 COPY ./Jumpeno.Client/Jumpeno.Client.csproj ./Jumpeno.Client/
 COPY ./Jumpeno.Server/Jumpeno.Server.csproj ./Jumpeno.Server/
-COPY ./Jumpeno.Shared/Jumpeno.Shared.csproj ./Jumpeno.Shared/
 COPY ./Jumpeno.sln ./
 
 # Restore workloads and dependencies
@@ -26,17 +25,15 @@ RUN dotnet restore ./Jumpeno.sln
 # Copy the entire source code
 COPY ./Jumpeno.Client ./Jumpeno.Client
 COPY ./Jumpeno.Server ./Jumpeno.Server
-COPY ./Jumpeno.Shared ./Jumpeno.Shared
 COPY ./Scripts ./Scripts
-COPY ./Jumpeno.Shared/appsettings.json /app/appsettings.shared.json
 
 # Minify static CSS & JS files based on the "Bundle" value
-RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Shared/appsettings.json) && \
+RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Client/AppSettings.Client.json) && \
     if [ "$BUNDLE" = "true" ]; then \
         echo "Bundling static files..."; \
         find ./Jumpeno.Client/wwwroot/css -type f -name "*.css" -print0 | xargs -0 cleancss -o ./Jumpeno.Client/wwwroot/css/bundle.css && \
         find ./Jumpeno.Client/wwwroot/css -mindepth 1 ! -name "bundle.css" -exec rm -rf {} + && \
-        sed -n '/<!-- Global JS -->/,/<!-- Global JS END -->/p' ./Jumpeno.Server/Pages/_Host.cshtml | \
+        sed -n '/<!-- Global JS -->/,/<!-- Global JS END -->/p' ./Jumpeno.Server/Pages/_Index.cshtml | \
             grep -oP '(?<=@AppEnvironment.Import\(")[^"]+(?="\))' | \
             sed 's/^/\.\/Jumpeno.Client\/wwwroot\//' | \
             tr '\n' '\0' | \

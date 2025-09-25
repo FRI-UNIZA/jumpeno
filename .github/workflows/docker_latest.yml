@@ -17,7 +17,7 @@ jobs:
       # Step 2:
       - name: Inject secrets
         run: |
-          # Modify appsettings.json
+          # Modify AppSettings.Server.json
           jq '.Auth.Pepper = "${{ secrets.AUTH_PEPPER }}" |
               .Auth.JWT.AccessSecret = "${{ secrets.AUTH_JWT_ACCESS_SECRET }}" |
               .Auth.JWT.RefreshSecret = "${{ secrets.AUTH_JWT_REFRESH_SECRET }}" |
@@ -28,17 +28,17 @@ jobs:
               .Email.BackupKeys = "${{ secrets.EMAIL_BACKUP_KEYS }}" |
               .Email.AppPassword = "${{ secrets.EMAIL_APP_PASSWORD }}" |
               .Email.Mailcatcher = "false"' \
-          Jumpeno.Server/appsettings.json > Jumpeno.Server/appsettings.tmp.json && \
-          mv Jumpeno.Server/appsettings.tmp.json Jumpeno.Server/appsettings.json
+          Jumpeno.Server/AppSettings.Server.json > Jumpeno.Server/AppSettings.Server.tmp.json && \
+          mv Jumpeno.Server/AppSettings.Server.tmp.json Jumpeno.Server/AppSettings.Server.json
       # Step 3:
       - name: Inject variables
         run: |
-          # Modify appsettings.json
+          # Modify AppSettings.Client.json
           jq '.Email = "${{ vars.EMAIL_ADDRESS }}" |
               .Links.Adminer = "${{ vars.DB_LINK }}" |
               .Links.Email = "${{ vars.EMAIL_LINK }}"' \
-          Jumpeno.Shared/appsettings.json > Jumpeno.Shared/appsettings.tmp.json && \
-          mv Jumpeno.Shared/appsettings.tmp.json Jumpeno.Shared/appsettings.json
+          Jumpeno.Client/AppSettings.Client.json > Jumpeno.Client/AppSettings.Client.tmp.json && \
+          mv Jumpeno.Client/AppSettings.Client.tmp.json Jumpeno.Client/AppSettings.Client.json
       # Step 4:
       - name: Login to GitHub Container Registry (GHCR)
         env:

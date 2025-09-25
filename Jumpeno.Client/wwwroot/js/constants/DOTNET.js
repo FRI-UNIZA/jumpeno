@@ -1,8 +1,7 @@
 class DOTNET {
     static NAMESPACE = {
         CLIENT: 'Jumpeno.Client',
-        SERVER: 'Jumpeno.Server',
-        SHARED: 'Jumpeno.Shared'
+        SERVER: 'Jumpeno.Server'
     }
 
     static WINDOW = {

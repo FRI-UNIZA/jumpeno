@@ -5,8 +5,6 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jumpeno.Server", "Jumpeno.Server\Jumpeno.Server.csproj", "{75606B9B-1160-4EEA-8D17-EBBF572A7314}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jumpeno.Shared", "Jumpeno.Shared\Jumpeno.Shared.csproj", "{9930151B-EF1F-43CB-B99F-CF6FA418EAB1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jumpeno.Client", "Jumpeno.Client\Jumpeno.Client.csproj", "{449BCD26-8943-4E54-A224-CDD4E112AE4C}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{75606B9B-1160-4EEA-8D17-EBBF572A7314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75606B9B-1160-4EEA-8D17-EBBF572A7314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75606B9B-1160-4EEA-8D17-EBBF572A7314}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9930151B-EF1F-43CB-B99F-CF6FA418EAB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9930151B-EF1F-43CB-B99F-CF6FA418EAB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9930151B-EF1F-43CB-B99F-CF6FA418EAB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9930151B-EF1F-43CB-B99F-CF6FA418EAB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{449BCD26-8943-4E54-A224-CDD4E112AE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{449BCD26-8943-4E54-A224-CDD4E112AE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{449BCD26-8943-4E54-A224-CDD4E112AE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU

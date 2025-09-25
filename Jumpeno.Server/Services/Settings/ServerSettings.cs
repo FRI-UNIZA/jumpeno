@@ -63,45 +63,45 @@ public static class ServerSettings {
     }
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(IConfiguration config) {
-        Port = config.GetValue<int>("Port");
-        AllowedHosts = config.GetValue<string>("AllowedHosts")!;
+    public static void Init(IConfiguration config, IConfiguration file) {
+        Port = file.GetValue<int>("Port");
+        AllowedHosts = file.GetValue<string>("AllowedHosts")!;
         Logging = new() {
             LogLevel = new() {
-                Default = config.GetValue<string>("Logging:LogLevel:Default")!,
-                Microsoft_AspNetCore = config.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
+                Default = file.GetValue<string>("Logging:LogLevel:Default")!,
+                Microsoft_AspNetCore = file.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
             }
         };
         Auth = new() {
-            Pepper = config.GetValue<string>("Auth:Pepper")!,
+            Pepper = file.GetValue<string>("Auth:Pepper")!,
             JWT = new() {
-                AccessSecret = config.GetValue<string>("Auth:JWT:AccessSecret")!,
-                RefreshSecret = config.GetValue<string>("Auth:JWT:RefreshSecret")!,
-                DataSecret = config.GetValue<string>("Auth:JWT:DataSecret")!
+                AccessSecret = file.GetValue<string>("Auth:JWT:AccessSecret")!,
+                RefreshSecret = file.GetValue<string>("Auth:JWT:RefreshSecret")!,
+                DataSecret = file.GetValue<string>("Auth:JWT:DataSecret")!
             },
-            Admins = config.GetSection("Auth:Admins").Get<string[]>()!
+            Admins = file.GetSection("Auth:Admins").Get<string[]>()!
         };
         Database = new() {
-            Version = config.GetValue<string>("Database:Version")!,
-            ConnectionString = config.GetConnectionString("DefaultConnection") ?? config.GetValue<string>("Database:ConnectionString")!
+            Version = file.GetValue<string>("Database:Version")!,
+            ConnectionString = config.GetConnectionString("DefaultConnection") ?? file.GetValue<string>("Database:ConnectionString")!
         };
         Email = new() {
-            Host = Environment.GetEnvironmentVariable("EMAIL_HOST") ?? config.GetValue<string>("Email:Host")!,
-            Port = Environment.GetEnvironmentVariable("EMAIL_PORT") is string portEmail ? int.Parse(portEmail) : config.GetValue<int>("Email:Port")!,
-            Password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? config.GetValue<string>("Email:Password")!,
-            BackupKeys = Environment.GetEnvironmentVariable("EMAIL_BACKUP_KEYS") ?? config.GetValue<string>("Email:BackupKeys")!,
-            AppPassword = Environment.GetEnvironmentVariable("EMAIL_APP_PASSWORD") ?? config.GetValue<string>("Email:AppPassword")!,
-            Mailcatcher = config.GetValue<bool>("Email:Mailcatcher")!
+            Host = Environment.GetEnvironmentVariable("EMAIL_HOST") ?? file.GetValue<string>("Email:Host")!,
+            Port = Environment.GetEnvironmentVariable("EMAIL_PORT") is string portEmail ? int.Parse(portEmail) : file.GetValue<int>("Email:Port")!,
+            Password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? file.GetValue<string>("Email:Password")!,
+            BackupKeys = Environment.GetEnvironmentVariable("EMAIL_BACKUP_KEYS") ?? file.GetValue<string>("Email:BackupKeys")!,
+            AppPassword = Environment.GetEnvironmentVariable("EMAIL_APP_PASSWORD") ?? file.GetValue<string>("Email:AppPassword")!,
+            Mailcatcher = file.GetValue<bool>("Email:Mailcatcher")!
         };
         Expiration = new() {
-            AccessToken = new() { Minutes = config.GetValue<int>("Expiration:AccessToken:Minutes")! },
-            RefreshToken = new() { Hours = config.GetValue<int>("Expiration:RefreshToken:Hours")! },
-            ActivationToken = new() { Hours = config.GetValue<int>("Expiration:ActivationToken:Hours")! },
-            PasswordResetToken = new() { Minutes = config.GetValue<int>("Expiration:PasswordResetToken:Minutes")! }
+            AccessToken = new() { Minutes = file.GetValue<int>("Expiration:AccessToken:Minutes")! },
+            RefreshToken = new() { Hours = file.GetValue<int>("Expiration:RefreshToken:Hours")! },
+            ActivationToken = new() { Hours = file.GetValue<int>("Expiration:ActivationToken:Hours")! },
+            PasswordResetToken = new() { Minutes = file.GetValue<int>("Expiration:PasswordResetToken:Minutes")! }
         };
         Schedule = new() {
-            ActivationCleaner = new() { Minutes = config.GetValue<int>("Schedule:ActivationCleaner:Minutes")! },
-            RefreshCleaner = new() { Minutes = config.GetValue<int>("Schedule:RefreshCleaner:Minutes")! }
+            ActivationCleaner = new() { Minutes = file.GetValue<int>("Schedule:ActivationCleaner:Minutes")! },
+            RefreshCleaner = new() { Minutes = file.GetValue<int>("Schedule:RefreshCleaner:Minutes")! }
         };
     }
 }

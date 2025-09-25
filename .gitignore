@@ -8,4 +8,5 @@ Publish
 # Project:
 Jumpeno.Client.csproj.user
 Jumpeno.Server.csproj.user
+# Database:
 Jumpeno.Server/Services/Database/Files

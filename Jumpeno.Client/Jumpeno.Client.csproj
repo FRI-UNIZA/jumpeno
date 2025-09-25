@@ -16,7 +16,6 @@
     </PropertyGroup>
     <ItemGroup>
         <TrimmerRootAssembly Include="Jumpeno.Client" />
-        <TrimmerRootAssembly Include="Jumpeno.Shared" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -41,17 +40,16 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.9" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.9" />
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
         <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.9" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="OneOf" Version="3.0.271" />
+        <PackageReference Include="QRCoder" Version="1.6.0" />
+        <PackageReference Include="QuadTrees" Version="1.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Jumpeno.Shared\Jumpeno.Shared.csproj" />
+        <EmbeddedResource Include="AppSettings.Client.json" />
     </ItemGroup>
-
-    <Target Name="PreRunScript" BeforeTargets="Build">
-        <Exec Command="echo Running client scripts..." />
-        <Exec Command="dotnet build ../Scripts/ThemeProvider/ThemeProvider/ThemeProvider.csproj" />
-        <Exec Command="dotnet ../Scripts/ThemeProvider/ThemeProvider/bin/Debug/net9.0/ThemeProvider.dll" />
-        <Exec Command="echo Finished client scripts!" />
-    </Target>
 </Project>

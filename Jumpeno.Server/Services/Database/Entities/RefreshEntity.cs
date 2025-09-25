@@ -33,7 +33,7 @@ public class RefreshEntity {
         errors.AddRange(Checker.Validate(token == origin, ERROR.MATCH(nameof(token), nameof(origin)).SetID(originID)));
         Checker.Assert(errors, EXCEPTION.VALUES);
         // 2) Read token:
-        var data = Shared.Utils.Token.Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        var data = Client.Utils.Token.Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         if (id != null && id != data.sub) throw new InvalidDataException(nameof(UserEntity.ID));
         // 3) Create record:
         var record = new RefreshEntity() {

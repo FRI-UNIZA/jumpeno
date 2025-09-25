@@ -2,7 +2,7 @@
 
 using System.Reflection;
 using Microsoft.CodeAnalysis;
-using Jumpeno.Shared.Utils;
+using Jumpeno.Client.Utils;
 
 public class Program {
     // Classes ----------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ public class Program {
     private static readonly string CSS_PATH = $"{ROOT}/Jumpeno.Client/wwwroot/css/theme.css";
 
     // Dependencies -----------------------------------------------------------------------------------------------------------------------
-    private static readonly string USINGS = "using Jumpeno.Shared.Models;";
+    private static readonly string USINGS = "using Jumpeno.Client.Models;";
     private static readonly PortableExecutableReference[] REFERENCES = [
         MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
         MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
@@ -44,8 +44,8 @@ public class Program {
     ];
     private static readonly (string Path, string Usings)[] DEPENDENCIES = [
         ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/SCROLLAREA_THEME.cs", ""),
-        ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
-        ($"{ROOT}/Jumpeno.Shared/Utils/Graphics/Models/RGBAColor.cs", "using System; using System.Text.Json.Serialization;"),
+        ($"{ROOT}/Jumpeno.Client/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
+        ($"{ROOT}/Jumpeno.Client/Utils/Graphics/Models/RGBAColor.cs", "using System; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Client/Themes/Themes/BaseTheme.cs", USINGS)
     ];
 

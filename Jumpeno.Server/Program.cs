@@ -4,6 +4,22 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load AppSettings.Client.json:
+const string SharedSettingsPath = "AppSettings.Client.json";
+var appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Client", SharedSettingsPath);
+if (!File.Exists(appSettingsPath)) appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), SharedSettingsPath);
+var appSettingsClient = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile(appSettingsPath, optional: true, reloadOnChange: true)
+    .Build();
+AppSettings.Init(builder.Configuration, appSettingsClient);
+// Load AppSettings.Server.json:
+var assembly = typeof(ServerSettings).Assembly;
+using var stream = assembly.GetManifestResourceStream("Jumpeno.Server.AppSettings.Server.json")
+    ?? throw new FileNotFoundException("Server configuration file not found.");
+var appSettingsServer = new ConfigurationBuilder().AddJsonStream(stream).Build();
+ServerSettings.Init(builder.Configuration, appSettingsServer);
+
 // Origin policy:
 const string ORIGIN_POLICY = "OriginPolicy";
 builder.Services.AddCors(options => {
@@ -20,17 +36,6 @@ builder.Services.AddAntiforgery(options => {
     options.Cookie.Name = COOKIE.MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
-
-// appsettings.json:
-ServerSettings.Init(builder.Configuration);
-// Load appsettings.json from the Shared project:
-var sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Shared", "appsettings.json");
-if (!File.Exists(sharedSettingsPath)) sharedSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.shared.json");
-var sharedConfig = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile(sharedSettingsPath, optional: true, reloadOnChange: true)
-    .Build();
-AppSettings.Init(sharedConfig);
 
 // Port configuration:
 if (builder.Environment.IsProduction()) {
@@ -277,7 +282,7 @@ app.UseMiddleware<DisposeMiddleware>();
 app.MapRazorPages();
 app.MapControllers();
 app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapFallbackToPage("/_Index");
 
 // Start app:
 CronService.Start();

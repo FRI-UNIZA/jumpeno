@@ -1,0 +1,21 @@
+namespace Jumpeno.Client.Constants;
+
+public static class IMAGE {
+    // Backgrounds:
+    public static string BG_YELLOW => URL.FileLink("/images/backgrounds/bg-yellow.svg");
+    public static string BG_BLUE => URL.FileLink("/images/backgrounds/bg-blue.svg");
+    // Icons:
+    public static string ICON_FAVICON => URL.FileLink("/images/icons/favicon.png");
+    public static string ICON_KEYBOARD => URL.FileLink("/images/icons/keyboard.svg");
+    // Images:
+    public static string JUMPER_YELLOW => URL.FileLink("/images/images/jumper-yellow.png");
+    public static string JUMPENO_PLAYERS => URL.FileLink("/images/images/jumpeno-players.png");
+    public static string KEYBOARD => URL.FileLink("/images/images/keyboard.png", theme: true);
+    public static string TILE => URL.FileLink("/images/images/tile.png");
+    // Sprites:
+    public static string SPRITE_MAGE_AIR => URL.FileLink("/images/sprites/mage-air.png");
+    public static string SPRITE_MAGE_EARTH => URL.FileLink("/images/sprites/mage-earth.png");
+    public static string SPRITE_MAGE_FIRE => URL.FileLink("/images/sprites/mage-fire.png");
+    public static string SPRITE_MAGE_MAGIC => URL.FileLink("/images/sprites/mage-magic.png");
+    public static string SPRITE_MAGE_WATER => URL.FileLink("/images/sprites/mage-water.png");
+}
