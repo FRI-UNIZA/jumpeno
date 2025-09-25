@@ -1,14 +1,11 @@
+# IDE:
 .vs
 .vscode
-Jumpeno.Client/bin
-Jumpeno.Client/obj
-Jumpeno.Client/Jumpeno.Client.csproj.user
-Jumpeno.Server/bin
-Jumpeno.Server/obj
-Jumpeno.Server/Jumpeno.Server.csproj.user
+# Build:
+bin
+obj
+Publish
+# Project:
+Jumpeno.Client.csproj.user
+Jumpeno.Server.csproj.user
 Jumpeno.Server/Services/Database/Files
-Jumpeno.Shared/bin
-Jumpeno.Shared/obj
-Jumpeno.Shared/Jumpeno.Shared.csproj.user
-Scripts/ThemeProvider/ThemeProvider/bin
-Scripts/ThemeProvider/ThemeProvider/obj
