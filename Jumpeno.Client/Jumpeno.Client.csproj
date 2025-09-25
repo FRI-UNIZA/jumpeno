@@ -6,7 +6,6 @@
     </PropertyGroup>
 
 	<PropertyGroup>
-		<WasmEnableSIMD>false</WasmEnableSIMD>
 		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
 	</PropertyGroup>
 
