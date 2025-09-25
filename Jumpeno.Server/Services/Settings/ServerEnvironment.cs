@@ -10,14 +10,4 @@ public static class ServerEnvironment {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static bool IsStaticPath(string path) => Path.HasExtension(path);
-
-    public static void WithoutStaticPath(string path, Action callback) {
-        if (IsStaticPath(path)) return;
-        callback();
-    }
-
-    public static async Task WithoutStaticPath(string path, Func<Task> callback) {
-        if (IsStaticPath(path)) return;
-        await callback();
-    }
 }

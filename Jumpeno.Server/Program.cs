@@ -271,7 +271,6 @@ GameHub.Init(app);
 app.UseBlazorFrameworkFiles();
 
 // Custom Middlewares:
-app.UseMiddleware<StaticFileMiddleware>();
 app.UseMiddleware<ErrorMiddleware>();
 app.UseMiddleware<APIMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
