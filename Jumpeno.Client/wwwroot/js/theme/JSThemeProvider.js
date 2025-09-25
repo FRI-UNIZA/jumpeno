@@ -12,7 +12,7 @@ class JSThemeProvider {
     static #THEME_SWITCH_ELEMENT_CLASS = "theme-switch-element";
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    static async Init(autodetect, key) {
+    static Init(autodetect, key) {
         var theme = this.#ThemeCSSClass(JSCookies.Get(key))
         if (autodetect && !theme) this.#SetupPreferred();
         else if (document.body.classList.contains(this.#CLASS_NO_THEME)) this.#SetupGiven(theme);
