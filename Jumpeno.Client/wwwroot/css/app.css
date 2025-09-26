@@ -16,9 +16,9 @@ html, body {
     overscroll-behavior: none;
 }
 
-body {
+body:not(.no-theme) {
     /* Style: */
-    background-color: var(--theme-body-background);
+    background: var(--theme-body-background) !important;
 }
 
 ::selection {
