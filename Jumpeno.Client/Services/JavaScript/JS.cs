@@ -9,7 +9,7 @@ public class JS {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static IJSInProcessRuntime Runtime => (IJSInProcessRuntime)AppEnvironment.GetService<IJSRuntime>();
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    // Invoke -----------------------------------------------------------------------------------------------------------------------------
     public static void InvokeVoid(string identifier, params object?[]? args) => Runtime.InvokeVoid(identifier, args);
 
     public static async Task InvokeVoidAsync(string identifier, params object?[]? args) => await Runtime.InvokeVoidAsync(identifier, args);
