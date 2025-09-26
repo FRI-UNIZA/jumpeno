@@ -4,14 +4,7 @@ namespace Jumpeno.Client.Services;
 
 public class JS {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static IJSInProcessRuntime Runtime;
-
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(IJSRuntime runtime) {
-        if (AppEnvironment.IsServer) throw new InvalidOperationException("JS can not be used on server!");
-        if (Runtime is not null) throw new InvalidOperationException("JSRuntime already initialized!");
-        Runtime = (IJSInProcessRuntime) runtime;
-    }
+    private static IJSInProcessRuntime Runtime => (IJSInProcessRuntime)AppEnvironment.GetService<IJSRuntime>();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void InvokeVoid(string identifier, params object?[]? args) => Runtime.InvokeVoid(identifier, args);

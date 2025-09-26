@@ -32,7 +32,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
         Func<EmptyResponse<bool>, Task<bool>> tabLock,
         Action<HttpRequestMessage>? addClientCookies = null
     ) {
-        if (Client is not null) return;
+        InitOnce.Check(nameof(HTTP));
         Client = AppEnvironment.GetService<HttpClient>;
         OnRefresh = onRefresh;
         OnError = onError;

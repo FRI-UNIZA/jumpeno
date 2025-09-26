@@ -127,7 +127,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
 
     // Player methods ---------------------------------------------------------------------------------------------------------------------
     public Player ConnectPlayer(Connection connection) {
-        AppEnvironment.CheckServer();
+        AppEnvironment.AssertServer();
         GameValidator.AssertConnectionType(connection);
         UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
         foreach (var (id, player) in Players) {
@@ -220,7 +220,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
 
     // Spectator methods ------------------------------------------------------------------------------------------------------------------
     public Spectator ConnectSpectator(Connection connection) {
-        AppEnvironment.CheckServer();
+        AppEnvironment.AssertServer();
         GameValidator.AssertConnectionType(connection);
         UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
         GameValidator.AssertSpectatorCount(this);

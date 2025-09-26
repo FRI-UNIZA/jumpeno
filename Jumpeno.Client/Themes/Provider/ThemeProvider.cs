@@ -37,7 +37,7 @@ public partial class ThemeProvider {
         return ThemeCSSClass(instance.AppTheme);
     }
     public static string ServerBodyClass() {
-        AppEnvironment.CheckServer();
+        AppEnvironment.AssertServer();
         var c = new CSSClass(CLASS_BODY)
         .SetSurface(SURFACE.PRIMARY);
         var cookie = GetThemeCookie();
@@ -52,7 +52,10 @@ public partial class ThemeProvider {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     // AppSettings:
-    public static void Init() => THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
+    public static void Init() {
+        InitOnce.Check(nameof(ThemeProvider));
+        THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
+    }
     // Component:
     private readonly TaskCompletionSource InitTCS = new();
     public Task Initialization => InitTCS.Task;

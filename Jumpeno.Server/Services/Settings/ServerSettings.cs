@@ -64,6 +64,7 @@ public static class ServerSettings {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config, IConfiguration file) {
+        InitOnce.Check(nameof(ServerSettings));
         Port = file.GetValue<int>("Port");
         AllowedHosts = file.GetValue<string>("AllowedHosts")!;
         Logging = new() {

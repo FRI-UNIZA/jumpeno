@@ -16,7 +16,7 @@ public static class CookieStorage {
         Func<string, string?> getItem,  Action<Cookie> setItem, Action<string, string, string> deleteItem,
         Func<bool, Task> openConsentModal
     ) {
-        if (GetItem is not null) throw new InvalidOperationException("Already initialized!");
+        InitOnce.Check(nameof(CookieStorage));
         GetItem = getItem;
         SetItem = setItem;
         DeleteItem = deleteItem;

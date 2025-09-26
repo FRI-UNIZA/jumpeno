@@ -44,7 +44,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(Action<string, bool, bool> serverRedirect, Action serverRefresh) {
-        if (ServerRedirect is not null) throw new InvalidOperationException("Navigator already initialized!");
+        InitOnce.Check(nameof(Navigator));
         ServerRedirect = serverRedirect;
         ServerRefresh = serverRefresh;
     }

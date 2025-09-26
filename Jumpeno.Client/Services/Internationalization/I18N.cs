@@ -21,9 +21,7 @@ public class I18N {
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
     public static void Init(IStringLocalizer<Resource> localizer) {
-        if (Localizer is not null) {
-            throw new Exception("I18N already initialized!");
-        }
+        InitOnce.Check(nameof(I18N));
         Localizer = localizer;
         USE_PREFIX = AppSettings.Language.UsePrefix;
         HOSTS = AppSettings.Language.Hosts;

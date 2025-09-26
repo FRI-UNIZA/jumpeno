@@ -11,7 +11,7 @@ public static class URL {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(Func<string> url, Func<string> themeCSSClass) {
-        if (Url is not null) throw new InvalidOperationException("Already initialized!");
+        InitOnce.Check(nameof(URL));
         Url = url;
         ThemeCSSClass = themeCSSClass;
     }
@@ -137,24 +137,14 @@ public static class URL {
         return NormPath(url.Substring(baseUrl.Length), true);
     }
 
-    public static string NoQuery(string url) {
-        return url.Substring(0, url.Length - Query(url).Length);
-    }
+    public static string NoQuery(string url) => url.Substring(0, url.Length - Query(url).Length);
 
-    public static string WithQuery(string url, string query) {
-        return $"{NoQuery(url)}{query}";
-    }
+    public static string WithQuery(string url, string query) => $"{NoQuery(url)}{query}";
 
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, string url) {
-        return new QueryParams(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
-    }
-    public static QueryParams GetQueryParams(string url) {
-        return GetQueryParams([], url);
-    }
+    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, string url) => new(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
+    public static QueryParams GetQueryParams(string url) => GetQueryParams([], url);
 
-    public static string SetQueryParams(string url, QueryParams queryParams) {
-        return WithQuery(NoQuery(url), queryParams.ToString());
-    }
+    public static string SetQueryParams(string url, QueryParams queryParams) => WithQuery(NoQuery(url), queryParams.ToString());
 
     public static bool IsLocal(string url) {
         var baseURL = BaseUrl(url);
@@ -209,12 +199,8 @@ public static class URL {
     }
 
     // Encoding ---------------------------------------------------------------------------------------------------------------------------
-    public static string EncodeValue(string value) {
-        return Uri.EscapeDataString(value);
-    }
-    public static string DecodeValue(string value) {
-        return Uri.UnescapeDataString(value);
-    }
+    public static string EncodeValue(string value) => Uri.EscapeDataString(value);
+    public static string DecodeValue(string value) => Uri.UnescapeDataString(value);
     private static string Encode(string url, bool encode) {
         var baseUrl = BaseUrl(url);
         var path = Path(url, keepEnd: true);
@@ -244,12 +230,8 @@ public static class URL {
 
         return $"{baseUrl}{newPath}{newQuery}";
     }
-    public static string Encode(string url) {
-        return Encode(url, true);
-    }
-    public static string Decode(string url) {
-        return Encode(url, false);
-    }
+    public static string Encode(string url) => Encode(url, true);
+    public static string Decode(string url) => Encode(url, false);
 
     // File -------------------------------------------------------------------------------------------------------------------------------
     public static string Directory(string path) {

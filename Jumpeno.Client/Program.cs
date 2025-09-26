@@ -33,7 +33,6 @@ URL.Init(
     ThemeProvider.ThemeCSSClass
 );
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
-JS.Init(app.Services.GetRequiredService<IJSRuntime>());
 HTTP.Init(
     async (iteration, e) => {
         if (!Auth.IsLoggedIn) throw e;

@@ -51,6 +51,7 @@ public static class AppSettings {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config, IConfiguration file) {
+        InitOnce.Check(nameof(AppSettings));
         Name = file.GetValue<string>("Name")!;
         Email = file.GetValue<string>("Email")!;
         Version = file.GetValue<string>("Version")!;

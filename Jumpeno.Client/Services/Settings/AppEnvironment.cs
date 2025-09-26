@@ -14,25 +14,25 @@ public static class AppEnvironment {
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateServer() => Checker.Validate(!IsServer, ERROR.DEFAULT.SetInfo("Not a server environment!"));
-    public static void CheckServer() => Checker.Assert(ValidateServer());
+    public static void AssertServer() => Checker.Assert(ValidateServer());
 
     public static List<Error> ValidateClient() => Checker.Validate(IsServer, ERROR.DEFAULT.SetInfo("Not a client environment!"));
-    public static void CheckClient() => Checker.Assert(ValidateClient());
+    public static void AssertClient() => Checker.Assert(ValidateClient());
     
     public static List<Error> ValidateController() => Checker.Validate(!IsController, ERROR.DEFAULT.SetInfo("Not a controller!"));
-    public static void CheckController() => Checker.Assert(ValidateController());
+    public static void AssertController() => Checker.Assert(ValidateController());
 
     public static List<Error> ValidateAPI() => Checker.Validate(!IsAPI, ERROR.DEFAULT.SetInfo("Not an API!"));
-    public static void CheckAPI() => Checker.Assert(ValidateAPI());
+    public static void AssertAPI() => Checker.Assert(ValidateAPI());
 
     public static List<Error> ValidateHub() => Checker.Validate(!IsHub, ERROR.DEFAULT.SetInfo("Not a hub!"));
-    public static void CheckHub() => Checker.Assert(ValidateHub());
+    public static void AssertHub() => Checker.Assert(ValidateHub());
 
     public static List<Error> ValidateDevelopment() => Checker.Validate(!IsDevelopment, ERROR.DEFAULT.SetInfo("Not a development environment!"));
-    public static void CheckDevelopment() => Checker.Assert(ValidateDevelopment());
+    public static void AssertDevelopment() => Checker.Assert(ValidateDevelopment());
 
     public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, ERROR.DEFAULT.SetInfo("Not a production environment!"));
-    public static void CheckProduction() => Checker.Assert(ValidateProduction());
+    public static void AssertProduction() => Checker.Assert(ValidateProduction());
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Func<Type, object> GetServiceOfType { get; set; }
@@ -47,6 +47,7 @@ public static class AppEnvironment {
         Func<bool> isDevelopment,
         Func<Type, object> getService
     ) {
+        InitOnce.Check(nameof(AppEnvironment));
         IsServerCheck = isServer;
         IsAPICheck = isAPI;
         IsHubCheck = isHub;

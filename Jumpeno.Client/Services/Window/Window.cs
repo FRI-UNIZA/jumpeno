@@ -146,7 +146,7 @@ public class Window {
     // Media ------------------------------------------------------------------------------------------------------------------------------
     public static bool IsTouchDevice => JS.Invoke<bool>(JSWindow.IsTouchDevice);
     public static DEVICE_TYPE GetDeviceType() {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         return IsTouchDevice ? DEVICE_TYPE.TOUCH : DEVICE_TYPE.POINTER;
     }
 
@@ -170,7 +170,7 @@ public class Window {
     }
     private static async Task<R> Lock<R>(object action, WINDOW_LOCK id) {
         // 1) Check client:
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         // 2) Get permission & create action:
         WindowLockAction? prevAction = null;
         WindowLockAction? lockAction = null;

@@ -4,32 +4,32 @@ namespace Jumpeno.Client.Services;
 
 public static class RequestStorage {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static Dictionary<string, object> Items;
-    private static Func<string, object> GetServerItem;
-    private static Action<string, object> SetServerItem;
-    private static Func<string, bool> DeleteServerItem;
+    private static readonly Dictionary<string, object> Items = [];
+    private static Func<string, object> GetItem;
+    private static Action<string, object> SetItem;
+    private static Func<string, bool> DeleteItem;
     
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(
-        Func<string, object> getServerItem, Action<string, object> setServerItem, Func<string, bool> deleteServerItem
+        Func<string, object> getItem,
+        Action<string, object> setItem,
+        Func<string, bool> deleteItem
     ) {
-        if (Items is not null) throw new InvalidOperationException("RequestStorage already initialized!");
-        Items = [];
-        GetServerItem = getServerItem;
-        SetServerItem = setServerItem;
-        DeleteServerItem = deleteServerItem;
+        InitOnce.Check(nameof(RequestStorage));
+        GetItem = getItem;
+        SetItem = setItem;
+        DeleteItem = deleteItem;
     }
-    public static void Init() {
-        Items = [];
-        GetServerItem = (string key) => null!;
-        SetServerItem = (string key, object o) => {};
-        DeleteServerItem = (string key) => false;
-    }
+    public static void Init() => Init(
+        key => Items[key],
+        (key, o) => Items[key] = o,
+        Items.Remove
+    );
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private static object? GetValue(string key) {
         Checker.CheckEmptyString(key, name: "key");
-        try { return AppEnvironment.IsServer ? GetServerItem(key) : Items[key]; }
+        try { return GetItem(key); }
         catch { return null; }
     }
     public static T? Get<T>(string key) {
@@ -47,12 +47,11 @@ public static class RequestStorage {
 
     public static void Set(string key, object o) {
         Checker.CheckEmptyString(key, name: "key");
-        if (AppEnvironment.IsServer) { SetServerItem(key, o); }
-        else { Items[key] = o; }
+        SetItem(key, o);
     }
 
     public static bool Delete(string key) {
         Checker.CheckEmptyString(key, name: "key");
-        return AppEnvironment.IsServer ? DeleteServerItem(key) : Items.Remove(key);
+        return DeleteItem(key);
     }
 }

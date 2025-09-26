@@ -85,31 +85,31 @@ public partial class Modal {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Open(bool loading = false) {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         CreatedLoading = loading;
         await ModalProvider.CreateModal(this);
     }
     public async Task Open() => await Open(false);
     public async Task OpenLoading() => await Open(true);
     public async Task FinishLoading() {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         await ModalProvider.NotifyFinishLoading(this);
     }
     public async Task CloseLoading() {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         await ModalProvider.DestroyLoadingModal(this);
     }
 
     public async Task Close() {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         await ModalProvider.DestroyModal(this);
     }
     public static async Task CloseAllAbove(Modal root) {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         await ModalProvider.CloseAllAbove(root);
     }
     public static async Task CloseAll() {
-        AppEnvironment.CheckClient();
+        AppEnvironment.AssertClient();
         await ModalProvider.CloseAllAbove(null);
     }
 }
