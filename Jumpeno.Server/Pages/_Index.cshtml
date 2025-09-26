@@ -12,14 +12,19 @@
         <base href="/" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content, viewport-fit=cover" />
+        <link href="@AppEnvironment.Import("manifest.webmanifest")" rel="manifest" />
         <component type="typeof(HrefLang)" render-mode="Static" />
         <!-- Description -->
         <title>@AppSettings.Name</title>
+        <meta name="apple-mobile-web-app-title" content="@AppSettings.Name" />
         <meta name="description" content="@I18N.T("JUMPENO_DESCRIPTION")">
         <meta name="keywords" content="@I18N.T("JUMPENO_KEYWORDS")">
         <meta name="author" content="FRI UNIZA">
         <!-- Icons -->
-        <link rel="icon" type="image/png" href="@IMAGE.ICON_FAVICON" />
+        <link rel="shortcut icon" href="@IMAGE.FAVICON_ICO" />
+        <link rel="icon" type="image/png" sizes="96x96" href="@IMAGE.FAVICON_PNG" />
+        <link rel="icon" type="image/svg+xml" href="@IMAGE.FAVICON_SVG" />
+        <link rel="apple-touch-icon" sizes="180x180" href="@IMAGE.FAVICON_APPLE_TOUCH_ICON" />
         <!-- CSS Modules -->
         <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" no-antblazor-css @Import.Critical />

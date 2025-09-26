@@ -4,8 +4,12 @@ public static class IMAGE {
     // Backgrounds:
     public static string BG_YELLOW => URL.FileLink("/images/backgrounds/bg-yellow.svg");
     public static string BG_BLUE => URL.FileLink("/images/backgrounds/bg-blue.svg");
+    // Favicon:
+    public static string FAVICON_ICO => URL.FileLink("/images/favicon/favicon.ico");
+    public static string FAVICON_PNG => URL.FileLink("/images/favicon/favicon-96x96.png");
+    public static string FAVICON_SVG => URL.FileLink("/images/favicon/favicon.svg");
+    public static string FAVICON_APPLE_TOUCH_ICON => URL.FileLink("/images/favicon/apple-touch-icon.png");
     // Icons:
-    public static string ICON_FAVICON => URL.FileLink("/images/icons/favicon.png");
     public static string ICON_KEYBOARD => URL.FileLink("/images/icons/keyboard.svg");
     // Images:
     public static string JUMPER_YELLOW => URL.FileLink("/images/images/jumper-yellow.png");
