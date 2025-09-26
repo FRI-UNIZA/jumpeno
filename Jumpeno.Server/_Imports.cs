@@ -4,6 +4,7 @@ global using Microsoft.EntityFrameworkCore;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using System.Drawing;
+global using Microsoft.AspNetCore.Html;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ApplicationModels;
 global using Microsoft.AspNetCore.Http.Extensions;

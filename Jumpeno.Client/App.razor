@@ -1,4 +1,4 @@
-﻿@namespace Jumpeno.Client
+@namespace Jumpeno.Client
 
 @code {
     // Views ------------------------------------------------------------------------------------------------------------------------------
@@ -12,6 +12,8 @@
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         try {
             if (!firstRender) { AuthPage.FinishStage(); return; }
+            // Import:
+            await ClientImport.Await();
             // Authorization:
             await HTTP.Sync(async () => {
                 if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
