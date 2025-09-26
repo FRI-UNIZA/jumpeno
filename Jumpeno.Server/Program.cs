@@ -38,9 +38,9 @@ builder.Services.AddAntiforgery(options => {
 });
 
 // Port configuration:
-if (builder.Environment.IsProduction()) {
+#if IS_PRODUCTION
     builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(ServerSettings.Port));
-}
+#endif
 
 // Add services to the container:
 builder.Services.AddHttpContextAccessor();
@@ -51,7 +51,7 @@ builder.Services.AddControllersWithViews(options => {
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 });
 builder.Services.AddRazorPages();
-if (builder.Environment.IsDevelopment()) {
+#if IS_DEVELOPMENT
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options => {
@@ -91,7 +91,7 @@ if (builder.Environment.IsDevelopment()) {
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
     });
-}
+#endif
 
 // Localization:
 builder.Services.AddLocalization();
@@ -100,9 +100,9 @@ builder.Services.Configure(CultureController.SetupAction());
 // Ant-Design:
 builder.Services.AddAntDesign();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(o => {
-    if (builder.Environment.IsDevelopment()) {
+    #if IS_DEVELOPMENT
         o.DetailedErrors = true;
-    }
+    #endif
 });
 
 // HttpClient:
@@ -254,13 +254,13 @@ CookieStorage.Init(
 ThemeProvider.Init();
 
 // Swagger:
-if (app.Environment.IsDevelopment()) {
+#if IS_DEVELOPMENT
     app.UseSwagger();
     app.UseSwaggerUI(options => {
         options.SwaggerEndpoint($"/swagger/{AppSettings.Version}/swagger.json", AppSettings.Version);
     });
     app.UseWebAssemblyDebugging();
-}
+#endif
 // HTTPS:
 app.UseHttpsRedirection();
 
