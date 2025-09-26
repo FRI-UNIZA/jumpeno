@@ -19,8 +19,8 @@
         <!-- Icons -->
         <link rel="icon" type="image/png" href="@IMAGE.ICON_FAVICON" />
         <!-- CSS Modules -->
-        <link href="@AppEnvironment.Import("modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css")" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" />
+        <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" no-antblazor-css />
         <!-- CSS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <link href="@AppEnvironment.Import("css/bundle.css")" rel="stylesheet" />
@@ -41,8 +41,8 @@
         <component type="typeof(App)" render-mode="@ServerEnvironment.RenderMode()" />
         <persist-component-state />
         <!-- JS Modules -->
-        <script src="@AppEnvironment.Import("modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js")" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")"></script>
+        <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")" no-antblazor-js></script>
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")"></script>
         <!-- JS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
