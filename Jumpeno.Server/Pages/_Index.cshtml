@@ -18,10 +18,10 @@
         <meta name="author" content="FRI UNIZA">
         <!-- Icons -->
         <link rel="icon" type="image/png" href="@IMAGE.ICON_FAVICON" />
-        <!-- CSS [Modules] -->
+        <!-- CSS Modules -->
         <link href="@AppEnvironment.Import("modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css")" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" />
-        <!-- CSS [Global] -->
+        <!-- CSS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <link href="@AppEnvironment.Import("css/bundle.css")" rel="stylesheet" />
         } else {
@@ -29,8 +29,8 @@
             <link href="@AppEnvironment.Import("css/font.css")" rel="stylesheet" />
             <link href="@AppEnvironment.Import("css/app.css")" rel="stylesheet" />
         }
-        <!-- CSS [Global] END -->
-        <!-- CSS [Project] -->
+        <!-- CSS Global END -->
+        <!-- CSS Project -->
         <link href="@AppEnvironment.Import("Jumpeno.Client.styles.css")" rel="stylesheet" />
         <!-- Blazor headers -->
         <component type="typeof(HeadOutlet)" render-mode="@ServerEnvironment.RenderMode()" />
@@ -40,11 +40,11 @@
         <component type="typeof(ServerPageLoader)" render-mode="Static" />
         <component type="typeof(App)" render-mode="@ServerEnvironment.RenderMode()" />
         <persist-component-state />
-        <!-- JS [Modules] -->
-        <script src="@AppEnvironment.Import("modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js")" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer" async></script>
-        <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")" async></script>
-        <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")" async></script>
-        <!-- JS [Global] -->
+        <!-- JS Modules -->
+        <script src="@AppEnvironment.Import("modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js")" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")"></script>
+        <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")"></script>
+        <!-- JS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <script src="@AppEnvironment.Import("js/bundle.js")"></script>
         } else {
@@ -73,8 +73,8 @@
             <script src="@AppEnvironment.Import("js/components/JSConsoleUI.js")"></script>
             <script src="@AppEnvironment.Import("js/document/JSTempTitle.js")"></script>
         }
-        <!-- JS [Global] END -->
-        <!-- JS [Project] -->
+        <!-- JS Global END -->
+        <!-- JS Project -->
         <script src="@AppEnvironment.Import("_framework/blazor.webassembly.js")" autostart="false"></script>
         <script>
             (async () => {

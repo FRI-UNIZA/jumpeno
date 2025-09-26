@@ -33,7 +33,7 @@ RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Client/AppSettings.Client.json) && \
         echo "Bundling static files..."; \
         find ./Jumpeno.Client/wwwroot/css -type f -name "*.css" -print0 | xargs -0 cleancss -o ./Jumpeno.Client/wwwroot/css/bundle.css && \
         find ./Jumpeno.Client/wwwroot/css -mindepth 1 ! -name "bundle.css" -exec rm -rf {} + && \
-        sed -n '/<!-- JS [Global] -->/,/<!-- JS [Global] END -->/p' ./Jumpeno.Server/Pages/_Index.cshtml | \
+        sed -n '/<!-- JS Global -->/,/<!-- JS Global END -->/p' ./Jumpeno.Server/Pages/_Index.cshtml | \
             grep -oP '(?<=@AppEnvironment.Import\(")[^"]+(?="\))' | \
             sed 's/^/\.\/Jumpeno.Client\/wwwroot\//' | \
             tr '\n' '\0' | \
