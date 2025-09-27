@@ -4,7 +4,6 @@ namespace Jumpeno.Client.Themes;
 
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string NAME = nameof(ThemeProvider);
     // Class:
     public const string CLASS_BODY = "body";
     public const string CLASS_NO_THEME = "no-theme";
@@ -21,8 +20,8 @@ public partial class ThemeProvider {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static ThemeProvider? Instance {
-        get { return RequestStorage.Get<ThemeProvider>(NAME); }
-        set { if (value == null) RequestStorage.Delete(NAME); else RequestStorage.Set(NAME, value); }
+        get { return RequestStorage.Get<ThemeProvider>(REQUEST_STORAGE.THEME_PROVIDER); }
+        set { if (value == null) RequestStorage.Delete(REQUEST_STORAGE.THEME_PROVIDER); else RequestStorage.Set(REQUEST_STORAGE.THEME_PROVIDER, value); }
     }
     private BaseTheme AppTheme = THEME.DEFAULT;
     public static string ThemeCSSClass(string classname) {

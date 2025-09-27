@@ -33,11 +33,11 @@ public partial class Notification {
     }
 
     public static List<NotificationData> GetServerNotifications() {
-        var notifications = RequestStorage.Get<List<NotificationData>>(nameof(GetServerNotifications));
+        var notifications = RequestStorage.Get<List<NotificationData>>(REQUEST_STORAGE.SERVER_NOTIFICATIONS);
         return notifications is null ? [] : notifications;
     }
     public static void SetServerNotifications(List<NotificationData> notifications) {
-        RequestStorage.Set(nameof(GetServerNotifications), notifications);
+        RequestStorage.Set(REQUEST_STORAGE.SERVER_NOTIFICATIONS, notifications);
     }
     public static void AddServerNotification(NotificationData notification) {
         List<NotificationData> notifications = GetServerNotifications();

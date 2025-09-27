@@ -9,9 +9,6 @@ public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const string MARK = "scroll-area";
     private const string CONTENT_CLASS = $"{MARK}-content";
-    // RequestStorage keys:
-    private const string KEY_AREAS = $"{nameof(ScrollArea)}.{nameof(Areas)}";
-    private const string KEY_REGISTER_LISTENERS = $"{nameof(ScrollArea)}.{nameof(RegisterListeners)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
@@ -32,11 +29,11 @@ public partial class ScrollArea {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<string, ScrollArea> Areas =>
-        RequestStorage.Access<Dictionary<string, ScrollArea>>(KEY_AREAS, []);
+        RequestStorage.Access<Dictionary<string, ScrollArea>>(REQUEST_STORAGE.SCROLLAREA_AREAS, []);
     // Listeners:
     private Action<ScrollAreaPosition>[] Listeners = [];
     private static Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners =>
-        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(KEY_REGISTER_LISTENERS, []);
+        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(REQUEST_STORAGE.SCROLLAREA_REGISTER_LISTENERS, []);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");

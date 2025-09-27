@@ -67,10 +67,10 @@ public class Disposer {
 
     // Request registration ---------------------------------------------------------------------------------------------------------------
     private static LinkedList<object> RequestList { get {
-        var list = RequestStorage.Get<LinkedList<object>>(nameof(RequestDispose));
+        var list = RequestStorage.Get<LinkedList<object>>(REQUEST_STORAGE.DISPOSER);
         if (list is null) {
             list = [];
-            RequestStorage.Set(nameof(RequestDispose), list);
+            RequestStorage.Set(REQUEST_STORAGE.DISPOSER, list);
         }
         return list;
     } }

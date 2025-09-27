@@ -22,8 +22,8 @@ public class Page : ComponentBase, IAsyncDisposable {
     public string[] GetPageUrls() => GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
 
     // Current page -----------------------------------------------------------------------------------------------------------------------
-    public static Page Current => RequestStorage.Get<Page>(nameof(Page)) ?? new Error404Page();
-    private static void SetCurrent(Page page) => RequestStorage.Set(nameof(Page), page);
+    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
 
     // Types ------------------------------------------------------------------------------------------------------------------------------
     private static readonly IEnumerable<Type> PageTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Page)));

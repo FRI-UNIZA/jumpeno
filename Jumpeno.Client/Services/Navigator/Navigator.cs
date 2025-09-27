@@ -142,7 +142,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(nameof(URL), url);
+            RequestStorage.Set(REQUEST_STORAGE.URL, url);
             NavLock.TryUnlock();
             return;
         }

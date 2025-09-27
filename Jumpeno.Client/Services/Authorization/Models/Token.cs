@@ -19,10 +19,10 @@ public class Token {
     ) {};
 
     // Token storage ----------------------------------------------------------------------------------------------------------------------
-    public static Data Access => RequestStorage.Get<Data>(TOKEN_TYPE.ACCESS.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
-    public static Data Refresh => RequestStorage.Get<Data>(TOKEN_TYPE.REFRESH.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
-    public static Data Activation => RequestStorage.Get<Data>(TOKEN_TYPE.ACTIVATION.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
-    public static Data PasswordReset => RequestStorage.Get<Data>(TOKEN_TYPE.PASSWORD_RESET.String()) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data Access => RequestStorage.Get<Data>(REQUEST_STORAGE.TOKEN_ACCESS) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data Refresh => RequestStorage.Get<Data>(REQUEST_STORAGE.TOKEN_REFRESH) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data Activation => RequestStorage.Get<Data>(REQUEST_STORAGE.TOKEN_ACTIVATION) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static Data PasswordReset => RequestStorage.Get<Data>(REQUEST_STORAGE.TOKEN_PASSWORD_RESET) ?? throw EXCEPTION.NOT_AUTHENTICATED;
 
     private static void Store(string key, string token) {
         if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw EXCEPTION.NOT_AUTHENTICATED;

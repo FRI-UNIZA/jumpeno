@@ -67,7 +67,7 @@ CookieStorage.Init(
         JS.InvokeVoid(JSCookies.Delete, key, Cookie.NormDomain(domain), path);
     },
     async unclosable => {
-        var modal = RequestStorage.Get<CookieModal>(nameof(CookieModal));
+        var modal = RequestStorage.Get<CookieModal>(REQUEST_STORAGE.COOKIE_MODAL);
         if (modal is null) return;
         await modal.OpenModal(unclosable);
     }

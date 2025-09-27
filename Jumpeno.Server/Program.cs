@@ -183,7 +183,7 @@ RequestStorage.Init(
 URL.Init(
     () => {
         var ctx = ServerContext.Instance;
-        var replaceURL = RequestStorage.Get<string>(nameof(URL));
+        var replaceURL = RequestStorage.Get<string>(REQUEST_STORAGE.URL);
         return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
     },
     ThemeProvider.ThemeCSSClass

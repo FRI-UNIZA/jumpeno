@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Base;
 public class ServiceComponent<T> : Component {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ServiceComponent() {
-        var key = GetType().Name;
+        var key = REQUEST_STORAGE.SERVICE_COMPONENT<T>();
         var instance = RequestStorage.Get<T>(key);
         if (instance is not null) throw new InvalidOperationException($"{key} already initialized!");
         RequestStorage.Set(key, this);
@@ -18,5 +18,5 @@ public class ServiceComponent<T> : Component {
     public override sealed async ValueTask DisposeAsync() => await base.DisposeAsync();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    protected static T Instance() => RequestStorage.Get<T>(typeof(T).Name)!;
+    protected static T Instance() => RequestStorage.Get<T>(REQUEST_STORAGE.SERVICE_COMPONENT<T>())!;
 }

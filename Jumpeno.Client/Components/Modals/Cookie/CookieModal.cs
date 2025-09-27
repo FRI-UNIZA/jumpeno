@@ -31,7 +31,7 @@ public partial class CookieModal {
             OnChange: new(e => UpdateSelection(typeof(COOKIE.PREFERENCES), e.Value))
         ));
     }
-    protected override void OnComponentInitialized() => RequestStorage.Set(nameof(CookieModal), this);
+    protected override void OnComponentInitialized() => RequestStorage.Set(REQUEST_STORAGE.COOKIE_MODAL, this);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
