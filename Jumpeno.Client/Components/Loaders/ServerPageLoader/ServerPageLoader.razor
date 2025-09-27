@@ -18,6 +18,7 @@
     #server-page-loader {
         /* Position: */
         position: fixed;
+        inset: 0;
         z-index: var(--theme-z-index-server-page-loader, 1000001);
         /* Display: */
         display: flex;
@@ -26,14 +27,30 @@
         align-items: center;
         gap: 24px;
         /* Size: */
+        box-sizing: border-box;
         width: 100vw;
         height: 100vh;
         height: 100dvh;
-        inset: 0;
+        margin: 0;
+        padding: 0;
         /* Style: */
         outline: none;
+        /* Content: */
+        font-size: 0;
+        line-height: 0;
         /* Animations: */
         animation: none;
+    }
+
+    #server-page-loader * {
+        /* Size: */
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        outline: none;
+        /* Content: */
+        font-size: 0;
+        line-height: 0;
     }
 
     #server-page-loader .server-page-loader-indicator {
@@ -65,16 +82,15 @@
         display: none;
     }
 
+    /* Theme [loading] ----------------------------------------------------------------------------------------------------------------- */
+    body.no-theme { opacity: 0; }
+
     /* Theme [loading][system-dark] ---------------------------------------------------------------------------------------------------- */
-    body {
-        background: #222222;
-    }
+    body { background: #222222; }
     
     /* Theme [loading][system-light] --------------------------------------------------------------------------------------------------- */
     @@media (prefers-color-scheme: light) {
-        body {
-            background: #ffffff;
-        }
+        body { background: #ffffff; }
     }
 
     /* Theme [dark] -------------------------------------------------------------------------------------------------------------------- */
@@ -118,7 +134,6 @@
         xmlns="http://www.w3.org/2000/svg"
         xmlns:svg="http://www.w3.org/2000/svg"
     >
-        <defs id="defs1" />
         <g
             id="layer1"
             transform="translate(-78.427784,-70.006755)"
