@@ -37,3 +37,4 @@ global using Jumpeno.Server.Models;
 global using Jumpeno.Server.Pages;
 global using Jumpeno.Server.Services;
 global using Jumpeno.Server.Utils;
+global using Jumpeno.Client.Images;
