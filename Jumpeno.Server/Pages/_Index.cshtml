@@ -28,6 +28,7 @@
         <!-- CSS Modules -->
         <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" no-antblazor-css @Import.Critical />
+        <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.variable.css")" rel="stylesheet" @Import.Critical />
         <!-- CSS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <link href="@AppEnvironment.Import("css/bundle.css")" rel="stylesheet" @Import.Critical />
