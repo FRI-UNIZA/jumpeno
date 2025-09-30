@@ -1,10 +1,11 @@
 # Jumpeno
 
 ## Description
-This <b>monorepo</b> hosts the interactive web game <b>Jumpeno</b>.
+This <b>monorepo</b> hosts the interactive web game <b>Jumpeno</b>.<br />
 (both front-end and back-end part.)<br />
 The project is developed using <b>C# framework Blazor</b>.<br />
-Application runs in <b>WebAssembly</b> and supports server-side rendering <b>(SSR)</b>, which can be enabled in configuration file.
+Application runs in <b>WebAssembly</b> and supports server-side rendering <b>(SSR)</b>.<br />
+(can be enabled in configuration file.)<br />
 It also includes support for <b>themes</b> and <b>translations</b>.
 
 The back-end provides a <b>REST API</b> via controllers, which can be accessed using HTTP requests.<br />
@@ -230,11 +231,11 @@ Server configuration is injected into the Docker image during a job inside GitHu
 Deployed app must run on port `80` to work properly!<br />
 (`Port` option in `/Jumpeno.Server/AppSettings.Server.json`).
 
-In latest .NET version "SIMD" is enabled automatically,<br />
-howewer must be turned off to support older mobile phone devices.<br />
+In the latest .NET version "SIMD" is enabled automatically,<br />
+but can be turned off to support older mobile phone devices by adding:<br />
 (`WasmEnableSIMD` option in `/Jumpeno.Client/Jumpeno.Client.csproj`)
 
-Not that client part has "tree shaking" enabled to speed up initial loading time.<br />
+Note that client part has "tree shaking" enabled to speed up initial loading time.<br />
 (`PublishTrimmed` option in `/Jumpeno.Client/Jumpeno.Client.csproj`)
 
 Static CSS and JS files in `Jumpeno.Client/wwwroot` directory should also be bundled for production.<br />
@@ -263,4 +264,4 @@ For example, `ThemeProvider` automatically generates theme CSS variables from C#
 ## Learn more
 This project is developed with [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor).
 
-You can learn more in the [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-9.0).
+Learn more from [Blazor documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-9.0).
