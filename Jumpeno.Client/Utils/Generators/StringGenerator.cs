@@ -1,8 +1,5 @@
 namespace Jumpeno.Client.Utils;
 
-using System;
-using System.Linq;
-
 public class StringGenerator {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Random G = new();

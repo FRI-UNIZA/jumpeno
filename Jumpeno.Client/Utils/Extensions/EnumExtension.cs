@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Utils;
 
-using System.Reflection;
-
 // Attributes -----------------------------------------------------------------------------------------------------------------------------
 [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
 public sealed class StringValueAttribute(string value) : Attribute {

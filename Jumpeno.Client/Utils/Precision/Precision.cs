@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Utils;
 
-using System.Globalization;
-
 public static class Precision {
     // Double -----------------------------------------------------------------------------------------------------------------------------
     public static string NormDouble(string value) {

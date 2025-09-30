@@ -15,8 +15,6 @@ public static class REQUEST_STORAGE {
     // ScrollArea:
     public const string SCROLLAREA_AREAS = $"{nameof(ScrollArea)}.{nameof(SCROLLAREA_AREAS)}";
     public const string SCROLLAREA_REGISTER_LISTENERS = $"{nameof(ScrollArea)}.{nameof(SCROLLAREA_REGISTER_LISTENERS)}";
-    // Notifications:
-    public const string SERVER_NOTIFICATIONS = $"{nameof(Notification)}.{nameof(SERVER_NOTIFICATIONS)}";
     // Services:
     public static string SERVICE_COMPONENT<T>() => $"{nameof(ServiceComponent<T>)}<{typeof(T).Name}>";
     public static string STATIC_SERVICE<T>() => $"{nameof(StaticService<T>)}<{typeof(T).Name}>";

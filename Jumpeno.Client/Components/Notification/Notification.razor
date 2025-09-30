@@ -2,6 +2,274 @@
 
 @inherits ServiceComponent<Notification>
 
+<style>
+    /* Keyframes ----------------------------------------------------------------------------------------------------------------------- */
+    @@keyframes notification-show {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(0%); }
+    }
+
+    @@keyframes notification-hide {
+        0% { grid-template-rows: 1fr; }
+        100% { grid-template-rows: 0fr; }
+    }
+
+    /* Variables ----------------------------------------------------------------------------------------------------------------------- */
+    .notification {
+        /* Show animation: */
+        --notification-show-duration: 200ms;
+        --notification-show-timing: ease;
+        /* Hide animation: */
+        --notification-hide-duration: 200ms;
+        --notification-hide-timing: ease;
+    }
+
+    /* Styles -------------------------------------------------------------------------------------------------------------------------- */
+    .notification {
+        /* Position: */
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: var(--theme-z-index-notification, 1000002);
+        /* Display: */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        /* Size: */
+        width: 100%;
+        padding-top: 5px;
+        /* Style: */
+        background: transparent;
+        /* Actions: */
+        pointer-events: none;
+    }
+
+    .notification * { box-sizing: border-box; }
+
+    .notification-grid {
+        /* Display: */
+        display: grid;
+        grid-template-rows: 1fr;
+        /* Size: */
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .notification .notification-wrap {
+        /* Position: */
+        position: relative;
+        /* Display: */
+        grid-row: 1 / span 2;
+        display: flex;
+        justify-content: flex-end;
+        /* Size: */
+        width: 100%;
+        padding: 0;
+        /* Content: */
+        overflow: hidden;
+        /* Animations: */
+        animation: notification-show var(--notification-show-duration) var(--notification-show-timing) forwards;
+    }
+
+    .notification .notification-card {
+        /* Position: */
+        position: relative;
+        /* Display: */
+        display: flex;
+        flex-direction: column;
+        /* Size: */
+        width: 100%;
+        padding: 18px 24px;
+        margin: 5px 10px;
+        /* Style: */
+        border-radius: 9px;
+        /* Base: */
+        font-size: 1px;
+        /* Animations: */
+        transition: opacity var(--notification-hide-duration) var(--notification-hide-timing);
+        /* Actions: */
+        pointer-events: all;
+    }
+
+    .notification .notification-title {
+        /* Position: */
+        position: relative;
+        /* Size: */
+        width: 100%;
+        min-height: 25px;
+        padding: 0 32px;
+        margin: 0;
+        /* Content: */
+        font-size: 16px;
+        word-break: break-word;
+    }
+
+    .notification .notification-message {
+        /* Position: */
+        position: relative;
+        /* Size: */
+        width: 100%;
+        padding-top: 10px;
+        margin: 0;
+        /* Content: */
+        font-size: 14px;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    /* Icon ---------------------------------------------------------------------------------------------------------------------------- */
+    .notification .notification-basic .notification-title { padding-left: 0; }
+    
+    .notification .notification-icon {
+        /* Position: */
+        position: absolute;
+        top: 19px;
+        left: 24px;
+        /* Display: */
+        display: flex;
+    }
+
+    .notification .notification-icon svg {
+        /* Size: */
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Close --------------------------------------------------------------------------------------------------------------------------- */
+    .notification .notification-close-button {
+        /* Position: */
+        position: absolute;
+        top: 20px;
+        right: 22px;
+        /* Display: */
+        display: flex;
+        /* Size: */
+        padding: 0;
+        margin: 0;
+        /* Style: */
+        background: transparent;
+        border: none;
+        outline: none;
+        /* Animations: */
+        transition: color 200ms;
+        /* Actions: */
+        cursor: pointer;
+    }
+
+    .notification .notification-close-thumb {
+        /* Position: */
+        --top: -10px;
+        --left: -10px;
+        z-index: 0;
+    }
+
+    .notification .notification-close-icon {
+        /* Position: */
+        z-index: 1;
+    }
+
+    .notification .notification-close-icon svg {
+        /* Size: */
+        width: 20px;
+        height: 21px;
+    }
+
+    @@media (min-width: 768px) {
+        /* Media > Styles -------------------------------------------------------------------------------------------------------------- */
+        .notification {
+            /* Size: */
+            width: 474px;
+            padding-top: 17px;
+            padding-right: 14px;
+        }
+
+        .notification .notification-card {
+            /* Size: */
+            width: auto;
+            margin: 7px 10px;
+        }
+    }
+
+    /* Closing ------------------------------------------------------------------------------------------------------------------------- */
+    .notification .notification-grid.closing {
+        /* Animations: */
+        animation: notification-hide var(--notification-hide-duration) var(--notification-hide-timing) forwards;
+        /* Actions: */
+        pointer-events: none;
+    }
+    
+    .notification .notification-grid.closing .notification-card { opacity: 0; }
+
+    /* ARIA ---------------------------------------------------------------------------------------------------------------------------- */
+    .notification-aria {
+        /* Position: */
+        position: absolute;
+        top: 0;
+        left: 0;
+        /* Style: */
+        opacity: 0;
+        /* Actions: */
+        pointer-events: none;
+    }
+
+    /* Theme [dark] -------------------------------------------------------------------------------------------------------------------- */
+    .body.dark-theme .notification .notification-card {
+        background: #ffffff;
+        box-shadow: 0 3em 6em -4em rgba(0, 0, 0, 0.12), 0 6em 16em 0 rgba(0, 0, 0, 0.08), 0 9em 28em 8em rgba(0, 0, 0, 0.05);
+    }
+
+    .body.dark-theme .notification .notification-success .notification-icon { color: var(--theme-status-success-accent-color, rgb(82, 196, 26)); }
+    .body.dark-theme .notification .notification-error .notification-icon { color: var(--theme-status-danger-accent-color, rgb(255, 77, 79)); }
+    .body.dark-theme .notification .notification-warning .notification-icon { color: var(--theme-status-warning-accent-color, rgb(250, 173, 20)); }
+    .body.dark-theme .notification .notification-info .notification-icon { color: var(--theme-status-info-accent-color, rgb(24, 144, 255)); }
+
+    .body.dark-theme .notification .notification-close-button { color: rgba(42, 33, 56, 0.45); }
+    .body.dark-theme .notification .notification-close-button:hover, .notification .notification-close-button:focus-visible { color: rgba(42, 33, 56, 0.7); }
+
+    /* Theme [light] ------------------------------------------------------------------------------------------------------------------- */
+    .body.light-theme .notification .notification-card {
+        background: #ffffff;
+        box-shadow: 0 3em 6em -4em rgba(0, 0, 0, 0.12), 0 6em 16em 0 rgba(0, 0, 0, 0.08), 0 9em 28em 8em rgba(0, 0, 0, 0.05);
+    }
+
+    .body.light-theme .notification .notification-success .notification-icon { color: var(--theme-status-success-accent-color, rgb(82, 196, 26)); }
+    .body.light-theme .notification .notification-error .notification-icon { color: var(--theme-status-danger-accent-color, rgb(255, 77, 79)); }
+    .body.light-theme .notification .notification-warning .notification-icon { color: var(--theme-status-warning-accent-color, rgb(250, 173, 20)); }
+    .body.light-theme .notification .notification-info .notification-icon { color: var(--theme-status-info-accent-color, rgb(24, 144, 255)); }
+
+    .body.light-theme .notification .notification-close-button { color: rgba(42, 33, 56, 0.45); }
+    .body.light-theme .notification .notification-close-button:hover, .notification .notification-close-button:focus-visible { color: rgba(42, 33, 56, 0.7); }
+</style>
+
+<div class="notification">
+    @foreach (var notification in NotificationList) {
+        <div @key="notification.Key" class="@GridClass(notification)" @onanimationend="async () => await OnClose(notification)">
+            <div class="notification-wrap" @onanimationend:stopPropagation>
+                <div
+                    class="notification-card @notification.Type.CSSClass()"
+                    @onmouseover="async () => await StopDelay(notification)"
+                    @onmouseout="async () => await RestartDelay(notification)"
+                >
+                    <p class="notification-title">@notification.Title</p>
+                    @if (notification.Message.Trim() != "") {
+                        <p class="notification-message">@notification.Message</p>
+                    }
+                    @switch (notification.Type) {
+                        case NOTIFICATION_TYPE.SUCCESS: <AntIcon Class="notification-icon" Type="check-circle" Theme="Outline" /> break;
+                        case NOTIFICATION_TYPE.ERROR: <AntIcon Class="notification-icon" Type="close-circle" Theme="Outline" /> break;
+                        case NOTIFICATION_TYPE.WARNING: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
+                        case NOTIFICATION_TYPE.INFO: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
+                    }
+                    <div class="notification-close-button" @onclick="async () => await Close(notification)">
+                        <ThumbButton Class="notification-close-thumb" />
+                        <AntIcon Class="notification-close-icon" Type="close" Theme="Outline" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 @foreach (var notification in AriaNotifications) {
     <p class="notification-aria" aria-live="assertive" role="alert">
         @($"{notification.Title}: {notification.Message}")

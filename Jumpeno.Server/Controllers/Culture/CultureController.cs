@@ -1,10 +1,9 @@
 namespace Jumpeno.Server.Controllers;
 
 using Microsoft.AspNetCore.Localization;
-using System.Globalization;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class CultureController : Controller {
     // Endpoints --------------------------------------------------------------------------------------------------------------------------
     /// <summary>Sets culture cookie and redirects to given URI.</summary>
@@ -80,7 +79,7 @@ public class CultureController : Controller {
                 return defaultLanguage;
             }
             var preferredLanguages = acceptLanguage.Split(",")
-                .Select(StringWithQualityHeaderValue.Parse)
+                .Select(System.Net.Http.Headers.StringWithQualityHeaderValue.Parse)
                 .OrderByDescending(s => s.Quality.GetValueOrDefault(1))
                 .ToArray();
 

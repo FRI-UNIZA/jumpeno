@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Components;
 
-using System.Reflection;
-
 public partial class ModalElement {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_UNCLOSABLE = "unclosable";

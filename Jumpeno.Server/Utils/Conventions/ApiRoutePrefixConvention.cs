@@ -1,7 +1,7 @@
 namespace Jumpeno.Server.Utils;
 
 public class ApiRoutePrefixConvention(string prefix) : IApplicationModelConvention {
-    private readonly AttributeRouteModel Prefix = new(new RouteAttribute(prefix));
+    private readonly AttributeRouteModel Prefix = new(new Microsoft.AspNetCore.Mvc.RouteAttribute(prefix));
 
     public void Apply(ApplicationModel application) {
         foreach (var controller in application.Controllers) {

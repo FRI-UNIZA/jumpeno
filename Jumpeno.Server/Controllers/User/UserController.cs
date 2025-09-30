@@ -1,7 +1,7 @@
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class UserController : ControllerBase {
     /// <summary>New user account registration.</summary>
     /// <param name="body">Registration data.</param>

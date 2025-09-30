@@ -3,6 +3,8 @@ namespace Jumpeno.Client.Components;
 public partial class SelectCulture {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "select-culture";
+    // Delay:
+    public const int CHANGE_DELAY = 300; // ms
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
@@ -22,7 +24,8 @@ public partial class SelectCulture {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private static async Task OnSelect(SelectEvent ev) {
-        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE, true);
+        await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE);
+        await Task.Delay(CHANGE_DELAY);
         await ChangeCulture(ev);
     }
 
@@ -82,7 +85,7 @@ public partial class SelectCulture {
             try { pageURI = page.CustomURL($"{value}", pageURI); }
             catch (Exception e) {
                 Notification.Error(e.Message);
-                await PageLoader.Hide(PAGE_LOADER_TASK.CULTURE_CHANGE, false);
+                await PageLoader.Hide(PAGE_LOADER_TASK.CULTURE_CHANGE);
                 return;
             } 
             path = I18N.USE_PREFIX ? $"/{CultureInfo.CurrentCulture}{pageURI}" : pageURI;

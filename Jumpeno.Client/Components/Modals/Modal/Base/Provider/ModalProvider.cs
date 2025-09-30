@@ -1,7 +1,5 @@
 namespace Jumpeno.Client.Components;
 
-using System.Reflection;
-
 public partial class ModalProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_CONTENT = "modal-provider-content";

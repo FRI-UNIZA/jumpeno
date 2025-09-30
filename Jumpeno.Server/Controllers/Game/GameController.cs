@@ -1,7 +1,7 @@
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class GameController : ControllerBase {
     [HttpPatch]
     public async Task Start([FromBody] string code) {

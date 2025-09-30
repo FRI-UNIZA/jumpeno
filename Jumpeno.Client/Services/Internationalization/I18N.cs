@@ -2,10 +2,6 @@ namespace Jumpeno.Client.Services;
 
 #pragma warning disable CS8618
 
-using System.Globalization;
-using System.Reflection;
-using Microsoft.Extensions.Localization;
-
 public class I18N {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private static IStringLocalizer<Resource> Localizer;

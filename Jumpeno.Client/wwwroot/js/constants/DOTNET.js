@@ -24,10 +24,6 @@ class DOTNET {
         POP_STATE: "JS_PopState"
     }
 
-    static NOTIFICATION = {
-        CLOSE: "JS_Close"
-    }
-
     static PAGE_LOADER = {
         SHOW: "JS_Show",
         AFTER_ANIMATION_FRAME: "JS_AfterAnimationFrame"

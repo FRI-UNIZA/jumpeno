@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
@@ -235,7 +234,7 @@ CookieStorage.Init(
                 Path = cookie.Path,
                 HttpOnly = cookie.HttpOnly,
                 Secure = cookie.Secure,
-                SameSite = (SameSiteMode)(int)cookie.SameSite
+                SameSite = (Microsoft.AspNetCore.Http.SameSiteMode)(int)cookie.SameSite
             }
         );
     },

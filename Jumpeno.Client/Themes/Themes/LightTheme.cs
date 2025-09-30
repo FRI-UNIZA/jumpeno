@@ -545,17 +545,6 @@ public class LightTheme : BaseTheme {
     public override RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR => new(255, 255, 255);
     public override string MODAL_PROFILE_AVATAR_BOX_SHADOW => "0 1em 8em 1em rgba(0, 0, 0, 0.7)";
 
-// NOTE: Notification ---------------------------------------------------------------------------------------------------------------------
-    public override string NOTIFICATION_BOX_SHADOW => "0 3em 6em -4em rgba(0, 0, 0, 0.12), " +
-                                                      "0 6em 16em 0 rgba(0, 0, 0, 0.08), " +
-                                                      "0 9em 28em 8em rgba(0, 0, 0, 0.05)";
-
-    // Notification control:
-    public override RGBAColor NOTIFICATION_CONTROL_COLOR => new(42, 33, 56, 0.45f);
-
-    // Notification control [highlight]:
-    public override RGBAColor NOTIFICATION_CONTROL_HIGHLIGHT_COLOR => new(42, 33, 56, 0.7f);
-
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------
     public override RGBAColor PROGRESS_CIRCLE_COLOR => new(42, 33, 56);

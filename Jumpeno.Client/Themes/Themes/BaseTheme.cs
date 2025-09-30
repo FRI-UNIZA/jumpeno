@@ -578,15 +578,6 @@ public class BaseTheme {
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR { get; }
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }
 
-// NOTE: Notification ---------------------------------------------------------------------------------------------------------------------
-    public virtual string NOTIFICATION_BOX_SHADOW { get; }
-
-    // Notification control:
-    public virtual RGBAColor NOTIFICATION_CONTROL_COLOR { get; }
-    
-    // Notification control [highlight]:
-    public virtual RGBAColor NOTIFICATION_CONTROL_HIGHLIGHT_COLOR { get; }
-
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor PROGRESS_CIRCLE_COLOR { get; }

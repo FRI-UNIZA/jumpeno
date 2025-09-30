@@ -1,7 +1,7 @@
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class AdminController : ControllerBase {
     /// <summary>Sends admin refresh token to email.</summary>
     /// <param name="body">Admin email.</param>

@@ -1,6 +1,5 @@
 namespace Jumpeno.Client.ViewModels;
 
-using System.Collections.Concurrent;
 using System.Timers;
 
 public class GameViewModel : IDisposable {

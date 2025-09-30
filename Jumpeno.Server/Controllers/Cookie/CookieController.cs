@@ -1,7 +1,7 @@
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class CookieController : ControllerBase {
     /// <summary>Sets accepted cookies.</summary>
     /// <param name="body">List of accepted cookie names.</param>
