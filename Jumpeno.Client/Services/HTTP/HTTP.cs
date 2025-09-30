@@ -192,9 +192,19 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     }
 
     // Tokens -----------------------------------------------------------------------------------------------------------------------------
+    /// <summary>Cancel pending request with given url.</summary>
+    /// <returns>Task to await.</returns>
+    public static async Task Cancel(HttpMethod method, string url) {
+        var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
+            var requestID = GetRequestID(method, url);
+            CancelToken(instance.Tokens[requestID]);
+            instance.Tokens.Remove(requestID);
+        });
+    }
+    
     /// <summary>Call to cancel all pending requests.</summary>
     /// <returns>Task to await.</returns>
-    public static async Task ClearTokens() {
+    public static async Task CancelRequests() {
         var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
             foreach (var token in instance.Tokens.Values) CancelToken(token);
             instance.Tokens.Clear();
