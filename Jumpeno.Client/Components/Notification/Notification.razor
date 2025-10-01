@@ -247,8 +247,8 @@
             <div class="notification-wrap" @onanimationend:stopPropagation>
                 <div
                     class="notification-card @notification.Type.CSSClass()"
-                    @onmouseover="async () => await StopDelay(notification)"
-                    @onmouseout="async () => await RestartDelay(notification)"
+                    @onpointerenter="async () => await StopDelay(notification)"
+                    @onpointerleave="async () => await RestartDelay(notification)"
                 >
                     <p class="notification-title">@notification.Title</p>
                     @if (notification.Message.Trim() != "") {
@@ -260,7 +260,7 @@
                         case NOTIFICATION_TYPE.WARNING: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
                         case NOTIFICATION_TYPE.INFO: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
                     }
-                    <div class="notification-close-button" @onclick="async () => await Close(notification)">
+                    <div class="notification-close-button" @onpointerdown="async () => await Close(notification)">
                         <ThumbButton Class="notification-close-thumb" />
                         <AntIcon Class="notification-close-icon" Type="close" Theme="Outline" />
                     </div>
