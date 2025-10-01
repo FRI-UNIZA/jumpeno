@@ -6,6 +6,9 @@ public static class JSActionHandler {
     public static readonly string DisableAutocomplete = $"{ClassName}.{nameof(DisableAutocomplete)}";
     public static readonly string PopAutocomplete = $"{ClassName}.{nameof(PopAutocomplete)}";
     public static readonly string EnableAutocomplete = $"{ClassName}.{nameof(EnableAutocomplete)}";
+    public static readonly string ActiveID = $"{ClassName}.{nameof(ActiveID)}";
+    public static readonly string HasFocus = $"{ClassName}.{nameof(HasFocus)}";
+    public static readonly string FocusedChildID = $"{ClassName}.{nameof(FocusedChildID)}";
     public static readonly string BlurFocus = $"{ClassName}.{nameof(BlurFocus)}";
     public static readonly string PopFocus = $"{ClassName}.{nameof(PopFocus)}";
     public static readonly string RestoreFocus = $"{ClassName}.{nameof(RestoreFocus)}";

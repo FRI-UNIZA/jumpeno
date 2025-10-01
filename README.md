@@ -2,10 +2,9 @@
 
 ## Description
 This <b>monorepo</b> hosts the interactive web game <b>Jumpeno</b>.<br />
-(both front-end and back-end part.)<br />
 The project is developed using <b>C# framework Blazor</b>.<br />
 Application runs in <b>WebAssembly</b> and supports server-side rendering <b>(SSR)</b>.<br />
-(can be enabled in configuration file.)<br />
+(can be enabled in configuration file)<br />
 It also includes support for <b>themes</b> and <b>translations</b>.
 
 The back-end provides a <b>REST API</b> via controllers, which can be accessed using HTTP requests.<br />

@@ -36,7 +36,23 @@ class JSActionHandler {
         }
     }
 
-    // Focus ------------------------------------------------------------------------------------------------------------------------------
+    // Focus [Predicates] -----------------------------------------------------------------------------------------------------------------
+    static ActiveID = () => document.activeElement.id;
+
+    static HasFocus(selector) {
+        var element = document.querySelector(selector);
+        if (!element) return false;
+        return element == document.activeElement;
+    }
+
+    static FocusedChildID(selector) {
+        var element = document.querySelector(selector);
+        if (!element) return null;
+        if (!element.contains(document.activeElement)) return null;
+        return document.activeElement.id;
+    }
+
+    // Focus [Stack] ----------------------------------------------------------------------------------------------------------------------
     static #BlurActiveFocus() {
         const activeElement = document.activeElement
         if (activeElement && activeElement.id !== undefined) {
@@ -49,9 +65,7 @@ class JSActionHandler {
         if (!focusAfterID) this.SetFocus(focusAfterID)
     }
 
-    static PopFocus() {
-        return this.#FocusIDs.pop()
-    }
+    static PopFocus() { return this.#FocusIDs.pop() }
 
     static async RestoreFocus() {
         const o = this.PopFocus()
@@ -82,6 +96,7 @@ class JSActionHandler {
         return this.#FocusIDs[this.#FocusIDs.length - 1].id;
     }
 
+    // Focus [set] ------------------------------------------------------------------------------------------------------------------------
     static #SetFocusOnElement(element) {
         if (element) {
             element.focus()

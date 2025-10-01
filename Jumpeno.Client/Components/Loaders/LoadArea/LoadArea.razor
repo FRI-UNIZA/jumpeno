@@ -1,0 +1,18 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div
+    id="@ID"
+    class="@ComputeClass()"
+    style="@Style"
+    tabindex="@(Loading ? 0 : -1)"
+    aria-label="@I18N.T("Loading")"
+>
+    <div class="@CLASS_CONTENT" inert="@Loading">
+        @ChildContent
+    </div>
+    <div class="@CLASS_LOADER_WRAP">
+        <Loader Class="@CLASS_LOADER" />
+    </div>
+</div>

@@ -7,6 +7,12 @@ public class ActionHandler {
     public static async Task PopAutocompleteAsync() => await JS.InvokeVoidAsync(JSActionHandler.PopAutocomplete);
     public static void EnableAutocomplete() => JS.InvokeVoid(JSActionHandler.EnableAutocomplete);
     public static async Task EnableAutocompleteAsync() => await JS.InvokeVoidAsync(JSActionHandler.EnableAutocomplete);
+    public static string? ActiveID() => JS.Invoke<string?>(JSActionHandler.ActiveID);
+    public static async Task<string?> ActiveIDAsync() => await JS.InvokeAsync<string?>(JSActionHandler.ActiveID);
+    public static bool HasFocus(string selector) => JS.Invoke<bool>(JSActionHandler.HasFocus, selector);
+    public static async Task<bool> HasFocusAsync(string selector) => await JS.InvokeAsync<bool>(JSActionHandler.HasFocus, selector);
+    public static string? FocusedChildID(string selector) => JS.Invoke<string?>(JSActionHandler.FocusedChildID, selector);
+    public static async Task<string?> FocusedChildIDAsync(string selector) => await JS.InvokeAsync<string?>(JSActionHandler.FocusedChildID, selector);
     public static void BlurFocus(string focusAfterID = "") => JS.InvokeVoid(JSActionHandler.BlurFocus, focusAfterID);
     public static async Task BlurFocusAsync(string focusAfterID = "") => await JS.InvokeVoidAsync(JSActionHandler.BlurFocus, focusAfterID);
     public static void PopFocus() => JS.InvokeVoid(JSActionHandler.PopFocus);
