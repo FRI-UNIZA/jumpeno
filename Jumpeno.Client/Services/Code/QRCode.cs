@@ -9,6 +9,6 @@ public static class QRCode {
         var svgQrCode = new QRCoder.SvgQRCode(qrCodeData);
         string svgContent = svgQrCode.GetGraphic(20, Color.Black, Color.White, false);
         // 3) Convert to a data URL format for embedding:
-        return $"{CONTENT_TYPE.DATA_SVG},{Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(svgContent))}";
+        return $"{CONTENT_TYPE.DATA_SVG},{Convert.ToBase64String(Encoding.UTF8.GetBytes(svgContent))}";
     }
 }

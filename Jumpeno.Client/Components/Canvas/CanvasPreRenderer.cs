@@ -14,6 +14,8 @@ public partial class CanvasPreRenderer {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     static CanvasPreRenderer() => Init();
 
+    protected override bool ShouldComponentRender() => false;
+
     protected override async void OnComponentAfterRender(bool firstRender) {
         if (!firstRender) return;
         foreach (var canvas in List) {

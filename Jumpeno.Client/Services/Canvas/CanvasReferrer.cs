@@ -13,7 +13,7 @@ public static class CanvasReferrer {
     }
 
     public static Canvas2DContext? Get(CANVAS id) {
-        if (!Refs.TryGetValue(id, out var ctx)) return null;
+        Refs.TryGetValue(id, out var ctx);
         return ctx;
     }
 }

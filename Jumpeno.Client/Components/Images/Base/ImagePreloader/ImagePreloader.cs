@@ -24,6 +24,8 @@ public partial class ImagePreloader {
         Add(IMAGE.SPRITE_MAGE_WATER);
     }
 
+    protected override bool ShouldComponentRender() => false;
+
     // Styles -----------------------------------------------------------------------------------------------------------------------------
     private static string RenderStyles() {
         var styles = "";

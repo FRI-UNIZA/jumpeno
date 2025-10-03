@@ -207,7 +207,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 await Notify.Invoke();
                 await GameViewTCS.Task;
             } catch {
-                GameVM = null;
+                await DisposeGame();
                 Notification.Error(MESSAGE.DEFAULT.T);
             } finally {
                 IsConnecting = false;
