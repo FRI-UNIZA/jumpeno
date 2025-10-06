@@ -1,13 +1,3 @@
-body.no-theme { opacity: 0; }
-
-@keyframes fade-in-theme { 0% { opacity: 0; } 100% { opacity: 1; }}
-.theme-updated .theme-transition-container {
-    animation: fade-in-theme calc(var(--theme-transition-extra-slow) * 1ms) forwards;
-}
-.setting-theme .theme-transition-container {
-    display: none !important;
-}
-
 body {
     --theme-font-primary: Montserrat, sans-serif;
     --theme-size-container-max-width: 1340;

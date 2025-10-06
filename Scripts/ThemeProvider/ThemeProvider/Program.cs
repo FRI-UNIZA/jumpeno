@@ -21,11 +21,6 @@ public class Program {
     // Variables --------------------------------------------------------------------------------------------------------------------------
     private const string VARIABLE_PREFIX = "theme";
 
-    // CSS --------------------------------------------------------------------------------------------------------------------------------
-    private const string CLASS_NO_THEME = "no-theme";
-    private const string CLASS_THEME_UPDATED = "theme-updated";
-    private const string CLASS_THEME_TRANSITION_CONTAINER = "theme-transition-container";
-
     // Paths ------------------------------------------------------------------------------------------------------------------------------
     private static readonly string ROOT = $"{Directory.GetCurrentDirectory()}/..";
     private static readonly string CLASS_DIR = $"{ROOT}/Jumpeno.Client/Themes/Themes";
@@ -68,20 +63,7 @@ public class Program {
     private static string CSSRule(string name, string value) => $"{name}: {value}";
     private static string AddRule(string rule) => $"\n    {rule};";
 
-    // Generators -------------------------------------------------------------------------------------------------------------------------
-    private static string GenerateNoTheme() => $"body.{CLASS_NO_THEME} {{ opacity: 0; }}\n";
-
-    private static string GenerateThemeTransition() {        
-        string content = "@keyframes fade-in-theme { 0% { opacity: 0; } 100% { opacity: 1; }}\n";
-        content = $"{content}.theme-updated .theme-transition-container {{\n";
-        content = $"{content}    animation: fade-in-theme calc(var(--theme-transition-extra-slow) * 1ms) forwards;\n";
-        content = $"{content}}}\n";
-        content = $"{content}.setting-theme .theme-transition-container {{\n";
-        content = $"{content}    display: none !important;\n";
-        content = $"{content}}}\n";
-        return content;
-    }
-    
+    // Generators -------------------------------------------------------------------------------------------------------------------------    
     private static string GenerateConstants(string className) {
         // 1) Initialization:
         var type = Reflex.CompileClass(CLASS_DIR, NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
@@ -152,10 +134,7 @@ public class Program {
     // Entry point ------------------------------------------------------------------------------------------------------------------------
     public static void Main(string[] args) {
         // 1) Init constants:
-        string content = 
-            GenerateNoTheme() + "\n" +
-            GenerateThemeTransition() + "\n" +
-            GenerateConstants(THEMES[0].CLASSNAME);
+        string content = GenerateConstants(THEMES[0].CLASSNAME);
         // 2) Add themes:
         foreach (var THEME in THEMES) {
             content += "\n" + GenerateVariables(THEME.CLASSNAME, THEME.CSS_CLASS);

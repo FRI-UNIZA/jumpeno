@@ -1,3 +1,13 @@
+/* Theme transition -------------------------------------------------------------------------------------------------------------------- */
+::deep.body .theme-transition-container { opacity: 1; }
+
+::deep.body.setting-theme .theme-transition-container { opacity: 0; }
+
+::deep.body.setting-theme-animation .theme-transition-container {
+    transition: opacity calc(var(--theme-transition-extra-slow) * 1ms) ease;
+}
+
+/* AntDesign Theme --------------------------------------------------------------------------------------------------------------------- */
 ::deep.body {
     --ant-primary-color: #eec600;
     --ant-primary-color-hover: #ffd000;

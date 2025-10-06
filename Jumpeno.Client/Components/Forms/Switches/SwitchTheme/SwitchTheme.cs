@@ -6,7 +6,7 @@ public partial class SwitchTheme {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [CascadingParameter(Name = ThemeProvider.CASCADE_CHANGE_APP_THEME)]
-    public required Func<BaseTheme, Task> ChangeAppTheme { get; set; }
+    public required Func<BaseTheme, Task<bool>> ChangeAppTheme { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
@@ -19,11 +19,18 @@ public partial class SwitchTheme {
     public SwitchTheme() => SwitchVM = new(new(
         FORM,
         CLASS,
-        OnChange: new(async e => await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE)),
-        OnAfterChange: new(async e => await TriggerChange())
+        OnChange: new(async e => await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH)),
+        OnAfterChange: new(TriggerChange)
     ));
     protected override void OnComponentParametersSet(bool firstTime) => SwitchVM.SetValue(AppTheme is LightTheme);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public async Task TriggerChange() => await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme());
+    public async Task TriggerChange(SwitchEvent e) {
+        if (await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme())) {
+            await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH);
+        } else {
+            SwitchVM.SetValue(!e.Value);
+            AnimationHandler.CallOnTransitionEnd($"#{SwitchVM.FormID}", async () => await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH));
+        }
+    }
 }

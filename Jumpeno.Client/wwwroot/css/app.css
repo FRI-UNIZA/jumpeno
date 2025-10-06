@@ -1,3 +1,4 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 html, body {
     /* Position: */
     position: fixed;
@@ -35,4 +36,12 @@ body:not(.no-theme) {
 button {
     /* Content: */
     font-size: 16px;
+}
+
+@media (display-mode: fullscreen), (display-mode: standalone), (display-mode: minimal-ui) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    body {
+        /* Actions: */
+        -webkit-touch-callout: none;
+    }
 }

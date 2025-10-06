@@ -1,9 +1,8 @@
 namespace Jumpeno.Client.Utils;
 
-public class Disabler(IDisabledComponent view, string? @class = null, string? @classTransition = null) {
+public class Disabler(IDisabledComponent view, string? @class = null, string? classDisabledAnimation = null) {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "disabled";
-    public const string CLASS_TRANSITION = "disabled-transition";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly IDisabledComponent View = view;
@@ -11,13 +10,13 @@ public class Disabler(IDisabledComponent view, string? @class = null, string? @c
     private bool WasDisabled = false;
     // Classes:
     public string Class { get; private set; } = @class ?? CLASS;
-    public string ClassTransition { get; private set; } = @classTransition ?? CLASS_TRANSITION;
+    public string ClassDisabledAnimation { get; private set; } = classDisabledAnimation ?? AnimationHandler.CLASS_DISABLED_ANIMATION;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public string CSSClass { get {
         return new CSSClass()
         .Set(Class, View.Disabled)
-        .Set(ClassTransition, View.Disabled || WasDisabled);
+        .Set(ClassDisabledAnimation, View.Disabled || WasDisabled);
     }}
 
     // Events -----------------------------------------------------------------------------------------------------------------------------

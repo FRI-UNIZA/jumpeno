@@ -8,6 +8,6 @@ public partial class Loader {
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
         .Set(CLASS, Base)
-        .Set(AnimationHandler.CLASS_IMUNE_ANIMATION);
+        .Set(AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION);
     }
 }

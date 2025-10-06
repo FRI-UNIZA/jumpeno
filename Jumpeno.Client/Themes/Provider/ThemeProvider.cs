@@ -84,12 +84,6 @@ public partial class ThemeProvider {
         });
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (!await PageLoader.IsActiveTask(PAGE_LOADER_TASK.THEME_CHANGE)) return;
-        await Task.Delay(AppTheme.TRANSITION_FAST);
-        await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
-    }
-
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Get cookie:
     private static string? GetThemeCookie() => CookieStorage.Get(COOKIE.PREFERENCES.APP_THEME);
@@ -113,22 +107,33 @@ public partial class ThemeProvider {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public async Task ChangeAppTheme(BaseTheme theme) {
+     public async Task<bool> ChangeAppTheme(BaseTheme theme) {
         try {
-            if (AppEnvironment.IsServer) throw new InvalidOperationException("Changing theme not allowed on the server!");
-            if (theme.GetType().Name == AppTheme.GetType().Name) return;
+            if (AppEnvironment.IsServer) throw new InvalidOperationException("Theme change not allowed on the server!");
+            if (theme.GetType().Name == AppTheme.GetType().Name) return false;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
             await HTTP.Sync(() => SetThemeCookie(theme));
             AppTheme = theme;
+            AnimationHandler.DisableAnimation();
             JS.InvokeVoid(JSThemeProvider.StartSettingTheme);
             JS.InvokeVoid(JSThemeProvider.SetCustomTheme, ThemeCSSClass(AppTheme));
             ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
             StateHasChanged();
             await Task.Yield();
-            JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
-        } catch {
+            AnimationHandler.RestoreAnimation();
+            await Task.Yield();
+            JS.InvokeVoid(JSThemeProvider.ApplyThemeAnimation);
+            await Task.Delay(AppTheme.TRANSITION_EXTRA_SLOW);
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
             await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
+            return true;
+        } catch {
+            AnimationHandler.RestoreAnimation();
+            JS.InvokeVoid(JSThemeProvider.ApplyThemeAnimation);
+            JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
+            await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
+            Notification.Error(MESSAGE.DEFAULT.T);
+            return false;
         }
     }
 }

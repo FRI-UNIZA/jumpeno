@@ -214,6 +214,7 @@
 
     /* Theme [dark] -------------------------------------------------------------------------------------------------------------------- */
     .body.dark-theme .notification .notification-card {
+        color: rgb(42, 33, 56);
         background: #ffffff;
         box-shadow: 0 3em 6em -4em rgba(0, 0, 0, 0.12), 0 6em 16em 0 rgba(0, 0, 0, 0.08), 0 9em 28em 8em rgba(0, 0, 0, 0.05);
     }
@@ -228,6 +229,7 @@
 
     /* Theme [light] ------------------------------------------------------------------------------------------------------------------- */
     .body.light-theme .notification .notification-card {
+        color: rgb(42, 33, 56);
         background: #ffffff;
         box-shadow: 0 3em 6em -4em rgba(0, 0, 0, 0.12), 0 6em 16em 0 rgba(0, 0, 0, 0.08), 0 9em 28em 8em rgba(0, 0, 0, 0.05);
     }
@@ -243,10 +245,10 @@
 
 <div class="notification">
     @foreach (var notification in NotificationList) {
-        <div @key="notification.Key" class="@GridClass(notification)" @onanimationend="async () => await OnClose(notification)">
-            <div class="notification-wrap" @onanimationend:stopPropagation>
+        <div @key="notification.Key" class="@GridClass(notification) @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION" @onanimationend="async () => await OnClose(notification)">
+            <div class="notification-wrap @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION" @onanimationend:stopPropagation>
                 <div
-                    class="notification-card @notification.Type.CSSClass()"
+                    class="notification-card @notification.Type.CSSClass() @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION"
                     @onpointerenter="async () => await StopDelay(notification)"
                     @onpointerleave="async () => await RestartDelay(notification)"
                 >

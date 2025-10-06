@@ -1,25 +1,13 @@
 namespace Jumpeno.Client.Services;
 
-public class AnimationHandler {
+public partial class AnimationHandler {
     // Class ------------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_IMUNE_TRANSITION = JSAnimationHandler.CLASS_IMUNE_TRANSITION;
-    public const string CLASS_IMUNE_ANIMATION = JSAnimationHandler.CLASS_IMUNE_ANIMATION;
+    public const string CLASS_DISABLED_ANIMATION = JSAnimationHandler.CLASS_DISABLED_ANIMATION;
+    public const string CLASS_PREVENT_DISABLED_ANIMATION = JSAnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static void SetTransitions(string timing = "") => JS.InvokeVoid(JSAnimationHandler.SetTransitions, timing);
-    public static async Task SetTransitionsAsync(string timing = "") => await JS.InvokeVoidAsync(JSAnimationHandler.SetTransitions, timing);
-
-    public static void DisableTransitions() => JS.InvokeVoid(JSAnimationHandler.DisableTransitions);
-    public static async Task DisableTransitionsAsync() => await JS.InvokeVoidAsync(JSAnimationHandler.DisableTransitions);
-
-    public static void RestoreTransitions() => JS.InvokeVoid(JSAnimationHandler.RestoreTransitions);
-    public static async Task RestoreTransitionsAsync() => await JS.InvokeVoidAsync(JSAnimationHandler.RestoreTransitions);
-
-    public static void DisableAnimations() => JS.InvokeVoid(JSAnimationHandler.DisableAnimations);
-    public static async Task DisableAnimationsAsync() => await JS.InvokeVoidAsync(JSAnimationHandler.DisableAnimations);
-
-    public static void RestoreAnimations() => JS.InvokeVoid(JSAnimationHandler.RestoreAnimations);
-    public static async Task RestoreAnimationsAsync() => await JS.InvokeVoidAsync(JSAnimationHandler.RestoreAnimations);
+    public static void DisableAnimation(string selector = "body") => JS.InvokeVoid(JSAnimationHandler.DisableAnimation, selector);
+    public static void RestoreAnimation(string selector = "body") => JS.InvokeVoid(JSAnimationHandler.RestoreAnimation, selector);
 
     // Animation end ----------------------------------------------------------------------------------------------------------------------
     public static void CallOnAnimationEnd<T>(string selector, DotNetObjectReference<T> objRef, string method) where T : class
