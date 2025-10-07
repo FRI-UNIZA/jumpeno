@@ -26,11 +26,9 @@ public partial class SwitchTheme {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task TriggerChange(SwitchEvent e) {
-        if (await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme())) {
-            await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH);
-        } else {
+        if (!await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme())) {
             SwitchVM.SetValue(!e.Value);
-            AnimationHandler.CallOnTransitionEnd($"#{SwitchVM.FormID}", async () => await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH));
         }
+        await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH);
     }
 }

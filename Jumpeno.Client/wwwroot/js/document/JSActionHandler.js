@@ -7,6 +7,12 @@ class JSActionHandler {
     static #Autocomplete = [];
     static #NotAriaHidden = [];
 
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
+    static #PreventEvents(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     // Autocomplete -----------------------------------------------------------------------------------------------------------------------
     static DisableAutocomplete() {
         const activeElement = document.activeElement;
@@ -127,6 +133,23 @@ class JSActionHandler {
         const focusableElements = wrapper.querySelectorAll(this.#FOCUS_SELECTOR)
         if (focusableElements.lenght <= 0) wrapper.focus()
         else focusableElements[focusableElements.length - 1].focus()
+    }
+
+    // Scroll -----------------------------------------------------------------------------------------------------------------------------
+    static PreventScroll(selector = "body", capturing = true) {
+        const elements = document.querySelectorAll(selector);
+        if (!elements) return;
+        elements.forEach(element => {
+            element.addEventListener("scroll", this.#PreventEvents, capturing);
+        });
+    }
+
+    static RestoreScroll(selector = "body", capturing = true) {
+        const elements = document.querySelectorAll(selector);
+        if (!elements) return;
+        elements.forEach(element => {
+            element.removeEventListener("scroll", this.#PreventEvents, capturing);
+        });
     }
 
     // Keyboard ---------------------------------------------------------------------------------------------------------------------------

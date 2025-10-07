@@ -28,6 +28,10 @@ public class ActionHandler {
     public static async Task FocusFirstAsync(string id) => await JS.InvokeVoidAsync(JSActionHandler.FocusFirst, id);
     public static void FocusLast(string id) => JS.InvokeVoid(JSActionHandler.FocusLast, id);
     public static async Task FocusLastAsync(string id) => await JS.InvokeVoidAsync(JSActionHandler.FocusLast, id);
+    public static void PreventScroll(string selector = "body", bool capturing = true) => JS.InvokeVoid(JSActionHandler.PreventScroll, selector, capturing);
+    public static async Task PreventScrollAsync(string selector = "body", bool capturing = true) => await JS.InvokeVoidAsync(JSActionHandler.PreventScroll, selector, capturing);
+    public static void RestoreScroll(string selector = "body", bool capturing = true) => JS.InvokeVoid(JSActionHandler.RestoreScroll, selector, capturing);
+    public static async Task RestoreScrollAsync(string selector = "body", bool capturing = true) => await JS.InvokeVoidAsync(JSActionHandler.RestoreScroll, selector, capturing);
     public static void DisableKeyboardActions() => JS.InvokeVoid(JSActionHandler.DisableKeyboardActions);
     public static async Task DisableKeyboardActionsAsync() => await JS.InvokeVoidAsync(JSActionHandler.DisableKeyboardActions);
     public static void EnableKeyboardActions() => JS.InvokeVoid(JSActionHandler.EnableKeyboardActions);

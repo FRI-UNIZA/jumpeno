@@ -17,6 +17,8 @@ public static class JSActionHandler {
     public static readonly string SetFocus = $"{ClassName}.{nameof(SetFocus)}";
     public static readonly string FocusFirst = $"{ClassName}.{nameof(FocusFirst)}";
     public static readonly string FocusLast = $"{ClassName}.{nameof(FocusLast)}";
+    public static readonly string PreventScroll = $"{ClassName}.{nameof(PreventScroll)}";
+    public static readonly string RestoreScroll = $"{ClassName}.{nameof(RestoreScroll)}";
     public static readonly string Clear = $"{ClassName}.{nameof(Clear)}";
     public static readonly string DisableKeyboardActions = $"{ClassName}.{nameof(DisableKeyboardActions)}";
     public static readonly string EnableKeyboardActions = $"{ClassName}.{nameof(EnableKeyboardActions)}";

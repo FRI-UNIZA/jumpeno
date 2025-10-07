@@ -5,9 +5,17 @@ namespace Jumpeno.Client.Themes;
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Class:
-    public const string CLASS_BODY = "body";
-    public const string CLASS_NO_THEME = "no-theme";
-    public const string CLASS_THEME_TRANSITION_CONTAINER = "theme-transition-container";
+    public static string CLASS_NO_THEME => JSThemeProvider.CLASS_NO_THEME;
+    public static string CLASS_DARK_THEME => JSThemeProvider.CLASS_DARK_THEME;
+    public static string CLASS_LIGHT_THEME => JSThemeProvider.CLASS_LIGHT_THEME;
+
+    public static string CLASS_SETTING_THEME => JSThemeProvider.CLASS_SETTING_THEME;
+    public static string CLASS_SETTING_THEME_ANIMATION => JSThemeProvider.CLASS_SETTING_THEME_ANIMATION;
+
+    public static string CLASS_THEME_TRANSITION_CONTAINER => JSThemeProvider.CLASS_THEME_TRANSITION_CONTAINER;
+
+    public static string SUFFIX => JSThemeProvider.SUFFIX;
+    public static string THEME_SUFFIX => JSThemeProvider.THEME_SUFFIX;
     // Autodetect:
     public static bool THEME_AUTODETECT { get; private set; }
     // Cascade:
@@ -37,7 +45,7 @@ public partial class ThemeProvider {
     }
     public static string ServerBodyClass() {
         AppEnvironment.AssertServer();
-        var c = new CSSClass(CLASS_BODY)
+        var c = new CSSClass(Window.CLASS_BODY)
         .SetSurface(SURFACE.PRIMARY);
         var cookie = GetThemeCookie();
         if (cookie is null) {
@@ -107,13 +115,20 @@ public partial class ThemeProvider {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-     public async Task<bool> ChangeAppTheme(BaseTheme theme) {
+    public async Task<bool> ChangeAppTheme(BaseTheme theme) {
         try {
-            if (AppEnvironment.IsServer) throw new InvalidOperationException("Theme change not allowed on the server!");
-            if (theme.GetType().Name == AppTheme.GetType().Name) return false;
             await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
+            if (AppEnvironment.IsServer) throw new InvalidOperationException("Theme change not allowed on the server!");
+            if (theme.GetType().Name == AppTheme.GetType().Name) throw new InvalidOperationException("Theme already set!");
             await HTTP.Sync(() => SetThemeCookie(theme));
             AppTheme = theme;
+            return true;
+        } catch {
+            Notification.Error(MESSAGE.DEFAULT.T);
+            return false;
+        } finally {
+            ScrollArea.SavePositions();
+            ActionHandler.PreventScroll();
             AnimationHandler.DisableAnimation();
             JS.InvokeVoid(JSThemeProvider.StartSettingTheme);
             JS.InvokeVoid(JSThemeProvider.SetCustomTheme, ThemeCSSClass(AppTheme));
@@ -122,18 +137,12 @@ public partial class ThemeProvider {
             await Task.Yield();
             AnimationHandler.RestoreAnimation();
             await Task.Yield();
+            ScrollArea.RestorePositions();
             JS.InvokeVoid(JSThemeProvider.ApplyThemeAnimation);
             await Task.Delay(AppTheme.TRANSITION_EXTRA_SLOW);
+            ActionHandler.RestoreScroll();
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
             await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
-            return true;
-        } catch {
-            AnimationHandler.RestoreAnimation();
-            JS.InvokeVoid(JSThemeProvider.ApplyThemeAnimation);
-            JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
-            await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
-            Notification.Error(MESSAGE.DEFAULT.T);
-            return false;
         }
     }
 }

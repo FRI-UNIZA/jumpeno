@@ -7,8 +7,13 @@ var {
 
 class JSScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    static #CLASS_CUSTOM_THEME = 'scroll-area-custom-theme'
-    static #CLASS_SCROLLBAR = 'os-scrollbar'
+    static CLASS = 'scroll-area'
+    static CLASS_CONTENT = `${this.CLASS}-content`
+    static CLASS_SCROLLBAR = 'os-scrollbar'
+
+    static LIGHT_THEME = 'os-theme-light'
+    static DARK_THEME = 'os-theme-dark'
+    static CUSTOM_THEME = 'scroll-area-custom-theme'
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     static #ScrollAreas = {}
@@ -16,7 +21,7 @@ class JSScrollArea {
     static #CustomThemes = {}
     static #Listeners = {}
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     static #GetViewPort(id) {
         return this.#ScrollAreas[id]?.elements()?.viewport
     }
@@ -32,6 +37,7 @@ class JSScrollArea {
         }
     }
     
+    // Initialization ---------------------------------------------------------------------------------------------------------------------
     static Activate(id, theme, autoHide, overflowX, overflowY) {
         const element = document.querySelector(`#${id}`)
         if (!element) return
@@ -39,7 +45,7 @@ class JSScrollArea {
             target: element
         }, {
             scrollbars: {
-                theme: theme ? `${theme} ${this.#CLASS_CUSTOM_THEME}` : `${this.#CurrentTheme}`,
+                theme: theme ? `${theme} ${this.CUSTOM_THEME}` : `${this.#CurrentTheme}`,
                 autoHide
             },
             overflow: {
@@ -57,11 +63,12 @@ class JSScrollArea {
         delete this.#CustomThemes[id]
     }
 
+    // Theme ------------------------------------------------------------------------------------------------------------------------------
     static SetTheme(theme) {
         if (this.#CurrentTheme) {
             const areas = document.getElementsByClassName(this.#CurrentTheme);
             [...areas].forEach(area => {
-                if (!area.classList.contains(this.#CLASS_CUSTOM_THEME)) {
+                if (!area.classList.contains(this.CUSTOM_THEME)) {
                     area.classList.remove(this.#CurrentTheme)
                     area.classList.add(theme)
                 }
@@ -79,10 +86,11 @@ class JSScrollArea {
         this.#CustomThemes[id] = theme
     }
 
+    // Scrollbars -------------------------------------------------------------------------------------------------------------------------
     static #ForEachScrollbar(id, callback) {
         const area = document.getElementById(id)
         if (!area) return
-        const scrollbars = area.querySelectorAll(`#${id} > .${this.#CLASS_SCROLLBAR}`)
+        const scrollbars = area.querySelectorAll(`#${id} > .${this.CLASS_SCROLLBAR}`)
         if (!scrollbars) return
         [...scrollbars].forEach(scrollbar => callback(scrollbar))
     }
@@ -100,6 +108,26 @@ class JSScrollArea {
         })
     }
 
+    // Restore ----------------------------------------------------------------------------------------------------------------------------
+    static #SavedAreas = [];
+    
+    static SavePositions() {
+        this.#SavedAreas = [];
+        const areas = document.querySelectorAll(`.${this.CLASS}`);
+        if (!areas) return;
+        areas.forEach(area => {
+            this.#SavedAreas.push({ ID: area.id, Position: this.Position(area.id) });
+        })
+    }
+
+    static RestorePositions() {
+        for (const area of this.#SavedAreas) {
+            this.Scroll(area.ID, area.Position.ScrollLeft, area.Position.ScrollTop);
+        }
+        this.#SavedAreas = [];
+    }
+
+    // Scroll -----------------------------------------------------------------------------------------------------------------------------
     static Scroll(id, left, top) {
         this.#GetViewPort(id)?.scrollTo({ left, top })
     }
@@ -126,6 +154,7 @@ class JSScrollArea {
         return this.#GetPosition(this.#GetViewPort(id))
     }
 
+    // Listeners --------------------------------------------------------------------------------------------------------------------------
     static AddScrollListener(id) {
         this.RemoveScrollListener(id)
         this.#Listeners[id] = (e) => {

@@ -7,8 +7,13 @@ namespace Jumpeno.Client.Components;
 /// </summary>
 public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    private const string MARK = "scroll-area";
-    private const string CONTENT_CLASS = $"{MARK}-content";
+    public static string CLASS => JSScrollArea.CLASS;
+    public static string CLASS_CONTENT => JSScrollArea.CLASS_CONTENT;
+    public static string CLASS_SCROLLBAR => JSScrollArea.CLASS_SCROLLBAR;
+
+    public static string LIGHT_THEME => JSScrollArea.LIGHT_THEME;
+    public static string DARK_THEME => JSScrollArea.DARK_THEME;
+    public static string CUSTOM_THEME => JSScrollArea.CUSTOM_THEME;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
@@ -39,7 +44,7 @@ public partial class ScrollArea {
     private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private string CSSClass() => new CSSClass(MARK).Set(Class, Base);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {
@@ -49,7 +54,7 @@ public partial class ScrollArea {
         OverflowY = true;
         Class = "";
         ChildContent = null;
-        ID = IDGenerator.Generate(MARK);
+        ID = IDGenerator.Generate(CLASS);
     }
 
     override protected void OnComponentAfterRender(bool firstRender) {
@@ -76,7 +81,7 @@ public partial class ScrollArea {
         Areas.Remove(ID);
     }
 
-    // Methods ----------------------------------------------------------------------------------------------------------------------------
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static ScrollArea? GetArea(string id) {
         Areas.TryGetValue(id, out var area);
         return area;
@@ -99,12 +104,13 @@ public partial class ScrollArea {
         }
     }
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
+    // Theme ------------------------------------------------------------------------------------------------------------------------------
     public static void SetTheme(SCROLLAREA_THEME theme) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.SetTheme, GetThemeString(theme));
     }
 
+    // Scrollbars -------------------------------------------------------------------------------------------------------------------------
     public static void HideScrollbars(string id) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.HideScrollbars, id);
@@ -117,6 +123,11 @@ public partial class ScrollArea {
     }
     public void ShowScrollbars() => ShowScrollbars(ID);
 
+    // Restore ----------------------------------------------------------------------------------------------------------------------------
+    public static void SavePositions() => JS.InvokeVoid(JSScrollArea.SavePositions);
+    public static void RestorePositions() => JS.InvokeVoid(JSScrollArea.RestorePositions);
+
+    // Scroll -----------------------------------------------------------------------------------------------------------------------------
     public static void ScrollTo(string id, double left, double top) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.Scroll, id, left, top);

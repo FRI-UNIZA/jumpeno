@@ -2,6 +2,8 @@ namespace Jumpeno.Client.Constants;
 
 public static class JSWindow {
     public static readonly string ClassName = nameof(JSWindow);
+
+    public const string CLASS_BODY = "body";
     
     public static readonly string GetSize = $"{ClassName}.{nameof(GetSize)}";
 

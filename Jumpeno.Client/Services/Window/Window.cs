@@ -1,6 +1,9 @@
 namespace Jumpeno.Client.Services;
 
 public class Window {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public static string CLASS_BODY => JSWindow.CLASS_BODY;
+
     // Size -------------------------------------------------------------------------------------------------------------------------------
     public static WindowSize GetSize() => JS.Invoke<WindowSize>(JSWindow.GetSize);
     public static async Task<WindowSize> GetSizeAsync() => await JS.InvokeAsync<WindowSize>(JSWindow.GetSize);
