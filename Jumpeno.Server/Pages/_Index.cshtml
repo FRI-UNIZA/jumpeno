@@ -24,7 +24,7 @@
         <link rel="icon" type="image/svg+xml" href="@IMAGE.FAVICON_SVG" />
         <link rel="apple-touch-icon" sizes="180x180" href="@IMAGE.FAVICON_APPLE_TOUCH_ICON" />
         <!-- CSS Modules -->
-        <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" integrity="sha512-LJPmNwX2gc0MasqB7LmhaaAdEcB484xA8STRs2Bke2qTDxl1hqKk6xbRxa4SnktZaBkS42IManLbrjXONu7LPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical />
+        <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" no-antblazor-css @Import.Critical />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.variable.css")" rel="stylesheet" @Import.Critical />
         <!-- CSS Global -->
@@ -47,7 +47,7 @@
         <component type="typeof(App)" render-mode="@ServerEnvironment.RenderMode()" />
         <persist-component-state />
         <!-- JS Modules -->
-        <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" integrity="sha512-89ZH53E2dymQKjudMI4Pj4zBuKgaeJnbVRCbrbyanofU0HPWVGD38uhk+rnpEKwioeR2QBEwaxULYhrPoAbuoQ==" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical></script>
+        <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")" no-antblazor-js @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")" @Import.Critical></script>
         <!-- JS Global -->
