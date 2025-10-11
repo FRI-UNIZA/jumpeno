@@ -15,6 +15,14 @@
     /* Content: */
     text-align: center;
 }
+::deep.create-box .connect-link.cancel {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    top: 34px;
+    left: 48px;
+}
 
 ::deep.create-box .connect-icon {
     /* Position: */
@@ -24,9 +32,16 @@
     /* Content: */
     font-size: 1.3em;
 }
+::deep.create-box .connect-link.cancel .connect-icon {
+    bottom: 0;
+    right: 0;
+    font-size: 1.6em;
+}
 
 /* Styles > Create form ---------------------------------------------------------------------------------------------------------------- */
 ::deep.create-box .create-form {
+    /* Position: */
+    position: relative;
     /* Display: */
     flex-direction: column;
     justify-content: center;
@@ -37,6 +52,345 @@
 ::deep.create-box .heading.create-heading {
     /* Content: */
     text-align: center;
+}
+
+/* Styles > Map info ------------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .game-info {
+    position: relative;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 16px;
+    margin-top: -8px;
+}
+
+::deep.create-box .game-info .game-name {
+    width: 100%;
+    margin-left: 140px;
+}
+
+::deep.create-box .game-info .game-code {
+    width: 116px;
+}
+
+::deep.create-box .info-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: -42px 0 -24px;
+    padding: 4px 0px 0 0;
+}
+
+::deep.create-box .map-title {
+    position: relative;
+    font-size: 20px;
+    width: 50%;
+    text-align: center;
+    /* background: linear-gradient(0deg,rgba(250, 250, 175, 1) 1%, rgb(255, 243, 71) 100%); */
+    color: #333333;
+    font-weight: 600;
+    /* text-shadow: 0 0 3px rgba(0, 0, 0, 0.5); */
+    padding: 26px 0 10px;
+    margin: 0;
+    margin-left: 0px;
+    border-radius: 20px 20px 0 0;
+    /* box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3) inset; */
+}
+
+::deep.create-box .map-info {
+    position: relative;
+    display: flex;
+    gap: 52px;
+    margin-top: 6px;
+    padding-bottom: 10px;
+}
+
+::deep.create-box .custom-code {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+@keyframes create-box-settings-icon-movement {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+::deep.modal.create-box-map-select-modal {
+    --modal-min-width: 360px;
+}
+
+::deep.create-box .settings-icon {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    font-size: 100px;
+    /* color: #fafafa; */
+    /* color: #333333; */
+    color: #ffffff;
+    /* color: #f2f2f2; */
+    /* opacity: 0.2; */
+    /* color: #333333; */
+    padding: 0;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
+    animation: create-box-settings-icon-movement 90s linear infinite;
+    /* transform: rotate(11deg); */
+    margin: -20px 0px -20px 8px;
+}
+
+::deep.create-box .capacity-label {
+    width: 100%;
+}
+
+::deep.create-box .capacity-label.variant.size .form-label-element {
+    padding-bottom: 9px;
+}
+
+::deep.modal.create-box-capacity-select-modal {
+    --modal-min-width: 300px;
+}
+
+::deep.create-box .logo-image {
+    position: absolute;
+    left: 0;
+    margin-left: 70px;
+    margin-top: 42px;
+    /* Position: */
+    --image-fit: contain;
+    --image-position: 0 center;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6));
+    /* Size: */
+    --image-width: 56px;
+    --image-height: 56px;
+}
+
+::deep.create-box .map-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    padding: 20px 0 0;
+}
+
+::deep.create-box .form-label.anonym-players {
+    width: 100%;
+}
+
+::deep.create-box .anonym-players-svg {
+    width: 50px;
+    height: 50px;
+    margin-left: -6px;
+}
+
+@keyframes create-box-map-float {
+    0% {
+        transform: translateY(-8px)
+        /* transform: scale(1.05) */
+    }
+    50% {
+        transform: translateY(8px)
+        /* transform: scale(1); */
+    }
+    100% {
+        transform: translateY(-8px)
+        /* transform: scale(1.05) */
+    }
+}
+
+@keyframes create-box-map-shadow-float {
+    0% {
+        clip-path: polygon(0% 25%, 100% 5%, 100% 80%, 0% 22%);
+    }
+    50% {
+        clip-path: polygon(0% 25%, 100% 14%, 100% 92%, 0% 22%);
+    }
+    100% {
+        clip-path: polygon(0% 25%, 100% 5%, 100% 80%, 0% 22%);
+    }
+}
+
+::deep.create-box .map-shadow {
+    position: absolute;
+    background: rgb(221, 213, 151);
+    opacity: 0.7;
+    width: 52px;
+    height: 220px;
+    top: -44px;
+    left: 335px;
+    clip-path: polygon(0% 30%, 100% 0%, 100% 80%, 0% 22%);
+    z-index: 0;
+    animation: create-box-map-shadow-float 4s ease-in-out infinite;
+}
+
+::deep.create-box .map-canvas {
+    width: 328px;
+    height: 185px;
+    margin: -32px -12px -6px -20px;
+    background: rgba(42, 33, 56, 1);
+    border-radius: 10px;
+    box-shadow: 0 6px 14px 3px rgba(0, 0, 0, 0.6);
+    animation: create-box-map-float 4s ease-in-out infinite;
+    border: 8px solid black;
+}
+
+::deep.create-box .form-label.variant.display-mode {
+    width: 100%;
+    margin-top: -18px;
+}
+
+::deep.create-box .form-label.variant.display-mode .radio-group {
+    width: 100%;
+    align-items: stretch;
+}
+
+::deep.create-box .form-label.variant.display-mode .form-label-element {
+    padding-bottom: 13px;
+}
+
+::deep.create-box .form-label.variant.display-mode .form-label-text {
+    font-size: 16px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+::deep.create-box .display-mode .radio-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+::deep.create-box .display-mode .option-one-screen-svg {
+    width: 60px;
+    height: 36px;
+    margin-bottom: 4px;
+}
+::deep.create-box .display-mode .option-one-screen-svg rect {
+    stroke: var(--radio-button-color) !important;
+    transition: stroke var(--radio-button-transition-duration) var(--radio-button-transition-timing);
+}
+
+::deep.create-box .display-mode .option-each-own-svg {
+    width: 80px;
+    height: 40px;
+}
+::deep.create-box .display-mode .option-each-own-svg rect {
+    stroke: var(--radio-button-color) !important;
+    transition: stroke var(--radio-button-transition-duration) var(--radio-button-transition-timing);
+}
+
+/* ::deep.create-box .display-mode .option-presentation-svg {
+    transition-property: stroke, fill;
+    transition-duration: var(--radio-button-transition-duration);
+    transition-timing-function: var(--radio-button-transition-timing);
+} */
+::deep.create-box .display-mode .option-presentation-svg {
+    width: 60px;
+    height: 40px;
+    margin-top: 2px;
+    margin-bottom: 3px;
+}
+/* ::deep.create-box .display-mode .option-presentation-svg rect {
+    stroke: var(--radio-button-color) !important;
+    fill: var(--radio-button-color) !important;
+}
+::deep.create-box .display-mode .option-presentation-svg circle {
+    stroke: var(--radio-button-color) !important;
+    fill: var(--radio-button-color) !important;
+}
+::deep.create-box .display-mode .option-presentation-svg path {
+    stroke: var(--radio-button-color) !important;
+    fill: var(--radio-button-color) !important;
+} */
+
+
+::deep.create-box .display-mode .option-label {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .display-mode .option-description {
+    font-size: 12px;
+    line-height: 1;
+    padding-bottom: 2px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .form-label.variant.game-mode {
+    width: 100%;
+    max-width: 500px;
+    padding-top: 2px;
+}
+
+::deep.create-box .form-label.variant.game-mode .radio-group {
+    width: 100%;
+    align-items: stretch;
+}
+
+::deep.create-box .form-label.variant.game-mode .form-label-element {
+    padding-bottom: 13px;
+}
+
+::deep.create-box .form-label.variant.game-mode .form-label-text {
+    font-size: 16px;
+}
+
+::deep.create-box .game-mode .radio-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+::deep.create-box .game-mode .option-label {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    padding-bottom: 4px;
+}
+
+::deep.create-box .game-mode .option-mayhem-svg {
+    position: relative;
+    /* top: -10px; */
+    /* left: 4px; */
+    width: 40px;
+    height: 40px;
+    margin: -4px 0;
+    margin-right: 6px;
+}
+
+::deep.create-box .game-mode .option-last-standing-svg {
+    width: 40px;
+    height: 36px;
+    margin: -2px 0;
+}
+
+::deep.create-box .game-mode .option-description {
+    font-size: 12px;
+    line-height: 1;
+    padding-bottom: 2px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .button.variant.size.create-game-button {
+    margin-top: 20px;
 }
 
 /* Styles > Error page ----------------------------------------------------------------------------------------------------------------- */

@@ -168,6 +168,7 @@
     margin: 0;
     /* Style: */
     color: var(--theme-text-color);
+    background: var(--theme-surface-background);
     border: none;
     outline: none;
     /* Content: */

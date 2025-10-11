@@ -6,15 +6,127 @@
     <AuthView Roles="[ROLE.USER]">
         <Box Class="create-form">
             <Heading1 Size="TEXT_SIZE.L" Spacing Class="create-heading">@I18N.T("Create game")</Heading1>
-            <Button Size="BUTTON_SIZE.M" OnClick="Create">
+            
+            <div class="game-info">
+                <AntIcon Type="setting" Theme="Outline" Class="settings-icon" />
+                <Image URL="@IMAGE.JUMPER_YELLOW" Transparent NoTransition Class="logo-image" />
+                <InputField ViewModel="VMName" Name="name" Label="@I18N.T("Game name")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" AllowClear Class="game-name" />
+                <div class="custom-code">
+                    <CheckBoxField ViewModel="VMCustomCode" Label="@I18N.T("Vlastný kód hry")" Size="FORM_SIZE.S" Align="FORM_ALIGN.CENTER" ActiveDescription AutoSize Class="custom-code" >
+                        <Description>Vlastný kód</Description>
+                    </CheckBoxField>
+                    <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Vlastný kód")" Size="FORM_SIZE.S" Align="FORM_ALIGN.CENTER" Class="game-code" />
+                </div>
+            </div>
+            <div class="info-area">
+                <p class="map-title">Mapa</p>
+            </div>
+            <div class="map-info">
+                @* <div class="map-shadow" /> *@
+                <div class="map-fields">
+                    <SelectComponent
+                        ViewModel="VMSelectMap"
+                        Label="@I18N.T("Zvoliť mapu")"
+                        Align="FORM_ALIGN.LEFT"
+                        OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                        Size="FORM_SIZE.S"
+                        Class="map-select"
+                        ModalClass="create-box-map-select-modal"
+                        Style="width: 350px"
+                    />
+                    <div class="map-row">
+                        <FormLabel Label="@I18N.T("Anonymní hráči")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="anonym-players">
+                            <SwitchComponent
+                                ViewModel="VMSwitchAnonyms"
+                                Label="@I18N.T("Light theme")"
+                                Size="FORM_SIZE.M"
+                                Class="anonym-players-switch"
+                                Position="SWITCH_POSITION.END"
+                                Align="FORM_ALIGN.CENTER"
+                                ActiveDescription
+                                AutoSize
+                            >
+                                <Description>
+                                    <AnonymSVG Class="anonym-players-svg" />
+                                </Description>
+                            </SwitchComponent>
+                        </FormLabel>
+                        
+                        <FormLabel Label="@I18N.T("Kapacita")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="capacity-label">
+                            <SelectComponent
+                                ViewModel="VMSelectCapacity"
+                                Label="@I18N.T("Kapacita")"
+                                Align="FORM_ALIGN.LEFT"
+                                OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                                Size="FORM_SIZE.S"
+                                Class="capacity-select"
+                                ModalClass="create-box-capacity-select-modal"
+                            />
+                        </FormLabel>
+                    </div>
+                </div>
+                <div class="map-canvas">
+                </div>
+            </div>
+
+            <FormLabel Label="@I18N.T("Zobrazovací režim")" Size="FORM_SIZE.L" Align="FORM_ALIGN.LEFT" Class="display-mode">
+                <RadioButton ViewModel="VMDisplayMode" Label="@I18N.T("Zobrazovací režim")" AutoSize>
+                    @if (true) {
+                        var option = VMDisplayModeOptions[0];
+                        <RadioButtonOption ViewModel="option" Label="option.Label" AutoSize>
+                            <DisplayModeEachOwnSVG Class="option-each-own-svg" />
+                            <p class="option-label">@option.Label</p>
+                            <p class="option-description">@I18N.T("Každý má vlastnú")</p>
+                        </RadioButtonOption>
+                    }
+                    @if (true) {
+                        var option = VMDisplayModeOptions[1];
+                        <RadioButtonOption ViewModel="option" Label="option.Label" AutoSize>
+                            <DisplayModeOneScreenSVG Class="option-one-screen-svg" />
+                            <p class="option-label">@option.Label</p>
+                            <p class="option-description">@I18N.T("Hra na 1 obrazovke")</p>
+                        </RadioButtonOption>
+                    }
+                    @if (true) {
+                        var option = VMDisplayModeOptions[2];
+                        <RadioButtonOption ViewModel="option" Label="option.Label" AutoSize>
+                            <DisplayModePresentationSVG Class="option-presentation-svg" />
+                            <p class="option-label">@option.Label</p>
+                            <p class="option-description">@I18N.T("Host iba riadi hru")</p>
+                        </RadioButtonOption>
+                    }
+                </RadioButton>
+            </FormLabel>
+
+            <FormLabel Label="@I18N.T("Herný režim")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="game-mode">
+                <RadioButton ViewModel="VMGameMode" Label="@I18N.T("Herný režim")" AutoSize>
+                    @if (true) {
+                        var option = VMGameModeOptions[0];
+                        <RadioButtonOption ViewModel="option" Label="option.Label" AutoSize>
+                            <p class="option-label"><GameModeMayhemSVG Class="option-mayhem-svg" />@option.Label</p>
+                            <p class="option-description">@I18N.T("Hra na čas s oživovaním hráčov")</p>
+                        </RadioButtonOption>
+                    }
+                    @if (true) {
+                        var option = VMGameModeOptions[1];
+                        <RadioButtonOption ViewModel="option" Label="option.Label" AutoSize>
+                            <p class="option-label"><GameModeLastStandingSVG Class="option-last-standing-svg" />@option.Label</p>
+                            <p class="option-description">@I18N.T("Kým nezostane na žive posledný")</p>
+                        </RadioButtonOption>
+                    }
+                </RadioButton>
+            </FormLabel>
+
+            <Button Size="BUTTON_SIZE.M" OnClick="Create" Class="create-game-button">
+                <Icon><AntIcon Type="check-circle" Theme="Outline"/></Icon>
                 <Text>@I18N.T("Create")</Text>
             </Button>
             <WebLink
                 Href="@(I18N.Link<GamePage>())" HrefPrevent
                 OnClick="GamePage.NavigateToConnect"
-                Class="connect-link"
+                Class="connect-link cancel"
             >
-                <AntIcon Type="play-circle" Theme="outline" Class="connect-icon" />
+                <AntIcon Type="left-circle" Theme="outline" Class="connect-icon" />
                 &nbsp;@I18N.T("Connect")&nbsp;
             </WebLink>
         </Box>
