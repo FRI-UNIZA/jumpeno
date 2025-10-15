@@ -690,16 +690,16 @@
   <data name="Capacity" xml:space="preserve">
     <value />
   </data>
-  <data name="players0" xml:space="preserve">
+  <data name="Players0" xml:space="preserve">
     <value />
   </data>
-  <data name="players1" xml:space="preserve">
+  <data name="Players1" xml:space="preserve">
     <value />
   </data>
-  <data name="players2+" xml:space="preserve">
+  <data name="Players2+" xml:space="preserve">
     <value />
   </data>
-  <data name="players5+" xml:space="preserve">
+  <data name="Players5+" xml:space="preserve">
     <value />
   </data>
   <data name="Designer" xml:space="preserve">
@@ -739,6 +739,57 @@
     <value />
   </data>
   <data name="Are you sure you want to continue?" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game name" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Custom code" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Select map" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TEXT_ANONYMOUS_PLAYERS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Display mode" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game mode" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Play on 1 screen" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Each has their own" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Host only presents" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Timed game with respawns" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Until one player remains" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Rounds0" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Rounds1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Rounds2+" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Rounds5+" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Number of rounds" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Map" xml:space="preserve">
     <value />
   </data>
 </root>

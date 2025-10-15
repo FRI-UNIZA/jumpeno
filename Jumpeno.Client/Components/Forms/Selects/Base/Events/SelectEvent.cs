@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public record SelectEvent (
-    SelectOption Before,
-    SelectOption After
+public record SelectEvent<T> (
+    SelectOption<T> Before,
+    SelectOption<T> After
 ) {}

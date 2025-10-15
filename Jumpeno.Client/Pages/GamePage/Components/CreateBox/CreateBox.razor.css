@@ -15,6 +15,16 @@
     /* Content: */
     text-align: center;
 }
+::deep.create-box .connect-link.cancel {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+/* ::deep.create-box .field.input.game-name .input-element {
+    font-size: 22px;
+} */
 
 ::deep.create-box .connect-icon {
     /* Position: */
@@ -24,9 +34,16 @@
     /* Content: */
     font-size: 1.3em;
 }
+::deep.create-box .connect-link.cancel .connect-icon {
+    bottom: 0;
+    right: 0;
+    font-size: 1.4em;
+}
 
 /* Styles > Create form ---------------------------------------------------------------------------------------------------------------- */
 ::deep.create-box .create-form {
+    /* Position: */
+    position: relative;
     /* Display: */
     flex-direction: column;
     justify-content: center;
@@ -34,9 +51,427 @@
     gap: 20px;
 }
 
+::deep.create-box .create-form-header {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
+    border-radius: 20px 20px 0 0;
+    width: calc(100% + 100px);
+    padding: 36px 50px 22px;
+    box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
+    margin: -50px;
+    margin-bottom: 8px;
+}
+
+::deep.create-box .create-form-header-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: -36px;
+}
+
 ::deep.create-box .heading.create-heading {
     /* Content: */
     text-align: center;
+}
+
+/* Styles > Map info ------------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .game-info {
+    position: relative;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 16px;
+    margin-top: -12px;
+}
+
+::deep.create-box .game-info .game-name-label {
+    width: 100%;
+    margin-left: 136px;
+}
+
+::deep.create-box .game-info .game-name {
+    width: 100%;
+}
+
+::deep.create-box .game-info .game-code {
+    width: 116px;
+}
+
+::deep.create-box .info-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: -44px 0 -30px;
+    padding: 4px 0px 0 0;
+}
+
+::deep.create-box .map-title {
+    position: relative;
+    font-size: 20px;
+    width: 50%;
+    text-align: center;
+    /* background: linear-gradient(0deg,rgba(250, 250, 175, 1) 1%, rgb(255, 243, 71) 100%); */
+    color: #333333;
+    font-weight: 600;
+    /* text-shadow: 0 0 3px rgba(0, 0, 0, 0.5); */
+    padding: 34px 0 2px;
+    margin: 0;
+    margin-left: -17px;
+    border-radius: 20px 20px 0 0;
+    /* box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3) inset; */
+}
+
+::deep.create-box .map-info {
+    position: relative;
+    display: flex;
+    gap: 34px;
+    margin-top: 12px;
+    padding-bottom: 24px;
+}
+
+::deep.create-box .custom-code {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+@keyframes create-box-settings-icon-movement {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+::deep.modal.create-box-map-select-modal {
+    --modal-min-width: 360px;
+}
+
+::deep.create-box .settings-icon {
+    position: absolute;
+    top: 30px;
+    left: -6px;
+    font-size: 100px;
+    /* color: #fafafa; */
+    /* color: #333333; */
+    color: #ffffff;
+    /* color: #f2f2f2; */
+    /* opacity: 0.2; */
+    /* color: #333333; */
+    padding: 0;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
+    animation: create-box-settings-icon-movement 90s linear infinite;
+    /* transform: rotate(11deg); */
+    margin: -20px 0px -20px 8px;
+}
+
+::deep.create-box .gameplay-options {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 36px;
+    width: 100%;
+    margin-top: -8px;
+}
+
+@keyframes create-box-map-arrow-animation {
+    0% {
+        /* transform: translateX(-7px) scale(1.2); */
+        transform: scale(1.3);
+    }
+    50% {
+        /* transform: translateX(-4px); */
+        transform: scale(0.9);
+    }
+    100% {
+        /* transform: translateX(-7px) scale(1.2); */
+        transform: scale(1.3);
+    }
+}
+
+::deep.create-box .create-box-map-icon {
+    position: absolute;
+    left: 314px;
+    top: 2px;
+    /* width: 30px; */
+    /* height: 30px; */
+    font-size: 36px;
+    /* color: rgba(0, 0, 0, 0.7); */
+    color: rgb(48, 48, 48);
+    opacity: 0.2;
+    /* color: white; */
+    /* opacity: 1; */
+    filter: drop-shadow(-1px 1px 1px rgba(42, 42, 42, 0.2));
+    animation: create-box-map-arrow-animation 2s ease-in-out infinite;
+}
+
+::deep.create-box .create-box-round-icon {
+    position: absolute;
+    right: 5px;
+    top: 11px;
+    /* width: 30px; */
+    /* height: 30px; */
+    font-size: 23px;
+    /* color: rgba(0, 0, 0, 0.7); */
+    color: rgb(48, 48, 48);
+    /* filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3)); */
+}
+
+::deep.create-box .create-box-capacity-icon {
+    position: absolute;
+    right: 4px;
+    top: 57px;
+    /* width: 30px; */
+    /* height: 30px; */
+    font-size: 25px;
+    color: rgba(255, 153, 0, 0.7);
+    color: white;
+    color: rgb(48, 48, 48);
+    /* filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.9)); */
+}
+
+::deep.modal.create-box-rounds-select-modal {
+    --modal-min-width: 320px;
+}
+
+::deep.modal.create-box-capacity-select-modal {
+    --modal-min-width: 300px;
+}
+
+::deep.create-box .logo-image {
+    position: absolute;
+    left: 0;
+    margin-left: 68px;
+    top: 42px;
+    /* Position: */
+    --image-fit: contain;
+    --image-position: 0 center;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6));
+    /* Size: */
+    --image-width: 56px;
+    --image-height: 56px;
+}
+
+::deep.create-box .map-row {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    padding: 22px 0 12px;
+}
+
+::deep.create-box .form-label.anonym-players {
+    padding-top: 3px;
+    width: 100%;
+    margin-bottom: -8px;
+}
+
+::deep.create-box .form-label.anonym-players .form-label-element {
+    padding-bottom: 6px;
+}
+
+::deep.create-box .anonym-players-svg {
+    width: 48px;
+    height: 48px;
+    margin-left: -6px;
+}
+
+@keyframes create-box-map-float {
+    0% {
+        transform: translateY(-11px)
+        /* transform: scale(1.05) */
+    }
+    50% {
+        transform: translateY(7px)
+        /* transform: scale(1); */
+    }
+    100% {
+        transform: translateY(-11px)
+        /* transform: scale(1.05) */
+    }
+}
+
+@keyframes create-box-map-shadow-float {
+    0% {
+        clip-path: polygon(0% 25%, 100% 5%, 100% 80%, 0% 22%);
+    }
+    50% {
+        clip-path: polygon(0% 25%, 100% 14%, 100% 92%, 0% 22%);
+    }
+    100% {
+        clip-path: polygon(0% 25%, 100% 5%, 100% 80%, 0% 22%);
+    }
+}
+
+::deep.create-box .map-shadow {
+    position: absolute;
+    background: rgb(221, 213, 151);
+    opacity: 0.7;
+    width: 52px;
+    height: 220px;
+    top: -44px;
+    left: 335px;
+    clip-path: polygon(0% 30%, 100% 0%, 100% 80%, 0% 22%);
+    z-index: 0;
+    animation: create-box-map-shadow-float 4s ease-in-out infinite;
+}
+
+::deep.create-box .map-canvas-area {
+    position: relative;
+    display: flex;
+    margin: -32px 0 -6px -22px;
+    animation: create-box-map-float 4s ease-in-out infinite;
+}
+
+::deep.create-box .map-canvas {
+    width: 328px;
+    height: 185px;
+    background: var(--theme-surface-background);
+    border-radius: 10px;
+    box-shadow: 0 6px 14px 3px rgba(0, 0, 0, 0.6);
+    border: 8px solid rgba(0, 0, 0, 0.3);
+}
+
+::deep.create-box .form-label.variant.display-mode {
+    width: 100%;
+    margin-top: -20px;
+}
+
+::deep.create-box .form-label.variant.display-mode .radio-group {
+    width: 100%;
+    align-items: stretch;
+}
+
+::deep.create-box .form-label.variant.display-mode .form-label-element {
+    padding-bottom: 13px;
+}
+
+::deep.create-box .form-label.variant.display-mode .form-label-text {
+    font-size: 16px;
+    /* opacity: 0; */
+    /* pointer-events: none; */
+}
+
+::deep.create-box .display-mode .radio-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+::deep.create-box .display-mode .option-one-screen-svg {
+    width: 60px;
+    height: 36px;
+    margin-bottom: 4px;
+}
+
+::deep.create-box .display-mode .option-each-own-svg {
+    width: 80px;
+    height: 40px;
+}
+
+::deep.create-box .display-mode .option-presentation-svg {
+    width: 60px;
+    height: 40px;
+    margin-top: 2px;
+    margin-bottom: 3px;
+}
+
+
+::deep.create-box .display-mode .option-label {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .display-mode .option-description {
+    font-size: 12px;
+    line-height: 1;
+    padding-bottom: 2px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .form-label.variant.game-mode {
+    width: 100%;
+    max-width: 500px;
+    padding-top: 2px;
+}
+
+::deep.create-box .form-label.variant.game-mode .radio-group {
+    width: 100%;
+    align-items: stretch;
+}
+
+::deep.create-box .form-label.variant.game-mode .form-label-element {
+    padding-bottom: 13px;
+}
+
+::deep.create-box .form-label.variant.game-mode .form-label-text {
+    font-size: 16px;
+}
+
+::deep.create-box .game-mode .radio-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+::deep.create-box .game-mode .option-label {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    padding-bottom: 4px;
+}
+
+::deep.create-box .game-mode .option-mayhem-svg {
+    position: relative;
+    /* top: -10px; */
+    /* left: 4px; */
+    width: 40px;
+    height: 40px;
+    margin: -4px 0;
+    margin-right: 6px;
+}
+
+::deep.create-box .game-mode .option-last-standing-svg {
+    width: 40px;
+    height: 36px;
+    margin: -2px 0;
+}
+
+::deep.create-box .game-mode .option-description {
+    font-size: 12px;
+    line-height: 1;
+    padding-bottom: 2px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+::deep.create-box .button.variant.size.create-game-button {
+    position: relative;
+    padding: 9px 10px 9px 17px;
+    --button-icon-size: 23px;
+}
+
+::deep.create-box .button.variant.size.create-game-button .button-text {
+    font-size: 15px;
+    margin-right: 6px;
 }
 
 /* Styles > Error page ----------------------------------------------------------------------------------------------------------------- */

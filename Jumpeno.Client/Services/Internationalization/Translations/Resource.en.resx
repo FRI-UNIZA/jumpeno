@@ -250,7 +250,7 @@
     <value>https://en.wikipedia.org/wiki/HTTP_cookie</value>
   </data>
   <data name="LINK_FRI" xml:space="preserve">
-    <value>https://www.fri.uniza.sk/en/</value>
+    <value>https://www.fri.uniza.sk</value>
   </data>
   <data name="JUMPENO_DESCRIPTION" xml:space="preserve">
     <value>Jumpeno is a battle-royale type of game. According to its name, jumping is the key. Your goal is to jump on other players to eliminate them and be the last Jumper standing.</value>
@@ -690,17 +690,17 @@
   <data name="Capacity" xml:space="preserve">
     <value>Capacity</value>
   </data>
-  <data name="players0" xml:space="preserve">
-    <value>players</value>
+  <data name="Players0" xml:space="preserve">
+    <value>Players</value>
   </data>
-  <data name="players1" xml:space="preserve">
-    <value>player</value>
+  <data name="Players1" xml:space="preserve">
+    <value>Player</value>
   </data>
-  <data name="players2+" xml:space="preserve">
-    <value>players</value>
+  <data name="Players2+" xml:space="preserve">
+    <value>Players</value>
   </data>
-  <data name="players5+" xml:space="preserve">
-    <value>players</value>
+  <data name="Players5+" xml:space="preserve">
+    <value>Players</value>
   </data>
   <data name="Designer" xml:space="preserve">
     <value>Designer</value>
@@ -740,5 +740,56 @@
   </data>
   <data name="Are you sure you want to continue?" xml:space="preserve">
     <value>Are you sure you want to continue?</value>
+  </data>
+  <data name="Game name" xml:space="preserve">
+    <value>Game name</value>
+  </data>
+  <data name="Custom code" xml:space="preserve">
+    <value>Custom code</value>
+  </data>
+  <data name="Select map" xml:space="preserve">
+    <value>Select map</value>
+  </data>
+  <data name="TEXT_ANONYMOUS_PLAYERS" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
+  <data name="Display mode" xml:space="preserve">
+    <value>Display mode</value>
+  </data>
+  <data name="Game mode" xml:space="preserve">
+    <value>Game mode</value>
+  </data>
+  <data name="Play on 1 screen" xml:space="preserve">
+    <value>Play on 1 screen</value>
+  </data>
+  <data name="Each has their own" xml:space="preserve">
+    <value>Each has their own</value>
+  </data>
+  <data name="Host only presents" xml:space="preserve">
+    <value>Host only presents</value>
+  </data>
+  <data name="Timed game with respawns" xml:space="preserve">
+    <value>Timed game with respawns</value>
+  </data>
+  <data name="Until one player remains" xml:space="preserve">
+    <value>Until one player remains</value>
+  </data>
+  <data name="Rounds0" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Rounds1" xml:space="preserve">
+    <value>Round</value>
+  </data>
+  <data name="Rounds2+" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Rounds5+" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Number of rounds" xml:space="preserve">
+    <value>Number of rounds</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
   </data>
 </root>

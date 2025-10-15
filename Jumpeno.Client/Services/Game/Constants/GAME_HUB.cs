@@ -8,16 +8,17 @@ public static class GAME_HUB {
     public const string PARAM_GAME_PARAMS_TYPE = "GameParamsType";
     public const string PARAM_GAME_PARAMS = "GameParams";
     // User:
-    public const string PARAM_CODE = "Code";
     public const string PARAM_DEVICE_TYPE = "DeviceType";
     public const string PARAM_NAME = "Name";
     public const string PARAM_SKIN = "Skin";
     public const string PARAM_ACCESS_TOKEN = "AccessToken";
     // Game:
+    public const string PARAM_CODE = "Code";
     public const string PARAM_GAME_NAME = "GameName";
     public const string PARAM_MAP = "Map";
     public const string PARAM_GAME_MODE = "GameMode";
     public const string PARAM_DISPLAY_MODE = "DisplayMode";
+    public const string PARAM_ROUNDS = "Rounds";
     public const string PARAM_CAPACITY = "Capacity";
     public const string PARAM_ANONYMS = "Anonyms";
 

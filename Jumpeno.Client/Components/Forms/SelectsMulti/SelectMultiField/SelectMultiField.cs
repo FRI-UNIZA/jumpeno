@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class SelectMultiField {
+public partial class SelectMultiField<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public new const string CLASS = "select-multi-field";
 

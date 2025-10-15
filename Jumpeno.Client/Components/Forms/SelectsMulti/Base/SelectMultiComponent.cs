@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class SelectMultiComponent {
+public partial class SelectMultiComponent<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "select-multi";
     // Class:
@@ -46,11 +46,11 @@ public partial class SelectMultiComponent {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
-    private List<SelectOption> DisplayedOptions = [];
-    private Dictionary<string, SelectOption> DisplayedValue = [];
+    private List<SelectOption<T>> DisplayedOptions = [];
+    private Dictionary<string, SelectOption<T>> DisplayedValue = [];
     private SELECT_MULTI_CLOSE ClosedAs = SELECT_MULTI_CLOSE.CANCEL;
     private bool ValueChanged = false;
-    private Dictionary<string, SelectOption> LastValue = [];
+    private Dictionary<string, SelectOption<T>> LastValue = [];
     // Tasks:
     private TaskCompletionSource SearchTCS = new();
     private readonly MinWatch MinSearchTime = new(MIN_SEARCH_LOADING);
@@ -74,7 +74,7 @@ public partial class SelectMultiComponent {
 
     private CSSClass ComputeModalClass() => new CSSClass(CLASS_SELECT_OPTIONS_MODAL).Set(ModalClass).Set(OptionAlign);
 
-    private CSSClass ComputeOptionClass(SelectOption option) {
+    private CSSClass ComputeOptionClass(SelectOption<T> option) {
         var c = new CSSClass(CLASS_OPTION);
         if (DisplayedValue.ContainsKey(option.Label)) c.Set(CLASS_OPTION_SELECTED);
         return c;
@@ -113,7 +113,7 @@ public partial class SelectMultiComponent {
     private async Task Search(string value) {
         await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
         MinSearchTime.Start();
-        List<SelectOption> newOptions = [];
+        List<SelectOption<T>> newOptions = [];
         foreach (var option in ViewModel.Options) {
             if (ViewModel.CustomSearch(new(value, option))) {
                 newOptions.Add(option);
@@ -128,7 +128,7 @@ public partial class SelectMultiComponent {
     }
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
-    private async Task SelectOption(SelectOption option, bool isSelected) {
+    private async Task SelectOption(SelectOption<T> option, bool isSelected) {
         if (isSelected) {
             DisplayedValue.Remove(option.Label);
             await ViewModel.OnDeselect.Invoke(new(option));
@@ -142,7 +142,7 @@ public partial class SelectMultiComponent {
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         ClosedAs = SELECT_MULTI_CLOSE.CLEAR;
         LastValue = new(ViewModel.Value);
-        ValueChanged = ViewModel.SetValue(new Dictionary<string, SelectOption>());
+        ValueChanged = ViewModel.SetValue(new Dictionary<string, SelectOption<T>>());
         await ModalRef.Close();
     }
 

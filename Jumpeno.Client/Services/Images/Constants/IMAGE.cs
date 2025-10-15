@@ -9,8 +9,6 @@ public static class IMAGE {
     public static string FAVICON_PNG => URL.FileLink("/images/favicon/favicon-96x96.png");
     public static string FAVICON_SVG => URL.FileLink("/images/favicon/favicon.svg");
     public static string FAVICON_APPLE_TOUCH_ICON => URL.FileLink("/images/favicon/apple-touch-icon.png");
-    // Icons:
-    public static string ICON_KEYBOARD => URL.FileLink("/images/icons/keyboard.svg");
     // Images:
     public static string JUMPER_YELLOW => URL.FileLink("/images/images/jumper-yellow.png");
     public static string JUMPENO_PLAYERS => URL.FileLink("/images/images/jumpeno-players.png");

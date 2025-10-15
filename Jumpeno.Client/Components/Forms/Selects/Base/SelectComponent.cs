@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class SelectComponent {
+public partial class SelectComponent<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID_PREFIX = "select";
     // Class:
@@ -39,8 +39,8 @@ public partial class SelectComponent {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
-    private List<SelectOption> DisplayedOptions = [];
-    private SelectOption LastSelected { get; set; } = SELECT.EMPTY_OPTION;
+    private List<SelectOption<T>> DisplayedOptions = [];
+    private SelectOption<T> LastSelected { get; set; } = SELECT<T>.EMPTY_OPTION;
     // Tasks:
     private TaskCompletionSource SearchTCS = new();
     private TaskCompletionSource SelectTCS = new();
@@ -48,7 +48,7 @@ public partial class SelectComponent {
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private string OptionPlaceholder() {
-        if (ViewModel.Value == SELECT.EMPTY_OPTION) {
+        if (ViewModel.Value == SELECT<T>.EMPTY_OPTION) {
             if (ViewModel.Placeholder != null) return ViewModel.Placeholder;
             return I18N.T("Empty");
         }
@@ -59,9 +59,9 @@ public partial class SelectComponent {
 
     private CSSClass ComputeModalClass() => new CSSClass(CLASS_SELECT_OPTIONS_MODAL).Set(ModalClass).Set(OptionAlign);
 
-    private CSSClass ComputeOptionClass(SelectOption option) {
+    private CSSClass ComputeOptionClass(SelectOption<T> option) {
         var c = new CSSClass(CLASS_OPTION);
-        if (ViewModel.Value == option) c.Set(CLASS_OPTION_SELECTED);
+        c.Set(CLASS_OPTION_SELECTED, ViewModel.Value == option);
         return c;
     }
 
@@ -80,7 +80,7 @@ public partial class SelectComponent {
         await PageLoader.Show(PAGE_LOADER_TASK.SELECT, true);
         ViewModel.SearchVM.Clear();
         DisplayedOptions = [.. ViewModel.Options];
-        if (ViewModel.Empty) DisplayedOptions.Insert(0, SELECT.EMPTY_OPTION);
+        if (ViewModel.Empty) DisplayedOptions.Insert(0, SELECT<T>.EMPTY_OPTION);
         LastSelected = ViewModel.Value;
         await ModalRef.Open();
     }
@@ -95,8 +95,8 @@ public partial class SelectComponent {
     private async Task Search(string value) {
         await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
         MinSearchWatch.Start();
-        List<SelectOption> newOptions = [];
-        if (ViewModel.Empty && value == ViewModel.SearchVM.InputVM.ClearValue) newOptions.Add(SELECT.EMPTY_OPTION);
+        List<SelectOption<T>> newOptions = [];
+        if (ViewModel.Empty && value == ViewModel.SearchVM.InputVM.ClearValue) newOptions.Add(SELECT<T>.EMPTY_OPTION);
         foreach (var option in ViewModel.Options) {
             if (ViewModel.CustomSearch(new(value, option))) {
                 newOptions.Add(option);
@@ -111,14 +111,14 @@ public partial class SelectComponent {
     }
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
-    private async Task SelectOption(SelectOption option) {
+    private async Task SelectOption(SelectOption<T> option) {
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         if (LastSelected != option) {
             ViewModel.SetValue(option);
             SelectTCS = new TaskCompletionSource();
             StateHasChanged();
             await SelectTCS.Task;
-            await ViewModel.OnSelect.Invoke(new SelectEvent(LastSelected, ViewModel.Value));
+            await ViewModel.OnSelect.Invoke(new SelectEvent<T>(LastSelected, ViewModel.Value));
         }
         await ModalRef.Close();
         ActionHandler.SetFocus(ViewModel.FormID);
@@ -127,9 +127,9 @@ public partial class SelectComponent {
     // Close ------------------------------------------------------------------------------------------------------------------------------
     private async Task HandleAfterClose() {
         DisplayedOptions = [];
-        var lastSelected = LastSelected; LastSelected = SELECT.EMPTY_OPTION;
+        var lastSelected = LastSelected; LastSelected = SELECT<T>.EMPTY_OPTION;
         if (lastSelected != ViewModel.Value) {
-            await ViewModel.OnCloseSelected.Invoke(new SelectEvent(lastSelected, ViewModel.Value));
+            await ViewModel.OnCloseSelected.Invoke(new SelectEvent<T>(lastSelected, ViewModel.Value));
         }
     }
 }

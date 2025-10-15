@@ -12,25 +12,32 @@
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         try {
             if (!firstRender) { AuthPage.FinishStage(); return; }
+            // [Before layout rendered] ---------------------------------------------------------------------------------------------------
             // Import:
             await ClientImport.Await();
             // Authorization:
             await HTTP.Sync(async () => {
                 if (!await Auth.TryLogInAdmin()) await Auth.TryLogInToken();
             });
-            await AuthPage.NextStage();
-            await AuthPage.ChangePath();
-            await AuthPage.AddRedirect();
-            // Theme:
-            await ThemeProviderRef.Initialization;
             // Culture:
             await SelectCulture.Init();
             // Cookie modal:
             var cookieModalOpen = await CookieStorage.InitModal();
             // Init actions:
-            await Init.Run();
+            await Init.RunBeforeLayout();
+            // Authorization [layout render]:
+            await AuthPage.NextStage();
+            await AuthPage.ChangePath();
+            await AuthPage.AddRedirect();
+            // [After layout rendered] ----------------------------------------------------------------------------------------------------
+            // Theme:
+            await ThemeProviderRef.Initialization;
+            // Init actions:
+            await Init.RunAfterLayout();
             // Server loader:
             ServerPageLoader.Hide();
+            // Init actions:
+            await Init.RunAfterLoader();
             await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL, false);
             // PageLoader:
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));

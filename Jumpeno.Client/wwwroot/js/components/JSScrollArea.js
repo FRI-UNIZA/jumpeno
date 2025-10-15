@@ -135,6 +135,7 @@ class JSScrollArea {
     static ItemPosition(id, selector) {
         const scrollableDiv = this.#GetViewPort(id)
         const item = scrollableDiv.querySelector(selector)
+        if (!item) return;
 
         const itemRect = item.getBoundingClientRect();
         const containerRect = scrollableDiv.getBoundingClientRect();

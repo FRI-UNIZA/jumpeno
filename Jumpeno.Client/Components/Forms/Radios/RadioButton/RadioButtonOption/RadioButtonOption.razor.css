@@ -2,6 +2,8 @@
 ::deep.field.radio-button-option {
     /* Style: */
     --radio-button-color: unset;
+    --radio-button-transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    --radio-button-transition-timing: ease-in-out;
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
@@ -52,8 +54,8 @@
     cursor: pointer;
     /* Animations: */
     transition-property: color background outline box-shadow;
-    transition-duration: calc(var(--theme-transition-fast) * 1ms);
-    transition-timing-function: ease-in-out;
+    transition-duration: var(--radio-button-transition-duration);
+    transition-timing-function: var(--radio-button-transition-timing);
 }
 
 /* Variant [primary][selected] --------------------------------------------------------------------------------------------------------- */

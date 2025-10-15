@@ -22,19 +22,19 @@ public class LockerSlim : IDisposable {
     // Callbacks --------------------------------------------------------------------------------------------------------------------------
     public async Task Exclusive(Action callback) {
         try { await Lock(); callback(); }
-        finally { Unlock(); }
+        finally { TryUnlock(); }
     }
     public async Task<T> Exclusive<T>(Func<T> callback) {
         try { await Lock(); return callback(); }
-        finally { Unlock(); }
+        finally { TryUnlock(); }
     }
     public async Task Exclusive(Func<Task> callback) {
         try { await Lock(); await callback(); }
-        finally { Unlock(); }
+        finally { TryUnlock(); }
     }
     public async Task<T> Exclusive<T>(Func<Task<T>> callback) {
         try { await Lock(); return await callback(); }
-        finally { Unlock(); }
+        finally { TryUnlock(); }
     }
     // [Dispose] Exception prone:
     public async Task TryExclusive(Action callback) {
@@ -52,22 +52,22 @@ public class LockerSlim : IDisposable {
 
     // Token callbacks --------------------------------------------------------------------------------------------------------------------
     public async Task Exclusive(Action<LockToken> callback) {
-        var token = new LockToken(Unlock);
+        var token = new LockToken(TryUnlock);
         try { await Lock(); callback(token); }
         finally { token.Unlock(); }
     }
     public async Task<T> Exclusive<T>(Func<LockToken, T> callback) {
-        var token = new LockToken(Unlock);
+        var token = new LockToken(TryUnlock);
         try { await Lock(); return callback(token); }
         finally { token.Unlock(); }
     }
     public async Task Exclusive(Func<LockToken, Task> callback) {
-        var token = new LockToken(Unlock);
+        var token = new LockToken(TryUnlock);
         try { await Lock(); await callback(token); }
         finally { token.Unlock(); }
     }
     public async Task<T> Exclusive<T>(Func<LockToken, Task<T>> callback) {
-        var token = new LockToken(Unlock);
+        var token = new LockToken(TryUnlock);
         try { await Lock(); return await callback(token); }
         finally { token.Unlock(); }
     }

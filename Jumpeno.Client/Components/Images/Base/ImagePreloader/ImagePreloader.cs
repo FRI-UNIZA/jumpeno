@@ -14,7 +14,6 @@ public partial class ImagePreloader {
     static ImagePreloader() {
         Add(IMAGE.BG_YELLOW);
         Add(IMAGE.BG_BLUE);
-        Add(IMAGE.ICON_KEYBOARD);
         Add(IMAGE.JUMPER_YELLOW);
         Add(IMAGE.TILE);
         Add(IMAGE.SPRITE_MAGE_AIR);

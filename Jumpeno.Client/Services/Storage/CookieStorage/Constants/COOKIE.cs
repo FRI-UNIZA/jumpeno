@@ -4,16 +4,6 @@ namespace Jumpeno.Client.Constants;
 #pragma warning disable IDE0002
 
 public static class COOKIE {
-    // Types ------------------------------------------------------------------------------------------------------------------------------
-    public static readonly List<Type> TYPES_REQUIRED = [
-        typeof(COOKIE.MANDATORY)
-    ];
-    
-    public static readonly List<Type> TYPES = [
-        typeof(COOKIE.MANDATORY),
-        typeof(COOKIE.PREFERENCES)
-    ];
-    
     // Cookies ----------------------------------------------------------------------------------------------------------------------------
     public enum MANDATORY {
         [StringValue("App.CookiesAccepted")] APP_COOKIES_ACCEPTED,
@@ -25,6 +15,16 @@ public static class COOKIE {
         [StringValue("App.Culture")] APP_CULTURE,
         [StringValue("App.Theme")] APP_THEME
     }
+
+    // Types ------------------------------------------------------------------------------------------------------------------------------
+    public static readonly List<Type> TYPES_REQUIRED = [
+        typeof(COOKIE.MANDATORY)
+    ];
+    
+    public static readonly List<Type> TYPES = [
+        typeof(COOKIE.MANDATORY),
+        typeof(COOKIE.PREFERENCES)
+    ];
 
     // Origin (domain and path) -----------------------------------------------------------------------------------------------------------
     public static string DEFAULT_DOMAIN => URL.Domain();

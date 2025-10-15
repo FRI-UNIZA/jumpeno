@@ -1,6 +1,8 @@
 @namespace Jumpeno.Client.Components
 
-@inherits FormField<SelectMultiViewModel>
+@typeparam T
+
+@inherits FormField<SelectMultiViewModel<T>>
 
 @code {
     protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;

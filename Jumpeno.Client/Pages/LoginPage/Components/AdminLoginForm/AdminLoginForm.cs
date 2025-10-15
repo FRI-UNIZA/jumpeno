@@ -19,7 +19,7 @@ public partial class AdminLoginForm {
             ID: nameof(AdminLoginDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsEmail,
+            TextCheck: AdminValidator.IsEmail,
             MaxLength: AdminValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",

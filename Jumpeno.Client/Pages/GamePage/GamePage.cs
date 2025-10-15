@@ -7,21 +7,30 @@ public partial class GamePage {
     // Navigation -------------------------------------------------------------------------------------------------------------------------
     public static string Link(string url, string code) => URL.ReplaceSegments(url, new() {{ 1, $"{code}" }});
     // Navigator data:
-    public record NavData(bool Create) {
-        public static bool OpenCreate() {
-            var value = Navigator.Data<NavData>()?.Create;
-            if (value is bool v) return v;
-            var state = Navigator.State(DEFAULT_HISTORY_STATE);
-            return state.WasCreate;
-        }
-    }
+    public record NavData(bool Create);
     public static readonly NavData DEFAULT_NAV_DATA = new(false);
     // Navigator state:
     public record HistoryState(bool WasRedirect, bool WasCreate);
     public static readonly HistoryState DEFAULT_HISTORY_STATE = new(false, false);
+    private static bool InitCreateBox() {
+        if (URL.Url().ToLower() != $"{URL.BaseUrl()}{I18N.Link<GamePage>()}") {
+            Navigator.SetState(new HistoryState(false, false));
+            CreateBox.InitialValues.Delete();
+            return false;
+        }
+        if (CreateBox.InitialValues.AreSet()) {
+            Navigator.SetState(new HistoryState(false, true));
+            return true;
+        }
+        var value = Navigator.Data<NavData>()?.Create;
+        if (value is bool v) return v;
+        var state = Navigator.State(DEFAULT_HISTORY_STATE);
+        return state.WasCreate;
+    }
     // Navigation:
     private static async Task NavigateTo(bool create) {
         await PageLoader.Show(async () => {
+            CreateBox.InitialValues.Delete();
             await Navigator.NavigateTo(
                 I18N.Link<GamePage>(),
                 data: new NavData(create),
@@ -48,7 +57,7 @@ public partial class GamePage {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
         ConnectVM = new(new(
-            Create: NavData.OpenCreate(),
+            Create: InitCreateBox(),
             URLCode: () => URLCode,
             OnConnect: new(OnConnect),
             OnDisconnect: new(OnDisconnect),

@@ -4,6 +4,8 @@ public static class GameValidator {
     // Code -------------------------------------------------------------------------------------------------------------------------------
     public const byte CODE_LENGTH = 4;
 
+    public static bool IsCode(string value) => Checker.IsAlphaNum(value);
+    public static bool IsCodeCase(string value) => IsCode(value) && value.ToUpper() == value;
     public static List<Error> ValidateCode(string? value, string id = "") {
         var errors = Checker.ValidateUndefined(value, id); value = $"{value}";
         Checker.Validate(errors, value.Length != CODE_LENGTH,
@@ -22,6 +24,7 @@ public static class GameValidator {
     public const byte NAME_MIN_LENGTH = 3;
     public const byte NAME_MAX_LENGTH = 20;
 
+    public static bool IsName(string value) => Checker.IsAlphaNum(value, ['.', ' ']);
     public static List<Error> ValidateName(string value, string id = "") {
         value = value.Trim();
         var errors = Checker.Validate(
@@ -29,13 +32,17 @@ public static class GameValidator {
             ERROR.DEFAULT.SetID(id)
             .SetInfo("Length is not between I18N{min} and I18N{max}", new() {{ "min", NAME_MIN_LENGTH }, { "max", NAME_MAX_LENGTH }})
         );
-        Checker.Validate(errors, !Checker.IsAlphaNum(value, ['.', ' ']), ERROR.DEFAULT.SetID(id).SetInfo("Value contains not allowed character"));
+        Checker.Validate(errors, !IsName(value), ERROR.DEFAULT.SetID(id).SetInfo("Value contains not allowed character"));
         Checker.Validate(errors, value.Length > 0 && value[0] == '.', ERROR.DEFAULT.SetID(id).SetInfo("Value must not start with a dot"));
         return errors;
     }
     public static string AssertName(string value, string id = "", AppException? exception = null) {
         return Checker.Assert(value, ValidateName(value, id), exception ?? EXCEPTION.VALUES);
     }
+
+    // Rounds -----------------------------------------------------------------------------------------------------------------------------
+    public const byte MIN_ROUNDS = 1;
+    public const byte MAX_ROUNDS = 12;
 
     // Capacity ---------------------------------------------------------------------------------------------------------------------------
     public const byte MIN_CAPACITY = 2;

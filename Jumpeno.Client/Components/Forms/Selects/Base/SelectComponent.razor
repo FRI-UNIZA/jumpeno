@@ -1,6 +1,8 @@
 @namespace Jumpeno.Client.Components
 
-@inherits FormField<SelectViewModel>
+@typeparam T
+
+@inherits FormField<SelectViewModel<T>>
 
 @code {
     protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
@@ -15,7 +17,7 @@
             disabled="@Disabled"
             @onclick="@OpenModal"
         >
-            @if (ViewModel.Value == SELECT.EMPTY_OPTION) {
+            @if (ViewModel.Value == SELECT<T>.EMPTY_OPTION) {
                 if (ViewModel.Placeholder == null) {
                     <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
                 } else {
@@ -60,7 +62,7 @@
                                 class="@ComputeOptionClass(option)"
                                 @onclick="@(async () => await SelectOption(option))"
                             >
-                                @(option == SELECT.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
+                                @(option == SELECT<T>.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
                             </button>
                         }
                     } else {

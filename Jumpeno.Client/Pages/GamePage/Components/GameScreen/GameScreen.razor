@@ -13,7 +13,7 @@
     <div class="game-info">
         <div class="keyboard-display-box">
             <GameButton Class="keyboard-display-button" Action="new(VM.ToggleControls)">
-                <Image URL="@IMAGE.ICON_KEYBOARD" NotDraggable Transparent NoTransition Preloaded Class="keyboard-display-image" />
+                <KeyboardSVG Class="keyboard-display-image" />
                 <span class="keyboard-display-text">@(VM.ControlsDisplayed ? I18N.T("Hide") : I18N.T("Show"))</span>
             </GameButton>
         </div>

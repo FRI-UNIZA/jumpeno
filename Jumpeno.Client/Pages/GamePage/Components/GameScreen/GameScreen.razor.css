@@ -136,12 +136,9 @@
 }
 
 ::deep.game-screen .keyboard-display-image {
-    /* Position: */
-    --image-fit: contain;
-    --image-position: center;
     /* Size: */
-    --image-height: calc(max(var(--info-height) * 0.28, var(--min-info-text-size)) * 1.8px);
-    --image-width: calc(var(--image-height) * 1.2);
+    width: calc(var(--image-height) * 1.2);
+    height: calc(max(var(--info-height) * 0.28, var(--min-info-text-size)) * 1.8px);
 }
 
 ::deep.game-screen .keyboard-display-text {

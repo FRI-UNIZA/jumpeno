@@ -26,7 +26,7 @@
     /* Size: */
     width: 100%;
     height: 100%;
-    padding: var(--input-padding);
+    padding: var(--input-padding-y) var(--input-padding-x);
     /* Style: */
     color: var(--input-color);
     border-radius: var(--field-border-radius);
@@ -165,22 +165,22 @@
 }
 
 ::deep.field.input.allow-clear.align-center:not(.icon-before):not(.icon-after) .input-element {
-    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size));
+    text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-gap-inner) + var(--input-clear-size) - var(--input-padding-x));
 }
 ::deep.field.input.allow-clear.align-center:not(.icon-before).icon-after .input-element {
-    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size));
+    text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) - var(--input-padding-x));
 }
 ::deep.field.input.allow-clear.align-center.icon-before:not(.icon-after) .input-element {
-    text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size) - var(--input-icon-size));
+    text-indent: calc(var(--input-clear-size) - var(--input-icon-size));
 }
 ::deep.field.input.allow-clear.align-center.icon-after.icon-before .input-element {
     text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size));
 }
 ::deep.field.input:not(.allow-clear).align-center.icon-before:not(.icon-after) .input-element {
-    text-indent: calc(-1 * var(--input-icon-size));
+    text-indent: calc(-1 * (var(--input-icon-gap-outer) + var(--input-icon-size) + var(--input-icon-gap-inner) - var(--input-padding-x)));
 }
 ::deep.field.input:not(.allow-clear).align-center:not(.icon-before).icon-after .input-element {
-    text-indent: var(--input-icon-size);
+    text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-size) + var(--input-icon-gap-inner) - var(--input-padding-x));
 }
 
 ::deep.field.input.allow-clear.align-right .input-element {
@@ -404,7 +404,8 @@
 /* Variant [primary][size-s] ----------------------------------------------------------------------------------------------------------- */
 ::deep.field.input.variant-primary.size-s {
     /* Variables: */
-    --input-padding: 10px 12px;
+    --input-padding-y: 10px;
+    --input-padding-x: 12px;
     --input-font-size: 16px;
     --input-icon-size: 22px;
     --input-icon-gap-inner: 6px;
@@ -417,7 +418,8 @@
 /* Variant [primary][size-m] ----------------------------------------------------------------------------------------------------------- */
 ::deep.field.input.variant-primary.size-m {
     /* Variables: */
-    --input-padding: 13px 16px;
+    --input-padding-y: 13px;
+    --input-padding-x: 16px;
     --input-font-size: 18px;
     --input-icon-size: 26px;
     --input-icon-gap-inner: 8px;
@@ -430,7 +432,8 @@
 /* Variant [primary][size-l] ----------------------------------------------------------------------------------------------------------- */
 ::deep.field.input.variant-primary.size-l {
     /* Variables: */
-    --input-padding: 16px 20px;
+    --input-padding-y: 16px;
+    --input-padding-x: 20px;
     --input-font-size: 24px;
     --input-icon-size: 32px;
     --input-icon-gap-inner: 10px;

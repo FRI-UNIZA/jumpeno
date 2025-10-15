@@ -20,7 +20,7 @@ public partial class ConnectBox {
             ID: GAME_HUB.PARAM_CODE,
             TextMode: INPUT_TEXT_MODE.UPPERCASE,
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
+            TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
             Placeholder: I18N.T("Code"),
             DefaultValue: ""
@@ -29,7 +29,7 @@ public partial class ConnectBox {
             Form: FORM,
             ID: GAME_HUB.PARAM_NAME,
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
+            TextCheck: UserValidator.IsName,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
             Placeholder: I18N.T("Your name"),
             DefaultValue: "",
@@ -58,8 +58,9 @@ public partial class ConnectBox {
 
     // Auto-Watch -------------------------------------------------------------------------------------------------------------------------
     public const string WATCH_QUERY = "Watch";
+    private bool AutoWatch = false;
 
-    public async Task<bool> TryAutoWatch() {
+    public async Task<bool> InitAutoWatch() {
         // 1) Wait for params initialization:
         await InitTCS.Task;
         // 2) Check query params:
@@ -70,9 +71,20 @@ public partial class ConnectBox {
         await Navigator.SetQueryParams(q);
         // 4) Check if cookie modal is displayed:
         if (CookieStorage.ModalOpenOnInit) return false;
-        // 5) Try connect as spectator:
+        // 5) Set AutoWatch:
+        AutoWatch = true;
+        // 6) Show loader:
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME);
+        // 7) Return result:
+        return true;
+    }
+
+    public async Task<bool> TryAutoWatch() {
+        // 1) Check AutoWatch:
+        if (!AutoWatch) return false;
+        // 2) Try connect as spectator:
         await HandleWatch();
-        // 6) Return result:
+        // 3) Return result:
         return true;
     }
 

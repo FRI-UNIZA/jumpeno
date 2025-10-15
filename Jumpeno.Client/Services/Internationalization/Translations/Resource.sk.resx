@@ -690,17 +690,17 @@
   <data name="Capacity" xml:space="preserve">
     <value>Kapacita</value>
   </data>
-  <data name="players0" xml:space="preserve">
-    <value>hráčov</value>
+  <data name="Players0" xml:space="preserve">
+    <value>Hráčov</value>
   </data>
-  <data name="players1" xml:space="preserve">
-    <value>hráč</value>
+  <data name="Players1" xml:space="preserve">
+    <value>Hráč</value>
   </data>
-  <data name="players2+" xml:space="preserve">
-    <value>hráči</value>
+  <data name="Players2+" xml:space="preserve">
+    <value>Hráči</value>
   </data>
-  <data name="players5+" xml:space="preserve">
-    <value>hráčov</value>
+  <data name="Players5+" xml:space="preserve">
+    <value>Hráčov</value>
   </data>
   <data name="Designer" xml:space="preserve">
     <value>Dizajnér</value>
@@ -740,5 +740,56 @@
   </data>
   <data name="Are you sure you want to continue?" xml:space="preserve">
     <value>Naozaj chcete pokračovať?</value>
+  </data>
+  <data name="Game name" xml:space="preserve">
+    <value>Názov hry</value>
+  </data>
+  <data name="Custom code" xml:space="preserve">
+    <value>Vlastný kód</value>
+  </data>
+  <data name="Select map" xml:space="preserve">
+    <value>Zvoliť mapu</value>
+  </data>
+  <data name="TEXT_ANONYMOUS_PLAYERS" xml:space="preserve">
+    <value>Anonymní hráči</value>
+  </data>
+  <data name="Display mode" xml:space="preserve">
+    <value>Zobrazovací režim</value>
+  </data>
+  <data name="Game mode" xml:space="preserve">
+    <value>Herný režim</value>
+  </data>
+  <data name="Play on 1 screen" xml:space="preserve">
+    <value>Hra na 1 obrazovke</value>
+  </data>
+  <data name="Each has their own" xml:space="preserve">
+    <value>Každý má vlastnú</value>
+  </data>
+  <data name="Host only presents" xml:space="preserve">
+    <value>Host iba riadi hru</value>
+  </data>
+  <data name="Timed game with respawns" xml:space="preserve">
+    <value>Hra na čas s oživovaním hráčov</value>
+  </data>
+  <data name="Until one player remains" xml:space="preserve">
+    <value>Kým ostane na žive posledný</value>
+  </data>
+  <data name="Rounds0" xml:space="preserve">
+    <value>Kôl</value>
+  </data>
+  <data name="Rounds1" xml:space="preserve">
+    <value>Kolo</value>
+  </data>
+  <data name="Rounds2+" xml:space="preserve">
+    <value>Kolá</value>
+  </data>
+  <data name="Rounds5+" xml:space="preserve">
+    <value>Kôl</value>
+  </data>
+  <data name="Number of rounds" xml:space="preserve">
+    <value>Počet kôl</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Mapa</value>
   </data>
 </root>

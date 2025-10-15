@@ -19,6 +19,7 @@ public static class UserValidator {
     // Email ------------------------------------------------------------------------------------------------------------------------------
     public static byte EMAIL_MAX_LENGTH => EMAIL.MAX_LENGTH;
 
+    public static bool IsEmail(string value) => Checker.IsEmail(value);
     public static List<Error> ValidateEmail(string? value, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
@@ -34,6 +35,7 @@ public static class UserValidator {
     public const byte NAME_MIN_LENGTH = 3;
     public const byte NAME_MAX_LENGTH = 13;
 
+    public static bool IsName(string value) => Checker.IsAlphaNum(value);
     public static List<Error> ValidateName(string? value, bool checkUnknown = true, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
@@ -64,6 +66,7 @@ public static class UserValidator {
     public const byte PASSWORD_GENERATOR_MIN_LENGTH = 8;
     public const byte PASSWORD_GENERATOR_MAX_LENGTH = 12;
 
+    public static bool IsPassword(string value) => Checker.IsPassword(value);
     public static List<Error> ValidatePassword(string value, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
