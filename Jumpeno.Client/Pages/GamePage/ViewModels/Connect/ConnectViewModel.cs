@@ -19,7 +19,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     // Connection:
     private HubConnection? HubConnection = null;
     private bool IsConnected => HubConnection is not null && HubConnection.State == HubConnectionState.Connected;
-    private bool IsConnecting = false;
+    public bool IsConnecting { get; private set; } = false;
+    public bool IsPageLeave { get; private set; } = false;
     private readonly LockerSlim ConnectLock = new();
     // Game:
     private GameViewModel? GameVM = null;
@@ -132,21 +133,27 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     // Connect methods --------------------------------------------------------------------------------------------------------------------
     private async Task ConnectRequest(Func<Task> request) {
-        await ConnectLock.TryExclusive(async () => await HTTP.Try(async () => {
-            try {
-                await PageLoader.Show(PAGE_LOADER_TASK.GAME);
-                // 1) Authorization:
-                Authorization.Start(request);
-                // 2) Pending updates:
-                PendingUpdates.Clear(); Updated = false;
-                // 3) Connect request:
-                await request();
-            } catch {
-                await PageLoader.Hide(PAGE_LOADER_TASK.GAME); throw;
-            }
-        }, Form));
+        await ConnectLock.TryExclusive(async () => {
+            await PageLoader.Show(PAGE_LOADER_TASK.GAME);
+            bool connectError = false;
+            await HTTP.Try(async () => {
+                try {
+                    // 1) Authorization:
+                    Authorization.Start(request);
+                    // 2) Pending updates:
+                    PendingUpdates.Clear(); Updated = false;
+                    // 3) Connect request:
+                    await request();
+                } catch {
+                    // 4) Handle error:
+                    connectError = true; throw;
+                }
+            }, Form);
+            if (!connectError) return;
+            await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
+        });
     }
-    
+
     private async Task CreateConnection<P>(GAME_PARAMS_TYPE type, P parameters) {
         if (IsConnected) return;
         try {
@@ -190,15 +197,15 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 await GameVM.AddNotifyListener(NotifyListener);
                 await GameVM.PreRender();
                 // 3) Set URL:
-                var state = Navigator.State(GamePage.DEFAULT_HISTORY_STATE);
+                var state = GamePage.NavState.Get();
                 bool isCodeSet = URLCode != "";
                 if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>(), replace: true, notify: NOTIFY.STATE);
                 else await Navigator.SetQueryParams(new());
-                Navigator.SetState(new GamePage.HistoryState(state.WasRedirect, Create));
+                GamePage.NavState.Set(new GamePage.HistoryState(state.WasRedirect, Create));
                 await Navigator.NavigateTo(
                     URL.WithQuery(I18N.Link<GamePage>([GameVM.Game.Code]), ""),
                     replace: state.WasRedirect && isCodeSet,
-                    state: new GamePage.HistoryState(true, Create),
+                    state: GamePage.NavState.New(new GamePage.HistoryState(true, Create)),
                     notify: NOTIFY.STATE
                 );
                 // 4) Update and render:
@@ -257,11 +264,14 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         if (e is not null) await HandleErrors(EXCEPTION.DISCONNECT.DTO);
     }
 
-    private async Task OnPageLeave(NavigationEvent e) {
+    private bool IsPageReturn(NavigationEvent e) {
         var pagePath = I18N.Link<GamePage>();
-        if (!((URL.Path(e.BeforeURL) != pagePath) && (URL.Path(e.AfterURL) == pagePath)) || IsConnecting) {
-            return;
-        }
+        return !IsConnecting && URL.Path(e.BeforeURL) != pagePath && URL.Path(e.AfterURL) == pagePath;
+    }
+
+    private async Task OnPageLeave(NavigationEvent e) {
+        if (!IsPageReturn(e)) return;
+        IsPageLeave = true;
         await HandleErrors();
     }
 

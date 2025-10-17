@@ -5,6 +5,11 @@ public class Layout : LayoutComponentBase, IAsyncDisposable {
     public static Layout Current => RequestStorage.Get<Layout>(REQUEST_STORAGE.LAYOUT) ?? new Layout();
     private static void SetCurrent(Layout layout) => RequestStorage.Set(REQUEST_STORAGE.LAYOUT, layout);
 
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Dispose:
+    public bool IsDisposing { get; private set; } = false;
+    public bool IsDisposed { get; private set; } = false;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() {
         SetCurrent(this);
@@ -26,9 +31,11 @@ public class Layout : LayoutComponentBase, IAsyncDisposable {
     protected sealed override void OnAfterRender(bool firstRender) => OnLayoutAfterRender(firstRender);
     protected sealed override async Task OnAfterRenderAsync(bool firstRender) => await OnLayoutfterRenderAsync(firstRender);
     public async ValueTask DisposeAsync() {
+        IsDisposing = true;
         OnLayoutDispose();
         await OnLayoutDisposeAsync();
         GC.SuppressFinalize(this);
+        IsDisposed = true;
     }
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------

@@ -14,6 +14,9 @@ public class Component : ComponentBase, IAsyncDisposable {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Disabler? Disabler = null;
+    // Dispose:
+    public bool IsDisposing { get; private set; } = false;
+    public bool IsDisposed { get; private set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public virtual CSSClass ComputeClass() => new CSSClass().Set(Class).Set(Disabler?.CSSClass);
@@ -43,9 +46,11 @@ public class Component : ComponentBase, IAsyncDisposable {
     }
     public void Dispose() {}
     public virtual async ValueTask DisposeAsync() {
+        IsDisposing = true;
         OnComponentDispose();
         await OnComponentDisposeAsync();
         GC.SuppressFinalize(this);
+        IsDisposed = true;
     }
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------

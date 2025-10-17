@@ -12,16 +12,19 @@ public class Page : ComponentBase, IAsyncDisposable {
     [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
     public BaseTheme AppTheme { get; set; } = null!;
 
+    // Current page -----------------------------------------------------------------------------------------------------------------------
+    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() => ComponentCount++;
     /// <summary>Returns all page urls as an array.</summary>
     /// <returns>Array of URLs</returns>
     public string[] GetPageUrls() => GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
-
-    // Current page -----------------------------------------------------------------------------------------------------------------------
-    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
-    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
+    // Dispose:
+    public bool IsDisposing { get; private set; } = false;
+    public bool IsDisposed { get; private set; } = false;
 
     // Types ------------------------------------------------------------------------------------------------------------------------------
     private static readonly IEnumerable<Type> PageTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Page)));
@@ -128,9 +131,11 @@ public class Page : ComponentBase, IAsyncDisposable {
         Reflex.InvokeVoid(typeof(Navigator), Navigator.PAGE_RENDERED);
     }
     public async ValueTask DisposeAsync() {
+        IsDisposing = true;
         OnPageDispose();
         await OnPageDisposeAsync();
         GC.SuppressFinalize(this);
+        IsDisposed = true;
     }
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------

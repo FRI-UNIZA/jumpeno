@@ -5,9 +5,6 @@ public partial class CreateBox {
     [Parameter]
     public required ConnectViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private bool Creating = false;
-
     // Form -------------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<CreateBox>();
     private readonly InputViewModel<string> VMInputName;
@@ -15,6 +12,7 @@ public partial class CreateBox {
     public const string PARAM_CODE_INPUT = $"{GAME_HUB.PARAM_CODE}.{nameof(PARAM_CODE_INPUT)}";
     private bool VMInputCodeDisabled;
     private readonly InputViewModel<string> VMInputCode;
+    private void SetVMInputCode(string urlCode) => VMInputCode.SetValue(urlCode);
     private List<SelectOption<int>> VMSelectMapOptions;
     private bool VMSelectMapDisabled;
     private LoadArea VMSelectMapLoadArea = null!;
@@ -34,7 +32,7 @@ public partial class CreateBox {
     public class InitialValues : FormInitialValues<InitialValuesKey, InitialValues> {
         public string InputName { get; set; } = AppSettings.Name;
         public bool CheckBoxCode { get; set; } = false;
-        public string InputCode { get; set; } = "";
+        public List<SelectOption<int>> SelectMapOptions { get; set; } = [];
         public SelectOption<int>? SelectMap { get; set; } = null;
         public bool SwitchAnonyms { get; set; } = true;
         public SelectOption<int>? SelectRounds { get; set; } = null;
@@ -63,11 +61,7 @@ public partial class CreateBox {
             DefaultValue: InitValues.CheckBoxCode,
             OnChange: new(e => {
                 VMInputCodeDisabled = !e.Value;
-                VMInputCode?.SetValue("");
-                InitValues.Commit(v => {
-                    v.CheckBoxCode = e.Value;
-                    v.InputCode = "";
-                });
+                InitValues.Commit(v => v.CheckBoxCode = e.Value);
                 Notify();
             })
         ));
@@ -80,17 +74,16 @@ public partial class CreateBox {
             TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
             Placeholder: I18N.T("Code"),
-            DefaultValue: InitValues.InputCode,
-            OnChange: new(e => InitValues.Commit(v => v.InputCode = e.After))
+            DefaultValue: ""
         ));
-        VMSelectMapOptions = [];
-        VMSelectMapDisabled = true;
+        VMSelectMapOptions = InitValues.SelectMapOptions;
+        VMSelectMapDisabled = InitValues.SelectMapOptions.Count <= 0;
         VMSelectMap = new(new(
             Form: FORM,
             ID: GAME_HUB.PARAM_MAP,
             Options: VMSelectMapOptions,
-            Empty: true,
-            DefaultValue: null,
+            Empty: VMSelectMapOptions.Count <= 0,
+            DefaultValue: VMSelectMapOptions.Count > 0 ? InitValues.SelectMap?.Pick(o => VMSelectMapOptions[o.Key]) : null,
             OnSelect: new(e => InitValues.Commit(v => v.SelectMap = e.After)),
             Placeholder: I18N.T("Select map"),
             Search: true
@@ -148,6 +141,12 @@ public partial class CreateBox {
         ));
     }
 
+    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
+        if (!firstTime) return;
+        VM.RegisterForm(FORM);
+        await VM.AddURLCodeChangedListener(EventDelegate<string>.Task(SetVMInputCode));
+    }
+
     protected override async Task OnComponentAfterRenderAsync(bool firstTime) {
         if (!firstTime) return;
         if (!Auth.IsRole(ROLE.USER)) return;
@@ -155,38 +154,48 @@ public partial class CreateBox {
     }
 
     protected override void OnComponentDispose() {
-        if (!Creating) InitialValues.Delete();
         // TODO: Cancel map loading request
+        if (VM.IsConnecting || GamePage.NavState.Get().WasCreate) return;
+        InitialValues.Delete();
+    }
+
+    protected override async ValueTask OnComponentDisposeAsync() {
+        VM.UnregisterForm(FORM);
+        await VM.RemoveURLCodeChangedListener(EventDelegate<string>.Task(SetVMInputCode));
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task LoadMaps() {
-        await HTTP.Try(async () => {
-            // TODO: Request to load maps
-            await Task.Delay(1000);
-            VMSelectMapOptions = [new(0, 0, "Jumper's home"), new(1, 1, "100 Needles"), new(2, 2, "Magic temple")];
-            VMSelectMap = new(new(
-                Form: FORM,
-                ID: GAME_HUB.PARAM_MAP,
-                Options: VMSelectMapOptions,
-                DefaultValue: InitValues.SelectMap?.Pick(o => VMSelectMapOptions[o.Key]),
-                OnSelect: new(e => InitValues.Commit(v => v.SelectMap = e.After)),
-                Placeholder: I18N.T("Select map"),
-                Search: true
-            ));
-            VMSelectMapDisabled = false;
-            Notify();
-        });
+        if (InitValues.SelectMapOptions.Count <= 0) {
+            await HTTP.Try(async () => {
+                // TODO: Request to load maps
+                await Task.Delay(4000);
+                VMSelectMapOptions = [new(0, 0, "Jumper's home"), new(1, 1, "100 Needles"), new(2, 2, "Magic temple")];
+                VMSelectMap = new(new(
+                    Form: FORM,
+                    ID: GAME_HUB.PARAM_MAP,
+                    Options: VMSelectMapOptions,
+                    DefaultValue: InitValues.SelectMap?.Pick(o => VMSelectMapOptions[o.Key]),
+                    OnSelect: new(e => InitValues.Commit(v => v.SelectMap = e.After)),
+                    Placeholder: I18N.T("Select map"),
+                    Search: true
+                ));
+                VMSelectMapDisabled = false;
+                if (IsDisposing) return;
+                InitValues.Commit(v => v.SelectMapOptions = VMSelectMapOptions);
+                Notify();
+            });
+        }
         await VMSelectMapLoadArea.FinishLoading();
     }
 
-    public async Task Create() {
+    private async Task Create() {
         await PageLoader.Show(PAGE_LOADER_TASK.GAME);
         await HTTP.Try(async () => {
-            Creating = true;
-            await Task.Delay(1000); // TODO: Send HTTP Create request instead
+            // TODO: Send HTTP Create request instead
+            // TODO: Cancel map loading request
+            await Task.Delay(1000);
             Notification.Error(I18N.T("This functionality is not implemented yet."));
-            Creating = false;
         }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
     }

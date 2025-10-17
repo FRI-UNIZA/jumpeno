@@ -229,14 +229,14 @@ body.light-theme .surface-primary {
     --theme-radio-primary-disabled-selected-mark-color: rgba(180, 180, 180, 1);
     --theme-radio-primary-disabled-selected-background: rgba(240, 240, 240, 1);
     --theme-radio-button-primary-color: rgba(42, 33, 56, 1);
-    --theme-radio-button-primary-background: rgba(255, 255, 255, 1);
-    --theme-radio-button-primary-box-shadow: 0 0 6em rgba(0, 0, 0, 0.2);
+    --theme-radio-button-primary-background: rgba(252, 252, 252, 1);
+    --theme-radio-button-primary-box-shadow: 0 0 6em rgba(0, 0, 0, 0.2), 0 0 12em 4em rgba(0, 0, 0, 0.03) inset;
     --theme-radio-button-primary-selected-color: rgba(40, 40, 40, 1);
     --theme-radio-button-primary-selected-background: rgba(255, 215, 0, 1);
     --theme-radio-button-primary-selected-box-shadow: 0 0 6em 4em rgba(0, 0, 0, 0.3);
     --theme-radio-button-primary-selected-outline-color: rgba(255, 255, 255, 1);
-    --theme-radio-button-primary-highlight-color: rgba(20, 20, 20, 1);
-    --theme-radio-button-primary-highlight-background: rgba(255, 239, 0, 1);
+    --theme-radio-button-primary-highlight-color: rgba(0, 0, 0, 1);
+    --theme-radio-button-primary-highlight-background: rgba(255, 255, 255, 1);
     --theme-radio-button-primary-highlight-box-shadow: 0 0 6em rgba(0, 0, 0, 0.2);
     --theme-radio-button-primary-highlight-selected-color: rgba(20, 20, 20, 1);
     --theme-radio-button-primary-highlight-selected-background: rgba(255, 239, 0, 1);

@@ -13,7 +13,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private bool SettingQueries = false;
     // Data & state:
     private object? NavData = null;
-    private object? NavState = null;
+    private (string Key, object? Data)? NavState = null;
     // Notify:
     private NOTIFY? Notify = null;
     // Loading:
@@ -110,7 +110,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             }
         }
 
-        if (NavState != null) SetState(NavState);
+        if (NavState != null) SetState(NavState.Value.Key, NavState.Value.Data);
 
         if (Notify != NOTIFY.STATE && !SettingQueries) await PageRenderedTCS.Task;
 
@@ -135,7 +135,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private async Task Navigate(
         string url,
         bool forceLoad = false, bool replace = false, bool queries = false,
-        object? data = null, object? state = null, NOTIFY? notify = null,
+        object? data = null, (string Key, object? Data)? state = null, NOTIFY? notify = null,
         bool loader = true
     ) {
         await NavLock.TryLock();
@@ -165,7 +165,7 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
     public static async Task NavigateTo(
         string url, bool forceLoad = false, bool replace = false,
-        object? data = null, object? state = null, NOTIFY? notify = null
+        object? data = null, (string Key, object? Data)? state = null, NOTIFY? notify = null
     ) => await Instance().Navigate(
         url,
         forceLoad, replace, queries: false,
@@ -194,9 +194,9 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     }
 
     // NOTE: Can also be set in NavitageTo and is client only!
-    public static T? State<T>() => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State) : default;
-    public static T State<T>(T fallback) => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State) ?? fallback : fallback;
-    public static void SetState<T>(T state, string? url = null) { if (AppEnvironment.IsClient) JS.InvokeVoid(JSNavigator.SetState, state, url); }
+    public static T? State<T>(string key) => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State, key) : default;
+    public static T State<T>(string key, T fallback) => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State, key) ?? fallback : fallback;
+    public static void SetState<T>(string key, T state, string? url = null) { if (AppEnvironment.IsClient) JS.InvokeVoid(JSNavigator.SetState, key, state, url); }
 
     // Pop state --------------------------------------------------------------------------------------------------------------------------
     public static bool IsPopState { get; private set; } = false;

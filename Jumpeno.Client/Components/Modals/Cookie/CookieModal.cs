@@ -69,10 +69,11 @@ public partial class CookieModal {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task OpenModal(bool unclosable) {
+        await ModalRef.OpenLoading();
         Unclosable = unclosable;
         await InitSelected(unclosable);
         StateHasChanged();
-        await ModalRef.Open();
+        await ModalRef.FinishLoading();
     }
 
     private async Task AcceptCookies(List<Type> accept) {

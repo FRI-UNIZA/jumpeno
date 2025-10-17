@@ -25,6 +25,8 @@ public partial class InputComponent<T> {
     public RenderFragment? IconAfter { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private InputViewModel<T>? PreviousViewModel = null;
+    // Value:
     private string DELIMITER = DEFAULT_DELIMITER.String();
     private string InputValue = "";
     private string FinalValue = "";
@@ -70,6 +72,8 @@ public partial class InputComponent<T> {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentParametersSet(bool firstTime) {
         DELIMITER = Delimiter.String();
+        if (ViewModel == PreviousViewModel) return;
+        PreviousViewModel = ViewModel;
         FormViewModel.SetReact(ViewModel, () => {
             UpdateInputValue();
             StateHasChanged();

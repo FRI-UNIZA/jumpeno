@@ -12,29 +12,31 @@ public partial class GamePage {
     // Navigator state:
     public record HistoryState(bool WasRedirect, bool WasCreate);
     public static readonly HistoryState DEFAULT_HISTORY_STATE = new(false, false);
-    private static bool InitCreateBox() {
-        if (URL.Url().ToLower() != $"{URL.BaseUrl()}{I18N.Link<GamePage>()}") {
-            Navigator.SetState(new HistoryState(false, false));
+    public static class NavState {
+        public static (string Key, HistoryState? Data)? New(HistoryState? state) => new(HISTORY_STATE.GAME_PAGE, state);
+        public static HistoryState Get() => Navigator.State(HISTORY_STATE.GAME_PAGE, DEFAULT_HISTORY_STATE);
+        public static void Set(HistoryState state) => Navigator.SetState(HISTORY_STATE.GAME_PAGE, state);
+    }
+    // Navigation init:
+    public static void InitNavigation() {
+        InitOnce.Check($"{nameof(GamePage)}.{nameof(InitNavigation)}");
+        if (!URL.AppPathMatch(I18N.Link<GamePage>()) || !URL.GetQueryParams().IsEmpty())
             CreateBox.InitialValues.Delete();
-            return false;
-        }
-        if (CreateBox.InitialValues.AreSet()) {
-            Navigator.SetState(new HistoryState(false, true));
-            return true;
-        }
+        if (!CreateBox.InitialValues.AreSet()) return;
+        NavState.Set(new HistoryState(false, true));
+    }
+    public static bool ShouldOpenCreateBox() {
         var value = Navigator.Data<NavData>()?.Create;
         if (value is bool v) return v;
-        var state = Navigator.State(DEFAULT_HISTORY_STATE);
-        return state.WasCreate;
+        return NavState.Get().WasCreate;
     }
     // Navigation:
     private static async Task NavigateTo(bool create) {
         await PageLoader.Show(async () => {
-            CreateBox.InitialValues.Delete();
             await Navigator.NavigateTo(
                 I18N.Link<GamePage>(),
                 data: new NavData(create),
-                state: new HistoryState(false, create)
+                state: NavState.New(new HistoryState(false, create))
             );
         }, PAGE_LOADER_TASK.ANIMATION);
     }
@@ -57,7 +59,7 @@ public partial class GamePage {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
         ConnectVM = new(new(
-            Create: InitCreateBox(),
+            Create: ShouldOpenCreateBox(),
             URLCode: () => URLCode,
             OnConnect: new(OnConnect),
             OnDisconnect: new(OnDisconnect),
@@ -69,6 +71,8 @@ public partial class GamePage {
     protected override async Task OnPageInitializedAsync() => await ConnectVM.OnPageInitializedAsync();
     protected override async Task OnPageParametersSetAsync(bool firstTime) => await ConnectVM.OnPageParametersSetAsync();
     protected override async ValueTask OnPageDisposeAsync() => await ConnectVM.OnPageDisposeAsync();
+
+    protected override bool ShouldPageRender() => !ConnectVM.IsPageLeave;
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private void OnConnect(GameViewModel vm) {

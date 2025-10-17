@@ -377,8 +377,8 @@ public class LightTheme : BaseTheme {
 
     // RadioButton [primary] --------------------------------------------------------------------------------------------------------------
     public override RGBAColor RADIO_BUTTON_PRIMARY_COLOR => new(42, 33, 56);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_BACKGROUND => new(255, 255, 255);
-    public override string RADIO_BUTTON_PRIMARY_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2)";
+    public override RGBAColor RADIO_BUTTON_PRIMARY_BACKGROUND => new(252, 252, 252);
+    public override string RADIO_BUTTON_PRIMARY_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2), 0 0 12em 4em rgba(0, 0, 0, 0.03) inset";
 
     // RadioButton [primary][selected]:
     public override RGBAColor RADIO_BUTTON_PRIMARY_SELECTED_COLOR => new(40, 40, 40);
@@ -387,8 +387,8 @@ public class LightTheme : BaseTheme {
     public override RGBAColor RADIO_BUTTON_PRIMARY_SELECTED_OUTLINE_COLOR => new(255, 255, 255);
 
     // RadioButton [primary][highlight]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_COLOR => new(20, 20, 20);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_BACKGROUND => new(255, 239, 0);
+    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_COLOR => new(0, 0, 0);
+    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_BACKGROUND => new(255, 255, 255);
     public override string RADIO_BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2)";
 
     // RadioButton [primary][highlight][selected]:

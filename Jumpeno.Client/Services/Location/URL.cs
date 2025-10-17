@@ -50,6 +50,7 @@ public static class URL {
     public static QueryParams GetQueryParams() => GetQueryParams(Url());
     public static string SetQueryParams(QueryParams queryParams) => SetQueryParams(Url(), queryParams);
     public static bool PathMatches(string url, bool exact = false) => PathMatches(Url(), url, exact);
+    public static bool AppPathMatch(string url, bool exact = false) => AppPathMatch(Url(), url, exact);
     public static string ReplaceSegments(Dictionary<int, string> segments) => ReplaceSegments(Url(), segments);
 
     // Custom URL methods -----------------------------------------------------------------------------------------------------------------
@@ -154,7 +155,17 @@ public static class URL {
     public static bool PathMatches(string url1, string url2, bool exact = false) {
         var path1 = Path(url1).ToLower();
         var path2 = Path(url2).ToLower();
-       return exact ? path1 == path2 : path2.StartsWith(path1) || path1.StartsWith(path2);
+        if (exact) return path1 == path2;
+        if (path1 == path2) return true;
+        return path2.StartsWith(path1 + '/') || path1.StartsWith(path2 + '/');
+    }
+
+    public static bool AppPathMatch(string url1, string url2, bool exact = false) {
+        var path1 = Path(url1).ToLower();
+        var path2 = Path(url2).ToLower();
+        var pathHome = Path(I18N.Link<HomePage>()).ToLower();
+        if (path1 == pathHome || path2 == pathHome) return path1 == path2;
+        return PathMatches(url1, url2, exact);
     }
 
     // Segments ---------------------------------------------------------------------------------------------------------------------------

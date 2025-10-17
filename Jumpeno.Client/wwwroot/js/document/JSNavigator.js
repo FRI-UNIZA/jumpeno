@@ -6,9 +6,9 @@ class JSNavigator {
     )
 
     // State ------------------------------------------------------------------------------------------------------------------------------
-    static State = () => window.history.state || null
+    static State = key => window.history.state?.[key] || null
 
-    static SetState = (state, url) => window.history.replaceState({ ...window.history.state, ...state}, "", url)
+    static SetState = (key, state, url) => window.history.replaceState({ ...window.history.state, [key]: state}, "", url)
 }
 
 window.JSNavigator = JSNavigator;
