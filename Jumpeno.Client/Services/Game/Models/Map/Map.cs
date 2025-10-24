@@ -1,28 +1,32 @@
 namespace Jumpeno.Client.Models;
 
-public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
+public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string DEFAULT_NAME = "Jumper's home";
     public const float WIDTH = 1024;
     public const float HEIGHT = 576;
-    public static readonly RGBColor DEFAULT_BACKGROUND = new(36, 30, 59);
-    public static readonly RGBColor DEFAULT_FOREGROUND = new(255, 255, 0);
-    public static List<Tile> DEFAULT_TILES => [
-        new(new(1 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(2 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(5 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(6 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(7 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(8 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(9 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(10 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 1 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 7 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 8 * Tile.SIZE + Tile.HALF_SIZE)),
-        new(new(13 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE))
-    ];
-    public static readonly Map DEFAULT_MAP = new(DEFAULT_NAME, DEFAULT_TILES, DEFAULT_BACKGROUND, DEFAULT_FOREGROUND);
+    // Color:
+    public const int BOX_SHADOW_CONTRAST = 30;
+    // Default:
+    public const string DEFAULT_NAME = "Jumper's home";
+    public static Map DEFAULT_MAP => new(
+        DEFAULT_NAME, 
+        [
+            new(new(1 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(2 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(5 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(6 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(7 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(8 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(9 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(10 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 1 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 7 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 8 * Tile.SIZE + Tile.HALF_SIZE)),
+            new(new(13 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE))
+        ],
+        new(36, 30, 59), new(255, 255, 0), new(10, 10, 10)
+    );
 
     // Description ------------------------------------------------------------------------------------------------------------------------
     public string Name { get; private set; }
@@ -52,7 +56,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
     );
 
     // Tiles ------------------------------------------------------------------------------------------------------------------------------
-    [JsonInclude]
+    [JsonInclude][Newtonsoft.Json.JsonProperty]
     private List<Tile> Tiles { get; set; }
     private readonly QuadTreeRectF<Tile> TileQT;
     public List<Tile> GetCollidingTiles(RectangleF rect) => TileQT.GetObjects(rect);
@@ -63,15 +67,17 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
     // Colors -----------------------------------------------------------------------------------------------------------------------------
     public RGBColor Background { get; private set; }
     public RGBColor Foreground { get; private set; }
+    public RGBColor Border { get; private set; }
+    public RGBColor BoxShadow { get; private set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    [JsonConstructor]
+    [JsonConstructor][Newtonsoft.Json.JsonConstructor]
     private Map(
         string name,
         float worldMinX, float worldMaxX, float worldMinY, float worldMaxY,
         int screenMinX, int screenMaxX, int screenMinY, int screenMaxY,
         List<Tile> tiles, Shrink shrink,
-        RGBColor background, RGBColor foreground
+        RGBColor background, RGBColor foreground, RGBColor border
     ) {
         Name = name;
         WorldMinX = worldMinX;
@@ -87,16 +93,20 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
         Shrink = shrink;
         Background = background;
         Foreground = foreground;
+        Border = border;
+        BoxShadow = InitBoxShadow(border);
         PreRenderer = InitPrerenderer();
     }
 
-    private Map(string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles, RGBColor background, RGBColor foreground)
-    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, foreground) {
+    private Map(
+        string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles,
+        RGBColor background, RGBColor foreground, RGBColor border)
+    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, foreground, border) {
         Shrink = new(this);
     }
 
-    public Map(string name, List<Tile> tiles, RGBColor background, RGBColor foreground)
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, foreground) {}
+    public Map(string name, List<Tile> tiles, RGBColor background, RGBColor foreground, RGBColor border)
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, foreground, border) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private QuadTreeRectF<Tile> InitTileQT(List<Tile> tiles) {
@@ -105,6 +115,12 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
         return tileQT;
     }
 
+    private static RGBColor InitBoxShadow(RGBColor border) {
+        var luma = (byte)Math.Max(border.Luminance() - BOX_SHADOW_CONTRAST, 0);
+        return new(luma, luma, luma);
+    }
+
+    // Screen -----------------------------------------------------------------------------------------------------------------------------
     public void UpdateScreen(int minX, int maxX, int minY, int maxY) {
         ScreenMinX = minX;
         ScreenMaxX = maxX;
@@ -119,13 +135,9 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
         return false;
     }
 
-    private bool TimeFlowUpdate(TimeFlowUpdate update) {
-        return Shrink.Update(update);
-    }
+    private bool TimeFlowUpdate(TimeFlowUpdate update) => Shrink.Update(update);
 
-    private bool StateUpdate(StateUpdate update) {
-        return Shrink.Update(update);
-    }
+    private bool StateUpdate(StateUpdate update) => Shrink.Update(update);
 
     // Conversions ------------------------------------------------------------------------------------------------------------------------
     public Point ToScreen(PointF point) {
@@ -149,26 +161,26 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
     public Point ToCanvas(PointF point) => new((int) point.X, (int) (WorldHeight - point.Y));
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
-    private readonly PreRenderer<Game> PreRenderer;
-    private PreRenderer<Game> InitPrerenderer() => new(CANVAS.MAP, PreRender, ApplyRender);
-    private async Task<bool> PreRender(Canvas2DContext ctx, Game game) {
+    private readonly PreRenderer<Map> PreRenderer;
+    private static PreRenderer<Map> InitPrerenderer() => new(CANVAS.MAP, PreRender, ApplyRender);
+    private static async Task<bool> PreRender(Canvas2DContext ctx, Map map) {
         // 1) Initialize:
         var prerendered = false;
         // 2) Clear:
-        await ctx.ClearRectAsync(WorldMinX, WorldMinY, WorldWidth, WorldHeight);
+        await ctx.ClearRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
         // 3) Render tiles:
-        for (int i = 0; i < Tiles.Count; i++) {
-            if (!await Tiles[i].Render(ctx, (game, false))) break;
+        for (int i = 0; i < map.Tiles.Count; i++) {
+            if (!await map.Tiles[i].Render(ctx, (map, false))) break;
             if (i > 0) continue;
             prerendered = true;
         }
         // 4) Return result:
         return prerendered;
     }
-    private async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Game game) {
+    private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map) {
         var (source, ctx) = context;
-        var world = Rect;
-        var screen = ScreenRect;
+        var world = map.Rect;
+        var screen = map.ScreenRect;
         await ctx.DrawImageAsync(
             source.Canvas, world.X, world.Y, world.Width, world.Height,
             screen.X, screen.Y, screen.Width, screen.Height
@@ -176,18 +188,18 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered<Game> {
         return true;
     }
     public bool IsPrerendered => PreRenderer.IsPrerendered;
-    public async Task<bool> PreRender(Game game) => await PreRenderer.PreRender(game);
+    public async Task<bool> PreRender() => await PreRenderer.PreRender(this);
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, Game game) {
+    public async Task<bool> Render(Canvas2DContext ctx, Game? game = null) {
         var screen = ScreenRect;
         // 1) Background:
-        await ctx.SetFillStyleAsync($"rgb({Background})");
+        await ctx.SetFillStyleAsync($"{Background}");
         await ctx.FillRectAsync(screen.X, screen.Y, screen.Width, screen.Height);
         // 2) Shrink:
-        await Shrink.Render(ctx, game);
+        if (game != null) await Shrink.Render(ctx, game);
         // 3) Tiles:
-        await PreRenderer.Render(ctx, game);
+        await PreRenderer.Render(ctx, this);
         return true;
     }
 }

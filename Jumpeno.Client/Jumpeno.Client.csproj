@@ -5,6 +5,11 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
+
 	<PropertyGroup>
 		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
 	</PropertyGroup>

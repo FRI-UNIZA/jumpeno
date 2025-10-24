@@ -7,6 +7,8 @@ public class Window {
     // Size -------------------------------------------------------------------------------------------------------------------------------
     public static WindowSize GetSize() => JS.Invoke<WindowSize>(JSWindow.GetSize);
     public static async Task<WindowSize> GetSizeAsync() => await JS.InvokeAsync<WindowSize>(JSWindow.GetSize);
+    public static WindowSize? GetSizeOf(string selector) => JS.Invoke<WindowSize?>(JSWindow.GetSizeOf, selector);
+    public static async Task<WindowSize?> GetSizeOfAsync(string selector) => await JS.InvokeAsync<WindowSize?>(JSWindow.GetSizeOf, selector);
 
     // Resize -----------------------------------------------------------------------------------------------------------------------------
     public static async Task AddResizeEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowResizeEvent> method) where T : class

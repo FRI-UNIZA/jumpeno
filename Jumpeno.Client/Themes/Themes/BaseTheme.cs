@@ -175,9 +175,13 @@ public class BaseTheme {
     public virtual RGBAColor GAME_STATE_COLOR { get; }
     public virtual string GAME_STATE_TEXT_SHADOW { get; }
 
-    // GameScreen:
-    public virtual RGBAColor GAME_SCREEN_CANVAS_BACKGROUND { get; }
-    public virtual string GAME_SCREEN_CANVAS_BOX_SHADOW { get; }
+    // CreateBox:
+    public virtual RGBAColor CREATE_BOX_SETTINGS_ICON_COLOR => new(255, 255, 255);
+    public virtual string CREATE_BOX_SETTINGS_ICON_DROP_SHADOW => "0 0 0.03em rgba(0, 0, 0, 0.6)";
+    public virtual string CREATE_BOX_LOGO_DROP_SHADOW => "0 0 2em rgba(0, 0, 0, 0.6)";
+    public virtual RGBAColor CREATE_BOX_MAP_ICON_COLOR => new(210, 210, 150);
+    public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_SIZE => "0 0.009em 0.04em 0.014em";
+    public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY { get; }
 
     // GameScreen > Control:
     public virtual RGBAColor GAME_SCREEN_CONTROL_COLOR { get; }
@@ -209,6 +213,9 @@ public class BaseTheme {
     public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS { get; }
+    // Header:
+    public virtual string BOX_HEADER_BACKGROUND => "linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent)";
+    public virtual string BOX_HEADER_BOX_SHADOW => "0 2em 10em -2em rgba(0, 0, 0, 0.05)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
     // Button [primary] -------------------------------------------------------------------------------------------------------------------
@@ -513,6 +520,13 @@ public class BaseTheme {
 
     // Switch [primary][disabled][checked]:
     public virtual RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND { get; }
+
+// NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor GAME_CANVAS_DEFAULT_BACKGROUND { get; }
+    public virtual RGBAColor GAME_CANVAS_DEFAULT_FOREGROUND { get; }
+    public virtual RGBAColor GAME_CANVAS_DEFAULT_BORDER { get; }
+    public virtual string GAME_CANVAS_BOX_SHADOW_SIZE => "0 0.0025em 0.025em 0.01em";
+    public virtual string GAME_CANVAS_BOX_SHADOW_OPACITY { get; }
 
 // NOTE: Images ---------------------------------------------------------------------------------------------------------------------------
     // Background -------------------------------------------------------------------------------------------------------------------------

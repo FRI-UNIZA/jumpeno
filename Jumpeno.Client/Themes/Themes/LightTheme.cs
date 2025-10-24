@@ -124,10 +124,9 @@ public class LightTheme : BaseTheme {
     // Game -------------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor GAME_STATE_COLOR => new(255, 255, 255);
     public override string GAME_STATE_TEXT_SHADOW => "0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8)";
-
-    // GameScreen:
-    public override RGBAColor GAME_SCREEN_CANVAS_BACKGROUND => new(0, 0, 0);
-    public override string GAME_SCREEN_CANVAS_BOX_SHADOW => "0 0.0025em 0.025em 0.01em rgba(0, 0, 0, 0.8)";
+    
+    // CreateBox:
+    public override string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY => "0.25";
 
     // GameScreen > Control:
     public override RGBAColor GAME_SCREEN_CONTROL_COLOR => new(105, 99, 115);
@@ -478,6 +477,12 @@ public class LightTheme : BaseTheme {
 
     // Switch [primary][disabled][checked]:
     public override RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND => new(180, 180, 180);
+
+// NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor GAME_CANVAS_DEFAULT_BACKGROUND => new(255, 255, 255);
+    public override RGBAColor GAME_CANVAS_DEFAULT_FOREGROUND => new(42, 33, 56);
+    public override RGBAColor GAME_CANVAS_DEFAULT_BORDER => new(230, 230, 230);
+    public override string GAME_CANVAS_BOX_SHADOW_OPACITY => "0.4";
 
 // NOTE: Images ---------------------------------------------------------------------------------------------------------------------------
     // Background -------------------------------------------------------------------------------------------------------------------------

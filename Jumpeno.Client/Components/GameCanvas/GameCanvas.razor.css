@@ -1,0 +1,128 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas {
+    /* NOTE: Use viewport units or pixels: */
+    --canvas-width: unset;
+    --canvas-height: unset;
+    --canvas-prefer-border-width: unset;
+    --canvas-prefer-border-radius: unset;
+    /* NOTE: Computed from base-size: */
+    --canvas-box-shadow-size: unset;
+    --canvas-box-shadow-opacity: unset;
+    --canvas-base-size: unset;
+}
+
+/* Constants --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas {
+    --canvas-border-cover-width: 2px;
+    --min-canvas-border-width: 2px;
+    --min-canvas-border-radius: 4px;
+}
+
+/* Constants [Computed] ---------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas {
+    --use-canvas-width: var(--canvas-width, 100%);
+    --use-canvas-height: var(--canvas-height, calc(9 / 16 * var(--use-canvas-width)));
+    --use-canvas-border-width: max(max(var(--canvas-prefer-border-width, 4px), var(--canvas-border-cover-width)), var(--min-canvas-border-width));
+    --use-canvas-border-radius: max(var(--canvas-prefer-border-radius, 8px), var(--min-canvas-border-radius));
+    --use-canvas-box-shadow-size: var(--canvas-box-shadow-size, var(--theme-game-canvas-box-shadow-size));
+    --use-canvas-box-shadow-opacity: var(--canvas-box-shadow-opacity, var(--theme-game-canvas-box-shadow-opacity));
+    --use-canvas-base-size: var(--canvas-base-size, 184px);
+}
+
+/* Constants [Map] --------------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas {
+    --canvas-background: unset;
+    --canvas-foreground: unset;
+    --canvas-border-color: unset;
+    --canvas-box-shadow-color: unset;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-canvas {
+    /* Position: */
+    position: relative;
+    z-index: 0;
+    /* Display: */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* Size: */
+    width: var(--use-canvas-width);
+    height: auto;
+    /* Style: */
+    background: var(--canvas-border-color);
+    border-style: solid;
+    border-color: var(--canvas-border-color);
+    border-width: var(--use-canvas-border-width);
+    border-radius: var(--use-canvas-border-radius);
+    box-shadow: var(--use-canvas-box-shadow-size) rgba(var(--canvas-box-shadow-color), var(--use-canvas-box-shadow-opacity));
+    /* Base: */
+    font-size: var(--use-canvas-base-size);
+}
+
+/* Styles > Border cover --------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas::before {
+    /* Position: */
+    position: absolute;
+    z-index: 1;
+    /* Size: */
+    inset: calc(-1 * var(--use-canvas-border-width));
+    /* Content: */
+    content: "";
+    /* Style: */
+    border-style: solid;
+    border-color: var(--canvas-border-color);
+    border-width: var(--use-canvas-border-width);
+    border-radius: var(--use-canvas-border-radius);
+    background: transparent;
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Styles > Size calculation ----------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas::after {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: 1px;
+    padding-top: var(--use-canvas-height);
+    margin: calc(-1 * var(--canvas-border-cover-width));
+    /* Content: */
+    content: "";
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Styles > Canvas --------------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas canvas {
+    /* Position: */
+    position: absolute;
+    /* Size: */
+    width: calc(100% + 2 * var(--canvas-border-cover-width));
+    height: calc(100% + 2 * var(--canvas-border-cover-width));
+    margin: calc(-1 * var(--canvas-border-cover-width));
+    /* Style: */
+    background: var(--canvas-background);
+}
+
+/* Styles > Content -------------------------------------------------------------------------------------------------------------------- */
+::deep.game-canvas .canvas-content {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    /* Content: */
+    overflow: hidden;
+}

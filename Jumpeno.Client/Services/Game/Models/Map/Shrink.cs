@@ -28,17 +28,17 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         return alpha;
     } }
 
-    [JsonInclude] private float WorldX { get; set; }
-    [JsonInclude] private float WorldY { get; set; }
-    [JsonInclude] private float WorldWidth { get; set; }
-    [JsonInclude] private float WorldHeight { get; set; }
+    [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldX { get; set; }
+    [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldY { get; set; }
+    [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldWidth { get; set; }
+    [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldHeight { get; set; }
     public RectangleF Rect => new(
         WorldX + Math.Max(Level, 0) * Tile.SIZE, WorldY,
         WorldWidth - 2 * Math.Max(Level, 0) * Tile.SIZE, WorldHeight
     );
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    [JsonConstructor]
+    [JsonConstructor][Newtonsoft.Json.JsonConstructor]
     public Shrink(int level, double timer, float worldX, float worldY, float worldWidth, float worldHeight) {
         // Properties:
         Level = level;
@@ -91,7 +91,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         for (int i = 0, x = (int) WorldX; x < WorldX + WorldWidth; x += Tile.SIZE) {
             for (float y = WorldY; y < WorldY + WorldHeight; y += Tile.SIZE, i++) {
                 var tile = new Tile(new(x + Tile.HALF_SIZE, y + Tile.HALF_SIZE));
-                if (!await tile.Render(ctx, (game, false))) break;
+                if (!await tile.Render(ctx, (game.Map, false))) break;
                 if (i > 0) continue;
                 prerendered = true;
             }
@@ -105,7 +105,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         var (source, ctx) = context; var rect = Rect;
 
         // 2.1) Highlight area color & size:
-        await ctx.SetFillStyleAsync($"rgb({COLOR.Blend(Alpha, game.Map.Background)})");
+        await ctx.SetFillStyleAsync($"{COLOR.Blend(Alpha, game.Map.Background)}");
         var add = rect.Width < 2 * Tile.SIZE + Tile.HALF_SIZE ? 4 : 1;
         var size = new Size(game.Map.ToScreenWidth(Tile.SIZE + Tile.HALF_SIZE) + add, game.Map.ToScreenHeight(rect.Height) + 1);
         // 2.2) Left part:

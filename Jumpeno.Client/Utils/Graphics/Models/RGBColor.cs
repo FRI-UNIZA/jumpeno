@@ -27,8 +27,11 @@ public record RGBColor {
         );
     }
     public RGBColor Blend(double percentage, RGBColor color) => Blend(this, percentage, color);
+    public double Luminance() => Math.Max(Math.Min(0.2126 * R + 0.7152 * G + 0.0722 * B, 255.0), 0.0);
 
     // Operators --------------------------------------------------------------------------------------------------------------------------
-    public override string ToString() => $"{R}, {G}, {B}";
+    public override string ToString() => $"rgb({ToStringContent()})";
+    public virtual string ToStringContent() => $"{R}, {G}, {B}";
+
     public static implicit operator string(RGBColor color) => color.ToString();
 }

@@ -89,7 +89,7 @@
     max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
     /* Style: */
     color: var(--theme-text-color);
-    background: var(--theme-surface-background);
+    background: transparent;
     border-radius: var(--modal-border-radius);
     outline: none;
     border: none;
@@ -100,6 +100,23 @@
     pointer-events: all;
     /* Base: */
     font-size: var(--modal-base-size);
+}
+::deep.modal .modal-dialog::before {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    /* Content: */
+    content: "";
+    /* Style: */
+    background: var(--theme-surface-background);
+    border-radius: calc(var(--modal-border-radius) + 2px);
+    /* Actions: */
+    pointer-events: none;
 }
 
 ::deep.modal .modal-container {
@@ -166,7 +183,7 @@
     /* Size: */
     padding: var(--modal-padding-content-mobile);
     /* Style: */
-    background: var(--theme-surface-background);
+    background: transparent;
 }
 
 ::deep.modal .modal-footer {

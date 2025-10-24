@@ -66,16 +66,6 @@
     --modal-padding-content: 0;
 }
 
-::deep.modal.select-options-modal .modal-dialog {
-    /* Style: */
-    background: transparent;
-}
-
-::deep.modal.select-options-modal .modal-content {
-    /* Style: */
-    background: transparent;
-}
-
 ::deep.modal.select-options-modal .select-options {
     /* Display: */
     display: flex;

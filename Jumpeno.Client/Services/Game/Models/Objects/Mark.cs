@@ -37,7 +37,7 @@ public static class Mark {
         var pointRight = game.Map.ToScreen(new(point.X + MARK_HEIGHT, point.Y + MARK_HEIGHT));
         point = game.Map.ToScreen(point);
         // 3) Render mark:
-        await ctx.SetFillStyleAsync($"rgb({game.Map.Foreground})");
+        await ctx.SetFillStyleAsync($"{game.Map.Foreground}");
         await ctx.BeginPathAsync();
         await ctx.MoveToAsync(point.X, point.Y);
         await ctx.LineToAsync(pointLeft.X, pointLeft.Y);
@@ -54,7 +54,7 @@ public static class Mark {
         var point = game.Map.ToScreen(CalculateMarkPoint(player.Body));
         // 3) Render name:
         await ctx.SetFontAsync($"{size}px {font}");
-        await ctx.SetFillStyleAsync($"rgb({game.Map.Foreground})");
+        await ctx.SetFillStyleAsync($"{game.Map.Foreground}");
         await ctx.SetTextBaselineAsync(TextBaseline.Alphabetic);
         await ctx.SetTextAlignAsync(TextAlign.Center);
         await ctx.FillTextAsync(player.User.Name, point.X, point.Y);

@@ -792,4 +792,22 @@
   <data name="Map" xml:space="preserve">
     <value>Map</value>
   </data>
+  <data name="Map could not be loaded" xml:space="preserve">
+    <value>Map could not be loaded</value>
+  </data>
+  <data name="Empty map list" xml:space="preserve">
+    <value>Empty map list</value>
+  </data>
+  <data name="Maps could not be loaded" xml:space="preserve">
+    <value>Maps could not be loaded</value>
+  </data>
+  <data name="Map loading" xml:space="preserve">
+    <value>Map loading</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Disabled field" xml:space="preserve">
+    <value>Disabled field</value>
+  </data>
 </root>

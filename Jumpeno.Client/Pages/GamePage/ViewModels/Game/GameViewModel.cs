@@ -44,7 +44,7 @@ public class GameViewModel : IDisposable {
 
     public async Task PreRender() {
         if (!IsWatching) return;
-        await Game.Map.PreRender(Game);
+        await Game.Map.PreRender();
         await Game.Map.Shrink.PreRender(Game);
     }
 

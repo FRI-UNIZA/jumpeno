@@ -103,18 +103,23 @@ class JSActionHandler {
     }
 
     // Focus [set] ------------------------------------------------------------------------------------------------------------------------
-    static #SetFocusOnElement(element) {
-        if (element) {
-            element.focus()
-            return
-        }
+    static #SetFocusOnDocument(preventScroll = false) {
         const webDocument = document.getElementById(JSWebDocument.ID);
         if (webDocument) {
-            webDocument.focus()
+            webDocument.focus({ preventScroll: preventScroll });
         }
     }
-    static SetFocus(id) {
-        this.#SetFocusOnElement(document.getElementById(id))
+    static #SetFocusOnElement(element, preventScroll = false) {
+        if (element) {
+            element.focus({ preventScroll: preventScroll })
+            return
+        }
+        this.#SetFocusOnDocument(preventScroll)
+    }
+    static SetFocus(id, fallbackID, preventScroll = false) {
+        const element = document.getElementById(id);
+        if (element) this.#SetFocusOnElement(element, preventScroll);
+        else this.#SetFocusOnElement(fallbackID && document.getElementById(fallbackID), preventScroll);
     }
 
     static FocusFirst(id) {

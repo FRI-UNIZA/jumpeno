@@ -50,14 +50,9 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         return false;
     }
 
-    private bool TimeFlowUpdate(TimeFlowUpdate update) {
-        return Body.Update(update);
-    }
+    private bool TimeFlowUpdate(TimeFlowUpdate update) => Body.Update(update);
 
-    private bool KeyUpdate(KeyUpdate update) {
-        // NOTE: Has update guard:
-        return Body.Update(update);
-    }
+    private bool KeyUpdate(KeyUpdate update) => Body.Update(update); // NOTE: Has update guard:
 
     private readonly UpdateGuard<GamePlayUpdate> GamePlayMoveUpdateGuard = new();
     private readonly UpdateGuard<GamePlayUpdate> GamePlayAliveUpdateGuard = new();
@@ -87,9 +82,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         return response.Updated;
     }
 
-    private bool MovementUpdate(MovementUpdate update) {
-        return Body.Update(update);
-    }
+    private bool MovementUpdate(MovementUpdate update) => Body.Update(update);
 
     private bool KillUpdate(KillUpdate update) {
         if (update.DeadID == ID) {
@@ -114,9 +107,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         return PlayerUpdateGuard.Update(update, () => Synchronize(update.Player));
     }
 
-    private bool StateUpdate(StateUpdate update) {
-        return Body.Update(update);
-    }
+    private bool StateUpdate(StateUpdate update) => Body.Update(update);
 
     private bool RoundUpdate(RoundUpdate update) {
         if (!update.Players.TryGetValue(ID, out var player)) return false;

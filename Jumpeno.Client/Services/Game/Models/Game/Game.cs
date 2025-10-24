@@ -215,7 +215,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // 5) Update player:
         Update(NewKillUpdate(null, player.ID));
         Update(new MovementUpdate(player.ID, position, Body.DEFAULT_DIRECTION, null, Body.DEFAULT_NORMAL));
-        player.Body.Animation.UpdateDirection(new(random.NextDouble() < 0.5 ? 1 : -1, -1));
+        player.Body.Animation.ResetDirection(new(random.NextDouble() < 0.5 ? 1 : -1, -1));
     }
 
     // Spectator methods ------------------------------------------------------------------------------------------------------------------

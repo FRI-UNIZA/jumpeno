@@ -86,9 +86,14 @@ builder.Services.AddRazorPages();
         options.OperationFilter<RoleFilter>();
         options.OperationFilter<ContentTypeFilter>();
 
-        // Add comments:
-        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        // Add XML comments from the Server project:
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
+        // Add XML comments from the Client project:
+        var referencedAssembly = typeof(App).Assembly;
+        xmlFile = $"{referencedAssembly.GetName().Name}.xml";
+        var referencedXmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        if (File.Exists(referencedXmlPath)) options.IncludeXmlComments(referencedXmlPath);
     });
 #endif
 

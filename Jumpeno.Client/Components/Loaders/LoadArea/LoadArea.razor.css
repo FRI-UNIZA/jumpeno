@@ -10,10 +10,10 @@
     /* Display: */
     display: flex;
     /* Size: */
-    width: calc(100% + 20px);
+    width: 100%;
     height: auto;
-    padding: 10px;
-    margin: -10px;
+    padding: 0;
+    margin: 0;
     /* Style: */
     outline: none;
 }
@@ -58,7 +58,7 @@
 }
 
 /* State [Loading] --------------------------------------------------------------------------------------------------------------------- */
-::deep.load-area.loading .load-area-content {
+::deep.load-area.loading:not(.no-style) .load-area-content {
     /* Style: */
     opacity: 0.3;
 }

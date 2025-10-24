@@ -7,6 +7,12 @@ class JSWindow {
 
     // Size -------------------------------------------------------------------------------------------------------------------------------
     static GetSize = () => ({ Width: window.innerWidth, Height: window.innerHeight })
+    static GetSizeOf = selector => {
+        const element = document.querySelector(selector);
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return { Width: rect.width, Height: rect.height };
+    }
 
     // Resize -----------------------------------------------------------------------------------------------------------------------------
     static #WidthPrevious = 0

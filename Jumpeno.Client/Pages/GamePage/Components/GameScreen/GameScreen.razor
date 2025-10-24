@@ -5,10 +5,8 @@
 
 @inherits BasicComponent
 
-<div class="@GameScreenClass()" style="@CSSVariables()">
-    <div class="canvas-box">
-        <BECanvas Width="@Dimension.CanvasWidth" Height="@Dimension.CanvasHeight" @ref="GameCanvasRef" />
-    </div>
+<div class="@GameScreenClass()">
+    <GameCanvas @ref="Canvas" Game="VM.Game" Player="VM.Player" />
 
     <div class="game-info">
         <div class="keyboard-display-box">

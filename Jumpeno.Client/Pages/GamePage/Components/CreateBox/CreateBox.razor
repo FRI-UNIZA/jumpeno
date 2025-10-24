@@ -5,13 +5,13 @@
 <div class="create-box">
     <AuthView Roles="[ROLE.USER]">
         <Box Class="create-form">
-            <div class="create-form-header">
+            <BoxHeader class="create-form-header">
                 <Heading1 Size="TEXT_SIZE.L" Class="create-heading">@I18N.T("Create game")</Heading1>
                 <div class="create-form-header-options">
                     <WebLink
                         Href="@(I18N.Link<GamePage>())" HrefPrevent
                         OnClick="GamePage.NavigateToConnect"
-                        Class="connect-link cancel"
+                        Class="connect-link-cancel"
                     >
                         <AntIcon Type="double-left" Theme="outline" Class="connect-icon" />
                         &nbsp;@I18N.T("Cancel")&nbsp;
@@ -21,83 +21,129 @@
                         <IconAfter><AntIcon Type="plus-circle" Theme="Outline"/></IconAfter>
                     </Button>
                 </div>
-            </div>
-            <div class="game-info">
+            </BoxHeader>
+            <div class="game-identifiers">
                 <AntIcon Type="setting" Theme="Outline" Class="settings-icon" />
                 <Image URL="@IMAGE.JUMPER_YELLOW" Transparent NoTransition Class="logo-image" />
+                <AntIcon Type="qrcode" Theme="Outline" Class="qr-code-icon" />
                 <FormLabel Label="@I18N.T("Game name")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="game-name-label">
-                    <InputField ViewModel="VMInputName" Name="name" Label="@I18N.T("Game name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" AllowClear Class="game-name" />
+                    <InputField ViewModel="VMInputName" Name="name" Label="@I18N.T("Game name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" AllowClear Class="game-name-input" />
                 </FormLabel>
                 <div class="custom-code">
-                    <CheckBoxField ViewModel="VMCheckBoxCode" Label="@I18N.T("Custom code")" Size="FORM_SIZE.S" Align="FORM_ALIGN.RIGHT" ActiveDescription AutoSize Class="custom-code" >
+                    <CheckBoxField ViewModel="VMCheckBoxCode" Label="@I18N.T("Custom code")" Size="FORM_SIZE.S" ErrorAlign="FORM_ALIGN.CENTER" ActiveDescription AutoSize Class="custom-code-checkbox" >
                         <Description>@I18N.T("Custom code")</Description>
                     </CheckBoxField>
-                    <InputField ViewModel="VMInputCode" Name="code" Label="@I18N.T("Custom code")" Size="FORM_SIZE.S" Align="FORM_ALIGN.CENTER" Disabled="VMInputCodeDisabled" Class="game-code" />
+                    <InputField ViewModel="VMInputCode" Name="code" Label="@I18N.T("Custom code")" Size="FORM_SIZE.S" Align="FORM_ALIGN.CENTER" Disabled="VMInputCodeDisabled" Class="custom-code-input" />
                 </div>
             </div>
-            <div class="info-area">
-                <p class="map-title">@I18N.T("Map")</p>
-            </div>
-            <div class="map-info">
-                @* <div class="map-shadow" /> *@
-                <div class="map-fields">
-                    <SelectComponent
-                        ViewModel="VMSelectMap"
-                        Disabled="VMSelectMapDisabled"
-                        Label="@I18N.T("Select map")"
-                        Align="FORM_ALIGN.LEFT"
-                        OptionAlign="SELECT_OPTION_ALIGN.CENTER"
-                        Size="FORM_SIZE.S"
-                        Class="map-select"
-                        ModalClass="create-box-map-select-modal"
-                        Style="width: 310px; margin-right: 36px;"
-                    />
-                    <AntIcon Type="caret-right" Theme="Outline" Class="create-box-map-icon" />
-                    <div class="map-row">
-                        <FormLabel Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="anonym-players">
+            <div class="game-options">
+                <Paragraph class="map-title-mobile">@I18N.T("Map")</Paragraph>
+                <div class="game-options-area">
+                    <Paragraph class="map-title">@I18N.T("Map")</Paragraph>
+                    <div class="map-option">
+                        <LoadArea
+                            ViewModel="GameMapSelectLoadArea"
+                            Type="LOAD_AREA_TYPE.FOCUS_LOADING"
+                            Label="@I18N.T("Select map")"
+                            LoadLabel="@($"{I18N.T("Select map")}, {@I18N.T("Disabled field")}")"
+                            RoleDescription="combobox"
+                            Class="load-area-map-option"
+                            NoStyle
+                            NoLoader
+                        >
+                            <SelectComponent
+                                ViewModel="VMSelectMap"
+                                Disabled="VMSelectMapDisabled"
+                                Label="@I18N.T("Select map")"
+                                Align="FORM_ALIGN.LEFT"
+                                OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                                Size="FORM_SIZE.S"
+                                Class="map-select"
+                                ModalClass="create-box-map-select-modal"
+                            />
+                            <AntIcon Type="caret-right" Theme="Outline" Class="create-box-map-icon" />
+                        </LoadArea>
+                    </div>
+                    <div class="gameplay-options">
+                        <FormLabel Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="anonymous-players-label">
                             <SwitchComponent
                                 ViewModel="VMSwitchAnonyms"
                                 Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")"
                                 Size="FORM_SIZE.M"
-                                Class="anonym-players-switch"
+                                Class="anonymous-players-switch"
                                 Position="SWITCH_POSITION.END"
                                 Align="FORM_ALIGN.CENTER"
                                 ActiveDescription
                                 AutoSize
                             >
                                 <Description>
-                                    <AnonymSVG Class="anonym-players-svg" />
+                                    <AnonymSVG Class="anonymous-players-svg" />
                                 </Description>
                             </SwitchComponent>
                         </FormLabel>
-                        <div class="gameplay-options">
-                            <AntIcon Type="clock-circle" Theme="Outline" Class="create-box-round-icon" />
-                            <SelectComponent
-                                ViewModel="VMSelectRounds"
-                                Label="@I18N.T("Number of rounds")"
-                                Align="FORM_ALIGN.LEFT"
-                                OptionAlign="SELECT_OPTION_ALIGN.CENTER"
-                                Size="FORM_SIZE.S"
-                                Class="rounds-select"
-                                ModalClass="create-box-rounds-select-modal"
-                            />
-                            <AntIcon Type="team" Theme="Outline" Class="create-box-capacity-icon" />
-                            <SelectComponent
-                                ViewModel="VMSelectCapacity"
-                                Label="@I18N.T("Capacity")"
-                                Align="FORM_ALIGN.LEFT"
-                                OptionAlign="SELECT_OPTION_ALIGN.CENTER"
-                                Size="FORM_SIZE.S"
-                                Class="capacity-select"
-                                ModalClass="create-box-capacity-select-modal"
-                            />
+                        <div class="game-additional-options">
+                            <div class="rounds-option">
+                                <SelectComponent
+                                    ViewModel="VMSelectRounds"
+                                    Label="@I18N.T("Number of rounds")"
+                                    Align="FORM_ALIGN.LEFT"
+                                    OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                                    Size="FORM_SIZE.S"
+                                    Class="rounds-select"
+                                    ModalClass="create-box-rounds-select-modal"
+                                />
+                                <AntIcon Type="clock-circle" Theme="Outline" Class="rounds-icon" />
+                            </div>
+                            <div class="capacity-option">
+                                <SelectComponent
+                                    ViewModel="VMSelectCapacity"
+                                    Label="@I18N.T("Capacity")"
+                                    Align="FORM_ALIGN.LEFT"
+                                    OptionAlign="SELECT_OPTION_ALIGN.CENTER"
+                                    Size="FORM_SIZE.S"
+                                    Class="capacity-select"
+                                    ModalClass="create-box-capacity-select-modal"
+                                />
+                                <AntIcon Type="team" Theme="Outline" Class="capacity-icon" />
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="map-canvas-icons">
+                    <AntIcon Type="more" Theme="Outline" Class="map-canvas-more-icon-left" />
+                    <AntIcon Type="more" Theme="Outline" Class="map-canvas-more-icon-right" />
+                </div>
                 <div class="map-canvas-area">
-                    <LoadArea @ref="VMSelectMapLoadArea" InitLoading Class="@($"load-area-canvas")">
-                        <div class="map-canvas @SURFACE.SECONDARY.CSSClass()">
-                        </div>
+                    <LoadArea
+                        ViewModel="GameMapLoadArea"
+                        Label="@I18N.T("Map")"
+                        LoadLabel="@I18N.T("Map loading")"
+                        RoleDescription="@I18N.T("Image")"
+                        Class="load-area-canvas"
+                    >
+                        <GameCanvas Map="GameMap" Class="map-canvas">
+                            @if (!GameMapLoadArea.Loading) {
+                                @if (VMSelectMapError) {
+                                    <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
+                                    <Paragraph Size="TEXT_SIZE.S" Class="error-description">@I18N.T("Maps could not be loaded")</Paragraph>
+                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="LoadMaps">
+                                        <Text>@I18N.T("Try again")</Text>
+                                    </Button>
+                                } else if (VMSelectMapOptions.Count <= 0) {
+                                    <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
+                                    <Paragraph Size="TEXT_SIZE.S" Class="error-description">@I18N.T("Empty map list")</Paragraph>
+                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="LoadMaps">
+                                        <Text>@I18N.T("Try again")</Text>
+                                    </Button>
+                                } else if (GameMapError) {
+                                    <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
+                                    <Paragraph Size="TEXT_SIZE.S" Class="error-description">@I18N.T("Map could not be loaded")</Paragraph>
+                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="() => LoadMap(VMSelectMap.Value.Value)">
+                                        <Text>@I18N.T("Try again")</Text>
+                                    </Button>
+                                }
+                            }
+                        </GameCanvas>
                     </LoadArea>
                 </div>
             </div>
@@ -106,26 +152,50 @@
                 <RadioButton ViewModel="VMRadioDisplayMode" Label="@I18N.T("Display mode")" AutoSize>
                     @if (true) {
                         var option = VMRadioDisplayModeOptions[0];
-                        <RadioButtonOption ViewModel="option" Label="@($"{I18N.T("Display mode")}: {option.Label}")" AutoSize>
+                        <RadioButtonOption
+                            Class="radio-display-mode radio-display-mode-each-own"
+                            ViewModel="option"
+                            Label="@($"{I18N.T("Display mode")}: {option.Label}")"
+                            Align="FORM_ALIGN.CENTER"
+                            AutoSize
+                        >
                             <DisplayModeEachOwnSVG Class="option-each-own-svg" />
-                            <p class="option-label">@option.Label</p>
-                            <p class="option-description">@I18N.T("Each has their own")</p>
+                            <div class="display-mode-description">
+                                <p class="option-label">@option.Label</p>
+                                <p class="option-description">@I18N.T("Each has their own")</p>
+                            </div>
                         </RadioButtonOption>
                     }
                     @if (true) {
                         var option = VMRadioDisplayModeOptions[1];
-                        <RadioButtonOption ViewModel="option" Label="@($"{I18N.T("Display mode")}: {option.Label}")" AutoSize>
+                        <RadioButtonOption
+                            Class="radio-display-mode radio-display-mode-one-screen"
+                            ViewModel="option"
+                            Label="@($"{I18N.T("Display mode")}: {option.Label}")"
+                            Align="FORM_ALIGN.CENTER"
+                            AutoSize
+                        >
                             <DisplayModeOneScreenSVG Class="option-one-screen-svg" />
-                            <p class="option-label">@option.Label</p>
-                            <p class="option-description">@I18N.T("Play on 1 screen")</p>
+                            <div class="display-mode-description">
+                                <p class="option-label">@option.Label</p>
+                                <p class="option-description">@I18N.T("Play on 1 screen")</p>
+                            </div>
                         </RadioButtonOption>
                     }
                     @if (true) {
                         var option = VMRadioDisplayModeOptions[2];
-                        <RadioButtonOption ViewModel="option" Label="@($"{I18N.T("Display mode")}: {option.Label}")" AutoSize>
+                        <RadioButtonOption
+                            Class="radio-display-mode radio-display-mode-presentation"
+                            ViewModel="option"
+                            Label="@($"{I18N.T("Display mode")}: {option.Label}")"
+                            Align="FORM_ALIGN.CENTER"
+                            AutoSize
+                        >
                             <DisplayModePresentationSVG Class="option-presentation-svg" />
-                            <p class="option-label">@option.Label</p>
-                            <p class="option-description">@I18N.T("Host only presents")</p>
+                            <div class="display-mode-description">
+                                <p class="option-label">@option.Label</p>
+                                <p class="option-description">@I18N.T("Host only presents")</p>
+                            </div>
                         </RadioButtonOption>
                     }
                 </RadioButton>
@@ -135,14 +205,26 @@
                 <RadioButton ViewModel="VMRadioGameMode" Label="@I18N.T("Game mode")" AutoSize>
                     @if (true) {
                         var option = VMRadioGameModeOptions[0];
-                        <RadioButtonOption ViewModel="option" Label="@($"{I18N.T("Game mode")}: {option.Label}")" AutoSize>
+                        <RadioButtonOption
+                            Class="radio-game-mode radio-game-mode-mayhem"
+                            ViewModel="option"
+                            Label="@($"{I18N.T("Game mode")}: {option.Label}")"
+                            Align="FORM_ALIGN.CENTER"
+                            AutoSize
+                        >
                             <p class="option-label"><GameModeMayhemSVG Class="option-mayhem-svg" />@option.Label</p>
                             <p class="option-description">@I18N.T("Timed game with respawns")</p>
                         </RadioButtonOption>
                     }
                     @if (true) {
                         var option = VMRadioGameModeOptions[1];
-                        <RadioButtonOption ViewModel="option" Label="@($"{I18N.T("Game mode")}: {option.Label}")" AutoSize>
+                        <RadioButtonOption
+                            Class="radio-game-mode radio-game-mode-last-standing"
+                            ViewModel="option"
+                            Label="@($"{I18N.T("Game mode")}: {option.Label}")"
+                            Align="FORM_ALIGN.CENTER"
+                            AutoSize
+                        >
                             <p class="option-label"><GameModeLastStandingSVG Class="option-last-standing-svg" />@option.Label</p>
                             <p class="option-description">@I18N.T("Until one player remains")</p>
                         </RadioButtonOption>

@@ -66,4 +66,6 @@ public class Component : ComponentBase, IAsyncDisposable {
     
     // Notification -----------------------------------------------------------------------------------------------------------------------
     public void Notify() => StateHasChanged();
+    public virtual void Notify(string message, object? data = null) {}
+    public virtual async Task NotifyAsync(string message, object? data = null) => await Task.CompletedTask;
 }

@@ -88,8 +88,7 @@ body.light-theme .surface-primary {
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
-    --theme-game-screen-canvas-background: rgba(0, 0, 0, 1);
-    --theme-game-screen-canvas-box-shadow: 0 0.0025em 0.025em 0.01em rgba(0, 0, 0, 0.8);
+    --theme-create-box-canvas-box-shadow-opacity: 0.25;
     --theme-game-screen-control-color: rgba(105, 99, 115, 1);
     --theme-game-screen-control-background: rgba(255, 255, 255, 1);
     --theme-game-screen-control-box-shadow: 0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.2);
@@ -286,6 +285,10 @@ body.light-theme .surface-primary {
     --theme-switch-primary-disabled-background: rgba(220, 220, 220, 1);
     --theme-switch-primary-disabled-bullet-background: rgba(240, 240, 240, 1);
     --theme-switch-primary-disabled-checked-background: rgba(180, 180, 180, 1);
+    --theme-game-canvas-default-background: rgba(255, 255, 255, 1);
+    --theme-game-canvas-default-foreground: rgba(42, 33, 56, 1);
+    --theme-game-canvas-default-border: rgba(230, 230, 230, 1);
+    --theme-game-canvas-box-shadow-opacity: 0.4;
     --theme-background-light-color: rgba(210, 210, 210, 1);
     --theme-background-dark-color: rgba(180, 180, 180, 1);
     --theme-image-light-color: rgba(210, 210, 210, 1);
@@ -327,6 +330,14 @@ body.light-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
+    --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
+    --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
+    --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
+    --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
+    --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
 }
 body.light-theme.surface-primary-collapse,
 body.light-theme .surface-primary-collapse {
@@ -447,8 +458,7 @@ body.dark-theme .surface-primary {
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
-    --theme-game-screen-canvas-background: rgba(0, 0, 0, 1);
-    --theme-game-screen-canvas-box-shadow: 0 0.0025em 0.025em 0.01em rgba(0, 0, 0, 0.8);
+    --theme-create-box-canvas-box-shadow-opacity: 0.5;
     --theme-game-screen-control-color: rgba(236, 240, 241, 1);
     --theme-game-screen-control-background: rgba(42, 33, 56, 1);
     --theme-game-screen-control-box-shadow: 0 0.04em 0.16em 0.02em rgb(0, 0, 0);
@@ -645,6 +655,10 @@ body.dark-theme .surface-primary {
     --theme-switch-primary-disabled-background: rgba(220, 220, 220, 1);
     --theme-switch-primary-disabled-bullet-background: rgba(240, 240, 240, 1);
     --theme-switch-primary-disabled-checked-background: rgba(180, 180, 180, 1);
+    --theme-game-canvas-default-background: rgba(42, 33, 56, 1);
+    --theme-game-canvas-default-foreground: rgba(255, 255, 255, 1);
+    --theme-game-canvas-default-border: rgba(10, 10, 10, 1);
+    --theme-game-canvas-box-shadow-opacity: 0.6;
     --theme-background-light-color: rgba(210, 210, 210, 1);
     --theme-background-dark-color: rgba(180, 180, 180, 1);
     --theme-image-light-color: rgba(210, 210, 210, 1);
@@ -686,6 +700,14 @@ body.dark-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
+    --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
+    --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
+    --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
+    --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
+    --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
 }
 body.dark-theme.surface-primary-collapse,
 body.dark-theme .surface-primary-collapse {

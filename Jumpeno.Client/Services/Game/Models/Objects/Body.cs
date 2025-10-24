@@ -218,6 +218,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
                 break;
             }
         }
+        if (updated) Animation.UpdateDirection(Direction);
         return updated;
     }
 
@@ -228,6 +229,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         if (update.Normal is PointF normal) {
             Normal = LastNormal = normal;
         }
+        Animation.UpdateDirection(Direction);
         return true;
     }
 

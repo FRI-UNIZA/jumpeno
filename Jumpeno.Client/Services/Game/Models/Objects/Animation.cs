@@ -40,6 +40,12 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
+    public void ResetDirection(PointF direction) {
+        _Direction.X = direction.X;
+        _Direction.Y = direction.Y;
+        Running = false;
+    }
+
     public void UpdateDirection(PointF direction) {
         if (direction.X != 0) _Direction.X = direction.X;
         if (direction.Y != 0) _Direction.Y = direction.Y;
@@ -77,8 +83,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, (Game Game, SKIN Skin, Body Body) @params) {
         var (game, skin, body) = @params;
-        // 1) Update direction & check image:
-        UpdateDirection(body.Direction);
+        // 1) Check image:
         if (GetImage(skin) is not ElementReference img) return false;
         // 2) Compute placement:
         var width = game.Map.ToScreenWidth(WIDTH);

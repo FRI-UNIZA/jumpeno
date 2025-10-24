@@ -7,6 +7,16 @@ public partial class GameScreen {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly DotNetObjectReference<GameScreen> Ref;
+    private GameCanvas Canvas = null!;
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    private CSSClass GameScreenClass() {
+        var c = new CSSClass("game-screen");
+        if (VM.IsHost) c.Set("host");
+        if (VM.IsWatching) c.Set("watching");
+        if (VM.IsPlayer) c.Set("player");
+        return c;
+    }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
@@ -22,10 +32,7 @@ public partial class GameScreen {
             await Window.AddKeyUpEventListener(Ref, JS_OnKeyUp);
             await Window.AddMouseUpEventListener(Ref, JS_OnMouseUp);
         }
-        await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
         await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
-        var size = Window.GetSize();
-        UpdateDimensions((int) size.Width, (int) size.Height);
         await VM.InitOnRender();
     }
 
@@ -40,50 +47,14 @@ public partial class GameScreen {
                 await Window.RemoveKeyUpEventListener(Ref, JS_OnKeyUp);
                 await Window.RemoveMouseUpEventListener(Ref, JS_OnMouseUp);
             }
-            await Window.RemoveResizeEventListener(Ref, JS_OnWindowResize);
             await Animator.RemoveAnimator(Ref, JS_OnAnimationFrame);
         }
         ControlLock.Dispose();
         MouseReleaseKeyEventLock.Dispose();
-        RenderLock.Dispose();
         Ref.Dispose();
         GC.SuppressFinalize(this);
     }
-
-    // Screen -----------------------------------------------------------------------------------------------------------------------------
-    // Computed screen dimensions:
-    private readonly GameScreenDimension Dimension = new();
-
-    // Screen class:
-    private CSSClass GameScreenClass() {
-        var c = new CSSClass("game-screen");
-        if (VM.IsHost) c.Set("host");
-        if (VM.IsWatching) c.Set("watching");
-        if (VM.IsPlayer) c.Set("player");
-        return c;
-    }
-
-    // CSS variables:
-    private CSSStyle CSSVariables() {
-        var s = Dimension.CSSVariables();
-        s.Set("--canvas-background-color", VM.Game.Map.Background);
-        return s;
-    }
-
-    // Update screen dimensions:
-    private void UpdateDimensions(int width, int height) {
-        Dimension.Update(width, height);
-        // NOTE: [marginal-gap] + 1px to hide marginal gap when canvas is rasterized bigger than map!
-        VM?.Game.Map.UpdateScreen(0, Dimension.CanvasWidth + 1, Dimension.CanvasHeight + 1, 0);
-        StateHasChanged();
-    }
     
-    // Window resize event:
-    [JSInvokable]
-    public async Task JS_OnWindowResize(WindowResizeEvent e) {
-        await RenderLock.TryExclusive(() => UpdateDimensions((int) e.Width, (int) e.Height));
-    }
-
     // Updates ----------------------------------------------------------------------------------------------------------------------------
     // 1) Apply server updates:
     private async Task Update() => await VM.ExecuteUpdates();
@@ -179,7 +150,7 @@ public partial class GameScreen {
     public async Task JS_OnMouseUp((int X, int Y) position) => await MouseReleaseKeyEvent();
 
     // Check pressed key:
-    private bool IsPressed(GAME_CONTROLS control) {
+    protected bool IsPressed(GAME_CONTROLS control) {
         switch (control) {
             case GAME_CONTROLS.SPACE:
                 return Space.Pressed;
@@ -190,7 +161,7 @@ public partial class GameScreen {
                 return false;
         }
     }
-    private async Task<bool> IsPressedAsync(GAME_CONTROLS control) {
+    protected async Task<bool> IsPressedAsync(GAME_CONTROLS control) {
         return await ControlLock.TryExclusive(() => IsPressed(control), false);
     }
 
@@ -221,14 +192,9 @@ public partial class GameScreen {
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    private BECanvasComponent? GameCanvasRef = null;
-    private readonly LockerSlim RenderLock = new();
-
     private async Task Render() {
-        if (!VM.IsWatching) return;
-        using var ctx = await GameCanvasRef.CreateCanvas2DAsync();
-        if (ctx == null) return;
-        await RenderLock.TryExclusive(async () => await VM.Game.Render(ctx, (VM.Player, AppTheme.FONT_PRIMARY)));
+        try { if (VM.IsWatching) await Canvas.Render(); }
+        catch {}
     }
 
     // Game loop --------------------------------------------------------------------------------------------------------------------------
