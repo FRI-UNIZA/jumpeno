@@ -91,14 +91,14 @@ public partial class LoadArea {
     private void SetRestoreID(LoadAreaViewModel.MessageSetRestoreIDData data) => RestoreFocusID = data.ID;
 
     // Notification -----------------------------------------------------------------------------------------------------------------------
-    public override void Notify(string message, object? data = null) {
+    protected override void Notify(string message, object? data = null) {
         if (!AppEnvironment.IsClient) return;
         switch (message) {
             case LoadAreaViewModel.MESSAGE_SET_RESTORE_ID: SetRestoreID((LoadAreaViewModel.MessageSetRestoreIDData)data!); break;
         }
     }
 
-    public override async Task NotifyAsync(string message, object? data = null) {
+    protected override async Task NotifyAsync(string message, object? data = null) {
         if (!AppEnvironment.IsClient) return;
         switch (message) {
             case LoadAreaViewModel.MESSAGE_START: StartLoading((LoadAreaViewModel.MessageStartData)data!); break;

@@ -210,10 +210,13 @@ public class BaseTheme {
 // NOTE: Box ------------------------------------------------------------------------------------------------------------------------------
     // Box [box] --------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX { get; }
-    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX { get; }
+
+    // Box [glass] ------------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS { get; }
-    // Header:
+
+    // Box > BoxHeader --------------------------------------------------------------------------------------------------------------------
     public virtual string BOX_HEADER_BACKGROUND => "linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent)";
     public virtual string BOX_HEADER_BOX_SHADOW => "0 2em 10em -2em rgba(0, 0, 0, 0.05)";
 

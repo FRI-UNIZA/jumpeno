@@ -15,8 +15,9 @@
             @onclick="ChangeValue"
             disabled="@Disabled"
         >
-            @if (Icon != null) { @Icon }
-            else {
+            @if (Icon != null) {
+                @Icon
+            } else {
                 <div class="@CLASS_ICON">
                     <div class="checkbox-icon-start" />
                     <div class="checkbox-icon-end" />

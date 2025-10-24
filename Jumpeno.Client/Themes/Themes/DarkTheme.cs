@@ -155,8 +155,10 @@ public class DarkTheme : BaseTheme {
 // NOTE: Box ------------------------------------------------------------------------------------------------------------------------------
     // Box [box] --------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX => SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX;
-    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS => SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS;
     public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
+
+    // Box [glass] ------------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS => SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS;
     public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
