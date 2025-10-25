@@ -8,7 +8,8 @@ public partial class GameCanvas {
         Map.DEFAULT_NAME, [],
         AppTheme.GAME_CANVAS_DEFAULT_BACKGROUND,
         AppTheme.GAME_CANVAS_DEFAULT_FOREGROUND,
-        AppTheme.GAME_CANVAS_DEFAULT_BORDER
+        AppTheme.GAME_CANVAS_DEFAULT_BORDER,
+        IMAGE.TILE, string.Empty
     );
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------

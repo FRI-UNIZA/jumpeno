@@ -1,3 +1,5 @@
+using Jumpeno.Client.Services.Game.Models.Map.Constants;
+
 namespace Jumpeno.Server.Services;
 
 public static class GameService {
@@ -7,7 +9,7 @@ public static class GameService {
         new GameEngine(
             DISPLAY_MODE.ONE_SCREEN, GAME_MODE.MAYHEM,
             User.UNKNOWN, Game.DEFAULT_CODE, Game.DEFAULT_NAME,
-            Map.DEFAULT_MAP, GameValidator.MAX_CAPACITY
+            MAPS.AllMaps[3], GameValidator.MAX_CAPACITY
         )
     }};
 

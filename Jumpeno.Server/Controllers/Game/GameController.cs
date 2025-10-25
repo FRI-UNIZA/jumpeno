@@ -1,3 +1,5 @@
+using Jumpeno.Client.Services.Game.Models.Map.Constants;
+
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
@@ -21,9 +23,12 @@ public class GameController : ControllerBase {
     [ProducesResponseType(typeof(GameMapsDTOR), StatusCodes.Status200OK)]
     public GameMapsDTOR Maps() {
         GameMapsDTOR result = new([]);
-        result.Maps.Add(new(100, "Jumper's home"));
-        result.Maps.Add(new(201, "100 Needles"));
-        result.Maps.Add(new(302, "Magic temple"));
+        int i = 0;
+        foreach (var map in MAPS.AllMaps)
+        {
+            result.Maps.Add(new (i, map.Name));
+            i++;
+        }
         return result;
     }
 
@@ -35,20 +40,8 @@ public class GameController : ControllerBase {
     public GameMapDTOR Map([FromQuery] GameMapDTO query) {
         // 1) Read query params:
         var q = query?.Assert() ?? throw EXCEPTION.VALUES.Add(ERROR.EMPTY);
-        // 2) Generate map:
-        Random rand = new();
-        List<Tile> tiles = [];
-        for (int i = 0; i < 10; i++) {
-            tiles.Add(new(new(rand.Next() % 16 * Tile.SIZE + Tile.HALF_SIZE, rand.Next() % 9 * Tile.SIZE + Tile.HALF_SIZE)));
-        }
-        return new(
-            new(
-                Client.Models.Map.DEFAULT_NAME,
-                tiles,
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)),
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)),
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256))
-            )
-        );
+        // 2) Get map:
+        var selectedMap = MAPS.AllMaps.ElementAt(q.ID);
+        return new(selectedMap);
     }
 }
