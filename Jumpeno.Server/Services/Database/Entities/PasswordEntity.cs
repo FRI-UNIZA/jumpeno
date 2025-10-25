@@ -82,9 +82,9 @@ public class PasswordEntity {
         int rows = await ctx.Password
             .Where(o => o.ID == id)
             .ExecuteUpdateAsync(setter => setter
-                .SetProperty(o => o.Hash, value => HashPassword(password, salt))
-                .SetProperty(o => o.Salt, value => salt)
-                .SetProperty(o => o.ModifiedAt, value => DateTime.UtcNow)
+                .SetProperty(o => o.Hash, HashPassword(password, salt))
+                .SetProperty(o => o.Salt, salt)
+                .SetProperty(o => o.ModifiedAt, DateTime.UtcNow)
             );
         // 3) True if updated:
         return rows > 0;
