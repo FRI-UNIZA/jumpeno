@@ -106,6 +106,7 @@
     margin: calc(-1 * var(--canvas-border-cover-width));
     /* Style: */
     background: var(--canvas-background);
+    border-radius: var(--use-canvas-border-radius);
 }
 
 /* Styles > Content -------------------------------------------------------------------------------------------------------------------- */

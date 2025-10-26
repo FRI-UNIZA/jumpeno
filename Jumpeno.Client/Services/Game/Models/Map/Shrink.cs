@@ -2,31 +2,40 @@ namespace Jumpeno.Client.Models;
 
 public class Shrink : IUpdateable, IPreRendered<Game> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
+    // Level:
     public static (int LEVEL, double TIMER) DEFAULT => (-1, DURATION);
     public const int MAX_LEVEL = ((int) Map.WIDTH + Tile.SIZE) / Tile.SIZE / 2;
-
-    public static readonly RGBColor COLOR = new(172, 192, 193);
+    // Alpha:
     public const double MIN_ALPHA = 0.2;
     public const double MAX_ALPHA = 0.5;
-
+    public const double LUMA_THRESHOLD = 220;
+    // Duration:
     public const double FADE_IN_MS = 400; // ms
     public const double MARK_MS = 3000; // ms
     public const double HIGHLIGHT_MS = 2000; // ms
     public const double DURATION = MARK_MS + HIGHLIGHT_MS; // ms
     public const double TOTAL_DURATION = DURATION * MAX_LEVEL; // ms
-
+    // Blick:
     public const double BLICK_INTERVAL_MS = 800; // ms
     public const double HALF_BLICK_INTERVAL_MS = BLICK_INTERVAL_MS / 2; // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Level:
     public int Level { get; private set; }
     public double Timer { get; private set; }
-    public double Alpha { get {
+    // Alpha:
+    public float Alpha { get {
         var t = Math.Max(Timer - MARK_MS, 0) % BLICK_INTERVAL_MS;
         var alpha = Level == 0 && Timer < FADE_IN_MS ? MIN_ALPHA * (Timer % FADE_IN_MS / FADE_IN_MS) : MIN_ALPHA;
         alpha += (MAX_ALPHA - MIN_ALPHA) * (1 - Math.Abs(HALF_BLICK_INTERVAL_MS - t) / HALF_BLICK_INTERVAL_MS);
-        return alpha;
+        return (float)alpha;
     } }
+    // Color:
+    public static RGBAColor Color(RGBColor background, float alpha) {
+        return background.Luminance() < LUMA_THRESHOLD
+        ? new(255, 255, 255, alpha)
+        : new(0, 0, 0, alpha);
+    }
 
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldX { get; set; }
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldY { get; set; }
@@ -104,20 +113,25 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         if (game.State != GAME_STATE.SHRINKING || Level < 0) return false;
         var (source, ctx) = context; var rect = Rect;
 
-        // 2.1) Highlight area color & size:
-        await ctx.SetFillStyleAsync($"{COLOR.Blend(Alpha, game.Map.Background)}");
-        var add = rect.Width < 2 * Tile.SIZE + Tile.HALF_SIZE ? 4 : 1;
+        // 2) Highlight area color & size:
+        await ctx.SetFillStyleAsync($"{Color(game.Map.Background, Alpha)}");
+        var add = rect.Width < 2 * Tile.SIZE + Tile.HALF_SIZE ? 4 : 1; var screen = game.Map.ScreenRect;
         var size = new Size(game.Map.ToScreenWidth(Tile.SIZE + Tile.HALF_SIZE) + add, game.Map.ToScreenHeight(rect.Height) + 1);
-        // 2.2) Left part:
-        var point = game.Map.ToScreen(new(rect.X - Tile.HALF_SIZE, rect.Y + rect.Height));
-        await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
-        // 2.3) Right part:
-        point = game.Map.ToScreen(new(rect.X + rect.Width - Tile.SIZE, rect.Y + rect.Height));
-        await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
+        if (Level < MAX_LEVEL - 1) {
+            // 2.1) Left part:
+            var point = game.Map.ToScreen(new(rect.X - Tile.HALF_SIZE, rect.Y + rect.Height));
+            await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
+            // 2.2) Right part:
+            point = game.Map.ToScreen(new(rect.X + rect.Width - Tile.SIZE, rect.Y + rect.Height));
+            await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
+        } else {
+            // 2.3) Middle part:
+            await ctx.FillRectAsync(screen.X, screen.Y, screen.Width, screen.Height);
+        }
 
         // 3.1) Tiles size:
         if (Level <= 0) return true;
-        var sizeF = new SizeF(rect.X - WorldX, rect.Height); var screen = game.Map.ScreenRect;
+        var sizeF = new SizeF(rect.X - WorldX, rect.Height);
         size = new(game.Map.ToScreenWidth(sizeF.Width), game.Map.ToScreenHeight(sizeF.Height));
         // 3.2) Left part:
         await ctx.DrawImageAsync(

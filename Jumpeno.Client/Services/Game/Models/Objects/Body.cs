@@ -3,11 +3,16 @@ namespace Jumpeno.Client.Models;
 public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKIN Skin)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const double IMMORTAL_MS = 2000; // ms
+    // Size:
     public const int WIDTH = 51; // px
     public const int HEIGHT = 64; // px
+    // Speed:
     public const float SPEED = 0.38f; // px per ms
+    // Jump:
     public const float JUMP_HEIGHT = 180f; // px
     public const float JUMP_SPEED = 0.95f; // px per ms (at the start)
+    public const float JUMP_SPEED_BASE = 0.2f; // minimal fraction of JUMP_SPEED
+    public const float JUMP_SPEED_MAX = 1.3f; // px per ms
     public const double PENDING_JUMP_TIMEOUT = 150; // ms
 
     // Computed constants -----------------------------------------------------------------------------------------------------------------
@@ -79,19 +84,18 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         else direction.X = key == GAME_CONTROLS.LEFT ? -1 : 1;
     }
 
-    private float ComputeNextX(double deltaT) {
-        return (float) (Center.X + deltaT * Direction.X * SPEED);
-    }
-    
+    private float ComputeNextX(double deltaT) => (float)(Center.X + deltaT * Direction.X * SPEED);
+
     private float ComputeNextY(double deltaT) {
         if (JumpFinishY == null) return Center.Y;
-        var jumpSpeed = (0.2 + (JumpFinishY - (Center.Y + HALF_HEIGHT)) / JUMP_HEIGHT) * JUMP_SPEED;
-        return (float) (Center.Y + deltaT * Direction.Y * jumpSpeed);
+        var jumpSpeed = Math.Min((double)
+            (JUMP_SPEED_BASE + (JumpFinishY - (Center.Y + HALF_HEIGHT)) / JUMP_HEIGHT) * JUMP_SPEED,
+            JUMP_SPEED_MAX // NOTE: Gravity restriction
+        );
+        return (float)(Center.Y + deltaT * Direction.Y * jumpSpeed);
     }
 
-    private PointF ComputeNextCenter(double deltaT) {
-        return new PointF(ComputeNextX(deltaT), ComputeNextY(deltaT));
-    }
+    private PointF ComputeNextCenter(double deltaT) => new(ComputeNextX(deltaT), ComputeNextY(deltaT));
 
     // Jump -------------------------------------------------------------------------------------------------------------------------------
     private void ApplyDeathFall(Game game) {
