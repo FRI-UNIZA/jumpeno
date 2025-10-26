@@ -24,7 +24,7 @@ public class GameController : ControllerBase {
     public GameMapsDTOR Maps() {
         GameMapsDTOR result = new([]);
         int i = 0;
-        foreach (var map in MAPS.AllMaps)
+        foreach (var map in MAPS.ALL_MAPS)
         {
             result.Maps.Add(new (i, map.Name));
             i++;
@@ -41,7 +41,7 @@ public class GameController : ControllerBase {
         // 1) Read query params:
         var q = query?.Assert() ?? throw EXCEPTION.VALUES.Add(ERROR.EMPTY);
         // 2) Get map:
-        var selectedMap = MAPS.AllMaps.ElementAt(q.ID);
+        var selectedMap = MAPS.ALL_MAPS.ElementAt(q.ID);
         return new(selectedMap);
     }
 }

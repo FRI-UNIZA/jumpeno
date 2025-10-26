@@ -5,17 +5,17 @@
     {
         #region MapsDefinitions
         //Colors -------------------------------------------------------------------------------------------
-        private static readonly RGBColor ColorWhite = new(255, 255, 255);
-        private static readonly RGBColor ColorYellow = new(255, 255, 0);
-        private static readonly RGBColor ColorDarkPurple = new(51, 0, 51);
-        private static readonly RGBColor ColorDarkGreen = new(7, 30, 24);
-        private static readonly RGBColor ColorDarkBlue = new(3, 14, 22);
-        private static readonly RGBColor DefaultBacgroundColor = new(36, 30, 59);
-        private static readonly RGBColor DefaultBorderColor = new(10, 10, 10);
+        private static readonly RGBColor COLOR_WHITE = new(255, 255, 255);
+        private static readonly RGBColor COLOR_YELLOW = new(255, 255, 0);
+        private static readonly RGBColor COLOR_DARK_PURPLE = new(51, 0, 51);
+        private static readonly RGBColor COLOR_DARK_GREEN = new(7, 30, 24);
+        private static readonly RGBColor COLOR_DARK_BLUE = new(3, 14, 22);
+        private static readonly RGBColor DEFAULT_BACKGROUND_COLOR = new(36, 30, 59);
+        private static readonly RGBColor DEFAULT_BORDER_COLOR = new(10, 10, 10);
 
         //Tiles positions ----------------------------------------------------------------------------------
         //Jumper's home
-        private static readonly List<(int x, int y)> JumpersHomeTilesPositions =
+        private static readonly List<(int x, int y)> JUMPERS_HOME_TILES_POSITIONS =
         [
             (1, 0), (2, 0), (10, 0), (12, 0),
             (12, 1),
@@ -24,7 +24,7 @@
         ];
 
         //Magic Temple
-        private static readonly List<(int x, int y)> MagicTempleTilesPositions =
+        private static readonly List<(int x, int y)> MAGIC_TEMPLE_TILES_POSITIONS =
         [
             (0, 0), (1, 0), (2, 0), (8, 0), (12, 0), (13, 0), (14, 0), (15, 0),
             (0, 1), (8, 1), (15, 1),
@@ -35,7 +35,7 @@
         ];
 
         //Emerald Grove
-        private static readonly List<(int x, int y)> EmeraldGroveTilesPositions =
+        private static readonly List<(int x, int y)> EMERALD_GROVE_TILES_POSITIONS =
         [
             (2, 0), (4, 0), (8, 0), (13, 0),
             (4, 1),
@@ -45,7 +45,7 @@
         ];
 
         //Amethyst Dawn
-        private static readonly List<(int x, int y)> AmethysDawnTilesPositions =
+        private static readonly List<(int x, int y)> AMETHYST_DAWN_TILES_POSITIONS =
         [
             (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (8, 0), (9, 0), (10, 0), (11, 0), (15, 0),
             (3, 1), (9, 1),
@@ -58,22 +58,22 @@
 
         //Static maps -------------------------------------------------------------------------------------
         //Jumper's home
-        private static readonly Map JumpersHome = new("Jumper's home", Tile.CreateTiles(JumpersHomeTilesPositions, IMAGE.TILE), 
-            DefaultBacgroundColor, ColorYellow, DefaultBorderColor, IMAGE.TILE, string.Empty);
+        private static readonly Map MAP_JUMPERS_HOME = new("Jumper's home", Tile.CreateTiles(JUMPERS_HOME_TILES_POSITIONS, IMAGE.TILE), 
+            DEFAULT_BACKGROUND_COLOR, COLOR_YELLOW, DEFAULT_BORDER_COLOR, IMAGE.TILE, string.Empty);
 
         //Magic Temple
-        private static readonly Map MagicTemple = new("Magic Temple", Tile.CreateTiles(MagicTempleTilesPositions, IMAGE.TILE_MAGIC_TEMPLE_ACTIVE),
-            DefaultBacgroundColor, ColorWhite, ColorDarkPurple, IMAGE.TILE_MAGIC_TEMPLE_ACTIVE, IMAGE.TILE_MAGIC_TEMPLE_BACKGROUND);
+        private static readonly Map MAP_MAGIC_TEMPLE = new("Magic Temple", Tile.CreateTiles(MAGIC_TEMPLE_TILES_POSITIONS, IMAGE.TILE_MAGIC_TEMPLE_ACTIVE),
+            DEFAULT_BACKGROUND_COLOR, COLOR_WHITE, COLOR_DARK_PURPLE, IMAGE.TILE_MAGIC_TEMPLE_ACTIVE, IMAGE.TILE_MAGIC_TEMPLE_BACKGROUND);
 
         //Emerald Grove
-        private static readonly Map EmeraldGrove = new("Emerald Grove", Tile.CreateTiles(EmeraldGroveTilesPositions, IMAGE.TILE_EMERALD_GROVE_ACTIVE),
-            DefaultBacgroundColor, ColorYellow, ColorDarkGreen, IMAGE.TILE_EMERALD_GROVE_ACTIVE, IMAGE.TILE_EMERALD_GROVE_BACKGROUND);
+        private static readonly Map MAP_EMERALD_GROVE = new("Emerald Grove", Tile.CreateTiles(EMERALD_GROVE_TILES_POSITIONS, IMAGE.TILE_EMERALD_GROVE_ACTIVE),
+            DEFAULT_BACKGROUND_COLOR, COLOR_YELLOW, COLOR_DARK_GREEN, IMAGE.TILE_EMERALD_GROVE_ACTIVE, IMAGE.TILE_EMERALD_GROVE_BACKGROUND);
 
         //Amethyst Dawn
-        private static readonly Map AmethystDawn = new("Amethyst Dawn", Tile.CreateTiles(AmethysDawnTilesPositions, IMAGE.TILE_AMETHYST_DAWN_ACTIVE),
-            DefaultBacgroundColor, ColorWhite, ColorDarkBlue, IMAGE.TILE_AMETHYST_DAWN_ACTIVE, IMAGE.TILE_AMETHYST_DAWN_BACKGROUND);
+        private static readonly Map MAP_AMETHYST_DAWN = new("Amethyst Dawn", Tile.CreateTiles(AMETHYST_DAWN_TILES_POSITIONS, IMAGE.TILE_AMETHYST_DAWN_ACTIVE),
+            DEFAULT_BACKGROUND_COLOR, COLOR_WHITE, COLOR_DARK_BLUE, IMAGE.TILE_AMETHYST_DAWN_ACTIVE, IMAGE.TILE_AMETHYST_DAWN_BACKGROUND);
 
         //All maps static list ----------------------------------------------------------------------------
-        public static readonly List<Map> AllMaps = [JumpersHome, MagicTemple, EmeraldGrove, AmethystDawn];
+        public static readonly List<Map> ALL_MAPS = [MAP_JUMPERS_HOME, MAP_MAGIC_TEMPLE, MAP_EMERALD_GROVE, MAP_AMETHYST_DAWN];
     }
 }

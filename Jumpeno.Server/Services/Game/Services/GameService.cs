@@ -9,7 +9,7 @@ public static class GameService {
         new GameEngine(
             DISPLAY_MODE.ONE_SCREEN, GAME_MODE.MAYHEM,
             User.UNKNOWN, Game.DEFAULT_CODE, Game.DEFAULT_NAME,
-            MAPS.AllMaps[3], GameValidator.MAX_CAPACITY
+            MAPS.ALL_MAPS[3], GameValidator.MAX_CAPACITY
         )
     }};
 
