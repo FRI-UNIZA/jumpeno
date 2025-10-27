@@ -1,5 +1,3 @@
-using Jumpeno.Client.Services.Game.Models.Map.Constants;
-
 namespace Jumpeno.Server.Controllers;
 
 [ApiController]
@@ -23,11 +21,9 @@ public class GameController : ControllerBase {
     [ProducesResponseType(typeof(GameMapsDTOR), StatusCodes.Status200OK)]
     public GameMapsDTOR Maps() {
         GameMapsDTOR result = new([]);
-        int i = 0;
-        foreach (var map in MAPS.ALL_MAPS)
+        for (int i = 0; i < MAPS.ALL_MAPS.Count; i++)
         {
-            result.Maps.Add(new (i, map.Name));
-            i++;
+            result.Maps.Add(new(i, MAPS.ALL_MAPS[i].Name));
         }
         return result;
     }
@@ -41,7 +37,6 @@ public class GameController : ControllerBase {
         // 1) Read query params:
         var q = query?.Assert() ?? throw EXCEPTION.VALUES.Add(ERROR.EMPTY);
         // 2) Get map:
-        var selectedMap = MAPS.ALL_MAPS.ElementAt(q.ID);
-        return new(selectedMap);
+        return new(MAPS.ALL_MAPS.ElementAt(q.ID));
     }
 }

@@ -8,6 +8,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public const int BOX_SHADOW_CONTRAST = 30;
     // Default:
     public const string DEFAULT_NAME = "Jumper's home";
+
     // Description ------------------------------------------------------------------------------------------------------------------------
     public string Name { get; private set; }
 
@@ -40,16 +41,14 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     private List<Tile> Tiles { get; set; }
     private readonly QuadTreeRectF<Tile> TileQT;
     public List<Tile> GetCollidingTiles(RectangleF rect) => TileQT.GetObjects(rect);
-    [JsonInclude][Newtonsoft.Json.JsonProperty]
-    private string BackgroundTileImagePath { get; set; } = string.Empty;
-    [JsonInclude][Newtonsoft.Json.JsonProperty]
-    public string ActiveTileImagePath { get; private set; } = string.Empty;
 
     // Shrink -----------------------------------------------------------------------------------------------------------------------------
     public Shrink Shrink { get; private set; }
 
     // Colors -----------------------------------------------------------------------------------------------------------------------------
     public RGBColor Background { get; private set; }
+    public string? BackgroundImage { get; private set; }
+    public string TileImage { get; private set; }
     public RGBColor Foreground { get; private set; }
     public RGBColor Border { get; private set; }
     public RGBColor BoxShadow { get; private set; }
@@ -61,8 +60,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         float worldMinX, float worldMaxX, float worldMinY, float worldMaxY,
         int screenMinX, int screenMaxX, int screenMinY, int screenMaxY,
         List<Tile> tiles, Shrink shrink,
-        RGBColor background, RGBColor foreground, RGBColor border,
-        string backgroundTileImagePath
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor border
     ) {
         Name = name;
         WorldMinX = worldMinX;
@@ -73,11 +71,12 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         ScreenMaxX = screenMaxX;
         ScreenMinY = screenMinY;
         ScreenMaxY = screenMaxY;
-        BackgroundTileImagePath = backgroundTileImagePath;
         Tiles = tiles;
         TileQT = InitTileQT(Tiles);
         Shrink = shrink;
         Background = background;
+        BackgroundImage = backgroundImage;
+        TileImage = tileImage;
         Foreground = foreground;
         Border = border;
         BoxShadow = InitBoxShadow(border);
@@ -86,16 +85,22 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
 
     private Map(
         string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles,
-        RGBColor background, RGBColor foreground, RGBColor border, string backgroundTileImagePath)
-    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, foreground, border, backgroundTileImagePath) {
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor border
+    )
+    :
+    this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, backgroundImage, tileImage, foreground, border) {
         Shrink = new(this);
     }
 
-    public Map(string name, List<Tile> tiles, RGBColor background, RGBColor foreground, RGBColor border, 
-        string tileImagePath, string backgroundTileImagePath)
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, foreground, border, backgroundTileImagePath) {
-        ActiveTileImagePath = tileImagePath;
-    }
+    public Map(
+        string name, List<Tile> tiles, RGBColor background, string backgroundImage, string tileImage, RGBColor foreground, RGBColor border
+    )
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, backgroundImage, tileImage, foreground, border) {}
+
+    public Map(
+        string name, List<Tile> tiles, RGBColor background, string tileImage, RGBColor foreground, RGBColor border
+    )
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, null, tileImage, foreground, border) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private QuadTreeRectF<Tile> InitTileQT(List<Tile> tiles) {
@@ -183,7 +188,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public async Task<bool> Render(Canvas2DContext ctx, Game? game = null) {
         var screen = ScreenRect;
         // 1) Background:
-        if (ImageReferrer.Get(BackgroundTileImagePath) is ElementReference img)
+        if (BackgroundImage != null && ImageReferrer.Get(BackgroundImage) is ElementReference img)
         {
             var pattern = await ctx.CreatePatternAsync(img, RepeatPattern.Repeat);
             await ctx.SetFillStyleAsync(pattern);

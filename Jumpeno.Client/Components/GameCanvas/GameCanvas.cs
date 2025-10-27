@@ -7,9 +7,9 @@ public partial class GameCanvas {
     public Map DEFAULT_MAP => new(
         Map.DEFAULT_NAME, [],
         AppTheme.GAME_CANVAS_DEFAULT_BACKGROUND,
+        IMAGE.MAP_JUMPERS_HOME_TILE,
         AppTheme.GAME_CANVAS_DEFAULT_FOREGROUND,
-        AppTheme.GAME_CANVAS_DEFAULT_BORDER,
-        IMAGE.TILE, string.Empty
+        AppTheme.GAME_CANVAS_DEFAULT_BORDER
     );
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------

@@ -90,7 +90,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         // 3) Render pattern:
         for (int i = 0, x = (int) WorldX; x < WorldX + WorldWidth; x += Tile.SIZE) {
             for (float y = WorldY; y < WorldY + WorldHeight; y += Tile.SIZE, i++) {
-                var tile = new Tile(new(x + Tile.HALF_SIZE, y + Tile.HALF_SIZE), game.Map.ActiveTileImagePath);
+                var tile = new Tile(new(x + Tile.HALF_SIZE, y + Tile.HALF_SIZE));
                 if (!await tile.Render(ctx, (game.Map, false))) break;
                 if (i > 0) continue;
                 prerendered = true;

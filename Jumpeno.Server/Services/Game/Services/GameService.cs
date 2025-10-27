@@ -1,5 +1,3 @@
-using Jumpeno.Client.Services.Game.Models.Map.Constants;
-
 namespace Jumpeno.Server.Services;
 
 public static class GameService {

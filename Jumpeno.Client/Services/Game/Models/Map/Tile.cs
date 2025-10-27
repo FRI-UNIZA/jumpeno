@@ -10,31 +10,27 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
     private PointF Center => Position.Center;
     public RectFPosition Position { get; private set; }
     public RectangleF Rect { get; private set; }
-    [JsonInclude][Newtonsoft.Json.JsonProperty]
-    private string ImagePath { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor][Newtonsoft.Json.JsonConstructor]
-    public Tile(PointF center, string imagePath) {
+    public Tile(PointF center) {
         Position = new(center, SIZE - 2, SIZE - 2);
         Rect = Collision.GetBoundingBox(Position);
-        ImagePath = imagePath;
     }
 
-    // Static tile creation methods --------------------------------------------------------------------------------------------------------
-    public static List<Tile> CreateTiles(List<(int x, int y)> positionsOfTiles, string texturePath)
+    public Tile(int x, int y) : this(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE))
+    {
+    }
+
+    // Static tile creation methods -------------------------------------------------------------------------------------------------------
+    public static List<Tile> CreateTiles(List<(int x, int y)> tilePositions)
     {
         var tiles = new List<Tile>();
-        foreach (var (x, y) in positionsOfTiles)
+        foreach (var (x, y) in tilePositions)
         {
-            tiles.Add(CreateTile(x, y, texturePath));
+            tiles.Add(new Tile(x, y));
         }
         return tiles;
-    }
-
-    public static Tile CreateTile(int x, int y, string imagePath)
-    {
-        return new Tile(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE), imagePath);
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
@@ -42,7 +38,7 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
         var (map, scale) = @params;
         var point = scale ? map.ToScreen(Center) : map.ToCanvas(Center);
         int size = scale ? map.ToScreenWidth(SIZE) : SIZE;
-        if (ImageReferrer.Get(ImagePath) is not ElementReference img) return false;
+        if (ImageReferrer.Get(map.TileImage) is not ElementReference img) return false;
         await ctx.DrawImageAsync(
             img,
             0, 0,
