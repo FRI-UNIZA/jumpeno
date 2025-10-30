@@ -4,18 +4,18 @@ public class MAPS
 {
     // Colors -----------------------------------------------------------------------------------------------------------------------------
     private static readonly RGBColor COLOR_WHITE = new(255, 255, 255);
+    private static readonly RGBColor COLOR_BLACK = new(10, 10, 10);
+    private static readonly RGBColor COLOR_DARK = new(36, 30, 59);
     private static readonly RGBColor COLOR_YELLOW = new(255, 255, 0);
     private static readonly RGBColor COLOR_DARK_PURPLE = new(51, 0, 51);
     private static readonly RGBColor COLOR_DARK_GREEN = new(7, 30, 24);
     private static readonly RGBColor COLOR_DARK_BLUE = new(3, 14, 22);
-    private static readonly RGBColor COLOR_PURPLE = new(36, 30, 59);
-    private static readonly RGBColor COLOR_BLACK = new(10, 10, 10);
 
     // Maps definitions -------------------------------------------------------------------------------------------------------------------
     // Jumper's home:
     private static readonly Map MAP_JUMPERS_HOME = new(
         "Jumper's home", Tile.CreateTiles(JUMPERS_HOME_TILE_POSITIONS),
-        COLOR_PURPLE, IMAGE.MAP_JUMPERS_HOME_TILE, COLOR_YELLOW, COLOR_BLACK
+        COLOR_DARK, IMAGE.MAP_JUMPERS_HOME_TILE, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK
     );
     private static List<(int x, int y)> JUMPERS_HOME_TILE_POSITIONS =>
     [
@@ -28,7 +28,7 @@ public class MAPS
     // Magic Temple:
     private static readonly Map MAP_MAGIC_TEMPLE = new(
         "Magic Temple", Tile.CreateTiles(MAGIC_TEMPLE_TILE_POSITIONS),
-        COLOR_PURPLE, IMAGE.MAP_MAGIC_TEMPLE_BACKGROUND, IMAGE.MAP_MAGIC_TEMPLE_TILE, COLOR_WHITE, COLOR_DARK_PURPLE
+        COLOR_DARK_PURPLE, IMAGE.MAP_MAGIC_TEMPLE_BACKGROUND, IMAGE.MAP_MAGIC_TEMPLE_TILE, COLOR_WHITE, COLOR_WHITE, COLOR_DARK_PURPLE
     );
     private static List<(int x, int y)> MAGIC_TEMPLE_TILE_POSITIONS =>
     [
@@ -43,7 +43,7 @@ public class MAPS
     // Emerald Grove:
     private static readonly Map MAP_EMERALD_GROVE = new(
         "Emerald Grove", Tile.CreateTiles(EMERALD_GROVE_TILE_POSITIONS),
-        COLOR_PURPLE, IMAGE.MAP_EMERALD_GROVE_BACKGROUND, IMAGE.MAP_EMERALD_GROVE_TILE, COLOR_YELLOW, COLOR_DARK_GREEN
+        COLOR_DARK_GREEN, IMAGE.MAP_EMERALD_GROVE_BACKGROUND, IMAGE.MAP_EMERALD_GROVE_TILE, COLOR_YELLOW, COLOR_WHITE, COLOR_DARK_GREEN
     );
     private static List<(int x, int y)> EMERALD_GROVE_TILE_POSITIONS =>
     [
@@ -57,7 +57,7 @@ public class MAPS
     // Amethyst Dawn:
     private static readonly Map MAP_AMETHYST_DAWN = new(
         "Amethyst Dawn", Tile.CreateTiles(AMETHYST_DAWN_TILE_POSITIONS),
-        COLOR_PURPLE, IMAGE.MAP_AMETHYST_DAWN_BACKGROUND, IMAGE.MAP_AMETHYST_DAWN_TILE, COLOR_WHITE, COLOR_DARK_BLUE
+        COLOR_DARK_BLUE, IMAGE.MAP_AMETHYST_DAWN_BACKGROUND, IMAGE.MAP_AMETHYST_DAWN_TILE, COLOR_WHITE, COLOR_WHITE, COLOR_DARK_BLUE
     );
     private static List<(int x, int y)> AMETHYST_DAWN_TILE_POSITIONS =>
     [

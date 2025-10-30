@@ -525,9 +525,10 @@ public class BaseTheme {
     public virtual RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND { get; }
 
 // NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
-    public virtual RGBAColor GAME_CANVAS_DEFAULT_BACKGROUND { get; }
-    public virtual RGBAColor GAME_CANVAS_DEFAULT_FOREGROUND { get; }
-    public virtual RGBAColor GAME_CANVAS_DEFAULT_BORDER { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_BACKGROUND { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_FOREGROUND { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_TINT { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_BORDER { get; }
     public virtual string GAME_CANVAS_BOX_SHADOW_SIZE => "0 0.0025em 0.025em 0.01em";
     public virtual string GAME_CANVAS_BOX_SHADOW_OPACITY { get; }
 

@@ -483,6 +483,7 @@ public class LightTheme : BaseTheme {
 // NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
     public override RGBAColor GAME_CANVAS_DEFAULT_BACKGROUND => new(255, 255, 255);
     public override RGBAColor GAME_CANVAS_DEFAULT_FOREGROUND => new(42, 33, 56);
+    public override RGBColor GAME_CANVAS_DEFAULT_TINT => new(0, 0, 0);
     public override RGBAColor GAME_CANVAS_DEFAULT_BORDER => new(230, 230, 230);
     public override string GAME_CANVAS_BOX_SHADOW_OPACITY => "0.4";
 

@@ -18,9 +18,7 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
         Rect = Collision.GetBoundingBox(Position);
     }
 
-    public Tile(int x, int y) : this(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE))
-    {
-    }
+    public Tile(int x, int y) : this(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE)) {}
 
     // Static tile creation methods -------------------------------------------------------------------------------------------------------
     public static List<Tile> CreateTiles(List<(int x, int y)> tilePositions)

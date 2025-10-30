@@ -504,9 +504,10 @@ public class DarkTheme : BaseTheme {
     public override RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND => new(180, 180, 180);
 
 // NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor GAME_CANVAS_DEFAULT_BACKGROUND => new(42, 33, 56);
-    public override RGBAColor GAME_CANVAS_DEFAULT_FOREGROUND => new(255, 255, 255);
-    public override RGBAColor GAME_CANVAS_DEFAULT_BORDER => new(10, 10, 10);
+    public override RGBColor GAME_CANVAS_DEFAULT_BACKGROUND => new(42, 33, 56);
+    public override RGBColor GAME_CANVAS_DEFAULT_FOREGROUND => new(255, 255, 255);
+    public override RGBColor GAME_CANVAS_DEFAULT_TINT => new(255, 255, 255);
+    public override RGBColor GAME_CANVAS_DEFAULT_BORDER => new(10, 10, 10);
     public override string GAME_CANVAS_BOX_SHADOW_OPACITY => "0.6";
 
 // NOTE: Images ---------------------------------------------------------------------------------------------------------------------------

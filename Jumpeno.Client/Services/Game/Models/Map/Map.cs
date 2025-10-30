@@ -50,6 +50,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public string? BackgroundImage { get; private set; }
     public string TileImage { get; private set; }
     public RGBColor Foreground { get; private set; }
+    public RGBColor Tint { get; private set; }
     public RGBColor Border { get; private set; }
     public RGBColor BoxShadow { get; private set; }
 
@@ -60,7 +61,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         float worldMinX, float worldMaxX, float worldMinY, float worldMaxY,
         int screenMinX, int screenMaxX, int screenMinY, int screenMaxY,
         List<Tile> tiles, Shrink shrink,
-        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor border
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     ) {
         Name = name;
         WorldMinX = worldMinX;
@@ -78,6 +79,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         BackgroundImage = backgroundImage;
         TileImage = tileImage;
         Foreground = foreground;
+        Tint = tint;
         Border = border;
         BoxShadow = InitBoxShadow(border);
         PreRenderer = InitPrerenderer();
@@ -85,22 +87,23 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
 
     private Map(
         string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles,
-        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor border
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    :
-    this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, backgroundImage, tileImage, foreground, border) {
+    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, backgroundImage, tileImage, foreground, tint, border) {
         Shrink = new(this);
     }
 
     public Map(
-        string name, List<Tile> tiles, RGBColor background, string backgroundImage, string tileImage, RGBColor foreground, RGBColor border
+        string name, List<Tile> tiles,
+        RGBColor background, string backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, backgroundImage, tileImage, foreground, border) {}
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, backgroundImage, tileImage, foreground, tint, border) {}
 
     public Map(
-        string name, List<Tile> tiles, RGBColor background, string tileImage, RGBColor foreground, RGBColor border
+        string name, List<Tile> tiles,
+        RGBColor background, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, null, tileImage, foreground, border) {}
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, null, tileImage, foreground, tint, border) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private QuadTreeRectF<Tile> InitTileQT(List<Tile> tiles) {

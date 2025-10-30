@@ -287,6 +287,7 @@ body.light-theme .surface-primary {
     --theme-switch-primary-disabled-checked-background: rgba(180, 180, 180, 1);
     --theme-game-canvas-default-background: rgba(255, 255, 255, 1);
     --theme-game-canvas-default-foreground: rgba(42, 33, 56, 1);
+    --theme-game-canvas-default-tint: rgb(0, 0, 0);
     --theme-game-canvas-default-border: rgba(230, 230, 230, 1);
     --theme-game-canvas-box-shadow-opacity: 0.4;
     --theme-background-light-color: rgba(210, 210, 210, 1);
@@ -655,9 +656,10 @@ body.dark-theme .surface-primary {
     --theme-switch-primary-disabled-background: rgba(220, 220, 220, 1);
     --theme-switch-primary-disabled-bullet-background: rgba(240, 240, 240, 1);
     --theme-switch-primary-disabled-checked-background: rgba(180, 180, 180, 1);
-    --theme-game-canvas-default-background: rgba(42, 33, 56, 1);
-    --theme-game-canvas-default-foreground: rgba(255, 255, 255, 1);
-    --theme-game-canvas-default-border: rgba(10, 10, 10, 1);
+    --theme-game-canvas-default-background: rgb(42, 33, 56);
+    --theme-game-canvas-default-foreground: rgb(255, 255, 255);
+    --theme-game-canvas-default-tint: rgb(255, 255, 255);
+    --theme-game-canvas-default-border: rgb(10, 10, 10);
     --theme-game-canvas-box-shadow-opacity: 0.6;
     --theme-background-light-color: rgba(210, 210, 210, 1);
     --theme-background-dark-color: rgba(180, 180, 180, 1);

@@ -14,13 +14,13 @@ public static class IMAGE {
     public static string JUMPENO_PLAYERS => URL.FileLink("/images/images/jumpeno-players.png");
     public static string KEYBOARD => URL.FileLink("/images/images/keyboard.png", theme: true);
     // Maps:
-    public static string MAP_JUMPERS_HOME_TILE => URL.FileLink("/images/images/tile.png");
-    public static string MAP_MAGIC_TEMPLE_TILE => URL.FileLink("/images/images/tile_magic_temple_active.png");
-    public static string MAP_MAGIC_TEMPLE_BACKGROUND => URL.FileLink("/images/images/tile_magic_temple_background.png");
-    public static string MAP_EMERALD_GROVE_TILE => URL.FileLink("/images/images/tile_emerald_grove_active.png");
-    public static string MAP_EMERALD_GROVE_BACKGROUND => URL.FileLink("/images/images/tile_emerald_grove_background.png");
-    public static string MAP_AMETHYST_DAWN_TILE => URL.FileLink("/images/images/tile_amethyst_dawn_active.png");
-    public static string MAP_AMETHYST_DAWN_BACKGROUND => URL.FileLink("/images/images/tile_amethyst_dawn_background.png");
+    public static string MAP_JUMPERS_HOME_TILE => URL.FileLink("/images/maps/jumpers_home_tile.png");
+    public static string MAP_MAGIC_TEMPLE_TILE => URL.FileLink("/images/maps/magic_temple_tile.png");
+    public static string MAP_MAGIC_TEMPLE_BACKGROUND => URL.FileLink("/images/maps/magic_temple_background.png");
+    public static string MAP_EMERALD_GROVE_TILE => URL.FileLink("/images/maps/emerald_grove_tile.png");
+    public static string MAP_EMERALD_GROVE_BACKGROUND => URL.FileLink("/images/maps/emerald_grove_background.png");
+    public static string MAP_AMETHYST_DAWN_TILE => URL.FileLink("/images/maps/amethyst_dawn_tile.png");
+    public static string MAP_AMETHYST_DAWN_BACKGROUND => URL.FileLink("/images/maps/amethyst_dawn_background.png");
     // Sprites:
     public static string SPRITE_MAGE_AIR => URL.FileLink("/images/sprites/mage-air.png");
     public static string SPRITE_MAGE_EARTH => URL.FileLink("/images/sprites/mage-earth.png");

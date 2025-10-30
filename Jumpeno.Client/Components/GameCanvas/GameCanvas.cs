@@ -9,6 +9,7 @@ public partial class GameCanvas {
         AppTheme.GAME_CANVAS_DEFAULT_BACKGROUND,
         IMAGE.MAP_JUMPERS_HOME_TILE,
         AppTheme.GAME_CANVAS_DEFAULT_FOREGROUND,
+        AppTheme.GAME_CANVAS_DEFAULT_TINT,
         AppTheme.GAME_CANVAS_DEFAULT_BORDER
     );
 
