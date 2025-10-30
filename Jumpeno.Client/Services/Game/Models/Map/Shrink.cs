@@ -31,11 +31,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         return (float)alpha;
     } }
     // Color:
-    public static RGBAColor Color(RGBColor background, float alpha) {
-        return background.Luminance() < LUMA_THRESHOLD
-        ? new(255, 255, 255, alpha)
-        : new(0, 0, 0, alpha);
-    }
+    public static RGBAColor Color(RGBColor tint, float alpha) => new(tint, alpha);
 
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldX { get; set; }
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldY { get; set; }
@@ -114,7 +110,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         var (source, ctx) = context; var rect = Rect;
 
         // 2) Highlight area color & size:
-        await ctx.SetFillStyleAsync($"{Color(game.Map.Background, Alpha)}");
+        await ctx.SetFillStyleAsync($"{Color(game.Map.Tint, Alpha)}");
         var add = rect.Width < 2 * Tile.SIZE + Tile.HALF_SIZE ? 4 : 1; var screen = game.Map.ScreenRect;
         var size = new Size(game.Map.ToScreenWidth(Tile.SIZE + Tile.HALF_SIZE) + add, game.Map.ToScreenHeight(rect.Height) + 1);
         if (Level < MAX_LEVEL - 1) {
