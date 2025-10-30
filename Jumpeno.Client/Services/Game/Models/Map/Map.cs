@@ -82,7 +82,8 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         Tint = tint;
         Border = border;
         BoxShadow = InitBoxShadow(border);
-        PreRenderer = InitPrerenderer();
+        PreRendererBG = InitPrerendererBG();
+        PreRendererTiles = InitPrerendererTiles();
     }
 
     private Map(
@@ -158,15 +159,45 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public Point ToCanvas(PointF point) => new((int) point.X, (int) (WorldHeight - point.Y));
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
-    private readonly PreRenderer<Map> PreRenderer;
-    private static PreRenderer<Map> InitPrerenderer() => new(CANVAS.MAP, PreRender, ApplyRender);
-    private static async Task<bool> PreRender(Canvas2DContext ctx, Map map) {
+    private readonly PreRenderer<Map> PreRendererBG;
+    private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
+    private readonly PreRenderer<Map> PreRendererTiles;
+    private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+    private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
+    {
+        // 1) Clear:
+        await ctx.ClearRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+        // 2) Render background:
+        await ctx.SetFillStyleAsync($"{map.Background}");
+        await ctx.FillRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+        // 3) Render background image:
+        if (map.BackgroundImage != null)
+        {
+            // 3.1) Render image:
+            if (ImageReferrer.Get(map.BackgroundImage) is ElementReference img)
+            {
+                var pattern = await ctx.CreatePatternAsync(img, RepeatPattern.Repeat);
+                await ctx.SetFillStyleAsync(pattern);
+                await ctx.FillRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+            }
+            // 3.2) Return result:
+            else
+            {
+                return false;
+            }
+        }
+        // 4) Return result:
+        return true;
+    }
+    private static async Task<bool> PreRenderTiles(Canvas2DContext ctx, Map map)
+    {
         // 1) Initialize:
         var prerendered = false;
         // 2) Clear:
         await ctx.ClearRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
         // 3) Render tiles:
-        for (int i = 0; i < map.Tiles.Count; i++) {
+        for (int i = 0; i < map.Tiles.Count; i++)
+        {
             if (!await map.Tiles[i].Render(ctx, (map, false))) break;
             if (i > 0) continue;
             prerendered = true;
@@ -174,7 +205,8 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return prerendered;
     }
-    private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map) {
+    private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map)
+    {
         var (source, ctx) = context;
         var world = map.Rect;
         var screen = map.ScreenRect;
@@ -184,27 +216,19 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         );
         return true;
     }
-    public bool IsPrerendered => PreRenderer.IsPrerendered;
-    public async Task<bool> PreRender() => await PreRenderer.PreRender(this);
+    public bool IsPrerendered => PreRendererBG.IsPrerendered && PreRendererTiles.IsPrerendered;
+    public async Task<bool> PreRender() => await PreRendererBG.PreRender(this) & await PreRendererTiles.PreRender(this);
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, Game? game = null) {
-        var screen = ScreenRect;
+    public async Task<bool> Render(Canvas2DContext ctx, Game? game = null)
+    {
         // 1) Background:
-        if (BackgroundImage != null && ImageReferrer.Get(BackgroundImage) is ElementReference img)
-        {
-            var pattern = await ctx.CreatePatternAsync(img, RepeatPattern.Repeat);
-            await ctx.SetFillStyleAsync(pattern);
-        }
-        else
-        {
-            await ctx.SetFillStyleAsync($"{Background}");
-        }
-        await ctx.FillRectAsync(screen.X, screen.Y, screen.Width, screen.Height);
+        await PreRendererBG.Render(ctx, this);
         // 2) Shrink:
         if (game != null) await Shrink.Render(ctx, game);
         // 3) Tiles:
-        await PreRenderer.Render(ctx, this);
+        await PreRendererTiles.Render(ctx, this);
+        // 4) Result:
         return true;
     }
 }

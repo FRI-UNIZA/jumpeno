@@ -19,7 +19,8 @@ public class GameController : ControllerBase {
     /// <response code="200">List of map identifiers.</response>
     [HttpGet]
     [ProducesResponseType(typeof(GameMapsDTOR), StatusCodes.Status200OK)]
-    public GameMapsDTOR Maps() {
+    public GameMapsDTOR Maps()
+    {
         GameMapsDTOR result = new([]);
         for (int i = 0; i < MAPS.ALL_MAPS.Count; i++)
         {
@@ -33,10 +34,18 @@ public class GameController : ControllerBase {
     /// <response code="200">Game map.</response>
     [HttpGet]
     [ProducesResponseType(typeof(GameMapDTOR), StatusCodes.Status200OK)]
-    public GameMapDTOR Map([FromQuery] GameMapDTO query) {
+    public GameMapDTOR Map([FromQuery] GameMapDTO query)
+    {
         // 1) Read query params:
         var q = query?.Assert() ?? throw EXCEPTION.VALUES.Add(ERROR.EMPTY);
-        // 2) Get map:
+        // 2) Validation:
+        if (q.ID < 0 || MAPS.ALL_MAPS.Count <= q.ID)
+        {
+            throw EXCEPTION.VALUES
+            .SetInfo("Invalid map ID")
+            .SetErrors([ERROR.INVALID.SetID(nameof(GameMapDTO.ID))]);
+        }
+        // 3) Return map:
         return new(MAPS.ALL_MAPS.ElementAt(q.ID));
     }
 }
