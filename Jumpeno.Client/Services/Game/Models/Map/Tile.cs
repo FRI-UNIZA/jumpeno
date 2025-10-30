@@ -18,12 +18,25 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
         Rect = Collision.GetBoundingBox(Position);
     }
 
+    public Tile(int x, int y) : this(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE)) {}
+
+    // Static tile creation methods -------------------------------------------------------------------------------------------------------
+    public static List<Tile> CreateTiles(List<(int x, int y)> tilePositions)
+    {
+        var tiles = new List<Tile>();
+        foreach (var (x, y) in tilePositions)
+        {
+            tiles.Add(new Tile(x, y));
+        }
+        return tiles;
+    }
+
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, (Map Map, bool Scale) @params) {
         var (map, scale) = @params;
         var point = scale ? map.ToScreen(Center) : map.ToCanvas(Center);
         int size = scale ? map.ToScreenWidth(SIZE) : SIZE;
-        if (ImageReferrer.Get(IMAGE.TILE) is not ElementReference img) return false;
+        if (ImageReferrer.Get(map.TileImage) is not ElementReference img) return false;
         await ctx.DrawImageAsync(
             img,
             0, 0,

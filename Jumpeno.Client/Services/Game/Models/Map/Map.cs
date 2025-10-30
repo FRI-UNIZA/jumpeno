@@ -8,25 +8,6 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public const int BOX_SHADOW_CONTRAST = 30;
     // Default:
     public const string DEFAULT_NAME = "Jumper's home";
-    public static Map DEFAULT_MAP => new(
-        DEFAULT_NAME, 
-        [
-            new(new(1 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(2 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(5 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(6 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(7 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(8 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(9 * Tile.SIZE + Tile.HALF_SIZE, 2 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(10 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 1 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 7 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(12 * Tile.SIZE + Tile.HALF_SIZE, 8 * Tile.SIZE + Tile.HALF_SIZE)),
-            new(new(13 * Tile.SIZE + Tile.HALF_SIZE, 0 * Tile.SIZE + Tile.HALF_SIZE))
-        ],
-        new(36, 30, 59), new(255, 255, 0), new(10, 10, 10)
-    );
 
     // Description ------------------------------------------------------------------------------------------------------------------------
     public string Name { get; private set; }
@@ -66,7 +47,10 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
 
     // Colors -----------------------------------------------------------------------------------------------------------------------------
     public RGBColor Background { get; private set; }
+    public string? BackgroundImage { get; private set; }
+    public string TileImage { get; private set; }
     public RGBColor Foreground { get; private set; }
+    public RGBColor Tint { get; private set; }
     public RGBColor Border { get; private set; }
     public RGBColor BoxShadow { get; private set; }
 
@@ -77,7 +61,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         float worldMinX, float worldMaxX, float worldMinY, float worldMaxY,
         int screenMinX, int screenMaxX, int screenMinY, int screenMaxY,
         List<Tile> tiles, Shrink shrink,
-        RGBColor background, RGBColor foreground, RGBColor border
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     ) {
         Name = name;
         WorldMinX = worldMinX;
@@ -92,21 +76,35 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         TileQT = InitTileQT(Tiles);
         Shrink = shrink;
         Background = background;
+        BackgroundImage = backgroundImage;
+        TileImage = tileImage;
         Foreground = foreground;
+        Tint = tint;
         Border = border;
         BoxShadow = InitBoxShadow(border);
-        PreRenderer = InitPrerenderer();
+        PreRendererBG = InitPrerendererBG();
+        PreRendererTiles = InitPrerendererTiles();
     }
 
     private Map(
         string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles,
-        RGBColor background, RGBColor foreground, RGBColor border)
-    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, foreground, border) {
+        RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
+    )
+    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, backgroundImage, tileImage, foreground, tint, border) {
         Shrink = new(this);
     }
 
-    public Map(string name, List<Tile> tiles, RGBColor background, RGBColor foreground, RGBColor border)
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, foreground, border) {}
+    public Map(
+        string name, List<Tile> tiles,
+        RGBColor background, string backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
+    )
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, backgroundImage, tileImage, foreground, tint, border) {}
+
+    public Map(
+        string name, List<Tile> tiles,
+        RGBColor background, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
+    )
+    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, null, tileImage, foreground, tint, border) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private QuadTreeRectF<Tile> InitTileQT(List<Tile> tiles) {
@@ -161,15 +159,45 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     public Point ToCanvas(PointF point) => new((int) point.X, (int) (WorldHeight - point.Y));
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
-    private readonly PreRenderer<Map> PreRenderer;
-    private static PreRenderer<Map> InitPrerenderer() => new(CANVAS.MAP, PreRender, ApplyRender);
-    private static async Task<bool> PreRender(Canvas2DContext ctx, Map map) {
+    private readonly PreRenderer<Map> PreRendererBG;
+    private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
+    private readonly PreRenderer<Map> PreRendererTiles;
+    private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+    private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
+    {
+        // 1) Clear:
+        await ctx.ClearRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+        // 2) Render background:
+        await ctx.SetFillStyleAsync($"{map.Background}");
+        await ctx.FillRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+        // 3) Render background image:
+        if (map.BackgroundImage != null)
+        {
+            // 3.1) Render image:
+            if (ImageReferrer.Get(map.BackgroundImage) is ElementReference img)
+            {
+                var pattern = await ctx.CreatePatternAsync(img, RepeatPattern.Repeat);
+                await ctx.SetFillStyleAsync(pattern);
+                await ctx.FillRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
+            }
+            // 3.2) Return result:
+            else
+            {
+                return false;
+            }
+        }
+        // 4) Return result:
+        return true;
+    }
+    private static async Task<bool> PreRenderTiles(Canvas2DContext ctx, Map map)
+    {
         // 1) Initialize:
         var prerendered = false;
         // 2) Clear:
         await ctx.ClearRectAsync(map.WorldMinX, map.WorldMinY, map.WorldWidth, map.WorldHeight);
         // 3) Render tiles:
-        for (int i = 0; i < map.Tiles.Count; i++) {
+        for (int i = 0; i < map.Tiles.Count; i++)
+        {
             if (!await map.Tiles[i].Render(ctx, (map, false))) break;
             if (i > 0) continue;
             prerendered = true;
@@ -177,7 +205,8 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return prerendered;
     }
-    private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map) {
+    private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map)
+    {
         var (source, ctx) = context;
         var world = map.Rect;
         var screen = map.ScreenRect;
@@ -187,19 +216,19 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         );
         return true;
     }
-    public bool IsPrerendered => PreRenderer.IsPrerendered;
-    public async Task<bool> PreRender() => await PreRenderer.PreRender(this);
+    public bool IsPrerendered => PreRendererBG.IsPrerendered && PreRendererTiles.IsPrerendered;
+    public async Task<bool> PreRender() => await PreRendererBG.PreRender(this) & await PreRendererTiles.PreRender(this);
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, Game? game = null) {
-        var screen = ScreenRect;
+    public async Task<bool> Render(Canvas2DContext ctx, Game? game = null)
+    {
         // 1) Background:
-        await ctx.SetFillStyleAsync($"{Background}");
-        await ctx.FillRectAsync(screen.X, screen.Y, screen.Width, screen.Height);
+        await PreRendererBG.Render(ctx, this);
         // 2) Shrink:
         if (game != null) await Shrink.Render(ctx, game);
         // 3) Tiles:
-        await PreRenderer.Render(ctx, this);
+        await PreRendererTiles.Render(ctx, this);
+        // 4) Result:
         return true;
     }
 }

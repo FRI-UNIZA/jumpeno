@@ -810,4 +810,7 @@
   <data name="Disabled field" xml:space="preserve">
     <value>Disabled field</value>
   </data>
+  <data name="Invalid map ID" xml:space="preserve">
+    <value>Invalid map ID</value>
+  </data>
 </root>

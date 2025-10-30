@@ -26,7 +26,8 @@ public partial class CanvasPreRenderer {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     private static void Init() {
         // Add objects here:
+        Add(CANVAS.MAP_BACKGROUND, Map.WIDTH, Map.HEIGHT);
+        Add(CANVAS.MAP_TILES, Map.WIDTH, Map.HEIGHT);
         Add(CANVAS.TILE_PATTERN, Map.WIDTH, Map.HEIGHT);
-        Add(CANVAS.MAP, Map.WIDTH, Map.HEIGHT);
     }
 }

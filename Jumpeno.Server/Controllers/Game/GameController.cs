@@ -19,11 +19,13 @@ public class GameController : ControllerBase {
     /// <response code="200">List of map identifiers.</response>
     [HttpGet]
     [ProducesResponseType(typeof(GameMapsDTOR), StatusCodes.Status200OK)]
-    public GameMapsDTOR Maps() {
+    public GameMapsDTOR Maps()
+    {
         GameMapsDTOR result = new([]);
-        result.Maps.Add(new(100, "Jumper's home"));
-        result.Maps.Add(new(201, "100 Needles"));
-        result.Maps.Add(new(302, "Magic temple"));
+        for (int i = 0; i < MAPS.ALL_MAPS.Count; i++)
+        {
+            result.Maps.Add(new(i, MAPS.ALL_MAPS[i].Name));
+        }
         return result;
     }
 
@@ -32,23 +34,18 @@ public class GameController : ControllerBase {
     /// <response code="200">Game map.</response>
     [HttpGet]
     [ProducesResponseType(typeof(GameMapDTOR), StatusCodes.Status200OK)]
-    public GameMapDTOR Map([FromQuery] GameMapDTO query) {
+    public GameMapDTOR Map([FromQuery] GameMapDTO query)
+    {
         // 1) Read query params:
         var q = query?.Assert() ?? throw EXCEPTION.VALUES.Add(ERROR.EMPTY);
-        // 2) Generate map:
-        Random rand = new();
-        List<Tile> tiles = [];
-        for (int i = 0; i < 10; i++) {
-            tiles.Add(new(new(rand.Next() % 16 * Tile.SIZE + Tile.HALF_SIZE, rand.Next() % 9 * Tile.SIZE + Tile.HALF_SIZE)));
+        // 2) Validation:
+        if (q.ID < 0 || MAPS.ALL_MAPS.Count <= q.ID)
+        {
+            throw EXCEPTION.VALUES
+            .SetInfo("Invalid map ID")
+            .SetErrors([ERROR.INVALID.SetID(nameof(GameMapDTO.ID))]);
         }
-        return new(
-            new(
-                Client.Models.Map.DEFAULT_NAME,
-                tiles,
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)),
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256)),
-                new((byte)(rand.Next() % 256), (byte)(rand.Next() % 256), (byte)(rand.Next() % 256))
-            )
-        );
+        // 3) Return map:
+        return new(MAPS.ALL_MAPS.ElementAt(q.ID));
     }
 }
