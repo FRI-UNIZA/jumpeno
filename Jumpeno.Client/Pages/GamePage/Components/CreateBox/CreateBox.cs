@@ -266,6 +266,7 @@ public partial class CreateBox {
     }
 
     private async Task FinishLoading() {
+        await Task.Delay(AppTheme.TRANSITION_SEMI_ULTRA_FAST);
         GameMapLoadArea.SetRestoreID(ID_BUTTON_TRY_AGAIN);
         await GameMapLoadArea.FinishLoading(restoreFocus: true);
         VMSelectMapDisabled = VMSelectMapError || VMSelectMapOptions.Count <= 0;

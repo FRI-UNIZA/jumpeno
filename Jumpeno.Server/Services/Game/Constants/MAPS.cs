@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Server.Constants;
 
 public class MAPS
 {
