@@ -321,7 +321,7 @@
   <data name="Game" xml:space="preserve">
     <value />
   </data>
-  <data name="Length must be equal to I18N{length}" xml:space="preserve">
+  <data name="Length must be I18N{length}" xml:space="preserve">
     <value />
   </data>
   <data name="Code must be alphanumeric" xml:space="preserve">
@@ -811,6 +811,69 @@
     <value />
   </data>
   <data name="Invalid map ID" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Number of rounds not between I18N{min} and I18N{max}" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game code already exists!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Maximum games limit exceeded!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game controller" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Do you really want to delete this game?" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Delete game" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Anonymous players not allowed!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Host can not participate as a player!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="At least 2 players required to start!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="You already host a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Host must be registered!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="You already play a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game is finished!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game is running!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game is not running!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Invalid game state!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game already deleted!" xml:space="preserve">
     <value />
   </data>
 </root>

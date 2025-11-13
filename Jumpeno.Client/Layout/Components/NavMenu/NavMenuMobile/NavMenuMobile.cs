@@ -56,7 +56,7 @@ public partial class NavMenuMobile {
             await Navigator.RemoveAfterFinishEventListener(CloseAfter);
             await Window.RemoveResizeEventListener(ObjRef, JS_OnWindowResize);
         }
-        Lock.Dispose();
+        await Lock.DisposeSafe();
         ObjRef.Dispose();
     }
 

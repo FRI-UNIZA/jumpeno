@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
+#pragma warning disable CA1816
 
-public class HTTP : StaticService<HTTP>, IDisposable {
+public class HTTP : StaticService<HTTP>, IAsyncDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
@@ -18,11 +19,11 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public HTTP() => Disposer = new(this, DisposeUnmanaged);
     private readonly Disposer Disposer;
-    private void DisposeUnmanaged() {
+    private async Task DisposeUnmanaged() {
         foreach (var token in Tokens.Values) token.Dispose();
-        TokenLock.Dispose();
+        await TokenLock.DisposeSafe();
     }
-    public void Dispose() => Disposer.Dispose();
+    public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
     ~HTTP() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
@@ -93,6 +94,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
             HttpResponseMessage? response;
             int code = CODE.DEFAULT;
             var token = new CancellationTokenSource();
+            bool isLocalURL = URL.IsLocal(url);
             try {            
                 // Add query parameters:
                 if (query is not null) url = URL.SetQueryParams(url, query);
@@ -101,7 +103,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 var request = new HttpRequestMessage(method, url);
 
                 // Add authorization:
-                if (URL.IsLocal(url)) try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
+                if (isLocalURL) try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
 
                 // Add body:
                 if (
@@ -129,7 +131,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                 }
 
                 // Add cookies:
-                if (AppEnvironment.IsServer && URL.IsLocal(url) && AddClientCookies is not null) AddClientCookies(request);
+                if (AppEnvironment.IsServer && isLocalURL && AddClientCookies is not null) AddClientCookies(request);
 
                 // Store token:
                 await instance.ReplaceToken(requestID, token);
@@ -184,7 +186,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
                     .SetHeaders(response?.Headers).SetContentHeaders(response?.Content.Headers);
                 }
                 // Try to refresh token:
-                if (exception.Code == EXCEPTION.NOT_AUTHENTICATED.Code) await OnRefresh(iteration, exception);
+                if (isLocalURL && exception.Code == EXCEPTION.NOT_AUTHENTICATED.Code) await OnRefresh(iteration, exception);
                 else throw exception;
             }
         }
@@ -363,6 +365,7 @@ public class HTTP : StaticService<HTTP>, IDisposable {
     /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> Try(Func<Task> callback, string? form = null) {
         return await TabLock(new(async () => {
+            if (form != null) FormManager.ClearErrors(form);
             try { await callback(); return true; }
             catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
             catch (AggregateException e) {

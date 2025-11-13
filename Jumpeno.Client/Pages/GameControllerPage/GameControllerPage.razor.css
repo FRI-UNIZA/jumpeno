@@ -1,0 +1,59 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-controller-page {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    /* Size: */
+    width: 100%;
+    padding: 40px 0;
+}
+
+::deep.game-controller-page .game-controller-form {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    /* Size: */
+    width: 360px;
+    max-width: 100%;
+}
+
+::deep.game-controller-page .form-inputs {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.game-controller-page .heading.game-controller-heading {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.game-controller-page > div:not(.game-controller-form) {
+    /* Display: */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    /* Media > Styles ---------------------------------------------------------------------------------------------------------------------- */
+    ::deep.game-controller-page {
+        /* Size: */
+        padding: 60px 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > Styles ---------------------------------------------------------------------------------------------------------------------- */
+    ::deep.game-controller-page {
+        /* Size: */
+        padding: 80px 0;
+    }
+}

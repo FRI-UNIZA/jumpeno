@@ -31,7 +31,7 @@ public static class Auth {
     private static async Task StopProcessing() { Processing = false; await InvokeUpdate(); }
 
     // Login anonymous --------------------------------------------------------------------------------------------------------------------
-    public static void LogInAnonymous(string name, SKIN skin) => User = new User(name, skin);
+    public static void LogInAnonymous(string name, SKIN skin = default) => User = new User(name, skin);
     public static void LogOutAnonymous() => User = null!;
 
     // Login registered -------------------------------------------------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 namespace Jumpeno.Client.Services;
 
 #pragma warning disable CS8618
+#pragma warning disable CA1816
 
-public class Navigator : StaticService<Navigator>, IDisposable {
+public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly NavigationManager Manager;
     private static Action<string, bool, bool> ServerRedirect;
@@ -36,10 +37,10 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             Manager.RegisterLocationChangingHandler(BeforeLocationChanged);
             Manager.LocationChanged += AfterLocationChanged;
         }
-        Disposer = new(this, NavLock.Dispose);
+        Disposer = new(this, NavLock.DisposeSafe);
     }
     private readonly Disposer Disposer;
-    public void Dispose() => Disposer.Dispose();
+    public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
     ~Navigator() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------

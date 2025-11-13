@@ -2,9 +2,6 @@ namespace Jumpeno.Client.Models;
 
 public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string DEFAULT_CODE = "FRI1";
-    public const string DEFAULT_NAME = "FRI UNIZA 1";
-    
     public static readonly int FPS = AppSettings.Game.FPS;
     public static readonly int TOUCH_DEVICE_NOTIFICATIONS = AppSettings.Game.TouchDeviceNotifications.PerSecond; // per second
 
@@ -23,11 +20,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public string Code { get; private set; }
     public string Name { get; private set; }
     public Map Map { get; private set; }
+    public bool Anonyms { get; private set; }
+    public byte Rounds { get; private set; }
     public byte Capacity { get; private set; }
     // State:
     public int Round { get; private set; }
+    public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
     public double Time { get; private set; }
     public GAME_STATE State { get; private set; }
+    public bool IsFinished => State == GAME_STATE.SCOREBOARD && Rounds <= Round;
     // Clock:
     public GameClock Clock { get; private set; }
     public GameClock TouchClock { get; private set; }
@@ -43,6 +44,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     private QuadTreeRectF<Player> PlayersQT { get; set; }
     // Spectators:
     public int SpectatorCount { get; private set; }
+    // Empty:
+    public bool IsEmpty => ActivePlayersCount <= 0 && SpectatorCount <= 0;
     // Traffic:
     public double? Ping { get; set; }
 
@@ -50,7 +53,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     [JsonConstructor]
     private Game(
         DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
-        Map map, byte capacity,
+        Map map, bool anonyms, byte rounds, byte capacity,
         int round, double time, GAME_STATE state,
         Dictionary<byte, Player> players, List<Player> activePlayers, int spectatorCount
     ) {
@@ -65,6 +68,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         Code = code;
         Name = name.Trim();
         Map = map;
+        Anonyms = anonyms;
+        Rounds = rounds;
         Capacity = capacity;
         // State:
         Round = round;
@@ -83,8 +88,11 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // Traffic:
         Ping = null;
     }
-    public Game(DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name, Map map, byte capacity) : this(
-        displayMode, mode, host, code, name, map, capacity,
+    public Game(
+        DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
+        Map map, bool anonyms, byte rounds, byte capacity
+    ) : this(
+        displayMode, mode, host, code, name, map, anonyms, rounds, capacity,
         0, 0, GAME_STATE.LOBBY,
         [], [], 0
     ) {}
@@ -126,16 +134,28 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     }
 
     // Player methods ---------------------------------------------------------------------------------------------------------------------
-    public Player ConnectPlayer(Connection connection) {
+    public Player ConnectPlayer(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID
+    ) {
+        // 1) Validation:
         AppEnvironment.AssertServer();
-        GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
+        UserValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, nameID);
+        // 2) Game settings check:
+        if (!Anonyms && connection.User.ID == null)
+            throw EXCEPTION.CLIENT.SetInfo("Anonymous players not allowed!");
+        if (DisplayMode == DISPLAY_MODE.PRESENTATION && connection.User.ID == Host.ID)
+            throw EXCEPTION.CLIENT.SetInfo("Host can not participate as a player!");
+        // 3) Try to connect player:
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name != connection.User.Name) continue;
                 if (State == GAME_STATE.LOBBY) {
                     throw EXCEPTION.CLIENT.SetInfo("Player name is taken!")
-                    .SetErrors(ERROR.DEFAULT.SetID(GAME_HUB.PARAM_NAME).SetInfo("Player name is taken!"));
+                    .SetErrors(ERROR.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
                     throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
                 }
@@ -144,6 +164,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
                 return player;
             }
         }
+        // 4) Assert state:
         if (State == GAME_STATE.LOBBY) throw EXCEPTION.CLIENT.SetInfo("The game is currently full!");
         else throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
     }
@@ -219,10 +240,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     }
 
     // Spectator methods ------------------------------------------------------------------------------------------------------------------
-    public Spectator ConnectSpectator(Connection connection) {
+    public Spectator ConnectSpectator(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID
+    ) {
         AppEnvironment.AssertServer();
-        GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
+        UserValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, nameID);
         GameValidator.AssertSpectatorCount(this);
         SpectatorCount++;
         return new(connection);
@@ -438,7 +464,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public MovementUpdate NewMovementUpdate(Player jumper, Player victim) {
         return new MovementUpdate(
             jumper.ID,
-            new(jumper.Body.Position.Center.X, victim.Body.Position.Center.Y + 2 * Body.HALF_HEIGHT),
+            new(jumper.Body.Position.Center.X, victim.Body.Position.Center.Y + Body.HEIGHT),
             jumper.Body.Direction, jumper.Body.JumpFinishY
         );
     }

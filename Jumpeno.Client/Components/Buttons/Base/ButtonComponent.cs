@@ -11,6 +11,7 @@ public partial class ButtonComponent : IDisabledComponent {
     public const string CLASS_ICON_AFTER = "button-icon-after";
     public const string CLASS_HAS_ICON_BEFORE = "has-icon-before";
     public const string CLASS_HAS_ICON_AFTER = "has-icon-after";
+    public const string CLASS_ICON_ONLY = "icon-only";
     // Params:
     public static readonly ButtonParams DEFAULT_PARAMS = new();
 
@@ -33,8 +34,11 @@ public partial class ButtonComponent : IDisabledComponent {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Dictionary<string, object> Attributes { get; set; } = [];
 
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public bool IconOnly() => Text == null && ((Icon != null && IconAfter == null) || (Icon == null && IconAfter != null));
+
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).Set(CLASS_ICON_ONLY, IconOnly());
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() => base.OnInitialized();

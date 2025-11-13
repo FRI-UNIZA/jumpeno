@@ -4,12 +4,12 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const double IMMORTAL_MS = 2000; // ms
     // Size:
-    public const int WIDTH = 51; // px
-    public const int HEIGHT = 64; // px
+    public const int WIDTH = 50; // px
+    public const int HEIGHT = 63; // px
     // Speed:
     public const float SPEED = 0.38f; // px per ms
     // Jump:
-    public const float JUMP_HEIGHT = 180f; // px
+    public const float JUMP_HEIGHT = 160f; // px
     public const float JUMP_SPEED = 0.95f; // px per ms (at the start)
     public const float JUMP_SPEED_BASE = 0.2f; // minimal fraction of JUMP_SPEED
     public const float JUMP_SPEED_MAX = 1.3f; // px per ms
@@ -39,6 +39,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     private (KeyUpdate? Update, DateTime Time) PendingJump = (null, DateTime.UtcNow);
     public float? JumpFinishY { get; private set; }
     public bool IsJumping => JumpFinishY != null;
+    public float? FallStartY = null;
     // Collision (normal vector):
     public PointF LastNormal { get; private set; }
     public PointF Normal { get; private set; }
@@ -47,9 +48,11 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool JumpedOn(Body body) {
+        var bodyRect = body.Rect; bodyRect.Inflate(1, 1);
         return Alive && body.Alive && !IsImmortal && !body.IsImmortal
         && Direction.Y < 0 && Normal.Y <= 0
-        && body.Rect.IntersectsWith(Rect)
+        && bodyRect.IntersectsWith(Rect)
+        && (FallStartY == null || (FallStartY - Position.Center.Y > Tile.HALF_SIZE))
         && (LastPosition.Center.Y - HALF_HEIGHT >= body.LastPosition.Center.Y + HALF_HEIGHT)
         && (Position.Center.Y - HALF_HEIGHT <= body.Position.Center.Y + HALF_HEIGHT);
     }
@@ -115,6 +118,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     private void StartFall() {
         direction.Y = -1;
         JumpFinishY = Center.Y + HALF_HEIGHT + JUMP_HEIGHT * 0.3f;
+        FallStartY = Position.Center.Y;
     }
 
     private void StartJump() {
@@ -129,6 +133,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     private void FinishJump() {
         direction.Y = -1;
         JumpFinishY = null;
+        FallStartY = null;
     }
 
     // Collision resolution ---------------------------------------------------------------------------------------------------------------
@@ -255,6 +260,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         switch (update.State) {
             case GAME_STATE.PAUSE:
                 direction.X = 0;
+                Animation.UpdateDirection(direction);
             return true;
         }
         return false;

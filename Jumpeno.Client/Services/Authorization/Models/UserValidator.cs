@@ -112,4 +112,19 @@ public static class UserValidator {
     public static User Assert(User? value, string id = "", AppException? exception = null) {
         return Checker.Assert(value, Validate(value, id), exception ?? EXCEPTION.VALUES)!;
     }
+
+    // Connection -------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidateConnectionType(Connection value, string id = "") => Checker.Validate(
+        value.GetType() != typeof(Connection),
+        ERROR.DEFAULT.SetID(id).SetInfo("Connection type invalid!")
+    );
+    public static Connection AssertConnectionType(Connection value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateConnectionType(value, id), exception ?? EXCEPTION.VALUES);
+    }
+
+    // Device -----------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidateDeviceType(DEVICE_TYPE? value, string id = "") => Checker.ValidateUndefined(value, id);
+    public static DEVICE_TYPE AssertDeviceType(DEVICE_TYPE? value, string id = "", AppException? exception = null) {
+        return (DEVICE_TYPE)Checker.Assert(value, ValidateDeviceType(value, id), exception ?? EXCEPTION.VALUES)!;
+    }
 }

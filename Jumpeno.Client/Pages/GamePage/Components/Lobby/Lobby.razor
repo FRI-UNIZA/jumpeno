@@ -18,8 +18,13 @@
             </div>
         </Box>
         <div class="round-line">
-            <p class="game-round">@I18N.T("Round"): <b>@(Game.LOBBY_STATES.Contains(VM.Game.State) ? VM.Game.Round + 1 : VM.Game.Round)</b></p>
-            <p class="game-state">&laquo;&thinsp;@(VM.Game.State == GAME_STATE.PAUSE ? I18N.T("Pause") : "Lobby")&thinsp;&raquo;</p>
+            <p class="game-round">@I18N.T("Round"): <b>@(VM.Game.ShowRound)</b></p>
+            <p class="game-state">
+                &laquo;&thinsp;@(
+                    VM.Game.IsFinished ? I18N.T("Finish")
+                    : VM.Game.State == GAME_STATE.PAUSE ? I18N.T("Pause") : "Lobby"
+                )&thinsp;&raquo;
+            </p>
         </div>
         <Box Class="lobby-box players">
             <div class="player-titles">

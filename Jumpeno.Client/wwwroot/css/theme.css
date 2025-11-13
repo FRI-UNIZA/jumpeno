@@ -338,6 +338,14 @@ body.light-theme .surface-primary {
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-button-success-color: rgba(255, 255, 255, 1);
+    --theme-button-success-background: linear-gradient(rgb(159 221 1) 00%, #6b9700 90%);
+    --theme-button-success-tint-color: rgb(89, 184, 0);
+    --theme-button-success-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
+    --theme-button-success-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-success-highlight-background: linear-gradient(rgb(166 231 0) 0%, #7caf00 90%);
+    --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
+    --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
 }
 body.light-theme.surface-primary-collapse,
@@ -709,6 +717,14 @@ body.dark-theme .surface-primary {
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-button-success-color: rgba(255, 255, 255, 1);
+    --theme-button-success-background: linear-gradient(rgb(159 221 1) 00%, #6b9700 90%);
+    --theme-button-success-tint-color: rgb(89, 184, 0);
+    --theme-button-success-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
+    --theme-button-success-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-success-highlight-background: linear-gradient(rgb(166 231 0) 0%, #7caf00 90%);
+    --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
+    --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
 }
 body.dark-theme.surface-primary-collapse,

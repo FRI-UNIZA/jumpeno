@@ -1,6 +1,6 @@
 namespace Jumpeno.Server.Constants;
 
-public class MAPS
+public class MAP
 {
     // Colors -----------------------------------------------------------------------------------------------------------------------------
     private static readonly RGBColor COLOR_WHITE = new(255, 255, 255);
@@ -68,7 +68,26 @@ public class MAPS
         (4, 4), (12, 4),
         (5, 5), (6, 5), (7, 5), (10, 5), (11, 5)
     ];
-    
-    // All maps static list ---------------------------------------------------------------------------------------------------------------
-    public static readonly List<Map> ALL_MAPS = [MAP_JUMPERS_HOME, MAP_MAGIC_TEMPLE, MAP_EMERALD_GROVE, MAP_AMETHYST_DAWN];
+
+    // Read -------------------------------------------------------------------------------------------------------------------------------
+    public static List<Map> List() => [MAP_JUMPERS_HOME, MAP_MAGIC_TEMPLE, MAP_EMERALD_GROVE, MAP_AMETHYST_DAWN];
+
+    public static Map ByID(
+        // Parameters:
+        int id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Select maps:
+        var maps = List();
+        // 2) Validation:
+        if (id < 0 || maps.Count <= id)
+        {
+            throw EXCEPTION.VALUES
+            .SetInfo("Invalid map ID")
+            .SetErrors([ERROR.INVALID.SetID(idID)]);
+        }
+        // 3) Return result:
+        return maps[id];
+    }
 }

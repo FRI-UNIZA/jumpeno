@@ -17,9 +17,9 @@
 }
 
 @keyframes create-box-map-floating {
-    0% { transform: translateY(-7px); }
-    50% { transform: translateY(11px); }
-    100% { transform: translateY(-7px); }
+    0% { transform: translateY(-10px); }
+    50% { transform: translateY(8px); }
+    100% { transform: translateY(-10px); }
 }
 
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
@@ -256,6 +256,11 @@
     display: flex;
     /* Size: */
     padding-top: 6px;
+}
+::deep.create-box .field.load-area.load-area-map-option.loading {
+    /* Actions: */
+    cursor: not-allowed;
+    pointer-events: all;
 }
 ::deep.create-box .field.select.map-select.variant.size {
     /* Size: */

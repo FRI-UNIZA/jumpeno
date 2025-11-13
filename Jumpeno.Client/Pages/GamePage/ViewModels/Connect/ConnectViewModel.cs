@@ -45,8 +45,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             await DisposeGame();
             await Navigator.RemoveAfterEventListener(OnPageLeave);
         });
-        ConnectLock.Dispose();
-        URLCodeChangedLock.Dispose();
+        await ConnectLock.DisposeSafe();
+        await URLCodeChangedLock.DisposeSafe();
         GC.SuppressFinalize(this);
     }
 
@@ -75,92 +75,68 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     // Request actions --------------------------------------------------------------------------------------------------------------------
     // NOTE: Call actions in components:
-    public async Task CreateRequest(CreateData data) => await ConnectRequest(async () => {
-        // 1) Validation:
-        var errors = GameValidator.ValidateCode(data.Code, GAME_HUB.PARAM_CODE);
-        errors.AddRange(GameValidator.ValidateName(data.GameName, GAME_HUB.PARAM_GAME_NAME));
-        errors.AddRange(GameValidator.ValidateCapacity(data.Capacity, GAME_HUB.PARAM_CAPACITY));
-        Checker.AssertWith(errors, EXCEPTION.VALUES);
-        // 2) Connect request:
-        await CreateConnection(
-            GAME_PARAMS_TYPE.CREATE,
-            new CreateGameParams(
-                data.Code, Window.GetDeviceType(), Token.Access.raw,
-                data.GameName, data.Map, data.GameMode, data.DisplayMode, data.Presentation, data.Capacity, data.Anonyms
-            )
+    public async Task CreateRequest(CreateData data) => await StartConnection(async () => {
+        // 1) Create DTO:
+        var dto = new GameHubCreateDTO(
+            data.Code, data.GameName,
+            data.Map, data.Anonyms, data.Rounds, data.Capacity,
+            data.DisplayMode, data.GameMode,
+            Token.Access.raw, Window.GetDeviceType()
         );
+        // 2) Validation:
+        dto.Assert();
+        // 3) Connect request:
+        await CreateConnection(nameof(GameHubCreateDTO), dto);
     });
     
-    public async Task PlayRequest(ConnectData data) => await ConnectRequest(async () => {
-        // 1) Validation:
-        var errors = GameValidator.ValidateCode(data.Code, GAME_HUB.PARAM_CODE);
-        // 2) Connect request:
+    public async Task ConnectRequest(ConnectData data) => await StartConnection(async () => {
         if (Auth.IsRegisteredUser) {
-            Checker.AssertWith(errors, EXCEPTION.VALUES);
-            await CreateConnection(
-                GAME_PARAMS_TYPE.REGISTERED_PLAYER,
-                new RegisteredGameParams(
-                    data.Code, Window.GetDeviceType(), Token.Access.raw
-                )
+            // 1) Create DTO:
+            var dto = new GameHubRegisteredDTO(
+                data.Code, Token.Access.raw, Window.GetDeviceType(), data.Spectate
             );
+            // 2) Validation:
+            dto.Assert();
+            // 3) Connect request:
+            await CreateConnection(nameof(GameHubRegisteredDTO), dto);
         } else {
-            errors.AddRange(UserValidator.ValidateName(data.Name, true, GAME_HUB.PARAM_NAME));
-            Checker.AssertWith(errors, EXCEPTION.VALUES);
-            Auth.LogInAnonymous(data.Name, User.GenerateSkin());
-            await CreateConnection(
-                GAME_PARAMS_TYPE.ANONYMOUS_PLAYER,
-                new AnonymousGameParams(
-                    data.Code, Window.GetDeviceType(), Auth.User.Name, Auth.User.Skin
-                )
+            // 1) Create DTO:
+            var dto = new GameHubAnonymousDTO(
+                data.Code, data.Name, Window.GetDeviceType(), data.Spectate
             );
+            // 2) Validation:
+            dto.Assert();
+            // 3) Connect request:
+            Auth.LogInAnonymous(data.Name);
+            try { await CreateConnection(nameof(GameHubAnonymousDTO), dto); }
+            catch { Auth.LogOutAnonymous(); }
         }
-    });
-    
-    public async Task WatchRequest(ConnectData data) => await ConnectRequest(async () => {
-        // 1) Validation:
-        var errors = GameValidator.ValidateCode(data.Code, GAME_HUB.PARAM_CODE);
-        errors.AddRange(UserValidator.ValidateName(data.Name, true, GAME_HUB.PARAM_NAME));
-        Checker.AssertWith(errors, EXCEPTION.VALUES);
-        // 2) Connect request:
-        if (!Auth.IsRegisteredUser) Auth.LogInAnonymous(data.Name, User.GenerateSkin());
-        await CreateConnection(
-            GAME_PARAMS_TYPE.SPECTATOR,
-            new AnonymousGameParams(
-                data.Code, Window.GetDeviceType(), Auth.User.Name, Auth.User.Skin
-            )
-        );
     });
 
     // Connect methods --------------------------------------------------------------------------------------------------------------------
-    private async Task ConnectRequest(Func<Task> request) {
+    private async Task StartConnection(Func<Task> request) {
         await ConnectLock.TryExclusive(async () => {
             await PageLoader.Show(PAGE_LOADER_TASK.GAME);
-            bool connectError = false;
-            await HTTP.Try(async () => {
-                try {
-                    // 1) Authorization:
-                    Authorization.Start(request);
-                    // 2) Pending updates:
-                    PendingUpdates.Clear(); Updated = false;
-                    // 3) Connect request:
-                    await request();
-                } catch {
-                    // 4) Handle error:
-                    connectError = true; throw;
-                }
+            var success = await HTTP.Try(async () => {
+                // 1) Authorization:
+                Authorization.Start(request);
+                // 2) Pending updates:
+                PendingUpdates.Clear(); Updated = false;
+                // 3) Connect request:
+                await request();
             }, Form);
-            if (!connectError) return;
+            if (success) return;
             await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
         });
     }
 
-    private async Task CreateConnection<P>(GAME_PARAMS_TYPE type, P parameters) {
+    private async Task CreateConnection<P>(string type, P dto) {
         if (IsConnected) return;
         try {
             // 1) Create data URL:
             var q = new QueryParams();
-            q.Set(GAME_HUB.PARAM_GAME_PARAMS_TYPE, JsonSerializer.Serialize(type));
-            q.Set(GAME_HUB.PARAM_GAME_PARAMS, JsonSerializer.Serialize(parameters));
+            q.Set(GAME_HUB.DTO_TYPE, type);
+            q.Set(GAME_HUB.DTO, JsonSerializer.Serialize(dto));
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.URL), q);
             // 2) Create HUB:
             HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
@@ -190,13 +166,15 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 IsConnecting = true;
                 // 1) Authorization:
                 Authorization.OnSuccess();
-                // 2) Create ViewModel:
+                // 2) Anonymous player update:
+                if (Auth.IsAnonymousUser && player != null) Auth.LogInAnonymous(player.User.Name, player.User.Skin);
+                // 3) Create ViewModel:
                 var qrCode = QRCode.SVG($"{URL.BaseUrl()}{I18N.Link<GamePage>([game.Code])}");
                 GameVM = new(qrCode, game, player, PendingUpdates, Send, new(GameViewRendered));
                 PendingUpdates.Clear();
                 await GameVM.AddNotifyListener(NotifyListener);
                 await GameVM.PreRender();
-                // 3) Set URL:
+                // 4) Set URL:
                 var state = GamePage.NavState.Get();
                 bool isCodeSet = URLCode != "";
                 if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>(), replace: true, notify: NOTIFY.STATE);
@@ -208,7 +186,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                     state: GamePage.NavState.New(new GamePage.HistoryState(true, Create)),
                     notify: NOTIFY.STATE
                 );
-                // 4) Update and render:
+                // 5) Update and render:
                 GameViewTCS = new TaskCompletionSource();
                 await OnConnect.Invoke(GameVM);
                 await Notify.Invoke();
@@ -287,8 +265,10 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private async Task DisposeGame() {
         await DisposeHub();
         var wasConnected = GameVM != null;
-        if (GameVM != null) await GameVM.RemoveNotifyListener(NotifyListener);
-        GameVM?.Dispose();
+        if (GameVM != null) {
+            await GameVM.RemoveNotifyListener(NotifyListener);
+            await GameVM.DisposeAsync();
+        }
         GameVM = null;
         GameViewTCS = null;
         PendingUpdates.Clear();

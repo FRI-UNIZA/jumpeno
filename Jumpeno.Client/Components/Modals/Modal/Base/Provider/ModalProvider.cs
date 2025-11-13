@@ -26,9 +26,9 @@ public partial class ModalProvider {
         JS.InvokeVoid(JSModal.Init);
     }
 
-    protected override void OnComponentDispose() {
-        ModalLock.Dispose();
-        ElementLock.Dispose();
+    protected override async ValueTask OnComponentDisposeAsync() {
+        await ModalLock.DisposeSafe();
+        await ElementLock.DisposeSafe();
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

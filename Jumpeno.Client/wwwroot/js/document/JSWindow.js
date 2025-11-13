@@ -45,7 +45,7 @@ class JSWindow {
     }
 
     // KeyDown ----------------------------------------------------------------------------------------------------------------------------
-    static #KeyDownStorage = new ListenerStorage('keydown', e => e.key)
+    static #KeyDownStorage = new ListenerStorage('keydown', e => ({ Key: e.key, Repeat: e.repeat }))
     
     static async AddKeyDownEventListener(objRef, method) {
         await this.#KeyDownStorage.AddEventListener(objRef, method)
@@ -56,7 +56,7 @@ class JSWindow {
     }
     
     // KeyUp ------------------------------------------------------------------------------------------------------------------------------
-    static #KeyUpStorage = new ListenerStorage('keyup', e => e.key)
+    static #KeyUpStorage = new ListenerStorage('keyup', e => ({ Key: e.key, Repeat: e.repeat }))
     
     static async AddKeyUpEventListener(objRef, method) {
         await this.#KeyUpStorage.AddEventListener(objRef, method)

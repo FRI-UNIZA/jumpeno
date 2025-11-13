@@ -17,7 +17,7 @@ public partial class ConnectBox {
     public ConnectBox() {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_CODE,
+            ID: Auth.IsRegisteredUser ? nameof(GameHubRegisteredDTO.Code) : nameof(GameHubAnonymousDTO.Code),
             TextMode: INPUT_TEXT_MODE.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
@@ -27,7 +27,7 @@ public partial class ConnectBox {
         ));
         VMName = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_NAME,
+            ID: nameof(GameHubAnonymousDTO.Name),
             Trim: true,
             TextCheck: UserValidator.IsName,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
@@ -89,6 +89,6 @@ public partial class ConnectBox {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task HandlePlay() => await VM.PlayRequest(new(VMCode.Value, VMName.Value));
-    private async Task HandleWatch() => await VM.WatchRequest(new(VMCode.Value, VMName.Value));
+    private async Task HandlePlay() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value, false));
+    private async Task HandleWatch() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value, true));
 }

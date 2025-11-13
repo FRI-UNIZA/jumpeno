@@ -29,11 +29,11 @@ public static class API {
         public static string USER_PASSWORD_RESET => $"{URL}/User/PasswordReset";
         public static string USER_PROFILE => $"{URL}/User/Profile";
         // Game:
-        public static string GAME_START => $"{URL}/Game/Start";
-        public static string GAME_PAUSE => $"{URL}/Game/Pause";
-        public static string GAME_RESUME => $"{URL}/Game/Resume";
-        public static string GAME_RESET => $"{URL}/Game/Reset";
         public static string GAME_MAPS => $"{URL}/Game/Maps";
         public static string GAME_MAP => $"{URL}/Game/Map";
+        public static string GAME_START => $"{URL}/Game/Start";
+        public static string GAME_PAUSE => $"{URL}/Game/Pause";
+        public static string GAME_TOGGLE => $"{URL}/Game/Toggle";
+        public static string GAME_DELETE => $"{URL}/Game/Delete";
     }
 }

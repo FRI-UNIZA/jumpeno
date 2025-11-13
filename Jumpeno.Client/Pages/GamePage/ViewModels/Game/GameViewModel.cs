@@ -2,9 +2,9 @@ namespace Jumpeno.Client.ViewModels;
 
 using System.Timers;
 
-public class GameViewModel : IDisposable {
+public class GameViewModel : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const int PING_INTERVAL_MS = 2000;
+    public static int PING_INTERVAL => From.SToMS(AppSettings.Game.PingInterval.Seconds); // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string QRCode { get; private set; }
@@ -29,10 +29,10 @@ public class GameViewModel : IDisposable {
         OnRender = onRender;
     }
 
-    public void Dispose() {
-        UpdateLock.Dispose();
+    public async ValueTask DisposeAsync() {
+        await UpdateLock.DisposeSafe();
         PingTimer?.Dispose();
-        PingLock.Dispose();
+        await PingLock.DisposeSafe();
         GC.SuppressFinalize(this);
     }
 
@@ -53,9 +53,6 @@ public class GameViewModel : IDisposable {
         foreach (var update in updates) queue.Enqueue(update);
         return queue;
     }
-
-    // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static async Task Request(Func<Task> request) => await PageLoader.Try(request, PAGE_LOADER_TASK.GAME_REQUEST);
 
     // Update Data ------------------------------------------------------------------------------------------------------------------------
     private readonly ConcurrentQueue<GameUpdate> GameUpdates;
@@ -144,7 +141,7 @@ public class GameViewModel : IDisposable {
 
     public async Task StartPing() {
         await PingLock.TryExclusive(() => {
-            PingTimer = new(PING_INTERVAL_MS);
+            PingTimer = new(PING_INTERVAL);
             PingTimer.Elapsed += async (sender, e) => await SendPing();
             PingTimer.Start();
         });
@@ -160,6 +157,11 @@ public class GameViewModel : IDisposable {
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     public bool ControlsDisplayed { get; private set; } = false;
-    public void InitControls() => ControlsDisplayed = Player != null && (Game.DisplayMode == DISPLAY_MODE.ONE_SCREEN || Player.Device == DEVICE_TYPE.TOUCH);
+    public void InitControls() {
+        ControlsDisplayed = Player != null && (
+            Player.Device == DEVICE_TYPE.TOUCH ||
+            (Game.DisplayMode != DISPLAY_MODE.EACH_OWN && !IsHost)
+        );
+    }
     public void ToggleControls() => ControlsDisplayed = !ControlsDisplayed;
 }

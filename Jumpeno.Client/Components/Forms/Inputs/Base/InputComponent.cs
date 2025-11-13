@@ -81,7 +81,7 @@ public partial class InputComponent<T> {
         UpdateInputValue();
     }
 
-    protected override void OnComponentDispose() => InputLock.Dispose();
+    protected override async ValueTask OnComponentDisposeAsync() => await InputLock.DisposeSafe();
     
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private async Task InvokeUpdate(Action? setter = null) {

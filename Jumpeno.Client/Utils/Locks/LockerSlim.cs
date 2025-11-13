@@ -1,22 +1,27 @@
 namespace Jumpeno.Client.Utils;
 
-#pragma warning disable CA1816
-
-public class LockerSlim : IDisposable {
+public class LockerSlim {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly SemaphoreSlim Semaphore = new(1, 1);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public LockerSlim() => Disposer = new(this, Semaphore.Dispose);
-    private readonly Disposer Disposer;
-    public void Dispose() => Disposer.Dispose();
+    public LockerSlim() => Disposer = new(this, () => { Disposed = true; TryUnlock(); Semaphore.Dispose(); });
     ~LockerSlim() => Disposer.Final();
+    // Invalidation:
+    private bool Disposed = false;
+    private void Check() => ObjectDisposedException.ThrowIf(Disposed, this);
+    // Dispose:
+    private readonly Disposer Disposer;
+    /// <summary>Releases Locker resources. (Must run under Lock!)</summary>
+    public void DisposeUnsafe() => Disposer.Dispose();
+    /// <summary>Releases Locker resources.</summary>
+    public async Task DisposeSafe() { await TryLock(); DisposeUnsafe(); }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public async Task Lock() => await Semaphore.WaitAsync();
+    public async Task Lock() { await Semaphore.WaitAsync(); Check(); }
     public void Unlock() => Semaphore.Release();
     // [Dispose] Exception prone:
-    public async Task TryLock() { try { await Lock(); } catch {} }
+    public async Task TryLock() { try { await Lock(); Check(); } catch {} }
     public void TryUnlock() { try { Semaphore.Release(); } catch {} }
 
     // Callbacks --------------------------------------------------------------------------------------------------------------------------

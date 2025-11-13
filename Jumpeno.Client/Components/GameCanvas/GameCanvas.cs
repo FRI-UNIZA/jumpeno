@@ -54,14 +54,12 @@ public partial class GameCanvas {
 
     // Dimensions -------------------------------------------------------------------------------------------------------------------------
     public async Task UpdateDimensions() {
-        try {
-            await RenderLock.Exclusive(() => {
-                var size = Window.GetSizeOf(Selector);
-                if (size == null) return;
-                Width = (int)size.Width;
-                Height = (int)size.Height;
-            });}
-        catch {}
+        await RenderLock.TryExclusive(() => {
+            var size = Window.GetSizeOf(Selector);
+            if (size == null) return;
+            Width = (int)size.Width;
+            Height = (int)size.Height;
+        });
     }
 
     [JSInvokable]
@@ -82,38 +80,34 @@ public partial class GameCanvas {
 
     protected override async ValueTask OnComponentDisposeAsync() {
         await Window.RemoveResizeEventListener(Ref, JS_OnWindowResize);
-        RenderLock.Dispose();
+        await RenderLock.DisposeSafe();
         ctx?.Dispose();
         Ref.Dispose();
     }
 
     // Render -----------------------------------------------------------------------------------------------------------------------------
     private async Task RenderMap() {
-        try {
-            await RenderLock.Exclusive(async () => {
-                // 1) Update map:
-                var map = CurrentMap(); map.UpdateScreen(0, Width, Height, 0);
-                // 2) Get context:
-                ctx ??= await CanvasRef.CreateCanvas2DAsync();
-                // 3) Render map:
-                await map.Render(ctx);
-            });
-        } catch {}
+        await RenderLock.TryExclusive(async () => {
+            // 1) Update map:
+            var map = CurrentMap(); map.UpdateScreen(0, Width, Height, 0);
+            // 2) Get context:
+            ctx ??= await CanvasRef.CreateCanvas2DAsync();
+            // 3) Render map:
+            await map.Render(ctx);
+        });
     }
 
     private async Task RenderGame() {
-        try {
-            await RenderLock.Exclusive(async () => {
-                // 0) Check game:
-                if (Game == null) return;
-                // 1) Update map:
-                Game.Map.UpdateScreen(0, Width, Height, 0);
-                // 2) Get context:
-                ctx ??= await CanvasRef.CreateCanvas2DAsync();
-                // 3) Render game:
-                await Game.Render(ctx, (Player, AppTheme.FONT_PRIMARY));
-            });
-        } catch {}
+        await RenderLock.TryExclusive(async () => {
+            // 0) Check game:
+            if (Game == null) return;
+            // 1) Update map:
+            Game.Map.UpdateScreen(0, Width, Height, 0);
+            // 2) Get context:
+            ctx ??= await CanvasRef.CreateCanvas2DAsync();
+            // 3) Render game:
+            await Game.Render(ctx, (Player, AppTheme.FONT_PRIMARY));
+        });
     }
 
     public async Task Render() {

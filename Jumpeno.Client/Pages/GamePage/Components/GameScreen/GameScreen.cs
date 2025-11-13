@@ -49,8 +49,8 @@ public partial class GameScreen {
             }
             await Animator.RemoveAnimator(Ref, JS_OnAnimationFrame);
         }
-        ControlLock.Dispose();
-        MouseReleaseKeyEventLock.Dispose();
+        await ControlLock.DisposeSafe();
+        await MouseReleaseKeyEventLock.DisposeSafe();
         Ref.Dispose();
         GC.SuppressFinalize(this);
     }
@@ -67,7 +67,7 @@ public partial class GameScreen {
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     // Actions:
-    private static async Task Pause() => await GameViewModel.Request(async () => await HTTP.Patch(API.BASE.GAME_PAUSE, body: Game.DEFAULT_CODE));
+    private static async Task Pause() => await Task.CompletedTask;
     // Arrows:
     private readonly List<GAME_CONTROLS> ArrowsPressed = [];
     private GAME_CONTROLS? LastArrowPressed = null;
@@ -119,8 +119,9 @@ public partial class GameScreen {
         });
     });
     [JSInvokable]
-    public async Task JS_OnKeyDown(string key) {
-        if (GameControlsExtension.Get(key) is not GAME_CONTROLS control) return;
+    public async Task JS_OnKeyDown(WindowKeyEvent e) {
+        if (e.Repeat) return;
+        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
         await PressKey(control);
     }
 
@@ -142,8 +143,9 @@ public partial class GameScreen {
     private Func<Task> MouseReleaseKeyEvent = () => Task.CompletedTask;
     private readonly LockerSlim MouseReleaseKeyEventLock = new();
     [JSInvokable]
-    public async Task JS_OnKeyUp(string key) {
-        if (GameControlsExtension.Get(key) is not GAME_CONTROLS control) return;
+    public async Task JS_OnKeyUp(WindowKeyEvent e) {
+        if (e.Repeat) return;
+        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
         await ReleaseKey(control);
     }
     [JSInvokable]
@@ -192,10 +194,7 @@ public partial class GameScreen {
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    private async Task Render() {
-        try { if (VM.IsWatching) await Canvas.Render(); }
-        catch {}
-    }
+    private async Task Render() { try { if (VM.IsWatching) await Canvas.Render(); } catch {} }
 
     // Game loop --------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]

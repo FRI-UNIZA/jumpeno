@@ -39,6 +39,29 @@
     text-align: center;
 }
 
+/* Styles > ActiveGames ---------------------------------------------------------------------------------------------------------------- */
+::deep.admin-page .active-games-heading-line {
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+::deep.admin-page .heading.active-games-heading {
+    /* Size: */
+    width: auto;
+    /* Content: */
+    text-align: center;
+}
+
+::deep.admin-page .button.active-games-control-button.variant.size {
+    /* Variables: */
+    --button-icon-size: 25px;
+    /* Size: */
+    margin: -10px 0;
+}
+
 /* Styles > DB ------------------------------------------------------------------------------------------------------------------------- */
 ::deep.admin-page .box.db-box {
     /* Display: */
@@ -140,6 +163,14 @@
 ::deep.admin-page .heading.map-heading {
     /* Content: */
     text-align: center;
+}
+
+@media (min-width: 320px) {
+    /* Media > Styles > ActiveGames ---------------------------------------------------------------------------------------------------- */
+    ::deep.admin-page .button.active-games-control-button.variant.size {
+        /* Size: */
+        margin-right: -51px;
+    }
 }
 
 @media (min-width: 1200px) {

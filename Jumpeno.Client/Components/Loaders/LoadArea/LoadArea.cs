@@ -48,7 +48,7 @@ public partial class LoadArea {
         RestoreFocusID = ViewModel.ID;
     }
 
-    protected override void OnComponentDispose() => ViewModel.OnViewDispose();
+    protected override async ValueTask OnComponentDisposeAsync() => await ViewModel.OnViewDispose();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void StartLoading(LoadAreaViewModel.MessageStartData data) {

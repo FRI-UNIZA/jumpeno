@@ -14,7 +14,7 @@ public partial class CreateBox {
     private readonly InputViewModel<string> VMInputName;
     // Code:
     private readonly CheckBoxViewModel VMCheckBoxCode;
-    public const string PARAM_CODE_INPUT = $"{GAME_HUB.PARAM_CODE}.{nameof(PARAM_CODE_INPUT)}";
+    public const string ID_CODE_INPUT = $"{nameof(GameHubCreateDTO.Code)}_{nameof(ID_CODE_INPUT)}";
     private readonly InputViewModel<string> VMInputCode;
     private bool VMInputCodeDisabled;
     private void SetVMInputCode(string urlCode) => VMInputCode.SetValue(urlCode);
@@ -26,7 +26,7 @@ public partial class CreateBox {
     private bool VMSelectMapDisabled;
     private SelectViewModel<int> VMSelectMapInit() => new(new(
         Form: FORM,
-        ID: GAME_HUB.PARAM_MAP,
+        ID: nameof(GameHubCreateDTO.Map),
         Options: VMSelectMapOptions,
         Empty: VMSelectMapOptions.Count <= 0,
         DefaultValue: VMSelectMapOptions.Count > 0 ? InitValues.SelectMap?.Pick(o => VMSelectMapOptions[o.Key]) : null,
@@ -40,9 +40,9 @@ public partial class CreateBox {
             await StartLoading();
             // 3) Load map in OnCloseSelected!
         }),
-        OnCloseSelected: new(e => {
+        OnCloseSelected: new(async e => {
             GameMapSelectLoadArea.Focus();
-            LoadMap(e.After.Value);
+            await LoadMap(e.After.Value);
         }),
         Placeholder: I18N.T("Select map"),
         Search: true
@@ -65,14 +65,14 @@ public partial class CreateBox {
     // Anonyms:
     private readonly SwitchViewModel VMSwitchAnonyms;
     // Rounds:
-    private readonly List<SelectOption<int>> VMSelectRoundsOptions;
-    private readonly SelectViewModel<int> VMSelectRounds;
+    private readonly List<SelectOption<byte>> VMSelectRoundsOptions;
+    private readonly SelectViewModel<byte> VMSelectRounds;
     // Capacity:
-    private readonly List<SelectOption<int>> VMSelectCapacityOptions;
-    private readonly SelectViewModel<int> VMSelectCapacity;
+    private readonly List<SelectOption<byte>> VMSelectCapacityOptions;
+    private readonly SelectViewModel<byte> VMSelectCapacity;
     // Display mode:
-    private readonly List<RadioOptionViewModel<DISPLAY_MODE_OPTION>> VMRadioDisplayModeOptions;
-    private readonly RadioViewModel<DISPLAY_MODE_OPTION> VMRadioDisplayMode;
+    private readonly List<RadioOptionViewModel<DISPLAY_MODE>> VMRadioDisplayModeOptions;
+    private readonly RadioViewModel<DISPLAY_MODE> VMRadioDisplayMode;
     // Game mode:
     private readonly List<RadioOptionViewModel<GAME_MODE>> VMRadioGameModeOptions;
     private readonly RadioViewModel<GAME_MODE> VMRadioGameMode;
@@ -92,11 +92,11 @@ public partial class CreateBox {
         // Anonyms:
         public bool SwitchAnonyms { get; set; } = true;
         // Rounds:
-        public SelectOption<int>? SelectRounds { get; set; } = null;
+        public SelectOption<byte>? SelectRounds { get; set; } = null;
         // Capacity:
-        public SelectOption<int>? SelectCapacity { get; set; } = null;
+        public SelectOption<byte>? SelectCapacity { get; set; } = null;
         // Display mode:
-        public RadioOptionDTO<DISPLAY_MODE_OPTION>? RadioDisplayMode { get; set; } = null;
+        public RadioOptionDTO<DISPLAY_MODE>? RadioDisplayMode { get; set; } = null;
         // Game mode:
         public RadioOptionDTO<GAME_MODE>? RadioGameMode { get; set; } = null;
     }
@@ -108,7 +108,7 @@ public partial class CreateBox {
         // Name:
         VMInputName = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_GAME_NAME,
+            ID: nameof(GameHubCreateDTO.GameName),
             Trim: true,
             TextCheck: GameValidator.IsName,
             MaxLength: GameValidator.NAME_MAX_LENGTH,
@@ -119,7 +119,7 @@ public partial class CreateBox {
         // Code:
         VMCheckBoxCode = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_CODE,
+            ID: nameof(GameHubCreateDTO.Code),
             DefaultValue: InitValues.CheckBoxCode,
             OnChange: new(e => {
                 VMInputCodeDisabled = !e.Value;
@@ -130,7 +130,7 @@ public partial class CreateBox {
         VMInputCodeDisabled = !InitValues.CheckBoxCode;
         VMInputCode = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: PARAM_CODE_INPUT,
+            ID: ID_CODE_INPUT,
             TextMode: INPUT_TEXT_MODE.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
@@ -148,18 +148,18 @@ public partial class CreateBox {
         // Anonyms:
         VMSwitchAnonyms = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_ANONYMS,
+            ID: nameof(GameHubCreateDTO.Anonyms),
             DefaultValue: InitValues.SwitchAnonyms,
             OnChange: new(e => InitValues.Commit(v => v.SwitchAnonyms = e.Value))
         ));
         // Rounds:
         VMSelectRoundsOptions = [];
-        for (int i = GameValidator.MIN_ROUNDS; i <= GameValidator.MAX_ROUNDS; i++) {
+        for (byte i = GameValidator.MIN_ROUNDS; i <= GameValidator.MAX_ROUNDS; i++) {
             VMSelectRoundsOptions.Add(new(i - GameValidator.MIN_ROUNDS, i, $"{i} {Translate.Rounds(i).ToLower()}"));
         }
         VMSelectRounds = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_ROUNDS,
+            ID: nameof(GameHubCreateDTO.Rounds),
             Options: VMSelectRoundsOptions,
             DefaultValue: InitValues.SelectRounds?.Pick(o => VMSelectRoundsOptions[o.Key]) ?? VMSelectRoundsOptions[2],
             OnSelect: new(e => InitValues.Commit(v => v.SelectRounds = e.After)),
@@ -167,12 +167,12 @@ public partial class CreateBox {
         ));
         // Capacity:
         VMSelectCapacityOptions = [];
-        for (int i = GameValidator.MIN_CAPACITY; i <= GameValidator.MAX_CAPACITY; i++) {
+        for (byte i = GameValidator.MIN_CAPACITY; i <= GameValidator.MAX_CAPACITY; i++) {
             VMSelectCapacityOptions.Add(new(i - GameValidator.MIN_CAPACITY, i, $"{i} {Translate.Players(i).ToLower()}"));
         }
         VMSelectCapacity = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_CAPACITY,
+            ID: nameof(GameHubCreateDTO.Capacity),
             Options: VMSelectCapacityOptions,
             DefaultValue: InitValues.SelectCapacity?.Pick(o => VMSelectCapacityOptions[o.Key]) ?? VMSelectCapacityOptions[^1],
             OnSelect: new(e => InitValues.Commit(v => v.SelectCapacity = e.After)),
@@ -180,13 +180,13 @@ public partial class CreateBox {
         ));
         // Display mode:
         VMRadioDisplayModeOptions = [
-            new(new(0, DISPLAY_MODE_OPTION.EACH_OWN, DISPLAY_MODE_OPTION.EACH_OWN.String())),
-            new(new(1, DISPLAY_MODE_OPTION.ONE_SCREEN, DISPLAY_MODE_OPTION.ONE_SCREEN.String())),
-            new(new(2, DISPLAY_MODE_OPTION.PRESENTATION, DISPLAY_MODE_OPTION.PRESENTATION.String()))
+            new(new(0, DISPLAY_MODE.EACH_OWN, DISPLAY_MODE.EACH_OWN.String())),
+            new(new(1, DISPLAY_MODE.ONE_SCREEN, DISPLAY_MODE.ONE_SCREEN.String())),
+            new(new(2, DISPLAY_MODE.PRESENTATION, DISPLAY_MODE.PRESENTATION.String()))
         ];
         VMRadioDisplayMode = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_DISPLAY_MODE,
+            ID: nameof(GameHubCreateDTO.DisplayMode),
             DefaultValue: InitValues.RadioDisplayMode?.Pick(o => VMRadioDisplayModeOptions[o.Key]) ?? VMRadioDisplayModeOptions[1],
             OnChange: new(e => InitValues.Commit(v => v.RadioDisplayMode = e.After?.DTO))
         ));
@@ -197,7 +197,7 @@ public partial class CreateBox {
         ];
         VMRadioGameMode = new(new(
             Form: FORM,
-            ID: GAME_HUB.PARAM_GAME_MODE,
+            ID: nameof(GameHubCreateDTO.GameMode),
             DefaultValue: InitValues.RadioGameMode?.Pick(o => VMRadioGameModeOptions[o.Key]) ?? VMRadioGameModeOptions[0],
             OnChange: new(e => InitValues.Commit(v => v.RadioGameMode = e.After?.DTO))
         ));
@@ -246,7 +246,7 @@ public partial class CreateBox {
         }
     }
 
-    private async void LoadMap(int id) {
+    private async Task LoadMap(int id) {
         try {
             // 0) Start loading:
             await StartLoading();
@@ -341,7 +341,15 @@ public partial class CreateBox {
     private async Task Create() {
         await PageLoader.Show(PAGE_LOADER_TASK.GAME);
         await CancelMapRequests();
-        // TODO: Create game instead:
-        await VM.PlayRequest(new(Game.DEFAULT_CODE, ""));
+        await VM.CreateRequest(new(
+            Code: VMInputCodeDisabled ? null : VMInputCode.Value,
+            GameName: VMInputName.Value,
+            Map: VMSelectMap.Empty ? null : VMSelectMap.Value.Value,
+            Anonyms: VMSwitchAnonyms.Value,
+            Rounds: VMSelectRounds.Value.Value,
+            Capacity: VMSelectCapacity.Value.Value,
+            DisplayMode: VMRadioDisplayMode.Value!.Value,
+            GameMode: VMRadioGameMode.Value!.Value
+        ));
     }
 }

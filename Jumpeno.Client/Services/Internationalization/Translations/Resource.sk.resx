@@ -321,7 +321,7 @@
   <data name="Game" xml:space="preserve">
     <value>Hra</value>
   </data>
-  <data name="Length must be equal to I18N{length}" xml:space="preserve">
+  <data name="Length must be I18N{length}" xml:space="preserve">
     <value>Dĺžka musí byť I18N{length}</value>
   </data>
   <data name="Code must be alphanumeric" xml:space="preserve">
@@ -346,7 +346,7 @@
     <value>Kód hry je nesprávny!</value>
   </data>
   <data name="Capacity not between I18N{min} and I18N{max}" xml:space="preserve">
-    <value>Kapacita nie je medzi I18N{min} and I18N{max}</value>
+    <value>Kapacita nie je medzi I18N{min} a I18N{max}</value>
   </data>
   <data name="The game is currently full!" xml:space="preserve">
     <value>Kapacita hry je naplnená!</value>
@@ -812,5 +812,68 @@
   </data>
   <data name="Invalid map ID" xml:space="preserve">
     <value>Nesprávne ID mapy</value>
+  </data>
+  <data name="Number of rounds not between I18N{min} and I18N{max}" xml:space="preserve">
+    <value>Počet kôl nie je medzi I18N{min} a I18N{max}</value>
+  </data>
+  <data name="Game code already exists!" xml:space="preserve">
+    <value>Kód hry už existuje!</value>
+  </data>
+  <data name="Maximum games limit exceeded!" xml:space="preserve">
+    <value>Prekročený maximálny počet hier!</value>
+  </data>
+  <data name="Game controller" xml:space="preserve">
+    <value>Ovládač hry</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Štart</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Zmazať</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Ovládač</value>
+  </data>
+  <data name="Do you really want to delete this game?" xml:space="preserve">
+    <value>Naozaj chcete zmazať túto hru?</value>
+  </data>
+  <data name="Delete game" xml:space="preserve">
+    <value>Zmazať hru</value>
+  </data>
+  <data name="Anonymous players not allowed!" xml:space="preserve">
+    <value>Anonymní hráči zakázaní!</value>
+  </data>
+  <data name="Host can not participate as a player!" xml:space="preserve">
+    <value>Host sa nemôže zúčastniť ako hráč!</value>
+  </data>
+  <data name="At least 2 players required to start!" xml:space="preserve">
+    <value>Spustenie vyžaduje aspoň 2 hráčov!</value>
+  </data>
+  <data name="You already host a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>Už máš vytvorenú hru s kódom "I18N{code}"!</value>
+  </data>
+  <data name="Host must be registered!" xml:space="preserve">
+    <value>Host musí byť registrovaný!</value>
+  </data>
+  <data name="You already play a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>Už hráš hru s kódom "I18N{code}"!</value>
+  </data>
+  <data name="Game is finished!" xml:space="preserve">
+    <value>Hra je ukončená!</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Koniec</value>
+  </data>
+  <data name="Game is running!" xml:space="preserve">
+    <value>Hra je spustená!</value>
+  </data>
+  <data name="Game is not running!" xml:space="preserve">
+    <value>Hra nie je spustená!</value>
+  </data>
+  <data name="Invalid game state!" xml:space="preserve">
+    <value>Nesprávny stav hry!</value>
+  </data>
+  <data name="Game already deleted!" xml:space="preserve">
+    <value>Hra už je zmazaná!</value>
   </data>
 </root>

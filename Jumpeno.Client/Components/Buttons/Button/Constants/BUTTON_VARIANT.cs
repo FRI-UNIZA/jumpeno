@@ -5,5 +5,6 @@ public enum BUTTON_VARIANT {
     [CSSClass("variant-secondary")] SECONDARY,
     [CSSClass("variant-tertiary")] TERTIARY,
     [CSSClass("variant-quaternary")] QUATERNARY,
+    [CSSClass("variant-success")] SUCCESS,
     [CSSClass("variant-danger")] DANGER
 }

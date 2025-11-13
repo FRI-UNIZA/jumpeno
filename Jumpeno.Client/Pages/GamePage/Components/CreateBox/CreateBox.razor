@@ -47,7 +47,7 @@
                             Label="@I18N.T("Select map")"
                             LoadLabel="@($"{I18N.T("Select map")}, {@I18N.T("Disabled field")}")"
                             RoleDescription="combobox"
-                            Class="load-area-map-option"
+                            Class="@($"{FormField<SelectViewModel<int>>.CLASS} {FORM_VARIANT.PRIMARY.CSSClass()} {FORM_SIZE.S.CSSClass()} load-area-map-option")"
                             NoStyle
                             NoLoader
                         >
@@ -138,7 +138,7 @@
                                 } else if (GameMapError) {
                                     <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
                                     <Paragraph Size="TEXT_SIZE.S" Class="error-description">@I18N.T("Map could not be loaded")</Paragraph>
-                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="() => LoadMap(VMSelectMap.Value.Value)">
+                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="async () => await LoadMap(VMSelectMap.Value.Value)">
                                         <Text>@I18N.T("Try again")</Text>
                                     </Button>
                                 }

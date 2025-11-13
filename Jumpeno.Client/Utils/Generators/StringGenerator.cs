@@ -5,6 +5,7 @@ public class StringGenerator {
     private readonly Random G = new();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
+    public string Generate(int length, string characters = CHARS.ALPHA_UPPER) => Generate(length, length, characters);
     public string Generate(int minLength, int maxLength, string characters = CHARS.ALPHA_UPPER) {
         // 1) Check values:
         Checker.CheckGreaterOrEqualTo(minLength, 1, nameof(minLength));
