@@ -15,7 +15,6 @@ public class PasswordEntity {
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]
     public required string ID { get; set; }
-    public required UserEntity User { get; set; }
 
     [Column(TypeName = "BINARY(32)")]
     public required byte[] Hash { get; set; }
@@ -24,6 +23,9 @@ public class PasswordEntity {
     public required byte[] Salt { get; set; }
 
     public required DateTime ModifiedAt { get; set; }
+
+    // Relations --------------------------------------------------------------------------------------------------------------------------
+    public required UserEntity User { get; set; }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static string Pepper(string password) => $"{password}{PEPPER}";

@@ -13,7 +13,6 @@ public class RefreshEntity {
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]
     public string? ID { get; set; }
-    public UserEntity? User { get; set; }
 
     public const string INDEX_ORIGIN = "IX_Refresh_Origin";
     [Column(TypeName = "VARCHAR(512)")]
@@ -21,6 +20,9 @@ public class RefreshEntity {
     
     public const string INDEX_EXPIRES = "IX_Refresh_Expires";
     public required DateTime Expires { get; set; }
+
+    // Relations --------------------------------------------------------------------------------------------------------------------------
+    public UserEntity? User { get; set; }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<RefreshEntity> Create(

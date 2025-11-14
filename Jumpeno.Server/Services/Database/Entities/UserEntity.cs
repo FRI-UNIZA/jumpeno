@@ -26,6 +26,7 @@ public class UserEntity {
     public const string INDEX_CREATED_AT = "IX_User_CreatedAt";
     public required DateTime CreatedAt { get; set; }
 
+    // Relations --------------------------------------------------------------------------------------------------------------------------
     public ICollection<RefreshEntity> Refresh { get; set; } = [];
     public ActivationEntity? Activation { get; set; }
     public PasswordEntity? Password { get; set; }
