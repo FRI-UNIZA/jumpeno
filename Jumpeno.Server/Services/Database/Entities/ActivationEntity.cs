@@ -16,7 +16,9 @@ public class ActivationEntity {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<ActivationEntity> Create(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:
@@ -36,7 +38,9 @@ public class ActivationEntity {
 
     // Delete -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<bool> Delete(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:

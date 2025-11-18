@@ -607,6 +607,7 @@ public class BaseTheme {
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BACKGROUND { get; }
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR { get; }
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }
+    public virtual string MODAL_PROFILE_AVATAR_SKIN_BOX_SHADOW => "inset 0 0 0.5em rgba(0, 0, 0, 0.2)";
 
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------

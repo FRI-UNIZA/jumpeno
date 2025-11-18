@@ -1,9 +1,11 @@
 @namespace Jumpeno.Client.Components
 
+@inherits BasicComponent
+
 <AuthView Roles="[ROLE.USER]">
     <DropDown @ref="DropDownRef" Title="@I18N.T("User menu")" Class="@CLASS">
         <DropDownButton>
-            <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="@CLASS_PROFILE_IMAGE" />
+            <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="@CLASS_PROFILE_IMAGE" />
         </DropDownButton>
         <Options>
             <DropDownOption Label="@I18N.T("My profile")" Action="OpenProfile">

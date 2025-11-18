@@ -47,7 +47,9 @@ public class UserEntity {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<UserEntity> Create(
+        // Parameters:
         string email, string name,
+        // Exceptions:
         string emailID = "", string nameID = ""
     ) {
         // 1) Validation:
@@ -79,7 +81,9 @@ public class UserEntity {
 
     // Read -------------------------------------------------------------------------------------------------------------------------------
     public static async Task<UserEntity?> ByID(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:
@@ -91,8 +95,11 @@ public class UserEntity {
         // 3) Return record:
         return record;
     }
+
     public static async Task<UserEntity?> ByIDLeftJoinActivation(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:
@@ -107,7 +114,9 @@ public class UserEntity {
     }
 
     public static async Task<UserEntity?> ByEmail(
+        // Parameters:
         string email,
+        // Exceptions:
         string emailID = ""
     ) {
         // 1) Validation:
@@ -119,8 +128,11 @@ public class UserEntity {
         // 3) Return record:
         return record;
     }
+
     public static async Task<UserEntity?> ByEmailLeftJoinPassword(
+        // Parameters:
         string email,
+        // Exceptions:
         string emailID = ""
     ) {
         // 1) Validation:
@@ -132,5 +144,66 @@ public class UserEntity {
             .FirstOrDefault(o => o.Email == email);
         // 3) Return record:
         return record;
+    }
+
+    // Delete -----------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> Delete(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+        // 2) Delete record:
+        var ctx = await DB.Context();
+        var afectedRows= await ctx.User
+            .Where(x => x.ID == id)
+            .ExecuteDeleteAsync();
+        // 3) True if deleted:
+        return afectedRows > 0;
+    }
+
+    // Update -----------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> Modify(
+        // Parameters:
+        string id,
+        string? email = null,
+        string? name = null,
+        SKIN? skin = null,
+        // Exceptions:
+        string idID = "",
+        string emailID = "",
+        string nameID = "",
+        string skinID = ""
+    ) {
+        // 1) Validation:
+        var errors = new List<Error>();
+        errors.AddRange(UserValidator.ValidateID(id, idID));
+        if (email is not null) errors.AddRange(UserValidator.ValidateEmail(email, emailID));
+        if (name is not null) errors.AddRange(UserValidator.ValidateName(name, false, nameID));
+        if (skin is not null) errors.AddRange(UserValidator.ValidateSkin(skin, skinID));
+        Checker.Assert(errors, EXCEPTION.VALUES);
+    
+        // 2) Modify record:
+        var ctx = await DB.Context();
+        var result = await DB.Update(async () => await ctx.User
+            .Where(o => o.ID == id)
+            .ExecuteUpdateAsync(setter => setter
+                .SetProperty(o => o.Email, o => email ?? o.Email)
+                .SetProperty(o => o.Name, o => name ?? o.Name)
+                .SetProperty(o => o.Skin, o => skin != null ? (int)skin : o.Skin)
+                .SetProperty(o => o.ModifiedAt, o => DateTime.UtcNow)
+        ), new() {
+            { INDEX_EMAIL, ERROR.EXISTS.SetID(emailID) },
+            { INDEX_NAME, ERROR.EXISTS.SetID(nameID) }
+        }
+        );
+    
+        // 3) Unique constraints:
+        Checker.Assert(result.errors, EXCEPTION.VALUES);
+
+        // 4) True if modified:
+        return result.rows > 0;
     }
 }

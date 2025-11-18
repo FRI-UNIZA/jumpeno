@@ -127,6 +127,35 @@ public class UserController : ControllerBase {
         return new(I18N.T("Password reset successful."));
     }
 
+    /// <summary>Changes authenticated user password.</summary>
+    /// <response code="200">Password changed.</response>
+    [HttpPatch][Role(ROLE.USER)]
+    [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
+    public async Task<MessageDTOR> PasswordChange([FromBody] UserPasswordChangeDTO body)
+    {
+        // 1) Validation:
+        body.Assert();
+        // 2) Change password:
+        await DB.Transaction(
+            async () =>
+            {
+                var existing = await PasswordEntity.ByIDLeftJoinRefresh(Token.Access.sub);
+                if (existing != null)
+                {
+                    if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw EXCEPTION.DEFAULT;
+                }
+                else
+                {
+                    await PasswordEntity.Create(Token.Access.sub, body.NewPassword, passwordID: nameof(body.NewPassword));
+                }
+                await RefreshEntity.DeleteByUserID(Token.Access.sub);
+            },
+            ISOLATION.SERIALIZABLE
+        );
+        // 3) Response:
+        return new(I18N.T("Password has been changed."));
+    }
+
     /// <summary>User profile info.</summary>
     /// <response code="200">User profile.</response>
     [HttpGet][Role(ROLE.USER)]
@@ -138,5 +167,34 @@ public class UserController : ControllerBase {
         var profile = new User(Guid.Parse(user.ID), user.Email, user.Name, (SKIN)user.Skin, user.Activation == null);
         // 3) Response:
         return new(profile);
+    }
+
+    /// <summary>Updates authenticated user data.</summary>
+    /// <response code="200">User data updated.</response>
+    [HttpPatch][Role(ROLE.USER)]
+    [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
+    public async Task<MessageDTOR> Update([FromBody] UserUpdateDTO body)
+    {
+        // 1) Validation:
+        body.Assert();
+        // 2) Update data:
+        if (!await UserEntity.Modify(Token.Access.sub, 
+            name: body.NewName, nameID: nameof(UserUpdateDTO.NewName),
+            skin: body.NewSkin, skinID: nameof(UserUpdateDTO.NewSkin),
+            email: body.NewEmail, emailID: nameof(UserUpdateDTO.NewEmail)
+        )) throw EXCEPTION.DEFAULT;
+        // 3) Response:
+        return new(I18N.T("User data has been updated."));
+    }
+
+    /// <summary>Deletes authenticated user account.</summary>
+    /// <response code="200">Account deleted.</response>
+    [HttpDelete][Role(ROLE.USER)]
+    [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
+    public async Task<MessageDTOR> Delete() {
+        // 1) Delete User:
+        if(!await UserEntity.Delete(Token.Access.sub)) throw EXCEPTION.DEFAULT;
+        // 2) Response:
+        return new(I18N.T("Account deleted."));
     }
 }
