@@ -43,7 +43,9 @@ public class PasswordEntity {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<PasswordEntity> Create(
+        // Parameters:
         string id, string password,
+        // Exceptions:
         string idID = "", string passwordID = ""
     ) {
         // 1) Validation:
@@ -69,7 +71,9 @@ public class PasswordEntity {
 
     // Update -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<bool> Update(
+        // Parameters:
         string id, string password,
+        // Exceptions:
         string idID = "", string passwordID = ""
     ) {
         // 1) Validation:
@@ -88,5 +92,87 @@ public class PasswordEntity {
             );
         // 3) True if updated:
         return rows > 0;
+    }
+
+    // Delete -----------------------------------------------------------------------------------------------------------------------------
+    public static async Task<bool> Delete(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+        // 2) Delete record:
+        var ctx = await DB.Context();
+        int rows = await ctx.Password
+            .Where(o => o.ID == id)
+            .ExecuteDeleteAsync();
+        // 3) True if deleted:
+        return rows > 0;
+    }
+
+    // Read -------------------------------------------------------------------------------------------------------------------------------
+    public static async Task<PasswordEntity?> ByID(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+
+        // 2) Select record:
+        var ctx = await DB.Context();
+        var record = await ctx.Password
+            .FirstOrDefaultAsync(o => o.ID == id);
+
+        // 3) Return record:
+        return record;
+    }
+
+    public static async Task<PasswordEntity?> ByIDLeftJoinUserLeftJoinRefresh(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+
+        // 2) Select record:
+        var ctx = await DB.Context();
+        var record = await ctx.Password
+            .Include(o => o.User)
+                .ThenInclude(u => u.Refresh)
+            .FirstOrDefaultAsync(o => o.ID == id);
+
+        // 3) Return record:
+        return record;
+    }
+
+    public static async Task<(PasswordEntity, IEnumerable<RefreshEntity>)?> ByIDLeftJoinRefresh(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+
+        // 2) Select record:
+        var ctx = await DB.Context();
+        var record = await ctx.Password
+            .GroupJoin(
+                ctx.Refresh,
+                password => password.ID,
+                refresh => refresh.ID,
+                (password, refreshes) => new { Password = password, Refresh = refreshes }
+            )
+            .Where(x => x.Password.ID == id)
+            .FirstOrDefaultAsync();
+
+        // 3) Return record:
+        return record == null ? null : (record.Password, record.Refresh);
     }
 }

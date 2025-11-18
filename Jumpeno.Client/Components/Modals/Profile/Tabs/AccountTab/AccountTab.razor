@@ -1,0 +1,63 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<AuthView Roles="[ROLE.USER]">
+    <div class="@ComputeClass()" style="@Style">
+        <div class="profile-row">
+            <div class="user-profile-image-wrap">
+                <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="user-profile-image" />
+            </div>
+            <InputField Class="profile-name" Name="name" ViewModel="@VMPlayerName" />
+            <InputField Class="profile-name" Name="email" ViewModel="@VMEmail" />
+
+            <Button OnClick="UpdateUserProfileInfo" Size="BUTTON_SIZE.S">
+                <Text>
+                    @I18N.T("Change")
+                </Text>
+            </Button>
+        </div>
+        <div class="profile-row">
+            @if (Auth.User.Activated)
+            {
+                <div class="activated-box">
+                    <Paragraph Class="profile-activated">
+                        <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
+                        @I18N.T("Account activated")
+                    </Paragraph>
+                </div>
+            }
+            else
+            {
+                <div class="activated-box">
+                    <Paragraph Class="profile-activated">
+                        <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
+                        @I18N.T("Account not activated")
+                    </Paragraph>
+                    <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
+                        <Text>@I18N.T("Resend link")</Text>
+                    </Button>
+                </div>
+            }
+            <Button OnClick="ChangePassword" Size="BUTTON_SIZE.S">
+                <Text>
+                    @I18N.T("Change password")
+                </Text>
+            </Button>
+            <Button OnClick="DeleteAccount" Size="BUTTON_SIZE.S" Variant="BUTTON_VARIANT.DANGER">
+                <Text>
+                    @I18N.T("Delete account")
+                </Text>
+            </Button>
+        </div>
+        <ConfirmModal @ref="ConfirmModalRef" Label="@I18N.T("Delete account")" Danger>
+            <Message>
+                @I18N.T("Are you sure you want to delete your account?")<br />
+                @I18N.T("This action is irreversible.")
+            </Message>
+            <TextOK>
+                @I18N.T("Delete account")
+            </TextOK>
+        </ConfirmModal>
+    </div>
+</AuthView>

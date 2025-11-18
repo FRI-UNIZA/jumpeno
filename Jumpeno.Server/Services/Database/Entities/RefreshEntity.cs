@@ -24,7 +24,9 @@ public class RefreshEntity {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<RefreshEntity> Create(
+        // Parameters:
         string token, string? id = null, string? origin = null,
+        // Exceptions:
         string tokenID = "", string idID = "", string originID = ""
     ) {
         // 1) Validation:
@@ -52,7 +54,9 @@ public class RefreshEntity {
 
     // Read -------------------------------------------------------------------------------------------------------------------------------
     public static async Task<bool> IsValid(
+        // Parameters:
         string token,
+        // Exceptions:
         string tokenID = ""
     ) {
         // 1) Validation:
@@ -69,7 +73,9 @@ public class RefreshEntity {
     }
 
     public static async Task<RefreshEntity?> ByToken(
+        // Parameters:
         string token,
+        // Exceptions:
         string tokenID = ""
     ) {
         // 1) Validation:
@@ -84,7 +90,9 @@ public class RefreshEntity {
 
     // Delete -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<bool> Delete(
+        // Parameters:
         string token,
+        // Exceptions:
         string tokenID = ""
     ) {
         // 1) Validation:
@@ -99,7 +107,9 @@ public class RefreshEntity {
     }
 
     public static async Task<bool> DeleteByOrigin(
+        // Parameters:
         string origin, string? except = null,
+        // Exceptions:
         string originID = "", string exceptID = ""
     ) {
         // 1) Validation:
@@ -123,6 +133,23 @@ public class RefreshEntity {
             .Where(o => o.Expires <= DateTime.UtcNow)
             .ExecuteDeleteAsync();
         // 2) True if deleted:
+        return rows > 0;
+    }
+
+    public static async Task<bool> DeleteByUserID(
+        // Parameters:
+        string id,
+        // Exceptions:
+        string idID = ""
+    ) {
+        // 1) Validation:
+        UserValidator.AssertID(id, idID);
+        // 2) Delete records:
+        var ctx = await DB.Context();
+        int rows = await ctx.Refresh
+            .Where(o => o.ID == id)
+            .ExecuteDeleteAsync();
+        // 3) True if deleted:
         return rows > 0;
     }
 }

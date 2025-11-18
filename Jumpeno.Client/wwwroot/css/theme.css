@@ -339,6 +339,7 @@ body.light-theme .surface-primary {
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
 }
 body.light-theme.surface-primary-collapse,
 body.light-theme .surface-primary-collapse {
@@ -710,6 +711,7 @@ body.dark-theme .surface-primary {
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
 }
 body.dark-theme.surface-primary-collapse,
 body.dark-theme .surface-primary-collapse {

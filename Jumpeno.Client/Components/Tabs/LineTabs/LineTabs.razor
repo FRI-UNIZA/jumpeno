@@ -1,0 +1,17 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<AntDesign.Tabs 
+    Type="@AntDesign.TabType.Line"
+    TabPosition="@Position.ToAntPosition()"
+    DefaultActiveKey="@DefaultActiveKey"
+    Centered="@Centered"
+    ActiveKey="@ActiveKey"
+    Style="@Style"
+    Class="@Class"
+    TabBarClass="@TabBarClass"
+    OnChange="OnChanged"    
+>
+    @ChildContent
+</AntDesign.Tabs>

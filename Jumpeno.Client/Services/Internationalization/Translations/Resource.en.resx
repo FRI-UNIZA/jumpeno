@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -812,5 +812,56 @@
   </data>
   <data name="Invalid map ID" xml:space="preserve">
     <value>Invalid map ID</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Socials" xml:space="preserve">
+    <value>Socials</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Delete account" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
+  <data name="User data has been updated." xml:space="preserve">
+    <value>User data has been updated.</value>
+  </data>
+  <data name="Sign in with Google" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="Connect Facebook account" xml:space="preserve">
+    <value>Connect Facebook account</value>
+  </data>
+  <data name="Password has been changed." xml:space="preserve">
+    <value>Password has been changed.</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Password change" xml:space="preserve">
+    <value>Password change</value>
+  </data>
+  <data name="Current avatar" xml:space="preserve">
+    <value>Current avatar</value>
+  </data>
+  <data name="Selected avatar" xml:space="preserve">
+    <value>Selected avatar</value>
+  </data>
+  <data name="Choose skin" xml:space="preserve">
+    <value>Choose skin</value>
+  </data>
+  <data name="Avatar option" xml:space="preserve">
+    <value>Avatar option</value>
+  </data>
+  <data name="Are you sure you want to delete your account?" xml:space="preserve">
+    <value>Are you sure you want to delete your account?</value>
+  </data>
+  <data name="This action is irreversible." xml:space="preserve">
+    <value>This action is irreversible.</value>
   </data>
 </root>
