@@ -597,6 +597,14 @@ public class BaseTheme {
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }
 
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
+    // PasswordStrength -------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor PASSWORD_STRENGTH_BAR_SEGMENT_BACKGROUND => new(236, 240, 241);
+    public virtual RGBColor PASSWORD_STRENGTH_RULE_COMPLETED_TEXT_COLOR => new(46, 125, 50);
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N1_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N2_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N3_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N4_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106))";
+
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor PROGRESS_CIRCLE_COLOR { get; }
     public virtual RGBAColor PROGRESS_CIRCLE_BACKGROUND { get; }

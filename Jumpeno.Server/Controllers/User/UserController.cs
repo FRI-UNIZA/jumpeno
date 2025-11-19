@@ -99,7 +99,7 @@ public class UserController : ControllerBase {
         var user = await UserEntity.ByEmail(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         // 3) Generate password:
         var g = new StringGenerator();
-        var password = g.Generate(UserValidator.PASSWORD_GENERATOR_MIN_LENGTH, UserValidator.PASSWORD_GENERATOR_MAX_LENGTH, CHARS.ALPHA_NUM);
+        var password = g.GenerateResetPassword(UserValidator.PASSWORD_GENERATOR_MIN_LENGTH, UserValidator.PASSWORD_GENERATOR_MAX_LENGTH);
         // 4) Send email:
         Email.SendPasswordReset(user.Email, password, JWT.GeneratePasswordReset(user.Email, password));
         // 5) Send response:

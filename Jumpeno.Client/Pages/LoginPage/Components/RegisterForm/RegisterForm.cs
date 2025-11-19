@@ -13,6 +13,7 @@ public partial class RegisterForm {
     private readonly InputViewModel<string> VMConfirmPassword;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private string Password = "";
     private bool Success = false;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -48,6 +49,10 @@ public partial class RegisterForm {
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
+            OnInput: new(e => {
+                Password = e.TextAfter;
+                StateHasChanged();
+            }),
             OnChange: new(e => {
                 if (VMConfirmPassword == null) return;
                 if (VMConfirmPassword.Value != e.After) return;

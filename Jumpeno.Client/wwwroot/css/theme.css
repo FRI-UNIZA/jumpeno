@@ -339,6 +339,12 @@ body.light-theme .surface-primary {
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
+    --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
+    --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
+    --theme-password-strength-bar-segment-n2-filled-background: linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38));
+    --theme-password-strength-bar-segment-n3-filled-background: linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0));
+    --theme-password-strength-bar-segment-n4-filled-background: linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106));
 }
 body.light-theme.surface-primary-collapse,
 body.light-theme .surface-primary-collapse {
@@ -710,6 +716,12 @@ body.dark-theme .surface-primary {
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
+    --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
+    --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
+    --theme-password-strength-bar-segment-n2-filled-background: linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38));
+    --theme-password-strength-bar-segment-n3-filled-background: linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0));
+    --theme-password-strength-bar-segment-n4-filled-background: linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106));
 }
 body.dark-theme.surface-primary-collapse,
 body.dark-theme .surface-primary-collapse {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -811,6 +811,30 @@
     <value />
   </data>
   <data name="Invalid map ID" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Password rules" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Password rule n1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Password rule n2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Password rule n3" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Password rule n4" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Does not contain uppercase letter" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Does not contain digit" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Does not contain special character" xml:space="preserve">
     <value />
   </data>
 </root>
