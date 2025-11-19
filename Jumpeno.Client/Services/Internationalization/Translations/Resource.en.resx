@@ -927,4 +927,28 @@
   <data name="This action is irreversible." xml:space="preserve">
     <value>This action is irreversible.</value>
   </data>
+  <data name="Password rules" xml:space="preserve">
+    <value>Password rules</value>
+  </data>
+  <data name="Password rule n1" xml:space="preserve">
+    <value>Length between 6 and 30 characters</value>
+  </data>
+  <data name="Password rule n2" xml:space="preserve">
+    <value>Contains uppercase letter</value>
+  </data>
+  <data name="Password rule n3" xml:space="preserve">
+    <value>Contains digit</value>
+  </data>
+  <data name="Password rule n4" xml:space="preserve">
+    <value>Contains special character (!@#$...)</value>
+  </data>
+  <data name="Does not contain uppercase letter" xml:space="preserve">
+    <value>Does not contain uppercase letter</value>
+  </data>
+  <data name="Does not contain digit" xml:space="preserve">
+    <value>Does not contain digit</value>
+  </data>
+  <data name="Does not contain special character" xml:space="preserve">
+    <value>Does not contain special character</value>
+  </data>
 </root>

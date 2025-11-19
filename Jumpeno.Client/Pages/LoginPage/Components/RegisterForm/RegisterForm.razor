@@ -6,29 +6,36 @@
 
 <div class="register-form">
     @if (!Success) {
-        <div class="register-box">
-            <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
-            <div class="register-inputs">
-                <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
-                <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
-                <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
-                <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+        <div class="register-form-content">
+            <div class="register-box">
+                <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
+                <div class="register-inputs">
+                    <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
+                    <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                    <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                    <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                </div>
+                <Box Surface="BOX_SURFACE.PRIMARY_GLASS" Class="password-strength-box-mobile">
+                    <PasswordStrength Password="@Password" HideLock />
+                </Box>
+                <Button Size="BUTTON_SIZE.M" OnClick="Register" Class="button-register">
+                    <Text>@I18N.T("Register")</Text>
+                </Button>
+                <Paragraph Size="TEXT_SIZE.S" Class="register-block">
+                    @I18N.T("Have an account?")&nbsp;
+                    <WebLink Size="TEXT_SIZE.S"
+                        NoWrap
+                        OnClick="() => VM.Show(LOGIN_FORM.USER)"
+                        OnEnter="() => VM.Show(LOGIN_FORM.USER)"
+                        Underline
+                    >
+                        @I18N.T("Log in")
+                    </WebLink>
+                </Paragraph>
             </div>
-            <Button Size="BUTTON_SIZE.M" OnClick="Register">
-                <Text>@I18N.T("Register")</Text>
-            </Button>
-            <Paragraph Size="TEXT_SIZE.S" Class="register-block">
-                @I18N.T("Have an account?")&nbsp;
-                <WebLink
-                    Size="TEXT_SIZE.S"
-                    NoWrap
-                    OnClick="() => VM.Show(LOGIN_FORM.USER)"
-                    OnEnter="() => VM.Show(LOGIN_FORM.USER)"
-                    Underline
-                >
-                    @I18N.T("Log in")
-                </WebLink>
-            </Paragraph>
+            <Box Surface="BOX_SURFACE.PRIMARY_GLASS" Class="password-strength-box">
+                <PasswordStrength Password="@Password" />
+            </Box>
         </div>
     } else {
         <div class="register-success-box">

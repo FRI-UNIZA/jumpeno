@@ -9,6 +9,33 @@
     width: 100%;
 }
 
+::deep.register-form .register-form-content {
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    /* Size: */
+    max-width: 100%;
+}
+
+::deep.register-form .password-strength-box {
+    /* Display: */
+    display: none;
+    flex: 1;
+    /* Size: */
+    padding: 20px;
+    padding-top: 30px;
+    width: 400px;
+    height: 100%;
+}
+
+::deep.register-form .password-strength-box-mobile {
+    /* Size: */
+    width: 100%;
+}
+
 ::deep.register-form .register-box {
     /* Display: */
     display: flex;
@@ -94,8 +121,23 @@
     font-size: 15px !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 860px) {
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.register-form .register-form-content {
+        /* Display: */
+        flex-direction: row;
+    }
+
+    ::deep.register-form .password-strength-box {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.register-form .password-strength-box-mobile {
+        /* Display: */
+        display: none;
+    }
+
     ::deep.register-form .paragraph.activation-text {
         /* Content: */
         font-size: 17px;

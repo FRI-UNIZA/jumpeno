@@ -6,6 +6,7 @@ public static class CHARS {
     public static readonly string ALPHA = $"{ALPHA_UPPER}{ALPHA_LOWER}";
 
     public const string NUM = "0123456789";
+    public const string SPECIAL = "!@#$%^&*()_-+={[}]:;'<,>.?/";
 
     public static readonly string ALPHA_UPPER_NUM = $"{ALPHA_UPPER}{NUM}";
     public static readonly string ALPHA_LOWER_NUM = $"{ALPHA_LOWER}{NUM}";

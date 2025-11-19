@@ -927,4 +927,28 @@
   <data name="This action is irreversible." xml:space="preserve">
     <value>Túto akciu nieje možné vrátiť.</value>
   </data>
+  <data name="Password rules" xml:space="preserve">
+    <value>Pravidlá hesla</value>
+  </data>
+  <data name="Password rule n1" xml:space="preserve">
+    <value>Dĺžka medzi 6 a 30 znakov</value>
+  </data>
+  <data name="Password rule n2" xml:space="preserve">
+    <value>Obsahuje veľké písmeno</value>
+  </data>
+  <data name="Password rule n3" xml:space="preserve">
+    <value>Obsahuje číslo</value>
+  </data>
+  <data name="Password rule n4" xml:space="preserve">
+    <value>Obsahuje špeciálny znak (!@#$...)</value>
+  </data>
+  <data name="Does not contain uppercase letter" xml:space="preserve">
+    <value>Neobsahuje veľké písmeno</value>
+  </data>
+  <data name="Does not contain digit" xml:space="preserve">
+    <value>Neobsahuje číslo</value>
+  </data>
+  <data name="Does not contain special character" xml:space="preserve">
+    <value>Neobsahuje špeciálny znak</value>
+  </data>
 </root>
