@@ -23,6 +23,12 @@ public partial class ConfirmModal {
     [Parameter]
     public RenderFragment? TextOK { get; set; }
 
+    // Events -----------------------------------------------------------------------------------------------------------------------------
+    public virtual async Task CallOnBeforeOpen() => await Task.CompletedTask;
+    public virtual async Task CallOnAfterOpen() => await Task.CompletedTask;
+    public virtual async Task CallOnBeforeClose() => await Task.CompletedTask;
+    public virtual async Task CallOnAfterClose() => await Task.CompletedTask;
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
     // Action:

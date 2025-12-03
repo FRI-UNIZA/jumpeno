@@ -73,7 +73,7 @@
     box-shadow: var(--theme-nav-menu-mobile-button-focus-box-shadow);
 }
 
-@media (max-width: 280px) {
+@media (max-width: 280.98px) {
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.nav-menu-close-button {
         /* Size: */

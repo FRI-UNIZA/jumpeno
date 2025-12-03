@@ -48,6 +48,39 @@ public static class GameValidator {
         return (bool)Checker.Assert(value, ValidateAnonyms(value, id), exception ?? EXCEPTION.VALUES)!;
     }
 
+    public static List<Error> ValidateAllowedAnonyms(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                !game.Anonyms && user.ID == null,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Anonymous players not allowed!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertAllowedAnonyms(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidateAllowedAnonyms(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.CLIENT
+    )!;
+
     // Rounds -----------------------------------------------------------------------------------------------------------------------------
     public const byte MIN_ROUNDS = 1;
     public const byte MAX_ROUNDS = 12;
@@ -103,6 +136,144 @@ public static class GameValidator {
         return (GAME_MODE)Checker.Assert(value, ValidateGameMode(value, id), exception ?? EXCEPTION.VALUES)!;
     }
 
+    // Host -------------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidateHostAlreadyConnected(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.HostConnected && user.ID == game.Host.ID,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Host already connected!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertHostAlreadyConnected(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidateHostAlreadyConnected(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.CLIENT
+    )!;
+
+    // Players ----------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidatePlayerHostPresentation(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.DisplayMode == DISPLAY_MODE.PRESENTATION && user.ID == game.Host.ID,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Host can not participate as a player!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertPlayerHostPresentation(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidatePlayerHostPresentation(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.CLIENT
+    )!;
+    
+    public static List<Error> ValidateReservedPlayerHostSpace(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.DisplayMode != DISPLAY_MODE.PRESENTATION &&
+                game.State == GAME_STATE.LOBBY &&
+                game.Capacity - 1 <= game.ActivePlayersCount &&
+                !game.HostConnected &&
+                user.ID != game.Host.ID,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertReservedPlayerHostSpace(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidateReservedPlayerHostSpace(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.DEFAULT
+    )!;
+    
+    public static List<Error> ValidateReservedPlayerHostName(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string userNameID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.DisplayMode != DISPLAY_MODE.PRESENTATION && user.ID != game.Host.ID && user.Name == game.Host.Name,
+                ERROR.DEFAULT.SetID(userNameID).SetInfo("Name is reserved!")
+            )
+        );
+        return errors;
+    }
+    public static string AssertReservedPlayerHostName(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string userNameID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user?.Name,
+        ValidateReservedPlayerHostName(game, user, gameID, userID, userNameID),
+        exception ?? EXCEPTION.VALUES
+    )!;
+
     // Spectators -------------------------------------------------------------------------------------------------------------------------
     public static int MAX_SPECTATORS => AppSettings.Game.MaxSpectators;
 
@@ -113,6 +284,75 @@ public static class GameValidator {
     public static Game AssertSpectatorCount(Game value, string id = "", AppException? exception = null) {
         return Checker.Assert(value, ValidateSpectatorCount(value, id), exception ?? EXCEPTION.VALUES);
     }
+
+    public static List<Error> ValidateSpectatorHostNonPresentation(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.DisplayMode != DISPLAY_MODE.PRESENTATION && user.ID == game.Host.ID,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("You must be connected as a player!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertSpectatorHostNonPresentation(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidateSpectatorHostNonPresentation(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.CLIENT
+    )!;
+
+    public static List<Error> ValidateReservedSpectatorHostSpace(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = ""
+    ) {
+        List<Error> errors = [];
+        errors.AddRange(Checker.ValidateUndefined(game, gameID));
+        errors.AddRange(Checker.ValidateUndefined(user, userID));
+        if (game == null || user == null) return errors;
+        errors.AddRange(
+            Checker.Validate(
+                game.DisplayMode == DISPLAY_MODE.PRESENTATION &&
+                MAX_SPECTATORS - 1 <= game.SpectatorCount &&
+                !game.HostConnected &&
+                user.ID != game.Host.ID,
+                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
+            )
+        );
+        return errors;
+    }
+    public static User AssertReservedSpectatorHostSpace(
+        // Parameters:
+        Game? game, User? user,
+        // Exceptions:
+        string gameID = "",
+        string userID = "", string user_IDID = "",
+        AppException? exception = null
+    )
+    => Checker.Assert(
+        user,
+        ValidateReservedSpectatorHostSpace(game, user, gameID, userID, user_IDID),
+        exception ?? EXCEPTION.DEFAULT
+    )!;
 
     // Instances --------------------------------------------------------------------------------------------------------------------------
     public static int MAX_INSTANCES => AppSettings.Game.MaxInstances;

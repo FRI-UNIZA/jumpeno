@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<div class="create-box">
+<div class="@ComputeClass()">
     <AuthView Roles="[ROLE.USER]">
         <Box Class="create-form">
             <BoxHeader class="create-form-header">
@@ -47,11 +47,11 @@
                             Label="@I18N.T("Select map")"
                             LoadLabel="@($"{I18N.T("Select map")}, {@I18N.T("Disabled field")}")"
                             RoleDescription="combobox"
-                            Class="@($"{FormField<SelectViewModel<int>>.CLASS} {FORM_VARIANT.PRIMARY.CSSClass()} {FORM_SIZE.S.CSSClass()} load-area-map-option")"
+                            Class="@LoadAreaMapOptionClass()"
                             NoStyle
                             NoLoader
                         >
-                            <SelectComponent
+                            <SelectField
                                 ViewModel="VMSelectMap"
                                 Disabled="VMSelectMapDisabled"
                                 Label="@I18N.T("Select map")"
@@ -66,7 +66,7 @@
                     </div>
                     <div class="gameplay-options">
                         <FormLabel Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="anonymous-players-label">
-                            <SwitchComponent
+                            <SwitchField
                                 ViewModel="VMSwitchAnonyms"
                                 Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")"
                                 Size="FORM_SIZE.M"
@@ -79,11 +79,11 @@
                                 <Description>
                                     <AnonymSVG Class="anonymous-players-svg" />
                                 </Description>
-                            </SwitchComponent>
+                            </SwitchField>
                         </FormLabel>
                         <div class="game-additional-options">
                             <div class="rounds-option">
-                                <SelectComponent
+                                <SelectField
                                     ViewModel="VMSelectRounds"
                                     Label="@I18N.T("Number of rounds")"
                                     Align="FORM_ALIGN.LEFT"
@@ -95,7 +95,7 @@
                                 <AntIcon Type="clock-circle" Theme="Outline" Class="rounds-icon" />
                             </div>
                             <div class="capacity-option">
-                                <SelectComponent
+                                <SelectField
                                     ViewModel="VMSelectCapacity"
                                     Label="@I18N.T("Capacity")"
                                     Align="FORM_ALIGN.LEFT"

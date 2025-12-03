@@ -1,0 +1,197 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button {
+    /* Size: */
+    --button-width: auto;
+    --button-height: 40px;
+    /* Style: */
+    --button-border-radius: 100vh;
+    /* Animations: */
+    --button-transition-property: color, background, box-shadow;
+    --button-transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    --button-transition-timing-function: ease;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-page .game-button {
+    /* Position: */
+    position: relative;
+    z-index: 0;
+    /* Display: */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    /* Size: */
+    width: var(--button-width);
+    height: var(--button-height);
+    padding: 0 calc(var(--button-height) * 0.4);
+    margin: 0;
+    /* Style: */
+    border-radius: var(--button-border-radius);
+    border: none;
+    outline: none;
+    appearance: none;
+    /* Animations: */
+    transition-property: var(--button-transition-property);
+    transition-duration: var(--button-transition-duration);
+    transition-timing-function: var(--button-transition-timing-function);
+    /* Actions: */
+    cursor: pointer;
+    /* Base: */
+    font-size: calc(var(--button-height) / 34);
+}
+
+::deep.game-page .game-button .game-button-content {
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--button-height) * 0.12);
+    /* Content: */
+    font-size: calc(var(--button-height) * 0.44);
+    font-weight: 500;
+    white-space: nowrap;
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Styles > Icon ----------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button .game-button-icon {
+    /* Content: */
+    font-size: calc(var(--button-height) * 0.62);
+    /* Actions: */
+    pointer-events: none;
+}
+
+/* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button.variant-primary:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-primary-color);
+    background: var(--theme-button-primary-background);
+    box-shadow: var(--theme-button-primary-box-shadow);
+}
+
+/* Variant [primary][active]: */
+::deep.game-page .game-button.variant-primary.active:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-primary-highlight-color);
+    background: var(--theme-button-primary-highlight-background);
+    box-shadow: var(--theme-button-primary-highlight-box-shadow);
+}
+
+/* Variant [primary][disabled]: */
+::deep.game-page .game-button.variant-primary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+    box-shadow: var(--theme-button-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+/* Variant [secondary] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button.variant-secondary:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-secondary-color);
+    background: var(--theme-button-secondary-background);
+    box-shadow: var(--theme-button-secondary-box-shadow);
+}
+
+/* Variant [secondary][active]: */
+::deep.game-page .game-button.variant-secondary.active:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-secondary-highlight-color);
+    background: var(--theme-button-secondary-highlight-background);
+    box-shadow: var(--theme-button-secondary-highlight-box-shadow);
+}
+
+/* Variant [secondary][disabled]: */
+::deep.game-page .game-button.variant-secondary.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+    box-shadow: var(--theme-button-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+/* Variant [success] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button.variant-success:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-success-color);
+    background: var(--theme-button-success-tint-color);
+    box-shadow: var(--theme-button-success-box-shadow);
+}
+::deep.game-page .game-button.variant-success:not(.disabled)::before,
+::deep.game-page .game-button.variant-success:not(.disabled)::after {
+    /* Position: */
+    position: absolute;
+    z-index: -1;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    background: var(--theme-button-success-background);
+    border-radius: var(--button-border-radius);
+    /* Content: */
+    content: "";
+}
+::deep.game-page .game-button.variant-success:not(.disabled)::after {
+    /* Style: */
+    background: var(--theme-button-success-highlight-background);
+    opacity: 0;
+    /* Transform: */
+    transform: translateZ(0);
+    /* Animations: */
+    transition: opacity var(--button-transition-duration) var(--button-transition-timing-function);
+    will-change: opacity;
+}
+
+/* Variant [success][active]: */
+::deep.game-page .game-button.variant-success.active:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-success-highlight-color);
+    background: var(--theme-button-success-highlight-tint-color);
+    box-shadow: var(--theme-button-success-highlight-box-shadow);
+}
+::deep.game-page .game-button.variant-success.active:not(.disabled)::after {
+    /* Style: */
+    opacity: 1;
+}
+
+/* Variant [success][disabled]: */
+::deep.game-page .game-button.variant-success.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+    box-shadow: var(--theme-button-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}
+
+/* Variant [danger] -------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-button.variant-danger:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-danger-color);
+    background: var(--theme-button-danger-background);
+    box-shadow: var(--theme-button-danger-box-shadow);
+}
+
+/* Variant [danger][active]: */
+::deep.game-page .game-button.variant-danger.active:not(.disabled) {
+    /* Style: */
+    color: var(--theme-button-danger-highlight-color);
+    background: var(--theme-button-danger-highlight-background);
+    box-shadow: var(--theme-button-danger-highlight-box-shadow);
+}
+
+/* Variant [danger][disabled]: */
+::deep.game-page .game-button.variant-danger.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+    box-shadow: var(--theme-button-disabled-box-shadow);
+    /* Actions: */
+    cursor: not-allowed;
+}

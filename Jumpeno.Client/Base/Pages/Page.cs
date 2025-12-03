@@ -128,7 +128,6 @@ public class Page : ComponentBase, IAsyncDisposable {
         await OnPageAfterRenderAsync(firstRender);
         if (!firstRender) return;
         if (Auth.Processing) return;
-        Reflex.InvokeVoid(typeof(Navigator), Navigator.PAGE_RENDERED);
     }
     public async ValueTask DisposeAsync() {
         IsDisposing = true;

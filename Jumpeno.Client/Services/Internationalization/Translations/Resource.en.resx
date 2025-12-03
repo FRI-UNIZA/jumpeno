@@ -366,12 +366,6 @@
   <data name="The game is already running." xml:space="preserve">
     <value>The game is already running.</value>
   </data>
-  <data name="Show" xml:space="preserve">
-    <value>Show</value>
-  </data>
-  <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
-  </data>
   <data name="Screen too small" xml:space="preserve">
     <value>Screen too small</value>
   </data>
@@ -834,12 +828,6 @@
   <data name="Controller" xml:space="preserve">
     <value>Controller</value>
   </data>
-  <data name="Do you really want to delete this game?" xml:space="preserve">
-    <value>Do you really want to delete this game?</value>
-  </data>
-  <data name="Delete game" xml:space="preserve">
-    <value>Delete game</value>
-  </data>
   <data name="Anonymous players not allowed!" xml:space="preserve">
     <value>Anonymous players not allowed!</value>
   </data>
@@ -950,5 +938,50 @@
   </data>
   <data name="Does not contain special character" xml:space="preserve">
     <value>Does not contain special character</value>
+  </data>
+  <data name="Lobby" xml:space="preserve">
+    <value>Lobby</value>
+  </data>
+  <data name="Playing" xml:space="preserve">
+    <value>Playing</value>
+  </data>
+  <data name="You must be connected as a player!" xml:space="preserve">
+    <value>You must be connected as a player!</value>
+  </data>
+  <data name="Name is reserved!" xml:space="preserve">
+    <value>Name is reserved!</value>
+  </data>
+  <data name="End game" xml:space="preserve">
+    <value>End game</value>
+  </data>
+  <data name="Do you really want to end this game?" xml:space="preserve">
+    <value>Do you really want to end this game?</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Everyone will be disconnected!" xml:space="preserve">
+    <value>Everyone will be disconnected!</value>
+  </data>
+  <data name="QR code" xml:space="preserve">
+    <value>QR code</value>
+  </data>
+  <data name="Invalid game action!" xml:space="preserve">
+    <value>Invalid game action!</value>
+  </data>
+  <data name="You are not a host!" xml:space="preserve">
+    <value>You are not a host!</value>
+  </data>
+  <data name="Game is deleted!" xml:space="preserve">
+    <value>Game is deleted!</value>
+  </data>
+  <data name="Server can not start the game now!" xml:space="preserve">
+    <value>Server can not start the game now!</value>
+  </data>
+  <data name="Space reserved for the host!" xml:space="preserve">
+    <value>Space reserved for the host!</value>
+  </data>
+  <data name="Host already connected!" xml:space="preserve">
+    <value>Host already connected!</value>
   </data>
 </root>

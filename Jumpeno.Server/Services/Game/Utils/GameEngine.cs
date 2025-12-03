@@ -11,7 +11,21 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     private Thread? GameLoopThread = null;
     // Locks:
     private readonly Locker GameLock = new();
+    private readonly EventWaitHandle GameStartHandle = new(false, EventResetMode.AutoReset);
     private readonly EventWaitHandle GameHandle = new(false, EventResetMode.AutoReset);
+    // Actions:
+    private bool IsPausing = false;
+    private bool IsDeleted = false;
+
+    // Hub --------------------------------------------------------------------------------------------------------------------------------
+    private async Task SendGameUpdate(UPDATE_GROUP group, NetworkUpdate update) => await GameHub.SendGameUpdate(Game, group, update);
+
+    private async Task SendGameActionUpdate(UPDATE_GROUP group, NetworkUpdate update) {
+        SetActionResponse(update);
+        await GameHub.SendGameUpdate(Game, group, update);
+    }
+
+    private async Task SendException(UPDATE_GROUP group, AppException e) => await GameHub.SendException(Game, group, e);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameEngine(
@@ -24,12 +38,14 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         // 1) Locks:
         GameLock.Lock();
         KeyUpdateLock.Lock();
-        // 2) Dispose locks:
-        GameLock.DisposeUnsafe();
-        KeyUpdateLock.DisposeUnsafe();
-        // 3) Dispose handle:
+        // 2) Dispose handles:
+        GameStartHandle.Set();
+        GameStartHandle.Dispose();
         GameHandle.Set();
         GameHandle.Dispose();
+        // 3) Dispose locks:
+        KeyUpdateLock.DisposeUnsafe();
+        GameLock.DisposeUnsafe();
         // 4) Finalize:
         GC.SuppressFinalize(this);
     }
@@ -42,16 +58,19 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         string nameID = ""
     )
     => await GameLock.Exclusive(async () => {
-        // 1) Before event:
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        // 2) Before event:
         await GameHub.BeforeConnected();
-        // 2) Connect player:
-        var player = Game.ConnectPlayer(connection, nameID);
-        var update = Game.NewPlayerUpdate(player);
+        // 3) Connect player:
+        var player = Game.CreatePlayer(connection, nameID);
+        // 4) Send update:
+        var update = Game.NewPlayerAddUpdate(player);
         var updated = Game.Update(update);
-        if (updated) await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-        // 3) Create context:
+        if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
+        // 5) Create context:
         var context = new GameContext(this, player);
-        // 4) After event:
+        // 6) After event:
         await GameHub.AfterConnected(context); return context;
     });
 
@@ -62,10 +81,11 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         await GameHub.BeforeDisconnected(context);
         // 2) Disconnect player:
         player.Disconnect();
-        var update = Game.NewPlayerUpdate(player);
+        // 3) Send update:
+        var update = Game.NewPlayerRemoveUpdate(player);
         var updated = Game.Update(update);
-        if (updated) await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-        // 3) After event:
+        if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
+        // 4) After event:
         await GameHub.AfterDisconnected(context);
     });
 
@@ -77,15 +97,19 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         string nameID = ""
     )
     => await GameLock.Exclusive(async () => {
-        // 1) Before event:
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        // 2) Before event:
         await GameHub.BeforeConnected();
-        // 2) Connect spectator:
-        var spectator = Game.ConnectSpectator(connection, nameID);
-        var update = Game.NewSpectatorUpdate();
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-        // 3) Create context:
+        // 3) Connect spectator:
+        var spectator = Game.CreateSpectator(connection, nameID);
+        // 4) Send update:
+        var update = Game.NewSpectatorAddUpdate(spectator);
+        var updated = Game.Update(update);
+        if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
+        // 5) Create context:
         var context = new GameContext(this, spectator);
-        // 4) After event:
+        // 6) After event:
         await GameHub.AfterConnected(context); return context;
     });
 
@@ -95,69 +119,121 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         var context = new GameContext(this, spectator);
         await GameHub.BeforeDisconnected(context);
         // 2) Disconnect spectator:
-        Game.Update(Game.NewSpectatorRemoveUpdate());
-        var update = Game.NewSpectatorUpdate();
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-        // 3) After event:
+        spectator.Disconnect();
+        // 3) Send update:
+        var update = Game.NewSpectatorRemoveUpdate(spectator);
+        var updated = Game.Update(update);
+        if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
+        // 4) After event:
         await GameHub.AfterDisconnected(context);
     });
 
     // Game actions -----------------------------------------------------------------------------------------------------------------------
-    public async Task Start()
-    => GameLock.Exclusive(() => {
-        // 1) Perform action:
-        if (Game.LOBBY_STATES.Contains(Game.State)) LoopStart();
-        else if (Game.PAUSE_STATES.Contains(Game.State)) LoopContinue();
-        // 2) Or throw:
+    public async Task Start(Connection? connection = null)
+    => await ActionCall(connection, async () => {
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        // 2) Perform action:
+        if (Game.LOBBY_STATES.Contains(Game.State)) await LoopStart();
+        else if (Game.PAUSE_STATES.Contains(Game.State)) await LoopContinue();
+        // 3) Or throw:
         else throw EXCEPTION.DEFAULT.SetInfo("Game is running!");
     });
 
-    public async Task Pause()
-    => GameLock.Exclusive(() => {
-        // 1) Perform action:
-        if (Game.RUN_STATES.Contains(Game.State)) LoopPause();
-        // 2) Or throw:
+    public async Task Pause(Connection? connection = null)
+    => await ActionCall(connection, async () => {
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        // 2) Perform action:
+        if (Game.RUN_STATES.Contains(Game.State)) await LoopPause();
+        // 3) Or throw:
         else throw EXCEPTION.DEFAULT.SetInfo("Game is not running!");
+    }, async () => {
+        // 4) Send response if pausing:
+        if (IsPausing) await SendGameActionUpdate(UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
     });
 
-    public async Task Toggle()
-    => await GameLock.Exclusive(async () => {
-        // 1) Perform action:
-        if (Game.LOBBY_STATES.Contains(Game.State)) LoopStart();
-        else if (Game.PAUSE_STATES.Contains(Game.State)) LoopContinue();
-        else if (Game.RUN_STATES.Contains(Game.State)) LoopPause();
-        // 2) Or throw:
+    public async Task Toggle(Connection? connection = null)
+    => await ActionCall(connection, async () => {
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        // 2) Perform action:
+        if (Game.LOBBY_STATES.Contains(Game.State)) await LoopStart();
+        else if (Game.PAUSE_STATES.Contains(Game.State)) await LoopContinue();
+        else if (Game.RUN_STATES.Contains(Game.State)) await LoopPause();
+        // 3) Or throw:
         else throw EXCEPTION.DEFAULT.SetInfo("Invalid game state!");
     });
 
-    private bool IsDeleted = false;
     public async Task Delete()
     => await GameLock.Exclusive(async () => {
-        // 1) Delete check:
-        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game already deleted!"); IsDeleted = true;
-        // 2) Notify clients:
-        await GameHub.SendException(Game, UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game already deleted!");
+        // 2) Set deleted:
+        IsDeleted = true;
+        // 3) Notify clients:
+        await SendException(UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
     });
 
-    // Loop actions -----------------------------------------------------------------------------------------------------------------------
-    private void LoopStart() {
+    // Loop [Action][Response] ------------------------------------------------------------------------------------------------------------
+    private LinkedList<string> ActionResponseIDs = [];
+
+    private void SetActionResponse(NetworkUpdate update) {
+        // 1) Check if needed:
+        if (ActionResponseIDs.Count <= 0) return;
+        // 2) Set update response:
+        update.ResponseIDs = ActionResponseIDs;
+        // 3) Clear IDs:
+        ActionResponseIDs = [];
+    }
+
+    private async Task ActionCall(Connection? connection, Func<Task> action, Func<Task>? after = null) 
+    => await GameLock.Exclusive(async () => {
+        // 1) Execute action:
+        await action();
+        // 2) Check connection:
+        if (connection?.ConnectionID == null) return;
+        // 3) Save response ID:
+        ActionResponseIDs.AddLast(connection.ConnectionID);
+        // 4) Execute after action:
+        if (after != null) await after();
+    });
+
+    private void CheckActionResponse(ref (GamePlayUpdate Update, bool Send) loop) {
+        if (ActionResponseIDs.Count > 0) loop.Send = true;
+    }
+
+    // Loop [Action][Execution] -----------------------------------------------------------------------------------------------------------
+    private async Task LoopStart() {
         // 1) Validation:
         if (Game.IsFinished) throw EXCEPTION.DEFAULT.SetInfo("Game is finished!");
+        if (GameLoopThread != null) throw EXCEPTION.DEFAULT.SetInfo("Game is running!");
+        if (!Game.LOBBY_STATES.Contains(Game.State)) throw EXCEPTION.DEFAULT.SetInfo("Invalid game state!");
         if (Game.ActivePlayersCount < 2) throw EXCEPTION.DEFAULT.SetInfo("At least 2 players required to start!");
-        // 2) Loop start:
-        GameLoopThread = new Thread(GameLoop);
-        GameLoopThread.Start();
+        // 2) Start loop:
+        try {
+            // 2.1) Start thread:
+            GameLoopThread = new Thread(GameLoop);
+            GameLoopThread.Start();
+        } catch {
+            // 2.2) Handle exception:
+            throw EXCEPTION.DEFAULT.SetInfo("Server can not start the game now!");
+        }
+        // 3) Start round:
+        await StartRound();
     }
 
     private GAME_STATE PausedState = GAME_STATE.GAMEPLAY;
-    private void LoopPause() {
+    private async Task LoopPause() {
         // 1) Save state:
         PausedState = Game.State;
         // 2) Update game:
         Game.Update(Game.NewStateUpdate(Game.Time, GAME_STATE.PAUSE));
+        // 3) Reset handle:
+        GameHandle.Reset();
     }
 
-    private void LoopContinue() {
+    private async Task LoopContinue() {
         // 1) Update game:
         Game.Update(Game.NewStateUpdate(Game.Time, PausedState));
         // 2) Set handle:
@@ -165,47 +241,52 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     }
 
     // Loop [Round] -----------------------------------------------------------------------------------------------------------------------
-    private async Task<bool> StartRound()
-    => await GameLock.Exclusive(async () => {
-        // 1) Do not run loop if not in lobby:
-        if (!Game.LOBBY_STATES.Contains(Game.State)) return false;
-        // 2) Reset round:
+    private async Task StartRound() {
+        // 1) Reset round:
         RoundFinishTimer = null;
         ResetKeyUpdates();
-        // 3) Start round:
+        // 2) Start round:
         var update = Game.NewRoundStartUpdate();
         Game.Update(update);
-        // 4) Send round update:
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-        // 5) Return true to run loop:
-        return true;
-    });
+        // 3) Send round update:
+        await SendGameActionUpdate(UPDATE_GROUP.ALL, update);
+        // 4) Set loop handle:
+        GameStartHandle.Set();
+    }
 
     private async Task HandlePause() {
         // 1) Check pause state & notify clients:
-        if (!Game.PAUSE_STATES.Contains(Game.State) || IsDeleted) return;
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
-        // 2) Wait for resume signal:
+        if (!Game.PAUSE_STATES.Contains(Game.State)) return;
+        await SendGameActionUpdate(UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
+        // 2) Mark pausing:
+        IsPausing = true;
+        // 3) Wait for resume signal:
         GameLock.Unlock();
         GameHandle.WaitOne();
         GameLock.Lock();
-        // 3) Reset key updates during pause:
+        // 4) Mark pausing:
+        IsPausing = false;
+        // 5) Reset key updates during pause:
         ResetKeyUpdates();
-        // 4) Check run state & notify clients:
-        if (!Game.RUN_STATES.Contains(Game.State) || IsDeleted) return;
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
+        // 6) Check run state & notify clients:
+        if (!Game.RUN_STATES.Contains(Game.State)) return;
+        await SendGameActionUpdate(UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
     }
 
-    private async Task UpdateRound()
-    => await GameLock.Exclusive(async () => {
-        // 1) Check state:
-        if (Game.State != GAME_STATE.SCOREBOARD) return;
-        // 2) Update round:
+    private async Task FinishRound() {
+        // 1) Update round:
         var update = Game.NewRoundFinishUpdate();
         Game.Update(update);
-        // 3) Send round update:
-        await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, update);
-    });
+        // 2) Send round update:
+        await SendGameActionUpdate(UPDATE_GROUP.ALL, update);
+        // 3) Release thread:
+        ReleaseThread();
+    }
+
+    private void ReleaseThread() {
+        GameLoopThread = null;
+        GameStartHandle.Reset();
+    }
 
     // Loop [Shrinking] -------------------------------------------------------------------------------------------------------------------
     private bool ApplyShrinking() {
@@ -238,12 +319,14 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     private readonly Locker KeyUpdateLock = new();
     private void ResetKeyUpdates() => KeyUpdateLock.Exclusive(KeyUpdates.Clear);
 
-    public bool Update(GameUpdate update) {
-        if (update is KeyUpdate key) return KeyUpdate(key);
-        return false;
-    }
+    public bool Update(GameUpdate update)
+    => update switch {
+        KeyUpdate key => KeyUpdate(key),
+        _ => false
+    };
 
-    private bool KeyUpdate(KeyUpdate update) => KeyUpdateLock.Exclusive(() => {
+    private bool KeyUpdate(KeyUpdate update)
+    => KeyUpdateLock.Exclusive(() => {
         // 1) Check whether game runs:
         if (!Game.RUN_STATES.Contains(Game.State)) return false;
         // 2) Add update to be applied:
@@ -269,6 +352,21 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     }
 
     // Loop [Kills & Lives] ---------------------------------------------------------------------------------------------------------------
+    private void EvaluateQuitPlayers(ref (GamePlayUpdate Update, bool Send) loop) {
+        foreach (var (player, id) in Game.PlayerQuitIterator) {
+            // 1) Kill update:
+            var kill = Game.NewKillUpdate(null, id);
+            Game.Update(kill);
+            // 2) Movement update:
+            var move = Game.NewMovementUnderMapUpdate(player);
+            Game.Update(move);
+            // 3) Set loop updates:
+            loop.Update.Movements[id] = move;
+            loop.Update.Kills[id] = kill;
+            loop.Send = true;
+        }
+    }
+
     private void EvaluatePlayerCollisions(ref (GamePlayUpdate Update, bool Send) loop) {
         // TODO: [Optional] Implement continuous collision detection (will increase complexity!)
         foreach (var (player, _) in Game.PlayerIterator) {
@@ -340,15 +438,15 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         if (loop.Send) {
             // 1) If killed or alive, send update to everyone (sync score & stop sending updates on joysticks):
             if (Game.DisplayMode != DISPLAY_MODE.EACH_OWN && (loop.Update.Kills.Count > 0 || loop.Update.Lives.Count > 0)) {
-                await GameHub.SendGameUpdate(Game, UPDATE_GROUP.ALL, loop.Update);
+                await SendGameActionUpdate(UPDATE_GROUP.ALL, loop.Update);
             // 2) Send update to all watching clients:
-            } else await GameHub.SendGameUpdate(Game, UPDATE_GROUP.WATCH, loop.Update);
+            } else await SendGameActionUpdate(UPDATE_GROUP.WATCH, loop.Update);
             Game.TouchClock.Reset();
         } else {
             // 3) Send periodical (wake-up) updates to touch devices:
             var deltaT = Game.TouchClock.ComputeDelta();
-            if (deltaT < Game.TouchClock.IntervalMS) return;
-            await GameHub.SendGameUpdate(Game, UPDATE_GROUP.WATCH_TOUCH, loop.Update);
+            if (deltaT < Game.TouchClock.INTERVAL) return;
+            await SendGameUpdate(UPDATE_GROUP.WATCH_TOUCH, loop.Update);
             Game.TouchClock.Update(deltaT);
         }
     }
@@ -356,54 +454,53 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     // Loop -------------------------------------------------------------------------------------------------------------------------------
     private async void GameLoop() {
         try {
-            // 1) Initial update:
-            var run = await StartRound();
-
+            // 1) Wait for the signal:
+            GameStartHandle.WaitOne();
             // 2) Run loop:
-            while (run) {
-                // 2.1) Await time delta:
-                var deltaT = await Game.Clock.AwaitDelta();
-
+            while (true) {
+                // 2.1) Await delta of time:
+                var deltaT = await GameLock.Exclusive(() => Game.Clock.AwaitDelta(GameLock));
                 // 2.2) Update game:
-                if (await GameLock.Exclusive(async () => {
-                    // 2.2.1) Return true if game finished:
-                    if (Game.LOBBY_STATES.Contains(Game.State) || IsDeleted) return true;
-                    // 2.2.2) Pause and repeat loop:
-                    if (Game.PAUSE_STATES.Contains(Game.State)) { await HandlePause(); return IsDeleted; }
+                if (!await GameLock.Exclusive(async () => {
+                    // 2.2.1) Quit if deleted:
+                    if (IsDeleted) { ReleaseThread(); return false; }
+                    // 2.2.2) Quit if finished:
+                    if (Game.LOBBY_STATES.Contains(Game.State)) { await FinishRound(); return false; }
+                    // 2.2.3) Pause and repeat loop:
+                    if (Game.PAUSE_STATES.Contains(Game.State)) { await HandlePause(); return true; }
 
-                    // 2.2.3) Prepare loop update & shrink:
+                    // 2.2.4) Prepare loop update & shrink:
                     var shrink = ApplyShrinking();
                     var loop = (Update: Game.NewGamePlayCurrentUpdate(), Send: shrink);
+                    EvaluateQuitPlayers(ref loop);
                     EvaluateShrinking(ref loop);
 
-                    // 2.2.4) Move game objects:
+                    // 2.2.5) Move game objects:
                     Game.Update(Game.NewTimeFlowUpdate(deltaT));
-                    // 2.2.5) Evaluate player interactions:
+                    // 2.2.6) Evaluate player interactions:
                     EvaluatePlayerCollisions(ref loop);
-                    // 2.2.6) Apply key updates:
+                    // 2.2.7) Apply key updates:
                     ApplyKeyUpdates(ref loop);
-                    // 2.2.7) Add life updates:
+                    // 2.2.8) Add life updates:
                     AddLifeUpdates(ref loop);
-                    // 2.2.8) Add movement corrections:
+                    // 2.2.9) Add movement corrections:
                     EnforceMoveUpdates(ref loop, shrink);
-                    // 2.2.9) Try to finish:
+                    // 2.2.10) Try to finish:
                     TryFinishGame(ref loop, deltaT);
+                    // 2.2.11) Check action:
+                    CheckActionResponse(ref loop);
 
-                    // 2.2.10) Send update & repeat loop:
-                    await SendLoopUpdate(loop); return false;
+                    // 2.2.12) Quit if finished:
+                    if (Game.LOBBY_STATES.Contains(Game.State)) { await FinishRound(); return false; }
+                    // 2.2.13) Send update & repeat loop:
+                    await SendLoopUpdate(loop); return true;
                 })) break;
             }
-
-            // 3) Finish round:
-            await UpdateRound();
         } catch {
-            // 4) Handle exception:
+            // 3) Handle exception:
             await GameLock.TryExclusive(async () => {
-                if (!IsDeleted) await GameHub.SendException(Game, UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
+                if (!IsDeleted) await SendException(UPDATE_GROUP.ALL, EXCEPTION.DISCONNECT);
             });
-        } finally {
-            // 5) Release thread:
-            GameLoopThread = null;
         }
     }
 }

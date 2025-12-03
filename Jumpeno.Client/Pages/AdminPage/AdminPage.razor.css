@@ -41,16 +41,30 @@
 
 /* Styles > ActiveGames ---------------------------------------------------------------------------------------------------------------- */
 ::deep.admin-page .active-games-heading-line {
+    /* Variables: */
+    --active-games-heading-button-size: 41px;
+    --active-games-heading-gap: 10px;
     /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+}
+
+::deep.admin-page .active-games-heading-line::before {
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: calc(var(--active-games-heading-button-size) + var(--active-games-heading-gap));
+    /* Content: */
+    content: "";
 }
 
 ::deep.admin-page .heading.active-games-heading {
+    /* Display: */
+    flex-shrink: 0;
     /* Size: */
     width: auto;
+    max-width: calc(100% - var(--active-games-heading-button-size) - var(--active-games-heading-gap));
     /* Content: */
     text-align: center;
 }
@@ -59,7 +73,9 @@
     /* Variables: */
     --button-icon-size: 25px;
     /* Size: */
-    margin: -10px 0;
+    width: var(--active-games-heading-button-size);
+    height: var(--active-games-heading-button-size);
+    margin: -10px 0 -10px var(--active-games-heading-gap);
 }
 
 /* Styles > DB ------------------------------------------------------------------------------------------------------------------------- */
@@ -163,14 +179,6 @@
 ::deep.admin-page .heading.map-heading {
     /* Content: */
     text-align: center;
-}
-
-@media (min-width: 320px) {
-    /* Media > Styles > ActiveGames ---------------------------------------------------------------------------------------------------- */
-    ::deep.admin-page .button.active-games-control-button.variant.size {
-        /* Size: */
-        margin-right: -51px;
-    }
 }
 
 @media (min-width: 1200px) {

@@ -1,9 +1,6 @@
 namespace Jumpeno.Client.Components;
 
 public partial class ModalElement {
-    // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_UNCLOSABLE = "unclosable";
-
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required Modal Modal { get; set; }
@@ -13,7 +10,7 @@ public partial class ModalElement {
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {
         var c = base.ComputeClass()
-        .Set(Modal.CLASS_MODAL, Base)
+        .Set(Modal.CLASS, Base)
         .SetSurface(Modal.Surface);
         switch (Modal.State) {
             case MODAL_STATE.PRE_OPEN:
@@ -29,8 +26,10 @@ public partial class ModalElement {
                 c.Set("closing"); c.Set("closing-loading");
             break;
         }
-        c.Set(CLASS_UNCLOSABLE, Modal.Unclosable);
-        c.Set(Modal.Class);
+        c.Set(Modal.CLASS_NO_HEADER, Modal.NoHeader);
+        c.Set(Modal.CLASS_NO_FOOTER, Modal.NoFooter);
+        c.Set(Modal.CLASS_UNCLOSABLE, Modal.Unclosable);
+        c.Set(Modal.ComputeClass());
         return c;
     }
 

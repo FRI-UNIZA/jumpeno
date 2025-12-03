@@ -1,42 +1,38 @@
 namespace Jumpeno.Client.Utils;
 
-public class GameClock {
+public class GameClock(int fps) {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public readonly int FPS = fps;
+    public readonly int INTERVAL = 1000 / fps; // ms
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private DateTime Time;
-    public int FPS { get; private set; }
-    public int IntervalMS { get; private set; }
-
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public GameClock(int fps) {
-        Time = DateTime.UtcNow;
-        FPS = fps;
-        IntervalMS = ComputeInterval(FPS);
-    }
-
-    // Initializers -----------------------------------------------------------------------------------------------------------------------
-    private static int ComputeInterval(int fps) => 1000 / fps;
+    private DateTime Time = DateTime.UtcNow;
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static double Delta(DateTime time1, DateTime time2) => Math.Abs((time1 - time2).TotalMilliseconds);
-    
+
     public static double DeltaAhead(DateTime time) => Math.Max((DateTime.UtcNow - time).TotalMilliseconds, 0);
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public void Set(DateTime time) => Time = time;
-    
+
     public void Reset() => Set(DateTime.UtcNow);
-    
+
     public void Update(double deltaT) => Time = Time.AddMilliseconds(deltaT);
-    
+
     public double ComputeDelta() => (DateTime.UtcNow - Time).TotalMilliseconds;
-    
-    public async Task<double> AwaitDelta() {
+
+    // Await ------------------------------------------------------------------------------------------------------------------------------
+    // NOTE: Must run under lock:
+    private async Task<double> AwaitDeltaT((Func<Task> Lock, Action Unlock)? locker) {
         while (true) {
             // 1) Compute delta:
             var deltaT = ComputeDelta();
             // 2) Check valid value:
-            if (deltaT <= IntervalMS) {
-                await Task.Delay(IntervalMS - (int) Math.Ceiling(deltaT));
+            if (deltaT <= INTERVAL) {
+                locker?.Unlock();
+                await Task.Delay(INTERVAL - (int) Math.Ceiling(deltaT));
+                if (locker != null) await (locker?.Lock!)();
                 continue;
             }
             // 3) Update time:
@@ -45,4 +41,7 @@ public class GameClock {
             return deltaT;
         }
     }
+    public async Task<double> AwaitDelta() => await AwaitDeltaT(null);
+    public async Task<double> AwaitDelta(LockerSlim locker) => await AwaitDeltaT((locker.Lock, locker.TryUnlock));
+    public async Task<double> AwaitDelta(Locker locker) => await AwaitDeltaT((() => { locker.Lock(); return Task.CompletedTask; }, locker.TryUnlock));
 }

@@ -11,6 +11,7 @@ public partial class ModalProvider {
     private readonly LockerSlim ElementLock = new();
     private TaskCompletionSource TCSLoading = null!;
     private TaskCompletionSource TCSOpen = null!;
+    private TaskCompletionSource TCSOpened = null!;
     private TaskCompletionSource TCSDispose = null!;
     private readonly MinWatch MinLoadingWatch = new();
 
@@ -51,8 +52,10 @@ public partial class ModalProvider {
         if (modal.CreatedLoading) instance.MinLoadingWatch.Start(modal.MinLoading);
         instance.TCSLoading = new();
         SetModalState(modal, MODAL_STATE.PRE_OPEN);
+        instance.TCSOpened = new();
         instance.ModalList.Add(modal);
         instance.StateHasChanged();
+        if (!modal.CreatedLoading) await instance.TCSOpened.Task;
     }
 
     public static async Task AddElement(ModalElement element) {
@@ -72,7 +75,8 @@ public partial class ModalProvider {
         await instance.TCSOpen.Task;
         await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
         ActionHandler.SetFocus(element.Modal.ID_DIALOG);
-        await element.Modal.OnAfterOpen.InvokeAsync(element.Modal);
+        await element.Modal.CallOnAfterOpen();
+        instance.TCSOpened.TrySetResult();
     }
 
     public static void NotifyOpen() => Instance().TCSOpen.TrySetResult();
@@ -91,12 +95,14 @@ public partial class ModalProvider {
         await instance.MinLoadingWatch.Task;
     }
 
-    public static async Task NotifyFinishLoading(Modal modal) {
-        await Instance().TCSLoading.Task;
+    public static async Task FinishLoading(Modal modal) {
+        var instance = Instance();
+        await instance.TCSLoading.Task;
         await AwaitLoading(modal);
-        await modal.OnBeforeOpen.InvokeAsync(modal);
+        await modal.CallOnBeforeOpen();
         SetModalState(modal, MODAL_STATE.OPENING);
         await NotifyElement(modal);
+        await instance.TCSOpened.Task;
     }
 
     // Closing:
@@ -115,23 +121,31 @@ public partial class ModalProvider {
         instance.ModalLock.TryUnlock();
     }
     
-    public static async Task DestroyModal(Modal modal, bool withLock = true) {
+    private static async Task DestroyModal(Modal modal, bool withLock = true) {
         var instance = Instance();
         if (withLock) await instance.ModalLock.TryLock();
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
-        await modal.OnBeforeClose.InvokeAsync(modal);
 
         instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+        if (element == null) {
+            await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
+            if (withLock) if (withLock) instance.ModalLock.TryUnlock();
+            return;
+        }
+        await modal.CallOnBeforeClose();
+
         instance.TCSDispose = new TaskCompletionSource();
-        element?.StartClosing();
+        element.StartClosing();
         await instance.TCSDispose.Task;
         
         await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
         if (await PageLoader.IsActive()) ActionHandler.PopFocus();
         else await ActionHandler.RestoreFocusAsync();
-        await modal.OnAfterClose.InvokeAsync(modal);
+        await modal.CallOnAfterClose();
         if (withLock) instance.ModalLock.TryUnlock();
     }
+
+    public static async Task DestroyModal(Modal modal) => await DestroyModal(modal, true);
 
     public static async Task RemoveElement(ModalElement element) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
@@ -161,7 +175,7 @@ public partial class ModalProvider {
         var instance = Instance();
         var element = instance.ElementDictionary[id];
         SetModalState(element.Modal, element.Modal.CreatedLoading ? MODAL_STATE.LOADING : MODAL_STATE.OPENING);
-        if (!element.Modal.CreatedLoading) await element.Modal.OnBeforeOpen.InvokeAsync(element.Modal);
+        if (!element.Modal.CreatedLoading) await element.Modal.CallOnBeforeOpen();
         element.Notify();
         instance.TCSLoading.TrySetResult();
     }

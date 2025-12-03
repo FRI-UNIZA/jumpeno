@@ -1,15 +1,14 @@
 namespace Jumpeno.Client.Models;
 
-public class PingUpdate(ulong id, int round, DateTime createdAt) : NetworkUpdate(id, round) {
+public class GameActionRequestUpdate(GAME_ACTION action) : GameRequestUpdate
+{
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GAME_HUB.PING_UPDATE;
+    public override string HUB_ACTION => GAME_HUB.GAME_ACTION_REQUEST_UPDATE;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public DateTime CreatedAt { get; private set; } = createdAt;
-    public DateTime? ReturnedAt { get; private set; } = null;
-
+    public GAME_ACTION Action { get; private set; } = action;
+    
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public void SetReturn() => ReturnedAt = DateTime.UtcNow;
     public override string ToString() => Format.JSON_PRETTY(this);
 }

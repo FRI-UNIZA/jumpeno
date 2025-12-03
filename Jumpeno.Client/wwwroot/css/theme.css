@@ -86,8 +86,6 @@ body.light-theme .surface-primary {
     --theme-nav-menu-mobile-button-highlight-color: rgba(132, 124, 145, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(42, 33, 56, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
-    --theme-game-state-color: rgba(255, 255, 255, 1);
-    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-create-box-canvas-box-shadow-opacity: 0.25;
     --theme-game-screen-control-color: rgba(105, 99, 115, 1);
     --theme-game-screen-control-background: rgba(255, 255, 255, 1);
@@ -97,6 +95,8 @@ body.light-theme .surface-primary {
     --theme-game-screen-control-pressed-box-shadow: 0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.14);
     --theme-lobby-box-shadow: 0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2);
     --theme-lobby-empty-color: rgba(0, 0, 0, 0.4);
+    --theme-lobby-hide-icon-color: rgb(100, 100, 100);
+    --theme-lobby-hide-icon-background: rgba(0, 0, 0, 0.1);
     --theme-lobby-line-background: rgba(255, 215, 0, 0.7);
     --theme-lobby-presence-box-shadow: 0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7);
     --theme-lobby-dash-color: rgba(0, 0, 0, 0.14);
@@ -331,6 +331,10 @@ body.light-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-game-state-color: rgba(255, 255, 255, 1);
+    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
+    --theme-game-waiting-background: rgb(61, 61, 61);
+    --theme-game-waiting-drop-shadow: 0 0.043em 0.086em rgba(0, 0, 0, 0.8);
     --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
     --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
@@ -472,8 +476,6 @@ body.dark-theme .surface-primary {
     --theme-nav-menu-mobile-button-highlight-color: rgba(255, 255, 255, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(236, 240, 241, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
-    --theme-game-state-color: rgba(255, 255, 255, 1);
-    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-create-box-canvas-box-shadow-opacity: 0.5;
     --theme-game-screen-control-color: rgba(236, 240, 241, 1);
     --theme-game-screen-control-background: rgba(42, 33, 56, 1);
@@ -483,6 +485,8 @@ body.dark-theme .surface-primary {
     --theme-game-screen-control-pressed-box-shadow: 0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.7);
     --theme-lobby-box-shadow: 0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2);
     --theme-lobby-empty-color: rgba(0, 0, 0, 0.4);
+    --theme-lobby-hide-icon-color: rgb(255, 255, 255);
+    --theme-lobby-hide-icon-background: rgba(255, 255, 255, 0.2);
     --theme-lobby-line-background: rgba(255, 215, 0, 0.7);
     --theme-lobby-presence-box-shadow: 0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7);
     --theme-lobby-dash-color: rgba(0, 0, 0, 0.14);
@@ -717,6 +721,10 @@ body.dark-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-game-state-color: rgba(255, 255, 255, 1);
+    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
+    --theme-game-waiting-background: rgb(61, 61, 61);
+    --theme-game-waiting-drop-shadow: 0 0.043em 0.086em rgba(0, 0, 0, 0.8);
     --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
     --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);

@@ -57,22 +57,22 @@ public class LockerSlim {
 
     // Token callbacks --------------------------------------------------------------------------------------------------------------------
     public async Task Exclusive(Action<LockToken> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { await Lock(); callback(token); }
         finally { token.Unlock(); }
     }
     public async Task<T> Exclusive<T>(Func<LockToken, T> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { await Lock(); return callback(token); }
         finally { token.Unlock(); }
     }
     public async Task Exclusive(Func<LockToken, Task> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { await Lock(); await callback(token); }
         finally { token.Unlock(); }
     }
     public async Task<T> Exclusive<T>(Func<LockToken, Task<T>> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { await Lock(); return await callback(token); }
         finally { token.Unlock(); }
     }

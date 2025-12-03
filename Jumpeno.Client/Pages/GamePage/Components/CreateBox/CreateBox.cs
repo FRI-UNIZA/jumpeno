@@ -8,6 +8,17 @@ public partial class CreateBox {
     [Parameter]
     public required ConnectViewModel VM { get; set; }
 
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("create-box", Base);
+
+    private static CSSClass LoadAreaMapOptionClass() {
+        return new CSSClass("load-area-map-option")
+        // NOTE: Styled as field:
+        .Set(FormField<SelectViewModel<int>>.CLASS)
+        .Set(FORM_VARIANT.PRIMARY.CSSClass())
+        .Set(FORM_SIZE.S.CSSClass());
+    }
+
     // Form -------------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<CreateBox>();
     // Name:
@@ -203,6 +214,8 @@ public partial class CreateBox {
         ));
     }
 
+    protected override void OnComponentInitialized() => SetVMInputCode(VM.URLCode);
+
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
         if (!firstTime) return;
         VM.RegisterForm(FORM);
@@ -266,11 +279,17 @@ public partial class CreateBox {
     }
 
     private async Task FinishLoading() {
+        // 1) Trigger child params change:
+        StateHasChanged();
+        await Task.Yield();
+        // 2) Animation delay:
         await Task.Delay(AppTheme.TRANSITION_SEMI_ULTRA_FAST);
+        // 3) Finish map loading:
         GameMapLoadArea.SetRestoreID(ID_BUTTON_TRY_AGAIN);
         await GameMapLoadArea.FinishLoading(restoreFocus: true);
         VMSelectMapDisabled = VMSelectMapError || VMSelectMapOptions.Count <= 0;
         StateHasChanged();
+        // 4) Finish select loading:
         if (VMSelectMapDisabled) return;
         GameMapSelectLoadArea.SetRestoreID(VMSelectMap.FormID);
         await GameMapSelectLoadArea.FinishLoading(restoreFocus: true);
@@ -339,7 +358,7 @@ public partial class CreateBox {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     private async Task Create() {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME);
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
         await CancelMapRequests();
         await VM.CreateRequest(new(
             Code: VMInputCodeDisabled ? null : VMInputCode.Value,

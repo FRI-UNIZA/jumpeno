@@ -66,11 +66,12 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
-    public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is StateUpdate state) return StateUpdate(state);
-        return false;
-    }
+    public bool Update(GameUpdate update)
+    => update switch {
+        TimeFlowUpdate time => TimeFlowUpdate(time),
+        StateUpdate state => StateUpdate(state),
+        _ => false
+    };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
         if (update.Game.State != GAME_STATE.SHRINKING) return false;

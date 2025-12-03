@@ -1,0 +1,32 @@
+@namespace Jumpeno.Client.Components
+
+<GameModal
+    @ref="@ModalRef" VM="VM"
+    Class="game-chat"
+    Label="@I18N.T("Chat")"
+    NoFooter
+>
+    <Content>
+        <div
+            style="
+                display: flex;
+                flex-direction: column;
+                gap: calc(var(--aspect-size) * 0.016);
+                width: 100%;
+                padding: calc(var(--aspect-size) * 0.05) calc(var(--aspect-size) * 0.014) calc(var(--aspect-size) * 0.07)
+            "
+        >
+            <AntIcon
+                Type="coffee"
+                Theme="outline"
+                Style="font-size: calc(var(--aspect-size) * 0.14); margin-right: calc(var(--aspect-size) * -0.025)"
+            />
+            <Heading1 Style="font-size: calc(var(--aspect-size) * 0.032); text-align: center; line-height: 1.2">
+                @I18N.T("Under construction")
+            </Heading1>
+            <Paragraph Style="font-size: calc(var(--aspect-size) * 0.016); text-align: center">
+                @I18N.T("We are working on the implementation of this functionality.")
+            </Paragraph>
+        </div>
+    </Content>
+</GameModal>

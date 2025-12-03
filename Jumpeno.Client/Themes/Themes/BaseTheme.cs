@@ -172,10 +172,15 @@ public class BaseTheme {
 
 // NOTE: Pages ----------------------------------------------------------------------------------------------------------------------------
     // Game -------------------------------------------------------------------------------------------------------------------------------
-    public virtual RGBAColor GAME_STATE_COLOR { get; }
-    public virtual string GAME_STATE_TEXT_SHADOW { get; }
+    // Game > Atoms > GameState:
+    public virtual RGBAColor GAME_STATE_COLOR => new(255, 255, 255);
+    public virtual string GAME_STATE_TEXT_SHADOW => "0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8)";
 
-    // CreateBox:
+    // Game > Atoms > GameWaiting:
+    public virtual RGBColor GAME_WAITING_BACKGROUND => new(61, 61, 61);
+    public virtual string GAME_WAITING_DROP_SHADOW => "0 0.043em 0.086em rgba(0, 0, 0, 0.8)";
+
+    // Game > Components > CreateBox:
     public virtual RGBAColor CREATE_BOX_SETTINGS_ICON_COLOR => new(255, 255, 255);
     public virtual string CREATE_BOX_SETTINGS_ICON_DROP_SHADOW => "0 0 0.03em rgba(0, 0, 0, 0.6)";
     public virtual string CREATE_BOX_LOGO_DROP_SHADOW => "0 0 2em rgba(0, 0, 0, 0.6)";
@@ -183,19 +188,23 @@ public class BaseTheme {
     public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_SIZE => "0 0.009em 0.04em 0.014em";
     public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY { get; }
 
-    // GameScreen > Control:
+    // Game > Components > GameScreen:
+    // Control:
     public virtual RGBAColor GAME_SCREEN_CONTROL_COLOR { get; }
     public virtual RGBAColor GAME_SCREEN_CONTROL_BACKGROUND { get; }
     public virtual string GAME_SCREEN_CONTROL_BOX_SHADOW { get; }
-    
-    // GameScreen > Control [pressed]:
+    // Control [pressed]:
     public virtual RGBAColor GAME_SCREEN_CONTROL_PRESSED_COLOR { get; }
     public virtual RGBAColor GAME_SCREEN_CONTROL_PRESSED_BACKGROUND { get; }
     public virtual string GAME_SCREEN_CONTROL_PRESSED_BOX_SHADOW { get; }
 
-    // Lobby:
+    // Game > Components > Lobby:
     public virtual string LOBBY_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_EMPTY_COLOR { get; }
+    // Hide:
+    public virtual RGBColor LOBBY_HIDE_ICON_COLOR { get; }
+    public virtual RGBAColor LOBBY_HIDE_ICON_BACKGROUND { get; }
+    // Players:
     public virtual RGBAColor LOBBY_LINE_BACKGROUND { get; }
     public virtual string LOBBY_PRESENCE_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_DASH_COLOR { get; }

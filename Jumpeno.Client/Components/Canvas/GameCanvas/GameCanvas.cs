@@ -32,6 +32,7 @@ public partial class GameCanvas {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string ID = IDGenerator.Generate(nameof(GameCanvas));
     public string Selector => $"#{ID} canvas";
+    public double DPR { get; private set; }
     public int Width { get; private set; }
     public int Height { get; private set; }
 
@@ -57,8 +58,9 @@ public partial class GameCanvas {
         await RenderLock.TryExclusive(() => {
             var size = Window.GetSizeOf(Selector);
             if (size == null) return;
-            Width = (int)size.Width;
-            Height = (int)size.Height;
+            DPR = JS.Eval<double>("window.devicePixelRatio || 1");
+            Width = (int)(size.Width * DPR);
+            Height = (int)(size.Height * DPR);
         });
     }
 
@@ -71,8 +73,8 @@ public partial class GameCanvas {
     protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         try {
             if (!firstRender) return;
-            await UpdateDimensions();
             await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
+            await UpdateDimensions();
         } finally {
             if (Game == null) await RenderMap();
         }
@@ -89,7 +91,7 @@ public partial class GameCanvas {
     private async Task RenderMap() {
         await RenderLock.TryExclusive(async () => {
             // 1) Update map:
-            var map = CurrentMap(); map.UpdateScreen(0, Width, Height, 0);
+            var map = CurrentMap(); map.UpdateScreen(0, Width, Height, 0, DPR);
             // 2) Get context:
             ctx ??= await CanvasRef.CreateCanvas2DAsync();
             // 3) Render map:
@@ -102,7 +104,7 @@ public partial class GameCanvas {
             // 0) Check game:
             if (Game == null) return;
             // 1) Update map:
-            Game.Map.UpdateScreen(0, Width, Height, 0);
+            Game.Map.UpdateScreen(0, Width, Height, 0, DPR);
             // 2) Get context:
             ctx ??= await CanvasRef.CreateCanvas2DAsync();
             // 3) Render game:

@@ -3,6 +3,7 @@
 ::deep.body .os-scrollbar {
     --os-size: 8px;
     --os-padding-axis: 3px;
+    --os-handle-border-radius: max(100vh, 100px);
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
@@ -18,7 +19,7 @@
     overflow: hidden;
 }
 
-::deep.scroll-area-content {
+::deep.scroll-area .scroll-area-content {
     /* Position: */
     position: relative;
     /* Display: */
@@ -29,6 +30,11 @@
     height: 100%;
     /* Content: */
     overflow: visible !important;
+}
+
+::deep.scroll-area .os-scrollbar-handle::before {
+    /* Actions: */
+    pointer-events: none;
 }
 
 @media all and (min-width: 768px) {

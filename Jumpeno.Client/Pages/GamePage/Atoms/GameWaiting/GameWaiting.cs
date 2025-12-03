@@ -1,19 +1,14 @@
 namespace Jumpeno.Client.Components;
 
-public partial class InfoBox {
+public partial class GameWaiting {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "info-box";
-    public const string CLASS_ICON = "info-icon";
-    public const string CLASS_TEXT = "info-text";
+    public const string CLASS = "game-waiting";
+    public const string CLASS_FINISHED = "finished";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required string Type { get; set; }
-    [Parameter]
-    public required string Theme { get; set; }
-    [Parameter]
-    public required RenderFragment ChildContent { get; set; }
+    public bool Finished { get; set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).Set(CLASS_FINISHED, Finished);
 }

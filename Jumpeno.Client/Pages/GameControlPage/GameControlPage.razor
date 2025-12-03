@@ -1,13 +1,13 @@
 @namespace Jumpeno.Client.Pages
 
 @inherits Page
-@attribute [Route(GameControllerPage.ROUTE_EN)]
-@attribute [Route(GameControllerPage.ROUTE_SK)]
+@attribute [Route(GameControlPage.ROUTE_EN)]
+@attribute [Route(GameControlPage.ROUTE_SK)]
 
-<div class="game-controller-page">
+<div class="game-control-page">
     <DocTitle Value="@I18N.T("Game controller")" />
-    <div class="game-controller-form">
-        <Heading1 Size="TEXT_SIZE.L" Class="game-controller-heading">@I18N.T("Game controller")</Heading1>
+    <div class="game-control-form">
+        <Heading1 Size="TEXT_SIZE.L" Class="game-control-heading">@I18N.T("Game controller")</Heading1>
         <div class="form-inputs">
             <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Code")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
         </div>
@@ -22,9 +22,12 @@
             <IconAfter><AntIcon Type="pause" Theme="outline" Label="@I18N.T("Pause")" /></IconAfter>
         </Button>
     </div>
-    <ConfirmModal @ref="DeleteConfirmModalRef" Label="@I18N.T("Delete game")" Danger>
+    <ConfirmModal @ref="DeleteConfirmModalRef" Label="@I18N.T("End game")" Danger>
         <Icon><AntIcon Type="delete" Theme="outline" Label="@I18N.T("Delete")" /></Icon>
-        <Message>@I18N.T("Do you really want to delete this game?")</Message>
-        <TextOK>@I18N.T("Delete")</TextOK>
+        <Message>
+            @I18N.T("Do you really want to end this game?")<br />
+            @I18N.T("Everyone will be disconnected!")
+        </Message>
+        <TextOK>@I18N.T("End")</TextOK>
     </ConfirmModal>
 </div>

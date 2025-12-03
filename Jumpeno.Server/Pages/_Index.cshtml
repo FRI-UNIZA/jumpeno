@@ -88,7 +88,6 @@
                 JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE.PREFERENCES.APP_THEME.String()");
                 JSTempTitle.Add();
                 JSWindow.Init();
-                JSNavigator.Init();
                 JSImage.InitAll();
                 Blazor.start({ applicationCulture: "@CultureInfo.CurrentCulture" });
             })();

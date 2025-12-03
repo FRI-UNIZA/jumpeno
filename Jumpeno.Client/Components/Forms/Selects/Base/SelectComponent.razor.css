@@ -72,6 +72,8 @@
     flex-direction: column;
     /* Size: */
     width: 100%;
+    /* Style: */
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
 }
 
 ::deep.modal.select-options-modal .select-option {
@@ -160,6 +162,7 @@
     color: var(--theme-text-color);
     background: var(--theme-surface-background);
     border: none;
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
     outline: none;
     /* Content: */
     font-family: var(--theme-font-primary);

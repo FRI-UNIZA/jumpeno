@@ -1,0 +1,53 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal.confirm-modal.game-confirm-modal {
+    /* Display: */
+    --confirm-footer-gap: calc(var(--aspect-size) * 0.012);
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.game-modal.confirm-modal.game-confirm-modal {
+    /* Size: */
+    --modal-min-width: calc(var(--aspect-size) * 0.34);
+    --modal-max-width: calc(var(--aspect-size) * 0.5);
+}
+
+::deep.modal.game-modal.confirm-modal.game-confirm-modal .confirm-content {
+    /* Display: */
+    gap: calc(var(--aspect-size) * 0.01);
+    /* Size: */
+    padding: calc(var(--aspect-size) * 0.01) 0;
+}
+
+::deep.modal.game-modal.confirm-modal.game-confirm-modal .confirm-content .confirm-icon-wrap {
+    /* Size: */
+    margin-top: calc(var(--aspect-size) * -0.006);
+    /* Content: */
+    font-size: calc(var(--aspect-size) * 0.07);
+}
+
+::deep.modal.game-modal.confirm-modal.game-confirm-modal .modal-footer {
+    /* Display: */
+    gap: calc(var(--aspect-size) * 0.008) var(--confirm-footer-gap);
+}
+
+::deep.modal.game-modal .paragraph.confirm-text.variant.size {
+    /* Content: */
+    font-size: calc(var(--aspect-size) * 0.016);
+}
+
+@media (min-width: 768px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.game-modal.confirm-modal.game-confirm-modal .confirm-content {
+        /* Display: */
+        gap: calc(var(--aspect-size) * 0.02);
+        /* Size: */
+        padding: 0 calc(var(--aspect-size) * 0.01);
+    }
+
+    ::deep.modal.game-modal.confirm-modal.game-confirm-modal .confirm-content .confirm-icon-wrap {
+        /* Size: */
+        margin-top: 0;
+        /* Content: */
+        font-size: calc(var(--aspect-size) * 0.05);
+    }
+}

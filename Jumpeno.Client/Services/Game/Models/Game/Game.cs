@@ -1,28 +1,33 @@
 namespace Jumpeno.Client.Models;
 
+#pragma warning disable CA1822
+
 public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly int FPS = AppSettings.Game.FPS;
     public static readonly int TOUCH_DEVICE_NOTIFICATIONS = AppSettings.Game.TouchDeviceNotifications.PerSecond; // per second
-
+    // Duration:
     public static readonly double ROUND_DURATION = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TOTAL_DURATION; // ms
     public static readonly double ROUND_FINISH_DELAY = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
-
+    // States:
     public static readonly List<GAME_STATE> LOBBY_STATES = [GAME_STATE.LOBBY, GAME_STATE.SCOREBOARD];
     public static readonly List<GAME_STATE> PAUSE_STATES = [GAME_STATE.PAUSE];
     public static readonly List<GAME_STATE> RUN_STATES = [GAME_STATE.GAMEPLAY, GAME_STATE.SHRINKING];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Identifier:
+    public ulong ID { get; }
+    private static ulong IDAutoIncrement = 0;
     // Settings:
-    public DISPLAY_MODE DisplayMode { get; private set; }
-    public GAME_MODE Mode { get; private set; }
-    public User Host { get; private set; }
-    public string Code { get; private set; }
-    public string Name { get; private set; }
-    public Map Map { get; private set; }
-    public bool Anonyms { get; private set; }
-    public byte Rounds { get; private set; }
-    public byte Capacity { get; private set; }
+    public DISPLAY_MODE DisplayMode { get; }
+    public GAME_MODE Mode { get; }
+    public User Host { get;  }
+    public string Code { get; }
+    public string Name { get; }
+    public Map Map { get; }
+    public bool Anonyms { get; }
+    public byte Rounds { get; }
+    public byte Capacity { get; }
     // State:
     public int Round { get; private set; }
     public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
@@ -30,37 +35,45 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public GAME_STATE State { get; private set; }
     public bool IsFinished => State == GAME_STATE.SCOREBOARD && Rounds <= Round;
     // Clock:
-    public GameClock Clock { get; private set; }
-    public GameClock TouchClock { get; private set; }
+    public readonly GameClock Clock;
+    public readonly GameClock TouchClock;
+    private bool ClockAutoReset = false;
+    public void ClockAutoResetOn() => ClockAutoReset = true;
+    public void ClockAutoResetOff() => ClockAutoReset = false;
     private void ResetClocks() { Clock.Reset(); TouchClock.Reset(); }
+    // Host:
+    public bool HostConnected { get; private set; }
     // Players:
     // NOTE: Index containing all possible game players:
-    [JsonInclude] private Dictionary<byte, Player> Players { get; set; }
+    [JsonInclude] private Dictionary<byte, Player> Players { get; }
     // NOTE: Active players are connected:
-    [JsonInclude] private List<Player> ActivePlayers { get; set; }
+    [JsonInclude] private List<Player> ActivePlayers { get; }
     public int ActivePlayersCount => ActivePlayers.Count;
     public int AlivePlayersCount { get; private set; }
     // NOTE: QuadTree of active players:
-    private QuadTreeRectF<Player> PlayersQT { get; set; }
+    private QuadTreeRectF<Player> PlayersQT { get; }
     // Spectators:
     public int SpectatorCount { get; private set; }
     // Empty:
     public bool IsEmpty => ActivePlayersCount <= 0 && SpectatorCount <= 0;
-    // Traffic:
-    public double? Ping { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
     private Game(
+        ulong id,
         DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
         Map map, bool anonyms, byte rounds, byte capacity,
         int round, double time, GAME_STATE state,
-        Dictionary<byte, Player> players, List<Player> activePlayers, int spectatorCount
+        bool hostConnected,
+        Dictionary<byte, Player> players, List<Player> activePlayers,
+        int spectatorCount
     ) {
         // Validation:
         GameValidator.AssertCode(code);
         GameValidator.AssertName(name);
         GameValidator.AssertCapacity(capacity);
+        // Identifier:
+        ID = id;
         // Settings:
         DisplayMode = displayMode;
         Mode = mode;
@@ -78,6 +91,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // Clocks:
         Clock = new(FPS);
         TouchClock = new(TOUCH_DEVICE_NOTIFICATIONS);
+        // Host:
+        HostConnected = hostConnected;
         // Players:
         ActivePlayers = InitActivePlayers(activePlayers, players);
         AlivePlayersCount = InitAlivePlayerCount(ActivePlayers);
@@ -85,16 +100,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         PlayersQT = InitPlayersQT(ActivePlayers);
         // Spectators:
         SpectatorCount = spectatorCount;
-        // Traffic:
-        Ping = null;
     }
     public Game(
         DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
         Map map, bool anonyms, byte rounds, byte capacity
     ) : this(
+        IDAutoIncrement++,
         displayMode, mode, host, code, name, map, anonyms, rounds, capacity,
         0, 0, GAME_STATE.LOBBY,
-        [], [], 0
+        false, [], [], 0
     ) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
@@ -134,48 +148,81 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     }
 
     // Player methods ---------------------------------------------------------------------------------------------------------------------
-    public Player ConnectPlayer(
+    public Player CreatePlayer(
         // Parameters:
         Connection connection,
         // Exceptions:
-        string nameID
+        string nameID = ""
     ) {
         // 1) Validation:
         AppEnvironment.AssertServer();
         UserValidator.AssertConnectionType(connection);
         UserValidator.AssertUnknown(connection.User, nameID);
-        // 2) Game settings check:
-        if (!Anonyms && connection.User.ID == null)
-            throw EXCEPTION.CLIENT.SetInfo("Anonymous players not allowed!");
-        if (DisplayMode == DISPLAY_MODE.PRESENTATION && connection.User.ID == Host.ID)
-            throw EXCEPTION.CLIENT.SetInfo("Host can not participate as a player!");
-        // 3) Try to connect player:
+        GameValidator.AssertAllowedAnonyms(this, connection.User);
+        // 2) Check host:
+        GameValidator.AssertPlayerHostPresentation(this, connection.User);
+        GameValidator.AssertReservedPlayerHostSpace(this, connection.User);
+        // 3) Find space:
+        var player = FindPlayerSpace(connection, nameID);
+        // 4) Set skin of anonym:
+        SetSkinOfAnonymousUser(connection.User);
+        // 5) Synchronize:
+        player.Synchronize(connection);
+        // 6) Return player:
+        return new(player);
+    }
+
+    private Player FindPlayerSpace(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID = ""
+    ) {
+        // 1) Try to find space:
+        Player? space = null;
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name != connection.User.Name) continue;
                 if (State == GAME_STATE.LOBBY) {
-                    throw EXCEPTION.CLIENT.SetInfo("Player name is taken!")
+                    throw EXCEPTION.DEFAULT.SetInfo("Player name is taken!")
                     .SetErrors(ERROR.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
-                    throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
+                    throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
                 }
             } else if (State == GAME_STATE.LOBBY || player.User.Equals(connection.User)) {
-                player.Synchronize(connection);
-                return player;
+                GameValidator.AssertReservedPlayerHostName(this, connection.User, userNameID: nameID);
+                space = player;
+                break;
             }
         }
-        // 4) Assert state:
-        if (State == GAME_STATE.LOBBY) throw EXCEPTION.CLIENT.SetInfo("The game is currently full!");
-        else throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
+        // 2.1) Space not found:
+        if (space == null) {
+            if (State == GAME_STATE.LOBBY) throw EXCEPTION.DEFAULT.SetInfo("The game is currently full!");
+            else throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
+        }
+        // 2.2) Or return found space:
+        else return space;
     }
 
-    public Player? GetPlayerRef(byte id) {
+    private static void SetSkinOfAnonymousUser(User user) {
+        // 1) Check anonym:
+        if (user.ID != null) return;
+        // 2) Select skin:
+        user.Skin = User.GenerateSkin();
+    }
+
+    public Player? GetActivePlayer(string connectionID) {
+        foreach (var player in ActivePlayers) {
+            if (player.ConnectionID == connectionID) return player;
+        }
+        return null;
+    }
+
+    public Player? GetPlayer(byte id) {
         Players.TryGetValue(id, out var player); return player;
     }
 
-    public List<Player> GetCollidingPlayers(Player player) {
-        return PlayersQT.GetObjects(player.Rect);
-    }
+    public List<Player> GetCollidingPlayers(Player player) => PlayersQT.GetObjects(player.Rect);
 
     public IEnumerable<(Player player, int index)> PlayerIterator { get {
         int index = 0;
@@ -193,12 +240,19 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         }
     }}
 
+    public IEnumerable<(Player player, byte id)> PlayerQuitIterator { get {
+        foreach (var (id, player) in Players) {
+            if (!player.IsConnected && (player.Body.Alive || !player.Body.Fallen))
+                yield return (player, id);
+        }
+    }}
+
     private void OnPlayerKill() => AlivePlayersCount--;
     private void OnPlayerAlive() => AlivePlayersCount++;
 
     private void MovePlayer(Player player) => PlayersQT.Move(player);
 
-    private void RestorePlayers() {
+    private void ResurrectPlayers() {
         var rand = new Random();
         var used = new Dictionary<float, bool>();
         foreach (var player in ActivePlayers) {
@@ -206,10 +260,11 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         }
     }
 
-    private void AnonymizePlayers() {
+    private void KillDisconnectedPlayers() {
         foreach (var (id, player) in Players) {
             if (player.IsConnected) continue;
-            Players[id] = new Player(id);
+            Update(NewKillUpdate(null, id));
+            Update(NewMovementUnderMapUpdate(player));
         }
     }
 
@@ -240,42 +295,49 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     }
 
     // Spectator methods ------------------------------------------------------------------------------------------------------------------
-    public Spectator ConnectSpectator(
+    public Spectator CreateSpectator(
         // Parameters:
         Connection connection,
         // Exceptions:
-        string nameID
+        string nameID = ""
     ) {
+        // 1) Validation:
         AppEnvironment.AssertServer();
         UserValidator.AssertConnectionType(connection);
         UserValidator.AssertUnknown(connection.User, nameID);
         GameValidator.AssertSpectatorCount(this);
-        SpectatorCount++;
+        // 2) Check host:
+        GameValidator.AssertSpectatorHostNonPresentation(this, connection.User);
+        GameValidator.AssertHostAlreadyConnected(this, connection.User);
+        GameValidator.AssertReservedSpectatorHostSpace(this, connection.User);
+        // 3) Return spectator:
         return new(connection);
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
-    public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is KeyUpdate key) return KeyUpdate(key);
-        if (update is GamePlayUpdate game) return GamePlayUpdate(game);
-        if (update is PingUpdate ping) return PingUpdate(ping);
-        if (update is MovementUpdate move) return MovementUpdate(move);
-        if (update is KillUpdate kill) return KillUpdate(kill);
-        if (update is LifeUpdate life) return LifeUpdate(life);
-        if (update is PlayerUpdate player) return PlayerUpdate(player);
-        if (update is SpectatorUpdate watch) return SpectatorUpdate(watch);
-        if (update is StateUpdate state) return StateUpdate(state);
-        if (update is RoundUpdate round) return RoundUpdate(round);
-        return false;
-    }
+    public bool Update(GameUpdate update)
+    => update switch {
+        TimeFlowUpdate time => TimeFlowUpdate(time),
+        KeyUpdate key => KeyUpdate(key),
+        GamePlayUpdate game => GamePlayUpdate(game),
+        MovementUpdate move => MovementUpdate(move),
+        KillUpdate kill => KillUpdate(kill),
+        LifeUpdate life => LifeUpdate(life),
+        PlayerUpdate player => PlayerUpdate(player),
+        SpectatorUpdate watch => SpectatorUpdate(watch),
+        StateUpdate state => StateUpdate(state),
+        RoundUpdate round => RoundUpdate(round),
+        _ => false
+    };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
         if (update.DeltaT <= 0) return false;
         Time += update.DeltaT;
         Map.Update(update);
-        foreach (var player in ActivePlayers) {
+        foreach (var (_, player) in Players) {
             player.Update(update);
+        }
+        foreach (var player in ActivePlayers) {
             MovePlayer(player);
         }
         return true;
@@ -302,17 +364,17 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
             StateUpdated = GamePlayUpdateGuard.Update(update, () => StateUpdate(update.StateUpdate))
         };
         // 3) Prepare updates:
-        Dictionary<byte, bool> updates = [];
+        HashSet<byte> updates = [];
         Dictionary<byte, KillUpdate> scoreUpdates = [];
-        foreach (var id in update.Movements.Keys) updates[id] = true;
-        foreach (var id in update.Kills.Keys) updates[id] = true;
-        foreach (var id in update.Lives.Keys) updates[id] = true;
+        foreach (var id in update.Movements.Keys) updates.Add(id);
+        foreach (var id in update.Kills.Keys) updates.Add(id);
+        foreach (var id in update.Lives.Keys) updates.Add(id);
         foreach (var (id, killUpdate) in update.Kills) {
             if (killUpdate.KillerID is not byte killerID || id == killUpdate.KillerID) continue;
             scoreUpdates[killerID] = killUpdate;
         }
         // 4) Apply player updates:
-        foreach (var id in updates.Keys) {
+        foreach (var id in updates) {
             if (!Players.TryGetValue(id, out var player)) continue;
             if (player.Update(update)) {
                 response.MoveUpdated = response.MoveUpdated || update.Response.MoveUpdated;
@@ -330,12 +392,6 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // 6) Return result:
         update.Response = response;
         return response.Updated;
-    }
-
-    private bool PingUpdate(PingUpdate update) {
-        if (update.ReturnedAt is not DateTime returnedAt) return false;
-        Ping = GameClock.Delta(returnedAt, update.CreatedAt);
-        return true;
     }
 
     private bool MovementUpdate(MovementUpdate update) {
@@ -366,25 +422,26 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     private bool PlayerUpdate(PlayerUpdate update) {
         if (!Players.TryGetValue(update.Player.ID, out var player)) return false;
         if (!player.Update(update)) return false;
+        // 1) Update host:
+        HostConnected = update.HostConnected;
+        // 2) Remove player:
+        ActivePlayers.Remove(player);
+        PlayersQT.Remove(player);
+        // 3) Add player if connected:
         if (update.Player.IsConnected) {
             ActivePlayers.Add(player);
             PlayersQT.Add(player);
-            player.ResetUpdateGuards();
-        } else {
-            KillUpdate(NewKillUpdate(null, player.ID));
-            MovementUpdate(NewMovementUnderMapUpdate(player));
-            ActivePlayers.Remove(player);
-            PlayersQT.Remove(player);
+            if (AppEnvironment.IsServer) player.ResetUpdateGuards();
         }
         return true;
     }
 
     private readonly UpdateGuard<SpectatorUpdate> SpectatorUpdateGuard = new();
-    private bool SpectatorUpdate(SpectatorUpdate update) {
-        return SpectatorUpdateGuard.Update(update, () => {
-            SpectatorCount = update.SpectatorCount;
-        });
-    }
+    private bool SpectatorUpdate(SpectatorUpdate update)
+    => SpectatorUpdateGuard.Update(update, () => {
+        HostConnected = update.HostConnected;
+        SpectatorCount = update.SpectatorCount;
+    });
 
     private bool StateUpdate(StateUpdate update) {
         // 1) Current state:
@@ -395,19 +452,6 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         }
         // 2) New state:
         switch (update.State) {
-            // NOTE: Lobby means reset (initial state):
-            case GAME_STATE.LOBBY:
-                Round = 0;
-                ResetClocks();
-                ActivePlayers.Clear();
-                AlivePlayersCount = InitAlivePlayerCount(ActivePlayers);
-                Players = InitPlayers(ActivePlayers);
-                PlayersQT.Clear();
-                SpectatorCount = 0;
-                Ping = null;
-                ResetUpdateGuards();
-                Updater.Reset();
-            break;
             case GAME_STATE.PAUSE:
                 foreach (var player in Players.Values) {
                     player.Update(update);
@@ -418,29 +462,27 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         Time = update.Time;
         State = update.State;
         Map.Update(update);
+        // 4) AutoReset:
+        if (ClockAutoReset) ResetClocks();
+        // 5) Return result:
         return true;
     }
 
     private readonly UpdateGuard<RoundUpdate> RoundUpdateGuard = new();
-    private bool RoundUpdate(RoundUpdate update) {
-        return RoundUpdateGuard.Update(update, () => {
-            // 1) New state:
-            switch (update.StateUpdate.State) {
-                case GAME_STATE.GAMEPLAY:
-                    if (update.Round == 1) AnonymizePlayers();
-                    ResetClocks();
-                break;
-            }
-            // 2) Update round & state:
-            Round = update.Round;
-            StateUpdate(update.StateUpdate);
-            // 3) Update players (position & score):
-            foreach (var (id, player) in Players) {
-                player.Update(update);
-            }
-            return true;
-        });
-    }
+    private bool RoundUpdate(RoundUpdate update) 
+    => RoundUpdateGuard.Update(update, () => {
+        // 1) Reset clocks:
+        ResetClocks();
+        // 2) Update round & state:
+        Round = update.Round;
+        StateUpdate(update.StateUpdate);
+        // 3) Update players (position & score):
+        foreach (var (id, player) in Players) {
+            player.Update(update);
+        }
+        // 4) Return result:
+        return true;
+    });
 
     public void ResetUpdateGuards() {
         GamePlayUpdateGuard.Reset();
@@ -482,9 +524,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public StateUpdate NewStateUpdate(double time, GAME_STATE state, int? level = null, double? timer = null) {
         return new(time, state, level ?? Map.Shrink.Level, timer ?? Map.Shrink.Timer);
     }
-    public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) {
-        return new(this, deltaT);
-    }
+    public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) => new(this, deltaT);
 
     // Network update factory -------------------------------------------------------------------------------------------------------------
     private readonly NetworkUpdater Updater = new();
@@ -504,26 +544,28 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     public KeyUpdate NewKeyUpdate(byte playerID, LinkedList<Control> controls) {
         return Updater.NewKeyUpdate(Round, playerID, controls);
     }
-    public PingUpdate NewPingUpdate() {
-        return Updater.NewPingUpdate(Round, DateTime.UtcNow);
+
+    public PlayerUpdate NewPlayerAddUpdate(Player player) {
+        return Updater.NewPlayerUpdate(Round, player.User.ID == Host.ID || HostConnected, player, false);
+    }
+    public PlayerUpdate NewPlayerRemoveUpdate(Player player) {
+        return Updater.NewPlayerUpdate(Round, player.User.ID != Host.ID && HostConnected, player, State == GAME_STATE.LOBBY);
     }
 
-    public PlayerUpdate NewPlayerUpdate(Player player) {
-        return Updater.NewPlayerUpdate(Round, player);
+    public SpectatorUpdate NewSpectatorAddUpdate(Spectator spectator) {
+        return Updater.NewSpectatorUpdate(Round, spectator.User.ID == Host.ID || HostConnected, SpectatorCount + 1);
     }
-    public SpectatorUpdate NewSpectatorUpdate() {
-        return Updater.NewSpectatorUpdate(Round, SpectatorCount);
-    }
-    public SpectatorUpdate NewSpectatorRemoveUpdate() {
-        return Updater.NewSpectatorUpdate(Round, Math.Max(SpectatorCount - 1, 0));
+    public SpectatorUpdate NewSpectatorRemoveUpdate(Spectator spectator) {
+        return Updater.NewSpectatorUpdate(Round, spectator.User.ID != Host.ID && HostConnected, SpectatorCount - 1);
     }
 
-    public RoundUpdate NewRoundResetUpdate() {
-        return Updater.NewRoundUpdate(0, NewStateUpdate(0, GAME_STATE.LOBBY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER), []);
-    }
     public RoundUpdate NewRoundStartUpdate() {
-        RestorePlayers();
-        return Updater.NewRoundUpdate(Round + 1, NewStateUpdate(0, GAME_STATE.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER), Players);
+        ResurrectPlayers();
+        KillDisconnectedPlayers();
+        return Updater.NewRoundUpdate(
+            Round + 1, NewStateUpdate(0, GAME_STATE.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
+            Players
+        );
     }
     public RoundUpdate NewRoundFinishUpdate() {
         return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GAME_STATE.SCOREBOARD), Players);
@@ -535,12 +577,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // 1) Render map:
         await Map.Render(ctx, this);
         // 2) Render players:
+        Player? myPlayer = null;
         foreach (var player in ActivePlayers) {
-            if (player.Equals(screenPlayer)) continue;
+            if (player.Equals(screenPlayer)) {
+                myPlayer = player; continue;
+            }
             await player.Render(ctx, this);
         }
         // 3) Render screen player on top:
-        if (screenPlayer != null) await screenPlayer.Render(ctx, this);
+        if (myPlayer != null) await myPlayer.Render(ctx, this);
         // 4) Render names or mark:
         foreach (var player in ActivePlayers) {
             if (player.Equals(screenPlayer)) await Mark.RenderMark(ctx, (this, player));

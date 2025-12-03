@@ -152,15 +152,16 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
-    public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is KeyUpdate key) return KeyUpdate(key);
-        if (update is MovementUpdate move) return MovementUpdate(move);
-        if (update is KillUpdate kill) return KillUpdate(kill);
-        if (update is LifeUpdate life) return LifeUpdate(life);
-        if (update is StateUpdate state) return StateUpdate(state);
-        return false;
-    }
+    public bool Update(GameUpdate update)
+    => update switch {
+        TimeFlowUpdate time => TimeFlowUpdate(time),
+        KeyUpdate key => KeyUpdate(key),
+        MovementUpdate move => MovementUpdate(move),
+        KillUpdate kill => KillUpdate(kill),
+        LifeUpdate life => LifeUpdate(life),
+        StateUpdate state => StateUpdate(state),
+        _ => false
+    };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
         // 1) Check delta:
@@ -266,9 +267,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         return false;
     }
 
-    public void ResetUpdateGuards() {
-        KeyUpdateGuard.Reset();
-    }
+    public void ResetUpdateGuards() => KeyUpdateGuard.Reset();
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, (Game Game, SKIN Skin) @params) {

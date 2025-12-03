@@ -5,24 +5,41 @@
 
 @inherits BasicComponent
 
-<div class="@GameScreenClass()">
+<div class="@ComputeClass()">
     <GameCanvas @ref="Canvas" Game="VM.Game" Player="VM.Player" />
 
     <div class="game-info">
-        <div class="keyboard-display-box">
-            <GameButton Class="keyboard-display-button" Action="new(VM.ToggleControls)">
-                <KeyboardSVG Class="keyboard-display-image" />
-                <span class="keyboard-display-text">@(VM.ControlsDisplayed ? I18N.T("Hide") : I18N.T("Show"))</span>
-            </GameButton>
+        <div class="game-menu">
+            @if (VM.IsHost) {
+                <GameTextButton Class="game-pause-button" Action="new(VM.Pause)">
+                    <ThumbButton Class="game-pause-button-thumb" />
+                    <AntIcon Type="pause-circle" Theme="fill" Class="game-pause-button-icon" />
+                </GameTextButton>
+            } else {
+                <GameTextButton Class="game-lobby-button" Action="new(VM.ShowLobby)">
+                    <ThumbButton Class="game-lobby-button-thumb" />
+                    <MenuSVG Class="game-lobby-button-icon" />
+                </GameTextButton>
+            }
+            @if (VM.IsPlayer) {
+                <GameTextButton Class="keyboard-display-button" Action="new(VM.ToggleControls)">
+                    <ThumbButton Class="keyboard-display-button-thumb" />
+                    <KeyboardSVG Class="keyboard-display-button-icon" />
+                </GameTextButton>
+            } else {
+                <GameTextButton Class="game-chat-button" Action="new(VM.Chat.Open)" Disabled>
+                    <ThumbButton Class="game-chat-button-thumb" />
+                    <AntIcon Type="message" Theme="fill" Class="game-chat-button-icon" />
+                </GameTextButton>
+            }
         </div>
-        <p class="trademark project-name">@(AppSettings.Name)&trade;</p>
-        <p class="game-time" @onclick="Pause">@Format.Ms_To_MMSS(VM.Game.Time)</p>
-        <p class="trademark faculty-name">&copy; FRI UNIZA</p>
+        <p class="game-time">@Format.Ms_To_MMSS(VM.Game.Time)</p>
+        <p class="trademark faculty-name"><span class="copy-sign">&copy;</span>FRI UNIZA</p>
         <div class="game-connected">
             <p class="connect-text">@I18N.T("Screen connected")</p>
             <AntIcon Type="wifi" Theme="outline" Class="connect-icon" />
         </div>
-        <p class="game-ping">@($"Ping"):&nbsp;&nbsp;<strong>@Format.DoubleWhole(VM.Game.Ping)</strong></p>
+        <p class="game-ping">@($"Ping"):&nbsp;&nbsp;<strong>@Format.DoubleWhole(VM.Ping)</strong></p>
     </div>
 
     <div class="@GameControlsClass()">
@@ -54,6 +71,6 @@
         </div>
     </div>
 
-    <InfoBox Class="flip-device" Type="rotate-left" Theme="outline">@I18N.T("Rotate screen")</InfoBox>
-    <InfoBox Class="small-device" Type="fullscreen" Theme="outline">@I18N.T("Screen too small")</InfoBox>
+    <GameInfoBox Class="flip-device" Type="rotate-left" Theme="outline">@I18N.T("Rotate screen")</GameInfoBox>
+    <GameInfoBox Class="small-device" Type="fullscreen" Theme="outline">@I18N.T("Screen too small")</GameInfoBox>
 </div>

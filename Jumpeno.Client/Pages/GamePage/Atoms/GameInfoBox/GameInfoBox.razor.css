@@ -1,5 +1,5 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-::deep.info-box {
+::deep.game-page .game-info-box {
     /* Display: */
     display: none; /* NOTE: Use flex to show */
     flex-direction: column;
@@ -9,7 +9,7 @@
     padding: calc(var(--theme-size-container-padding-mobile) * 1px);
 }
 
-::deep.info-box .info-icon svg {
+::deep.game-page .game-info-box .info-icon svg {
     /* Size: */
     min-width: 60px;
     min-height: 60px;
@@ -17,7 +17,7 @@
     height: min(30vw, 30vh);
 }
 
-::deep.info-box .info-text {
+::deep.game-page .game-info-box .info-text {
     /* Size: */
     padding-top: max(10px, min(2vw, 2vh));
     margin: 0;

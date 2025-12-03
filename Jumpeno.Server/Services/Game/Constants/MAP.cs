@@ -11,7 +11,7 @@ public class MAP
     private static readonly RGBColor COLOR_DARK_GREEN = new(7, 30, 24);
     private static readonly RGBColor COLOR_DARK_BLUE = new(3, 14, 22);
 
-    // Maps definitions -------------------------------------------------------------------------------------------------------------------
+    // Map definitions --------------------------------------------------------------------------------------------------------------------
     // Jumper's home:
     private static readonly Map MAP_JUMPERS_HOME = new(
         "Jumper's home", Tile.CreateTiles(JUMPERS_HOME_TILE_POSITIONS),
@@ -22,7 +22,7 @@ public class MAP
         (1, 0), (2, 0), (10, 0), (12, 0),
         (12, 1),
         (5, 2), (6, 2), (7, 2), (8, 2), (9, 2),
-        (12, 7), (12, 8), (13, 0)
+        (13, 0)
     ];
 
     // Magic Temple:

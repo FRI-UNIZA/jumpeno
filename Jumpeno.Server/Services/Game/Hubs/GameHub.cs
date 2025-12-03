@@ -18,21 +18,22 @@ public class GameHub : Hub {
     }
 
     // Groups -----------------------------------------------------------------------------------------------------------------------------
-    private static string GroupName(string code, UPDATE_GROUP group) => $"{code}-{group}";
+    private static string GroupName(ulong id, string code, UPDATE_GROUP group) => $"{id}-{code}-{group}";
     private static List<string> GroupNames(GameContext ctx) {
+        var id = ctx.Engine.Game.ID;
         var code = ctx.Engine.Game.Code;
         // 1) Common group:
-        List<string> groups = [GroupName(code, UPDATE_GROUP.ALL)];
+        List<string> groups = [GroupName(id, code, UPDATE_GROUP.ALL)];
         // 2) All spectators:
         if (
             ctx.Engine.Game.DisplayMode != DISPLAY_MODE.EACH_OWN
             && ctx.Connection is Player
             && !ctx.Connection.User.Equals(ctx.Engine.Game.Host)
         ) return groups;
-        groups.Add(GroupName(code, UPDATE_GROUP.WATCH));
+        groups.Add(GroupName(id, code, UPDATE_GROUP.WATCH));
         // 3) Touch spectators:
         if (ctx.Connection.Device != DEVICE_TYPE.TOUCH) return groups;
-        groups.Add(GroupName(code, UPDATE_GROUP.WATCH_TOUCH));
+        groups.Add(GroupName(id, code, UPDATE_GROUP.WATCH_TOUCH));
         return groups;
     }
     private static async Task AddToGroups(GameContext ctx) {
@@ -95,7 +96,7 @@ public class GameHub : Hub {
                 var dto = JsonSerializer.Deserialize<GameHubAnonymousDTO>(queryDTO!)
                 ?? throw EXCEPTION.VALUES.SetErrors(ERROR.UNDEFINED.SetID(GAME_HUB.DTO));
                 dto.Assert();
-                return (new(dto.Name, User.GenerateSkin()), dto);
+                return (new(dto.Name), dto);
             }
             case nameof(GameHubRegisteredDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubRegisteredDTO>(queryDTO!)
@@ -142,18 +143,40 @@ public class GameHub : Hub {
         // 1) Add to groups:
         await AddToGroups(ctx);
         // 2) Send response:
-        await Hub.Clients.Client(id).SendAsync(
-            GAME_HUB.CONNECTION_SUCCESSFUL, ctx.Engine.Game, ctx.Connection is Player player ? player : null
-        );
+        await Hub.Clients.Client(id).SendAsync(GAME_HUB.CONNECTION_SUCCESSFUL, ctx.Engine.Game);
     }
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
+    public async Task GameActionRequestUpdate(GameActionRequestUpdate update) {
+        try {
+            // 1) Validate host:
+            if (GameContext is null || GameContext.Connection.User.ID != GameContext.Engine.Game.Host.ID)
+                throw EXCEPTION.CLIENT.SetInfo("You are not a host!");
+            // 2) Control game:
+            switch (update.Action) {
+                case GAME_ACTION.START: await GameService.StartGame(GameContext.Engine, GameContext.Connection); return;
+                case GAME_ACTION.PAUSE: await GameService.PauseGame(GameContext.Engine, GameContext.Connection); return;
+                case GAME_ACTION.TOGGLE: await GameService.ToggleGame(GameContext.Engine, GameContext.Connection); return;
+                case GAME_ACTION.DELETE: await GameService.DeleteGame(GameContext.Engine); return;
+            }
+            // 3) Throw if invalid:
+            throw EXCEPTION.CLIENT.SetInfo("Invalid game action!");
+        } catch (Exception e) {
+            // 4) Handle error:
+            await SendResponse(new GameActionResponseUpdate(e));
+        }
+    }
+
     public void KeyUpdate(KeyUpdate update) {
         try {
+            // 1) Validate player:
             if (GameContext is null) return;
-            if (GameContext.Engine.Game.GetPlayerRef(update.PlayerID) != GameContext.Connection) return;
+            if (GameContext.Connection is not Player player) return;
+            if (player.ID != update.PlayerID) return;
+            // 2) Update game:
             GameService.Update(GameContext.Engine, update);
         } catch (Exception e) {
+            // 3) Handle error:
             Console.Error.WriteLine(e);
         }
     }
@@ -165,7 +188,7 @@ public class GameHub : Hub {
 
     // Server updates ---------------------------------------------------------------------------------------------------------------------
     public static async Task SendGameUpdate(Game game, UPDATE_GROUP group, NetworkUpdate update) {
-        try { await Hub.Clients.Group(GroupName(game.Code, group)).SendAsync(update.HUB_ACTION, update); }
+        try { await Hub.Clients.Group(GroupName(game.ID, game.Code, group)).SendAsync(update.HUB_ACTION, update); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
@@ -179,7 +202,7 @@ public class GameHub : Hub {
     }
 
     public static async Task SendException(Game game, UPDATE_GROUP group, AppException exception) {
-        try { await HandleException(Hub.Clients.Group(GroupName(game.Code, group)), exception); }
+        try { await HandleException(Hub.Clients.Group(GroupName(game.ID, game.Code, group)), exception); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
@@ -187,6 +210,20 @@ public class GameHub : Hub {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
             await HandleException(Hub.Clients.Client(id), exception);
+        } catch (Exception e) {
+            Console.Error.WriteLine(e);
+        }
+    }
+
+    public async Task SendResponse(GameResponseUpdate update) {
+        try { await Clients.Caller.SendAsync(update.HUB_ACTION, update); }
+        catch (Exception e) { Console.Error.WriteLine(e); }
+    }
+
+    public static async Task SendResponse(Connection? connection, GameResponseUpdate update) {
+        try {
+            if (connection == null || connection.ConnectionID is not string id) return;
+            await Hub.Clients.Client(id).SendAsync(update.HUB_ACTION, update);
         } catch (Exception e) {
             Console.Error.WriteLine(e);
         }

@@ -33,6 +33,10 @@ public static class GameService {
     }
 
     private static bool RemoveEngine(GameEngine engine) {
+        // 1) Assert current engine:
+        var current = FindEngine(engine.Game.Code);
+        if (current?.Game.ID != engine.Game.ID) return false;
+        // 2) Try to remove:
         return Engines.Remove(engine.Game.Code)
         && HostEngines.Remove((Guid)engine.Game.Host.ID!);
     }
@@ -44,7 +48,7 @@ public static class GameService {
         data.Assert();
         // 1) Check host:
         if (connection.User.ID is not Guid hostID)
-            throw EXCEPTION.DEFAULT.SetInfo("Host must be registered!"); 
+            throw EXCEPTION.DEFAULT.SetInfo("Host must be registered!");
         if (FindHostEngine(hostID) is GameEngine hostEngine)
             throw EXCEPTION.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
         // 2) Check games limit:
@@ -87,8 +91,12 @@ public static class GameService {
         // 2) Player:
         else {
             // 2.1) Check registered player:
-            if (connection.User.ID is Guid playerID && FindPlayerEngine(playerID) is GameEngine playerEngine)
-                throw EXCEPTION.DEFAULT.SetInfo("You already play a game with code \"I18N{code}\"!", new() { ["code"] = playerEngine.Game.Code });
+            if (connection.User.ID is Guid playerID) {
+                if (FindHostEngine(playerID) is GameEngine hostEngine && playerID != engine.Game.Host.ID)
+                    throw EXCEPTION.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
+                if (FindPlayerEngine(playerID) is GameEngine playerEngine)
+                    throw EXCEPTION.DEFAULT.SetInfo("You already play a game with code \"I18N{code}\"!", new() { ["code"] = playerEngine.Game.Code });
+            }
             // 2.2) Add player:
             var ctx = await engine.AddPlayer(connection, nameID);
             // 2.3) Add registered player engine:
@@ -103,9 +111,7 @@ public static class GameService {
         // Exceptions:
         string codeID = "", string nameID = ""
     )
-    => await Lock.Exclusive(async () =>
-        await Connect(AssertEngine(code, codeID), connection, spectator, nameID)
-    );
+    => await Lock.Exclusive(() => Connect(AssertEngine(code, codeID), connection, spectator, nameID));
 
     public static async Task Disconnect(GameEngine engine, Connection connection)
     => await Lock.Exclusive(async () => {
@@ -127,7 +133,9 @@ public static class GameService {
         } finally {
             // 2) Dispose engine:
             if (engine.Game.IsEmpty) {
+                // 2.1) Remove engine:
                 RemoveEngine(engine);
+                // 2.2) Dispose engine:
                 await engine.DisposeAsync();
             }
         }
@@ -141,43 +149,35 @@ public static class GameService {
         // Exceptions:
         string codeID = ""
     )
-    => Lock.Exclusive(() => {
-        Update(AssertEngine(code, codeID), update); 
-    });
+    => Lock.Exclusive(() => Update(AssertEngine(code, codeID), update));
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task StartGame(GameEngine engine) => await engine.Start();
+    public static async Task StartGame(GameEngine engine, Connection? connection = null) => await engine.Start(connection);
     public static async Task StartGame(
         // Parameters:
         string code,
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(async () => {
-        await StartGame(AssertEngine(code, codeID));
-    });
+    => await Lock.Exclusive(() => StartGame(AssertEngine(code, codeID)));
 
-    public static async Task PauseGame(GameEngine engine) => await engine.Pause();
+    public static async Task PauseGame(GameEngine engine, Connection? connection = null) => await engine.Pause(connection);
     public static async Task PauseGame(
         // Parameters:
         string code,
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(async () => {
-        await PauseGame(AssertEngine(code, codeID));
-    });
+    => await Lock.Exclusive(() => PauseGame(AssertEngine(code, codeID)));
 
-    public static async Task ToggleGame(GameEngine engine) => await engine.Toggle();
+    public static async Task ToggleGame(GameEngine engine, Connection? connection = null) => await engine.Toggle(connection);
     public static async Task ToggleGame(
         // Parameters:
         string code,
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(async () => {
-        await ToggleGame(AssertEngine(code, codeID));
-    });
+    => await Lock.Exclusive(() => ToggleGame(AssertEngine(code, codeID)));
 
     private static async Task Delete(
         // Parameters:
@@ -188,7 +188,8 @@ public static class GameService {
         // 1.1) Remove engine:
         if (RemoveEngine(engine)) await engine.Delete();
         // 1.2) Or throw exception:
-        else throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID(codeID).SetInfo("Game code is incorrect!"));
+        else throw EXCEPTION.VALUES.SetInfo("Game code is incorrect!")
+        .SetErrors(ERROR.INVALID.SetID(codeID).SetInfo("Game code is incorrect!"));
     }
     public static async Task DeleteGame(
         // Parameters:
@@ -196,16 +197,12 @@ public static class GameService {
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(async () => {
-        await Delete(engine, codeID);
-    });
+    => await Lock.Exclusive(() => Delete(engine, codeID));
     public static async Task DeleteGame(
         // Parameters:
         string code,
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(async () => {
-        await Delete(AssertEngine(code, codeID), codeID);
-    });
+    => await Lock.Exclusive(() => Delete(AssertEngine(code, codeID), codeID));
 }

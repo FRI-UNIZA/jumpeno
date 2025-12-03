@@ -366,12 +366,6 @@
   <data name="The game is already running." xml:space="preserve">
     <value />
   </data>
-  <data name="Show" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Hide" xml:space="preserve">
-    <value />
-  </data>
   <data name="Screen too small" xml:space="preserve">
     <value />
   </data>
@@ -834,12 +828,6 @@
   <data name="Controller" xml:space="preserve">
     <value />
   </data>
-  <data name="Do you really want to delete this game?" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Delete game" xml:space="preserve">
-    <value />
-  </data>
   <data name="Anonymous players not allowed!" xml:space="preserve">
     <value />
   </data>
@@ -949,6 +937,51 @@
     <value />
   </data>
   <data name="Does not contain special character" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Lobby" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Playing" xml:space="preserve">
+    <value />
+  </data>
+  <data name="You must be connected as a player!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Name is reserved!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="End game" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Do you really want to end this game?" xml:space="preserve">
+    <value />
+  </data>
+  <data name="End" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Everyone will be disconnected!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="QR code" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Invalid game action!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="You are not a host!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game is deleted!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Server can not start the game now!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Space reserved for the host!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Host already connected!" xml:space="preserve">
     <value />
   </data>
 </root>

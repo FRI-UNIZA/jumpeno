@@ -1,5 +1,5 @@
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-::deep.game-controller-page {
+::deep.game-control-page {
     /* Display: */
     display: flex;
     flex-direction: column;
@@ -11,7 +11,7 @@
     padding: 40px 0;
 }
 
-::deep.game-controller-page .game-controller-form {
+::deep.game-control-page .game-control-form {
     /* Display: */
     display: flex;
     flex-direction: column;
@@ -22,7 +22,7 @@
     max-width: 100%;
 }
 
-::deep.game-controller-page .form-inputs {
+::deep.game-control-page .form-inputs {
     /* Display: */
     display: flex;
     flex-direction: column;
@@ -30,12 +30,12 @@
     width: 100%;
 }
 
-::deep.game-controller-page .heading.game-controller-heading {
+::deep.game-control-page .heading.game-control-heading {
     /* Content: */
     text-align: center;
 }
 
-::deep.game-controller-page > div:not(.game-controller-form) {
+::deep.game-control-page > div:not(.game-control-form) {
     /* Display: */
     display: flex;
     align-items: center;
@@ -44,7 +44,7 @@
 
 @media (min-width: 768px) {
     /* Media > Styles ---------------------------------------------------------------------------------------------------------------------- */
-    ::deep.game-controller-page {
+    ::deep.game-control-page {
         /* Size: */
         padding: 60px 0;
     }
@@ -52,7 +52,7 @@
 
 @media (min-width: 1200px) {
     /* Media > Styles ---------------------------------------------------------------------------------------------------------------------- */
-    ::deep.game-controller-page {
+    ::deep.game-control-page {
         /* Size: */
         padding: 80px 0;
     }

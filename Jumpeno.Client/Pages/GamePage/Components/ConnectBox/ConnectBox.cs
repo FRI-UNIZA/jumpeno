@@ -5,11 +5,15 @@ public partial class ConnectBox {
     [Parameter]
     public required ConnectViewModel VM { get; set; }
 
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("connect-box", Base);
+
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<ConnectBox>();
+    // Code:
     private readonly InputViewModel<string> VMCode;
     private void SetInputCode(string urlCode) => VMCode.SetValue(urlCode);
-
+    // Name:
     private readonly InputViewModel<string> VMName;
     private static string LastNameValue = "";
 
@@ -41,6 +45,7 @@ public partial class ConnectBox {
 
     protected override void OnComponentInitialized() {
         LastNameValue = LastNameValue == "" ? User.GenerateName() : LastNameValue;
+        SetInputCode(VM.URLCode);
         VMName.SetValue(LastNameValue);
     }
 
@@ -74,7 +79,7 @@ public partial class ConnectBox {
         // 5) Set AutoWatch:
         AutoWatch = true;
         // 6) Show loader:
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME);
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
         // 7) Return result:
         return true;
     }

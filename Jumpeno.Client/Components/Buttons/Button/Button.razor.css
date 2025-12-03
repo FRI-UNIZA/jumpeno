@@ -1,7 +1,7 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
 ::deep.button-component.button {
     /* Style: */
-    --button-border-radius: 100px;
+    --button-border-radius: max(100vh, 1000px);
     /* Animations: */
     --button-transition-property: color, background, box-shadow;
     --button-transition-duration: calc(var(--theme-transition-fast) * 1ms);
@@ -66,10 +66,10 @@
     padding: 13px 28px;
 }
 ::deep.button-component.button.size-m .button-text {
-    /* Content: */
-    font-size: 16px;
     /* Size: */
     margin-top: 1px;
+    /* Content: */
+    font-size: 16px;
 }
 
 /* Size [size-l] ----------------------------------------------------------------------------------------------------------------------- */
@@ -84,10 +84,10 @@
     padding: 17px 34px;
 }
 ::deep.button-component.button.size-l .button-text {
-    /* Content: */
-    font-size: 19px;
     /* Size: */
     margin-top: 1px;
+    /* Content: */
+    font-size: 19px;
 }
 
 /* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
@@ -259,8 +259,11 @@
     /* Style: */
     background: var(--theme-button-success-highlight-background);
     opacity: 0;
+    /* Transform: */
+    transform: translateZ(0);
     /* Animations: */
     transition: opacity var(--button-transition-duration) var(--button-transition-timing-function);
+    will-change: opacity;
 }
 
 /* Variant [success][highlight] */

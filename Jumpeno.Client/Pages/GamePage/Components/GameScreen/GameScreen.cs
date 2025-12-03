@@ -5,18 +5,12 @@ public partial class GameScreen {
     [Parameter]
     public required GameViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly DotNetObjectReference<GameScreen> Ref;
     private GameCanvas Canvas = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass GameScreenClass() {
-        var c = new CSSClass("game-screen");
-        if (VM.IsHost) c.Set("host");
-        if (VM.IsWatching) c.Set("watching");
-        if (VM.IsPlayer) c.Set("player");
-        return c;
-    }
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("game-screen", Base).Set(VM.CSSClass());
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
@@ -24,6 +18,7 @@ public partial class GameScreen {
     protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         if (VM.IsWatching) {
+            await Render();
             await VM.AddAfterUpdatesListener(AfterUpdates);
         }
         if (VM.IsPlayer) {
@@ -33,7 +28,6 @@ public partial class GameScreen {
             await Window.AddMouseUpEventListener(Ref, JS_OnMouseUp);
         }
         await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
-        await VM.InitOnRender();
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
@@ -66,8 +60,6 @@ public partial class GameScreen {
     } 
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
-    // Actions:
-    private static async Task Pause() => await Task.CompletedTask;
     // Arrows:
     private readonly List<GAME_CONTROLS> ArrowsPressed = [];
     private GAME_CONTROLS? LastArrowPressed = null;

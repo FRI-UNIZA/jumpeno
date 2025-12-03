@@ -121,30 +121,31 @@ public class LightTheme : BaseTheme {
     public override string NAV_MENU_MOBILE_BUTTON_FOCUS_BOX_SHADOW => "0 1em 6em rgba(0, 0, 0, 0.4)";
 
 // NOTE: Pages ----------------------------------------------------------------------------------------------------------------------------
-    // Game -------------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor GAME_STATE_COLOR => new(255, 255, 255);
-    public override string GAME_STATE_TEXT_SHADOW => "0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8)";
-    
-    // CreateBox:
+    // Game -------------------------------------------------------------------------------------------------------------------------------    
+    // Game > Components > CreateBox:
     public override string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY => "0.25";
 
-    // GameScreen > Control:
+    // Game > Components > GameScreen:
+    // Control:
     public override RGBAColor GAME_SCREEN_CONTROL_COLOR => new(105, 99, 115);
     public override RGBAColor GAME_SCREEN_CONTROL_BACKGROUND => new(255, 255, 255);
     public override string GAME_SCREEN_CONTROL_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.2)";
-    
-    // GameScreen > Control [pressed]:
+    // Control [pressed]:
     public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_COLOR => new(105, 99, 115);
     public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_BACKGROUND => new(255, 255, 255, 0.7f);
     public override string GAME_SCREEN_CONTROL_PRESSED_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.14)";
 
-    // Lobby:
+    // Game > Components > Lobby:
     public override string LOBBY_BOX_SHADOW => "0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2)";
     public override RGBAColor LOBBY_EMPTY_COLOR => new(0, 0, 0, 0.4f);
+    // Hide:
+    public override RGBColor LOBBY_HIDE_ICON_COLOR => new(100, 100, 100);
+    public override RGBAColor LOBBY_HIDE_ICON_BACKGROUND => new(0, 0, 0, 0.1f);
+    // Players:
     public override RGBAColor LOBBY_LINE_BACKGROUND => new(255, 215, 0, 0.7f);
     public override string LOBBY_PRESENCE_BOX_SHADOW => "0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7)";
     public override RGBAColor LOBBY_DASH_COLOR => new(0, 0, 0, 0.14f);
-    
+
     // Manual -----------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor MANUAL_COLOR => new(255, 255, 255);
     public override string MANUAL_TEXT_SHADOW => "0.5em 0.1em 0.53em rgba(0, 0, 0, 0.4)";

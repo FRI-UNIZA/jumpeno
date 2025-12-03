@@ -5,20 +5,21 @@ public partial class Lobby {
     [Parameter]
     public required GameViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private CSSClass ComputePlayerLineClass(Player player) {
-        var c = new CSSClass("player-line");
-        if (VM.Player != null && VM.Player.Equals(player)) c.Set("current");
-        c.Set(player.IsConnected ? "connected" : "disconnected");
-        return c;
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    private GameConfirmModal DeleteConfirmModalRef = null!;
+    private GameModal QRCodeModalRef = null!;
+
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("lobby", Base).Set(VM.CSSClass());
+
+    private CSSClass PlayerLineClass(Player player) {
+        return new CSSClass("player-line")
+        .Set("current", VM.Player != null && VM.Player.Equals(player))
+        .Set(player.IsConnected ? "connected" : "disconnected");
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
-        if (!firstRender) return;
-        await VM.InitOnRender();
-        await VM.StartUpdating();
-    }
+    protected override async Task OnComponentAfterRenderAsync(bool firstRender) { if (firstRender) await VM.StartUpdating(); }
 
     protected override void OnComponentDispose() => VM.StopUpdating();
 }

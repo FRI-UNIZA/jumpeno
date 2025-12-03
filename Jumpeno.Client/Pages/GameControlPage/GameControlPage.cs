@@ -1,17 +1,17 @@
 namespace Jumpeno.Client.Pages;
 
-public partial class GameControllerPage {
-    public const string ROUTE_EN = "/en/game-controller";
+public partial class GameControlPage {
+    public const string ROUTE_EN = "/en/game-control";
     public const string ROUTE_SK = "/sk/ovladac-hry";
     public static readonly ROLE[] ROLES = [ROLE.ADMIN];
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
-    private readonly string FORM = Form.Of<GameControllerPage>();
+    private readonly string FORM = Form.Of<GameControlPage>();
     private readonly InputViewModel<string> VMCode;
     private ConfirmModal DeleteConfirmModalRef = null!;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public GameControllerPage() {
+    public GameControlPage() {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(GameControlDTO.Code),
@@ -26,9 +26,9 @@ public partial class GameControllerPage {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Request(string url) {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME);
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
         await HTTP.Try(async () => await HTTP.Patch(url, body: new GameControlDTO(){ Code = VMCode.Value }), FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME);
+        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
     }
     private async Task Delete() => await DeleteConfirmModalRef.Open(async () => await Request(API.BASE.GAME_DELETE));
     private async Task Toggle() => await Request(API.BASE.GAME_TOGGLE);

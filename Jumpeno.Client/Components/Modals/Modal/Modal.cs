@@ -8,7 +8,7 @@ public partial class Modal {
     public const string ID_DIALOG_PREFIX = "modal-dialog";
     public const string ID_DIALOG_END_PREFIX = "modal-dialog-end";
     // Class:
-    public const string CLASS_MODAL = ID_PREFIX;
+    public const string CLASS = ID_PREFIX;
     public const string CLASS_BACKDROP = "modal-backdrop";
     public const string CLASS_INIT = "modal-init";
     public const string CLASS_START = "modal-start";
@@ -21,6 +21,10 @@ public partial class Modal {
     public const string CLASS_CONTENT = "modal-content";
     public const string CLASS_FOOTER = "modal-footer";
     public const string CLASS_END = "modal-end";
+    // Settings:
+    public const string CLASS_NO_HEADER = "no-header";
+    public const string CLASS_NO_FOOTER = "no-footer";
+    public const string CLASS_UNCLOSABLE = "unclosable";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Surface:
@@ -57,6 +61,12 @@ public partial class Modal {
     [Parameter]
     public EventCallback<Modal> OnAfterClose { get; set; } = EventCallback<Modal>.Empty;
 
+    // Events -----------------------------------------------------------------------------------------------------------------------------
+    public virtual async Task CallOnBeforeOpen() => await OnBeforeOpen.InvokeAsync(this);
+    public virtual async Task CallOnAfterOpen() => await OnAfterOpen.InvokeAsync(this);
+    public virtual async Task CallOnBeforeClose() => await OnBeforeClose.InvokeAsync(this);
+    public virtual async Task CallOnAfterClose() => await OnAfterClose.InvokeAsync(this);
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string ID;
     public readonly string ID_DIALOG_INIT;
@@ -78,9 +88,7 @@ public partial class Modal {
     }
 
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (State == MODAL_STATE.OPEN) {
-            await ModalProvider.NotifyElement(this);
-        }
+        if (State == MODAL_STATE.OPEN) await ModalProvider.NotifyElement(this);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
@@ -90,16 +98,19 @@ public partial class Modal {
         await ModalProvider.CreateModal(this);
     }
     public async Task Open() => await Open(false);
+
+    // Loading:
     public async Task OpenLoading() => await Open(true);
     public async Task FinishLoading() {
         AppEnvironment.AssertClient();
-        await ModalProvider.NotifyFinishLoading(this);
+        await ModalProvider.FinishLoading(this);
     }
     public async Task CloseLoading() {
         AppEnvironment.AssertClient();
         await ModalProvider.DestroyLoadingModal(this);
     }
 
+    // Close:
     public async Task Close() {
         AppEnvironment.AssertClient();
         await ModalProvider.DestroyModal(this);

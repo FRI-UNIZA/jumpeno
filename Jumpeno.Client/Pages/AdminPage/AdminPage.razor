@@ -11,7 +11,7 @@
         <div class="active-games-heading-line">
             <Heading2 Class="active-games-heading">@I18N.T("Active games")</Heading2>
             <Button Class="active-games-control-button" Size="BUTTON_SIZE.S" Params="@(new ButtonLinkParams(
-                Href: I18N.Link<GameControllerPage>()
+                Href: I18N.Link<GameControlPage>()
             ))">
                 <Icon><AntIcon Type="aim" Theme="outline" Label="@I18N.T("Controller")" /></Icon>
             </Button>
@@ -52,7 +52,7 @@
         </Box>
         <Box Class="email-box">
             <Heading2 Size="TEXT_SIZE.M" Class="email-heading">
-                <AntIcon Type="mail" Theme="outline" />&nbsp;@I18N.T("Email")
+                <AntIcon Type="mail" Theme="outline" Style="position: relative; top: 1px" />&nbsp;@I18N.T("Email")
             </Heading2>
             <Paragraph Size="TEXT_SIZE.S" Class="email-info">
                 <b>@AppSettings.Email</b>

@@ -17,38 +17,45 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private Player(string? connectionID, User user, DEVICE_TYPE device, byte id, Body body, int score) : base(connectionID, user, device) {
+    private Player(
+        string? connectionID, User user, DEVICE_TYPE device,
+        byte id, Body body, int score
+    ) : base(connectionID, user, device) {
         ID = id;
         Body = body;
         Score = score;
     }
-    public Player(byte id) : this(null, User.UNKNOWN, DEVICE_TYPE.POINTER, id, new(), 0) {}
-    
-    // Utils ------------------------------------------------------------------------------------------------------------------------------
-    private void ResolveJump(Game game) {
-        foreach (var other in game.GetCollidingPlayers(this)) {
-            // 1) Check self:
-            if (Equals(other)) continue;
-            // 2) Check jump:
-            if (!JumpedOn(other)) continue;
-            // 3) Movement update:
-            Update(game.NewMovementUpdate(this, other));
-        }
+
+    public Player(byte id) : this(
+        null, User.UNKNOWN, DEVICE_TYPE.POINTER,
+        id, new(), 0
+    ) {}
+
+    public Player(Player player) : this(
+        player.ConnectionID, player.User, player.Device,
+        player.ID, player.Body, player.Score
+    ) {}
+
+    private void Anonymize() {
+        Synchronize(null, User.UNKNOWN, DEVICE_TYPE.POINTER);
+        Body = new();
+        Score = 0;
     }
 
-    // Updates ----------------------------------------------------------------------------------------------------------------------------    
-    public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is KeyUpdate key) return KeyUpdate(key);
-        if (update is GamePlayUpdate game) return GamePlayUpdate(game);
-        if (update is MovementUpdate move) return MovementUpdate(move);
-        if (update is KillUpdate kill) return KillUpdate(kill);
-        if (update is LifeUpdate life) return LifeUpdate(life);
-        if (update is PlayerUpdate player) return PlayerUpdate(player);
-        if (update is StateUpdate state) return StateUpdate(state);
-        if (update is RoundUpdate round) return RoundUpdate(round);
-        return false;
-    }
+    // Updates ----------------------------------------------------------------------------------------------------------------------------
+    public bool Update(GameUpdate update)
+    => update switch {
+        TimeFlowUpdate time => TimeFlowUpdate(time),
+        KeyUpdate key => KeyUpdate(key),
+        GamePlayUpdate game => GamePlayUpdate(game),
+        MovementUpdate move => MovementUpdate(move),
+        KillUpdate kill => KillUpdate(kill),
+        LifeUpdate life => LifeUpdate(life),
+        PlayerUpdate player => PlayerUpdate(player),
+        StateUpdate state => StateUpdate(state),
+        RoundUpdate round => RoundUpdate(round),
+        _ => false
+    };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) => Body.Update(update);
 
@@ -103,9 +110,11 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     private readonly UpdateGuard<PlayerUpdate> PlayerUpdateGuard = new();
-    private bool PlayerUpdate(PlayerUpdate update) {
-        return PlayerUpdateGuard.Update(update, () => Synchronize(update.Player));
-    }
+    private bool PlayerUpdate(PlayerUpdate update)
+    => PlayerUpdateGuard.Update(update, () => {
+        if (update.Anonymize) Anonymize();
+        else Synchronize(update.Player);
+    });
 
     private bool StateUpdate(StateUpdate update) => Body.Update(update);
 
@@ -124,8 +133,5 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, Game game) {
-        ResolveJump(game);
-        return await Body.Render(ctx, (game, User.Skin));
-    }
+    public async Task<bool> Render(Canvas2DContext ctx, Game game) => await Body.Render(ctx, (game, User.Skin));
 }

@@ -104,7 +104,7 @@
     transition: transform calc(var(--theme-transition-semi-fast) * 1ms);
 }
 
-@media (max-width: 300px) {
+@media (max-width: 300.98px) {
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.nav-menu .container.nav-menu-container {
         /* Size: */

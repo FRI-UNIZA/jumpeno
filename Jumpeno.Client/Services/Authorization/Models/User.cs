@@ -23,19 +23,19 @@ public class User {
         "Stonks"
     ];
     public const string NAME_UNKNOWN = "Unknown";
-    public static readonly User UNKNOWN = new(NAME_UNKNOWN, SKIN.MAGE_MAGIC);
+    public static readonly User UNKNOWN = new(NAME_UNKNOWN);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public Guid? ID { get; private set; }
     public string? Email { get; private set; }
     public string Name { get; private set; }
-    public SKIN Skin { get; private set; }
+    public SKIN Skin { get; set; }
     public bool Activated { get; private set; }
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool Equals(User? user) {
         if (user == null) return false;
-        if (user.ID == null) return user.Name.ToLower() == Name.ToLower();
+        if (ID == null && user.ID == null) return user.Name.ToLower() == Name.ToLower();
         return user.ID == ID;
     }
 
@@ -54,5 +54,5 @@ public class User {
         Activated = activated;
     }
     public User(Guid id, string email, string name, SKIN skin, bool activated) : this((Guid?) id, email, name, skin, activated) {}
-    public User(string name, SKIN skin) : this(null, null, name, skin, true) {}
+    public User(string name) : this(null, null, name, default, true) {}
 }
