@@ -10,9 +10,9 @@ public partial class SelectCulture {
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private readonly SelectViewModel VM = new(new(
-        Options: [.. I18N.LANGUAGES.Select(x => new SelectOption(x, x.ToUpper()))],
-        DefaultValue: new(I18N.Culture, I18N.Culture.ToUpper()),
+    private readonly SelectViewModel<string> VM = new(new(
+        Options: [.. I18N.LANGUAGES.Select((x, index) => new SelectOption<string>(index, x, x.ToUpper()))],
+        DefaultValue: new(Array.IndexOf(I18N.LANGUAGES, I18N.Culture), I18N.Culture, I18N.Culture.ToUpper()),
         OnSelect: new(OnSelect)
     ));
 
@@ -23,7 +23,7 @@ public partial class SelectCulture {
     }
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    private static async Task OnSelect(SelectEvent ev) {
+    private static async Task OnSelect(SelectEvent<string> ev) {
         await PageLoader.Show(PAGE_LOADER_TASK.CULTURE_CHANGE);
         await Task.Delay(CHANGE_DELAY);
         await ChangeCulture(ev);
@@ -42,8 +42,8 @@ public partial class SelectCulture {
         });
     }
 
-    private static async Task ChangeCulture(SelectEvent ev) {
-        var value = ev.After.GetValue<string>();
+    private static async Task ChangeCulture(SelectEvent<string> ev) {
+        var value = ev.After.Value!;
 
         if (I18N.Culture == value) return;
 

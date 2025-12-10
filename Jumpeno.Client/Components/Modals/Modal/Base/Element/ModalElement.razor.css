@@ -16,9 +16,9 @@
     --modal-padding-content-tablet: var(--modal-padding-content);
     --modal-padding-content-desktop: var(--modal-padding-content);
     --modal-padding-footer: var(--modal-padding);
-    --modal-padding-footer-mobile: 14px var(--modal-padding-footer);
-    --modal-padding-footer-tablet: 14px var(--modal-padding-footer);
-    --modal-padding-footer-desktop: 15px var(--modal-padding-footer);
+    --modal-padding-footer-mobile: calc(var(--modal-padding-footer) * 0.875) var(--modal-padding-footer);
+    --modal-padding-footer-tablet: calc(var(--modal-padding-footer) * 0.875) var(--modal-padding-footer);
+    --modal-padding-footer-desktop: calc(var(--modal-padding-footer) * 0.9375) var(--modal-padding-footer);
     /* Margin: */
     --modal-margin: var(--theme-size-container-padding-mobile);
     /* Border radius: */
@@ -89,7 +89,7 @@
     max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
     /* Style: */
     color: var(--theme-text-color);
-    background: var(--theme-surface-background);
+    background: transparent;
     border-radius: var(--modal-border-radius);
     outline: none;
     border: none;
@@ -101,14 +101,33 @@
     /* Base: */
     font-size: var(--modal-base-size);
 }
+::deep.modal .modal-dialog::before {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    /* Size: */
+    width: 100%;
+    height: 100%;
+    /* Content: */
+    content: "";
+    /* Style: */
+    background: var(--theme-surface-background);
+    border-radius: calc(var(--modal-border-radius) + 2px);
+    /* Actions: */
+    pointer-events: none;
+}
 
-::deep.modal .modal-container {
+::deep.modal .container.modal-container {
     /* Position: */
     z-index: 1;
     /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
+    padding: var(--modal-margin);
     /* Actions: */
     pointer-events: none;
 }
@@ -127,6 +146,7 @@
     /* Style: */
     background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
+    border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
     /* Base: */
     font-size: var(--modal-base-size);
 }
@@ -166,7 +186,7 @@
     /* Size: */
     padding: var(--modal-padding-content-mobile);
     /* Style: */
-    background: var(--theme-surface-background);
+    background: transparent;
 }
 
 ::deep.modal .modal-footer {
@@ -182,8 +202,29 @@
     /* Style: */
     background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
-    /* Content: */
-    font-size: 1px;
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
+    /* Base: */
+    font-size: var(--modal-base-size);
+}
+
+/* NoHeader ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.no-header .modal-scroll,
+::deep.modal.no-header .modal-scroll > [data-overlayscrollbars-viewport],
+::deep.modal.no-header .modal-scroll > [data-overlayscrollbars-viewport] > .scroll-area-content,
+::deep.modal.no-header .modal-content {
+    /* Style: */
+    border-top-left-radius: var(--modal-border-radius);
+    border-top-right-radius: var(--modal-border-radius);
+}
+
+/* NoFooter ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.no-footer .modal-scroll,
+::deep.modal.no-footer .modal-scroll > [data-overlayscrollbars-viewport],
+::deep.modal.no-footer .modal-scroll > [data-overlayscrollbars-viewport] > .scroll-area-content,
+::deep.modal.no-footer .modal-content {
+    /* Style: */
+    border-bottom-left-radius: var(--modal-border-radius);
+    border-bottom-right-radius: var(--modal-border-radius);
 }
 
 /* Focus trap -------------------------------------------------------------------------------------------------------------------------- */

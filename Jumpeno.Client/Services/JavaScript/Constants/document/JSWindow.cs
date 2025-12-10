@@ -6,6 +6,7 @@ public static class JSWindow {
     public const string CLASS_BODY = "body";
     
     public static readonly string GetSize = $"{ClassName}.{nameof(GetSize)}";
+    public static readonly string GetSizeOf = $"{ClassName}.{nameof(GetSizeOf)}";
 
     public static readonly string AddResizeEventListener = $"{ClassName}.{nameof(AddResizeEventListener)}";
     public static readonly string RemoveResizeEventListener = $"{ClassName}.{nameof(RemoveResizeEventListener)}";

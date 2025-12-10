@@ -18,17 +18,12 @@ public class NetworkUpdater {
         return new KeyUpdate(KeyUpdateID++, round, playerID, controls);
     }
 
-    // PingUpdate --------------------------------------------------------------------------------------------------------------------------
-    private ulong PingUpdateID = 0;
-    public PingUpdate NewPingUpdate(int round, DateTime createdAt) {
-        return new PingUpdate(PingUpdateID++, round, createdAt);
-    }
-
     // PlayerUpdate -----------------------------------------------------------------------------------------------------------------------
     private ulong PlayerUpdateID = 0;
-    public PlayerUpdate NewPlayerUpdate(int round, Player player) {
-        return new PlayerUpdate(PlayerUpdateID++, round, player);
-    }
+    public PlayerUpdate NewPlayerUpdate(
+        int round, bool hostConnected, Player player, int readyForRound, bool invalidate, GamePlayUpdate? gamePlayUpdate = null
+    )
+    => new(PlayerUpdateID++, round, hostConnected, player, readyForRound, invalidate, gamePlayUpdate);
 
     // RoundUpdate ------------------------------------------------------------------------------------------------------------------------
     private ulong RoundUpdateID = 0;
@@ -38,15 +33,14 @@ public class NetworkUpdater {
 
     // SpectatorUpdate --------------------------------------------------------------------------------------------------------------------
     private ulong SpectatorUpdateID = 0;
-    public SpectatorUpdate NewSpectatorUpdate(int round, int spectatorCount) {
-        return new SpectatorUpdate(SpectatorUpdateID++, round, spectatorCount);
+    public SpectatorUpdate NewSpectatorUpdate(int round, bool hostConnected, int spectatorCount) {
+        return new SpectatorUpdate(SpectatorUpdateID++, round, hostConnected, spectatorCount);
     }
 
     // Reset ------------------------------------------------------------------------------------------------------------------------------
     public void Reset() {
         GamePlayUpdateID = 0;
         KeyUpdateID = 0;
-        PingUpdateID = 0;
         PlayerUpdateID = 0;
         RoundUpdateID = 0;
         SpectatorUpdateID = 0;

@@ -27,11 +27,18 @@ public static class API {
         public static string USER_LOGIN => $"{URL}/User/Login";
         public static string USER_PASSWORD_RESET_REQUEST => $"{URL}/User/PasswordResetRequest";
         public static string USER_PASSWORD_RESET => $"{URL}/User/PasswordReset";
+        public static string USER_PASSWORD_CHANGE => $"{URL}/User/PasswordChange";
         public static string USER_PROFILE => $"{URL}/User/Profile";
+        public static string USER_UPDATE => $"{URL}/User/Update";
+        public static string USER_DELETE => $"{URL}/User/Delete";
         // Game:
+        public static string GAME_MAPS => $"{URL}/Game/Maps";
+        public static string GAME_MAP => $"{URL}/Game/Map";
         public static string GAME_START => $"{URL}/Game/Start";
         public static string GAME_PAUSE => $"{URL}/Game/Pause";
-        public static string GAME_RESUME => $"{URL}/Game/Resume";
-        public static string GAME_RESET => $"{URL}/Game/Reset";
+        public static string GAME_TOGGLE => $"{URL}/Game/Toggle";
+        public static string GAME_DELETE => $"{URL}/Game/Delete";
+        public static string GAME_SET_PLAYER_READY => $"{URL}/Game/SetPlayerReady";
+        public static string GAME_KICK_PLAYER => $"{URL}/Game/KickPlayer";
     }
 }

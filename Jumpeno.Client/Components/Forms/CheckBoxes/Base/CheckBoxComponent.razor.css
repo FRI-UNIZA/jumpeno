@@ -19,23 +19,19 @@
     align-items: center;
     flex-shrink: 0;
 }
-::deep.field.checkbox .checkbox-icon::before {
+::deep.field.checkbox .checkbox-icon-start {
     /* Position: */
     position: absolute;
     /* Display: */
     display: block;
     flex-shrink: 0;
-    /* Content: */
-    content: "";
 }
-::deep.field.checkbox .checkbox-icon::after {
+::deep.field.checkbox .checkbox-icon-end {
     /* Position: */
     position: absolute;
     /* Display: */
     display: block;
     flex-shrink: 0;
-    /* Content: */
-    content: "";
 }
 
 ::deep.field.checkbox .checkbox-description {
@@ -106,7 +102,7 @@
     width: var(--checkbox-icon-size);
     height: var(--checkbox-icon-size);
 }
-::deep.field.checkbox.variant-primary .checkbox-icon::before {
+::deep.field.checkbox.variant-primary .checkbox-icon-start {
     /* Position: */
     left: 50%;
     top: 50%;
@@ -123,7 +119,7 @@
     transition-duration: var(--checkbox-transition-duration);
     transition-timing-function: var(--checkbox-transition-timing);
 }
-::deep.field.checkbox.variant-primary .checkbox-icon::after {
+::deep.field.checkbox.variant-primary .checkbox-icon-end {
     /* Position: */
     left: 50%;
     top: 50%;

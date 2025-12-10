@@ -2,10 +2,18 @@
 
 @inherits BasicComponent
 
-<div class="lobby">
+<div class="@ComputeClass()">
     <div class="lobby-panel primary">
         <Box Class="lobby-box game">
-            <h1 class="lobby-text game-name">@VM.Game.Name</h1>
+            <div class="game-name-line">
+                <h1 class="lobby-text game-name">@VM.Game.Name</h1>
+                @if (VM.IsHost) {
+                    <GameButton Variant="GAME_BUTTON_VARIANT.DANGER" Class="game-delete-button" Action="new(() => DeleteConfirmModalRef.Open(VM.Delete))">
+                        <ThumbButton Class="game-delete-button-thumb" />
+                        <CloseSVG Class="game-delete-button-icon" />
+                    </GameButton>
+                }
+            </div>
             <div class="game-info">
                 <p class="lobby-text game-code">
                     <span>@I18N.T("Code"):</span>
@@ -13,26 +21,107 @@
                 </p>
                 <p class="lobby-text spectators">
                     <AntIcon Type="eye" Theme="outline" Class="watch-icon" />
-                    <span>@VM.Game.SpectatorCount</span>
+                    <span class="spectator-count">@VM.Game.SpectatorCount</span>
                 </p>
+                <div class="game-info-buttons">
+                    <GameTextButton Class="game-info-button game-qrcode-button" Action="new(QRCodeModalRef.Open)" Disabled>
+                        <ThumbButton Class="game-qrcode-button-thumb" />
+                        <AntIcon Type="qrcode" Theme="outline" Class="game-qrcode-button-icon" />
+                    </GameTextButton>
+                    <GameTextButton Class="game-info-button game-chat-button" Action="new(VM.Chat.Open)" Disabled>
+                        <ThumbButton Class="game-chat-button-thumb" />
+                        <AntIcon Type="message" Theme="fill" Class="game-chat-button-icon" />
+                    </GameTextButton>
+                </div>
             </div>
         </Box>
         <div class="round-line">
-            <p class="game-round">@I18N.T("Round"): <b>@(Game.LOBBY_STATES.Contains(VM.Game.State) ? VM.Game.Round + 1 : VM.Game.Round)</b></p>
-            <p class="game-state">&laquo;&thinsp;@(VM.Game.State == GAME_STATE.PAUSE ? I18N.T("Pause") : "Lobby")&thinsp;&raquo;</p>
+            <p class="game-round">@I18N.T("Round"): <b>@(VM.Game.ShowRound)</b></p>
+            <GameState Class="lobby-game-state">
+                @(
+                    VM.Game.IsFinished ? I18N.T("Finish") :
+                    VM.LobbyDisplayed ? I18N.T("Playing") :
+                    Game.PAUSE_STATES.Contains(VM.Game.State) ? I18N.T("Pause") :
+                    @I18N.T("Lobby")
+                )
+            </GameState>
+            <div class="game-round-buttons">
+                @if (VM.LobbyDisplayed) {
+                    <GameButton Variant="GAME_BUTTON_VARIANT.PRIMARY" Class="game-action-button lobby-hide-button" Action="new(VM.HideLobby)">
+                        <ThumbButton Class="game-action-button-thumb" />
+                        <GameControllerSVG Class="lobby-hide-button-icon" />
+                    </GameButton>
+                } else {
+                    if (VM.IsHost) {
+                        if (
+                            Game.LOBBY_STATES.Contains(VM.Game.State) && !VM.Game.IsFinished && VM.Game.ActivePlayersCount >= 2 && VM.Game.ActivePlayersReady()
+                            ||
+                            Game.PAUSE_STATES.Contains(VM.Game.State)
+                        ) {
+                            <GameButton Variant="GAME_BUTTON_VARIANT.SUCCESS" Class="game-action-button game-start-button" Action="new(VM.Play)">
+                                <ThumbButton Class="game-action-button-thumb" />
+                                <AntIcon Class="game-start-button-icon" Type="caret-right" Theme="outline" />
+                            </GameButton>
+                        } else {
+                            <GameWaiting Finished="VM.Game.IsFinished" />
+                        }
+                    } else if (VM.IsPlayer && VM.Player != null) {
+                        if (VM.Player.IsReady(VM.Game)) {
+                            <GameWaiting Finished="VM.Game.IsFinished" />
+                        } else {
+                            <GameButton Variant="GAME_BUTTON_VARIANT.SUCCESS" Class="game-action-button player-ready-button" Action="new(VM.IamReady)">
+                                <ThumbButton Class="game-action-button-thumb" />
+                                <CheckMarkSVG Class="player-ready-button-icon" />
+                            </GameButton>
+                        }
+                    } else {
+                        <GameWaiting Finished="VM.Game.IsFinished" />
+                    }
+                }
+            </div>
         </div>
         <Box Class="lobby-box players">
             <div class="player-titles">
                 <p Class="lobby-text player-title">@I18N.T("Players")</p>
-                <p Class="lobby-text player-title">@I18N.T("Score")</p>
+                <p Class="lobby-text player-title">
+                    @if (VM.IsHost) {
+                        <GameTextButton Class="player-settings-button" Action="new(TogglePlayerSettings)">
+                            <ThumbButton Class="player-settings-button-thumb" />
+                            <AntIcon Type="setting" Theme="fill" Class="player-settings-button-icon" />
+                        </GameTextButton>
+                    }
+                    @if (PlayerSettingsOpen) @I18N.T("Player shifts")
+                    else @I18N.T("Score")
+                </p>
             </div>
             <div class="player-table">
                 @foreach (var (player, index) in VM.Game.PlayerScoreIterator) {
-                    <div class="@ComputePlayerLineClass(player)">
+                    <div class="@PlayerLineClass(player)">
                         <div class="player-presence" />
                         <p Class="lobby-text player-name">@(index + 1). @player.User.Name</p>
                         <div class="player-line-dash" />
-                        <p Class="lobby-text player-score">@(player.Score)</p>
+                        @if (VM.IsHost && PlayerSettingsOpen) {
+                            <div class="player-action-buttons">
+                                <GameButton
+                                    Variant="GAME_BUTTON_VARIANT.DANGER"
+                                    Class="player-action-button player-kick-button"
+                                    Action="new(async () => {
+                                        PlayerToKick = new(player);
+                                        await PlayerKickConfirmModalRef.Open(() => VM.KickPlayer(player));
+                                    })"
+                                    Disabled="
+                                        player.User.ID == VM.Game.Host.ID ||
+                                        VM.Game.IsFinished ||
+                                        VM.Game.State != GAME_STATE.LOBBY && VM.Game.ValidPlayersCount <= 2
+                                    "
+                                >
+                                    <ThumbButton Class="player-kick-button-thumb" />
+                                    <AntIcon Type="delete" Theme="outline" Class="game-button-icon player-kick-button-icon" />
+                                </GameButton>
+                            </div>
+                        } else {
+                            <p Class="lobby-text player-score">@(player.Score)</p>
+                        }
                     </div>
                 }
             </div>
@@ -49,5 +138,62 @@
         </Box>
     </div>
 
-    <InfoBox Class="small-device" Type="fullscreen" Theme="outline">@I18N.T("Screen too small")</InfoBox>
+    <GameInfoBox Class="small-device" Type="fullscreen" Theme="outline">@I18N.T("Screen too small")</GameInfoBox>
 </div>
+
+<GameConfirmModal
+    @ref="DeleteConfirmModalRef" VM="VM"
+    Class="lobby-delete-confirm-modal"
+    Label="@I18N.T("End game")"
+    Danger
+>
+    <Icon><AntIcon Type="logout" Theme="outline" /></Icon>
+    <Message>
+        @I18N.T("Do you really want to end this game?")<br />
+        @I18N.T("Everyone will be disconnected!")
+    </Message>
+    <TextOK>@I18N.T("End")</TextOK>
+</GameConfirmModal>
+
+<GameModal
+    @ref="@QRCodeModalRef" VM="VM"
+    Class="lobby-qr-code-modal"
+    Label="@I18N.T("QR code")"
+    NoFooter
+>
+    <Content>
+        <div
+            style="
+                display: flex;
+                flex-direction: column;
+                gap: calc(var(--aspect-size) * 0.016);
+                width: 100%;
+                padding: calc(var(--aspect-size) * 0.05) calc(var(--aspect-size) * 0.014) calc(var(--aspect-size) * 0.07)
+            "
+        >
+            <AntIcon
+                Type="coffee"
+                Theme="outline"
+                Style="font-size: calc(var(--aspect-size) * 0.14); margin-right: calc(var(--aspect-size) * -0.025)"
+            />
+            <Heading1 Style="font-size: calc(var(--aspect-size) * 0.032); text-align: center; line-height: 1.2">
+                @I18N.T("Under construction")
+            </Heading1>
+            <Paragraph Style="font-size: calc(var(--aspect-size) * 0.016); text-align: center">
+                @I18N.T("We are working on the implementation of this functionality.")
+            </Paragraph>
+        </div>
+    </Content>
+</GameModal>
+
+<GameConfirmModal
+    @ref="PlayerKickConfirmModalRef" VM="VM"
+    Class="lobby-player-kick-confirm-modal"
+    Label="@(PlayerToKick?.User.Name)"
+    Danger
+    OnAfterClose="() => PlayerToKick = null"
+>
+    <Icon><AntIcon Type="user-delete" Theme="outline" /></Icon>
+    <Message>@I18N.T("Do you want to kick this player?")</Message>
+    <TextOK>@I18N.T("Kick")</TextOK>
+</GameConfirmModal>

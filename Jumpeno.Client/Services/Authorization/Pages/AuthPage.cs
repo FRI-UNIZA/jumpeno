@@ -65,21 +65,21 @@ public partial class AuthPage {
 
     public static async Task AddRedirect() {
         if (!AppSettings.Redirect) return;
-        await Navigator.AddBlocker(ev => {
-            if (Navigator.IsPopState) return true;
+        await Navigator.AddBlocker(e => {
+            if (e.IsPopState) return true;
             var q = URL.Query();
             if (!Auth.IsLoggedIn) {
-                if (Page.Roles(URL.ToRelative(ev.AfterURL)).Length > 0) {
+                if (Page.Roles(URL.ToRelative(e.AfterURL)).Length > 0) {
                     Navigator.NavigateTo(URL.WithQuery(LINK_LOGIN, q));
                     return false;
                 }
                 return true;
             } else {
-                if (Auth.IsRole(Page.RolesBlock(URL.ToRelative(ev.AfterURL)))) {
+                if (Auth.IsRole(Page.RolesBlock(URL.ToRelative(e.AfterURL)))) {
                     Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q));
                     return false;
                 }
-                var roles = Page.Roles(URL.ToRelative(ev.AfterURL));
+                var roles = Page.Roles(URL.ToRelative(e.AfterURL));
                 if (roles.Length > 0 && !Auth.IsRole(roles)) {
                     Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q));
                     return false;

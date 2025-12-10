@@ -10,11 +10,15 @@ public class ActivationEntity {
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]
     public required string ID { get; set; }
+
+    // Relations --------------------------------------------------------------------------------------------------------------------------
     public required UserEntity User { get; set; }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<ActivationEntity> Create(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:
@@ -34,7 +38,9 @@ public class ActivationEntity {
 
     // Delete -----------------------------------------------------------------------------------------------------------------------------
     public static async Task<bool> Delete(
+        // Parameters:
         string id,
+        // Exceptions:
         string idID = ""
     ) {
         // 1) Validation:

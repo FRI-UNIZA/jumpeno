@@ -1,11 +1,9 @@
 namespace Jumpeno.Server.Middlewares;
 
 public class APIMiddleware(RequestDelegate next) {
-    private readonly RequestDelegate Next = next;
-
     public async Task InvokeAsync(HttpContext ctx) {
         if (!ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX, StringComparison.OrdinalIgnoreCase)) {
-            await Next(ctx); return;
+            await next(ctx); return;
         }
         // Get endpoint metadata:
         var endpoint = ctx.GetEndpoint() ?? throw EXCEPTION.BAD_REQUEST;
@@ -15,9 +13,9 @@ public class APIMiddleware(RequestDelegate next) {
             .OfType<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()
             .FirstOrDefault() ?? throw EXCEPTION.BAD_REQUEST;
 
-        // Get the method info:
-        var methodInfo = controllerActionDescriptor.MethodInfo ?? throw EXCEPTION.BAD_REQUEST;
+        // Check the method info:
+        if (controllerActionDescriptor?.MethodInfo == null) throw EXCEPTION.BAD_REQUEST;
         // Move to next:
-        await Next(ctx);
+        await next(ctx);
     }
 }

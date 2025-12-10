@@ -4,23 +4,31 @@
 @attribute [Route(GamePage.ROUTE_EN)]
 @attribute [Route(GamePage.ROUTE_SK)]
 
+<DocTitle Value="@I18N.T("Game")" />
+
 <div class="game-page">
-    <DocTitle Value="@I18N.T("Game")" />
     @if (GameVM is null) {
         if (!ConnectVM.Create) {
-            <ConnectBox @ref="View" VM="ConnectVM" />
+            <ConnectBox @key="@nameof(ConnectBox)" @ref="View" VM="ConnectVM" />
         } else {
-            <CreateBox @ref="View" VM="ConnectVM" />
+            <CreateBox @key="@nameof(CreateBox)" @ref="View" VM="ConnectVM" />
         }
-    } else switch (GameVM.Game.State) {
-        case GAME_STATE.LOBBY:
-        case GAME_STATE.SCOREBOARD:
-        case GAME_STATE.PAUSE:
-            <Lobby @ref="View" VM="GameVM" />
-        break;
-        case GAME_STATE.GAMEPLAY:
-        case GAME_STATE.SHRINKING:
-            <GameScreen @ref="View" VM="GameVM" />
-        break;
+    } else {
+        <GameChat @key="@nameof(GameChat)" @ref="ChatRef" VM="GameVM" />
+        switch (GameVM.Game.State) {
+            case GAME_STATE.LOBBY:
+            case GAME_STATE.PAUSE:
+            case GAME_STATE.SCOREBOARD:
+                <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
+            break;
+            case GAME_STATE.GAMEPLAY:
+            case GAME_STATE.SHRINKING:
+                if (GameVM.LobbyDisplayed) {
+                    <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
+                } else {
+                    <GameScreen @key="@nameof(GameScreen)" @ref="View" VM="GameVM" />
+                }
+            break;
+        }
     }
 </div>

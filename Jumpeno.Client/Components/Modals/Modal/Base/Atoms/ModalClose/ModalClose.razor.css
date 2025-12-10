@@ -12,6 +12,8 @@
 ::deep.modal-close {
     /* Display: */
     display: inline-flex;
+    justify-content: center;
+    align-items: center;
     padding: var(--close-padding);
     justify-self: var(--close-justify);
     align-self: var(--close-align);

@@ -33,14 +33,19 @@ public static class AppSettings {
     }
     public static AppSettingsGame Game { get; private set; } public class AppSettingsGame {
         public int FPS { get; init; }
-        public AppSettingsGameTouchDeviceNotifications TouchDeviceNotifications { get; init; }
-        public class AppSettingsGameTouchDeviceNotifications {
-            public int PerSecond { get; init; }
-        }
         public AppSettingsGameRound Round { get; init; } public class AppSettingsGameRound {
             public int Minutes { get; init; }
         }
         public AppSettingsGameFinishDelay FinishDelay { get; init; } public class AppSettingsGameFinishDelay {
+            public int Seconds { get; init; }
+        }
+        public int MaxSpectators { get; init; }
+        public int MaxInstances { get; init; }
+        public AppSettingsGameTouchDeviceNotifications TouchDeviceNotifications { get; init; }
+        public class AppSettingsGameTouchDeviceNotifications {
+            public int PerSecond { get; init; }
+        }
+        public AppSettingsGamePingInterval PingInterval { get; init; } public class AppSettingsGamePingInterval {
             public int Seconds { get; init; }
         }
     }
@@ -81,9 +86,12 @@ public static class AppSettings {
         };
         Game = new() {
             FPS = file.GetValue<int>("Game:FPS")!,
-            TouchDeviceNotifications = new() { PerSecond = file.GetValue<int>("Game:TouchDeviceNotifications:PerSecond")! },
             Round = new() { Minutes = file.GetValue<int>("Game:Round:Minutes")! },
-            FinishDelay = new() { Seconds = file.GetValue<int>("Game:FinishDelay:Seconds")! }
+            FinishDelay = new() { Seconds = file.GetValue<int>("Game:FinishDelay:Seconds")! },
+            MaxSpectators = file.GetValue<int>("Game:MaxSpectators")!,
+            MaxInstances = file.GetValue<int>("Game:MaxInstances")!,
+            TouchDeviceNotifications = new() { PerSecond = file.GetValue<int>("Game:TouchDeviceNotifications:PerSecond")! },
+            PingInterval = new() { Seconds = file.GetValue<int>("Game:PingInterval:Seconds")! }
         };
         Links = new() {
             Adminer = file.GetValue<string>("Links:Adminer")!,

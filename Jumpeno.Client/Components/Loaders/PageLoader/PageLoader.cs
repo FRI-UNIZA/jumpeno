@@ -41,7 +41,7 @@ public partial class PageLoader {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentDispose() => Lock.Dispose();
+    protected override async ValueTask OnComponentDisposeAsync() => await Lock.DisposeSafe();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private async Task OnChange() {

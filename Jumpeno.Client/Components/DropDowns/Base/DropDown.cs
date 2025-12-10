@@ -84,7 +84,7 @@ public partial class DropDown {
             await Window.RemoveKeyDownEventListener(Ref, JS_OnKeyDown);
         }
         Ref.Dispose();
-        Lock.Dispose();
+        await Lock.DisposeSafe();
     }
 
     // Private actions --------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public partial class DropDown {
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
-    public async Task JS_OnClick((int x, int y) position) {
+    public async Task JS_OnClick(WindowMouseEvent e) {
         await Lock.TryExclusive(() => {
             Displayed = OpenRequested;
             OpenRequested = false;
@@ -132,5 +132,5 @@ public partial class DropDown {
     public async Task JS_OnResize(WindowResizeEvent e) => await Close();
 
     [JSInvokable]
-    public async Task JS_OnKeyDown(string key) { if (key == KEYBOARD.ESC) await Close(); }
+    public async Task JS_OnKeyDown(WindowKeyEvent e) { if (e.Key == KEYBOARD.ESC) await Close(); }
 }

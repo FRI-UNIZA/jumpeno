@@ -73,10 +73,10 @@
 }
 ::deep.home-page .paragraph.contact-text .contact-icon svg {
     /* Size: */
-    margin-bottom: -3px;
+    margin-bottom: -4px;
     margin-right: 8px;
     /* Content: */
-    font-size: 20px;
+    font-size: 21px;
 }
 
 ::deep.home-page .action-buttons {

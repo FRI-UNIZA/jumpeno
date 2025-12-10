@@ -3,9 +3,17 @@ namespace Jumpeno.Client.Services;
 /// <summary>Actions that run on app start.</summary>
 public static class Init {
     /* Initialization ------------------------------------------------------------------------------------------------------------------ */
-    public static async Task Run() {
+    public static async Task RunBeforeLayout() {
+        InitGamePageNavigation();
         await TryActivate();
         await TryPasswordReset();
+    }
+
+    public static async Task RunAfterLayout() {
+        await InitAutoWatch();
+    }
+
+    public static async Task RunAfterLoader() {
         await TryAutoWatch();
     }
 
@@ -67,11 +75,27 @@ public static class Init {
         return true;
     }
 
+    /* GamePage ------------------------------------------------------------------------------------------------------------------------ */
+    private static void InitGamePageNavigation() => GamePage.InitNavigation();
+
     /* AutoWatch ----------------------------------------------------------------------------------------------------------------------- */
+    private static bool ConnectBoxView(out ConnectBox view) {
+        view = null!;
+        if (Page.Current is not GamePage page) return false;
+        if (page.View is not ConnectBox component) return false;
+        view = component; return true;
+    }
+
+    private static async Task<bool> InitAutoWatch() {
+        // 1) Check if view is rendered:
+        if (!ConnectBoxView(out var view)) return false;
+        // 2) Try autowatch:
+        return await view.InitAutoWatch();
+    }
+
     private static async Task<bool> TryAutoWatch() {
         // 1) Check if view is rendered:
-        if (Page.Current is not GamePage page) return false;
-        if (page.View is not ConnectBox view) return false;
+        if (!ConnectBoxView(out var view)) return false;
         // 2) Try autowatch:
         return await view.TryAutoWatch();
     }

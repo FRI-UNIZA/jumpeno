@@ -1,5 +1,7 @@
 @namespace Jumpeno.Client.Components
 
+@inherits BasicComponent
+
 <AuthView Roles="[ROLE.USER]">
     <Modal
         @ref="@ModalRef"
@@ -8,31 +10,18 @@
         Class="profile-modal"
     >
         <Content>
-            <div class="profile-content">
-                <div class="user-profile-image-wrap">
-                    <Image URL="@Animation.GetURL(Auth.User.Skin)" Transparent Class="user-profile-image" />
-                </div>
-                <Heading1 Class="profile-name">@Auth.User.Name</Heading1>
-                <Paragraph Class="profile-email">@Auth.User.Email</Paragraph>
-                @if (Auth.User.Activated) {
-                    <div class="activated-box">
-                        <Paragraph Class="profile-activated">
-                            <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
-                            @I18N.T("Account activated")
-                        </Paragraph>
-                    </div>
-                } else {
-                    <div class="activated-box">
-                        <Paragraph Class="profile-activated">
-                            <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
-                            @I18N.T("Account not activated")
-                        </Paragraph>
-                        <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
-                            <Text>@I18N.T("Resend link")</Text>
-                        </Button>
-                    </div>
-                }
-            </div>
+            <LineTabs Position="@TabsPosition" Centered="true" Class="profile-tabs" TabBarClass="profile-tab-bar" OnChanged="x => ResetForms()">
+                <TabPane Key="1" Title="@I18N.T("Account")">
+                    <AccountTab @ref="AccountRef" ModalRef="@ModalRef" PasswordChangeModalRef="@PasswordChangeModalRef" />
+                </TabPane>
+                <TabPane Key="2" Title="@I18N.T("Socials")">
+                    <SocialsTab @ref="SocialsRef" />
+                </TabPane>
+                <TabPane Key="3" Title="@I18N.T("Avatar")">
+                    <AvatarTab @ref="AvatarRef" />
+                </TabPane>
+            </LineTabs>
         </Content>
     </Modal>
+    <PasswordChangeModal @ref="PasswordChangeModalRef" />
 </AuthView>

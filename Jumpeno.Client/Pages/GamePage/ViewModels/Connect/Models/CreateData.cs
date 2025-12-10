@@ -3,10 +3,10 @@ namespace Jumpeno.Client.Models;
 public record struct CreateData(
     string? Code,
     string GameName,
-    string? Map,
-    GAME_MODE GameMode,
-    DISPLAY_MODE DisplayMode,
-    bool Presentation,
+    int? Map,
+    bool Anonyms,
+    byte Rounds,
     byte Capacity,
-    bool Anonyms
+    DISPLAY_MODE DisplayMode,
+    GAME_MODE GameMode
 );

@@ -1,0 +1,36 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<AuthView Roles="[ROLE.USER]">
+    <div class="@ComputeClass()" style="@Style">
+        <div class="avatar-show">
+            <div>
+                <div class="current-avatar">
+                    <Image Class="avatar-image" URL="@Auth.User.Skin.ToImagePath()" Alt="@I18N.T("Current avatar")" />
+                </div>
+                <TextSpan Size="TEXT_SIZE.S">@I18N.T("Current avatar")</TextSpan>
+            </div>
+            <Button Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.S" OnClick="ChangeSkin"> 
+                <Text >
+                    @I18N.T("Change")
+                </Text>
+            </Button>
+            <div>
+                <div class="selected-avatar">
+                    <Image Class="avatar-image" URL="@SelectedSkin.ToImagePath()" Alt="@I18N.T("Selected avatar")" Preloaded />
+                </div>
+                <TextSpan Size="TEXT_SIZE.S">@I18N.T("Selected avatar")</TextSpan>
+            </div>
+        </div>
+        <LineDivider Text="@I18N.T("Choose skin")" />
+        <div class="avatar-grid"> 
+            @foreach (SKIN skin in Skins)
+            {
+                <div class="@ComputeAvatarOptionClass(skin)" @onclick="() => SelectSkin(skin)">
+                    <Image Class="avatar-image" URL="@skin.ToImagePath()" Alt="@I18N.T("Avatar option")" Preloaded />
+                </div>
+            }
+        </div>
+    </div>
+</AuthView>

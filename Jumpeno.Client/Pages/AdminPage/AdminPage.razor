@@ -8,8 +8,15 @@
 
 <div class="admin-page">
     <div class="feature-panel">
-        <Heading2 Class="admin-heading">@I18N.T("Active games")</Heading2>
-        <Box Surface="BOX_SURFACE.PRIMARY_GLASS">
+        <div class="active-games-heading-line">
+            <Heading2 Class="active-games-heading">@I18N.T("Active games")</Heading2>
+            <Button Class="active-games-control-button" Size="BUTTON_SIZE.S" Params="@(new ButtonLinkParams(
+                Href: I18N.Link<GameControlPage>()
+            ))">
+                <Icon><AntIcon Type="aim" Theme="outline" Label="@I18N.T("Controller")" /></Icon>
+            </Button>
+        </div>
+        <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 440px; padding: 40px 0;">
                 <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin: 0 auto 30px; transform: translateX(14px)" />
                 <Paragraph Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
@@ -45,7 +52,7 @@
         </Box>
         <Box Class="email-box">
             <Heading2 Size="TEXT_SIZE.M" Class="email-heading">
-                <AntIcon Type="mail" Theme="outline" />&nbsp;@I18N.T("Email")
+                <AntIcon Type="mail" Theme="outline" Style="position: relative; top: 1px" />&nbsp;@I18N.T("Email")
             </Heading2>
             <Paragraph Size="TEXT_SIZE.S" Class="email-info">
                 <b>@AppSettings.Email</b>

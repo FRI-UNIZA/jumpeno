@@ -1,0 +1,11 @@
+[*]
+insert_final_newline = true
+end_of_line = lf
+charset = utf-8
+indent_size = 4
+indent_style = space
+
+[*.cs]
+dotnet_diagnostic.IDE0130.severity = none
+csharp_style_namespace_declarations = file_scoped:suggestion
+dotnet_style_namespace_match_folder = false

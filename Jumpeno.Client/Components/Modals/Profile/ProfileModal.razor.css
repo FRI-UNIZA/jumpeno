@@ -1,94 +1,29 @@
+/* Constants -------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.profile-modal {
+    --profile-modal-z-index: 10;
+}
+
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.modal.profile-modal {
     /* Size: */
-    --modal-min-width: 460px;
+    --modal-min-width: 800px;
     --modal-max-width: 1200px;
-    /* Base: */
-    --modal-profile-base-size: 1px;
+    --modal-min-height: 600px;
 }
 
-::deep.modal.profile-modal .profile-content {
+::deep.modal.profile-modal .profile-tabs {
     /* Display: */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    /* Size: */
-    min-width: 100%;
-    max-width: 100%;
-    padding: 30px 0 54px;
-}
-
-::deep.modal.profile-modal .profile-content .user-profile-image-wrap {
-    /* Position: */
-    position: relative;
-    /* Size: */
-    width: 112px;
-    height: 112px;
-    /* Style: */
-    border-radius: 100%;
-    background-color: var(--theme-modal-profile-avatar-background);
-    border: 6px solid var(--theme-modal-profile-avatar-border-color);
-    box-shadow: var(--theme-modal-profile-avatar-box-shadow);
-    /* Content: */
-    overflow: hidden;
-    /* Base: */
-    font-size: var(--modal-profile-base-size);
-}
-
-::deep.modal.profile-modal .profile-content .image.user-profile-image {
-    /* Size: */
-    --image-width: 100px;
-    --image-height: 100px;
-    /* Transform: */
-    transform: scale(4) translate(37.2%, 36.8%);
-    /* Actions: */
-    pointer-events: none;
-}
-
-::deep.modal.profile-modal .profile-content .heading.profile-name {
-    /* Content: */
-    text-align: center;
-}
-
-::deep.modal.profile-modal .profile-content .paragraph.profile-email {
-    /* Size: */
-    margin-top: -10px;
-    /* Content: */
-    text-align: center;
-}
-
-::deep.modal.profile-modal .profile-content .paragraph.profile-activated {
-    /* Content: */
-    text-align: center;
-}
-::deep.modal.profile-modal .profile-content .user-activated-icon,
-::deep.modal.profile-modal .profile-content .user-not-activated-icon {
-    /* Position: */
-    position: relative;
-    bottom: -2px;
-    /* Size: */
-    margin: 0 5px 0 -8px;
-    /* Content: */
-    font-size: 22px;
-}
-::deep.modal.profile-modal .profile-content .user-activated-icon {
-    /* Style: */
-    color: var(--theme-status-success-accent-color);
-}
-::deep.modal.profile-modal .profile-content .user-not-activated-icon {
-    /* Style: */
-    color: var(--theme-status-danger-accent-color);
-}
-::deep.modal.profile-modal .profile-content .activated-box {
-    /* Display: */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    align-self: center;
     /* Size: */
     width: 100%;
-    padding-top: 12px;
+    margin: 0 auto;
+}
+
+::deep.modal.profile-modal .profile-tab-bar {
+    /* Position: */
+    position: sticky;
+    top: 0; /* stick to top */
+    z-index: var(--profile-modal-z-index); /* stay above content */
+    /* Style */
+    background: var(--theme-surface-background); /* prevent content from showing through */
 }

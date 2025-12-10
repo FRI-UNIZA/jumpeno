@@ -1,3 +1,33 @@
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes create-box-settings-icon-movement {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+
+@keyframes create-box-map-arrow-animation {
+    0% { transform: scale(1.3); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1.3); }
+}
+
+@keyframes create-box-map-scale-animation {
+    0% { transform: scale(1.01); }
+    50% { transform: scale(0.96); }
+    100% { transform: scale(1.01); }
+}
+
+@keyframes create-box-map-floating {
+    0% { transform: translateY(-10px); }
+    50% { transform: translateY(8px); }
+    100% { transform: translateY(-10px); }
+}
+
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.create-box {
+    --map-canvas-large-mobile-width: 420px;
+    --game-options-tablet-width: 420px;
+}
+
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.create-box {
     /* Display: */
@@ -9,34 +39,611 @@
     padding: 6px 0;
 }
 
-::deep.create-box .connect-link {
+::deep.create-box .box.create-form {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+}
+
+/* Styles > Header --------------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .heading.create-heading {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.create-box .create-form-header-options {
+    /* Display: */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    /* Size: */
+    width: 100%;
+    margin-top: 8px;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep.create-box .create-form-header-options * {
+    /* Actions: */
+    pointer-events: all;
+}
+
+::deep.create-box .web-link.variant.size.connect-link-cancel {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 1px;
     /* Size: */
     margin: 8px 0 6px;
     /* Content: */
     text-align: center;
 }
+::deep.create-box .web-link.variant.size.connect-link-cancel .connect-icon {
+    /* Position: */
+    bottom: 0;
+    right: 0;
+    /* Content: */
+    font-size: 1.4em;
+}
 
-::deep.create-box .connect-icon {
+::deep.create-box .button.variant.size.create-game-button {
     /* Position: */
     position: relative;
-    bottom: -0.1em;
-    right: -0.1em;
+    /* Size: */
+    padding: 9px 10px 9px 17px;
+    --button-icon-size: 23px;
+}
+::deep.create-box .button.variant.size.create-game-button .button-text {
+    /* Size: */
+    margin-right: 6px;
     /* Content: */
-    font-size: 1.3em;
+    font-size: 15px;
 }
 
-/* Styles > Create form ---------------------------------------------------------------------------------------------------------------- */
-::deep.create-box .create-form {
+/* Styles > Identifiers ---------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .game-identifiers {
+    /* Position: */
+    position: relative;
     /* Display: */
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-end;
+    gap: 10px;
+    /* Size: */
+    width: 100%;
 }
 
-::deep.create-box .heading.create-heading {
+::deep.create-box .settings-icon {
+    /* Position: */
+    position: absolute;
+    top: 110px;
+    left: -6px;
+    /* Display: */
+    display: none;
+    /* Size: */
+    padding: 0;
+    margin: -20px 0px -20px 8px;
+    /* Style: */
+    color: var(--theme-create-box-settings-icon-color);
+    filter: drop-shadow(var(--theme-create-box-settings-icon-drop-shadow));
+    /* Content: */
+    font-size: 100px;
+    /* Animations: */
+    animation: create-box-settings-icon-movement 90s linear infinite;
+}
+
+::deep.create-box .image.logo-image {
+    /* Position: */
+    position: absolute;
+    left: 0;
+    top: 122px;
+    --image-fit: contain;
+    --image-position: 0 center;
+    /* Display: */
+    display: none;
+    /* Size: */
+    --image-width: 56px;
+    --image-height: 56px;
+    margin-left: 68px;
+    /* Style: */
+    filter: drop-shadow(var(--theme-create-box-logo-drop-shadow));
+    /* Base: */
+    font-size: 1px;
+}
+
+::deep.create-box .qr-code-icon {
+    /* Position: */
+    position: absolute;
+    top: 80px;
+    right: 4px;
+    /* Display: */
+    display: none;
+    /* Content: */
+    font-size: 120px;
+}
+
+::deep.create-box .form-label.game-name-label {
+    /* Size: */
+    width: 100%;
+    margin: auto;
+}
+
+::deep.create-box .field.input.game-name-input.variant.size {
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .custom-code {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    /* Size: */
+    width: 100%;
+    padding-left: 0;
+}
+
+::deep.create-box .field.checkbox.custom-code-checkbox.variant.size {
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .field.checkbox.custom-code-checkbox.variant.size > .form-error {
+    /* Size: */
+    width: calc(100% + 22px);
+    height: 82px;
+    left: -11px;
+    top: -7px;
+}
+
+::deep.create-box .field.input.custom-code-input.variant.size {
+    /* Size: */
+    width: 100%;
+}
+
+/* Styles > GameOptions ---------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .game-options {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */;
+    width: 100%;
+    padding-top: 7px;
+}
+
+::deep.create-box .text.paragraph.map-title-mobile {
+    /* Size: */
+    padding-bottom: 3px;
+    /* Content: */
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+::deep.create-box .game-options-area {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    order: 2;
+    /* Size: */
+    width: 100%;
+    margin: auto;
+}
+
+::deep.create-box .text.paragraph.map-title {
+    /* Display: */
+    display: none;
+    /* Content: */
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+::deep.create-box .map-option {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    padding-top: 6px;
+}
+::deep.create-box .field.load-area.load-area-map-option.loading {
+    /* Actions: */
+    cursor: not-allowed;
+    pointer-events: all;
+}
+::deep.create-box .field.select.map-select.variant.size {
+    /* Size: */
+    width: 100%;
+}
+::deep.modal.select-options-modal.create-box-map-select-modal {
+    /* Size: */
+    --modal-min-width: 360px;
+}
+::deep.create-box .create-box-map-icon {
+    /* Position: */
+    position: absolute;
+    right: -39px;
+    top: 2px;
+    /* Display: */
+    display: none;
+    /* Style: */
+    color: var(--theme-create-box-map-icon-color);
+    /* Content: */
+    font-size: 36px;
+    /* Animations: */
+    animation: create-box-map-arrow-animation 2s ease-in-out infinite;
+}
+
+::deep.create-box .gameplay-options {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    /* Size: */
+    padding-top: 8px;
+}
+
+::deep.create-box .form-label.anonymous-players-label {
+    /* Display: */
+    flex-shrink: 0;
+    /* Size: */
+    width: 100%;
+    padding-top: 5px;
+}
+::deep.create-box .form-label.anonymous-players-label .form-label-element {
+    /* Size: */
+    padding-bottom: 8px;
+}
+::deep.create-box .field.switch.anonymous-players-switch.variant.size .switch-description {
+    /* Size: */
+    width: 48px;
+    height: 48px;
+    margin-left: -6px;
+    /* Style: */
+    border-radius: 30px;
+    /* Content: */
+    overflow: hidden;
+}
+::deep.create-box .anonymous-players-svg {
+    /* Size: */
+    width: 48px;
+    height: 48px;
+}
+::deep.create-box .field.switch.anonymous-players-switch.variant.size > .form-error {
+    left: 0;
+    top: -2px;
+    width: 100%;
+    height: calc(100% + 4px);
+}
+
+::deep.create-box .game-additional-options {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    order: -1;
+    /* Size: */
+    width: 100%;
+    padding-right: 32px;
+}
+
+::deep.create-box .rounds-option {
+    /* Position: */
+    position: relative;
+}
+::deep.create-box .field.select.rounds-select.variant.size {
+    /* Size: */
+    width: 100%;
+}
+::deep.modal.select-options-modal.create-box-rounds-select-modal {
+    /* Size: */
+    --modal-min-width: 320px;
+}
+::deep.create-box .rounds-icon {
+    /* Position: */
+    position: absolute;
+    right: -31px;
+    top: 11px;
+    /* Content: */
+    font-size: 23px;
+}
+
+::deep.create-box .capacity-option {
+    /* Position: */
+    position: relative;
+}
+::deep.create-box .field.select.capacity-select.variant.size {
+    /* Size: */
+    width: 100%;
+}
+::deep.modal.select-options-modal.create-box-capacity-select-modal {
+    /* Size: */
+    --modal-min-width: 300px;
+}
+::deep.create-box .capacity-icon {
+    /* Position: */
+    position: absolute;
+    right: -32px;
+    top: 10px;
+    /* Content: */
+    font-size: 25px;
+}
+
+::deep.create-box .map-canvas-area {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    order: 1;
+    /* Size: */
+    width: 100%;
+    padding-bottom: min(2vw, 20px);
+    margin: auto;
+    /* Animations: */
+    animation: create-box-map-scale-animation 4s ease-in-out infinite;
+}
+
+::deep.create-box .map-canvas-icons {
+    /* Variables: */
+    --map-canvas-icon-position: calc((100% - var(--map-canvas-large-mobile-width)) / 4 - 54px);
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: none;
+    /* Size: */
+    width: 100%;
+    margin: auto;
+    height: 0;
+    /* Actions: */
+    pointer-events: none;
+}
+::deep.create-box .map-canvas-more-icon-left,
+::deep.create-box .map-canvas-more-icon-right {
+    /* Position: */
+    position: absolute;
+    top: 74px;
+    /* Content: */
+    font-size: 90px;
+    /* Style: */
+    opacity: 0.4;
+    color: var(--theme-text-color);
+}
+::deep.create-box .map-canvas-more-icon-left *, ::deep.create-box .map-canvas-more-icon-right * { fill: var(--theme-text-color); }
+::deep.create-box .map-canvas-more-icon-left { left: var(--map-canvas-icon-position); }
+::deep.create-box .map-canvas-more-icon-right { right: var(--map-canvas-icon-position); }
+
+::deep.create-box .load-area.load-area-canvas {
+    /* Animations: */
+    transition: opacity calc(var(--theme-transition-fast) * 1ms) ease;
+}
+::deep.create-box .load-area.load-area-canvas:focus-visible {
+    /* Style: */
+    opacity: 0.85;
+}
+
+::deep.create-box .map-canvas {
+    /* Variables: */
+    --canvas-prefer-border-width: min(2vw, 8px);
+    --canvas-prefer-border-radius: min(3vw, 12px);
+    --canvas-box-shadow-size: var(--theme-create-box-canvas-box-shadow-size);
+    --canvas-box-shadow-opacity: var(--theme-create-box-canvas-box-shadow-opacity);
+}
+
+::deep.create-box .map-canvas .canvas-content {
+    /* Display: */
+    gap: 2px;
+}
+::deep.create-box .map-canvas .canvas-content .paragraph {
+    /* Style: */
+    color: var(--canvas-foreground);
     /* Content: */
     text-align: center;
+}
+::deep.create-box .map-canvas .canvas-content .paragraph.error-title {
+    /* Variables: */
+    --max-lines: 1;
+    /* Display: */
+    flex-shrink: 0;
+    /* Content: */
+    font-weight: 600;
+    /* Size: */
+    margin-bottom: 1.5vw;
+}
+::deep.create-box .map-canvas .canvas-content .paragraph.error-description {
+    /* Variables: */
+    --max-lines: 2;
+    /* Display: */
+    display: none;
+    flex-shrink: 0;
+    /* Size: */
+    margin-bottom: 9px;
+}
+
+/* Styles > DisplayMode ---------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .form-label.display-mode.variant.size {
+    /* Size: */
+    width: 100%;
+    padding-top: 12px;
+}
+::deep.create-box .form-label.display-mode.variant.size .form-label-element {
+    /* Size: */
+    padding-bottom: 13px;
+}
+::deep.create-box .form-label.display-mode.variant.size .form-label-text {
+    /* Content: */
+    font-size: 16px;
+}
+::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
+    /* Display: */
+    align-items: stretch;
+    flex-wrap: wrap;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+    /* Display: */
+    order: 1;
+    /* Size: */
+    width: 100%;
+    height: 60px;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .radio-button-element {
+    /* Size: */
+    padding-left: 0;
+    padding-right: 0;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .radio-button-content {
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+    /* Display: */
+    display: none;
+    /* Base: */
+    font-size: 0.75px;
+}
+::deep.create-box .form-label.display-mode.variant.size .option-each-own-svg {
+    /* Size: */
+    width: 80em;
+    height: 40em;
+}
+::deep.create-box .form-label.display-mode.variant.size .option-one-screen-svg {
+    /* Size: */
+    width: 60em;
+    height: 36em;
+    margin-bottom: 4em;
+    margin-left: -1em;
+}
+::deep.create-box .form-label.display-mode.variant.size .option-presentation-svg {
+    /* Size: */
+    width: 60em;
+    height: 40em;
+    margin-top: 2em;
+    margin-bottom: 3em;
+}
+
+::deep.create-box .form-label.display-mode.variant.size .option-label {
+    /* Size: */
+    margin: 0;
+    /* Content: */
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+::deep.create-box .form-label.display-mode.variant.size .option-description {
+    /* Size: */
+    padding-bottom: 2px;
+    margin: 0;
+    /* Content: */
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Styles > GameMode ------------------------------------------------------------------------------------------------------------------- */
+::deep.create-box .form-label.game-mode.variant.size {
+    /* Size: */
+    width: 100%;
+    max-width: 100%;
+    padding-top: 20px;
+}
+::deep.create-box .form-label.game-mode.variant.size .form-label-element {
+    /* Size: */
+    padding-bottom: 13px;
+}
+::deep.create-box .form-label.game-mode.variant.size .form-label-text {
+    /* Content: */
+    font-size: 16px;
+}
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-group {
+    /* Display: */
+    align-items: stretch;
+    flex-direction: column;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
+    /* Size: */
+    height: 60px;
+}
+::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-button-content {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+}
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .option-mayhem-svg {
+    /* Size: */
+    width: 40px;
+    height: 40px;
+    margin: -4px 6px -4px 0;
+}
+::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
+    /* Size: */
+    width: 40px;
+    height: 36px;
+    margin: -3px -4px -2px -10px;
+}
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label {
+    /* Display: */
+    display: flex;
+    align-items: center;
+    /* Size: */
+    margin-bottom: 3px;
+    padding-bottom: 0;
+    /* Content: */
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+::deep.create-box .form-label.game-mode.variant.size .radio-button .option-description {
+    /* Display: */
+    display: none;
+    /* Size: */
+    padding-bottom: 2px;
+    margin: 0;
+    /* Content: */
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 /* Styles > Error page ----------------------------------------------------------------------------------------------------------------- */
@@ -68,10 +675,389 @@
     text-align: center;
 }
 
+::deep.create-box-error-page .web-link.connect-link.variant.size {
+    /* Size: */
+    margin: 8px 0 6px;
+    /* Content: */
+    text-align: center;
+}
+
+@media (min-width: 320px) {
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .map-canvas .canvas-content .paragraph.error-title {
+        /* Size: */
+        margin-bottom: 0;
+    }
+    ::deep.create-box .map-canvas .canvas-content .paragraph.error-description {
+        /* Display: */
+        display: block;
+        display: -webkit-box;
+    }
+
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
+        /* Display: */
+        align-items: flex-start;
+        /* Size: */
+        min-width: 120px;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+        /* Display: */
+        display: block;
+    }
+    
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
+        /* Size: */
+        height: 78px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label {
+        /* Size: */
+        padding-bottom: 4px;
+    }
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-description {
+        /* Display: */
+        display: flex;
+    }
+}
+
+@media (min-width: 375px) {
+    /* Media > Styles > Identifiers ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-identifiers {
+        /* Display: */
+        gap: 22px;
+    }
+    
+    ::deep.create-box .settings-icon {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.create-box .image.logo-image {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.create-box .custom-code {
+        /* Size: */
+        padding-left: 136px;
+    }
+
+    ::deep.create-box .field.checkbox.custom-code-checkbox.variant.size > .form-error {
+        /* Size: */
+        width: calc(100% + 28px);
+        height: 86px;
+        left: -14px;
+        top: -9px;
+    }
+
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-options {
+        /* Size: */
+        padding-top: 12px;
+    }
+    
+    ::deep.create-box .text.paragraph.map-title-mobile {
+        /* Content: */
+        font-size: 20px;
+        /* Size: */
+        padding-bottom: 6px;
+    }
+}
+
+@media (min-width: 440px) {
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .gameplay-options {
+        /* Display: */
+        flex-direction: row;
+        /* Size: */
+        padding-top: 14px;
+    }
+
+    ::deep.create-box .form-label.anonymous-players-label {
+        /* Size: */
+        width: 50%;
+    }
+
+    ::deep.create-box .game-additional-options {
+        /* Display: */
+        order: 0;
+    }
+
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size {
+        /* Size: */
+        padding-top: 20px;
+    }
+}
+
+@media (min-width: 460px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Display: */
+        order: 2;
+        /* Size: */
+        width: calc(50% - 6px);
+        height: 108px;
+    }    
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode.radio-display-mode-one-screen {
+        /* Display: */
+        order: 1;
+        /* Size: */
+        width: 100%;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-button-content {
+        /* Display: */
+        flex-direction: column;
+        gap: 0;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
+        /* Display: */
+        align-items: center;
+        /* Size: */
+        min-width: auto;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+        /* Base: */
+        font-size: 1px;
+    }
+}
+
+@media (min-width: 500px) {
+    /* Media > Styles > Identifiers ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .custom-code {
+        /* Size: */
+        padding-right: 136px;
+    }
+
+    ::deep.create-box .qr-code-icon {
+        /* Display: */
+        display: block;
+    }
+}
+
+@media (min-width: 580px) {
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .map-canvas-area {
+        width: var(--map-canvas-large-mobile-width);
+    }
+
+    ::deep.create-box .map-canvas-icons {
+        /* Display: */
+        display: flex;
+    }
+}
+
+@media (min-width: 600px) {
+    /* Media > Styles > Header --------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .create-form-header-options {
+        /* Size: */
+        margin-top: -36px;
+    }
+
+    ::deep.create-box .text.paragraph.map-title-mobile {
+        /* Size: */
+        padding-bottom: 8px;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size {
+        /* Size: */
+        max-width: 500px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 680px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        flex-wrap: nowrap;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Display: */
+        order: 1;
+        /* Size: */
+        width: 100%;
+    }
+}
+
+@media (min-width: 700px) {
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-options {
+        /* Size: */
+        max-width: var(--game-options-tablet-width);
+        margin-right: auto;
+    }
+
+    ::deep.create-box .map-canvas-area {
+        width: 100%;
+    }
+
+    ::deep.create-box .map-canvas-icons {
+        /* Display: */
+        display: none;
+    }
+
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size {
+        /* Position: */
+        position: absolute;
+        right: var(--box-padding);
+        /* Size: */
+        width: calc(100% - var(--game-options-tablet-width) - 36px - 2 * var(--box-padding));
+        margin-top: 94px;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        flex-direction: column;
+    }
+}
+
 @media (min-width: 768px) {
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.create-box {
         /* Size: */
         padding: 30px 0;
+    }
+
+    /* Media > Styles > Header --------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .create-form-header-options {
+        /* Size: */
+        margin-bottom: -6px;
+    }
+
+    /* Media > Styles > Identifiers ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-identifiers {
+        /* Size: */
+        margin-top: -10px;
+    }
+}
+
+@media (min-width: 800px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.create-box .box.create-form {
+        /* Size: */
+        width: auto;
+    }
+
+    /* Media > Styles > Identifiers ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-identifiers {
+        /* Display: */
+        flex-direction: row;
+        gap: 20px;
+        /* Size: */
+        padding-left: 136px;
+    }
+
+    ::deep.create-box .settings-icon {
+        /* Position: */
+        top: 30px;
+    }
+
+    ::deep.create-box .image.logo-image {
+        /* Position: */
+        top: 42px;
+    }
+
+    ::deep.create-box .qr-code-icon {
+        /* Display: */
+        display: none;
+    }
+
+    ::deep.create-box .custom-code {
+        /* Size: */
+        width: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    ::deep.create-box .field.checkbox.custom-code-checkbox.variant.size > .form-error {
+        /* Size: */
+        width: calc(100% + 38px);
+        height: 88px;
+        left: -19px;
+        top: -10px;
+    }
+
+    ::deep.create-box .field.input.custom-code-input.variant.size {
+        /* Size: */
+        width: 116px;
+    }
+
+    /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .game-options {
+        /* Display: */
+        flex-direction: row;
+        /* Size: */
+        max-width: 100%;
+        padding-top: 30px;
+    }
+
+    ::deep.create-box .game-options-area {
+        /* Display: */
+        order: 1;
+        /* Size: */
+        width: 358px;
+        padding-right: 48px;
+    }
+
+    ::deep.create-box .text.paragraph.map-title-mobile {
+        /* Display: */
+        display: none;
+    }
+
+    ::deep.create-box .text.paragraph.map-title {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.create-box .create-box-map-icon {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.create-box .game-additional-options {
+        /* Size: */
+        padding-right: 0;
+    }
+
+    ::deep.create-box .form-label.anonymous-players-label {
+        /* Size: */
+        width: 156px;
+    }
+
+    ::deep.create-box .map-canvas-area {
+        /* Size: */
+        width: 328px;
+        padding-bottom: 0;
+        /* Animations: */
+        animation: create-box-map-floating 4s ease-in-out infinite;
+    }
+
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size {
+        /* Position: */
+        position: relative;
+        margin-top: 0;
+        right: auto;
+        /* Size: */
+        width: 100%;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        flex-direction: row;
     }
 }

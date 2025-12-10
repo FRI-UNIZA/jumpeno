@@ -28,11 +28,13 @@
     --lobby-box-shadow: var(--theme-lobby-box-shadow);
     /* Game box: */
     --game-box-height: calc(var(--lobby-height) * 0.174);
-    --game-box-padding-vertical: calc(var(--lobby-height) * 0.046);
+    --game-box-padding-vertical: calc(var(--lobby-height) * 0.04);
     --game-box-inside-height: calc(var(--game-box-height) - 2 * var(--game-box-padding-vertical));
-    --game-name-height: calc(var(--game-box-inside-height) * 0.5);
-    --game-gap-height: calc(var(--game-box-inside-height) * 0.22);
-    --game-info-height: calc(var(--game-box-inside-height) * 0.28);
+    --game-name-height: calc(var(--game-box-inside-height) * 0.48);
+    --game-gap-height: calc(var(--game-box-inside-height) * 0.26);
+    --game-delete-button-size: var(--game-name-height);
+    --game-delete-button-gap: calc(var(--game-name-height) * 0.28);
+    --game-info-height: calc(var(--game-box-inside-height) * 0.26);
     /* Round line: */
     --round-line-height: calc(var(--lobby-height) * 0.055) + var(--lobby-gap);
     --round-line-inside-height: calc(var(--round-line-height) - var(--lobby-gap));
@@ -111,11 +113,35 @@
     padding: var(--game-box-padding-vertical) var(--lobby-box-padding);
 }
 
-::deep.lobby .lobby-text.game-name {
+/* Game box > Game name ---------------------------------------------------------------------------------------------------------------- */
+::deep.lobby .game-name-line {
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     /* Size: */
+    width: 100%;
+    padding-bottom: var(--game-gap-height);
+}
+
+::deep.lobby.host .game-name-line::before {
+    /* Display: */
+    display: flex;
+    /* Size: */
+    width: calc(var(--game-delete-button-size) + var(--game-delete-button-gap));
+    /* Content: */
+    content: "";
+}
+
+::deep.lobby .lobby-text.game-name {
+    /* Display: */
+    flex-shrink: 0;
+    /* Size: */
+    width: auto;
+    max-width: calc(100% - var(--game-delete-button-gap) - var(--game-delete-button-size));
     padding-top: calc(var(--game-gap-height) * 2);
     padding-bottom: calc(var(--game-gap-height) * 2);
-    margin: calc(var(--game-gap-height) * -2) 0 calc(var(--game-gap-height) * -1);
+    margin: calc(var(--game-gap-height) * -2) 0;
     /* Content: */
     font-size: var(--game-name-height);
     font-weight: 600;
@@ -123,21 +149,43 @@
     text-overflow: ellipsis;
 }
 
+::deep.lobby .game-button.variant.game-delete-button {
+    /* Variables: */
+    --button-width: var(--game-delete-button-size);
+    --button-height: var(--game-delete-button-size);
+    /* Size: */
+    padding: 0;
+    margin-top: calc(var(--game-name-height) * -0.05);
+    margin-left: var(--game-delete-button-gap);
+}
+
+::deep.lobby .game-button.variant.game-delete-button .game-delete-button-icon {
+    /* Position: */
+    position: absolute;
+    /* Content: */
+    font-size: calc(var(--button-width) * 0.6189);
+}
+
+/* Game box > Game info ---------------------------------------------------------------------------------------------------------------- */
 ::deep.lobby .game-info {
     /* Display: */
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: "spectators code buttons";
     align-items: center;
+    gap: calc(var(--game-info-height) * 0.8);
     /* Size: */
     width: 100%;
     height: var(--game-info-height);
 }
 
 ::deep.lobby .lobby-text.game-code {
-    /* Size: */
-    width: 50%;
+    /* Display: */
+    grid-area: code;
+    align-self: start;
     /* Content: */
     font-size: var(--game-info-height);
+    text-align: center;
 }
 
 ::deep.lobby .lobby-text.game-code *:not(b) {
@@ -152,17 +200,17 @@
 
 ::deep.lobby .lobby-text.spectators {
     /* Display: */
+    grid-area: spectators;
     display: inline-flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     gap: calc(var(--game-info-height) * 0.4);
     /* Size: */
-    width: 50%;
     padding: 0;
     /* Content: */
     font-size: var(--game-info-height);
     font-weight: 600;
-    text-align: right;
+    overflow: hidden;
 }
 
 ::deep.lobby .watch-icon {
@@ -170,32 +218,54 @@
     font-size: calc(var(--game-info-height) * 1.5);
 }
 
-/* Round line -------------------------------------------------------------------------------------------------------------------------- */
-@keyframes lobby-game-state-animation {
-    0% { opacity: 0.4; }
-    50% { opacity: 1; }
-    100% { opacity: 0.4; }
+::deep.lobby .lobby-text.spectators .spectator-count {
+    /* Content: */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+::deep.lobby .game-info-buttons {
+    /* Display: */
+    grid-area: buttons;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: calc(var(--game-info-height) * 0.7);
+}
+
+::deep.lobby .game-text-button.game-info-button {
+    /* Variables: */
+    --font-size: calc(var(--game-info-height) * 1.8);
+}
+
+::deep.lobby .game-text-button.game-chat-button,
+::deep.lobby .game-text-button.game-chat-button *:not(.game-chat-button-thumb) {
+    /* Style: */
+    border-radius: 100vh 100vh 100vh 0;
+}
+
+/* Round line -------------------------------------------------------------------------------------------------------------------------- */
 ::deep.lobby .round-line {
     /* Position: */
     position: relative;
     /* Display: */
-    display: flex;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: "round state buttons";
     align-items: center;
+    column-gap: calc(var(--round-line-inside-height) * 0.5);
     /* Size: */
     width: 100%;
+    padding: 0 var(--lobby-box-padding);
     margin: calc(var(--lobby-gap) * -0.5) 0;
     height: var(--round-line-inside-height);
 }
 
 ::deep.lobby .game-round {
-    /* Position: */
-    position: absolute;
+    /* Display: */
+    grid-area: round;
     /* Size: */
     width: auto;
-    padding-left: var(--lobby-box-padding);
     margin: 0;
     /* Content: */
     font-size: calc(var(--round-line-inside-height) * 0.5);
@@ -209,23 +279,70 @@
     font-weight: 700;
 }
 
-::deep.lobby .game-state {
-    /* Size: */
-    width: 100%;
-    margin: 0;
-    /* Style: */
-    color: var(--theme-game-state-color);
-    text-shadow: var(--theme-game-state-text-shadow);
+::deep.lobby .game-state.lobby-game-state {
     /* Content: */
-    font-size: calc(var(--round-line-inside-height) * 0.66);
-    line-height: 1;
-    font-weight: 700;
-    letter-spacing: calc(var(--lobby-width) * 0.0025);
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-align: center;
+    --font-size: calc(var(--round-line-inside-height) * 0.66);
+}
+
+::deep.lobby .game-round-buttons {
+    /* Display: */
+    grid-area: buttons;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* Size: */
+    min-height: var(--round-line-inside-height);
+}
+
+@keyframes lobby-action-button-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+::deep.lobby .game-button.variant.game-action-button {
+    /* Variables: */
+    --button-width: var(--round-line-inside-height);
+    --button-height: var(--round-line-inside-height);
+    /* Size: */
+    padding: 0;
     /* Animations: */
-    animation: lobby-game-state-animation 1.5s infinite ease-in-out;
+    animation: lobby-action-button-animation 2.4s linear infinite;
+}
+
+::deep.lobby .game-button.variant.game-action-button .game-action-button-thumb {
+    /* Variables: */
+    --width: 50px;
+    --height: 50px;
+}
+
+::deep.lobby .game-button.variant.game-action-button.game-start-button .game-start-button-icon {
+    /* Size: */
+    margin-left: calc(var(--round-line-inside-height) * 0.12);
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.75);
+    /* Transform: */
+    transform: scaleX(1.4);
+}
+
+::deep.lobby .game-button.variant.game-action-button.lobby-hide-button .lobby-hide-button-icon {
+    /* Size: */
+    margin-top: calc(var(--round-line-inside-height) * -0.03);
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.7);
+}
+
+::deep.lobby .game-button.variant.game-action-button.player-ready-button .player-ready-button-icon {
+    /* Size: */
+    margin-top: calc(var(--round-line-inside-height) * 0.04);
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.7);
+}
+
+::deep.game-page .lobby .game-waiting {
+    /* Variables: */
+    --width: calc(var(--round-line-inside-height) * 1.3);
+    --height: var(--round-line-inside-height);
 }
 
 /* Players box ------------------------------------------------------------------------------------------------------------------------- */
@@ -238,6 +355,8 @@
 }
 
 ::deep.lobby .player-titles {
+    /* Position: */
+    z-index: 2;
     /* Display: */
     display: flex;
     justify-content: space-between;
@@ -248,11 +367,43 @@
 }
 
 ::deep.lobby .lobby-text.player-title {
+    /* Position: */
+    position: relative;
     /* Size: */
     width: auto;
     /* Content: */
     font-size: var(--player-title-inside-height);
     font-weight: 500;
+}
+
+::deep.lobby .player-settings-button {
+    /* Position: */
+    position: absolute;
+    top: calc(var(--player-title-inside-height) * 0.85);
+    right: calc(var(--player-title-inside-height) * 2.9);
+    /* Size: */
+    margin: -1em calc(var(--player-title-inside-height) * 0.2) -1em;
+    /* Content: */
+    font-size: calc(var(--player-title-inside-height) * 1.17);
+    /* Style: */
+    color: var(--theme-lobby-player-settings-color);
+    /* Transform: */
+    transform: translateY(calc(var(--player-title-inside-height) * 0.2));
+}
+::deep.lobby .player-settings-button, ::deep.lobby .player-settings-button *:not(.player-settings-button-thumb) {
+    /* Style: */
+    border-radius: calc(var(--player-title-inside-height) * 2);
+}
+::deep.lobby .player-settings-button .player-settings-button-icon {
+    /* Transform: */
+    transform: rotateZ(30deg) translateZ(0);
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-semi-fast) * 1ms) ease;
+    will-change: transform;
+}
+::deep.lobby.player-settings-open .player-settings-button .player-settings-button-icon {
+    /* Transform: */
+    transform: rotateZ(120deg) translateZ(0);
 }
 
 ::deep.lobby .player-table {
@@ -299,11 +450,16 @@
     height: calc(var(--player-line-height) * 0.24);
     margin-right: calc(var(--player-line-height) * -0.15);
     /* Style: */
-    background: var(--theme-status-success-neon-color);
+    background: var(--theme-status-warning-neon-color);
     border-radius: 50%;
     box-shadow: var(--theme-lobby-presence-box-shadow);
     /* Content: */
     font-size: var(--player-line-height);
+}
+
+::deep.lobby .player-line.connected.ready .player-presence {
+    /* Style: */
+    background: var(--theme-status-success-neon-color);
 }
 
 ::deep.lobby .player-line.disconnected .player-presence {
@@ -333,6 +489,23 @@
     width: 100%;
     /* Style: */
     border-bottom: 1px dashed var(--theme-lobby-dash-color);
+}
+
+::deep.lobby .player-action-buttons {
+    /* Display: */
+    display: flex;
+    gap: calc(var(--player-line-height) * 0.16);
+    /* Size: */
+    margin-right: calc(var(--player-line-height) * -0.16);
+}
+::deep.lobby .game-button.player-action-button {
+    /* Size: */
+    --button-width: calc(var(--player-line-height) * 0.65);
+    --button-height: calc(var(--player-line-height) * 0.65);
+}
+::deep.lobby .game-button.player-action-button.player-kick-button .player-kick-button-icon {
+    /* Content: */
+    font-size: calc(var(--player-line-height) * 0.45);
 }
 
 ::deep.lobby .player-score {
@@ -396,7 +569,7 @@
     text-align: center;
 }
 
-@media (max-width: 1000px) or (max-height: 780px) {
+@media (max-width: 1000.98px) or (max-height: 780.98px) {
     /* Media [mobile view] > Variables [aspect ratio]----------------------------------------------------------------------------------- */
     ::deep.lobby {
         --lobby-width: min(90vw, calc(100vw - 2px * var(--theme-size-container-padding-mobile)));
@@ -420,17 +593,13 @@
     ::deep.lobby {
         /* Size: */
         height: auto;
+        max-width: 1000px;
         padding: var(--lobby-padding) 0;
     }
 
     ::deep.lobby .lobby-panel.secondary {
         /* Display: */
         display: none;
-    }
-    
-    ::deep.lobby .lobby-text.game-name {
-        /* Content: */
-        text-align: center;
     }
 
     /* Media [mobile view] > Players box ----------------------------------------------------------------------------------------------- */
@@ -458,6 +627,21 @@
     }
 }
 
+@media (max-width: 385.98px) {
+    /* Media > Game box ---------------------------------------------------------------------------------------------------------------- */
+    ::deep.lobby .game-info {
+        /* Grid: */
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+            "code code code"
+            "spectators spectators buttons"
+        ;
+        /* Size: */
+        height: auto;
+        margin-bottom: calc(var(--game-info-height) * -0.5);
+    }
+}
+
 @media (max-width: 379.98px) {
     /* Media [round state shift on small mobile] > Round line -------------------------------------------------------------------------- */
     ::deep.lobby .game-round {
@@ -466,8 +650,24 @@
     }
 }
 
+@media (max-width: 374.98px) {
+    /* Media > Round line -------------------------------------------------------------------------------------------------------------- */
+    ::deep.lobby .round-line {
+        /* Display: */
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+            "state state state"
+            "round round buttons"
+        ;
+        row-gap: calc(var(--round-line-inside-height) * 0.16);
+        /* Size: */
+        height: auto;
+    }
+}
+
 @media (max-width: 269.98px) or (max-height: 269.98px) {
     /* Media [device small] > General styles ------------------------------------------------------------------------------------------- */
     ::deep.lobby > * { display: none !important; }
-    ::deep.lobby .small-device { display: flex !important; }
+    ::deep.lobby .game-info-box.small-device { display: flex !important; }
 }

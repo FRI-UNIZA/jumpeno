@@ -66,22 +66,14 @@
     --modal-padding-content: 0;
 }
 
-::deep.modal.select-options-modal .modal-dialog {
-    /* Style: */
-    background: transparent;
-}
-
-::deep.modal.select-options-modal .modal-content {
-    /* Style: */
-    background: transparent;
-}
-
 ::deep.modal.select-options-modal .select-options {
     /* Display: */
     display: flex;
     flex-direction: column;
     /* Size: */
     width: 100%;
+    /* Style: */
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
 }
 
 ::deep.modal.select-options-modal .select-option {
@@ -168,7 +160,9 @@
     margin: 0;
     /* Style: */
     color: var(--theme-text-color);
+    background: var(--theme-surface-background);
     border: none;
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
     outline: none;
     /* Content: */
     font-family: var(--theme-font-primary);

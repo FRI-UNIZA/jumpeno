@@ -19,7 +19,7 @@ public class RadioOption<T> : FormField<RadioOptionViewModel<T>> {
     public override FORM_ALIGN? ErrorAlign { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    protected bool IsSelected => Radio.ViewModel.Value == ViewModel;
+    protected bool IsSelected => Radio.ViewModel.Value?.DTO == ViewModel.DTO;
     protected virtual bool CustomAfterChange => false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------

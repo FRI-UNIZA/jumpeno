@@ -22,6 +22,21 @@ public partial class ConfirmModal {
     public RenderFragment? TextCancel { get; set; }
     [Parameter]
     public RenderFragment? TextOK { get; set; }
+    // Events:
+    [Parameter]
+    public EventCallback<ConfirmModal> OnBeforeOpen { get; set; } = EventCallback<ConfirmModal>.Empty;
+    [Parameter]
+    public EventCallback<ConfirmModal> OnAfterOpen { get; set; } = EventCallback<ConfirmModal>.Empty;
+    [Parameter]
+    public EventCallback<ConfirmModal> OnBeforeClose { get; set; } = EventCallback<ConfirmModal>.Empty;
+    [Parameter]
+    public EventCallback<ConfirmModal> OnAfterClose { get; set; } = EventCallback<ConfirmModal>.Empty;
+
+    // Events -----------------------------------------------------------------------------------------------------------------------------
+    public virtual async Task CallOnBeforeOpen() => await OnBeforeOpen.InvokeAsync(this);
+    public virtual async Task CallOnAfterOpen() => await OnAfterOpen.InvokeAsync(this);
+    public virtual async Task CallOnBeforeClose() => await OnBeforeClose.InvokeAsync(this);
+    public virtual async Task CallOnAfterClose() => await OnAfterClose.InvokeAsync(this);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;

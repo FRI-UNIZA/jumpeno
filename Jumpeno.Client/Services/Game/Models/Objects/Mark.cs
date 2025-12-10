@@ -6,6 +6,7 @@ public static class Mark {
 
     public const int TEXT_SIZE = 14; // px
     public const int MIN_TEXT_SIZE = 6; // px
+    public const int TEXT_WEIGHT = 500;
 
     public const int MARK_BOTTOM_OFFSET = 10; // px
     public const int MARK_TOP_OFFSET = 10; // px
@@ -37,7 +38,7 @@ public static class Mark {
         var pointRight = game.Map.ToScreen(new(point.X + MARK_HEIGHT, point.Y + MARK_HEIGHT));
         point = game.Map.ToScreen(point);
         // 3) Render mark:
-        await ctx.SetFillStyleAsync($"rgb({game.Map.Foreground})");
+        await ctx.SetFillStyleAsync($"{game.Map.Foreground}");
         await ctx.BeginPathAsync();
         await ctx.MoveToAsync(point.X, point.Y);
         await ctx.LineToAsync(pointLeft.X, pointLeft.Y);
@@ -49,12 +50,12 @@ public static class Mark {
     public static async Task<bool> RenderName(Canvas2DContext ctx, (Game Game, Player Player, string Font) @params) {
         // 1) Parameters:
         var (game, player, font) = @params;
-        var size = Math.Max(game.Map.ToScreenHeight(TEXT_SIZE), MIN_TEXT_SIZE);
+        var size = Math.Max(game.Map.ToScreenHeight(TEXT_SIZE), MIN_TEXT_SIZE * game.Map.DPR);
         // 2) Compute mark point:
         var point = game.Map.ToScreen(CalculateMarkPoint(player.Body));
         // 3) Render name:
-        await ctx.SetFontAsync($"{size}px {font}");
-        await ctx.SetFillStyleAsync($"rgb({game.Map.Foreground})");
+        await ctx.SetFontAsync($"{TEXT_WEIGHT} {size}px {font}");
+        await ctx.SetFillStyleAsync($"{game.Map.Foreground}");
         await ctx.SetTextBaselineAsync(TextBaseline.Alphabetic);
         await ctx.SetTextAlignAsync(TextAlign.Center);
         await ctx.FillTextAsync(player.User.Name, point.X, point.Y);

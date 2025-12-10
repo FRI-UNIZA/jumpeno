@@ -1,25 +1,50 @@
-/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
 ::deep.button-component.button {
     /* Style: */
-    border-radius: 100px;
+    --button-border-radius: max(100vh, 1000px);
     /* Animations: */
-    transition-property: color, background, box-shadow;
-    transition-duration: calc(var(--theme-transition-fast) * 1ms);
-    transition-timing-function: ease;
+    --button-transition-property: color, background, box-shadow;
+    --button-transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    --button-transition-timing-function: ease;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.button-component.button {
+    /* Position: */
+    z-index: 0;
+    /* Style: */
+    border-radius: var(--button-border-radius);
+    /* Animations: */
+    transition-property: var(--button-transition-property);
+    transition-duration: var(--button-transition-duration);
+    transition-timing-function: var(--button-transition-timing-function);
 }
 ::deep.button-component.button .button-text {
     /* Content: */
     font-weight: 500;
 }
 
+/* Styles [icon-only] ------------------------------------------------------------------------------------------------------------------ */
+::deep.button-component.button.size.icon-only {
+    /* Size: */
+    width: var(--button-size);
+    padding: 0;
+}
+
+::deep.button-component.button.icon-only .button-content {
+    /* Position: */
+    position: absolute;
+}
+
 /* Size [size-s] ----------------------------------------------------------------------------------------------------------------------- */
 ::deep.button-component.button.size-s {
     /* Variables: */
+    --button-size: 41px;
     --base-size: 0.8px;
     --button-icon-size: 18px;
     --button-gap: 7px;
     /* Size: */
-    height: 41px;
+    height: var(--button-size);
     padding: 9px 22px;
 }
 ::deep.button-component.button.size-s .button-text {
@@ -32,35 +57,37 @@
 /* Size [size-m] ----------------------------------------------------------------------------------------------------------------------- */
 ::deep.button-component.button.size-m {
     /* Variables: */
+    --button-size: 52px;
     --base-size: 1px;
     --button-icon-size: 22px;
     --button-gap: 9px;
     /* Size: */
-    height: 52px;
+    height: var(--button-size);
     padding: 13px 28px;
 }
 ::deep.button-component.button.size-m .button-text {
-    /* Content: */
-    font-size: 16px;
     /* Size: */
     margin-top: 1px;
+    /* Content: */
+    font-size: 16px;
 }
 
 /* Size [size-l] ----------------------------------------------------------------------------------------------------------------------- */
 ::deep.button-component.button.size-l {
     /* Variables: */
+    --button-size: 64px;
     --base-size: 1.2px;
     --button-icon-size: 26px;
     --button-gap: 11px;
     /* Size: */
-    height: 64px;
+    height: var(--button-size);
     padding: 17px 34px;
 }
 ::deep.button-component.button.size-l .button-text {
-    /* Content: */
-    font-size: 19px;
     /* Size: */
     margin-top: 1px;
+    /* Content: */
+    font-size: 19px;
 }
 
 /* Variant [primary] ------------------------------------------------------------------------------------------------------------------- */
@@ -199,6 +226,70 @@
     background: var(--theme-button-disabled-background);
 }
 ::deep.button-component.button.variant-quaternary.disabled:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-disabled-box-shadow);
+}
+
+/* Variant [success] ------------------------------------------------------------------------------------------------------------------- */
+::deep.button-component.button.variant-success {
+    /* Style: */
+    color: var(--theme-button-success-color);
+    background: var(--theme-button-success-tint-color);
+}
+::deep.button-component.button.variant-success:not(.no-shadow) {
+    /* Style: */
+    box-shadow: var(--theme-button-success-box-shadow);
+}
+::deep.button-component.button.variant-success:not(.disabled)::before,
+::deep.button-component.button.variant-success:not(.disabled)::after {
+    /* Position: */
+    position: absolute;
+    z-index: -1;
+    /* Display: */
+    display: flex;
+    /* Size: */
+    inset: 0;
+    /* Style: */
+    background: var(--theme-button-success-background);
+    border-radius: var(--button-border-radius);
+    /* Content: */
+    content: "";
+}
+::deep.button-component.button.variant-success:not(.disabled)::after {
+    /* Style: */
+    background: var(--theme-button-success-highlight-background);
+    opacity: 0;
+    /* Transform: */
+    transform: translateZ(0);
+    /* Animations: */
+    transition: opacity var(--button-transition-duration) var(--button-transition-timing-function);
+    will-change: opacity;
+}
+
+/* Variant [success][highlight] */
+::deep.button-component.button.variant-success:not(.disabled):hover,
+::deep.button-component.button.variant-success:not(.disabled):focus-visible {
+    /* Style: */
+    color: var(--theme-button-success-highlight-color);
+    background: var(--theme-button-success-highlight-tint-color);
+}
+::deep.button-component.button.variant-success:not(.disabled):not(.no-shadow):hover,
+::deep.button-component.button.variant-success:not(.disabled):not(.no-shadow):focus-visible {
+    /* Style: */
+    box-shadow: var(--theme-button-success-highlight-box-shadow);
+}
+::deep.button-component.button.variant-success:not(.disabled):hover::after {
+    /* Style: */
+    opacity: 1;
+}
+
+/* Variant [success][disabled] */
+::deep.button-component.button.variant-success.disabled {
+    /* Style: */
+    color: var(--theme-button-disabled-color);
+    background: var(--theme-button-disabled-background);
+}
+::deep.button-component.button.variant-success.disabled:not(.no-shadow) {
     /* Style: */
     box-shadow: var(--theme-button-disabled-box-shadow);
 }
