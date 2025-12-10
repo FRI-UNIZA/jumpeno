@@ -1,8 +1,9 @@
 namespace Jumpeno.Client.ViewModels;
 
-public class ChatViewModel(string code, Func<GameChat?> chat, Action notify)
+public class ChatViewModel(ulong id, string code, Func<GameChat?> chat, Action notify)
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
+    private readonly ulong ID = id;
     private readonly string Code = code;
 
     // GameChat ---------------------------------------------------------------------------------------------------------------------------
@@ -28,6 +29,6 @@ public class ChatViewModel(string code, Func<GameChat?> chat, Action notify)
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public async Task Open() => await UseChat(chat => chat.Open());
-    public async Task Close() => await UseChat(chat => chat.Close());
+    public Task Open() => UseChat(chat => chat.Open());
+    public Task Close() => UseChat(chat => chat.Close());
 }

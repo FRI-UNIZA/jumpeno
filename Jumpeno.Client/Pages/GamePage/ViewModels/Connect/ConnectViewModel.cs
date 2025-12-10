@@ -131,8 +131,11 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         if (IsConnected) throw EXCEPTION.DEFAULT;
         // 1) Create data URL:
         var q = new QueryParams();
-        q.Set(GAME_HUB.DTO_TYPE, type);
-        q.Set(GAME_HUB.DTO, JsonSerializer.Serialize(dto));
+            // 1.1) Add meta:
+            q.Set(HEADER.APP_VERSION, AppSettings.Version);
+            // 1.2) Add DTO:
+            q.Set(GAME_HUB.DTO_TYPE, type);
+            q.Set(GAME_HUB.DTO, JsonSerializer.Serialize(dto));
         var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.URL), q);
         // 2) Create HUB:
         HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
@@ -141,6 +144,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         // 3) Add events:
         HubConnection.On<Game>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
         HubConnection.On<GameActionResponseUpdate>(GAME_HUB.GAME_ACTION_RESPONSE_UPDATE, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GAME_HUB.PLAYER_KICK_RESPONSE_UPDATE, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GAME_HUB.PLAYER_READY_RESPONSE_UPDATE, GameResponse);
         HubConnection.On<RoundUpdate>(GAME_HUB.ROUND_UPDATE, GameUpdate);
         HubConnection.On<GamePlayUpdate>(GAME_HUB.GAME_PLAY_UPDATE, GameUpdate);
         HubConnection.On<PlayerUpdate>(GAME_HUB.PLAYER_UPDATE, GameUpdate);
@@ -165,7 +170,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 // 2) Authorization:
                 Authorization.OnSuccess();
                 // 3) Get player:
-                Player? player = game.GetActivePlayer(HubConnection.ConnectionId);
+                Player? player = game.GetValidPlayerByConnectionID(HubConnection.ConnectionId);
                 if (Auth.IsAnonymousUser && player != null) Auth.User.Skin = player.User.Skin;
                 // 4) Create ViewModel:
                 var qrCode = QRCode.SVG($"{URL.BaseUrl()}{I18N.Link<GamePage>([game.Code])}");

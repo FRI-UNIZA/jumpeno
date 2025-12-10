@@ -15,7 +15,7 @@
                     <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
                     <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
                 </div>
-                <Box Surface="BOX_SURFACE.PRIMARY_GLASS" Class="password-strength-box-mobile">
+                <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT" Class="password-strength-box-mobile">
                     <PasswordStrength Password="@Password" HideLock />
                 </Box>
                 <Button Size="BUTTON_SIZE.M" OnClick="Register" Class="button-register">
@@ -33,7 +33,7 @@
                     </WebLink>
                 </Paragraph>
             </div>
-            <Box Surface="BOX_SURFACE.PRIMARY_GLASS" Class="password-strength-box">
+            <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT" Class="password-strength-box">
                 <PasswordStrength Password="@Password" />
             </Box>
         </div>

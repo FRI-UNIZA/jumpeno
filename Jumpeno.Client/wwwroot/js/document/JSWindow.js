@@ -67,7 +67,7 @@ class JSWindow {
     }
 
     // MouseDown --------------------------------------------------------------------------------------------------------------------------
-    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ X: e.clientX, Y: e.clientY }))
+    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddMouseDownEventListener(objRef, method) {
         await this.#MouseDownStorage.AddEventListener(objRef, method)
@@ -78,7 +78,7 @@ class JSWindow {
     }
 
     // MouseUp ----------------------------------------------------------------------------------------------------------------------------
-    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ X: e.clientX, Y: e.clientY }))
+    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddMouseUpEventListener(objRef, method) {
         await this.#MouseUpStorage.AddEventListener(objRef, method)
@@ -89,7 +89,7 @@ class JSWindow {
     }
 
     // Click ------------------------------------------------------------------------------------------------------------------------------
-    static #ClickStorage = new ListenerStorage('click', e => ({ X: e.clientX, Y: e.clientY }))
+    static #ClickStorage = new ListenerStorage('click', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddClickEventListener(objRef, method) {
         await this.#ClickStorage.AddEventListener(objRef, method)

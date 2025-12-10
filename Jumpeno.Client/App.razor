@@ -45,6 +45,10 @@
             // Focus:
             if (cookieModalOpen) ActionHandler.SetFocus(CookieModalRef.GetDialogID());
             else ActionHandler.SetFocus(WebDocument.ID);
+        } catch (AppException e) {
+            // App error:
+            ServerPageLoader.Stop();
+            Notification.Error(e.Info.T);
         } catch {
             // Initialization error:
             ServerPageLoader.Stop();

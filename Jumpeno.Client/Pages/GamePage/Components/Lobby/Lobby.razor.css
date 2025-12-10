@@ -162,19 +162,8 @@
 ::deep.lobby .game-button.variant.game-delete-button .game-delete-button-icon {
     /* Position: */
     position: absolute;
-    /* Size: */
-    width: calc(var(--button-width) * 0.6);
-    height: calc(var(--button-width) * 0.1);
-    /* Style: */
-    border-radius: var(--button-width);
-    background: var(--theme-button-danger-color);
-    /* Transform: */
-    transform: rotate(45deg);
-}
-
-::deep.lobby .game-button.variant.game-delete-button .game-delete-button-icon:last-child {
-    /* Transform: */
-    transform: rotate(-45deg);
+    /* Content: */
+    font-size: calc(var(--button-width) * 0.6189);
 }
 
 /* Game box > Game info ---------------------------------------------------------------------------------------------------------------- */
@@ -337,15 +326,17 @@
 }
 
 ::deep.lobby .game-button.variant.game-action-button.lobby-hide-button .lobby-hide-button-icon {
-    /* Display: */
-    display: flex;
     /* Size: */
-    width: calc(var(--round-line-inside-height) * 0.7);
-    height: calc(var(--round-line-inside-height) * 0.52);
-    /* Style: */
-    border-radius: calc(var(--round-line-inside-height) * 0.12);
-    border: calc(var(--round-line-inside-height) * 0.08) solid var(--theme-lobby-hide-icon-color);
-    background: var(--theme-lobby-hide-icon-background);
+    margin-top: calc(var(--round-line-inside-height) * -0.03);
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.7);
+}
+
+::deep.lobby .game-button.variant.game-action-button.player-ready-button .player-ready-button-icon {
+    /* Size: */
+    margin-top: calc(var(--round-line-inside-height) * 0.04);
+    /* Content: */
+    font-size: calc(var(--round-line-inside-height) * 0.7);
 }
 
 ::deep.game-page .lobby .game-waiting {
@@ -364,6 +355,8 @@
 }
 
 ::deep.lobby .player-titles {
+    /* Position: */
+    z-index: 2;
     /* Display: */
     display: flex;
     justify-content: space-between;
@@ -374,11 +367,43 @@
 }
 
 ::deep.lobby .lobby-text.player-title {
+    /* Position: */
+    position: relative;
     /* Size: */
     width: auto;
     /* Content: */
     font-size: var(--player-title-inside-height);
     font-weight: 500;
+}
+
+::deep.lobby .player-settings-button {
+    /* Position: */
+    position: absolute;
+    top: calc(var(--player-title-inside-height) * 0.85);
+    right: calc(var(--player-title-inside-height) * 2.9);
+    /* Size: */
+    margin: -1em calc(var(--player-title-inside-height) * 0.2) -1em;
+    /* Content: */
+    font-size: calc(var(--player-title-inside-height) * 1.17);
+    /* Style: */
+    color: var(--theme-lobby-player-settings-color);
+    /* Transform: */
+    transform: translateY(calc(var(--player-title-inside-height) * 0.2));
+}
+::deep.lobby .player-settings-button, ::deep.lobby .player-settings-button *:not(.player-settings-button-thumb) {
+    /* Style: */
+    border-radius: calc(var(--player-title-inside-height) * 2);
+}
+::deep.lobby .player-settings-button .player-settings-button-icon {
+    /* Transform: */
+    transform: rotateZ(30deg) translateZ(0);
+    /* Animations: */
+    transition: transform calc(var(--theme-transition-semi-fast) * 1ms) ease;
+    will-change: transform;
+}
+::deep.lobby.player-settings-open .player-settings-button .player-settings-button-icon {
+    /* Transform: */
+    transform: rotateZ(120deg) translateZ(0);
 }
 
 ::deep.lobby .player-table {
@@ -425,11 +450,16 @@
     height: calc(var(--player-line-height) * 0.24);
     margin-right: calc(var(--player-line-height) * -0.15);
     /* Style: */
-    background: var(--theme-status-success-neon-color);
+    background: var(--theme-status-warning-neon-color);
     border-radius: 50%;
     box-shadow: var(--theme-lobby-presence-box-shadow);
     /* Content: */
     font-size: var(--player-line-height);
+}
+
+::deep.lobby .player-line.connected.ready .player-presence {
+    /* Style: */
+    background: var(--theme-status-success-neon-color);
 }
 
 ::deep.lobby .player-line.disconnected .player-presence {
@@ -459,6 +489,23 @@
     width: 100%;
     /* Style: */
     border-bottom: 1px dashed var(--theme-lobby-dash-color);
+}
+
+::deep.lobby .player-action-buttons {
+    /* Display: */
+    display: flex;
+    gap: calc(var(--player-line-height) * 0.16);
+    /* Size: */
+    margin-right: calc(var(--player-line-height) * -0.16);
+}
+::deep.lobby .game-button.player-action-button {
+    /* Size: */
+    --button-width: calc(var(--player-line-height) * 0.65);
+    --button-height: calc(var(--player-line-height) * 0.65);
+}
+::deep.lobby .game-button.player-action-button.player-kick-button .player-kick-button-icon {
+    /* Content: */
+    font-size: calc(var(--player-line-height) * 0.45);
 }
 
 ::deep.lobby .player-score {

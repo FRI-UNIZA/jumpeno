@@ -8,13 +8,32 @@ public partial class GameControlPage {
     // Form -------------------------------------------------------------------------------------------------------------------------------
     private readonly string FORM = Form.Of<GameControlPage>();
     private readonly InputViewModel<string> VMCode;
+    private readonly InputViewModel<string> VMName;
     private ConfirmModal DeleteConfirmModalRef = null!;
+    private ConfirmModal PlayerKickConfirmModalRef = null!;
+
+    private void MapGameControlErrors(AppException e) {
+        foreach (var error in e.Errors) {
+            switch (error.ID) {
+                case nameof(GameControlDTO.Code): error.SetID(VMCode.ID); break;
+            }
+        }
+    }
+
+    private void MapGamePlayerControlErrors(AppException e) {
+        foreach (var error in e.Errors) {
+            switch (error.ID) {
+                case nameof(GamePlayerControlDTO.Code): error.SetID(VMCode.ID); break;
+                case nameof(GamePlayerControlDTO.Name): error.SetID(VMName.ID); break;
+            }
+        }
+    }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameControlPage() {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: nameof(GameControlDTO.Code),
+            ID: nameof(VMCode),
             TextMode: INPUT_TEXT_MODE.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
@@ -22,14 +41,67 @@ public partial class GameControlPage {
             Placeholder: I18N.T("Code"),
             DefaultValue: ""
         ));
+        VMName = new(new InputViewModelTextParams(
+            Form: FORM,
+            ID: nameof(VMName),
+            Trim: true,
+            TextCheck: UserValidator.IsName,
+            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            Placeholder: I18N.T("Player name"),
+            DefaultValue: ""
+        ));
     }
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task Request(string url) {
+    // Actions > Game ---------------------------------------------------------------------------------------------------------------------
+    private async Task ActionRequest(string url) {
         await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
-        await HTTP.Try(async () => await HTTP.Patch(url, body: new GameControlDTO(){ Code = VMCode.Value }), FORM);
+        await HTTP.Try(async () => {
+            try {
+                // 1) Data:
+                var data = new GameControlDTO(){ Code = VMCode.Value };
+                // 2) Validation:
+                data.Assert();
+                // 3) Send request:
+                await HTTP.Patch(url, body: data);
+            } catch (AppException e) {
+                // 4) Match errors:
+                MapGameControlErrors(e); throw;                
+            }
+        }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
     }
-    private async Task Delete() => await DeleteConfirmModalRef.Open(async () => await Request(API.BASE.GAME_DELETE));
-    private async Task Toggle() => await Request(API.BASE.GAME_TOGGLE);
+
+    private Task Delete() => DeleteConfirmModalRef.Open(() => ActionRequest(API.BASE.GAME_DELETE));
+
+    private Task Toggle() => ActionRequest(API.BASE.GAME_TOGGLE);
+
+    // Actions > Player -------------------------------------------------------------------------------------------------------------------
+    private async Task PlayerRequest(string url) {
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        await HTTP.Try(async () => {
+            try {
+                // 1) Data:
+                var data = new GamePlayerControlDTO(){ Code = VMCode.Value, Name = VMName.Value };
+                // 2) Validation:
+                data.Assert();
+                // 3) Send request:
+                await HTTP.Patch(url, body: data);
+            } catch (AppException e) {
+                // 4) Match errors:
+                MapGamePlayerControlErrors(e); throw;
+            }
+        }, FORM);
+        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+    }
+
+    private Task PlayerReady() => PlayerRequest(API.BASE.GAME_SET_PLAYER_READY);
+
+    private async Task PlayerKick() {
+        await HTTP.Try(async () => {
+            // 1) Check name before modal open:
+            UserValidator.AssertName(VMName.Value, checkUnknown: true, VMName.ID);
+            // 2) Open confirm modal:
+            await PlayerKickConfirmModalRef.Open(() => PlayerRequest(API.BASE.GAME_KICK_PLAYER));
+        }, FORM);
+    }
 }

@@ -82,15 +82,15 @@
     align-items: center;
     /* Size: */
     width: 100%;
-    margin: 0;
 }
 
 ::deep.manual-page .manual-image {
     /* Position: */
     --image-fit: contain;
     /* Size: */
-    --image-width: 78%;
+    --image-width: min(78%, 400px);
     --image-height-ratio: 80%;
+    margin: -20px 0;
 }
 
 @media (min-width: 768px) {
@@ -124,6 +124,12 @@
     ::deep.manual-page .manual-image-section {
         /* Size: */
         width: 47%;
+        margin: 0;
+    }
+
+    ::deep.manual-page .manual-image {
+        /* Size: */
+        --image-width: 78%;
     }
 }
 

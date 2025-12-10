@@ -102,8 +102,12 @@ public class HTTP : StaticService<HTTP>, IAsyncDisposable {
                 // Create request object:
                 var request = new HttpRequestMessage(method, url);
 
-                // Add authorization:
-                if (isLocalURL) try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
+                if (isLocalURL) {
+                    // Add authorization:
+                    try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
+                    // Add version:
+                    SetHeader(request, HEADER.APP_VERSION, AppSettings.Version);
+                }
 
                 // Add body:
                 if (

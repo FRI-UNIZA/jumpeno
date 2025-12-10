@@ -984,4 +984,40 @@
   <data name="Host already connected!" xml:space="preserve">
     <value>Host už je pripojený!</value>
   </data>
+  <data name="You are not a player!" xml:space="preserve">
+    <value>Nie si hráč!</value>
+  </data>
+  <data name="Player is ready." xml:space="preserve">
+    <value>Hráč je ready.</value>
+  </data>
+  <data name="Players are not ready." xml:space="preserve">
+    <value>Hráči nie sú ready.</value>
+  </data>
+  <data name="Not a player of this game!" xml:space="preserve">
+    <value>Nie je hráč tejto hry!</value>
+  </data>
+  <data name="Player not connected." xml:space="preserve">
+    <value>Hráč nie je pripojený.</value>
+  </data>
+  <data name="Player shifts" xml:space="preserve">
+    <value>Akcie</value>
+  </data>
+  <data name="Do you want to kick this player?" xml:space="preserve">
+    <value>Chceš vyhodiť tohto hráča?</value>
+  </data>
+  <data name="Kick" xml:space="preserve">
+    <value>Vyhodiť</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Host can not be kicked!" xml:space="preserve">
+    <value>Hosta nemožno vyhodiť!</value>
+  </data>
+  <data name="Game must have at least 2 players!" xml:space="preserve">
+    <value>Hra musí mať aspoň 2 hráčov!</value>
+  </data>
+  <data name="Incorrect version! Please refresh." xml:space="preserve">
+    <value>Nesprávna verzia! Obnov stránku.</value>
+  </data>
 </root>

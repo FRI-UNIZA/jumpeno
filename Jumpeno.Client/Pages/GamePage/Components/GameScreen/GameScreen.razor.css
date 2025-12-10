@@ -176,9 +176,10 @@
 
 ::deep.game-screen .trademark.faculty-name .copy-sign {
     /* Size: */
-    margin-right: 0.3em;
+    margin-right: 0.24em;
     /* Content: */
-    font-size: max(calc(var(--info-height) * 0.47), var(--min-info-text-size));
+    font-size: max(calc(var(--info-height) * 0.51), var(--min-info-text-size));
+    font-weight: bold;
 }
 
 /* Game info > Connection -------------------------------------------------------------------------------------------------------------- */

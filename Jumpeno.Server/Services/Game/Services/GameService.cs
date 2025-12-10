@@ -41,6 +41,20 @@ public static class GameService {
         && HostEngines.Remove((Guid)engine.Game.Host.ID!);
     }
 
+    private static bool RemovePlayerEngine(Player player) {
+        if (player.User.ID is not Guid id || !player.IsConnected) return false;
+        PlayerEngines.Remove(id); return true;
+    }
+
+    private static async Task DisposeEngine(GameEngine engine) {
+        // 1) Check empty:
+        if (!engine.Game.IsEmpty) return;
+        // 2) Remove engine:
+        RemoveEngine(engine);
+        // 3) Dispose engine:
+        await engine.DisposeAsync();
+    }
+
     // Connection -------------------------------------------------------------------------------------------------------------------------
     public static async Task<GameContext> Create(GameHubCreateDTO data, Connection connection)
     => await Lock.Exclusive(async () => {
@@ -113,36 +127,32 @@ public static class GameService {
     )
     => await Lock.Exclusive(() => Connect(AssertEngine(code, codeID), connection, spectator, nameID));
 
-    public static async Task Disconnect(GameEngine engine, Connection connection)
+    public static async Task Disconnect(GameContext ctx)
     => await Lock.Exclusive(async () => {
         try {
-            // 1) Connect:
-            switch (connection) {
+            // 1) Disconnect:
+            switch (ctx.Connection) {
                 // 1.1) Spectator:
                 case Spectator spectator:
-                    await engine.RemoveSpectator(spectator);
+                    await ctx.Engine.RemoveSpectator(spectator);
                 break;
                 // 1.2) Player:
                 case Player player:
-                    // 1.2.1) Remove player:
-                    await engine.RemovePlayer(player);
+                    // 1.2.1) Remove player (can be invalidated):
+                    var removedPlayer = await ctx.Engine.RemovePlayer(player);
                     // 1.2.2) Remove registered player engine:
-                    if (player.User.ID is Guid playerID) PlayerEngines.Remove(playerID);
+                    RemovePlayerEngine(removedPlayer);
                 break;
             }
         } finally {
             // 2) Dispose engine:
-            if (engine.Game.IsEmpty) {
-                // 2.1) Remove engine:
-                RemoveEngine(engine);
-                // 2.2) Dispose engine:
-                await engine.DisposeAsync();
-            }
+            await DisposeEngine(ctx.Engine);
         }
     });
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
-    public static void Update(GameEngine engine, GameUpdate update) => engine.Update(update);
+    private static void Update(GameEngine engine, GameUpdate update) => engine.Update(update);
+    public static void Update(GameContext ctx, GameUpdate update) => Update(ctx.Engine, update);
     public static void Update(
         // Parameters:
         string code, GameUpdate update,
@@ -152,7 +162,8 @@ public static class GameService {
     => Lock.Exclusive(() => Update(AssertEngine(code, codeID), update));
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task StartGame(GameEngine engine, Connection? connection = null) => await engine.Start(connection);
+    private static async Task StartGame(GameEngine engine, GameContext? ctx = null) => await engine.Start(ctx);
+    public static async Task StartGame(GameContext ctx) => await StartGame(ctx.Engine, ctx);
     public static async Task StartGame(
         // Parameters:
         string code,
@@ -161,7 +172,8 @@ public static class GameService {
     )
     => await Lock.Exclusive(() => StartGame(AssertEngine(code, codeID)));
 
-    public static async Task PauseGame(GameEngine engine, Connection? connection = null) => await engine.Pause(connection);
+    private static async Task PauseGame(GameEngine engine, GameContext? ctx = null) => await engine.Pause(ctx);
+    public static async Task PauseGame(GameContext ctx) => await PauseGame(ctx.Engine, ctx);
     public static async Task PauseGame(
         // Parameters:
         string code,
@@ -170,7 +182,8 @@ public static class GameService {
     )
     => await Lock.Exclusive(() => PauseGame(AssertEngine(code, codeID)));
 
-    public static async Task ToggleGame(GameEngine engine, Connection? connection = null) => await engine.Toggle(connection);
+    private static async Task ToggleGame(GameEngine engine, GameContext? ctx = null) => await engine.Toggle(ctx);
+    public static async Task ToggleGame(GameContext ctx) => await ToggleGame(ctx.Engine, ctx);
     public static async Task ToggleGame(
         // Parameters:
         string code,
@@ -179,7 +192,7 @@ public static class GameService {
     )
     => await Lock.Exclusive(() => ToggleGame(AssertEngine(code, codeID)));
 
-    private static async Task Delete(
+    private static async Task DeleteGame(
         // Parameters:
         GameEngine engine,
         // Exceptions:
@@ -191,18 +204,73 @@ public static class GameService {
         else throw EXCEPTION.VALUES.SetInfo("Game code is incorrect!")
         .SetErrors(ERROR.INVALID.SetID(codeID).SetInfo("Game code is incorrect!"));
     }
-    public static async Task DeleteGame(
-        // Parameters:
-        GameEngine engine,
-        // Exceptions:
-        string codeID = ""
-    )
-    => await Lock.Exclusive(() => Delete(engine, codeID));
+    public static async Task DeleteGame(GameContext ctx) => await Lock.Exclusive(() => DeleteGame(ctx.Engine));
     public static async Task DeleteGame(
         // Parameters:
         string code,
         // Exceptions:
         string codeID = ""
     )
-    => await Lock.Exclusive(() => Delete(AssertEngine(code, codeID), codeID));
+    => await Lock.Exclusive(() => DeleteGame(AssertEngine(code, codeID), codeID));
+
+    // Players > Ready --------------------------------------------------------------------------------------------------------------------
+    public static async Task SetPlayerReady(GameContext ctx) => await ctx.Engine.SetPlayerReady(ctx);
+
+    private static async Task SetPlayerReadyByName(
+        // Parameters:
+        GameEngine engine, string name,
+        // Response:
+        GameContext? ctx = null,
+        // Exceptions:
+        string nameID = ""
+    )
+    => await engine.SetPlayerReadyByName(name, ctx, nameID);
+    public static async Task SetPlayerReadyByName(
+        // Parameters:
+        GameContext ctx, string name,
+        // Exceptions:
+        string nameID = ""
+    )
+    => await SetPlayerReadyByName(ctx.Engine, name, ctx, nameID);
+    public static async Task SetPlayerReadyByName(
+        // Parameters:
+        string code, string name,
+        // Exceptions:
+        string codeID = "", string nameID = ""
+    )
+    => await Lock.Exclusive(() => SetPlayerReadyByName(AssertEngine(code, codeID), name, null, nameID));
+
+    // Players > Kick ---------------------------------------------------------------------------------------------------------------------
+    private static async Task KickPlayerByName(
+        // Parameters:
+        GameEngine engine, string name,
+        // Response:
+        GameContext? ctx = null,
+        // Exceptions:
+        string nameID = ""
+    ) {
+        try {
+            // 1) Kick player (will be invalidated):
+            var kickedPlayer = await engine.KickPlayerByName(name, ctx, nameID);
+            // 2) Remove registered player engine:
+            RemovePlayerEngine(kickedPlayer);
+        } finally {
+            // 3) Dispose engine:
+            await DisposeEngine(engine);
+        }
+    }
+    public static async Task KickPlayerByName(
+        // Parameters:
+        GameContext ctx, string name,
+        // Exceptions:
+        string nameID = ""
+    )
+    => await Lock.Exclusive(() => KickPlayerByName(ctx.Engine, name, ctx, nameID));
+    public static async Task KickPlayerByName(
+        // Parameters:
+        string code, string name,
+        // Exceptions:
+        string codeID = "", string nameID = ""
+    )
+    => await Lock.Exclusive(() => KickPlayerByName(AssertEngine(code, codeID), name, null, nameID));
 }

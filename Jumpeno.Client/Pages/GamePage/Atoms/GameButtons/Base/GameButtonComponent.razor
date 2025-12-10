@@ -10,7 +10,7 @@
             style="@Style"
             @onmousedown="PressStart" @ontouchstart="PressStart"
             @onmouseenter="MouseEnter" @onmouseleave="MouseLeave"
-            @onmouseup="PressEnd" @ontouchend="PressEnd"
+            @onmouseup="PressEndMouse" @ontouchend="PressEndTouch"
             @ontouchstart:preventDefault @ontouchend:preventDefault
             @ontouchstart:stopPropagation @ontouchend:stopPropagation
             tabindex="-1"

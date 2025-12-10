@@ -7,6 +7,7 @@
     align-items: center;
     /* Size: */
     width: 100%;
+    margin: -30px 0 -20px;
 }
 
 ::deep.register-form .register-form-content {
@@ -121,8 +122,21 @@
     font-size: 15px !important;
 }
 
+@media (min-width: 768px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.register-form {
+        /* Size: */
+        margin: -46px 0 -40px;
+    }
+}
+
 @media (min-width: 860px) {
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.register-form {
+        /* Size: */
+        margin: -30px 0 -20px;
+    }
+
     ::deep.register-form .register-form-content {
         /* Display: */
         flex-direction: row;

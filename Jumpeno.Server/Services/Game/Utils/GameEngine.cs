@@ -50,7 +50,7 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         GC.SuppressFinalize(this);
     }
 
-    // Player actions ---------------------------------------------------------------------------------------------------------------------
+    // Player actions > Add ---------------------------------------------------------------------------------------------------------------
     public async Task<GameContext> AddPlayer(
         // Parameters:
         Connection connection,
@@ -74,19 +74,80 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         await GameHub.AfterConnected(context); return context;
     });
 
-    public async Task RemovePlayer(Player player)
-    => await GameLock.Exclusive(async () => {
-        // 1) Before event:
-        var context = new GameContext(this, player);
-        await GameHub.BeforeDisconnected(context);
-        // 2) Disconnect player:
-        player.Disconnect();
+    // Player actions > Ready -------------------------------------------------------------------------------------------------------------
+    private async Task SetPlayerReady(GameContext? ctx, Player player) {
+        // 1) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        if (!Game.LOBBY_STATES.Contains(Game.State)) throw EXCEPTION.CLIENT.SetInfo("Invalid game state!");
+        if (!player.IsConnected) throw EXCEPTION.CLIENT.SetInfo("Player not connected.");
+        if (player.IsReady(Game)) throw EXCEPTION.CLIENT.SetInfo("Player is ready.");
+        // 2) Create update:
+        var update = Game.NewPlayerReadyUpdate(player);
+        if (ctx?.Connection?.ConnectionID != null) update.ResponseIDs = new([ctx.Connection.ConnectionID]);
         // 3) Send update:
-        var update = Game.NewPlayerRemoveUpdate(player);
         var updated = Game.Update(update);
         if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
-        // 4) After event:
+    }
+
+    public async Task SetPlayerReady(GameContext ctx)
+    => await GameLock.Exclusive(async () => {
+        if (ctx.Connection is not Player player) throw EXCEPTION.DEFAULT.SetInfo("You are not a player!");
+        await SetPlayerReady(ctx, player);
+    });
+
+    public async Task SetPlayerReadyByName(
+        // Parameters:
+        string name,
+        // Response:
+        GameContext? ctx = null,
+        // Exceptions:
+        string nameID = ""
+    )
+    => await GameLock.Exclusive(() => SetPlayerReady(ctx, Game.AssertValidPlayerByName(name, nameID)));
+
+    // Player actions > Remove ------------------------------------------------------------------------------------------------------------
+    private async Task<Player> RemovePlayer(Player player, bool kick, GameContext? ctx = null) {
+        // 1) Check valid player:
+        if (!player.IsValid()) throw EXCEPTION.DEFAULT.SetInfo("Not a player of this game!");
+        // 2) Create context:
+        var context = new GameContext(this, new Player(player));
+        // 3) Before event:
+        await GameHub.BeforeDisconnected(context);
+        // 4) Disconnect player:
+        player.Disconnect();
+        // 5) Send update:
+        var update = kick ? Game.NewPlayerKickUpdate(player) : Game.NewPlayerRemoveUpdate(player);
+        if (ctx?.Connection?.ConnectionID != null) update.ResponseIDs = new([ctx.Connection.ConnectionID]);
+        var updated = Game.Update(update);
+        if (updated) await SendGameUpdate(UPDATE_GROUP.ALL, update);
+        // 6) Send exception:
+        if (kick) await GameHub.SendException(context.Connection, EXCEPTION.DISCONNECT);
+        // 7) After event:
         await GameHub.AfterDisconnected(context);
+        // 8) Return removed player:
+        return (Player)context.Connection;
+    }
+
+    public async Task<Player> RemovePlayer(Player player) => await GameLock.Exclusive(() => RemovePlayer(player, false));
+
+    public async Task<Player> KickPlayerByName(
+        // Parameters:
+        string name,
+        // Response:
+        GameContext? ctx = null,
+        // Exceptions:
+        string nameID = ""
+    )
+    => await GameLock.Exclusive(async () => {
+        // 1) Assert player:
+        var player = Game.AssertValidPlayerByName(name, nameID);
+        // 2) Validation:
+        if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
+        if (Game.IsFinished) throw EXCEPTION.DEFAULT.SetInfo("Game is finished!");
+        if (player.User.ID == Game.Host.ID) throw EXCEPTION.DEFAULT.SetInfo("Host can not be kicked!");
+        if (Game.State != GAME_STATE.LOBBY && Game.ValidPlayersCount <= 2) throw EXCEPTION.DEFAULT.SetInfo("Game must have at least 2 players!");
+        // 3) Remove player:
+        return await RemovePlayer(player, true, ctx);
     });
 
     // Spectator actions ------------------------------------------------------------------------------------------------------------------
@@ -129,8 +190,8 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     });
 
     // Game actions -----------------------------------------------------------------------------------------------------------------------
-    public async Task Start(Connection? connection = null)
-    => await ActionCall(connection, async () => {
+    public async Task Start(GameContext? ctx = null)
+    => await ActionCall(ctx, async () => {
         // 1) Validation:
         if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
         // 2) Perform action:
@@ -140,8 +201,8 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         else throw EXCEPTION.DEFAULT.SetInfo("Game is running!");
     });
 
-    public async Task Pause(Connection? connection = null)
-    => await ActionCall(connection, async () => {
+    public async Task Pause(GameContext? ctx = null)
+    => await ActionCall(ctx, async () => {
         // 1) Validation:
         if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
         // 2) Perform action:
@@ -153,8 +214,8 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         if (IsPausing) await SendGameActionUpdate(UPDATE_GROUP.ALL, Game.NewGamePlayCurrentUpdate());
     });
 
-    public async Task Toggle(Connection? connection = null)
-    => await ActionCall(connection, async () => {
+    public async Task Toggle(GameContext? ctx = null)
+    => await ActionCall(ctx, async () => {
         // 1) Validation:
         if (IsDeleted) throw EXCEPTION.DEFAULT.SetInfo("Game is deleted!");
         // 2) Perform action:
@@ -187,15 +248,13 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         ActionResponseIDs = [];
     }
 
-    private async Task ActionCall(Connection? connection, Func<Task> action, Func<Task>? after = null) 
+    private async Task ActionCall(GameContext? ctx, Func<Task> action, Func<Task>? after = null) 
     => await GameLock.Exclusive(async () => {
         // 1) Execute action:
         await action();
-        // 2) Check connection:
-        if (connection?.ConnectionID == null) return;
-        // 3) Save response ID:
-        ActionResponseIDs.AddLast(connection.ConnectionID);
-        // 4) Execute after action:
+        // 2) Set response:
+        if (ctx?.Connection?.ConnectionID != null) ActionResponseIDs.AddLast(ctx.Connection.ConnectionID);
+        // 3) Execute after action:
         if (after != null) await after();
     });
 
@@ -210,6 +269,7 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         if (GameLoopThread != null) throw EXCEPTION.DEFAULT.SetInfo("Game is running!");
         if (!Game.LOBBY_STATES.Contains(Game.State)) throw EXCEPTION.DEFAULT.SetInfo("Invalid game state!");
         if (Game.ActivePlayersCount < 2) throw EXCEPTION.DEFAULT.SetInfo("At least 2 players required to start!");
+        if (!Game.ActivePlayersReady()) throw EXCEPTION.CLIENT.SetInfo("Players are not ready.");
         // 2) Start loop:
         try {
             // 2.1) Start thread:
@@ -302,7 +362,7 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
 
     private void EvaluateShrinking(ref (GamePlayUpdate Update, bool Send) loop) {
         if (Game.State != GAME_STATE.SHRINKING) return;
-        foreach (var (player, _) in Game.PlayerIterator) {
+        foreach (var (player, _) in Game.ActivePlayerIterator) {
             // 1) Check collision:
             if (!player.IsShrinked(Game.Map.Shrink)) continue;
             // 2) Kill update:
@@ -339,11 +399,14 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
             KeyUpdateLock.Lock(); 
             foreach (var update in KeyUpdates) {
                 // 1) Update game:
-                Game.Update(update);
-                // 2) Add movement update to loop:
-                loop.Update.Movements[update.PlayerID] = Game.NewMovementUpdate(update.PlayerID);
-                // 3) Mark send:
-                loop.Send = true;
+                var updated = Game.Update(update);
+                // 2) If updated:
+                if (updated) {
+                    // 2.1) Add movement update to loop:
+                    loop.Update.Movements[update.PlayerID] = Game.NewMovementUpdate(update.PlayerID);
+                    // 2.2) Mark send:
+                    loop.Send = true;
+                }
             }
             KeyUpdates.Clear();
         } finally {
@@ -352,42 +415,38 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
     }
 
     // Loop [Kills & Lives] ---------------------------------------------------------------------------------------------------------------
-    private void EvaluateQuitPlayers(ref (GamePlayUpdate Update, bool Send) loop) {
-        foreach (var (player, id) in Game.PlayerQuitIterator) {
-            // 1) Kill update:
-            var kill = Game.NewKillUpdate(null, id);
-            Game.Update(kill);
-            // 2) Movement update:
-            var move = Game.NewMovementUnderMapUpdate(player);
-            Game.Update(move);
-            // 3) Set loop updates:
-            loop.Update.Movements[id] = move;
-            loop.Update.Kills[id] = kill;
-            loop.Send = true;
-        }
-    }
-
     private void EvaluatePlayerCollisions(ref (GamePlayUpdate Update, bool Send) loop) {
         // TODO: [Optional] Implement continuous collision detection (will increase complexity!)
-        foreach (var (player, _) in Game.PlayerIterator) {
+        // 1) Save killer movements:
+        LinkedList<MovementUpdate> movements = [];
+        // 2) Check player kills:
+        foreach (var (player, _) in Game.ActivePlayerIterator) {
+            // 2.1) Get colliding players:
             var colliding = Game.GetCollidingPlayers(player);
+            Player? bottom = null;
+            // 2.2) Execute kills:
             foreach (var other in colliding) {
-                // 1) Check self:
+                // 2.2.1) Check self:
                 if (player.Equals(other)) continue;
-                // 2) Check jump:
+                // 2.2.2) Check jump:
                 if (!player.JumpedOn(other)) continue;
-                // 3) Kill update:
-                var killUpdate = Game.NewKillUpdate(player.ID, other.ID);
-                Game.Update(killUpdate);
-                // 4) Movement update:
-                var movement = Game.NewMovementUpdate(player, other);
-                Game.Update(movement);
-                // 5) Set loop updates:
-                loop.Update.Movements[player.ID] = movement;
+                // 2.2.3) Save bottom player:
+                if (bottom == null || other.Body.Position.Center.Y < bottom.Body.Position.Center.Y) bottom = other;
+                // 2.2.4) Kill update:
+                var kill = Game.NewKillUpdate(player.ID, other.ID);
+                Game.Update(kill);
+                // 2.2.5) Set loop updates:
                 loop.Update.Movements[other.ID] = Game.NewMovementUpdate(other.ID);
-                loop.Update.Kills[other.ID] = killUpdate;
+                loop.Update.Kills[other.ID] = kill;
                 loop.Send = true;
             }
+            // 2.3) Movement update:
+            if (bottom != null) movements.AddLast(Game.NewMovementUpdate(player, bottom));
+        }
+        // 3) Make killer movements:
+        foreach (var move in movements) {
+            Game.Update(move);
+            loop.Update.Movements[move.PlayerID] = move;
         }
     }
 
@@ -396,23 +455,30 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
         if (Game.Mode != GAME_MODE.MAYHEM || Game.State == GAME_STATE.SHRINKING) return;
         if (RoundFinishTimer != null) return;
         // 2) Add life updates:
-        foreach (var (player, _) in Game.PlayerIterator) {
+        foreach (var (player, _) in Game.ActivePlayerIterator) {
             if (player.Body.Alive || !player.Body.Fallen) continue;
-            var lifeUpdate = Game.NewLifeUpdate(player);
+            // 2.1) Move:
+            var moveUpdate = Game.NewRandomPositionUpdate(player);
+            Game.Update(moveUpdate);
+            loop.Update.Movements[player.ID] = moveUpdate;
+            // 2.2) Life:
+            var lifeUpdate = Game.NewLifeUpdate(player.ID);
             Game.Update(lifeUpdate);
             loop.Update.Lives[player.ID] = lifeUpdate;
+            // 2.3) Send:
             loop.Send = true;
         }
     }
 
     private void EnforceMoveUpdates(ref (GamePlayUpdate Update, bool Send) loop, bool shrink) {
-        foreach (var (player, _) in Game.PlayerIterator) {
+        foreach (var (player, _) in Game.ActivePlayerIterator) {
             // 1) Check collision:
-            if (!shrink && !player.CollisionDetected) continue;
+            if (!(shrink && player.IsAlive) && !player.CollisionDetected) continue;
             // 2) Check movement update:
             if (loop.Update.Movements.ContainsKey(player.ID)) continue;
             // 3) Add movement update to loop:
             loop.Update.Movements[player.ID] = Game.NewMovementUpdate(player.ID);
+            // 4) Send:
             loop.Send = true;
         }
     }
@@ -472,7 +538,6 @@ public class GameEngine : IUpdateable, IAsyncDisposable {
                     // 2.2.4) Prepare loop update & shrink:
                     var shrink = ApplyShrinking();
                     var loop = (Update: Game.NewGamePlayCurrentUpdate(), Send: shrink);
-                    EvaluateQuitPlayers(ref loop);
                     EvaluateShrinking(ref loop);
 
                     // 2.2.5) Move game objects:

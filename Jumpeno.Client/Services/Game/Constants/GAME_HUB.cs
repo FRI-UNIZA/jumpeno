@@ -13,6 +13,8 @@ public static class GAME_HUB {
     public const string KEY_UPDATE = "KeyUpdate";
     // Request:
     public const string GAME_ACTION_REQUEST_UPDATE = "GameActionRequestUpdate";
+    public const string PLAYER_KICK_REQUEST_UPDATE = "PlayerKickRequestUpdate";
+    public const string PLAYER_READY_REQUEST_UPDATE = "PlayerReadyRequestUpdate";
 
     // Trip updates -----------------------------------------------------------------------------------------------------------------------
     public const string PING_UPDATE = "PingUpdate";
@@ -27,4 +29,6 @@ public static class GAME_HUB {
     public const string ERROR = "Error";
     // Response:
     public const string GAME_ACTION_RESPONSE_UPDATE = "GameActionResponseUpdate";
+    public const string PLAYER_KICK_RESPONSE_UPDATE = "PlayerKickResponseUpdate";
+    public const string PLAYER_READY_RESPONSE_UPDATE = "PlayerReadyResponseUpdate";
 }

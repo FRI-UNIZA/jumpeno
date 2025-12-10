@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Components;
 
-public partial class GameButtonComponent {
+public partial class GameButtonComponent : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_CONTENT = "game-button-content";
     // States:
@@ -16,6 +16,7 @@ public partial class GameButtonComponent {
     public RenderFragment? ChildContent { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private bool PressStarted = false;
     public bool Active { get; private set; } = false;
     private bool MouseOn = false;
 
@@ -23,12 +24,15 @@ public partial class GameButtonComponent {
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS_ACTIVE, Active).Set(CLASS_DISABLED, Disabled);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private void PressStart() => Active = true;
+    private void PressStart() { Active = true; PressStarted = true; }
     private void MouseEnter() { Active = true; MouseOn = true; }
-    private void MouseLeave() { Active = false; MouseOn = false; }
-    private async Task PressEnd() {
+    private void MouseLeave() { Active = false; MouseOn = false; PressStarted = false; }
+    private async Task PressEnd(bool valid) {
+        PressStarted = false;
         if (!Active) return;
-        if (!Disabled) await Action.Invoke();
+        if (!Disabled && valid) await Action.Invoke();
         if (!MouseOn) Active = false;
     }
+    private async Task PressEndMouse(MouseEventArgs e) => await PressEnd(PressStarted && e.Button == MOUSE_BUTTON.LEFT.Raw());
+    private async Task PressEndTouch(TouchEventArgs e) => await PressEnd(true);
 }

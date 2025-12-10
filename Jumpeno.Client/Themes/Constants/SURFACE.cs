@@ -6,6 +6,8 @@ public enum SURFACE {
     [CSSClass("surface-primary-collapse")] PRIMARY_COLLAPSE,
     [CSSClass("surface-primary-box")] PRIMARY_BOX,
     [CSSClass("surface-primary-box-collapse")] PRIMARY_BOX_COLLAPSE,
+    [CSSClass("surface-primary-transparent")] PRIMARY_TRANSPARENT,
+    [CSSClass("surface-primary-transparent-collapse")] PRIMARY_TRANSPARENT_COLLAPSE,
     [CSSClass("surface-primary-glass")] PRIMARY_GLASS,
     [CSSClass("surface-primary-glass-collapse")] PRIMARY_GLASS_COLLAPSE,
     // Secondary:

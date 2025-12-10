@@ -26,8 +26,8 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     // Health:
     public bool Alive { get; private set; }
     public bool Fallen { get; private set; }
-    public double ImmortalMS { get { return immortalMS; } private set { immortalMS = Math.Max(value, 0); } } private double immortalMS;
-    public bool IsImmortal => ImmortalMS > 0;
+    public bool IsImmortal { get; private set; }
+    public double ImmortalUntil { get; private set; }
     // Position:
     public RectFPosition LastPosition { get; private set; }
     public RectFPosition Position { get { return position; } private set { position = value; } } private RectFPosition position;
@@ -39,7 +39,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     private (KeyUpdate? Update, DateTime Time) PendingJump = (null, DateTime.UtcNow);
     public float? JumpFinishY { get; private set; }
     public bool IsJumping => JumpFinishY != null;
-    public float? FallStartY = null;
+    public float? FallStartY { get; private set; } = null;
     // Collision (normal vector):
     public PointF LastNormal { get; private set; }
     public PointF Normal { get; private set; }
@@ -67,10 +67,16 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private Body(bool alive, bool fallen, double immortalMS, PointF center, PointF direction, float? jumpFinishY, Animation animation) {
+    private Body(
+        bool alive, bool fallen,
+        bool isImmortal, double immortalUntil,
+        PointF center, PointF direction, float? jumpFinishY,
+        Animation animation
+    ) {
         Alive = alive;
         Fallen = fallen;
-        ImmortalMS = immortalMS;
+        IsImmortal = isImmortal;
+        ImmortalUntil = immortalUntil;
         Position = new(center, WIDTH, HEIGHT);
         LastPosition = Position;
         Direction = direction;
@@ -79,7 +85,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         Normal = DEFAULT_NORMAL;
         Animation = animation;
     }
-    public Body() : this(false, false, 0, DEFAULT_POSITION, DEFAULT_DIRECTION, null, new(DEFAULT_DIRECTION)) {}
+    public Body() : this(false, false, false, 0, DEFAULT_POSITION, DEFAULT_DIRECTION, null, new(DEFAULT_DIRECTION)) {}
 
     // Movement ---------------------------------------------------------------------------------------------------------------------------
     private void ChangeDirection(GAME_CONTROLS key, bool pressed) {
@@ -200,7 +206,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         }
 
         // 5) Resolve immortality:
-        ImmortalMS -= update.DeltaT;
+        IsImmortal = update.Game.Time < ImmortalUntil;
 
         // 6) Return result:
         return true;
@@ -236,10 +242,9 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         position.Center = update.Center;
         direction = update.Direction;
         JumpFinishY = update.JumpFinishY;
-        if (update.Normal is PointF normal) {
-            Normal = LastNormal = normal;
-        }
-        Animation.UpdateDirection(Direction);
+        LastNormal = Normal = update.Normal;
+        if (update.AnimationDirection is PointF dir) Animation.ResetDirection(dir);
+        else Animation.UpdateDirection(Direction);
         return true;
     }
 
@@ -253,7 +258,8 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         if (Alive) return false;
         Alive = true;
         Fallen = false;
-        ImmortalMS = update.ImmortalMS;
+        IsImmortal = update.Game.Time < update.ImmortalUntil;
+        ImmortalUntil = update.ImmortalUntil;
         return true;
     }
 

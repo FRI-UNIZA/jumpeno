@@ -117,7 +117,7 @@ public partial class DropDown {
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
-    public async Task JS_OnClick((int x, int y) position) {
+    public async Task JS_OnClick(WindowMouseEvent e) {
         await Lock.TryExclusive(() => {
             Displayed = OpenRequested;
             OpenRequested = false;

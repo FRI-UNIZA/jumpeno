@@ -65,25 +65,27 @@ public class GameHub : Hub {
     private async Task<(User User, object DTO)> ReadDTO() {
         // 1.1) Init context:
         var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
-        // 1.2) Init errors:
+        // 1.2) Check app version:
+        VersionMiddleware.CheckHubVersion(ctx);
+        // 1.3) Init errors:
         List<Error> errors = [];
 
-        // 3.1) Validate type:
+        // 2.1) Validate type:
         Checker.Validate(
             errors,
             !ctx.Request.Query.TryGetValue(GAME_HUB.DTO_TYPE, out var queryDTOType),
             ERROR.EMPTY.SetID(GAME_HUB.DTO_TYPE)
         );
-        // 3.2) Validate params:
+        // 2.2) Validate params:
         Checker.Validate(
             errors,
             !ctx.Request.Query.TryGetValue(GAME_HUB.DTO, out var queryDTO),
             ERROR.EMPTY.SetID(GAME_HUB.DTO)
         );
-        // 3.3) Check errors:
+        // 2.3) Check errors:
         Checker.AssertWith(errors, EXCEPTION.VALUES);
 
-        // 4.1) Read params:
+        // 3.1) Read params:
         switch (queryDTOType) {
             case nameof(GameHubCreateDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubCreateDTO>(queryDTO!)
@@ -106,7 +108,7 @@ public class GameHub : Hub {
                 return (await UserEntity.SelectCurrentActivatedUser(), dto);
             }
         }
-        // 4.2) Invalid type:
+        // 3.2) Invalid type:
         throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID(GAME_HUB.DTO_TYPE));
     }
 
@@ -154,10 +156,10 @@ public class GameHub : Hub {
                 throw EXCEPTION.CLIENT.SetInfo("You are not a host!");
             // 2) Control game:
             switch (update.Action) {
-                case GAME_ACTION.START: await GameService.StartGame(GameContext.Engine, GameContext.Connection); return;
-                case GAME_ACTION.PAUSE: await GameService.PauseGame(GameContext.Engine, GameContext.Connection); return;
-                case GAME_ACTION.TOGGLE: await GameService.ToggleGame(GameContext.Engine, GameContext.Connection); return;
-                case GAME_ACTION.DELETE: await GameService.DeleteGame(GameContext.Engine); return;
+                case GAME_ACTION.START: await GameService.StartGame(GameContext); return;
+                case GAME_ACTION.PAUSE: await GameService.PauseGame(GameContext); return;
+                case GAME_ACTION.TOGGLE: await GameService.ToggleGame(GameContext); return;
+                case GAME_ACTION.DELETE: await GameService.DeleteGame(GameContext); return;
             }
             // 3) Throw if invalid:
             throw EXCEPTION.CLIENT.SetInfo("Invalid game action!");
@@ -167,14 +169,38 @@ public class GameHub : Hub {
         }
     }
 
+    public async Task PlayerReadyRequestUpdate(PlayerReadyRequestUpdate update) {
+        try {
+            // 1) Validate player:
+            if (GameContext == null) throw EXCEPTION.CLIENT.SetInfo("You are not a player!");
+            // 2) Set player ready:
+            await GameService.SetPlayerReady(GameContext);
+        } catch (Exception e) {
+            // 3) Handle error:
+            await SendResponse(new PlayerReadyResponseUpdate(e));
+        }
+    }
+
+    public async Task PlayerKickRequestUpdate(PlayerKickRequestUpdate update) {
+        try {
+            // 1) Validate host:
+            if (GameContext is null || GameContext.Connection.User.ID != GameContext.Engine.Game.Host.ID)
+                throw EXCEPTION.CLIENT.SetInfo("You are not a host!");
+            // 2) Kick player:
+            await GameService.KickPlayerByName(GameContext, update.Name);
+        } catch (Exception e) {
+            // 3) Handle error:
+            await SendResponse(new PlayerKickResponseUpdate(e));
+        }
+    }
+
     public void KeyUpdate(KeyUpdate update) {
         try {
             // 1) Validate player:
-            if (GameContext is null) return;
-            if (GameContext.Connection is not Player player) return;
+            if (GameContext?.Connection is not Player player) return;
             if (player.ID != update.PlayerID) return;
             // 2) Update game:
-            GameService.Update(GameContext.Engine, update);
+            GameService.Update(GameContext, update);
         } catch (Exception e) {
             // 3) Handle error:
             Console.Error.WriteLine(e);
@@ -240,9 +266,10 @@ public class GameHub : Hub {
             if (ConnectTCS != null) await ConnectTCS.Task;
             // 2) Check context:
             if (GameContext == null) return;
+            // NOTE: Not called for invalid (already kicked) player - exception is thrown!
             // 3) Disconnect player from the game:
             // NOTE: [Locked] BeforeDisconnected(GameContext)
-            await GameService.Disconnect(GameContext.Engine, GameContext.Connection);
+            await GameService.Disconnect(GameContext);
             // NOTE: [Locked] AfterDisconnected(GameContext)
         } catch (Exception e) {
             // 4) Handle error:

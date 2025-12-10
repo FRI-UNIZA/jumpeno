@@ -32,9 +32,12 @@
     overflow: visible !important;
 }
 
-::deep.scroll-area .os-scrollbar-handle::before {
-    /* Actions: */
-    pointer-events: none;
+@media (hover: hover) and (pointer: fine) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.scroll-area .os-scrollbar-handle::before {
+        /* Actions: */
+        pointer-events: none;
+    }
 }
 
 @media all and (min-width: 768px) {

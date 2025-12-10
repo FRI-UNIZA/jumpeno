@@ -35,7 +35,7 @@ public class User {
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool Equals(User? user) {
         if (user == null) return false;
-        if (ID == null && user.ID == null) return user.Name.ToLower() == Name.ToLower();
+        if (ID == null && user.ID == null) return user.Name == Name;
         return user.ID == ID;
     }
 

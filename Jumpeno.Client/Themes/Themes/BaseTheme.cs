@@ -48,8 +48,16 @@ public class BaseTheme {
     public double BREAKPOINT_TABLET => 1200;
 
     // Email ------------------------------------------------------------------------------------------------------------------------------
-    public RGBAColor EMAIL_COLOR => new(42, 33, 56);
-    public RGBAColor EMAIL_ACCENT_COLOR => new(255, 215, 0);
+    public string EMAIL_TITLE_FONT => "Arial";
+    public string EMAIL_TEXT_FONT => "Helvetica";
+    public string EMAIL_BUTTON_FONT => "Arial";
+    // Email > Text:
+    public RGBColor EMAIL_BACKGROUND => new(255, 255, 255);
+    public RGBColor EMAIL_TEXT_COLOR => new(0, 0, 0);
+    // Email > Button:
+    public RGBColor EMAIL_BUTTON_COLOR => new(0, 0, 0);
+    public RGBColor EMAIL_BUTTON_BACKGROUND => new(255, 215, 0);
+    public RGBColor EMAIL_BUTTON_BACKGROUND_HIGHLIGHT => new(255, 239, 0);
     
 // NOTE: Surface --------------------------------------------------------------------------------------------------------------------------
     // Primary ----------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +65,8 @@ public class BaseTheme {
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX_COLLAPSE { get; }
+    public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT { get; }
+    public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT_COLLAPSE { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS_COLLAPSE { get; }
 
@@ -201,10 +211,8 @@ public class BaseTheme {
     // Game > Components > Lobby:
     public virtual string LOBBY_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_EMPTY_COLOR { get; }
-    // Hide:
-    public virtual RGBColor LOBBY_HIDE_ICON_COLOR { get; }
-    public virtual RGBAColor LOBBY_HIDE_ICON_BACKGROUND { get; }
     // Players:
+    public virtual RGBColor LOBBY_PLAYER_SETTINGS_COLOR => new(65, 65, 65);
     public virtual RGBAColor LOBBY_LINE_BACKGROUND { get; }
     public virtual string LOBBY_PRESENCE_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_DASH_COLOR { get; }
@@ -220,6 +228,10 @@ public class BaseTheme {
     // Box [box] --------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX { get; }
+
+    // Box [transparent] ------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT { get; }
+    public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_TRANSPARENT { get; }
 
     // Box [glass] ------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }

@@ -5,41 +5,47 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     public byte ID { get; private set; }
     public Body Body { get; private set; }
     public int Score { get; private set; }
+    public int ReadyForRound { get; private set; }
     public RectangleF Rect => Body.Rect;
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool Equals(Player? player) => ID == player?.ID;
+    public static bool IsValid(Player? player) => !User.UNKNOWN.Equals(player?.User);
+    public bool IsValid() => IsValid(this);
     public bool IsJumping => Body.IsJumping;
     public bool JumpedOn(Player player) => Body.JumpedOn(player.Body);
     public bool CollisionDetected => Body.CollisionDetected;
     public bool IsShrinked(Shrink shrink) => Body.IsShrinked(shrink);
     public bool IsAlive => Body.Alive;
+    public bool IsReady(Game game) => game.IsPlayerReady(this);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
     private Player(
         string? connectionID, User user, DEVICE_TYPE device,
-        byte id, Body body, int score
+        byte id, Body body, int score, int readyForRound
     ) : base(connectionID, user, device) {
         ID = id;
         Body = body;
         Score = score;
+        ReadyForRound = readyForRound;
     }
 
     public Player(byte id) : this(
         null, User.UNKNOWN, DEVICE_TYPE.POINTER,
-        id, new(), 0
+        id, new(), 0, 0
     ) {}
 
     public Player(Player player) : this(
         player.ConnectionID, player.User, player.Device,
-        player.ID, player.Body, player.Score
+        player.ID, player.Body, player.Score, player.ReadyForRound
     ) {}
 
-    private void Anonymize() {
+    private void Invalidate() {
         Synchronize(null, User.UNKNOWN, DEVICE_TYPE.POINTER);
-        Body = new();
+        // NOTE: Body is preserved!
         Score = 0;
+        ReadyForRound = 0;
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
@@ -78,10 +84,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         if (killUpdate != null || lifeUpdate != null) {
             GamePlayAliveUpdateGuard.Update(update, () => {
                 if (killUpdate != null) response.KillUpdated = KillUpdate(killUpdate);
-                if (lifeUpdate != null) {
-                    response.LifeUpdated = LifeUpdate(lifeUpdate);
-                    if (response.LifeUpdated) Body = lifeUpdate.Player.Body;
-                }
+                if (lifeUpdate != null) response.LifeUpdated = LifeUpdate(lifeUpdate);
             });
         }
         // 4) Return response:
@@ -105,15 +108,16 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     private bool LifeUpdate(LifeUpdate update) {
-        if (update.Player.ID != ID) return false;
+        if (update.PlayerID != ID) return false;
         return Body.Update(update);
     }
 
     private readonly UpdateGuard<PlayerUpdate> PlayerUpdateGuard = new();
     private bool PlayerUpdate(PlayerUpdate update)
     => PlayerUpdateGuard.Update(update, () => {
-        if (update.Anonymize) Anonymize();
-        else Synchronize(update.Player);
+        if (update.Invalidate) { Invalidate(); return; }
+        Synchronize(update.Player);
+        ReadyForRound = update.ReadyForRound;
     });
 
     private bool StateUpdate(StateUpdate update) => Body.Update(update);
@@ -122,6 +126,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
         if (!update.Players.TryGetValue(ID, out var player)) return false;
         Body = player.Body;
         Score = player.Score;
+        if (User.ID == update.Game.Host.ID) ReadyForRound = update.Game.Round + 1;
         return true;
     }
 

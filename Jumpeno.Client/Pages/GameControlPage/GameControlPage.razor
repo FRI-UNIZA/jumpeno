@@ -4,30 +4,59 @@
 @attribute [Route(GameControlPage.ROUTE_EN)]
 @attribute [Route(GameControlPage.ROUTE_SK)]
 
+<DocTitle Value="@I18N.T("Game controller")" />
+
 <div class="game-control-page">
-    <DocTitle Value="@I18N.T("Game controller")" />
     <div class="game-control-form">
         <Heading1 Size="TEXT_SIZE.L" Class="game-control-heading">@I18N.T("Game controller")</Heading1>
         <div class="form-inputs">
-            <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Code")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+            <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Code")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" />
+        </div>
+        <div class="game-controls">
+            <Button Variant="BUTTON_VARIANT.DANGER" Size="BUTTON_SIZE.M" Class="button-end-game" OnClick="Delete">
+                <Icon><CloseSVG Label="@I18N.T("End game")" /></Icon>
+            </Button>
+            <Button Size="BUTTON_SIZE.M" Class="button-toggle-game" OnClick="Toggle">
+                <Icon><AntIcon Type="caret-right" Theme="outline" Label="@I18N.T("Start")" /></Icon>
+                <Text>/</Text>
+                <IconAfter><AntIcon Type="pause" Theme="outline" Label="@I18N.T("Pause")" /></IconAfter>
+            </Button>
         </div>
     </div>
-    <div>
-        <Button Variant="BUTTON_VARIANT.DANGER" Size="BUTTON_SIZE.L" OnClick="Delete">
-            <Icon><AntIcon Type="delete" Theme="outline" Label="@I18N.T("Delete")" /></Icon>
-        </Button>
-        <Button Size="BUTTON_SIZE.M" OnClick="Toggle">
-            <Icon><AntIcon Type="caret-right" Theme="outline" Label="@I18N.T("Start")" /></Icon>
-            <Text>/</Text>
-            <IconAfter><AntIcon Type="pause" Theme="outline" Label="@I18N.T("Pause")" /></IconAfter>
-        </Button>
-    </div>
-    <ConfirmModal @ref="DeleteConfirmModalRef" Label="@I18N.T("End game")" Danger>
-        <Icon><AntIcon Type="delete" Theme="outline" Label="@I18N.T("Delete")" /></Icon>
-        <Message>
-            @I18N.T("Do you really want to end this game?")<br />
-            @I18N.T("Everyone will be disconnected!")
-        </Message>
-        <TextOK>@I18N.T("End")</TextOK>
-    </ConfirmModal>
+    <Box Surface="BOX_SURFACE.PRIMARY_GLASS" class="player-control-form">
+        <div class="player-control-area">
+            <Heading2 Size="TEXT_SIZE.M" Class="player-form-heading">
+                <AntIcon Class="player-form-heading-icon" Type="team" Theme="outline" Label="@I18N.T("Players")" />
+                @I18N.T("Players")
+            </Heading2>
+            <div class="player-controls">
+                <Button Variant="BUTTON_VARIANT.SUCCESS" Size="BUTTON_SIZE.S" Class="button-player-ready" OnClick="PlayerReady">
+                    <Icon><CheckMarkSVG Label="@I18N.T("Ready")" /></Icon>
+                </Button>
+                <Button Variant="BUTTON_VARIANT.DANGER" Size="BUTTON_SIZE.S" Class="button-player-kick" OnClick="PlayerKick">
+                    <Icon><AntIcon Type="delete" Theme="outline" Label="@I18N.T("Kick")" /></Icon>
+                </Button>
+            </div>
+        </div>
+        <div class="form-inputs">
+            <InputField ViewModel="VMName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" AllowClear />
+        </div>
+    </Box>
+    <AntIcon Type="double-left" Theme="outline" Class="game-illustration-icon game-illustration-left" />
+    <AntIcon Type="double-right" Theme="outline" Class="game-illustration-icon game-illustration-right" />
 </div>
+
+<ConfirmModal @ref="DeleteConfirmModalRef" Label="@I18N.T("End game")" Danger>
+    <Icon><AntIcon Type="logout" Theme="outline" Label="@I18N.T("Delete")" /></Icon>
+    <Message>
+        @I18N.T("Do you really want to end this game?")<br />
+        @I18N.T("Everyone will be disconnected!")
+    </Message>
+    <TextOK>@I18N.T("End")</TextOK>
+</ConfirmModal>
+
+<ConfirmModal @ref="PlayerKickConfirmModalRef" Label="@(VMName.Value)" Danger>
+    <Icon><AntIcon Type="user-delete" Theme="outline" Label="@I18N.T("Players")" /></Icon>
+    <Message>@I18N.T("Do you want to kick this player?")</Message>
+    <TextOK>@I18N.T("Kick")</TextOK>
+</ConfirmModal>

@@ -57,7 +57,7 @@ public partial class GameScreen {
     public async Task AfterUpdates() {
         var deltaT = await VM.Game.Clock.AwaitDelta();
         VM.Game.Update(VM.Game.NewTimeFlowUpdate(deltaT));
-    } 
+    }
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     // Arrows:
@@ -102,13 +102,17 @@ public partial class GameScreen {
             }
         });
     }
-    private Func<Task> TouchKeyEvent(GAME_CONTROLS control) => async () => await PressKey(control);
-    private Func<Task> MouseTouchKeyEvent(GAME_CONTROLS control) => async () => await MouseReleaseKeyEventLock.TryExclusive(async () => {
+    private Func<Task> TouchKeyEvent(GAME_CONTROLS control) => () => PressKey(control);
+    private Func<MouseEventArgs, Task> MouseTouchKeyEvent(GAME_CONTROLS control)
+    => e => MouseReleaseKeyEventLock.TryExclusive(async () => {
+        if (e.Button != MOUSE_BUTTON.LEFT.Raw()) return;
         await PressKey(control);
-        MouseReleaseKeyEvent = async () => await MouseReleaseKeyEventLock.TryExclusive(async () => {
-            await ReleaseKey(control);
-            MouseReleaseKeyEvent = () => Task.CompletedTask;
-        });
+        MouseReleaseKeyEvent = () => MouseReleaseKeyEventLock.TryExclusive(
+            async () => {
+                await ReleaseKey(control);
+                MouseReleaseKeyEvent = () => Task.CompletedTask;
+            }
+        );
     });
     [JSInvokable]
     public async Task JS_OnKeyDown(WindowKeyEvent e) {
@@ -131,7 +135,7 @@ public partial class GameScreen {
             }
         });
     }
-    private Func<Task> ReleaseKeyEvent(GAME_CONTROLS control) => async () => await ReleaseKey(control);
+    private Func<Task> ReleaseKeyEvent(GAME_CONTROLS control) => () => ReleaseKey(control);
     private Func<Task> MouseReleaseKeyEvent = () => Task.CompletedTask;
     private readonly LockerSlim MouseReleaseKeyEventLock = new();
     [JSInvokable]
@@ -141,7 +145,9 @@ public partial class GameScreen {
         await ReleaseKey(control);
     }
     [JSInvokable]
-    public async Task JS_OnMouseUp((int X, int Y) position) => await MouseReleaseKeyEvent();
+    public async Task JS_OnMouseUp(WindowMouseEvent e) {
+        if (e.Button == MOUSE_BUTTON.LEFT) await MouseReleaseKeyEvent();
+    }
 
     // Check pressed key:
     protected bool IsPressed(GAME_CONTROLS control) {

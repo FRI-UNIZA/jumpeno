@@ -38,5 +38,7 @@ public static class API {
         public static string GAME_PAUSE => $"{URL}/Game/Pause";
         public static string GAME_TOGGLE => $"{URL}/Game/Toggle";
         public static string GAME_DELETE => $"{URL}/Game/Delete";
+        public static string GAME_SET_PLAYER_READY => $"{URL}/Game/SetPlayerReady";
+        public static string GAME_KICK_PLAYER => $"{URL}/Game/KickPlayer";
     }
 }

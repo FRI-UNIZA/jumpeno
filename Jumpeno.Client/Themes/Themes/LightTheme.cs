@@ -7,7 +7,9 @@ public class LightTheme : BaseTheme {
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE => new(255, 255, 255);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX => new(250, 250, 175);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX_COLLAPSE => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS => new(SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX, 0.6f);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => new(SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX, 0.6f);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT_COLLAPSE => new(255, 255, 255);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS => new(0, 0, 0, 0.04f);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS_COLLAPSE => new(255, 255, 255);
 
     // Secondary --------------------------------------------------------------------------------------------------------------------------
@@ -138,9 +140,6 @@ public class LightTheme : BaseTheme {
     // Game > Components > Lobby:
     public override string LOBBY_BOX_SHADOW => "0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2)";
     public override RGBAColor LOBBY_EMPTY_COLOR => new(0, 0, 0, 0.4f);
-    // Hide:
-    public override RGBColor LOBBY_HIDE_ICON_COLOR => new(100, 100, 100);
-    public override RGBAColor LOBBY_HIDE_ICON_BACKGROUND => new(0, 0, 0, 0.1f);
     // Players:
     public override RGBAColor LOBBY_LINE_BACKGROUND => new(255, 215, 0, 0.7f);
     public override string LOBBY_PRESENCE_BOX_SHADOW => "0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7)";
@@ -158,9 +157,13 @@ public class LightTheme : BaseTheme {
     public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX => SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX;
     public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX => "0 6em 16em 0 rgba(0, 0, 0, 0.15)";
 
+    // Box [transparent] ------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT;
+    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_TRANSPARENT => "0 6em 16em 0 rgba(0, 0, 0, 0.15)";
+
     // Box [glass] ------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS => SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS;
-    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 6em 16em 0 rgba(0, 0, 0, 0.15)";
+    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 3em 6em rgba(0, 0, 0, 0.14)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
     // Button [primary] -------------------------------------------------------------------------------------------------------------------

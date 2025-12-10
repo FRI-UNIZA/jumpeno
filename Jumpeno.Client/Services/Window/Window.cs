@@ -76,18 +76,18 @@ public class Window {
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task AddMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddMouseDownEventListener, objRef, method.Method.Name);
     /// <summary>Adds a mousedown event listener to the window.</summary>
     /// <typeparam name="T">Type of object to execute callback on</typeparam>
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task AddMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddMouseDownEventListener, objRef, method.Method.Name);
-    public static async Task RemoveMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task RemoveMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveMouseDownEventListener, objRef, method.Method.Name);
-    public static async Task RemoveMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task RemoveMouseDownEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveMouseDownEventListener, objRef, method.Method.Name);
 
     // MouseUp ----------------------------------------------------------------------------------------------------------------------------
@@ -96,18 +96,18 @@ public class Window {
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task AddMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddMouseUpEventListener, objRef, method.Method.Name);
     /// <summary>Adds a mouseup event listener to the window.</summary>
     /// <typeparam name="T">Type of object to execute callback on</typeparam>
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task AddMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddMouseUpEventListener, objRef, method.Method.Name);
-    public static async Task RemoveMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task RemoveMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveMouseUpEventListener, objRef, method.Method.Name);
-    public static async Task RemoveMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task RemoveMouseUpEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveMouseUpEventListener, objRef, method.Method.Name);
 
     // Click ------------------------------------------------------------------------------------------------------------------------------
@@ -116,18 +116,18 @@ public class Window {
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddClickEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task AddClickEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddClickEventListener, objRef, method.Method.Name);
     /// <summary>Adds a click event listener to the window.</summary>
     /// <typeparam name="T">Type of object to execute callback on</typeparam>
     /// <param name="objRef">Reference to an object to execute callback on</param>
     /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
     /// <returns>Task to await</returns>
-    public static async Task AddClickEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task AddClickEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.AddClickEventListener, objRef, method.Method.Name);
-    public static async Task RemoveClickEventListener<T>(DotNetObjectReference<T> objRef, Action<(int X, int Y)> method) where T : class
+    public static async Task RemoveClickEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowMouseEvent> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveClickEventListener, objRef, method.Method.Name);
-    public static async Task RemoveClickEventListener<T>(DotNetObjectReference<T> objRef, Func<(int X, int Y), Task> method) where T : class
+    public static async Task RemoveClickEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowMouseEvent, Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveClickEventListener, objRef, method.Method.Name);
 
     // Scroll -----------------------------------------------------------------------------------------------------------------------------

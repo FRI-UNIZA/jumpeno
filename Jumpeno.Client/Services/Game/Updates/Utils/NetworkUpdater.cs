@@ -20,9 +20,10 @@ public class NetworkUpdater {
 
     // PlayerUpdate -----------------------------------------------------------------------------------------------------------------------
     private ulong PlayerUpdateID = 0;
-    public PlayerUpdate NewPlayerUpdate(int round, bool hostConnected, Player player, bool anonymize) {
-        return new PlayerUpdate(PlayerUpdateID++, round, hostConnected, player, anonymize);
-    }
+    public PlayerUpdate NewPlayerUpdate(
+        int round, bool hostConnected, Player player, int readyForRound, bool invalidate, GamePlayUpdate? gamePlayUpdate = null
+    )
+    => new(PlayerUpdateID++, round, hostConnected, player, readyForRound, invalidate, gamePlayUpdate);
 
     // RoundUpdate ------------------------------------------------------------------------------------------------------------------------
     private ulong RoundUpdateID = 0;

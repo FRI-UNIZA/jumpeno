@@ -984,4 +984,40 @@
   <data name="Host already connected!" xml:space="preserve">
     <value />
   </data>
+  <data name="You are not a player!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Player is ready." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Players are not ready." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Not a player of this game!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Player not connected." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Player shifts" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Do you want to kick this player?" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Kick" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Host can not be kicked!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Game must have at least 2 players!" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Incorrect version! Please refresh." xml:space="preserve">
+    <value />
+  </data>
 </root>

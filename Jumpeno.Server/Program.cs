@@ -276,6 +276,7 @@ app.UseBlazorFrameworkFiles();
 
 // Custom Middlewares:
 app.UseMiddleware<ErrorMiddleware>();
+app.UseMiddleware<VersionMiddleware>();
 app.UseMiddleware<APIMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<HeadersMiddleware>();

@@ -31,8 +31,14 @@ body {
     --theme-breakpoint-mobile: 768;
     --theme-breakpoint-tablet-sm: 992;
     --theme-breakpoint-tablet: 1200;
-    --theme-email-color: rgba(42, 33, 56, 1);
-    --theme-email-accent-color: rgba(255, 215, 0, 1);
+    --theme-email-title-font: Arial;
+    --theme-email-text-font: Helvetica;
+    --theme-email-button-font: Arial;
+    --theme-email-background: rgb(255, 255, 255);
+    --theme-email-text-color: rgb(0, 0, 0);
+    --theme-email-button-color: rgb(0, 0, 0);
+    --theme-email-button-background: rgb(255, 215, 0);
+    --theme-email-button-background-highlight: rgb(255, 239, 0);
 }
 
 body.light-theme.surface-primary,
@@ -95,8 +101,6 @@ body.light-theme .surface-primary {
     --theme-game-screen-control-pressed-box-shadow: 0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.14);
     --theme-lobby-box-shadow: 0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2);
     --theme-lobby-empty-color: rgba(0, 0, 0, 0.4);
-    --theme-lobby-hide-icon-color: rgb(100, 100, 100);
-    --theme-lobby-hide-icon-background: rgba(0, 0, 0, 0.1);
     --theme-lobby-line-background: rgba(255, 215, 0, 0.7);
     --theme-lobby-presence-box-shadow: 0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7);
     --theme-lobby-dash-color: rgba(0, 0, 0, 0.14);
@@ -340,6 +344,7 @@ body.light-theme .surface-primary {
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
     --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-lobby-player-settings-color: rgb(65, 65, 65);
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-button-success-color: rgba(255, 255, 255, 1);
@@ -373,11 +378,21 @@ body.light-theme.surface-primary-box-collapse,
 body.light-theme .surface-primary-box-collapse {
     --theme-surface-background: rgba(255, 255, 255, 1);
 }
-body.light-theme.surface-primary-glass,
-body.light-theme .surface-primary-glass {
+body.light-theme.surface-primary-transparent,
+body.light-theme .surface-primary-transparent {
     --theme-surface-background: rgba(250, 250, 175, 0.6);
     --theme-box-background: rgba(250, 250, 175, 0.6);
     --theme-box-box-shadow: 0 6em 16em 0 rgba(0, 0, 0, 0.15);
+}
+body.light-theme.surface-primary-transparent-collapse,
+body.light-theme .surface-primary-transparent-collapse {
+    --theme-surface-background: rgba(255, 255, 255, 1);
+}
+body.light-theme.surface-primary-glass,
+body.light-theme .surface-primary-glass {
+    --theme-surface-background: rgba(0, 0, 0, 0.04);
+    --theme-box-background: rgba(0, 0, 0, 0.04);
+    --theme-box-box-shadow: 0 3em 6em rgba(0, 0, 0, 0.14);
 }
 body.light-theme.surface-primary-glass-collapse,
 body.light-theme .surface-primary-glass-collapse {
@@ -485,8 +500,6 @@ body.dark-theme .surface-primary {
     --theme-game-screen-control-pressed-box-shadow: 0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.7);
     --theme-lobby-box-shadow: 0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2);
     --theme-lobby-empty-color: rgba(0, 0, 0, 0.4);
-    --theme-lobby-hide-icon-color: rgb(255, 255, 255);
-    --theme-lobby-hide-icon-background: rgba(255, 255, 255, 0.2);
     --theme-lobby-line-background: rgba(255, 215, 0, 0.7);
     --theme-lobby-presence-box-shadow: 0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7);
     --theme-lobby-dash-color: rgba(0, 0, 0, 0.14);
@@ -730,6 +743,7 @@ body.dark-theme .surface-primary {
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
     --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-lobby-player-settings-color: rgb(65, 65, 65);
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
     --theme-button-success-color: rgba(255, 255, 255, 1);
@@ -763,11 +777,21 @@ body.dark-theme.surface-primary-box-collapse,
 body.dark-theme .surface-primary-box-collapse {
     --theme-surface-background: rgba(255, 255, 255, 1);
 }
-body.dark-theme.surface-primary-glass,
-body.dark-theme .surface-primary-glass {
+body.dark-theme.surface-primary-transparent,
+body.dark-theme .surface-primary-transparent {
     --theme-surface-background: rgba(250, 250, 175, 0.6);
     --theme-box-background: rgba(250, 250, 175, 0.6);
     --theme-box-box-shadow: 0 6em 16em 0 rgba(0, 0, 0, 0.2);
+}
+body.dark-theme.surface-primary-transparent-collapse,
+body.dark-theme .surface-primary-transparent-collapse {
+    --theme-surface-background: rgba(255, 255, 255, 1);
+}
+body.dark-theme.surface-primary-glass,
+body.dark-theme .surface-primary-glass {
+    --theme-surface-background: rgba(0, 0, 0, 0.04);
+    --theme-box-background: rgba(0, 0, 0, 0.04);
+    --theme-box-box-shadow: 0 3em 6em rgba(0, 0, 0, 0.14);
 }
 body.dark-theme.surface-primary-glass-collapse,
 body.dark-theme .surface-primary-glass-collapse {

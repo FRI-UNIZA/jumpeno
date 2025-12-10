@@ -63,4 +63,44 @@ public class GameController : ControllerBase {
     [HttpPatch][Role(ROLE.ADMIN)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task Delete([FromBody] GameControlDTO body) => await GameService.DeleteGame(body.Assert().Code, nameof(GameControlDTO.Code));
+
+    /// <summary>Sets the player as ready.</summary>
+    /// <param name="body">Player control data.</param>
+    /// <response code="200">Player is now ready.</response>
+    [HttpPatch][Role(ROLE.ADMIN)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task SetPlayerReady([FromBody] GamePlayerControlDTO body)
+    {
+        // 1) Validation:
+        body.Assert();
+        // 2) Action call:
+        await GameService.SetPlayerReadyByName(
+            // Parameters:
+            code: body.Code,
+            name: body.Name,
+            // Exceptions:
+            codeID: nameof(body.Code),
+            nameID: nameof(body.Name)
+        );
+    }
+
+    /// <summary>Kicks the player from game.</summary>
+    /// <param name="body">Player control data.</param>
+    /// <response code="200">Player is kicked out.</response>
+    [HttpPatch][Role(ROLE.ADMIN)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task KickPlayer([FromBody] GamePlayerControlDTO body)
+    {
+        // 1) Validation:
+        body.Assert();
+        // 2) Action call:
+        await GameService.KickPlayerByName(
+            // Parameters:
+            code: body.Code,
+            name: body.Name,
+            // Exceptions:
+            codeID: nameof(body.Code),
+            nameID: nameof(body.Name)
+        );
+    }
 }
