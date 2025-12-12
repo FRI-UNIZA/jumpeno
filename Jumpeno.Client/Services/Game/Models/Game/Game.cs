@@ -205,11 +205,11 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         else return space;
     }
 
-    private static void SetSkinOfAnonymousUser(User user) {
+    private void SetSkinOfAnonymousUser(User user) {
         // 1) Check anonym:
         if (user.ID != null) return;
         // 2) Select skin:
-        user.Skin = User.GenerateSkin();
+        user.Skin = GetAvailableSkin();
     }
 
     // Player > Getters > Host ------------------------------------------------------------------------------------------------------------
@@ -341,6 +341,20 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
             Update(NewKillUpdate(null, id));
             Update(NewMovementUnderMapUpdate(player));
         }
+    }
+
+    private SKIN GetAvailableSkin()
+    {
+        // 1) Select free skins:
+        var usedSkins = ActivePlayers.Select(p => p.User.Skin);
+        var allSkins = Enum.GetValues<SKIN>();
+        var freeSkins = allSkins.Except(usedSkins);
+        // 2.1) Find random avaible skin:
+        if (freeSkins.Any())
+            return freeSkins.ElementAt(Random.Shared.Next(freeSkins.Count()));
+        // 2.2) Fallback:
+        else
+            return allSkins.ElementAt(Random.Shared.Next(allSkins.Length));
     }
 
     // Spectator > Connection -------------------------------------------------------------------------------------------------------------

@@ -14,17 +14,17 @@ public partial class GameCanvas {
     );
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    // NOTE: Use for static map rendering:
-    [Parameter]
-    public required Map? Map { get; set; }
-    // NOTE: Use for game rendering:
-    [Parameter]
-    public Game? Game { get; set; }
-    [Parameter]
-    public Player? Player { get; set; }
-    // NOTE: Use for game UI or notifications:
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    /// <summary>Use for static map rendering</summary>
+    [Parameter] public required Map? Map { get; set; }
+
+    /// <summary>Use for game rendering</summary>
+    [Parameter] public Game? Game { get; set; }
+
+    /// <summary>Current game player</summary>
+    [Parameter] public Player? Player { get; set; }
+
+    /// <summary>Use for game UI or notifications</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     // Map --------------------------------------------------------------------------------------------------------------------------------
     public Map CurrentMap() => Map ?? Game?.Map ?? DEFAULT_MAP;
@@ -53,6 +53,12 @@ public partial class GameCanvas {
         .Set("--canvas-box-shadow-color", map.BoxShadow.ToStringContent());
     }
 
+    // Visibility -------------------------------------------------------------------------------------------------------------------------
+    [JSInvokable]
+    public async Task JS_OnVisibilityChange(WindowVisibilityEvent e) {
+        if (!e.Hidden) await Render();
+    }
+
     // Dimensions -------------------------------------------------------------------------------------------------------------------------
     public async Task UpdateDimensions() {
         await RenderLock.TryExclusive(() => {
@@ -73,6 +79,7 @@ public partial class GameCanvas {
     protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         try {
             if (!firstRender) return;
+            await Window.AddVisibilityChangeEventListener(Ref, JS_OnVisibilityChange);
             await Window.AddResizeEventListener(Ref, JS_OnWindowResize);
             await UpdateDimensions();
         } finally {
@@ -81,6 +88,7 @@ public partial class GameCanvas {
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
+        await Window.RemoveVisibilityChangeEventListener(Ref, JS_OnVisibilityChange);
         await Window.RemoveResizeEventListener(Ref, JS_OnWindowResize);
         await RenderLock.DisposeSafe();
         ctx?.Dispose();

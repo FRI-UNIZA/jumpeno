@@ -150,6 +150,26 @@ public class Window {
     public static async Task RemoveScrollEventListener<T>(DotNetObjectReference<T> objRef, Func<Task> method) where T : class
     => await JS.InvokeVoidAsync(JSWindow.RemoveScrollEventListener, objRef, method.Method.Name);
 
+    // Visibility change ------------------------------------------------------------------------------------------------------------------
+    /// <summary>Adds a visibility change event listener to the window.</summary>
+    /// <typeparam name="T">Type of object to execute callback on</typeparam>
+    /// <param name="objRef">Reference to an object to execute callback on</param>
+    /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
+    /// <returns>Task to await</returns>
+    public static Task AddVisibilityChangeEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowVisibilityEvent> method) where T : class
+    => JS.InvokeVoidAsync(JSWindow.AddVisibilityChangeEventListener, objRef, method.Method.Name);
+    /// <summary>Adds a visibility change event listener to the window.</summary>
+    /// <typeparam name="T">Type of object to execute callback on</typeparam>
+    /// <param name="objRef">Reference to an object to execute callback on</param>
+    /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
+    /// <returns>Task to await</returns>
+    public static Task AddVisibilityChangeEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowVisibilityEvent, Task> method) where T : class
+    => JS.InvokeVoidAsync(JSWindow.AddVisibilityChangeEventListener, objRef, method.Method.Name);
+    public static Task RemoveVisibilityChangeEventListener<T>(DotNetObjectReference<T> objRef, Action<WindowVisibilityEvent> method) where T : class
+    => JS.InvokeVoidAsync(JSWindow.RemoveVisibilityChangeEventListener, objRef, method.Method.Name);
+    public static Task RemoveVisibilityChangeEventListener<T>(DotNetObjectReference<T> objRef, Func<WindowVisibilityEvent, Task> method) where T : class
+    => JS.InvokeVoidAsync(JSWindow.RemoveVisibilityChangeEventListener, objRef, method.Method.Name);
+
     // User select ------------------------------------------------------------------------------------------------------------------------
     public static void BlockUserSelect() => JS.InvokeVoid(JSWindow.BlockUserSelect);
     public static async Task BlockUserSelectAsync() => await JS.InvokeVoidAsync(JSWindow.BlockUserSelect);
