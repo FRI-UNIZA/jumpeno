@@ -43,14 +43,10 @@ public partial class ConnectBox {
 
     private readonly TaskCompletionSource InitTCS = new();
 
-    protected override void OnComponentInitialized() {
+    protected override async Task OnComponentInitializedAsync() {
         LastNameValue = LastNameValue == "" ? User.GenerateName() : LastNameValue;
         SetInputCode(VM.URLCode);
         VMName.SetValue(LastNameValue);
-    }
-
-    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (!firstTime) return;
         VM.RegisterForm(FORM);
         await VM.AddURLCodeChangedListener(EventDelegate<string>.Task(SetInputCode));
         InitTCS.TrySetResult();

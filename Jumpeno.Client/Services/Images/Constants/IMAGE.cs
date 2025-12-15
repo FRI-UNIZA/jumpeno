@@ -25,6 +25,11 @@ public static class IMAGE {
     public static string SPRITE_MAGE_AIR => URL.FileLink("/images/sprites/mage-air.png");
     public static string SPRITE_MAGE_EARTH => URL.FileLink("/images/sprites/mage-earth.png");
     public static string SPRITE_MAGE_FIRE => URL.FileLink("/images/sprites/mage-fire.png");
+    public static string SPRITE_MAGE_ICE => URL.FileLink("/images/sprites/mage-ice.png");
+    public static string SPRITE_MAGE_LAVA => URL.FileLink("/images/sprites/mage-lava.png");
     public static string SPRITE_MAGE_MAGIC => URL.FileLink("/images/sprites/mage-magic.png");
+    public static string SPRITE_MAGE_PLANT => URL.FileLink("/images/sprites/mage-plant.png");
+    public static string SPRITE_MAGE_SNOW => URL.FileLink("/images/sprites/mage-snow.png");
     public static string SPRITE_MAGE_WATER => URL.FileLink("/images/sprites/mage-water.png");
+    public static string SPRITE_MAGE_WOOD => URL.FileLink("/images/sprites/mage-wood.png");
 }

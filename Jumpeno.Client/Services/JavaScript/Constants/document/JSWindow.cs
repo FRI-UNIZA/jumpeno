@@ -29,6 +29,9 @@ public static class JSWindow {
     public static readonly string AddScrollEventListener = $"{ClassName}.{nameof(AddScrollEventListener)}";
     public static readonly string RemoveScrollEventListener = $"{ClassName}.{nameof(RemoveScrollEventListener)}";
 
+    public static readonly string AddVisibilityChangeEventListener = $"{ClassName}.{nameof(AddVisibilityChangeEventListener)}";
+    public static readonly string RemoveVisibilityChangeEventListener = $"{ClassName}.{nameof(RemoveVisibilityChangeEventListener)}";
+
     public static readonly string BlockUserSelect = $"{ClassName}.{nameof(BlockUserSelect)}";
     public static readonly string AllowUserSelect = $"{ClassName}.{nameof(AllowUserSelect)}";
 

@@ -121,7 +121,7 @@
                         RoleDescription="@I18N.T("Image")"
                         Class="load-area-canvas"
                     >
-                        <GameCanvas Map="GameMap" Class="map-canvas">
+                        <MapCanvas Map="GameMap" Class="map-canvas">
                             @if (!GameMapLoadArea.Loading) {
                                 @if (VMSelectMapError) {
                                     <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
@@ -138,12 +138,12 @@
                                 } else if (GameMapError) {
                                     <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
                                     <Paragraph Size="TEXT_SIZE.S" Class="error-description">@I18N.T("Map could not be loaded")</Paragraph>
-                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="async () => await LoadMap(VMSelectMap.Value.Value)">
+                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="() => LoadMap(VMSelectMap.Value.Value)">
                                         <Text>@I18N.T("Try again")</Text>
                                     </Button>
                                 }
                             }
-                        </GameCanvas>
+                        </MapCanvas>
                     </LoadArea>
                 </div>
             </div>

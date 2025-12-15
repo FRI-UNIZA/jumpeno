@@ -4,27 +4,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
-#pragma warning disable CA1816
 
-public class HTTP : StaticService<HTTP>, IAsyncDisposable {
+public class HTTP : StaticService<HTTP> {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
     private static Func<Exception, string?, Task> OnError;
     private static Func<EmptyResponse<bool>, Task<bool>> TabLock;
     private static Action<HttpRequestMessage>? AddClientCookies;
-    private readonly Dictionary<string, CancellationTokenSource> Tokens = [];
-    private readonly LockerSlim TokenLock = new();
-
-    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public HTTP() => Disposer = new(this, DisposeUnmanaged);
-    private readonly Disposer Disposer;
-    private async Task DisposeUnmanaged() {
-        foreach (var token in Tokens.Values) token.Dispose();
-        await TokenLock.DisposeSafe();
-    }
-    public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
-    ~HTTP() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(
@@ -57,44 +44,24 @@ public class HTTP : StaticService<HTTP>, IAsyncDisposable {
         request.Content.Headers.Add(key, value);
     }
 
-    private static string GetRequestID(HttpMethod method, string url) {
-        return $"{method}:{url}";
-    }
-
-    private static void CancelToken(CancellationTokenSource token) {
-        token.Cancel();
-        token.Dispose();
-    }
-
-    private async Task RemoveToken(string requestID, CancellationTokenSource token) {
-        await TokenLock.TryExclusive(() => {
-            if (!Tokens.TryGetValue(requestID, out var stored)) return;
-            if (stored != token) return;
-            CancelToken(token);
-            Tokens.Remove(requestID);
-        });
-    }
-
-    private async Task ReplaceToken(string requestID, CancellationTokenSource token) {
-        await TokenLock.TryExclusive(() => {
-            if (Tokens.TryGetValue(requestID, out var stored)) CancelToken(stored);
-            Tokens[requestID] = token;
-        });
-    }
-
     private static async Task<HTTPHeadResult> Request<T>(
         HttpMethod method, bool bodyAccess, string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
         // Retry on refresh:
         for (int iteration = 1; iteration <= 2; iteration++) {
             // Access instance:
             var instance = Instance();
-            var requestID = GetRequestID(method, url);
             HttpResponseMessage? response;
             int code = CODE.DEFAULT;
-            var token = new CancellationTokenSource();
             bool isLocalURL = URL.IsLocal(url);
+            // Cancel token:
+            var cts = new CancellationTokenSource();
+            if (token != null) {
+                token.Token = cts;
+                if (token.IsCancelled) token.Cancel();
+            }
             try {            
                 // Add query parameters:
                 if (query is not null) url = URL.SetQueryParams(url, query);
@@ -115,7 +82,7 @@ public class HTTP : StaticService<HTTP>, IAsyncDisposable {
                     && body is not null
                 ) {
                     var jsonBody = JsonConvert.SerializeObject(body);
-                    request.Content = new StringContent(jsonBody, System.Text.Encoding.UTF8, CONTENT_TYPE.JSON);
+                    request.Content = new StringContent(jsonBody, Encoding.UTF8, CONTENT_TYPE.JSON);
                 }
 
                 // Add headers:
@@ -137,18 +104,15 @@ public class HTTP : StaticService<HTTP>, IAsyncDisposable {
                 // Add cookies:
                 if (AppEnvironment.IsServer && isLocalURL && AddClientCookies is not null) AddClientCookies(request);
 
-                // Store token:
-                await instance.ReplaceToken(requestID, token);
-
                 // Send request:
-                response = await Client().SendAsync(request, token.Token);
+                response = await Client().SendAsync(request, cts.Token);
                 code = (int) response.StatusCode;
             } catch (OperationCanceledException) {
                 throw EXCEPTION.REQUEST_CANCELLED;
             } catch {
                 throw EXCEPTION.REQUEST_FAILED;
             } finally {
-                await instance.RemoveToken(requestID, token);
+                cts.Dispose();
             }
 
             // Check status code:
@@ -197,136 +161,133 @@ public class HTTP : StaticService<HTTP>, IAsyncDisposable {
         throw EXCEPTION.DEFAULT;
     }
 
-    // Tokens -----------------------------------------------------------------------------------------------------------------------------
-    /// <summary>Cancel pending request with given url.</summary>
-    /// <returns>Task to await.</returns>
-    public static async Task Cancel(HttpMethod method, string url) {
-        var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
-            var requestID = GetRequestID(method, url);
-            CancelToken(instance.Tokens[requestID]);
-            instance.Tokens.Remove(requestID);
-        });
-    }
-    
-    /// <summary>Call to cancel all pending requests.</summary>
-    /// <returns>Task to await.</returns>
-    public static async Task CancelRequests() {
-        var instance = Instance(); await instance.TokenLock.TryExclusive(() => {
-            foreach (var token in instance.Tokens.Values) CancelToken(token);
-            instance.Tokens.Clear();
-        });
-    }
-
     // Requests ---------------------------------------------------------------------------------------------------------------------------
     public static async Task<HTTPHeadResult> Head(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Head, false, url, query, headers);
+        return await Request<object>(HttpMethod.Head, false, url, query, headers, token: token);
     }
 
     public static async Task<HTTPHeadResult> Options(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Options, false, url, query, headers);
+        return await Request<object>(HttpMethod.Options, false, url, query, headers, token: token);
     }
     public static async Task<HTTPResult<T>> Options<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Options, true, url, query, headers);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Options, true, url, query, headers, token: token);
     }
 
     public static async Task<HTTPHeadResult> Trace(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Trace, false, url, query, headers);
+        return await Request<object>(HttpMethod.Trace, false, url, query, headers, token: token);
     }
     public static async Task<HTTPResult<T>> Trace<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Trace, true, url, query, headers);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Trace, true, url, query, headers, token: token);
     }
 
     public static async Task<HTTPHeadResult> Get(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Get, false, url, query, headers);
+        return await Request<object>(HttpMethod.Get, false, url, query, headers, token: token);
     }
     public static async Task<HTTPResult<T>> Get<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Get, true, url, query, headers);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Get, true, url, query, headers, token: token);
     }
 
     public static async Task<HTTPHeadResult> Connect(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Connect, false, url, query, headers, contentHeaders, body);
+        return await Request<object>(HttpMethod.Connect, false, url, query, headers, contentHeaders, body, token: token);
     }
     public static async Task<HTTPResult<T>> Connect<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Connect, true, url, query, headers, contentHeaders, body);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Connect, true, url, query, headers, contentHeaders, body, token: token);
     }
 
     public static async Task<HTTPHeadResult> Post(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Post, false, url, query, headers, contentHeaders, body);
+        return await Request<object>(HttpMethod.Post, false, url, query, headers, contentHeaders, body, token: token);
     }
     public static async Task<HTTPResult<T>> Post<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Post, true, url, query, headers, contentHeaders, body);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Post, true, url, query, headers, contentHeaders, body, token: token);
     }
 
     public static async Task<HTTPHeadResult> Put(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Put, false, url, query, headers, contentHeaders, body);
+        return await Request<object>(HttpMethod.Put, false, url, query, headers, contentHeaders, body, token: token);
     }
     public static async Task<HTTPResult<T>> Put<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Put, true, url, query, headers, contentHeaders, body);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Put, true, url, query, headers, contentHeaders, body, token: token);
     }
 
     public static async Task<HTTPHeadResult> Patch(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Patch, false, url, query, headers, contentHeaders, body);
+        return await Request<object>(HttpMethod.Patch, false, url, query, headers, contentHeaders, body, token: token);
     }
     public static async Task<HTTPResult<T>> Patch<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Patch, true, url, query, headers, contentHeaders, body);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Patch, true, url, query, headers, contentHeaders, body, token: token);
     }
 
     public static async Task<HTTPHeadResult> Delete(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return await Request<object>(HttpMethod.Delete, false, url, query, headers, contentHeaders, body);
+        return await Request<object>(HttpMethod.Delete, false, url, query, headers, contentHeaders, body, token: token);
     }
     public static async Task<HTTPResult<T>> Delete<T>(
         string url,
-        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null
+        QueryParams? query = null, Dictionary<string, string>? headers = null, Dictionary<string, string>? contentHeaders = null, object? body = null,
+        HTTPToken? token = null
     ) {
-        return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body);
+        return (HTTPResult<T>) await Request<T>(HttpMethod.Delete, true, url, query, headers, contentHeaders, body, token: token);
     }
 
     // Sync -------------------------------------------------------------------------------------------------------------------------------

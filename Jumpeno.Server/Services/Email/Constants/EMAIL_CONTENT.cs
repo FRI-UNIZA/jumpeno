@@ -6,7 +6,7 @@ public static class EMAIL_CONTENT {
         var theme = THEME.DEFAULT;
         var text = "";
         text += $"<!DOCTYPE html>";
-        text += $"<html>";
+        text += $"<html lang=\"{I18N.Culture}\">";
         text +=     $"<head>";
         text +=         $"<meta charset=\"UTF-8\">";
         text +=         $"<style>";
@@ -41,7 +41,8 @@ public static class EMAIL_CONTENT {
         text +=                                     $"margin-top: 16px;";
         text +=                                     $"border-bottom: 2px solid rgba(0, 0, 0, 0.15);";
         text +=                                     $"transition: background-color {theme.TRANSITION_FAST}ms ease;";
-        text +=                                 $"\"";
+        text +=                                 $"\" ";
+        text +=                                 $"data-ogsb data-ogsc";
         text +=                             $">";
         text +=                                 button;
         text +=                             $"</a>";

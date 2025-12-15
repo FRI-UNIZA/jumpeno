@@ -110,6 +110,17 @@ class JSWindow {
         await this.#ScrollStorage.RemoveEventListener(objRef, method, true)
     }
 
+    // Visibility change ------------------------------------------------------------------------------------------------------------------
+    static #VisibilityChangeStorage = new ListenerStorage('visibilitychange', () => ({ Hidden: document.hidden }))
+
+    static async AddVisibilityChangeEventListener(objRef, method) {
+        await this.#VisibilityChangeStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveVisibilityChangeEventListener(objRef, method) {
+        await this.#VisibilityChangeStorage.RemoveEventListener(objRef, method)
+    }
+
     // User select ------------------------------------------------------------------------------------------------------------------------    
     static BlockUserSelect() {
         document.body.classList.remove(CSS_CLASS.NO_USER_SELECT)

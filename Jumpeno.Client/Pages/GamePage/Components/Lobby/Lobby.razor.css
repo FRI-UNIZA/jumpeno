@@ -163,7 +163,7 @@
     /* Position: */
     position: absolute;
     /* Content: */
-    font-size: calc(var(--button-width) * 0.6189);
+    font-size: calc(var(--button-width) * 0.6389);
 }
 
 /* Game box > Game info ---------------------------------------------------------------------------------------------------------------- */
@@ -584,6 +584,7 @@
         --lobby-primary-width: var(--lobby-width);
         --lobby-secondary-width: 0;
         /* Game box: */
+        --game-delete-button-size: 25px;
         --game-info-height: calc(var(--game-box-inside-height) * 0.3);
         /* Player box: */
         --player-line-height: 38px;
@@ -600,6 +601,12 @@
     ::deep.lobby .lobby-panel.secondary {
         /* Display: */
         display: none;
+    }
+
+    /* Media [mobile view] > Game box > Game name -------------------------------------------------------------------------------------- */
+    ::deep.lobby .game-button.variant.game-delete-button .game-delete-button-icon {
+        /* Content: */
+        font-size: 15.5px;
     }
 
     /* Media [mobile view] > Players box ----------------------------------------------------------------------------------------------- */

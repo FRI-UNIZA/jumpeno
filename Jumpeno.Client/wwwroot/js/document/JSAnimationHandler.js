@@ -46,6 +46,10 @@ class JSAnimationHandler {
         if (count <= 0) return
         setTimeout(() => requestAnimationFrame(() => this.RenderFrames(--count)), 0)
     }
+
+    static RequestAnimationFrame(objRef, method) {
+        requestAnimationFrame(() => objRef.invokeMethodAsync(method));
+    }
 }
 
 window.JSAnimationHandler = JSAnimationHandler
