@@ -65,13 +65,6 @@ public class GameViewModel : IAsyncDisposable {
     public Task InitChat() => Chat.Init();
     private Task DisposeChat() => Chat.Dispose();
 
-    // Initialization [Render] ------------------------------------------------------------------------------------------------------------
-    public async Task PreRender() {
-        if (!IsWatching) return;
-        await Game.Map.PreRender();
-        await Game.Map.Shrink.PreRender(Game);
-    }
-
     // Initialization [UI] ----------------------------------------------------------------------------------------------------------------
     public void InitUI() {
         BlockUserActions();

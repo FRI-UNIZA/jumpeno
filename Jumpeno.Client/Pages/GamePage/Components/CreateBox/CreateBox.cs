@@ -214,18 +214,16 @@ public partial class CreateBox {
         ));
     }
 
-    protected override void OnComponentInitialized() => SetVMInputCode(VM.URLCode);
-
-    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (!firstTime) return;
+    protected override async Task OnComponentInitializedAsync() {
+        SetVMInputCode(VM.URLCode);
         VM.RegisterForm(FORM);
         await VM.AddURLCodeChangedListener(EventDelegate<string>.Task(SetVMInputCode));
     }
 
-    protected override async Task OnComponentAfterRenderAsync(bool firstTime) {
+    protected override void OnComponentAfterRender(bool firstTime) {
         if (!firstTime) return;
         if (!Auth.IsRole(ROLE.USER)) return;
-        await LoadMaps();
+        Async.Fire(LoadMaps);
     }
 
     protected override void OnComponentDispose() {
@@ -234,7 +232,7 @@ public partial class CreateBox {
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
-        await CancelMapRequests();
+        await DisposeMapRequests();
         await VM.RemoveURLCodeChangedListener(EventDelegate<string>.Task(SetVMInputCode));
         VM.UnregisterForm(FORM);
     }
@@ -242,32 +240,40 @@ public partial class CreateBox {
     // Map --------------------------------------------------------------------------------------------------------------------------------
     private async Task LoadMaps() {
         try {
-            // 0) Start loading:
+            // 1) Start loading:
             await StartLoading();
-            // 1.1) Load map list:
-            if (VMSelectMapOptions.Count <= 0) await LoadMapListRequest();
-            // 1.2) Check error:
-            if (VMSelectMapError) { return; }
-            // 1.3) Check empty:
-            if (VMSelectMapOptions.Count <= 0) { return; }
-            // 2.1) Load map detail:
-            if (GameMap == null) await LoadMapRequest(VMSelectMap.Value.Value);
+            // 2.1) Load map list:
+            if (VMSelectMapOptions.Count <= 0) {
+                if (await MapsToken.Reset() is not HTTPToken token) return;
+                await LoadMapsRequest(token);
+            }
+            // 2.2) Check error:
+            if (VMSelectMapError) return;
+            // 2.3) Check empty:
+            if (VMSelectMapOptions.Count <= 0) return;
+            // 3) Load map detail:
+            if (GameMap == null) {
+                if (await MapToken.Reset() is not HTTPToken token) return;
+                await LoadMapRequest(VMSelectMap.Value.Value, token);
+            }
         } catch {
         } finally {
-            // 3) Finish loading:
+            // 4) Finish loading:
             await FinishLoading();
         }
     }
 
     private async Task LoadMap(int id) {
         try {
-            // 0) Start loading:
+            // 1) Start loading:
             await StartLoading();
-            // 1) Request:
-            try { await LoadMapRequest(id); } catch {}
-            // 2) Finish loading:
+            // 2) Request:
+            if (await MapToken.Reset() is not HTTPToken token) return;
+            await LoadMapRequest(id, token);
+        } finally {
+            // 3) Finish loading:
             await FinishLoading();
-        } catch {}
+        }
     }
 
     // Map > Loading ----------------------------------------------------------------------------------------------------------------------
@@ -296,7 +302,9 @@ public partial class CreateBox {
     }
 
     // Map > Requests ---------------------------------------------------------------------------------------------------------------------
-    private async Task LoadMapListRequest() {
+    private readonly HTTPRequestToken MapsToken = new();
+
+    private async Task LoadMapsRequest(HTTPToken token) {
         try {
             // 0) Init:
             VMSelectMapOptions = [];
@@ -306,7 +314,7 @@ public partial class CreateBox {
             // 2) Request maps:
             await HTTP.Try(async () => { try {
                 // 2.1) Send HTTP Request:
-                var result = await HTTP.Get<GameMapsDTOR>(API.BASE.GAME_MAPS);
+                var result = await HTTP.Get<GameMapsDTOR>(API.BASE.GAME_MAPS, token: token);
                 var body = result.Body.Assert();
                 VMSelectMapOptions = [];
                 for (int i = 0; i < body.Maps.Count; i++) {
@@ -325,7 +333,9 @@ public partial class CreateBox {
         } catch {}
     }
 
-    private async Task LoadMapRequest(int id) {
+    private readonly HTTPRequestToken MapToken = new();
+
+    private async Task LoadMapRequest(int id, HTTPToken token) {
         try {
             // 0) Init:
             GameMap = null;
@@ -336,7 +346,7 @@ public partial class CreateBox {
             await HTTP.Try(async () => { try {
                 // 2.1) Send HTTP request:
                 QueryParams q = new(); q.Set(nameof(GameMapDTO.ID), id);
-                var result = await HTTP.Get<GameMapDTOR>(API.BASE.GAME_MAP, query: q);
+                var result = await HTTP.Get<GameMapDTOR>(API.BASE.GAME_MAP, query: q, token: token);
                 var body = result.Body.Assert();
                 GameMap = body.Map;
                 GameMapError = false;
@@ -351,9 +361,14 @@ public partial class CreateBox {
         } catch {}
     }
 
-    private static async Task CancelMapRequests() {
-        await HTTP.Cancel(HttpMethod.Get, API.BASE.GAME_MAPS);
-        await HTTP.Cancel(HttpMethod.Get, API.BASE.GAME_MAP);
+    private async Task CancelMapRequests() {
+        await MapsToken.Reset();
+        await MapToken.Reset();
+    }
+
+    private async Task DisposeMapRequests() {
+        await MapsToken.DisposeAsync();
+        await MapToken.DisposeAsync();
     }
 
     // Create -----------------------------------------------------------------------------------------------------------------------------

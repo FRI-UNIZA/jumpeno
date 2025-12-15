@@ -167,6 +167,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
     private readonly PreRenderer<Map> PreRendererTiles;
     private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+
     private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
     {
         // 1) Clear:
@@ -193,6 +194,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return true;
     }
+
     private static async Task<bool> PreRenderTiles(Canvas2DContext ctx, Map map)
     {
         // 1) Initialize:
@@ -209,6 +211,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return prerendered;
     }
+
     private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map)
     {
         var (source, ctx) = context;
@@ -221,7 +224,20 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         return true;
     }
     public bool IsPrerendered => PreRendererBG.IsPrerendered && PreRendererTiles.IsPrerendered;
-    public async Task<bool> PreRender() => await PreRendererBG.PreRender(this) & await PreRendererTiles.PreRender(this);
+
+    public async Task<bool> PreRender(Game? game = null)
+    {
+        // 1) Save result:
+        var isPrerendered = false;
+        // 2.1) Background:
+        isPrerendered &= await PreRendererBG.PreRender(this);
+        // 2.2) Shrink:
+        if (game != null) isPrerendered &= await Shrink.PreRender(game);
+        // 2.3) Tiles:
+        isPrerendered &= await PreRendererTiles.PreRender(this);
+        // 3) Return result:
+        return isPrerendered;
+    }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, Game? game = null)

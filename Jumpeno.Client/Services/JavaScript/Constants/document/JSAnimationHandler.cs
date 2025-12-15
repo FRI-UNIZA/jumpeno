@@ -11,4 +11,5 @@ public static class JSAnimationHandler {
     public static readonly string CallOnAnimationEnd = $"{ClassName}.{nameof(CallOnAnimationEnd)}";
     public static readonly string CallOnTransitionEnd = $"{ClassName}.{nameof(CallOnTransitionEnd)}";
     public static readonly string RenderFrames = $"{ClassName}.{nameof(RenderFrames)}";
+    public static readonly string RequestAnimationFrame = $"{ClassName}.{nameof(RequestAnimationFrame)}";
 }

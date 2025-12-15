@@ -15,11 +15,14 @@ public class PreRenderer<T>(
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public bool IsPrerendered { get; private set; } = false;
+
     public async Task<bool> PreRender(T @params) {
-        if (IsPrerendered || Source == null) return false;
+        IsPrerendered = false;
+        if (Source == null) return IsPrerendered;
         IsPrerendered = await PreRenderAction(Source, @params);
         return IsPrerendered;
     }
+
     public async Task<bool> Render(Canvas2DContext ctx, T @params) {
         if (!IsPrerendered) await PreRender(@params);
         if (!IsPrerendered || Source == null) return false;

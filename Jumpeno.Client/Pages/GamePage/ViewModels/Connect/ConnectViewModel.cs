@@ -183,7 +183,6 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 PendingUpdates.Clear();
                 await GameVM.InitChat();
                 await GameVM.AddAfterUpdateListener(GameResponse);
-                await GameVM.PreRender();
                 // 5) Set URL:
                 var state = GamePage.NavState.Get();
                 bool isCodeSet = URLCode != "";
