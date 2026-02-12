@@ -63,7 +63,8 @@
     --option-padding-horizontal: calc(0.87 * var(--option-font-size));
     --option-padding-vertical: 14px;
     /* Size: */
-    --modal-padding-content: 0;
+    --modal-padding-content-x: 0;
+    --modal-padding-content-y: 0;
 }
 
 ::deep.modal.select-options-modal .select-options {

@@ -8,18 +8,29 @@
     /* Size: */
     min-width: 100%;
     max-width: 100%;
-    padding: 30px 0 54px;
+    padding: 30px 0 40px;
+    margin-top: -20px;
 }
 
-::deep.account-tab .profile-row {
+::deep.account-tab .profile-row,
+::deep.account-tab .profile-button-row {
     /* Display: */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 12px;
+}
+
+::deep.account-tab .profile-row {
     /* Size: */
-    width: 50%;
+    width: 54%;
+    padding-left: 20px;
+}
+
+::deep.account-tab .profile-button-row {
+    /* Size: */
+    width: 46%;
 }
 
 ::deep.account-tab .user-profile-image-wrap {
@@ -28,6 +39,7 @@
     /* Size: */
     width: 140px;
     height: 140px;
+    margin-bottom: 10px;
     /* Style: */
     border-radius: 100%;
     background-color: var(--theme-modal-profile-avatar-background);
@@ -107,6 +119,12 @@
     }
 
     ::deep.account-tab .profile-row {
+        /* Size: */
+        width: 100%;
+        padding-left: 0;
+    }
+
+    ::deep.account-tab .profile-button-row {
         /* Size: */
         width: 100%;
     }

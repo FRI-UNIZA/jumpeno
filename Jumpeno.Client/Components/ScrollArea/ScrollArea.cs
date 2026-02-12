@@ -134,6 +134,12 @@ public partial class ScrollArea {
     }
     public void ScrollTo(double left, double top) => ScrollTo(ID, left, top);
 
+    public static void InitScrollTo(string id, double left, double top) {
+        ScrollTo(id, 1, 1);
+        ScrollTo(id, left, top);
+    }
+    public void InitScrollTo(double left, double top) => InitScrollTo(ID, left, top);
+
     public static ScrollAreaPosition Position(string id) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaPosition>(JSScrollArea.Position, id);

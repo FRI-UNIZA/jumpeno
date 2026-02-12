@@ -75,24 +75,25 @@ public partial class SelectComponent<T> {
     }
 
     // Opening ----------------------------------------------------------------------------------------------------------------------------
-    private async Task OpenModal() {
+    public async Task Open() {
         if (Disabled) return;
-        await PageLoader.Show(PAGE_LOADER_TASK.SELECT, true);
+        await ModalRef.Open();
+    }
+
+    private void HandleOpenStart() {
         ViewModel.SearchVM.Clear();
         DisplayedOptions = [.. ViewModel.Options];
         if (ViewModel.Empty) DisplayedOptions.Insert(0, SELECT<T>.EMPTY_OPTION);
         LastSelected = ViewModel.Value;
-        await ModalRef.Open();
     }
 
-    private async Task HandleBeforeOpen() {
+    private void HandleOpenFinish() {
         var pos = ModalRef.ScrollAreaRef.ItemPosition($".{CLASS_OPTION_SELECTED}");
-        ModalRef.ScrollAreaRef.ScrollTo(0, pos.Top - pos.Height);
-        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT, false);
+        ModalRef.ScrollAreaRef.InitScrollTo(0, pos.Top - pos.Height);
     }
 
     // Search -----------------------------------------------------------------------------------------------------------------------------
-    private async Task Search(string value) {
+    private Task Search(string value) => UI.Lock.TryExclusive(async () => {
         await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
         MinSearchWatch.Start();
         List<SelectOption<T>> newOptions = [];
@@ -108,28 +109,32 @@ public partial class SelectComponent<T> {
         await SearchTCS.Task;
         await MinSearchWatch.Task;
         await PageLoader.Hide(PAGE_LOADER_TASK.SEARCH);
-    }
+    });
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
-    private async Task SelectOption(SelectOption<T> option) {
+    private Task SelectOption(SelectOption<T> option) => ModalRef.Close(async () => {
+        if (LastSelected == option) return;
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
-        if (LastSelected != option) {
-            ViewModel.SetValue(option);
-            SelectTCS = new TaskCompletionSource();
-            StateHasChanged();
-            await SelectTCS.Task;
-            await ViewModel.OnSelect.Invoke(new SelectEvent<T>(LastSelected, ViewModel.Value));
-        }
-        await ModalRef.Close();
-        ActionHandler.SetFocus(ViewModel.FormID);
-    }
+        ViewModel.SetValue(option);
+        SelectTCS = new TaskCompletionSource();
+        StateHasChanged();
+        await SelectTCS.Task;
+        await ViewModel.OnSelect.Invoke(new SelectEvent<T>(LastSelected, ViewModel.Value));
+    });
 
     // Close ------------------------------------------------------------------------------------------------------------------------------
-    private async Task HandleAfterClose() {
+    public Task Close() => ModalRef.Close();
+
+    private async Task HandleCloseFinish() {
+        if (LastSelected == ViewModel.Value) return;
+        await ViewModel.OnCloseSelected.Invoke(new SelectEvent<T>(LastSelected, ViewModel.Value));
+    }
+
+    private async Task HandleAfterCloseFinish() {
+        ActionHandler.SetFocus(ViewModel.FormID);
         DisplayedOptions = [];
         var lastSelected = LastSelected; LastSelected = SELECT<T>.EMPTY_OPTION;
-        if (lastSelected != ViewModel.Value) {
-            await ViewModel.OnCloseSelected.Invoke(new SelectEvent<T>(lastSelected, ViewModel.Value));
-        }
+        if (lastSelected == ViewModel.Value) return;
+        await ViewModel.OnAfterCloseSelected.Invoke(new SelectEvent<T>(lastSelected, ViewModel.Value));
     }
 }

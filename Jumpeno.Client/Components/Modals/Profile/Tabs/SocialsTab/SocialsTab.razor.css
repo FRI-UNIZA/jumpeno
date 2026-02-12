@@ -1,5 +1,10 @@
 ::deep.socials-tab {
+    /* Display: */
     display: flex;
+    align-items: center;
     flex-direction: column;
-    gap: 10px
+    gap: 12px;
+    /* Size: */
+    width: 100%;
+    padding: 20px 0;
 }

@@ -356,6 +356,11 @@ body.light-theme .surface-primary {
     --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
     --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-tab-button-color: rgb(42, 33, 56);
+    --theme-modal-profile-tab-button-highlight-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
+    --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
@@ -755,6 +760,11 @@ body.dark-theme .surface-primary {
     --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
     --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-tab-button-color: rgb(42, 33, 56);
+    --theme-modal-profile-tab-button-highlight-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
+    --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);

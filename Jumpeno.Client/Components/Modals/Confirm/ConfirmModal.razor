@@ -8,10 +8,14 @@
             @ref="@ModalRef"
             Label="@(Label ?? I18N.T("Confirmation"))"
             Class="@ComputeClass()"
-            OnBeforeOpen="CallOnBeforeOpen"
-            OnAfterOpen="CallOnAfterOpen"
-            OnBeforeClose="CallOnBeforeClose"
-            OnAfterClose="CallOnAfterClose"
+            OnBeforeOpenStart="CallOnBeforeOpenStart"
+            OnOpenStart="CallOnOpenStart"
+            OnOpenFinish="CallOnOpenFinish"
+            OnAfterOpenFinish="CallOnAfterOpenFinish"
+            OnBeforeCloseStart="CallOnBeforeCloseStart"
+            OnCloseStart="CallOnCloseStart"
+            OnCloseFinish="CallOnCloseFinish"
+            OnAfterCloseFinish="CallOnAfterCloseFinish"
         >
             <Content>
                 <div class="confirm-content">

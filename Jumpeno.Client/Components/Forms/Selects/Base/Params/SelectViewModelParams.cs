@@ -20,5 +20,6 @@ public record SelectViewModelParams<T> (
     // Events:
     EventDelegate<SelectEvent<T>>? OnSelect = null,
     EventDelegate<SelectEvent<T>>? OnCloseSelected = null,
+    EventDelegate<SelectEvent<T>>? OnAfterCloseSelected = null,
     Action<string>? OnError = null
 );

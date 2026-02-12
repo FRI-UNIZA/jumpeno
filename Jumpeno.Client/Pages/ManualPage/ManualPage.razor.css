@@ -6,7 +6,7 @@
     align-items: center;
     /* Size: */
     width: 100%;
-    padding: 0 0 6px;
+    padding: 0 0 12px;
 }
 
 ::deep.manual-page .manual-card {

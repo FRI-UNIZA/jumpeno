@@ -19,6 +19,8 @@ public partial class Modal {
     public const string CLASS_SUB_HEADER = "modal-sub-header";
     public const string CLASS_SCROLL = "modal-scroll";
     public const string CLASS_CONTENT = "modal-content";
+    /// <summary>Important wrapper for proper padding on mobile devices.</summary>
+    public const string CLASS_CONTENT_BOX = "modal-content-box";
     public const string CLASS_FOOTER = "modal-footer";
     public const string CLASS_END = "modal-end";
     // Settings:
@@ -45,27 +47,49 @@ public partial class Modal {
     public bool NoFooter { get; set; }
     [Parameter]
     public RenderFragment? Footer { get; set; }
+    // Scrollbars:
+    [Parameter]
+    public SCROLLAREA_AUTOHIDE ScrollAutoHide { get; set; } = SCROLLAREA_AUTOHIDE.MOVE;
+    [Parameter]
+    public bool NoInitScroll { get; set; } = false;
     // Loading (ms):
     [Parameter]
     public uint MinLoading { get; set; } = 300;
     // Abilities:
     [Parameter]
     public bool Unclosable { get; set; } = false;
-    // Events:
+    // Events [open]:
     [Parameter]
-    public EventCallback<Modal> OnBeforeOpen { get; set; } = EventCallback<Modal>.Empty;
+    public EventCallback<Modal> OnBeforeOpenStart { get; set; } = EventCallback<Modal>.Empty;
     [Parameter]
-    public EventCallback<Modal> OnAfterOpen { get; set; } = EventCallback<Modal>.Empty;
+    public EventCallback<Modal> OnOpenStart { get; set; } = EventCallback<Modal>.Empty;
     [Parameter]
-    public EventCallback<Modal> OnBeforeClose { get; set; } = EventCallback<Modal>.Empty;
+    public EventCallback<Modal> OnOpenFinish { get; set; } = EventCallback<Modal>.Empty;
     [Parameter]
-    public EventCallback<Modal> OnAfterClose { get; set; } = EventCallback<Modal>.Empty;
+    public EventCallback<Modal> OnAfterOpenFinish { get; set; } = EventCallback<Modal>.Empty;
+    // Events [close]:
+    [Parameter]
+    public EventCallback<Modal> OnBeforeCloseStart { get; set; } = EventCallback<Modal>.Empty;
+    [Parameter]
+    public EventCallback<Modal> OnCloseStart { get; set; } = EventCallback<Modal>.Empty;
+    [Parameter]
+    public EventCallback<Modal> OnCloseFinish { get; set; } = EventCallback<Modal>.Empty;
+    [Parameter]
+    public EventCallback<Modal> OnAfterCloseFinish { get; set; } = EventCallback<Modal>.Empty;
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    public virtual async Task CallOnBeforeOpen() => await OnBeforeOpen.InvokeAsync(this);
-    public virtual async Task CallOnAfterOpen() => await OnAfterOpen.InvokeAsync(this);
-    public virtual async Task CallOnBeforeClose() => await OnBeforeClose.InvokeAsync(this);
-    public virtual async Task CallOnAfterClose() => await OnAfterClose.InvokeAsync(this);
+    public virtual async Task CallOnBeforeOpenStart() => await OnBeforeOpenStart.InvokeAsync(this);
+    public virtual async Task CallOnOpenStart() => await OnOpenStart.InvokeAsync(this);
+    public virtual async Task CallOnOpenFinish() { 
+        if (!NoInitScroll && ScrollAutoHide != SCROLLAREA_AUTOHIDE.NEVER) ScrollAreaRef.InitScrollTo(0, 0);
+        await OnOpenFinish.InvokeAsync(this);
+    }
+    public virtual async Task CallOnAfterOpenFinish() => await OnAfterOpenFinish.InvokeAsync(this);
+    // Close:
+    public virtual async Task CallOnBeforeCloseStart() => await OnBeforeCloseStart.InvokeAsync(this);
+    public virtual async Task CallOnCloseStart() => await OnCloseStart.InvokeAsync(this);
+    public virtual async Task CallOnCloseFinish() => await OnCloseFinish.InvokeAsync(this);
+    public virtual async Task CallOnAfterCloseFinish() => await OnAfterCloseFinish.InvokeAsync(this);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public readonly string ID;
@@ -92,15 +116,21 @@ public partial class Modal {
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task Open(bool loading = false) {
+    private async Task Open(bool loading = false, EmptyDelegate? init = null) {
         AppEnvironment.AssertClient();
-        CreatedLoading = loading;
-        await ModalProvider.CreateModal(this);
+        await ModalProvider.CreateModal(this, new(async () => {
+            CreatedLoading = loading;
+            if (init != null) await init.Invoke();
+        }));
     }
-    public async Task Open() => await Open(false);
+    public Task Open() => Open(false);
+    public Task Open(Action init) => Open(false, new(init));
+    public Task Open(Func<Task> init) => Open(false, new(init));
 
     // Loading:
-    public async Task OpenLoading() => await Open(true);
+    public Task OpenLoading() => Open(true);
+    public Task OpenLoading(Action init) => Open(true, new(init));
+    public Task OpenLoading(Func<Task> init) => Open(true, new(init));
     public async Task FinishLoading() {
         AppEnvironment.AssertClient();
         await ModalProvider.FinishLoading(this);
@@ -111,16 +141,19 @@ public partial class Modal {
     }
 
     // Close:
-    public async Task Close() {
+    private async Task Close(EmptyDelegate? dispose = null) {
         AppEnvironment.AssertClient();
-        await ModalProvider.DestroyModal(this);
+        await ModalProvider.DestroyModal(this, dispose);
     }
+    public Task Close() => Close((EmptyDelegate?)null);
+    public Task Close(Action dispose) => Close(new EmptyDelegate(dispose));
+    public Task Close(Func<Task> dispose) => Close(new EmptyDelegate(dispose));
     public static async Task CloseAllAbove(Modal root) {
         AppEnvironment.AssertClient();
         await ModalProvider.CloseAllAbove(root);
     }
     public static async Task CloseAll() {
         AppEnvironment.AssertClient();
-        await ModalProvider.CloseAllAbove(null);
+        await ModalProvider.CloseAllAbove();
     }
 }

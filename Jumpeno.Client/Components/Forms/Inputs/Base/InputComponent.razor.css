@@ -154,26 +154,26 @@
 }
 
 /* Clear indentation ------------------------------------------------------------------------------------------------------------------- */
-::deep.field.input.allow-clear:not(.align-right) .input-element {
+::deep.field.input.allow-clear:not(.disabled):not(.align-right) .input-element {
     padding-right: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-outer));
 }
-::deep.field.input.icon-after.allow-clear:not(.align-right) .input-element {
+::deep.field.input.icon-after.allow-clear:not(.disabled):not(.align-right) .input-element {
     padding-right: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
 }
 ::deep.field.input.icon-after:not(.align-right) .input-clear {
     right: calc(var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
 }
 
-::deep.field.input.allow-clear.align-center:not(.icon-before):not(.icon-after) .input-element {
+::deep.field.input.allow-clear:not(.disabled).align-center:not(.icon-before):not(.icon-after) .input-element {
     text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-gap-inner) + var(--input-clear-size) - var(--input-padding-x));
 }
-::deep.field.input.allow-clear.align-center:not(.icon-before).icon-after .input-element {
+::deep.field.input.allow-clear:not(.disabled).align-center:not(.icon-before).icon-after .input-element {
     text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) - var(--input-padding-x));
 }
-::deep.field.input.allow-clear.align-center.icon-before:not(.icon-after) .input-element {
+::deep.field.input.allow-clear:not(.disabled).align-center.icon-before:not(.icon-after) .input-element {
     text-indent: calc(var(--input-clear-size) - var(--input-icon-size));
 }
-::deep.field.input.allow-clear.align-center.icon-after.icon-before .input-element {
+::deep.field.input.allow-clear:not(.disabled).align-center.icon-after.icon-before .input-element {
     text-indent: calc(var(--input-icon-gap-inner) + var(--input-clear-size));
 }
 ::deep.field.input:not(.allow-clear).align-center.icon-before:not(.icon-after) .input-element {
@@ -183,10 +183,10 @@
     text-indent: calc(var(--input-icon-gap-outer) + var(--input-icon-size) + var(--input-icon-gap-inner) - var(--input-padding-x));
 }
 
-::deep.field.input.allow-clear.align-right .input-element {
+::deep.field.input.allow-clear:not(.disabled).align-right .input-element {
     padding-left: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-outer));
 }
-::deep.field.input.icon-before.allow-clear.align-right .input-element {
+::deep.field.input.icon-before.allow-clear:not(.disabled).align-right .input-element {
     padding-left: calc(var(--input-icon-gap-inner) + var(--input-clear-size) + var(--input-icon-gap-inner) + var(--input-icon-size) + var(--input-icon-gap-outer));
 }
 ::deep.field.input.icon-before.align-right .input-clear {

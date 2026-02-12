@@ -23,9 +23,11 @@
                     </div>
                 }
             }
-            <ScrollArea @ref="@Modal.ScrollAreaRef" OverflowX="false" Class="@Modal.CLASS_SCROLL">
+            <ScrollArea @ref="@Modal.ScrollAreaRef" OverflowX="false" Class="@Modal.CLASS_SCROLL" AutoHide="@Modal.ScrollAutoHide">
                 <div class="@Modal.CLASS_CONTENT">
-                    @Modal.Content
+                    <div class="@Modal.CLASS_CONTENT_BOX">
+                        @Modal.Content
+                    </div>
                 </div>
             </ScrollArea>
             @if (!Modal.NoFooter) {

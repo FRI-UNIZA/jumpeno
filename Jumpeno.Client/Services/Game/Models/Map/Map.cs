@@ -64,7 +64,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         List<Tile> tiles, Shrink shrink,
         RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     ) {
-        Name = name;
+        Name = MapValidator.AssertName(name);
         WorldMinX = worldMinX;
         WorldMaxX = worldMaxX;
         WorldMinY = worldMinY;

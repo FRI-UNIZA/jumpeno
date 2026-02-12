@@ -15,7 +15,7 @@
             aria-invalid="@ViewModel.Error.HasError"
             class="@CLASS_SELECT_INPUT"
             disabled="@Disabled"
-            @onclick="@OpenModal"
+            @onclick="@Open"
         >
             @if (ViewModel.Value == SELECT<T>.EMPTY_OPTION) {
                 if (ViewModel.Placeholder == null) {
@@ -33,9 +33,12 @@
             Surface="ModalSurface"
             Label="Label"
             NoFooter
+            NoInitScroll
             Class="@ComputeModalClass()"
-            OnBeforeOpen="@HandleBeforeOpen"
-            OnAfterClose="@HandleAfterClose"
+            OnOpenStart="@HandleOpenStart"
+            OnOpenFinish="@HandleOpenFinish"
+            OnCloseFinish="@HandleCloseFinish"
+            OnAfterCloseFinish="@HandleAfterCloseFinish"
         >
             <SubHeader>
                 @if (ViewModel.Search) {
@@ -60,7 +63,7 @@
                                 aria-label="@option.Label"
                                 aria-selected="false"
                                 class="@ComputeOptionClass(option)"
-                                @onclick="@(async () => await SelectOption(option))"
+                                @onclick="@(() => SelectOption(option))"
                             >
                                 @(option == SELECT<T>.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
                             </button>

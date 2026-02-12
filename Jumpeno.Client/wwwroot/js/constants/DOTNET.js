@@ -21,7 +21,6 @@ class DOTNET {
     }
 
     static PAGE_LOADER = {
-        SHOW: "JS_Show",
         AFTER_ANIMATION_FRAME: "JS_AfterAnimationFrame"
     }
 

@@ -39,10 +39,7 @@ public partial class UserLoginForm {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Login() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
-        await HTTP.Try(async () => {
-            await Auth.LogInUser(VMEmail.Value, VMPassword.Value);
-            ActionHandler.PopFocus();
-        }, FORM);
+        await HTTP.Try(() => Auth.LogInUser(VMEmail.Value, VMPassword.Value), FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }
 }
