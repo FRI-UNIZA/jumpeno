@@ -9,8 +9,8 @@ public partial class GameConfirmModal {
     public required GameViewModel VM { get; set; }
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    public override async Task CallOnBeforeOpen() { await base.CallOnBeforeOpen(); await VM.SwitchToWebInput(); }
-    public override async Task CallOnBeforeClose() { await base.CallOnBeforeClose(); await VM.SwitchToGameInput(); }
+    public override async Task CallOnOpenStart() { await base.CallOnOpenStart(); await VM.SwitchToWebInput(); }
+    public override async Task CallOnCloseFinish() { await base.CallOnCloseFinish(); await VM.SwitchToGameInput(); }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(GameModal.CLASS, Base).Set(CLASS, Base);

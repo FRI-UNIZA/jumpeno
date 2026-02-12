@@ -6,9 +6,11 @@ public class Window {
 
     // Size -------------------------------------------------------------------------------------------------------------------------------
     public static WindowSize GetSize() => JS.Invoke<WindowSize>(JSWindow.GetSize);
-    public static async Task<WindowSize> GetSizeAsync() => await JS.InvokeAsync<WindowSize>(JSWindow.GetSize);
+    public static Task<WindowSize> GetSizeAsync() => JS.InvokeAsync<WindowSize>(JSWindow.GetSize);
     public static WindowSize? GetSizeOf(string selector) => JS.Invoke<WindowSize?>(JSWindow.GetSizeOf, selector);
-    public static async Task<WindowSize?> GetSizeOfAsync(string selector) => await JS.InvokeAsync<WindowSize?>(JSWindow.GetSizeOf, selector);
+    public static Task<WindowSize?> GetSizeOfAsync(string selector) => JS.InvokeAsync<WindowSize?>(JSWindow.GetSizeOf, selector);
+    public static WindowSize? GetRealSizeOf(string selector) => JS.Invoke<WindowSize?>(JSWindow.GetRealSizeOf, selector);
+    public static Task<WindowSize?> GetRealSizeOfAsync(string selector) => JS.InvokeAsync<WindowSize?>(JSWindow.GetRealSizeOf, selector);
 
     // Resize -----------------------------------------------------------------------------------------------------------------------------
     /// <summary>Adds a resize event listener to the window object.</summary>

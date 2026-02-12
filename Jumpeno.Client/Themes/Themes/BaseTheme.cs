@@ -625,6 +625,11 @@ public class BaseTheme {
     public virtual string MODAL_COOKIE_BUTTON_HIGHLIGHT_TEXT_SHADOW { get; }
     
     // ProfileModal -----------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_COLOR => new(42, 33, 56);
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_HIGHLIGHT_COLOR => new(245, 208, 0);
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_ACTIVE_COLOR => new(245, 208, 0);
+    public virtual string MODAL_PROFILE_TAB_BUTTON_ACTIVE_TEXT_SHADOW => "-1px 1px 2px rgb(255, 231, 94)";
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_DIVIDER_COLOR => new(236, 236, 236);
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BACKGROUND { get; }
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR { get; }
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }

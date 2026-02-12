@@ -162,7 +162,7 @@
                             <DisplayModeEachOwnSVG Class="option-each-own-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Each has their own")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
@@ -178,7 +178,7 @@
                             <DisplayModeOneScreenSVG Class="option-one-screen-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Play on 1 screen")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
@@ -194,12 +194,15 @@
                             <DisplayModePresentationSVG Class="option-presentation-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Host only presents")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
                 </RadioButton>
             </FormLabel>
+            @if (VMRadioDisplayMode.Value != null) {
+                <Paragraph Class="display-mode-dynamic-description">@VMRadioDisplayModeDescriptions[VMRadioDisplayMode.Value.Key]</Paragraph>
+            }
 
             <FormLabel Label="@I18N.T("Game mode")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="game-mode">
                 <RadioButton ViewModel="VMRadioGameMode" Label="@I18N.T("Game mode")" AutoSize>
@@ -212,8 +215,11 @@
                             Align="FORM_ALIGN.CENTER"
                             AutoSize
                         >
-                            <p class="option-label"><GameModeMayhemSVG Class="option-mayhem-svg" />@option.Label</p>
-                            <p class="option-description">@I18N.T("Timed game with respawns")</p>
+                            <p class="option-label">
+                                <GameModeMayhemSVG Class="option-mayhem-svg" />
+                                <span class="option-label-text">@option.Label</span>
+                            </p>
+                            <p class="option-description">@VMRadioGameModeDescriptions[option.Key]</p>
                         </RadioButtonOption>
                     }
                     @if (true) {
@@ -225,12 +231,18 @@
                             Align="FORM_ALIGN.CENTER"
                             AutoSize
                         >
-                            <p class="option-label"><GameModeLastStandingSVG Class="option-last-standing-svg" />@option.Label</p>
-                            <p class="option-description">@I18N.T("Until one player remains")</p>
+                            <p class="option-label">
+                                <GameModeLastStandingSVG Class="option-last-standing-svg" />
+                                <span class="option-label-text">@option.Label</span>
+                            </p>
+                            <p class="option-description">@VMRadioGameModeDescriptions[option.Key]</p>
                         </RadioButtonOption>
                     }
                 </RadioButton>
             </FormLabel>
+            @if (VMRadioGameMode.Value != null) {
+                <Paragraph Class="game-mode-dynamic-description">@VMRadioGameModeDescriptions[VMRadioGameMode.Value.Key]</Paragraph>
+            }
         </Box>
     </AuthView>
     <AuthViewBlock Roles="[ROLE.USER]">

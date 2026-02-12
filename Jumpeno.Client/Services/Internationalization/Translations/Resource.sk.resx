@@ -1020,4 +1020,7 @@
   <data name="Incorrect version! Please refresh." xml:space="preserve">
     <value>Nesprávna verzia! Obnov stránku.</value>
   </data>
+  <data name="Account deleted." xml:space="preserve">
+    <value>Účet zmazaný.</value>
+  </data>
 </root>

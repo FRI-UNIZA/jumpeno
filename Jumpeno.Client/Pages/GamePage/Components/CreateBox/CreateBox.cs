@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class CreateBox {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_BUTTON_TRY_AGAIN = "button-try-again"; 
+    public const string ID_BUTTON_TRY_AGAIN = "button-try-again";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -51,12 +51,13 @@ public partial class CreateBox {
             await StartLoading();
             // 3) Load map in OnCloseSelected!
         }),
-        OnCloseSelected: new(async e => {
+        OnAfterCloseSelected: new(e => {
             GameMapSelectLoadArea.Focus();
-            await LoadMap(e.After.Value);
+            Async.Fire(() => LoadMap(e.After.Value));
         }),
         Placeholder: I18N.T("Select map"),
-        Search: true
+        Search: true,
+        SearchMaxLength: MapValidator.NAME_MAX_LENGTH
     ));
     private void VMSelectMapUpdate() {
         if (IsDisposing) return;
@@ -83,9 +84,11 @@ public partial class CreateBox {
     private readonly SelectViewModel<byte> VMSelectCapacity;
     // Display mode:
     private readonly List<RadioOptionViewModel<DISPLAY_MODE>> VMRadioDisplayModeOptions;
+    private readonly List<string> VMRadioDisplayModeDescriptions = [];
     private readonly RadioViewModel<DISPLAY_MODE> VMRadioDisplayMode;
     // Game mode:
     private readonly List<RadioOptionViewModel<GAME_MODE>> VMRadioGameModeOptions;
+    private readonly List<string> VMRadioGameModeDescriptions = [];
     private readonly RadioViewModel<GAME_MODE> VMRadioGameMode;
 
     // Form > InitialValues ---------------------------------------------------------------------------------------------------------------
@@ -195,22 +198,33 @@ public partial class CreateBox {
             new(new(1, DISPLAY_MODE.ONE_SCREEN, DISPLAY_MODE.ONE_SCREEN.String())),
             new(new(2, DISPLAY_MODE.PRESENTATION, DISPLAY_MODE.PRESENTATION.String()))
         ];
+        VMRadioDisplayModeDescriptions.Add(I18N.T("Each has their own"));
+        VMRadioDisplayModeDescriptions.Add(I18N.T("Play on 1 screen"));
+        VMRadioDisplayModeDescriptions.Add(I18N.T("Host only presents"));
         VMRadioDisplayMode = new(new(
             Form: FORM,
             ID: nameof(GameHubCreateDTO.DisplayMode),
             DefaultValue: InitValues.RadioDisplayMode?.Pick(o => VMRadioDisplayModeOptions[o.Key]) ?? VMRadioDisplayModeOptions[1],
-            OnChange: new(e => InitValues.Commit(v => v.RadioDisplayMode = e.After?.DTO))
+            OnChange: new(e => {
+                InitValues.Commit(v => v.RadioDisplayMode = e.After?.DTO);
+                StateHasChanged();
+            })
         ));
         // Game mode:
         VMRadioGameModeOptions = [
             new(new(0, GAME_MODE.MAYHEM, GAME_MODE.MAYHEM.String())),
             new(new(1, GAME_MODE.LAST_STANDING, GAME_MODE.LAST_STANDING.String()))
         ];
+        VMRadioGameModeDescriptions.Add(I18N.T("Timed game with respawns"));
+        VMRadioGameModeDescriptions.Add(I18N.T("Until one player remains"));
         VMRadioGameMode = new(new(
             Form: FORM,
             ID: nameof(GameHubCreateDTO.GameMode),
             DefaultValue: InitValues.RadioGameMode?.Pick(o => VMRadioGameModeOptions[o.Key]) ?? VMRadioGameModeOptions[0],
-            OnChange: new(e => InitValues.Commit(v => v.RadioGameMode = e.After?.DTO))
+            OnChange: new(e => {
+                InitValues.Commit(v => v.RadioGameMode = e.After?.DTO);
+                StateHasChanged();
+            })
         ));
     }
 

@@ -10,17 +10,33 @@
         Class="profile-modal"
     >
         <Content>
-            <LineTabs Position="@TabsPosition" Centered="true" Class="profile-tabs" TabBarClass="profile-tab-bar" OnChanged="x => ResetForms()">
-                <TabPane Key="1" Title="@I18N.T("Account")">
-                    <AccountTab @ref="AccountRef" ModalRef="@ModalRef" PasswordChangeModalRef="@PasswordChangeModalRef" />
-                </TabPane>
-                <TabPane Key="2" Title="@I18N.T("Socials")">
-                    <SocialsTab @ref="SocialsRef" />
-                </TabPane>
-                <TabPane Key="3" Title="@I18N.T("Avatar")">
-                    <AvatarTab @ref="AvatarRef" />
-                </TabPane>
-            </LineTabs>
+            <div class="profile-modal-tab-switch">
+                <div class="profile-tab-buttons">
+                    @code {
+                        private RenderFragment TabButton(PROFILE_TAB tab) => @<Fragment>
+                            <button class="@TabButtonClass(tab)" @onclick="@ChangeTab(tab)">
+                                @I18N.T(tab.String())
+                            </button>
+                        </Fragment>;
+                    }
+                    @TabButton(PROFILE_TAB.ACCOUNT)
+                    @TabButton(PROFILE_TAB.SOCIALS)
+                    @TabButton(PROFILE_TAB.AVATAR)
+                </div>
+                <div class="profile-tabs">
+                    @switch (Tab) {
+                        case PROFILE_TAB.ACCOUNT:
+                            <AccountTab ModalRef="@ModalRef" PasswordChangeModalRef="@PasswordChangeModalRef" />
+                        break;
+                        case PROFILE_TAB.SOCIALS:
+                            <SocialsTab />
+                        break;
+                        case PROFILE_TAB.AVATAR:
+                            <AvatarTab />
+                        break;
+                    }
+                </div>
+            </div>
         </Content>
     </Modal>
     <PasswordChangeModal @ref="PasswordChangeModalRef" />

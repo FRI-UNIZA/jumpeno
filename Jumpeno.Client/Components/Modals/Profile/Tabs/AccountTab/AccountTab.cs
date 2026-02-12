@@ -71,21 +71,21 @@ public partial class AccountTab : IProfileTab
     {
         await ConfirmModalRef.Open(async () => {
             await PageLoader.Show(PAGE_LOADER_TASK.DELETE_ACCOUNT);
+            await Auth.RequestFreeze();
             await HTTP.Try(async () => {
                 var result = await HTTP.Delete<MessageDTOR>(API.BASE.USER_DELETE);
                 var body = result.Body.Assert();
-
                 await Auth.LogOut();
                 await ModalRef.Close();
                 Notification.Success(body.Message);
             }, FORM);
+            await Auth.ResolveFreeze();
             await PageLoader.Hide(PAGE_LOADER_TASK.DELETE_ACCOUNT);
         });
     }
 
     private async Task ChangePassword()
     {
-        await PasswordChangeModalRef.ResetForm();
         await PasswordChangeModalRef.Open();
     }
 

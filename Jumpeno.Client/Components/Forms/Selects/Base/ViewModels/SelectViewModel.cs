@@ -23,6 +23,7 @@ public class SelectViewModel<T> : FormViewModel {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     public EventDelegate<SelectEvent<T>> OnSelect { get; set; }
     public EventDelegate<SelectEvent<T>> OnCloseSelected { get; set; }
+    public EventDelegate<SelectEvent<T>> OnAfterCloseSelected { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SelectViewModel(SelectViewModelParams<T> p) : base(p.Form, p.ID, p.OnError) {
@@ -50,5 +51,6 @@ public class SelectViewModel<T> : FormViewModel {
         // Events:
         OnSelect = p.OnSelect ?? EventDelegate<SelectEvent<T>>.EMPTY;
         OnCloseSelected = p.OnCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
+        OnAfterCloseSelected = p.OnAfterCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
     }
 }

@@ -175,20 +175,12 @@ public static class CookieStorage {
         DeleteCookie(key, domain, path);
     }
 
-    private static async Task ExecWithCookie(Enum[] cookieType, EmptyDelegate callback) {
-        if (!AreAccepted(cookieType)) return;
-        await callback.Invoke();
+    private static async Task<bool> ExecWithCookie(Enum[] cookieType, EmptyDelegate callback) {
+        if (!AreAccepted(cookieType)) return false;
+        await callback.Invoke(); return true;
     }
-    public static async Task WithCookie(Enum[] cookieType, Func<Task> callback) {
-        await ExecWithCookie(cookieType, new(callback));
-    }
-    public static async Task WithCookie(Enum[] cookieType, Action callback) {
-        await ExecWithCookie(cookieType, new(callback));
-    }
-    public static async Task WithCookie(Enum cookieType, Func<Task> callback) {
-        await ExecWithCookie([cookieType], new(callback));
-    }
-    public static async Task WithCookie(Enum cookieType, Action callback) {
-        await ExecWithCookie([cookieType], new(callback));
-    }
+    public static Task WithCookie(Enum[] cookieType, Func<Task> callback) => ExecWithCookie(cookieType, new(callback));
+    public static Task WithCookie(Enum[] cookieType, Action callback) => ExecWithCookie(cookieType, new(callback));
+    public static Task WithCookie(Enum cookieType, Func<Task> callback) => ExecWithCookie([cookieType], new(callback));
+    public static Task WithCookie(Enum cookieType, Action callback) => ExecWithCookie([cookieType], new(callback));
 }

@@ -489,23 +489,20 @@
 ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
     /* Display: */
     align-items: stretch;
-    flex-wrap: wrap;
+    gap: 10px;
     /* Size: */
     width: 100%;
 }
 
 ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
-    /* Display: */
-    order: 1;
     /* Size: */
     width: 100%;
-    height: 60px;
+    height: 48px;
 }
 
 ::deep.create-box .form-label.display-mode.variant.size .radio-button-element {
     /* Size: */
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
 }
 
 ::deep.create-box .form-label.display-mode.variant.size .radio-button-content {
@@ -521,16 +518,16 @@
 
 ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
     /* Display: */
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
 }
 
 ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
     /* Display: */
-    display: none;
+    display: block;
     /* Base: */
-    font-size: 0.75px;
+    font-size: 0.59px;
 }
 ::deep.create-box .form-label.display-mode.variant.size .option-each-own-svg {
     /* Size: */
@@ -541,15 +538,13 @@
     /* Size: */
     width: 60em;
     height: 36em;
-    margin-bottom: 4em;
+    margin-bottom: 1em;
     margin-left: -1em;
 }
 ::deep.create-box .form-label.display-mode.variant.size .option-presentation-svg {
     /* Size: */
     width: 60em;
     height: 40em;
-    margin-top: 2em;
-    margin-bottom: 3em;
 }
 
 ::deep.create-box .form-label.display-mode.variant.size .option-label {
@@ -571,6 +566,16 @@
     white-space: nowrap;
 }
 
+::deep.create-box .paragraph.display-mode-dynamic-description.variant.size {
+    /* Size: */
+    width: 100%;
+    padding: 11px 0 0;
+    margin-bottom: -4px;
+    /* Content: */
+    font-size: 14px;
+    text-align: center;
+}
+
 /* Styles > GameMode ------------------------------------------------------------------------------------------------------------------- */
 ::deep.create-box .form-label.game-mode.variant.size {
     /* Size: */
@@ -579,6 +584,8 @@
     padding-top: 20px;
 }
 ::deep.create-box .form-label.game-mode.variant.size .form-label-element {
+    /* Display: */
+    display: none;
     /* Size: */
     padding-bottom: 13px;
 }
@@ -590,15 +597,21 @@
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-group {
     /* Display: */
     align-items: stretch;
-    flex-direction: column;
+    gap: 10px;
     /* Size: */
     width: 100%;
 }
 
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
     /* Size: */
-    height: 60px;
+    height: 48px;
 }
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-button-element {
+    /* Size: */
+    padding: 0;
+}
+
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-button-content {
     /* Display: */
     display: flex;
@@ -610,15 +623,13 @@
 
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-mayhem-svg {
     /* Size: */
-    width: 40px;
-    height: 40px;
-    margin: -4px 6px -4px 0;
+    width: 34px;
+    height: 34px;
 }
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
     /* Size: */
-    width: 40px;
-    height: 36px;
-    margin: -3px -4px -2px -10px;
+    width: 34px;
+    height: 34px;
 }
 
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label {
@@ -626,14 +637,22 @@
     display: flex;
     align-items: center;
     /* Size: */
-    margin-bottom: 3px;
     padding-bottom: 0;
+    margin-bottom: 0;
     /* Content: */
     font-size: 20px;
     font-weight: 600;
     line-height: 1.5;
     white-space: nowrap;
 }
+
+::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label .option-label-text {
+    /* Display: */
+    display: none;
+    /* Content: */
+    font-size: 16px;
+}
+
 ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-description {
     /* Display: */
     display: none;
@@ -644,6 +663,15 @@
     font-size: 12px;
     line-height: 1;
     white-space: nowrap;
+}
+
+::deep.create-box .paragraph.game-mode-dynamic-description.variant.size {
+    /* Size: */
+    width: 100%;
+    padding: 11px 0 0;
+    /* Content: */
+    font-size: 14px;
+    text-align: center;
 }
 
 /* Styles > Error page ----------------------------------------------------------------------------------------------------------------- */
@@ -682,6 +710,14 @@
     text-align: center;
 }
 
+@media (min-width: 300px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+        /* Base: */
+        font-size: 0.68px;
+    }
+}
+
 @media (min-width: 320px) {
     /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
     ::deep.create-box .map-canvas .canvas-content .paragraph.error-title {
@@ -695,31 +731,69 @@
     }
 
     /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
-    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
-        /* Display: */
-        align-items: flex-start;
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
         /* Size: */
-        min-width: 120px;
+        height: 54px;
     }
 
     ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
-        /* Display: */
-        display: block;
+        /* Base: */
+        font-size: 0.72px;
     }
-    
+
     /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
     ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
         /* Size: */
-        height: 78px;
+        height: 52px;
     }
 
     ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label {
         /* Size: */
         padding-bottom: 4px;
     }
-    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-description {
-        /* Display: */
-        display: flex;
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-mayhem-svg {
+        /* Size: */
+        width: 36px;
+        height: 36px;
+    }
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
+        /* Size: */
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (min-width: 330px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+        /* Base: */
+        font-size: 0.75px;
+    }
+}
+
+@media (min-width: 360px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Size: */
+        height: 64px;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
+        /* Size: */
+        height: 60px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-mayhem-svg {
+        /* Size: */
+        width: 40px;
+        height: 40px;
+    }
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
+        /* Size: */
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -767,6 +841,28 @@
     }
 }
 
+@media (min-width: 390px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
+        /* Base: */
+        font-size: 0.85px;
+    }
+}
+
+@media (min-width: 420px) {
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Size: */
+        height: 72px;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
+        /* Size: */
+        height: 64px;
+    }
+}
+
 @media (min-width: 440px) {
     /* Media > Styles > GameOptions ---------------------------------------------------------------------------------------------------- */
     ::deep.create-box .gameplay-options {
@@ -791,22 +887,38 @@
         /* Size: */
         padding-top: 20px;
     }
+
+    ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        gap: 12px;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-group {
+        /* Display: */
+        gap: 12px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-mayhem-svg {
+        /* Size: */
+        margin: -4px 6px -4px 0;
+    }
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
+        /* Size: */
+        margin: -3px -4px -2px -10px;
+    }
+    
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label .option-label-text {
+        /* Display: */
+        display: inline;
+    }
 }
 
 @media (min-width: 460px) {
     /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
     ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
-        /* Display: */
-        order: 2;
         /* Size: */
-        width: calc(50% - 6px);
-        height: 108px;
-    }    
-    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode.radio-display-mode-one-screen {
-        /* Display: */
-        order: 1;
-        /* Size: */
-        width: 100%;
+        height: 80px;
     }
 
     ::deep.create-box .form-label.display-mode.variant.size .radio-button-content {
@@ -815,16 +927,15 @@
         gap: 0;
     }
 
-    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
-        /* Display: */
-        align-items: center;
-        /* Size: */
-        min-width: auto;
-    }
-
     ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode svg {
         /* Base: */
         font-size: 1px;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label .option-label-text {
+        /* Content: */
+        font-size: 17px;
     }
 }
 
@@ -851,6 +962,67 @@
         /* Display: */
         display: flex;
     }
+
+    /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Size: */
+        width: 100%;
+        height: 100px;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .option-one-screen-svg {
+        /* Size: */
+        margin-bottom: 4em;
+        margin-left: -1em;
+    }
+    ::deep.create-box .form-label.display-mode.variant.size .option-presentation-svg {
+        /* Size: */
+        margin-top: 2em;
+        margin-bottom: 3em;
+    }
+    
+    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description {
+        /* Display: */
+        display: flex;
+    }
+
+    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description .option-description {
+        /* Display: */
+        display: none;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .field.radio-button-option.radio-game-mode {
+        /* Size: */
+        width: 100%;
+        height: 78px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label {
+        /* Size: */
+        margin-bottom: 3px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-last-standing-svg {
+        /* Size: */
+        width: 40px;
+        height: 36px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-label .option-label-text {
+        /* Content: */
+        font-size: 20px;
+    }
+
+    ::deep.create-box .form-label.game-mode.variant.size .radio-button .option-description {
+        /* Display: */
+        display: flex;
+    }
+
+    ::deep.create-box .paragraph.game-mode-dynamic-description.variant.size {
+        /* Display: */
+        display: none;
+    }
 }
 
 @media (min-width: 600px) {
@@ -870,25 +1042,29 @@
         /* Size: */
         max-width: 500px;
     }
-
-    ::deep.create-box .form-label.game-mode.variant.size .radio-button .radio-group {
-        /* Display: */
-        flex-direction: row;
-    }
 }
 
 @media (min-width: 680px) {
     /* Media > Styles > DisplayMode ---------------------------------------------------------------------------------------------------- */
-    ::deep.create-box .form-label.display-mode.variant.size .radio-button .radio-group {
-        /* Display: */
-        flex-wrap: nowrap;
+    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+        /* Size: */
+        height: 108px;
     }
 
-    ::deep.create-box .form-label.display-mode.variant.size .radio-display-mode {
+    ::deep.create-box .form-label.display-mode.variant.size .display-mode-description .option-description {
         /* Display: */
-        order: 1;
-        /* Size: */
-        width: 100%;
+        display: flex;
+    }
+
+    ::deep.create-box .paragraph.display-mode-dynamic-description.variant.size {
+        /* Display: */
+        display: none;
+    }
+
+    /* Media > Styles > GameMode ------------------------------------------------------------------------------------------------------- */
+    ::deep.create-box .form-label.game-mode.variant.size .form-label-element {
+        /* Display: */
+        display: inline-block;
     }
 }
 

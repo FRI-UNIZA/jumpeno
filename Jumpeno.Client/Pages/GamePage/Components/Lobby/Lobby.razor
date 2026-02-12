@@ -105,10 +105,10 @@
                                 <GameButton
                                     Variant="GAME_BUTTON_VARIANT.DANGER"
                                     Class="player-action-button player-kick-button"
-                                    Action="new(async () => {
-                                        PlayerToKick = new(player);
-                                        await PlayerKickConfirmModalRef.Open(() => VM.KickPlayer(player));
-                                    })"
+                                    Action="new(() => PlayerKickConfirmModalRef.Open(
+                                        () => PlayerToKick = new(player),
+                                        () => VM.KickPlayer(player)
+                                    ))"
                                     Disabled="
                                         player.User.ID == VM.Game.Host.ID ||
                                         VM.Game.IsFinished ||
@@ -191,7 +191,7 @@
     Class="lobby-player-kick-confirm-modal"
     Label="@(PlayerToKick?.User.Name)"
     Danger
-    OnAfterClose="() => PlayerToKick = null"
+    OnCloseFinish="() => PlayerToKick = null"
 >
     <Icon><AntIcon Type="user-delete" Theme="outline" /></Icon>
     <Message>@I18N.T("Do you want to kick this player?")</Message>

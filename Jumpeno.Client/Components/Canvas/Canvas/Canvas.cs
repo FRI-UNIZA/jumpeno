@@ -24,16 +24,14 @@ public abstract class Canvas : BasicComponent {
     [JSInvokable]
     public async Task JS_OnVisibilityChange(WindowVisibilityEvent e) {
         if (e.Hidden) return;
-        var counter = 0;
-        do {
-            await Task.Delay(REFRESH_INIT_DELAY);
+        await Task.Delay(REFRESH_INIT_DELAY);
+        var counter = 0; do {
             await RenderLock.TryExclusive(async () => {
                 await PreRenderCanvas();
-                if (!Dynamic) await RenderCanvas();
+                if (!Dynamic) StateHasChanged();
             });
             await Task.Delay(REFRESH_INTERVAL);
-            counter += REFRESH_INTERVAL;
-        } while (counter < REFRESH_TIMES * REFRESH_INTERVAL);
+        } while (++counter < REFRESH_TIMES);
     }
 
     // Dimensions -------------------------------------------------------------------------------------------------------------------------

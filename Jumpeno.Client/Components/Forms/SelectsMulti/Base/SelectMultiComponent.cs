@@ -96,21 +96,22 @@ public partial class SelectMultiComponent<T> {
     }
 
     // Opening ----------------------------------------------------------------------------------------------------------------------------
-    private async Task OpenModal() {
+    public async Task Open() {
         if (Disabled) return;
-        await PageLoader.Show(PAGE_LOADER_TASK.SELECT, true);
+        await ModalRef.Open();
+    }
+
+    private void HandleOpenStart() {
         ViewModel.SearchVM.Clear();
         DisplayedOptions = [..ViewModel.Options];
         DisplayedValue = new(ViewModel.Value);
         ClosedAs = SELECT_MULTI_CLOSE.CANCEL;
         ValueChanged = false;
         LastValue = [];
-        await ModalRef.Open();
-        await PageLoader.Hide(PAGE_LOADER_TASK.SELECT, false);
     }
 
     // Search -----------------------------------------------------------------------------------------------------------------------------
-    private async Task Search(string value) {
+    private Task Search(string value) => UI.Lock.TryExclusive(async () => {
         await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
         MinSearchTime.Start();
         List<SelectOption<T>> newOptions = [];
@@ -125,10 +126,10 @@ public partial class SelectMultiComponent<T> {
         await SearchTCS.Task;
         await MinSearchTime.Task;
         await PageLoader.Hide(PAGE_LOADER_TASK.SEARCH);
-    }
+    });
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
-    private async Task SelectOption(SelectOption<T> option, bool isSelected) {
+    private Task SelectOption(SelectOption<T> option, bool isSelected) => UI.Lock.TryExclusive(async () => {
         if (isSelected) {
             DisplayedValue.Remove(option.Label);
             await ViewModel.OnDeselect.Invoke(new(option));
@@ -136,26 +137,26 @@ public partial class SelectMultiComponent<T> {
             DisplayedValue.Add(option.Label, option);
             await ViewModel.OnSelect.Invoke(new(option));
         }
-    }
+    });
 
-    private async Task ClearSelect() {
+    private Task ClearSelect() => ModalRef.Close(async () => {
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         ClosedAs = SELECT_MULTI_CLOSE.CLEAR;
         LastValue = new(ViewModel.Value);
         ValueChanged = ViewModel.SetValue(new Dictionary<string, SelectOption<T>>());
-        await ModalRef.Close();
-    }
+    });
 
-    private async Task ConfirmSelect() {
+    private Task ConfirmSelect() => ModalRef.Close(async () => {
         await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
         ClosedAs = SELECT_MULTI_CLOSE.OK;
         LastValue = new(ViewModel.Value);
         ValueChanged = ViewModel.SetValue(DisplayedValue);
-        await ModalRef.Close();
-    }
+    });
 
     // Close ------------------------------------------------------------------------------------------------------------------------------
-    private async Task HandleBeforeClose() {
+    public Task Close() => ModalRef.Close();
+
+    private async Task HandleCloseStart() {
         switch (ClosedAs) {
             case SELECT_MULTI_CLOSE.CANCEL:
                 await ViewModel.OnCancel.Invoke(new(DisplayedValue, ViewModel.Value));
@@ -171,21 +172,37 @@ public partial class SelectMultiComponent<T> {
         }
     }
 
-    private async Task HandleAfterClose() {
+    private async Task HandleCloseFinish() {
+        switch (ClosedAs) {
+            case SELECT_MULTI_CLOSE.CANCEL:
+                await ViewModel.OnCancelClose.Invoke(new(DisplayedValue, ViewModel.Value));
+            break;
+            case SELECT_MULTI_CLOSE.CLEAR:
+                if (ValueChanged) await ViewModel.OnClearClose.Invoke(new(LastValue, ViewModel.Value));
+                else await ViewModel.OnCancelClose.Invoke(new(DisplayedValue, ViewModel.Value));
+            break;
+            case SELECT_MULTI_CLOSE.OK:
+                if (ValueChanged) await ViewModel.OnOKClose.Invoke(new(LastValue, ViewModel.Value));
+                else await ViewModel.OnCancelClose.Invoke(new(DisplayedValue, ViewModel.Value));
+            break;
+        }
+    }
+
+    private async Task HandleAfterCloseFinish() {
         DisplayedOptions = [];
         var displayedValue = DisplayedValue; DisplayedValue = [];
         var lastValue = LastValue; LastValue = [];
         switch (ClosedAs) {
             case SELECT_MULTI_CLOSE.CANCEL:
-                await ViewModel.OnCancelClose.Invoke(new(displayedValue, ViewModel.Value));
+                await ViewModel.OnAfterCancelClose.Invoke(new(displayedValue, ViewModel.Value));
             break;
             case SELECT_MULTI_CLOSE.CLEAR:
-                if (ValueChanged) await ViewModel.OnClearClose.Invoke(new(lastValue, ViewModel.Value));
-                else await ViewModel.OnCancelClose.Invoke(new(displayedValue, ViewModel.Value));
+                if (ValueChanged) await ViewModel.OnAfterClearClose.Invoke(new(lastValue, ViewModel.Value));
+                else await ViewModel.OnAfterCancelClose.Invoke(new(displayedValue, ViewModel.Value));
             break;
             case SELECT_MULTI_CLOSE.OK:
-                if (ValueChanged) await ViewModel.OnOKClose.Invoke(new(lastValue, ViewModel.Value));
-                else await ViewModel.OnCancelClose.Invoke(new(displayedValue, ViewModel.Value));
+                if (ValueChanged) await ViewModel.OnAfterOKClose.Invoke(new(lastValue, ViewModel.Value));
+                else await ViewModel.OnAfterCancelClose.Invoke(new(displayedValue, ViewModel.Value));
             break;
         }
     }

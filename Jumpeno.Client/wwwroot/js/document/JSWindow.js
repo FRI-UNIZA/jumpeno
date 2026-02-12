@@ -10,6 +10,11 @@ class JSWindow {
     static GetSizeOf = selector => {
         const element = document.querySelector(selector);
         if (!element) return null;
+        return { Width: element.offsetWidth, Height: element.offsetHeight };
+    }
+    static GetRealSizeOf = selector => {
+        const element = document.querySelector(selector);
+        if (!element) return null;
         const rect = element.getBoundingClientRect();
         return { Width: rect.width, Height: rect.height };
     }

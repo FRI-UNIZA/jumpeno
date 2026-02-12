@@ -21,9 +21,12 @@ public record SelectMultiViewModelParams<T> (
     EventDelegate<SelectMultiOptionEvent<T>>? OnDeselect = null,
     EventDelegate<SelectMultiCancelEvent<T>>? OnCancel = null,
     EventDelegate<SelectMultiCancelEvent<T>>? OnCancelClose = null,
+    EventDelegate<SelectMultiCancelEvent<T>>? OnAfterCancelClose = null,
     EventDelegate<SelectMultiEvent<T>>? OnClear = null,
     EventDelegate<SelectMultiEvent<T>>? OnClearClose = null,
+    EventDelegate<SelectMultiEvent<T>>? OnAfterClearClose = null,
     EventDelegate<SelectMultiEvent<T>>? OnOK = null,
     EventDelegate<SelectMultiEvent<T>>? OnOKClose = null,
+    EventDelegate<SelectMultiEvent<T>>? OnAfterOKClose = null,
     Action<string>? OnError = null
 );
