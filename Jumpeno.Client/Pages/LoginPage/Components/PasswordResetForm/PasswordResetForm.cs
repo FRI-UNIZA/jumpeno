@@ -16,7 +16,7 @@ public partial class PasswordResetForm {
             ID: nameof(UserPasswordResetRequestDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsEmail,
+            TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",

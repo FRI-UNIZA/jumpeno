@@ -6,6 +6,8 @@ public static class JSWindow {
     public const string CLASS_BODY = "body";
     
     public static readonly string GetSize = $"{ClassName}.{nameof(GetSize)}";
+    public static readonly string GetSizeOf = $"{ClassName}.{nameof(GetSizeOf)}";
+    public static readonly string GetRealSizeOf = $"{ClassName}.{nameof(GetRealSizeOf)}";
 
     public static readonly string AddResizeEventListener = $"{ClassName}.{nameof(AddResizeEventListener)}";
     public static readonly string RemoveResizeEventListener = $"{ClassName}.{nameof(RemoveResizeEventListener)}";
@@ -27,6 +29,9 @@ public static class JSWindow {
 
     public static readonly string AddScrollEventListener = $"{ClassName}.{nameof(AddScrollEventListener)}";
     public static readonly string RemoveScrollEventListener = $"{ClassName}.{nameof(RemoveScrollEventListener)}";
+
+    public static readonly string AddVisibilityChangeEventListener = $"{ClassName}.{nameof(AddVisibilityChangeEventListener)}";
+    public static readonly string RemoveVisibilityChangeEventListener = $"{ClassName}.{nameof(RemoveVisibilityChangeEventListener)}";
 
     public static readonly string BlockUserSelect = $"{ClassName}.{nameof(BlockUserSelect)}";
     public static readonly string AllowUserSelect = $"{ClassName}.{nameof(AllowUserSelect)}";

@@ -1,24 +1,31 @@
 namespace Jumpeno.Client.Components;
 
 public partial class ProfileModal {
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
+    // Tabs:
+    private PROFILE_TAB Tab = PROFILE_TAB.ACCOUNT;
+    // Modals:
+    private PasswordChangeModal PasswordChangeModalRef { get; set; } = null!;
 
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    private CSSClass TabButtonClass(PROFILE_TAB tab) => new CSSClass("profile-tab-button").Set("active", Tab == tab);
+
+    // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {
         await ModalRef.OpenLoading();
+        Tab = PROFILE_TAB.ACCOUNT;
         var success = await HTTP.Try(Auth.LoadProfile);
         if (success) await ModalRef.FinishLoading();
         else await ModalRef.CloseLoading();
     }
 
-    // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task SendActivationLink() {
-        await PageLoader.Show(PAGE_LOADER_TASK.ACTIVATION);
-        await HTTP.Try(async () => {
-            var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_SEND_ACTIVATION);
-            Notification.Success(result.Body.Message);
-        });
-        await PageLoader.Hide(PAGE_LOADER_TASK.ACTIVATION);
-    }
+    // Events -----------------------------------------------------------------------------------------------------------------------------
+    private Action ChangeTab(PROFILE_TAB tab) => async () => {
+        ModalRef.ScrollAreaRef.ScrollTo(0, 0);
+        Tab = tab;
+        StateHasChanged();
+        await Task.Yield();
+        ModalRef.ScrollAreaRef.InitScrollTo(0, 0);
+    };
 }

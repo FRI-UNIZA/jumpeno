@@ -1,8 +1,7 @@
 namespace Jumpeno.Server.Middlewares;
 
 public class HeadersMiddleware(RequestDelegate next) {
-    private readonly RequestDelegate Next = next;
-
+    // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static void ApplyHeaders(HttpContext ctx) {
         // 1) Culture header:
         ctx.Response.Headers.ContentLanguage = I18N.Culture;        
@@ -16,8 +15,9 @@ public class HeadersMiddleware(RequestDelegate next) {
         ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON;
     }
 
+    // Invoke -----------------------------------------------------------------------------------------------------------------------------
     public async Task InvokeAsync(HttpContext ctx) {
         ApplyHeaders(ctx);
-        await Next(ctx);
+        await next(ctx);
     }
 }

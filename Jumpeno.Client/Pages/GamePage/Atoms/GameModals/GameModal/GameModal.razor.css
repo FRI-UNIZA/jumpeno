@@ -1,0 +1,160 @@
+/* GameModal > Variables --------------------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal {
+    /* Modal padding: */
+    --modal-padding: calc(var(--aspect-size) * 0.016);
+    /* Margin: */
+    --modal-margin: calc(var(--aspect-size) * 0.016);
+    /* Border radius: */
+    --modal-border-radius: calc(var(--aspect-size) * 0.008);
+    /* Base: */
+    --modal-base-size: calc(var(--aspect-size) * 0.001);
+}
+
+/* GameModal > Styles ------------------------------------------------------------------------------------------------------------------ */
+::deep.modal.game-modal .modal-dialog {
+    /* Size: */
+    min-width: min(var(--modal-min-width), var(--modal-max-width), calc(100vw - 2 * var(--modal-margin)));
+    max-width: min(var(--modal-max-width), calc(100vw - 2 * var(--modal-margin)));
+    min-height: min(var(--modal-min-height), calc(100vh - 2 * var(--modal-margin)), var(--modal-max-height));
+    min-height: min(var(--modal-min-height), calc(100dvh - 2 * var(--modal-margin)), var(--modal-max-height));
+    max-height: min(calc(100vh - 2 * var(--modal-margin)), var(--modal-max-height));
+    max-height: min(calc(100dvh - 2 * var(--modal-margin)), var(--modal-max-height));
+}
+
+::deep.modal.game-modal .modal-header {
+    /* Display: */
+    gap: calc(var(--aspect-size) * 0.018);
+}
+
+::deep.modal.game-modal .modal-scroll .os-scrollbar {
+    /* Variables: */
+    --os-size: calc(var(--aspect-size) * 0.008);
+    --os-padding-axis: calc(var(--aspect-size) * 0.006);
+    --os-padding-perpendicular: calc(var(--aspect-size) * 0.002);
+}
+
+/* GameModal > ModalHeading > Styles --------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal .text.heading.variant.size.modal-heading {
+    font-size: calc(var(--aspect-size) * 0.016);
+}
+
+/* GameModal > ModalClose > Variables -------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal .modal-close {
+    /* Size: */
+    --close-padding: calc(var(--aspect-size) * 0.004);
+    --close-size: calc(var(--aspect-size) * 0.016);
+}
+
+/* GameModal > Button > Size [size-s] -------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal .button-component.button.variant.size-s {
+    /* Variables: */
+    --button-size: calc(var(--aspect-size) * 0.041);
+    --base-size: calc(var(--aspect-size) * 0.0008);
+    --button-icon-size: calc(var(--aspect-size) * 0.018);
+    --button-gap: calc(var(--aspect-size) * 0.007);
+    /* Size: */
+    padding: calc(var(--aspect-size) * 0.009) calc(var(--aspect-size) * 0.022);
+}
+
+::deep.modal.game-modal .button-component.button.variant.size-s .button-text {
+    /* Size: */
+    margin-top: calc(var(--aspect-size) * 0.001);
+    /* Content: */
+    font-size: calc(var(--aspect-size) * 0.013);
+}
+
+/* GameModal > Button > Size [size-m] -------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal .button-component.button.variant.size-m {
+    /* Variables: */
+    --button-size: calc(var(--aspect-size) * 0.052);
+    --base-size: calc(var(--aspect-size) * 0.001);
+    --button-icon-size: calc(var(--aspect-size) * 0.022);
+    --button-gap: calc(var(--aspect-size) * 0.009);
+    /* Size: */
+    padding: calc(var(--aspect-size) * 0.013) calc(var(--aspect-size) * 0.028);
+}
+
+::deep.modal.game-modal .button-component.button.variant.size-m .button-text {
+    /* Size: */
+    margin-top: calc(var(--aspect-size) * 0.001);
+    /* Content: */
+    font-size: calc(var(--aspect-size) * 0.016);
+}
+
+/* GameModal > Button > Size [size-l] -------------------------------------------------------------------------------------------------- */
+::deep.modal.game-modal .button-component.button.variant.size-l {
+    /* Variables: */
+    --button-size: calc(var(--aspect-size) * 0.064);
+    --base-size: calc(var(--aspect-size) * 0.0012);
+    --button-icon-size: calc(var(--aspect-size) * 0.026);
+    --button-gap: calc(var(--aspect-size) * 0.011);
+    /* Size: */
+    padding: calc(var(--aspect-size) * 0.017) calc(var(--aspect-size) * 0.034);
+}
+
+::deep.modal.game-modal .button-component.button.variant.size-l .button-text {
+    /* Size: */
+    margin-top: calc(var(--aspect-size) * 0.001);
+    /* Content: */
+    font-size: calc(var(--aspect-size) * 0.019);
+}
+
+@media (min-width: 768px) {
+    /* Media > GameModal > Variables --------------------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal {
+        /* Modal padding: */
+        --modal-padding: calc(var(--aspect-size) * 0.017);
+        /* Margin: */
+        --modal-margin: calc(var(--aspect-size) * 0.028);
+    }
+    
+    /* Media > GameModal > Styles ------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.game-modal .modal-scroll .os-scrollbar {
+        /* --os-padding-axis: 5px; */
+        --os-size: calc(var(--aspect-size) * 0.011);
+        --os-padding-axis: calc(var(--aspect-size) * 0.006);
+        --os-padding-perpendicular: calc(var(--aspect-size) * 0.0028);
+    }
+
+    /* Media > GameModal > ModalHeading > Styles --------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal .text.heading.variant.size.modal-heading {
+        font-size: calc(var(--aspect-size) * 0.019);
+    }
+
+    /* Media > GameModal > ModalClose > Variables -------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal .modal-close {
+        /* Size: */
+        --close-padding: calc(var(--aspect-size) * 0.005);
+        --close-size: calc(var(--aspect-size) * 0.017);
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Media > GameModal > Variables --------------------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal {
+        /* Modal padding: */
+        --modal-padding: calc(var(--aspect-size) * 0.018);
+        /* Margin: */
+        --modal-margin: calc(var(--aspect-size) * 0.04);
+    }
+    
+    /* Media > GameModal > Styles ------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.game-modal .modal-scroll .os-scrollbar {
+        /* Variables: */
+        --os-size: calc(var(--aspect-size) * 0.012);
+        --os-padding-axis: calc(var(--aspect-size) * 0.005);
+        --os-padding-perpendicular: calc(var(--aspect-size) * 0.003);
+    }
+
+    /* Media > GameModal > ModalHeading > Styles --------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal .text.heading.variant.size.modal-heading {
+        font-size: calc(var(--aspect-size) * 0.02);
+    }
+
+    /* Media > GameModal > ModalClose > Variables -------------------------------------------------------------------------------------- */
+    ::deep.modal.game-modal .modal-close {
+        /* Size: */
+        --close-padding: calc(var(--aspect-size) * 0.006);
+        --close-size: calc(var(--aspect-size) * 0.018);
+    }
+}

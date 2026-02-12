@@ -1,6 +1,8 @@
 @namespace Jumpeno.Client.Components
 
-@inherits FormField<SelectMultiViewModel>
+@typeparam T
+
+@inherits FormField<SelectMultiViewModel<T>>
 
 @code {
     protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
@@ -13,7 +15,7 @@
             aria-invalid="@ViewModel.Error.HasError"
             class="@CLASS_SELECT_INPUT"
             disabled="@Disabled"
-            @onclick="@OpenModal"
+            @onclick="@Open"
         >
             @if (ViewModel.Value.Count == 0) {
                 if (ViewModel.Placeholder == null) {
@@ -39,8 +41,10 @@
             Surface="ModalSurface"
             Label="Label"
             Class="@ComputeModalClass()"
-            OnBeforeClose="@HandleBeforeClose"
-            OnAfterClose="@HandleAfterClose"
+            OnOpenStart="@HandleOpenStart"
+            OnCloseStart="@HandleCloseStart"
+            OnCloseFinish="@HandleCloseFinish"
+            OnAfterCloseFinish="@HandleAfterCloseFinish"
         >
             <SubHeader>
                 @if (ViewModel.Search) {
@@ -68,7 +72,7 @@
                                 aria-label="@HTML.Label.OptionAria(option.Label, isSelected)"
                                 aria-selected="@HTML.Label.OptionAriaActive(isSelected)"
                                 class="@ComputeOptionClass(option)"
-                                @onclick="@(async () => await SelectOption(option, isSelected))"
+                                @onclick="@(() => SelectOption(option, isSelected))"
                             >
                                 <AntIcon Type="minus-circle" Theme="outline" Class="@ComputeMarkerClass(isSelected, false)" />
                                 <AntIcon Type="plus-circle" Theme="outline" Class="@ComputeMarkerClass(isSelected, true)" />

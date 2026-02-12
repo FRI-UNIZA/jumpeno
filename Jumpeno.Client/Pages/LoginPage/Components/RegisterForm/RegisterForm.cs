@@ -13,6 +13,7 @@ public partial class RegisterForm {
     private readonly InputViewModel<string> VMConfirmPassword;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private string Password = "";
     private bool Success = false;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -22,7 +23,7 @@ public partial class RegisterForm {
             ID: nameof(UserRegisterDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsEmail,
+            TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
@@ -33,7 +34,7 @@ public partial class RegisterForm {
             ID: nameof(UserRegisterDTO.Name),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
+            TextCheck: UserValidator.IsName,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
@@ -43,11 +44,15 @@ public partial class RegisterForm {
             Form: FORM,
             ID: nameof(UserRegisterDTO.Password),
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            TextCheck: Checker.IsPassword,
+            TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
+            OnInput: new(e => {
+                Password = e.TextAfter;
+                StateHasChanged();
+            }),
             OnChange: new(e => {
                 if (VMConfirmPassword == null) return;
                 if (VMConfirmPassword.Value != e.After) return;
@@ -59,7 +64,7 @@ public partial class RegisterForm {
             Form: FORM,
             ID: "ConfirmPassword",
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            TextCheck: Checker.IsPassword,
+            TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",

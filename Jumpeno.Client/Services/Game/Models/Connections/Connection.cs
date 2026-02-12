@@ -16,7 +16,7 @@ public class Connection {
         User = user;
         Device = device;
     }
-    
+
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public void Connect(string connectionID, DEVICE_TYPE device) {
         ConnectionID = connectionID;

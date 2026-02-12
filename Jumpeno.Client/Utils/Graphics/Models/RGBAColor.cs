@@ -35,6 +35,8 @@ public record RGBAColor : RGBColor {
     public RGBAColor Blend(double percentage, RGBAColor color) => Blend(this, percentage, color);
 
     // Operators --------------------------------------------------------------------------------------------------------------------------
-    public override string ToString() => $"rgba({R}, {G}, {B}, {$"{A}".Replace(',', '.')})";
+    public override string ToString() => $"rgba({ToStringContent()})";
+    public override string ToStringContent() => $"{R}, {G}, {B}, {$"{A}".Replace(',', '.')}";
+
     public static implicit operator string(RGBAColor color) => color.ToString();
 }

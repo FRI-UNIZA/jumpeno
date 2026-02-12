@@ -60,4 +60,38 @@ public partial class AnimationHandler {
     // Frames -----------------------------------------------------------------------------------------------------------------------------
     public static void RenderFrames(int count) => JS.InvokeVoid(JSAnimationHandler.RenderFrames, count);
     public static async Task RenderFramesAsync(int count) => await JS.InvokeVoidAsync(JSAnimationHandler.RenderFrames, count);
+
+    /// <summary>Requests animation frame.</summary>
+    /// <typeparam name="T">Type of object to execute callback on</typeparam>
+    /// <param name="objRef">Reference to an object to execute callback on</param>
+    /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
+    /// <returns>Task to await</returns>
+    public static Task RequestAnimationFrame<T>(DotNetObjectReference<T> objRef, Action method) where T : class
+    => JS.InvokeVoidAsync(JSAnimationHandler.RequestAnimationFrame, objRef, method.Method.Name);
+    /// <summary>Requests animation frame.</summary>
+    /// <typeparam name="T">Type of object to execute callback on</typeparam>
+    /// <param name="objRef">Reference to an object to execute callback on</param>
+    /// <param name="method">The method to invoke. It must be marked with the [JSInvokable] attribute</param>
+    /// <returns>Task to await</returns>
+    public static Task RequestAnimationFrame<T>(DotNetObjectReference<T> objRef, Func<Task> method) where T : class
+    => JS.InvokeVoidAsync(JSAnimationHandler.RequestAnimationFrame, objRef, method.Method.Name);
+
+    /// <summary>Executes animation frame and waits for it's completion.</summary>
+    /// <param name="method">The method to invoke</param>
+    /// <returns>Task to await</returns>
+    public static async Task ExecuteAnimationFrame(Action method) {
+        var obj = DotNetObjectReference.Create(new AnimationHandlerFrameObject(new(method)));
+        await JS.InvokeVoidAsync(JSAnimationHandler.RequestAnimationFrame, obj, nameof(obj.Value.Execute));
+        await obj.Value.Task;
+        obj.Dispose();
+    }
+    /// <summary>Executes animation frame and waits for it's completion.</summary>
+    /// <param name="method">The method to invoke</param>
+    /// <returns>Task to await</returns>
+    public static async Task ExecuteAnimationFrame(Func<Task> method) {
+        var obj = DotNetObjectReference.Create(new AnimationHandlerFrameObject(new(method)));
+        await JS.InvokeVoidAsync(JSAnimationHandler.RequestAnimationFrame, obj, nameof(obj.Value.Execute));
+        await obj.Value.Task;
+        obj.Dispose();
+    }
 }

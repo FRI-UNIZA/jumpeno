@@ -17,7 +17,7 @@ public partial class UserLoginForm {
             ID: nameof(UserLoginDTO.Email),
             TextMode: INPUT_TEXT_MODE.NORMAL,
             Trim: true,
-            TextCheck: Checker.IsEmail,
+            TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
@@ -27,7 +27,7 @@ public partial class UserLoginForm {
             Form: FORM,
             ID: nameof(UserLoginDTO.Password),
             TextMode: INPUT_TEXT_MODE.NORMAL,
-            TextCheck: Checker.IsPassword,
+            TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
@@ -39,10 +39,7 @@ public partial class UserLoginForm {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Login() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
-        await HTTP.Try(async () => {
-            await Auth.LogInUser(VMEmail.Value, VMPassword.Value);
-            ActionHandler.PopFocus();
-        }, FORM);
+        await HTTP.Try(() => Auth.LogInUser(VMEmail.Value, VMPassword.Value), FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }
 }

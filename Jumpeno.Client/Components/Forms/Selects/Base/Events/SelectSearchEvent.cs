@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public record SelectSearchEvent (
+public record SelectSearchEvent<T> (
     string Search,
-    SelectOption Option
+    SelectOption<T> Option
 ) {}

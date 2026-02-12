@@ -48,8 +48,16 @@ public class BaseTheme {
     public double BREAKPOINT_TABLET => 1200;
 
     // Email ------------------------------------------------------------------------------------------------------------------------------
-    public RGBAColor EMAIL_COLOR => new(42, 33, 56);
-    public RGBAColor EMAIL_ACCENT_COLOR => new(255, 215, 0);
+    public string EMAIL_TITLE_FONT => "Arial";
+    public string EMAIL_TEXT_FONT => "Helvetica";
+    public string EMAIL_BUTTON_FONT => "Arial";
+    // Email > Text:
+    public RGBColor EMAIL_BACKGROUND => new(255, 255, 255);
+    public RGBColor EMAIL_TEXT_COLOR => new(0, 0, 0);
+    // Email > Button:
+    public RGBColor EMAIL_BUTTON_COLOR => new(0, 0, 0);
+    public RGBColor EMAIL_BUTTON_BACKGROUND => new(255, 215, 0);
+    public RGBColor EMAIL_BUTTON_BACKGROUND_HIGHLIGHT => new(255, 239, 0);
     
 // NOTE: Surface --------------------------------------------------------------------------------------------------------------------------
     // Primary ----------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +65,8 @@ public class BaseTheme {
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX_COLLAPSE { get; }
+    public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT { get; }
+    public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT_COLLAPSE { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS_COLLAPSE { get; }
 
@@ -172,26 +182,37 @@ public class BaseTheme {
 
 // NOTE: Pages ----------------------------------------------------------------------------------------------------------------------------
     // Game -------------------------------------------------------------------------------------------------------------------------------
-    public virtual RGBAColor GAME_STATE_COLOR { get; }
-    public virtual string GAME_STATE_TEXT_SHADOW { get; }
+    // Game > Atoms > GameState:
+    public virtual RGBAColor GAME_STATE_COLOR => new(255, 255, 255);
+    public virtual string GAME_STATE_TEXT_SHADOW => "0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8)";
 
-    // GameScreen:
-    public virtual RGBAColor GAME_SCREEN_CANVAS_BACKGROUND { get; }
-    public virtual string GAME_SCREEN_CANVAS_BOX_SHADOW { get; }
+    // Game > Atoms > GameWaiting:
+    public virtual RGBColor GAME_WAITING_BACKGROUND => new(61, 61, 61);
+    public virtual string GAME_WAITING_DROP_SHADOW => "0 0.043em 0.086em rgba(0, 0, 0, 0.8)";
 
-    // GameScreen > Control:
+    // Game > Components > CreateBox:
+    public virtual RGBAColor CREATE_BOX_SETTINGS_ICON_COLOR => new(255, 255, 255);
+    public virtual string CREATE_BOX_SETTINGS_ICON_DROP_SHADOW => "0 0 0.03em rgba(0, 0, 0, 0.6)";
+    public virtual string CREATE_BOX_LOGO_DROP_SHADOW => "0 0 2em rgba(0, 0, 0, 0.6)";
+    public virtual RGBAColor CREATE_BOX_MAP_ICON_COLOR => new(210, 210, 150);
+    public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_SIZE => "0 0.009em 0.04em 0.014em";
+    public virtual string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY { get; }
+
+    // Game > Components > GameScreen:
+    // Control:
     public virtual RGBAColor GAME_SCREEN_CONTROL_COLOR { get; }
     public virtual RGBAColor GAME_SCREEN_CONTROL_BACKGROUND { get; }
     public virtual string GAME_SCREEN_CONTROL_BOX_SHADOW { get; }
-    
-    // GameScreen > Control [pressed]:
+    // Control [pressed]:
     public virtual RGBAColor GAME_SCREEN_CONTROL_PRESSED_COLOR { get; }
     public virtual RGBAColor GAME_SCREEN_CONTROL_PRESSED_BACKGROUND { get; }
     public virtual string GAME_SCREEN_CONTROL_PRESSED_BOX_SHADOW { get; }
 
-    // Lobby:
+    // Game > Components > Lobby:
     public virtual string LOBBY_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_EMPTY_COLOR { get; }
+    // Players:
+    public virtual RGBColor LOBBY_PLAYER_SETTINGS_COLOR => new(65, 65, 65);
     public virtual RGBAColor LOBBY_LINE_BACKGROUND { get; }
     public virtual string LOBBY_PRESENCE_BOX_SHADOW { get; }
     public virtual RGBAColor LOBBY_DASH_COLOR { get; }
@@ -206,9 +227,19 @@ public class BaseTheme {
 // NOTE: Box ------------------------------------------------------------------------------------------------------------------------------
     // Box [box] --------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX { get; }
-    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX { get; }
+
+    // Box [transparent] ------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT { get; }
+    public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_TRANSPARENT { get; }
+
+    // Box [glass] ------------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS { get; }
     public virtual string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS { get; }
+
+    // Box > BoxHeader --------------------------------------------------------------------------------------------------------------------
+    public virtual string BOX_HEADER_BACKGROUND => "linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent)";
+    public virtual string BOX_HEADER_BOX_SHADOW => "0 2em 10em -2em rgba(0, 0, 0, 0.05)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
     // Button [primary] -------------------------------------------------------------------------------------------------------------------
@@ -250,6 +281,18 @@ public class BaseTheme {
     public virtual RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_COLOR { get; }
     public virtual RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_BACKGROUND { get; }
     public virtual string BUTTON_QUATERNARY_HIGHLIGHT_BOX_SHADOW { get; }
+
+    // Button [success] -------------------------------------------------------------------------------------------------------------------
+    public virtual RGBAColor BUTTON_SUCCESS_COLOR => new(255, 255, 255);
+    public virtual string BUTTON_SUCCESS_BACKGROUND => "linear-gradient(rgb(159 221 1) 00%, #6b9700 90%)";
+    public virtual RGBColor BUTTON_SUCCESS_TINT_COLOR => new(89, 184, 0);
+    public virtual string BUTTON_SUCCESS_BOX_SHADOW => "0.8em 3em 4em rgba(0, 0, 0, 0.55)";
+
+    // Button [success][highlight]:
+    public virtual RGBAColor BUTTON_SUCCESS_HIGHLIGHT_COLOR => new(255, 255, 255);
+    public virtual string BUTTON_SUCCESS_HIGHLIGHT_BACKGROUND => "linear-gradient(rgb(166 231 0) 0%, #7caf00 90%)";
+    public virtual RGBColor BUTTON_SUCCESS_HIGHLIGHT_TINT_COLOR => new(89, 184, 0);
+    public virtual string BUTTON_SUCCESS_HIGHLIGHT_BOX_SHADOW => "0.8em 3em 4em rgba(0, 0, 0, 0.55)";
 
     // Button [danger] --------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BUTTON_DANGER_COLOR { get; }
@@ -514,6 +557,14 @@ public class BaseTheme {
     // Switch [primary][disabled][checked]:
     public virtual RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND { get; }
 
+// NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor GAME_CANVAS_DEFAULT_BACKGROUND { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_FOREGROUND { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_TINT { get; }
+    public virtual RGBColor GAME_CANVAS_DEFAULT_BORDER { get; }
+    public virtual string GAME_CANVAS_BOX_SHADOW_SIZE => "0 0.0025em 0.025em 0.01em";
+    public virtual string GAME_CANVAS_BOX_SHADOW_OPACITY { get; }
+
 // NOTE: Images ---------------------------------------------------------------------------------------------------------------------------
     // Background -------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BACKGROUND_LIGHT_COLOR { get; }
@@ -574,11 +625,25 @@ public class BaseTheme {
     public virtual string MODAL_COOKIE_BUTTON_HIGHLIGHT_TEXT_SHADOW { get; }
     
     // ProfileModal -----------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_COLOR => new(42, 33, 56);
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_HIGHLIGHT_COLOR => new(245, 208, 0);
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_ACTIVE_COLOR => new(245, 208, 0);
+    public virtual string MODAL_PROFILE_TAB_BUTTON_ACTIVE_TEXT_SHADOW => "-1px 1px 2px rgb(255, 231, 94)";
+    public virtual RGBColor MODAL_PROFILE_TAB_BUTTON_DIVIDER_COLOR => new(236, 236, 236);
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BACKGROUND { get; }
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR { get; }
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }
+    public virtual string MODAL_PROFILE_AVATAR_SKIN_BOX_SHADOW => "inset 0 0 0.5em rgba(0, 0, 0, 0.2)";
 
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
+    // PasswordStrength -------------------------------------------------------------------------------------------------------------------
+    public virtual RGBColor PASSWORD_STRENGTH_BAR_SEGMENT_BACKGROUND => new(236, 240, 241);
+    public virtual RGBColor PASSWORD_STRENGTH_RULE_COMPLETED_TEXT_COLOR => new(46, 125, 50);
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N1_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N2_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N3_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0))";
+    public virtual string PASSWORD_STRENGTH_BAR_SEGMENT_N4_FILLED_BACKGROUND => "linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106))";
+
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor PROGRESS_CIRCLE_COLOR { get; }
     public virtual RGBAColor PROGRESS_CIRCLE_BACKGROUND { get; }

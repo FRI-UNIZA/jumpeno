@@ -2,9 +2,15 @@ namespace Jumpeno.Client.ViewModels;
 
 using System.Timers;
 
-public class GameViewModel : IDisposable {
+#pragma warning disable CA1822
+
+public class GameViewModel : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const int PING_INTERVAL_MS = 2000;
+    public static int PING_INTERVAL => From.SToMS(AppSettings.Game.PingInterval.Seconds); // ms
+    // Classes:
+    public const string CLASS_HOST = "host";
+    public const string CLASS_WATCHING = "watching";
+    public const string CLASS_PLAYER = "player";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string QRCode { get; private set; }
@@ -15,47 +21,57 @@ public class GameViewModel : IDisposable {
     public bool IsHost => Game.Host.Equals(Auth.User);
     public bool IsWatching => Game.DisplayMode == DISPLAY_MODE.EACH_OWN || !IsPlayer || IsHost;
     public bool IsPlayer => Player != null;
+    
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public CSSClass CSSClass() {
+        return new CSSClass()
+        .Set(CLASS_HOST, IsHost)
+        .Set(CLASS_WATCHING, IsWatching)
+        .Set(CLASS_PLAYER, IsPlayer);
+    }
+
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    public ChatViewModel Chat { get; private set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameViewModel(
         string qrCode, Game game, Player? player,
-        LinkedList<GameUpdate> updates, Func<string, object, Task> send, EmptyDelegate onRender
+        LinkedList<GameUpdate> updates,
+        Func<string, object, Task> send, Func<string, object, Task> sendRequest, Func<EmptyDelegate, Task> exec,
+        Func<GameChat?> chat, Action notify
     ) {
         QRCode = qrCode;
         Game = game;
-        Player = player == null ? player : Game.GetPlayerRef(player.ID);
+        Player = player;
         GameUpdates = InitGameUpdates(updates);
         Send = send;
-        OnRender = onRender;
+        SendRequest = sendRequest;
+        Exec = action => exec(new(action));
+        ExecAsync = action => exec(new(action));
+        Chat = new(Game.ID, Game.Code, chat, notify);
+        Notify = notify;
+        Ping = null;
     }
 
-    public void Dispose() {
-        UpdateLock.Dispose();
+    public async ValueTask DisposeAsync() {
+        await UpdateLock.DisposeSafe();
         PingTimer?.Dispose();
-        PingLock.Dispose();
+        await PingLock.DisposeSafe();
+        await DisposeChat();
         GC.SuppressFinalize(this);
     }
 
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    private readonly EmptyDelegate OnRender;
+    // Initialization [Chat] --------------------------------------------------------------------------------------------------------------
+    public Task InitChat() => Chat.Init();
+    private Task DisposeChat() => Chat.Dispose();
 
-    // NOTE: Init must be called after render of displayed component:
-    public async Task InitOnRender() => await OnRender.Invoke();
-
-    public async Task PreRender() {
-        if (!IsWatching) return;
-        await Game.Map.PreRender(Game);
-        await Game.Map.Shrink.PreRender(Game);
+    // Initialization [UI] ----------------------------------------------------------------------------------------------------------------
+    public void InitUI() {
+        BlockUserActions();
+        InitControls();
     }
 
-    private static ConcurrentQueue<GameUpdate> InitGameUpdates(LinkedList<GameUpdate> updates) {
-        var queue = new ConcurrentQueue<GameUpdate>();
-        foreach (var update in updates) queue.Enqueue(update);
-        return queue;
-    }
-
-    // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static async Task Request(Func<Task> request) => await PageLoader.Try(request, PAGE_LOADER_TASK.GAME_REQUEST);
+    public void DisposeUI() => AllowUserActions();
 
     // Update Data ------------------------------------------------------------------------------------------------------------------------
     private readonly ConcurrentQueue<GameUpdate> GameUpdates;
@@ -63,19 +79,25 @@ public class GameViewModel : IDisposable {
     private readonly LockerSlim UpdateLock = new();
     public bool Updating { get; private set; } = false;
 
+    private static ConcurrentQueue<GameUpdate> InitGameUpdates(LinkedList<GameUpdate> updates) {
+        var queue = new ConcurrentQueue<GameUpdate>();
+        foreach (var update in updates) queue.Enqueue(update);
+        return queue;
+    }
+
     public async Task AddUpdate(GameUpdate update) {
         GameUpdates.Enqueue(update);
         if (Updating) await ExecuteUpdates();
     }
 
-    public async Task ResetUpdates() => await UpdateLock.TryExclusive(GameUpdates.Clear);
+    public Task ResetUpdates() => UpdateLock.TryExclusive(GameUpdates.Clear);
 
     // Update execution -------------------------------------------------------------------------------------------------------------------
     private bool TryUpdateGame(GameUpdate update) {
         // 1) Ensure current round:
         if (update is GamePlayUpdate gameUpdate) {
             if (gameUpdate.Round < Game.Round) return false;
-            if ((gameUpdate.Round == Game.Round && Game.LOBBY_STATES.Contains(Game.State)) || (gameUpdate.Round > Game.Round)) {
+            if (gameUpdate.Round > Game.Round) {
                 FutureUpdates.AddLast(gameUpdate);
                 return false;
             }
@@ -86,65 +108,74 @@ public class GameViewModel : IDisposable {
 
     public async Task ExecuteUpdates() {
         await UpdateLock.TryExclusive(async () => {
-            if (BeforeUpdates != null) await BeforeUpdates.Invoke();
+            if (BeforeUpdates != null) await BeforeUpdates();
             FutureUpdates.Clear();
             while (GameUpdates.TryDequeue(out var update)) {
-                if (BeforeUpdate != null) await BeforeUpdate.Invoke(new(update));
+                if (BeforeUpdate != null) await BeforeUpdate(new(update));
                 var success = TryUpdateGame(update);
-                if (AfterUpdate != null) await AfterUpdate.Invoke(new(update, success));
+                if (AfterUpdate != null) await AfterUpdate(new(update, success));            
             }
             foreach (var update in FutureUpdates) GameUpdates.Enqueue(update);
-            if (AfterUpdates != null) await AfterUpdates.Invoke();
-            if (Notify != null) await Notify.Invoke();
+            if (AfterUpdates != null) await AfterUpdates();
+            Notify();
         });
     }
 
     public async Task StartUpdating() {
         Updating = true;
+        Game.ClockAutoResetOn();
         await ExecuteUpdates();
     }
 
     public void StopUpdating() {
         Updating = false;
+        Game.ClockAutoResetOff();
     }
 
     // Update events ----------------------------------------------------------------------------------------------------------------------
     private event Func<Task>? BeforeUpdates;
-    public async Task AddBeforeUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => BeforeUpdates += listener);
-    public async Task RemoveBeforeUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => BeforeUpdates -= listener);
+    public Task AddBeforeUpdatesListener(Func<Task> listener) => UpdateLock.TryExclusive(() => BeforeUpdates += listener);
+    public Task RemoveBeforeUpdatesListener(Func<Task> listener) => UpdateLock.TryExclusive(() => BeforeUpdates -= listener);
     
     private event Func<UpdateBeforeEvent, Task>? BeforeUpdate;
-    public async Task AddBeforeUpdateListener(Func<UpdateBeforeEvent, Task>? listener) => await UpdateLock.TryExclusive(() => BeforeUpdate += listener);
-    public async Task RemoveBeforeUpdateListener(Func<UpdateBeforeEvent, Task>? listener) => await UpdateLock.TryExclusive(() => BeforeUpdate -= listener);
+    public Task AddBeforeUpdateListener(Func<UpdateBeforeEvent, Task>? listener) => UpdateLock.TryExclusive(() => BeforeUpdate += listener);
+    public Task RemoveBeforeUpdateListener(Func<UpdateBeforeEvent, Task>? listener) => UpdateLock.TryExclusive(() => BeforeUpdate -= listener);
     
     private event Func<UpdateAfterEvent, Task>? AfterUpdate;
-    public async Task AddAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => await UpdateLock.TryExclusive(() => AfterUpdate += listener);
-    public async Task RemoveAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => await UpdateLock.TryExclusive(() => AfterUpdate -= listener);
+    public Task AddAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => UpdateLock.TryExclusive(() => AfterUpdate += listener);
+    public Task RemoveAfterUpdateListener(Func<UpdateAfterEvent, Task>? listener) => UpdateLock.TryExclusive(() => AfterUpdate -= listener);
     private event Func<Task>? AfterUpdates;
-    public async Task AddAfterUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => AfterUpdates += listener);
-    public async Task RemoveAfterUpdatesListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => AfterUpdates -= listener);
+    public Task AddAfterUpdatesListener(Func<Task> listener) => UpdateLock.TryExclusive(() => AfterUpdates += listener);
+    public Task RemoveAfterUpdatesListener(Func<Task> listener) => UpdateLock.TryExclusive(() => AfterUpdates -= listener);
 
-    private event Func<Task>? Notify;
-    public async Task AddNotifyListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => Notify += listener);
-    public async Task RemoveNotifyListener(Func<Task> listener) => await UpdateLock.TryExclusive(() => Notify -= listener);
+    private readonly Action Notify;
 
     // Server communication ---------------------------------------------------------------------------------------------------------------
     public Func<string, object, Task> Send { get; private set; }
-    public async Task SendGameUpdate(NetworkUpdate update) => await Send(update.HUB_ACTION, update);
+    public Task SendGameUpdate(NetworkUpdate update) => Send(update.HUB_ACTION, update);
+    public Task SendTripUpdate(GameTripUpdate update) => Send(update.HUB_ACTION, update);
+    public Func<string, object, Task> SendRequest { get; private set; }
+    public Task SendGameRequest(GameRequestUpdate update) => SendRequest(update.HUB_ACTION, update);
+    public Func<Action, Task> Exec { get; private set; }
+    public Func<Func<Task>, Task> ExecAsync { get; private set; }
 
     // Ping -------------------------------------------------------------------------------------------------------------------------------
+    public double? Ping { get; private set; }
     private Timer? PingTimer = null;
     private readonly LockerSlim PingLock = new();
 
-    // Ping - actions:
-    public async Task SendPing() {
-        var update = Game.NewPingUpdate();
-        await Send(update.HUB_ACTION, update);
+    public void SetPing(PingUpdate update) {
+        update.SetReturn();
+        if (update.ReturnedAt is not DateTime returnedAt) return;
+        Ping = GameClock.Delta(returnedAt, update.CreatedAt);
+        Notify();
     }
+
+    public Task SendPing() => SendTripUpdate(new PingUpdate(DateTime.UtcNow));
 
     public async Task StartPing() {
         await PingLock.TryExclusive(() => {
-            PingTimer = new(PING_INTERVAL_MS);
+            PingTimer = new(PING_INTERVAL);
             PingTimer.Elapsed += async (sender, e) => await SendPing();
             PingTimer.Start();
         });
@@ -158,8 +189,63 @@ public class GameViewModel : IDisposable {
         });
     }
 
+    // User actions -----------------------------------------------------------------------------------------------------------------------
+    private static void BlockUserActions(
+        bool select = true,
+        bool zoom = true,
+        bool overscroll = true,
+        bool touchStart = true,
+        bool touchEnd = true
+    ) {
+        if (select) Window.BlockUserSelect();
+        if (zoom) Window.TouchActionPanOn();
+        if (overscroll) Window.OverscrollNoneOn();
+        if (touchStart) Window.PreventTouchStart();
+        if (touchEnd) Window.PreventTouchEnd();
+    }
+    public Task SwitchToGameInput() => Exec(() => BlockUserActions(zoom: false));
+
+    private static void AllowUserActions(
+        bool select = true,
+        bool zoom = true,
+        bool overscroll = true,
+        bool touchStart = true,
+        bool touchEnd = true
+    ) {
+        if (select) Window.AllowUserSelect();
+        if (zoom) Window.TouchActionPanOff();
+        if (overscroll) Window.OverscrollNoneOff();
+        if (touchStart) Window.DefaultTouchStart();
+        if (touchEnd) Window.DefaultTouchEnd();
+    }
+    public Task SwitchToWebInput() => Exec(() => AllowUserActions(zoom: false));
+
+    // Game -------------------------------------------------------------------------------------------------------------------------------
+    public Task Play() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.TOGGLE));
+    public Task Pause() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.PAUSE));
+    public Task Delete() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.DELETE));
+
+    // Player -----------------------------------------------------------------------------------------------------------------------------
+    public Task IamReady() => SendGameRequest(new PlayerReadyRequestUpdate());
+    public Task KickPlayer(Player player) => SendGameRequest(new PlayerKickRequestUpdate(player.User.Name));
+
+    // Lobby ------------------------------------------------------------------------------------------------------------------------------
+    private int? LobbyRound = null;
+    public bool LobbyDisplayed => LobbyRound == Game.Round && Game.RUN_STATES.Contains(Game.State);
+
+    public Task ShowLobby() => UpdateLock.TryExclusive(() => { LobbyRound = Game.Round; Notify(); });
+
+    public Task HideLobby() => UpdateLock.TryExclusive(() => { LobbyRound = null; Notify(); });
+
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     public bool ControlsDisplayed { get; private set; } = false;
-    public void InitControls() => ControlsDisplayed = Player != null && (Game.DisplayMode == DISPLAY_MODE.ONE_SCREEN || Player.Device == DEVICE_TYPE.TOUCH);
-    public void ToggleControls() => ControlsDisplayed = !ControlsDisplayed;
+
+    private void InitControls() {
+        ControlsDisplayed = Player != null && (
+            Player.Device == DEVICE_TYPE.TOUCH ||
+            (Game.DisplayMode != DISPLAY_MODE.EACH_OWN && !IsHost)
+        );
+    }
+
+    public void ToggleControls() { ControlsDisplayed = !ControlsDisplayed; Notify(); }
 }

@@ -3,13 +3,19 @@
 @inherits BasicComponent
 
 <div
-    id="@ID"
+    id="@ViewModel.ID"
     class="@ComputeClass()"
     style="@Style"
-    tabindex="@(Loading ? 0 : -1)"
-    aria-label="@I18N.T("Loading")"
+    tabindex="@(
+        Type == LOAD_AREA_TYPE.FOCUSABLE ||
+        (Type == LOAD_AREA_TYPE.FOCUS_LOADING && ViewModel.Loading)
+        ? 0 : -1
+    )"
+    role="group"
+    aria-roledescription="@RoleDescription"
+    aria-label="@(ViewModel.Loading ? LoadLabel : Type == LOAD_AREA_TYPE.FOCUSABLE ? Label : null)"
 >
-    <div class="@CLASS_CONTENT" inert="@Loading">
+    <div class="@CLASS_CONTENT" inert="@ViewModel.Loading">
         @ChildContent
     </div>
     <div class="@CLASS_LOADER_WRAP">

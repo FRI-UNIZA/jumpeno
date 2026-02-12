@@ -1,5 +1,7 @@
 namespace Jumpeno.Client.Base;
 
+#pragma warning disable CA1822
+
 public class Page : ComponentBase, IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Used to specify language specific URL:
@@ -12,16 +14,21 @@ public class Page : ComponentBase, IAsyncDisposable {
     [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
     public BaseTheme AppTheme { get; set; } = null!;
 
+    // Current page -----------------------------------------------------------------------------------------------------------------------
+    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
+
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
     public void CountComponent() => ComponentCount++;
     /// <summary>Returns all page urls as an array.</summary>
     /// <returns>Array of URLs</returns>
     public string[] GetPageUrls() => GetType().GetCustomAttributes<RouteAttribute>().Select(x => x.Template).ToArray();
-
-    // Current page -----------------------------------------------------------------------------------------------------------------------
-    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
-    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
+    // Lifecycle:
+    private readonly LockerSlim LifeLock = new();
+    // Dispose:
+    public bool IsDisposing { get; private set; } = false;
+    public bool IsDisposed { get; private set; } = false;
 
     // Types ------------------------------------------------------------------------------------------------------------------------------
     private static readonly IEnumerable<Type> PageTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Page)));
@@ -102,36 +109,58 @@ public class Page : ComponentBase, IAsyncDisposable {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() {
+        if (IsDisposing) return;
         SetCurrent(this);
         OnPageInitialized();
         if (AppEnvironment.IsServer) return;
         ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
     }
-    protected override sealed async Task OnInitializedAsync() => await OnPageInitializedAsync();
+    protected override sealed Task OnInitializedAsync() => LifeLock.TryExclusive(
+        async () => {
+            if (IsDisposing) return;
+            await OnPageInitializedAsync();
+        }
+    );
+
     private bool ParametersSet = false;
     protected sealed override void OnParametersSet() {
+        if (IsDisposing) return;
         OnPageParametersSet(!ParametersSet);
         ParametersSet = true;
     }
     private bool ParametersSetAsync = false;
-    protected sealed override async Task OnParametersSetAsync() {
-        var firstTime = !ParametersSetAsync;
-        ParametersSetAsync = true;
-        await OnPageParametersSetAsync(firstTime);
-    }
+    protected sealed override Task OnParametersSetAsync() => LifeLock.TryExclusive(
+        async () => {
+            if (IsDisposing) return;
+            var firstTime = !ParametersSetAsync;
+            ParametersSetAsync = true;
+            await OnPageParametersSetAsync(firstTime);
+        }
+    );
+
     protected sealed override bool ShouldRender() => ShouldPageRender();
-    protected sealed override void OnAfterRender(bool firstRender) => OnPageAfterRender(firstRender);
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender) {
-        await OnPageAfterRenderAsync(firstRender);
-        if (!firstRender) return;
-        if (Auth.Processing) return;
-        Reflex.InvokeVoid(typeof(Navigator), Navigator.PAGE_RENDERED);
+    protected sealed override void OnAfterRender(bool firstRender) {
+        if (IsDisposing) return;
+        OnPageAfterRender(firstRender);
     }
-    public async ValueTask DisposeAsync() {
-        OnPageDispose();
-        await OnPageDisposeAsync();
-        GC.SuppressFinalize(this);
-    }
+    protected sealed override Task OnAfterRenderAsync(bool firstRender) => LifeLock.TryExclusive(
+        async () => {
+            if (IsDisposing) return;
+            await OnPageAfterRenderAsync(firstRender);
+        }
+    );
+
+    public void Dispose() {}
+    public async ValueTask DisposeAsync() => await LifeLock.TryExclusive(
+        async () => {
+            IsDisposing = true;
+            OnPageDispose();
+            await OnPageDisposeAsync();
+            GC.SuppressFinalize(this);
+            IsDisposed = true;
+            LifeLock.DisposeUnsafe();
+        }
+    );
 
     // Lifecycle overrides ----------------------------------------------------------------------------------------------------------------
     protected virtual void OnPageInitialized() {}

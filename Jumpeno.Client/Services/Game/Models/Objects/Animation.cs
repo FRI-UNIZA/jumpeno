@@ -40,26 +40,21 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
+    public void ResetDirection(PointF direction) {
+        _Direction.X = direction.X;
+        _Direction.Y = direction.Y;
+        Running = false;
+    }
+
     public void UpdateDirection(PointF direction) {
         if (direction.X != 0) _Direction.X = direction.X;
         if (direction.Y != 0) _Direction.Y = direction.Y;
         Running = direction.X != 0;
     }
 
-    public static string GetURL(SKIN skin) {
-        switch (skin) {
-            case SKIN.MAGE_AIR: return IMAGE.SPRITE_MAGE_AIR;
-            case SKIN.MAGE_EARTH: return IMAGE.SPRITE_MAGE_EARTH;
-            case SKIN.MAGE_FIRE: return IMAGE.SPRITE_MAGE_FIRE;
-            case SKIN.MAGE_MAGIC: return IMAGE.SPRITE_MAGE_MAGIC;
-            case SKIN.MAGE_WATER: return IMAGE.SPRITE_MAGE_WATER;
-            default: return IMAGE.SPRITE_MAGE_MAGIC;
-        }
-    }
-
     private static ElementReference? GetImage(SKIN skin) {
         if (AppEnvironment.IsServer) return null;
-        string id = GetURL(skin);
+        string id = skin.ToImagePath();
         if (ImageReferrer.Get(id) is not ElementReference img) return null;
         return img;
     }
@@ -77,8 +72,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, (Game Game, SKIN Skin, Body Body) @params) {
         var (game, skin, body) = @params;
-        // 1) Update direction & check image:
-        UpdateDirection(body.Direction);
+        // 1) Check image:
         if (GetImage(skin) is not ElementReference img) return false;
         // 2) Compute placement:
         var width = game.Map.ToScreenWidth(WIDTH);

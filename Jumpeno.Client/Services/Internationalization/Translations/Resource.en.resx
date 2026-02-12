@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -250,7 +250,7 @@
     <value>https://en.wikipedia.org/wiki/HTTP_cookie</value>
   </data>
   <data name="LINK_FRI" xml:space="preserve">
-    <value>https://www.fri.uniza.sk/en/</value>
+    <value>https://www.fri.uniza.sk</value>
   </data>
   <data name="JUMPENO_DESCRIPTION" xml:space="preserve">
     <value>Jumpeno is a battle-royale type of game. According to its name, jumping is the key. Your goal is to jump on other players to eliminate them and be the last Jumper standing.</value>
@@ -321,8 +321,8 @@
   <data name="Game" xml:space="preserve">
     <value>Game</value>
   </data>
-  <data name="Length must be equal to I18N{length}" xml:space="preserve">
-    <value>Length must be equal to I18N{length}</value>
+  <data name="Length must be I18N{length}" xml:space="preserve">
+    <value>Length must be I18N{length}</value>
   </data>
   <data name="Code must be alphanumeric" xml:space="preserve">
     <value>Code must be alphanumeric</value>
@@ -365,12 +365,6 @@
   </data>
   <data name="The game is already running." xml:space="preserve">
     <value>The game is already running.</value>
-  </data>
-  <data name="Show" xml:space="preserve">
-    <value>Show</value>
-  </data>
-  <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
   </data>
   <data name="Screen too small" xml:space="preserve">
     <value>Screen too small</value>
@@ -690,17 +684,17 @@
   <data name="Capacity" xml:space="preserve">
     <value>Capacity</value>
   </data>
-  <data name="players0" xml:space="preserve">
-    <value>players</value>
+  <data name="Players0" xml:space="preserve">
+    <value>Players</value>
   </data>
-  <data name="players1" xml:space="preserve">
-    <value>player</value>
+  <data name="Players1" xml:space="preserve">
+    <value>Player</value>
   </data>
-  <data name="players2+" xml:space="preserve">
-    <value>players</value>
+  <data name="Players2+" xml:space="preserve">
+    <value>Players</value>
   </data>
-  <data name="players5+" xml:space="preserve">
-    <value>players</value>
+  <data name="Players5+" xml:space="preserve">
+    <value>Players</value>
   </data>
   <data name="Designer" xml:space="preserve">
     <value>Designer</value>
@@ -740,5 +734,293 @@
   </data>
   <data name="Are you sure you want to continue?" xml:space="preserve">
     <value>Are you sure you want to continue?</value>
+  </data>
+  <data name="Game name" xml:space="preserve">
+    <value>Game name</value>
+  </data>
+  <data name="Custom code" xml:space="preserve">
+    <value>Custom code</value>
+  </data>
+  <data name="Select map" xml:space="preserve">
+    <value>Select map</value>
+  </data>
+  <data name="TEXT_ANONYMOUS_PLAYERS" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
+  <data name="Display mode" xml:space="preserve">
+    <value>Display mode</value>
+  </data>
+  <data name="Game mode" xml:space="preserve">
+    <value>Game mode</value>
+  </data>
+  <data name="Play on 1 screen" xml:space="preserve">
+    <value>Play on 1 screen</value>
+  </data>
+  <data name="Each has their own" xml:space="preserve">
+    <value>Each has their own</value>
+  </data>
+  <data name="Host only presents" xml:space="preserve">
+    <value>Host only presents</value>
+  </data>
+  <data name="Timed game with respawns" xml:space="preserve">
+    <value>Timed game with respawns</value>
+  </data>
+  <data name="Until one player remains" xml:space="preserve">
+    <value>Until one player remains</value>
+  </data>
+  <data name="Rounds0" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Rounds1" xml:space="preserve">
+    <value>Round</value>
+  </data>
+  <data name="Rounds2+" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Rounds5+" xml:space="preserve">
+    <value>Rounds</value>
+  </data>
+  <data name="Number of rounds" xml:space="preserve">
+    <value>Number of rounds</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Map could not be loaded" xml:space="preserve">
+    <value>Map could not be loaded</value>
+  </data>
+  <data name="Empty map list" xml:space="preserve">
+    <value>Empty map list</value>
+  </data>
+  <data name="Maps could not be loaded" xml:space="preserve">
+    <value>Maps could not be loaded</value>
+  </data>
+  <data name="Map loading" xml:space="preserve">
+    <value>Map loading</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Disabled field" xml:space="preserve">
+    <value>Disabled field</value>
+  </data>
+  <data name="Invalid map ID" xml:space="preserve">
+    <value>Invalid map ID</value>
+  </data>
+  <data name="Number of rounds not between I18N{min} and I18N{max}" xml:space="preserve">
+    <value>Number of rounds not between I18N{min} and I18N{max}</value>
+  </data>
+  <data name="Game code already exists!" xml:space="preserve">
+    <value>Game code already exists!</value>
+  </data>
+  <data name="Maximum games limit exceeded!" xml:space="preserve">
+    <value>Maximum games limit exceeded!</value>
+  </data>
+  <data name="Game controller" xml:space="preserve">
+    <value>Game controller</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Controller</value>
+  </data>
+  <data name="Anonymous players not allowed!" xml:space="preserve">
+    <value>Anonymous players not allowed!</value>
+  </data>
+  <data name="Host can not participate as a player!" xml:space="preserve">
+    <value>Host can not participate as a player!</value>
+  </data>
+  <data name="At least 2 players required to start!" xml:space="preserve">
+    <value>At least 2 players required to start!</value>
+  </data>
+  <data name="You already host a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>You already host a game with code "I18N{code}"!</value>
+  </data>
+  <data name="Host must be registered!" xml:space="preserve">
+    <value>Host must be registered!</value>
+  </data>
+  <data name="You already play a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>You already play a game with code "I18N{code}"!</value>
+  </data>
+  <data name="Game is finished!" xml:space="preserve">
+    <value>Game is finished!</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="Game is running!" xml:space="preserve">
+    <value>Game is running!</value>
+  </data>
+  <data name="Game is not running!" xml:space="preserve">
+    <value>Game is not running!</value>
+  </data>
+  <data name="Invalid game state!" xml:space="preserve">
+    <value>Invalid game state!</value>
+  </data>
+  <data name="Game already deleted!" xml:space="preserve">
+    <value>Game already deleted!</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Socials" xml:space="preserve">
+    <value>Socials</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Delete account" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
+  <data name="User data has been updated." xml:space="preserve">
+    <value>User data has been updated.</value>
+  </data>
+  <data name="Sign in with Google" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="Connect Facebook account" xml:space="preserve">
+    <value>Connect Facebook account</value>
+  </data>
+  <data name="Password has been changed." xml:space="preserve">
+    <value>Password has been changed.</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Password change" xml:space="preserve">
+    <value>Password change</value>
+  </data>
+  <data name="Current avatar" xml:space="preserve">
+    <value>Current avatar</value>
+  </data>
+  <data name="Selected avatar" xml:space="preserve">
+    <value>Selected avatar</value>
+  </data>
+  <data name="Choose skin" xml:space="preserve">
+    <value>Choose skin</value>
+  </data>
+  <data name="Avatar option" xml:space="preserve">
+    <value>Avatar option</value>
+  </data>
+  <data name="Are you sure you want to delete your account?" xml:space="preserve">
+    <value>Are you sure you want to delete your account?</value>
+  </data>
+  <data name="This action is irreversible." xml:space="preserve">
+    <value>This action is irreversible.</value>
+  </data>
+  <data name="Password rules" xml:space="preserve">
+    <value>Password rules</value>
+  </data>
+  <data name="Password rule n1" xml:space="preserve">
+    <value>Length between 6 and 30 characters</value>
+  </data>
+  <data name="Password rule n2" xml:space="preserve">
+    <value>Contains uppercase letter</value>
+  </data>
+  <data name="Password rule n3" xml:space="preserve">
+    <value>Contains digit</value>
+  </data>
+  <data name="Password rule n4" xml:space="preserve">
+    <value>Contains special character (!@#$...)</value>
+  </data>
+  <data name="Does not contain uppercase letter" xml:space="preserve">
+    <value>Does not contain uppercase letter</value>
+  </data>
+  <data name="Does not contain digit" xml:space="preserve">
+    <value>Does not contain digit</value>
+  </data>
+  <data name="Does not contain special character" xml:space="preserve">
+    <value>Does not contain special character</value>
+  </data>
+  <data name="Lobby" xml:space="preserve">
+    <value>Lobby</value>
+  </data>
+  <data name="Playing" xml:space="preserve">
+    <value>Playing</value>
+  </data>
+  <data name="You must be connected as a player!" xml:space="preserve">
+    <value>You must be connected as a player!</value>
+  </data>
+  <data name="Name is reserved!" xml:space="preserve">
+    <value>Name is reserved!</value>
+  </data>
+  <data name="End game" xml:space="preserve">
+    <value>End game</value>
+  </data>
+  <data name="Do you really want to end this game?" xml:space="preserve">
+    <value>Do you really want to end this game?</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Everyone will be disconnected!" xml:space="preserve">
+    <value>Everyone will be disconnected!</value>
+  </data>
+  <data name="QR code" xml:space="preserve">
+    <value>QR code</value>
+  </data>
+  <data name="Invalid game action!" xml:space="preserve">
+    <value>Invalid game action!</value>
+  </data>
+  <data name="You are not a host!" xml:space="preserve">
+    <value>You are not a host!</value>
+  </data>
+  <data name="Game is deleted!" xml:space="preserve">
+    <value>Game is deleted!</value>
+  </data>
+  <data name="Server can not start the game now!" xml:space="preserve">
+    <value>Server can not start the game now!</value>
+  </data>
+  <data name="Space reserved for the host!" xml:space="preserve">
+    <value>Space reserved for the host!</value>
+  </data>
+  <data name="Host already connected!" xml:space="preserve">
+    <value>Host already connected!</value>
+  </data>
+  <data name="You are not a player!" xml:space="preserve">
+    <value>You are not a player!</value>
+  </data>
+  <data name="Player is ready." xml:space="preserve">
+    <value>Player is ready.</value>
+  </data>
+  <data name="Players are not ready." xml:space="preserve">
+    <value>Players are not ready.</value>
+  </data>
+  <data name="Not a player of this game!" xml:space="preserve">
+    <value>Not a player of this game!</value>
+  </data>
+  <data name="Player not connected." xml:space="preserve">
+    <value>Player not connected.</value>
+  </data>
+  <data name="Player shifts" xml:space="preserve">
+    <value>Shifts</value>
+  </data>
+  <data name="Do you want to kick this player?" xml:space="preserve">
+    <value>Do you want to kick this player?</value>
+  </data>
+  <data name="Kick" xml:space="preserve">
+    <value>Kick</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Host can not be kicked!" xml:space="preserve">
+    <value>Host can not be kicked!</value>
+  </data>
+  <data name="Game must have at least 2 players!" xml:space="preserve">
+    <value>Game must have at least 2 players!</value>
+  </data>
+  <data name="Incorrect version! Please refresh." xml:space="preserve">
+    <value>Incorrect version! Please refresh.</value>
+  </data>
+  <data name="Account deleted." xml:space="preserve">
+    <value>Account deleted.</value>
   </data>
 </root>

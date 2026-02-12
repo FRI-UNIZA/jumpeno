@@ -5,11 +5,15 @@ public partial class ConnectBox {
     [Parameter]
     public required ConnectViewModel VM { get; set; }
 
+    // Markup -----------------------------------------------------------------------------------------------------------------------------
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("connect-box", Base);
+
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<ConnectBox>();
+    // Code:
     private readonly InputViewModel<string> VMCode;
     private void SetInputCode(string urlCode) => VMCode.SetValue(urlCode);
-
+    // Name:
     private readonly InputViewModel<string> VMName;
     private static string LastNameValue = "";
 
@@ -17,19 +21,19 @@ public partial class ConnectBox {
     public ConnectBox() {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_CODE,
+            ID: Auth.IsRegisteredUser ? nameof(GameHubRegisteredDTO.Code) : nameof(GameHubAnonymousDTO.Code),
             TextMode: INPUT_TEXT_MODE.UPPERCASE,
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
+            TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
             Placeholder: I18N.T("Code"),
             DefaultValue: ""
         ));
         VMName = new(new InputViewModelTextParams(
             Form: FORM,
-            ID: GAME_HUB.PARAM_NAME,
+            ID: nameof(GameHubAnonymousDTO.Name),
             Trim: true,
-            TextCheck: Checker.IsAlphaNum,
+            TextCheck: UserValidator.IsName,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
             Placeholder: I18N.T("Your name"),
             DefaultValue: "",
@@ -39,13 +43,10 @@ public partial class ConnectBox {
 
     private readonly TaskCompletionSource InitTCS = new();
 
-    protected override void OnComponentInitialized() {
+    protected override async Task OnComponentInitializedAsync() {
         LastNameValue = LastNameValue == "" ? User.GenerateName() : LastNameValue;
+        SetInputCode(VM.URLCode);
         VMName.SetValue(LastNameValue);
-    }
-
-    protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (!firstTime) return;
         VM.RegisterForm(FORM);
         await VM.AddURLCodeChangedListener(EventDelegate<string>.Task(SetInputCode));
         InitTCS.TrySetResult();
@@ -58,8 +59,9 @@ public partial class ConnectBox {
 
     // Auto-Watch -------------------------------------------------------------------------------------------------------------------------
     public const string WATCH_QUERY = "Watch";
+    private bool AutoWatch = false;
 
-    public async Task<bool> TryAutoWatch() {
+    public async Task<bool> InitAutoWatch() {
         // 1) Wait for params initialization:
         await InitTCS.Task;
         // 2) Check query params:
@@ -70,13 +72,24 @@ public partial class ConnectBox {
         await Navigator.SetQueryParams(q);
         // 4) Check if cookie modal is displayed:
         if (CookieStorage.ModalOpenOnInit) return false;
-        // 5) Try connect as spectator:
+        // 5) Set AutoWatch:
+        AutoWatch = true;
+        // 6) Show loader:
+        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+        // 7) Return result:
+        return true;
+    }
+
+    public async Task<bool> TryAutoWatch() {
+        // 1) Check AutoWatch:
+        if (!AutoWatch) return false;
+        // 2) Try connect as spectator:
         await HandleWatch();
-        // 6) Return result:
+        // 3) Return result:
         return true;
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private async Task HandlePlay() => await VM.PlayRequest(new(VMCode.Value, VMName.Value));
-    private async Task HandleWatch() => await VM.WatchRequest(new(VMCode.Value, VMName.Value));
+    private async Task HandlePlay() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value, false));
+    private async Task HandleWatch() => await VM.ConnectRequest(new(VMCode.Value, VMName.Value, true));
 }

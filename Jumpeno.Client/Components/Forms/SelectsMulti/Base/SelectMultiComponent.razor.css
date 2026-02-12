@@ -78,7 +78,8 @@
 /* Options ----------------------------------------------------------------------------------------------------------------------------- */
 ::deep.modal.select-multi-options-modal {
     /* Variables: */
-    --modal-padding-content: 0;
+    --modal-padding-content-x: 0;
+    --modal-padding-content-y: 0;
     --option-font-size: 14px;
     --option-padding-horizontal: calc(0.87 * var(--option-font-size));
     --option-padding-vertical: 14px;
@@ -202,6 +203,7 @@
     margin: 0;
     /* Style: */
     color: var(--theme-text-color);
+    background: var(--theme-surface-background);
     border: none;
     outline: none;
     /* Content: */

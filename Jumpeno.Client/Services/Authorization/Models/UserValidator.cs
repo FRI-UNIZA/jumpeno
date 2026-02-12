@@ -1,5 +1,8 @@
 namespace Jumpeno.Client.Utils;
 
+using System.Collections.Immutable;
+using System.Text.RegularExpressions;
+
 public static class UserValidator {
     // ID ---------------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateID(Guid? value, string id = "") {
@@ -19,6 +22,7 @@ public static class UserValidator {
     // Email ------------------------------------------------------------------------------------------------------------------------------
     public static byte EMAIL_MAX_LENGTH => EMAIL.MAX_LENGTH;
 
+    public static bool IsEmail(string value) => Checker.IsEmail(value);
     public static List<Error> ValidateEmail(string? value, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
@@ -34,6 +38,7 @@ public static class UserValidator {
     public const byte NAME_MIN_LENGTH = 3;
     public const byte NAME_MAX_LENGTH = 13;
 
+    public static bool IsName(string value) => Checker.IsAlphaNum(value);
     public static List<Error> ValidateName(string? value, bool checkUnknown = true, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
@@ -64,7 +69,25 @@ public static class UserValidator {
     public const byte PASSWORD_GENERATOR_MIN_LENGTH = 8;
     public const byte PASSWORD_GENERATOR_MAX_LENGTH = 12;
 
-    public static List<Error> ValidatePassword(string value, string id = "") {
+    public static readonly ImmutableArray<(Func<string, bool> invalid, Error error)> PASSWORD_RULES =
+    [
+        // Length 6-30:
+        (new Func<string, bool>(x => string.IsNullOrEmpty(x) || x.Length < PASSWORD_MIN_LENGTH || PASSWORD_MAX_LENGTH < x.Length),
+        ERROR.DEFAULT.SetInfo("Length is not between I18N{min} and I18N{max}", new() { { "min", PASSWORD_MIN_LENGTH }, { "max", PASSWORD_MAX_LENGTH } })),
+        // Contains uppercase letter:
+        (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[A-Z]")),
+        ERROR.DEFAULT.SetInfo("Does not contain uppercase letter")),
+        // Contains digit:
+        (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[0-9]")),
+        ERROR.DEFAULT.SetInfo("Does not contain digit")),
+        // Contains special character:
+        (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[^a-zA-Z0-9]")),
+        ERROR.DEFAULT.SetInfo("Does not contain special character"))
+    ];
+
+    public static bool IsPassword(string value) => Checker.IsPassword(value);
+
+    public static List<Error> ValidateWeakPassword(string? value, string id = "") {
         var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
         Checker.Validate(errors, value.Trim() == "", ERROR.EMPTY.SetID(id));
@@ -75,8 +98,28 @@ public static class UserValidator {
         Checker.Validate(errors, !Checker.IsPassword(value), ERROR.DEFAULT.SetID(id).SetInfo("Invalid characters"));
         return errors;
     }
-    public static string AssertPassword(string value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidatePassword(value, id), exception ?? EXCEPTION.VALUES);
+
+    public static string AssertWeakPassword(string? value, string id = "", AppException? exception = null)
+    {
+        return Checker.Assert(value, ValidateWeakPassword(value, id), exception ?? EXCEPTION.VALUES)!;
+    }
+
+    public static List<Error> ValidatePassword(string? value, string id = "")
+    {
+        var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        if (errors.Count > 0) return errors; value = $"{value}";
+        Checker.Validate(errors, value.Trim() == "", ERROR.EMPTY.SetID(id));
+        Checker.Validate(errors, !Checker.IsPassword(value), ERROR.DEFAULT.SetID(id).SetInfo("Invalid characters"));
+        foreach (var (invalid, error) in PASSWORD_RULES)
+        {
+            Checker.Validate(errors, invalid(value), error.SetID(id));
+        }
+        return errors;
+    }
+
+    public static string AssertPassword(string? value, string id = "", AppException? exception = null)
+    {
+        return Checker.Assert(value, ValidatePassword(value, id), exception ?? EXCEPTION.VALUES)!;
     }
 
     public static List<Error> ValidateConfirmPassword(string value, string password, string id = "") {
@@ -108,5 +151,20 @@ public static class UserValidator {
     }
     public static User Assert(User? value, string id = "", AppException? exception = null) {
         return Checker.Assert(value, Validate(value, id), exception ?? EXCEPTION.VALUES)!;
+    }
+
+    // Connection -------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidateConnectionType(Connection value, string id = "") => Checker.Validate(
+        value.GetType() != typeof(Connection),
+        ERROR.DEFAULT.SetID(id).SetInfo("Connection type invalid!")
+    );
+    public static Connection AssertConnectionType(Connection value, string id = "", AppException? exception = null) {
+        return Checker.Assert(value, ValidateConnectionType(value, id), exception ?? EXCEPTION.VALUES);
+    }
+
+    // Device -----------------------------------------------------------------------------------------------------------------------------
+    public static List<Error> ValidateDeviceType(DEVICE_TYPE? value, string id = "") => Checker.ValidateUndefined(value, id);
+    public static DEVICE_TYPE AssertDeviceType(DEVICE_TYPE? value, string id = "", AppException? exception = null) {
+        return (DEVICE_TYPE)Checker.Assert(value, ValidateDeviceType(value, id), exception ?? EXCEPTION.VALUES)!;
     }
 }

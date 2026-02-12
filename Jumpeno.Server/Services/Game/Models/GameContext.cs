@@ -9,10 +9,10 @@ public class GameContext {
     public Connection Connection { get; private set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public GameContext(GameEngine engine, Connection connection) {
-        if (connection is not Spectator && connection is not Player)
-        throw new ArgumentException("Connection type invalid!");
+    private GameContext(GameEngine engine, Connection connection) {
         Engine = engine;
         Connection = connection;
     }
+    public GameContext(GameEngine engine, Player connection) : this(engine, (Connection)connection) {}
+    public GameContext(GameEngine engine, Spectator connection) : this(engine, (Connection)connection) {}
 }

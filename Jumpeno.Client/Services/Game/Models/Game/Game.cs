@@ -1,63 +1,80 @@
 namespace Jumpeno.Client.Models;
 
-public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)> {
+#pragma warning disable CA1822
+
+public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string DEFAULT_CODE = "FRI1";
-    public const string DEFAULT_NAME = "FRI UNIZA 1";
-    
     public static readonly int FPS = AppSettings.Game.FPS;
     public static readonly int TOUCH_DEVICE_NOTIFICATIONS = AppSettings.Game.TouchDeviceNotifications.PerSecond; // per second
-
+    // Duration:
     public static readonly double ROUND_DURATION = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TOTAL_DURATION; // ms
     public static readonly double ROUND_FINISH_DELAY = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
-
+    // States:
     public static readonly List<GAME_STATE> LOBBY_STATES = [GAME_STATE.LOBBY, GAME_STATE.SCOREBOARD];
     public static readonly List<GAME_STATE> PAUSE_STATES = [GAME_STATE.PAUSE];
     public static readonly List<GAME_STATE> RUN_STATES = [GAME_STATE.GAMEPLAY, GAME_STATE.SHRINKING];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // Identifier:
+    public ulong ID { get; }
+    private static ulong IDAutoIncrement = 0;
     // Settings:
-    public DISPLAY_MODE DisplayMode { get; private set; }
-    public GAME_MODE Mode { get; private set; }
-    public User Host { get; private set; }
-    public string Code { get; private set; }
-    public string Name { get; private set; }
-    public Map Map { get; private set; }
-    public byte Capacity { get; private set; }
+    public DISPLAY_MODE DisplayMode { get; }
+    public GAME_MODE Mode { get; }
+    public User Host { get;  }
+    public string Code { get; }
+    public string Name { get; }
+    public Map Map { get; }
+    public bool Anonyms { get; }
+    public byte Rounds { get; }
+    public byte Capacity { get; }
     // State:
     public int Round { get; private set; }
+    public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
     public double Time { get; private set; }
     public GAME_STATE State { get; private set; }
+    public bool IsFinished => State == GAME_STATE.SCOREBOARD && Rounds <= Round;
     // Clock:
-    public GameClock Clock { get; private set; }
-    public GameClock TouchClock { get; private set; }
+    public readonly GameClock Clock;
+    public readonly GameClock TouchClock;
+    private bool ClockAutoReset = false;
+    public void ClockAutoResetOn() => ClockAutoReset = true;
+    public void ClockAutoResetOff() => ClockAutoReset = false;
     private void ResetClocks() { Clock.Reset(); TouchClock.Reset(); }
+    // Host:
+    public bool HostConnected { get; private set; }
     // Players:
     // NOTE: Index containing all possible game players:
-    [JsonInclude] private Dictionary<byte, Player> Players { get; set; }
+    [JsonInclude] private Dictionary<byte, Player> Players { get; }
     // NOTE: Active players are connected:
-    [JsonInclude] private List<Player> ActivePlayers { get; set; }
+    [JsonInclude] private List<Player> ActivePlayers { get; }
+    public int ValidPlayersCount => ValidPlayerIterator.Count();
     public int ActivePlayersCount => ActivePlayers.Count;
     public int AlivePlayersCount { get; private set; }
     // NOTE: QuadTree of active players:
-    private QuadTreeRectF<Player> PlayersQT { get; set; }
+    private QuadTreeRectF<Player> PlayersQT { get; }
     // Spectators:
     public int SpectatorCount { get; private set; }
-    // Traffic:
-    public double? Ping { get; set; }
+    // Empty:
+    public bool IsEmpty => ActivePlayersCount <= 0 && SpectatorCount <= 0;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
     private Game(
+        ulong id,
         DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
-        Map map, byte capacity,
+        Map map, bool anonyms, byte rounds, byte capacity,
         int round, double time, GAME_STATE state,
-        Dictionary<byte, Player> players, List<Player> activePlayers, int spectatorCount
+        bool hostConnected,
+        Dictionary<byte, Player> players, List<Player> activePlayers,
+        int spectatorCount
     ) {
         // Validation:
         GameValidator.AssertCode(code);
         GameValidator.AssertName(name);
         GameValidator.AssertCapacity(capacity);
+        // Identifier:
+        ID = id;
         // Settings:
         DisplayMode = displayMode;
         Mode = mode;
@@ -65,6 +82,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         Code = code;
         Name = name.Trim();
         Map = map;
+        Anonyms = anonyms;
+        Rounds = rounds;
         Capacity = capacity;
         // State:
         Round = round;
@@ -73,6 +92,8 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // Clocks:
         Clock = new(FPS);
         TouchClock = new(TOUCH_DEVICE_NOTIFICATIONS);
+        // Host:
+        HostConnected = hostConnected;
         // Players:
         ActivePlayers = InitActivePlayers(activePlayers, players);
         AlivePlayersCount = InitAlivePlayerCount(ActivePlayers);
@@ -80,13 +101,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         PlayersQT = InitPlayersQT(ActivePlayers);
         // Spectators:
         SpectatorCount = spectatorCount;
-        // Traffic:
-        Ping = null;
     }
-    public Game(DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name, Map map, byte capacity) : this(
-        displayMode, mode, host, code, name, map, capacity,
+    public Game(
+        DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
+        Map map, bool anonyms, byte rounds, byte capacity
+    ) : this(
+        IDAutoIncrement++,
+        displayMode, mode, host, code, name, map, anonyms, rounds, capacity,
         0, 0, GAME_STATE.LOBBY,
-        [], [], 0
+        false, [], [], 0
     ) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
@@ -125,133 +148,259 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         return players;
     }
 
-    // Player methods ---------------------------------------------------------------------------------------------------------------------
-    public Player ConnectPlayer(Connection connection) {
+    // Player > Connection ----------------------------------------------------------------------------------------------------------------
+    public Player CreatePlayer(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID = ""
+    ) {
+        // 1) Validation:
         AppEnvironment.AssertServer();
-        GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
+        UserValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, nameID);
+        AssertAllowedAnonymousUser(connection.User);
+        // 2) Check host:
+        AssertPlayerHostPresentation(connection.User);
+        AssertReservedPlayerHostSpace(connection.User);
+        // 3) Find space:
+        var player = FindPlayerSpace(connection, nameID);
+        // 4) Set skin of anonym:
+        SetSkinOfAnonymousUser(connection.User);
+        // 5) Synchronize:
+        player.Synchronize(connection);
+        // 6) Return player:
+        return player;
+    }
+
+    private Player FindPlayerSpace(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID = ""
+    ) {
+        // 1) Try to find space:
+        Player? space = null;
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
-                if (player.User.Name != connection.User.Name) continue;
+                if (player.User.Name.ToLower() != connection.User.Name.ToLower()) continue;
                 if (State == GAME_STATE.LOBBY) {
-                    throw EXCEPTION.CLIENT.SetInfo("Player name is taken!")
-                    .SetErrors(ERROR.DEFAULT.SetID(GAME_HUB.PARAM_NAME).SetInfo("Player name is taken!"));
+                    throw EXCEPTION.DEFAULT.SetInfo("Player name is taken!")
+                    .SetErrors(ERROR.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
-                    throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
+                    throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
                 }
             } else if (State == GAME_STATE.LOBBY || player.User.Equals(connection.User)) {
-                player.Synchronize(connection);
-                return player;
+                AssertReservedPlayerHostName(connection.User, userNameID: nameID);
+                space = player;
+                break;
             }
         }
-        if (State == GAME_STATE.LOBBY) throw EXCEPTION.CLIENT.SetInfo("The game is currently full!");
-        else throw EXCEPTION.CLIENT.SetInfo("The game is already running.");
+        // 2.1) Space not found:
+        if (space == null) {
+            if (State == GAME_STATE.LOBBY) throw EXCEPTION.DEFAULT.SetInfo("The game is currently full!");
+            else throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
+        }
+        // 2.2) Or return found space:
+        else return space;
     }
 
-    public Player? GetPlayerRef(byte id) {
-        Players.TryGetValue(id, out var player); return player;
+    private void SetSkinOfAnonymousUser(User user) {
+        // 1) Check anonym:
+        if (user.ID != null) return;
+        // 2) Select skin:
+        user.Skin = GetAvailableSkin();
     }
 
-    public List<Player> GetCollidingPlayers(Player player) {
-        return PlayersQT.GetObjects(player.Rect);
+    // Player > Getters > Host ------------------------------------------------------------------------------------------------------------
+    public Player? GetHostPlayer() {
+        foreach (var (_, player) in Players) {
+            if (player.User.ID == Host.ID) return player;
+        }
+        return null;
     }
 
+    // Player > Getters > All players -----------------------------------------------------------------------------------------------------
+    public Player? GetPlayer(byte? id) {
+        if (id is not byte playerID) return null;
+        Players.TryGetValue(playerID, out var player); return player;
+    }
+
+    public Player? GetPlayerByConnectionID(string? connectionID) {
+        if (connectionID == null) return null;
+        foreach (var (_, player) in Players) {
+            if (player.ConnectionID == connectionID) return player;
+        }
+        return null;
+    }
+
+    public Player? GetPlayerByName(string? name) {
+        if (name == null) return null;
+        foreach (var (_, player) in Players) {
+            if (player.User.Name == name) return player;
+        }
+        return null;
+    }
+
+    // Player > Getters > Valid players ---------------------------------------------------------------------------------------------------
+    public Player? GetValidPlayer(byte? id) {
+        var player = GetPlayer(id);
+        return Player.IsValid(player) ? player : null;
+    }
+
+    public Player? GetValidPlayerByConnectionID(string? connectionID) {
+        var player = GetPlayerByConnectionID(connectionID);
+        return Player.IsValid(player) ? player : null;
+    }
+
+    public Player? GetValidPlayerByName(string? name) {
+        var player = GetPlayerByName(name);
+        return Player.IsValid(player) ? player : null;
+    }
+
+    // Player > Getters > Active players --------------------------------------------------------------------------------------------------
+    public Player? GetActivePlayer(byte? id) {
+        if (id == null) return null;
+        foreach (var player in ActivePlayers) {
+            if (player.ID == id) return player;
+        }
+        return null;
+    }
+
+    public Player? GetActivePlayerByConnectionID(string? connectionID) {
+        if (connectionID == null) return null;
+        foreach (var player in ActivePlayers) {
+            if (player.ConnectionID == connectionID) return player;
+        }
+        return null;
+    }
+
+    public Player? GetActivePlayerByName(string? name) {
+        if (name == null) return null;
+        foreach (var player in ActivePlayers) {
+            if (player.User.Name == name) return player;
+        }
+        return null;
+    }
+
+    // Player > Getters > Collisions ------------------------------------------------------------------------------------------------------
+    public List<Player> GetCollidingPlayers(Player player) => PlayersQT.GetObjects(player.Rect);
+
+    // Player > Getters > Iterators -------------------------------------------------------------------------------------------------------
     public IEnumerable<(Player player, int index)> PlayerIterator { get {
         int index = 0;
-        foreach (var player in ActivePlayers) {
-            yield return (player, index++);
+        foreach (var (_, player) in Players) yield return (player, index++);
+    }}
+
+    public IEnumerable<(Player player, int index)> ValidPlayerIterator { get {
+        int index = 0;
+        foreach (var (_, player) in Players) {
+            if (player.IsValid()) yield return (player, index++);
         }
+    }}
+
+    public IEnumerable<(Player player, int index)> ActivePlayerIterator { get {
+        int index = 0;
+        foreach (var player in ActivePlayers) yield return (player, index++);
     }}
 
     public IEnumerable<(Player player, int index)> PlayerScoreIterator { get {
-        var players = State == GAME_STATE.LOBBY ? ActivePlayers
-        : Players.Values.Where(p => !p.User.Equals(User.UNKNOWN)).ToList();
         int index = 0;
-        foreach (var player in players.OrderByDescending(p => p.Score)) {
+        foreach (var (player, id) in ValidPlayerIterator.OrderByDescending(x => x.player.Score)) {
             yield return (player, index++);
         }
     }}
 
+    // Player > Predicates ----------------------------------------------------------------------------------------------------------------
+    public bool IsPlayerReady(Player player) => IsFinished || !LOBBY_STATES.Contains(State) || player.ReadyForRound == Round + 1;
+
+    public bool ActivePlayersReady() {
+        foreach (var player in ActivePlayers) {
+            if (!IsPlayerReady(player)) return false;
+        }
+        return true;
+    }
+
+    // Player > Utils ---------------------------------------------------------------------------------------------------------------------
     private void OnPlayerKill() => AlivePlayersCount--;
     private void OnPlayerAlive() => AlivePlayersCount++;
 
     private void MovePlayer(Player player) => PlayersQT.Move(player);
 
-    private void RestorePlayers() {
+    private void ResurrectPlayers() {
         var rand = new Random();
-        var used = new Dictionary<float, bool>();
+        var used = new HashSet<float>();
         foreach (var player in ActivePlayers) {
-            Update(NewLifeUpdate(player, rand, used));
+            Update(NewRandomPositionUpdate(player, rand, used));
+            Update(NewLifeResetUpdate(player.ID));
         }
     }
 
-    private void AnonymizePlayers() {
+    private void KillPlayers() {
         foreach (var (id, player) in Players) {
-            if (player.IsConnected) continue;
-            Players[id] = new Player(id);
+            Update(NewKillUpdate(null, id));
+            Update(NewMovementUnderMapUpdate(player));
         }
     }
 
-    private void RandomizePosition(Player player, Random? random = null, Dictionary<float, bool>? used = null) {
-        // 1) Prepare parameters:
-        random ??= new Random();
-        used ??= [];
-        // 2) Randomize position:
-        float x = Map.WorldMinX + random.Next(0, (int) Map.WorldWidth) / Tile.SIZE * Tile.SIZE + Tile.HALF_SIZE;
-        while (used.ContainsKey(x)) x = Map.WorldMinX + (x - Map.WorldMinX + Tile.SIZE) % Map.WorldWidth;
-        used[x] = true;
-        var y = Map.WorldMinY + random.Next(0, (int) Map.WorldHeight) / Tile.SIZE * Tile.SIZE + Body.HALF_HEIGHT;
-        // 3) Avoid tile collision:
-        var position = new PointF(x, y);
-        while (Map.GetCollidingTiles(new(position.X - Tile.HALF_SIZE, position.Y - Tile.HALF_SIZE, Tile.SIZE, Tile.SIZE)).Count > 0) {
-            position.Y = Map.WorldMinY + (position.Y - Map.WorldMinY + Tile.SIZE) % Map.WorldHeight;
-        }
-        // 4) Put on the ground:
-        while (
-            Map.GetCollidingTiles(new(position.X - Tile.HALF_SIZE, position.Y - Tile.HALF_SIZE, Tile.SIZE, Tile.SIZE)).Count <= 0
-            && (position.Y > Map.WorldMinY)
-        ) position.Y -= Tile.SIZE;
-        position.Y += Tile.SIZE;
-        // 5) Update player:
-        Update(NewKillUpdate(null, player.ID));
-        Update(new MovementUpdate(player.ID, position, Body.DEFAULT_DIRECTION, null, Body.DEFAULT_NORMAL));
-        player.Body.Animation.UpdateDirection(new(random.NextDouble() < 0.5 ? 1 : -1, -1));
+    private SKIN GetAvailableSkin()
+    {
+        // 1) Select free skins:
+        var usedSkins = ActivePlayers.Select(p => p.User.Skin);
+        var allSkins = Enum.GetValues<SKIN>();
+        var freeSkins = allSkins.Except(usedSkins);
+        // 2.1) Find random avaible skin:
+        if (freeSkins.Any())
+            return freeSkins.ElementAt(Random.Shared.Next(freeSkins.Count()));
+        // 2.2) Fallback:
+        else
+            return allSkins.ElementAt(Random.Shared.Next(allSkins.Length));
     }
 
-    // Spectator methods ------------------------------------------------------------------------------------------------------------------
-    public Spectator ConnectSpectator(Connection connection) {
+    // Spectator > Connection -------------------------------------------------------------------------------------------------------------
+    public Spectator CreateSpectator(
+        // Parameters:
+        Connection connection,
+        // Exceptions:
+        string nameID = ""
+    ) {
+        // 1) Validation:
         AppEnvironment.AssertServer();
-        GameValidator.AssertConnectionType(connection);
-        UserValidator.AssertUnknown(connection.User, GAME_HUB.PARAM_NAME);
-        GameValidator.AssertSpectatorCount(this);
-        SpectatorCount++;
+        UserValidator.AssertConnectionType(connection);
+        UserValidator.AssertUnknown(connection.User, nameID);
+        AssertSpectatorCount();
+        // 2) Check host:
+        AssertSpectatorHostNonPresentation(connection.User);
+        AssertHostConnectedOnce(connection.User);
+        AssertReservedSpectatorHostSpace(connection.User);
+        // 3) Return spectator:
         return new(connection);
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
     public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is KeyUpdate key) return KeyUpdate(key);
-        if (update is GamePlayUpdate game) return GamePlayUpdate(game);
-        if (update is PingUpdate ping) return PingUpdate(ping);
-        if (update is MovementUpdate move) return MovementUpdate(move);
-        if (update is KillUpdate kill) return KillUpdate(kill);
-        if (update is LifeUpdate life) return LifeUpdate(life);
-        if (update is PlayerUpdate player) return PlayerUpdate(player);
-        if (update is SpectatorUpdate watch) return SpectatorUpdate(watch);
-        if (update is StateUpdate state) return StateUpdate(state);
-        if (update is RoundUpdate round) return RoundUpdate(round);
-        return false;
+        update.Game = this;
+        return update switch {
+            TimeFlowUpdate time => TimeFlowUpdate(time),
+            KeyUpdate key => KeyUpdate(key),
+            GamePlayUpdate game => GamePlayUpdate(game),
+            MovementUpdate move => MovementUpdate(move),
+            KillUpdate kill => KillUpdate(kill),
+            LifeUpdate life => LifeUpdate(life),
+            PlayerUpdate player => PlayerUpdate(player),
+            SpectatorUpdate watch => SpectatorUpdate(watch),
+            StateUpdate state => StateUpdate(state),
+            RoundUpdate round => RoundUpdate(round),
+            _ => false
+        };
     }
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
         if (update.DeltaT <= 0) return false;
         Time += update.DeltaT;
         Map.Update(update);
-        foreach (var player in ActivePlayers) {
-            player.Update(update);
-            MovePlayer(player);
-        }
+        foreach (var (_, player) in Players) player.Update(update);
+        foreach (var player in ActivePlayers) MovePlayer(player);
         return true;
     }
 
@@ -273,20 +422,21 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         if (LOBBY_STATES.Contains(State)) return false;
         // 2) Prepare response with state update:
         var response = new GamePlayResponse {
-            StateUpdated = GamePlayUpdateGuard.Update(update, () => StateUpdate(update.StateUpdate))
+            StateUpdated = GamePlayUpdateGuard.Update(update, () => Update(update.StateUpdate))
         };
         // 3) Prepare updates:
-        Dictionary<byte, bool> updates = [];
-        Dictionary<byte, KillUpdate> scoreUpdates = [];
-        foreach (var id in update.Movements.Keys) updates[id] = true;
-        foreach (var id in update.Kills.Keys) updates[id] = true;
-        foreach (var id in update.Lives.Keys) updates[id] = true;
+        HashSet<byte> updates = [];
+        Dictionary<byte, LinkedList<KillUpdate>> scoreUpdates = [];
+        foreach (var (id, move) in update.Movements) { updates.Add(id); move.Game = this; }
+        foreach (var (id, kill) in update.Kills) { updates.Add(id); kill.Game = this; }
+        foreach (var (id, life) in update.Lives) { updates.Add(id); life.Game = this; }
         foreach (var (id, killUpdate) in update.Kills) {
             if (killUpdate.KillerID is not byte killerID || id == killUpdate.KillerID) continue;
-            scoreUpdates[killerID] = killUpdate;
+            if (!scoreUpdates.ContainsKey(killerID)) scoreUpdates[killerID] = [];
+            scoreUpdates[killerID].AddLast(killUpdate);
         }
         // 4) Apply player updates:
-        foreach (var id in updates.Keys) {
+        foreach (var id in updates) {
             if (!Players.TryGetValue(id, out var player)) continue;
             if (player.Update(update)) {
                 response.MoveUpdated = response.MoveUpdated || update.Response.MoveUpdated;
@@ -297,19 +447,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
             }
         }
         // 5) Update score:
-        foreach (var (id, killUpdate) in scoreUpdates) {
+        foreach (var (id, killUpdates) in scoreUpdates) {
             if (!Players.TryGetValue(id, out var player)) continue;
-            if (player.Update(killUpdate)) response.ScoreUpdated = true;
+            foreach (var kill in killUpdates) {
+                if (player.Update(kill)) response.ScoreUpdated = true;
+            }
         }
         // 6) Return result:
         update.Response = response;
         return response.Updated;
-    }
-
-    private bool PingUpdate(PingUpdate update) {
-        if (update.ReturnedAt is not DateTime returnedAt) return false;
-        Ping = GameClock.Delta(returnedAt, update.CreatedAt);
-        return true;
     }
 
     private bool MovementUpdate(MovementUpdate update) {
@@ -331,7 +477,7 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     }
 
     private bool LifeUpdate(LifeUpdate update) {
-        if (!Players.TryGetValue(update.Player.ID, out var player)) return false;
+        if (!Players.TryGetValue(update.PlayerID, out var player)) return false;
         var updated = player.Update(update);
         if (updated) OnPlayerAlive();
         return updated;
@@ -340,25 +486,30 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
     private bool PlayerUpdate(PlayerUpdate update) {
         if (!Players.TryGetValue(update.Player.ID, out var player)) return false;
         if (!player.Update(update)) return false;
-        if (update.Player.IsConnected) {
+        // 1) Update host:
+        HostConnected = update.HostConnected;
+        // 2) Remove player:
+        ActivePlayers.Remove(player);
+        PlayersQT.Remove(player);
+        // 3) Add player if connected:
+        if (player.IsConnected) {
             ActivePlayers.Add(player);
             PlayersQT.Add(player);
-            player.ResetUpdateGuards();
-        } else {
-            KillUpdate(NewKillUpdate(null, player.ID));
-            MovementUpdate(NewMovementUnderMapUpdate(player));
-            ActivePlayers.Remove(player);
-            PlayersQT.Remove(player);
+            if (AppEnvironment.IsServer) player.ResetUpdateGuards();
+        }
+        // 4) Apply gameplay update:
+        if (update.GamePlayUpdate != null) {
+            Update(update.GamePlayUpdate);
         }
         return true;
     }
 
     private readonly UpdateGuard<SpectatorUpdate> SpectatorUpdateGuard = new();
-    private bool SpectatorUpdate(SpectatorUpdate update) {
-        return SpectatorUpdateGuard.Update(update, () => {
-            SpectatorCount = update.SpectatorCount;
-        });
-    }
+    private bool SpectatorUpdate(SpectatorUpdate update)
+    => SpectatorUpdateGuard.Update(update, () => {
+        HostConnected = update.HostConnected;
+        SpectatorCount = update.SpectatorCount;
+    });
 
     private bool StateUpdate(StateUpdate update) {
         // 1) Current state:
@@ -369,19 +520,6 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         }
         // 2) New state:
         switch (update.State) {
-            // NOTE: Lobby means reset (initial state):
-            case GAME_STATE.LOBBY:
-                Round = 0;
-                ResetClocks();
-                ActivePlayers.Clear();
-                AlivePlayersCount = InitAlivePlayerCount(ActivePlayers);
-                Players = InitPlayers(ActivePlayers);
-                PlayersQT.Clear();
-                SpectatorCount = 0;
-                Ping = null;
-                ResetUpdateGuards();
-                Updater.Reset();
-            break;
             case GAME_STATE.PAUSE:
                 foreach (var player in Players.Values) {
                     player.Update(update);
@@ -392,115 +530,36 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         Time = update.Time;
         State = update.State;
         Map.Update(update);
+        // 4) AutoReset:
+        if (ClockAutoReset) ResetClocks();
+        // 5) Return result:
         return true;
     }
 
     private readonly UpdateGuard<RoundUpdate> RoundUpdateGuard = new();
-    private bool RoundUpdate(RoundUpdate update) {
-        return RoundUpdateGuard.Update(update, () => {
-            // 1) New state:
-            switch (update.StateUpdate.State) {
-                case GAME_STATE.GAMEPLAY:
-                    if (update.Round == 1) AnonymizePlayers();
-                    ResetClocks();
-                break;
-            }
-            // 2) Update round & state:
-            Round = update.Round;
-            StateUpdate(update.StateUpdate);
-            // 3) Update players (position & score):
-            foreach (var (id, player) in Players) {
-                player.Update(update);
-            }
-            return true;
-        });
-    }
+    private bool RoundUpdate(RoundUpdate update) 
+    => RoundUpdateGuard.Update(update, () => {
+        // 1) Reset clocks:
+        ResetClocks();
+        // 2) Update round & state:
+        Round = update.Round;
+        Update(update.StateUpdate);
+        // 3) Reset alive players count:
+        AlivePlayersCount = 0;
+        // 4) Update players (position & score):
+        foreach (var (id, player) in Players) {
+            player.Update(update);
+            if (player.IsAlive) AlivePlayersCount++;
+        }
+        foreach (var player in ActivePlayers) MovePlayer(player);
+        // 5) Return result:
+        return true;
+    });
 
     public void ResetUpdateGuards() {
         GamePlayUpdateGuard.Reset();
         SpectatorUpdateGuard.Reset();
         RoundUpdateGuard.Reset();
-    }
-
-    // Partial update factory -------------------------------------------------------------------------------------------------------------
-    public KillUpdate NewKillUpdate(byte? killerID, byte deadID, bool penalize = false) {
-        return new(killerID, deadID, penalize);
-    }
-    public LifeUpdate NewLifeUpdate(Player player, Random? random = null, Dictionary<float, bool>? used = null) {
-        RandomizePosition(player, random, used);
-        return new(player, Body.IMMORTAL_MS);
-    }
-
-    public MovementUpdate NewMovementUpdate(byte playerID) {
-        if (!Players.TryGetValue(playerID, out var player)) throw new ArgumentException("Wrong player ID!");
-        return new(playerID, player.Body.Position.Center, player.Body.Direction, player.Body.JumpFinishY);
-    }
-    public MovementUpdate NewMovementUpdate(Player jumper, Player victim) {
-        return new MovementUpdate(
-            jumper.ID,
-            new(jumper.Body.Position.Center.X, victim.Body.Position.Center.Y + 2 * Body.HALF_HEIGHT),
-            jumper.Body.Direction, jumper.Body.JumpFinishY
-        );
-    }
-    public MovementUpdate NewMovementUnderMapUpdate(Player player) {
-        return new MovementUpdate(
-            player.ID,
-            new(
-                player.Body.Position.Center.X,
-                Map.WorldMinY - (Mark.CalculateMarkPointTop(player.Body).Y - player.Body.Position.Center.Y)
-            ),
-            player.Body.Direction, player.Body.JumpFinishY
-        );
-    }
-
-    public StateUpdate NewStateUpdate(double time, GAME_STATE state, int? level = null, double? timer = null) {
-        return new(time, state, level ?? Map.Shrink.Level, timer ?? Map.Shrink.Timer);
-    }
-    public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) {
-        return new(this, deltaT);
-    }
-
-    // Network update factory -------------------------------------------------------------------------------------------------------------
-    private readonly NetworkUpdater Updater = new();
-
-    public GamePlayUpdate NewGamePlayUpdate(
-        StateUpdate stateUpdate,
-        Dictionary<byte, MovementUpdate>? movements = null,
-        Dictionary<byte, KillUpdate>? kills = null,
-        Dictionary<byte, LifeUpdate>? lives = null
-    ) {
-        return Updater.NewGamePlayUpdate(Round, stateUpdate, movements, kills, lives);
-    }
-    public GamePlayUpdate NewGamePlayCurrentUpdate() {
-        return NewGamePlayUpdate(NewStateUpdate(Time, State));
-    }
-
-    public KeyUpdate NewKeyUpdate(byte playerID, LinkedList<Control> controls) {
-        return Updater.NewKeyUpdate(Round, playerID, controls);
-    }
-    public PingUpdate NewPingUpdate() {
-        return Updater.NewPingUpdate(Round, DateTime.UtcNow);
-    }
-
-    public PlayerUpdate NewPlayerUpdate(Player player) {
-        return Updater.NewPlayerUpdate(Round, player);
-    }
-    public SpectatorUpdate NewSpectatorUpdate() {
-        return Updater.NewSpectatorUpdate(Round, SpectatorCount);
-    }
-    public SpectatorUpdate NewSpectatorRemoveUpdate() {
-        return Updater.NewSpectatorUpdate(Round, Math.Max(SpectatorCount - 1, 0));
-    }
-
-    public RoundUpdate NewRoundResetUpdate() {
-        return Updater.NewRoundUpdate(0, NewStateUpdate(0, GAME_STATE.LOBBY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER), []);
-    }
-    public RoundUpdate NewRoundStartUpdate() {
-        RestorePlayers();
-        return Updater.NewRoundUpdate(Round + 1, NewStateUpdate(0, GAME_STATE.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER), Players);
-    }
-    public RoundUpdate NewRoundFinishUpdate() {
-        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GAME_STATE.SCOREBOARD), Players);
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
@@ -509,12 +568,15 @@ public class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)
         // 1) Render map:
         await Map.Render(ctx, this);
         // 2) Render players:
+        Player? myPlayer = null;
         foreach (var player in ActivePlayers) {
-            if (player.Equals(screenPlayer)) continue;
+            if (player.Equals(screenPlayer)) {
+                myPlayer = player; continue;
+            }
             await player.Render(ctx, this);
         }
         // 3) Render screen player on top:
-        if (screenPlayer != null) await screenPlayer.Render(ctx, this);
+        if (myPlayer != null) await myPlayer.Render(ctx, this);
         // 4) Render names or mark:
         foreach (var player in ActivePlayers) {
             if (player.Equals(screenPlayer)) await Mark.RenderMark(ctx, (this, player));

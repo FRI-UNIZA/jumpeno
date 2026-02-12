@@ -1,10 +1,14 @@
 /* Variables --------------------------------------------------------------------------------------------------------------------------- */
 ::deep.box {
+    --box-padding: 24px;
+    --box-border-radius: 20px;
     --base-size: 1px;
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.box {
+    /* Position: */
+    position: relative;
     /* Display: */
     display: flex;
     flex-direction: row;
@@ -15,9 +19,9 @@
     max-width: 100%;
     height: auto;
     max-height: 100%;
-    padding: 24px;
+    padding: var(--box-padding);
     /* Style: */
-    border-radius: 20px;
+    border-radius: var(--box-border-radius);
     background: var(--theme-box-background);
     box-shadow: var(--theme-box-box-shadow);
     /* Base: */
@@ -28,7 +32,7 @@
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.box {
         /* Size: */
-        padding: 36px;
+        --box-padding: 36px;
     }
 }
 
@@ -36,6 +40,6 @@
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.box {
         /* Size: */
-        padding: 50px;
+        --box-padding: 50px;
     }
 }

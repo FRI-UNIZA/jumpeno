@@ -7,7 +7,7 @@
         🎮
         <TextSpan NoWrap>
             @I18N.T("Have a nice game (Have a nice)")
-            <WebLink Href="@(I18N.Link<GamePage>())" Class="footer-link">
+            <WebLink Href="@(I18N.Link<GamePage>())" OnClick="() => ActionHandler.BlurFocus()" Class="footer-link">
                 @I18N.T("Have a nice game (game)")
             </WebLink>
         </TextSpan>

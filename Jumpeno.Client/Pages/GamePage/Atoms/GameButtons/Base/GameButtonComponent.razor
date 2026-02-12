@@ -1,0 +1,21 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+@code {
+    protected RenderFragment Render() => @<Fragment>
+        <button
+            class="@ComputeClass()"
+            type="@BUTTON_TYPE.BUTTON.StringLower()"
+            style="@Style"
+            @onmousedown="PressStart" @ontouchstart="PressStart"
+            @onmouseenter="MouseEnter" @onmouseleave="MouseLeave"
+            @onmouseup="PressEndMouse" @ontouchend="PressEndTouch"
+            @ontouchstart:preventDefault @ontouchend:preventDefault
+            @ontouchstart:stopPropagation @ontouchend:stopPropagation
+            tabindex="-1"
+        >
+            <div class="@CLASS_CONTENT">@ChildContent</div>
+        </button>    
+    </Fragment>;
+}

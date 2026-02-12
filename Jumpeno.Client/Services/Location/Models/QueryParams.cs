@@ -66,12 +66,8 @@ public class QueryParams {
         Items = [];
     }
 
-    public int Count() {
-        return Items.Count;
-    }
-    public bool IsEmpty() {
-        return Count() == 0;
-    }
+    public int Count() => Items.Count;
+    public bool IsEmpty() => Count() == 0;
     public void ForEachKey(Func<string, int, bool> callback) {
         var index = 0;
         foreach (KeyValuePair<string, StringValues> item in Items) {

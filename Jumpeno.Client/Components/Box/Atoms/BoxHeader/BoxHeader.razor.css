@@ -1,0 +1,18 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.box .box-header {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    /* Size: */
+    width: calc(100% + 2 * var(--box-padding));
+    padding: calc(0.72 * var(--box-padding)) var(--box-padding) calc(0.56 * var(--box-padding));
+    margin: calc(-1 * var(--box-padding)) calc(-1 * var(--box-padding)) calc(0.5 * var(--box-padding));
+    /* Style: */
+    background: var(--theme-box-header-background);
+    border-radius: var(--box-border-radius) var(--box-border-radius) 0 0;
+    box-shadow: var(--theme-box-header-box-shadow);
+    /* Base: */
+    font-size: var(--base-size);
+}

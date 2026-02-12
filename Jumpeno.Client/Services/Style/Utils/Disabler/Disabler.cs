@@ -22,8 +22,8 @@ public class Disabler(IDisabledComponent view, string? @class = null, string? cl
     // Events -----------------------------------------------------------------------------------------------------------------------------
     public async Task OnViewRender() {
         if (WasDisabled == View.Disabled) return;
-        await Task.Yield();
         WasDisabled = View.Disabled;
+        await Task.Yield();
         View.Notify();
     }
 }

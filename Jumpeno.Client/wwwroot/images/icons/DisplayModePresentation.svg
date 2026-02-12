@@ -1,0 +1,81 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="87.697"
+    height="61.826"
+    viewBox="0 0 23.203 16.358"
+>
+    <defs>
+        <clipPath id="a" clipPathUnits="userSpaceOnUse">
+            <rect
+                width="31.842"
+                height="6.678"
+                x="58.484"
+                y="97.183"
+                rx="1.576"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1.4942"
+            />
+        </clipPath>
+    </defs>
+    <g transform="translate(-64.032 -87.504)">
+        <rect
+            width="22.115"
+            height="12.901"
+            x="64.576"
+            y="88.048"
+            rx="1.596"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.088"
+        />
+        <circle
+            cx="75.519"
+            cy="95.869"
+            r="2"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="1.088"
+        />
+        <circle
+            cx="81.678"
+            cy="97.122"
+            r="2"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="1.088"
+        />
+        <circle
+            cx="69.465"
+            cy="97.1"
+            r="2"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="1.088"
+        />
+        <g clip-path="url(#a)">
+            <path
+                d="M-66.42-104.902a3.105 4.08 0 0 1-3.095 4.08 3.105 4.08 0 0 1-3.114-4.057l3.105-.023z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1.93631"
+                transform="scale(-1)"
+            />
+            <path
+                d="M-72.458-104.782a3.016 5.009 0 0 1-3.007 5.01 3.016 5.009 0 0 1-3.025-4.981l3.016-.029z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2.11428"
+                transform="scale(-1)"
+            />
+            <path
+                d="M-78.583-104.861a3.11 4.027 0 0 1-3.102 4.027 3.11 4.027 0 0 1-3.119-4.004l3.11-.023z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1.92519"
+                transform="scale(-1)"
+            />
+        </g>
+    </g>
+</svg>
+

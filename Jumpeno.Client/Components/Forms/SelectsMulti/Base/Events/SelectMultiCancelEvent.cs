@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public record SelectMultiCancelEvent (
-    Dictionary<string, SelectOption> Cancelled,
-    Dictionary<string, SelectOption> Value
+public record SelectMultiCancelEvent<T> (
+    Dictionary<string, SelectOption<T>> Cancelled,
+    Dictionary<string, SelectOption<T>> Value
 ) {}

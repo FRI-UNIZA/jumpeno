@@ -1,94 +1,155 @@
+/* Constants -------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.profile-modal {
+    /* Position: */
+    --profile-tabs-menu-z-index: 10;
+    /* Size: */
+    --tab-buttons-height: 50px;
+}
+
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.modal.profile-modal {
     /* Size: */
-    --modal-min-width: 460px;
+    --modal-min-width: 860px;
     --modal-max-width: 1200px;
-    /* Base: */
-    --modal-profile-base-size: 1px;
+    --modal-min-height: 580px;
 }
 
-::deep.modal.profile-modal .profile-content {
+::deep.modal.profile-modal .profile-modal-tab-switch {
+    /* Position: */
+    position: relative;
     /* Display: */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    /* Size: */
-    min-width: 100%;
-    max-width: 100%;
-    padding: 30px 0 54px;
-}
-
-::deep.modal.profile-modal .profile-content .user-profile-image-wrap {
-    /* Position: */
-    position: relative;
-    /* Size: */
-    width: 112px;
-    height: 112px;
-    /* Style: */
-    border-radius: 100%;
-    background-color: var(--theme-modal-profile-avatar-background);
-    border: 6px solid var(--theme-modal-profile-avatar-border-color);
-    box-shadow: var(--theme-modal-profile-avatar-box-shadow);
-    /* Content: */
-    overflow: hidden;
-    /* Base: */
-    font-size: var(--modal-profile-base-size);
-}
-
-::deep.modal.profile-modal .profile-content .image.user-profile-image {
-    /* Size: */
-    --image-width: 100px;
-    --image-height: 100px;
-    /* Transform: */
-    transform: scale(4) translate(37.2%, 36.8%);
-    /* Actions: */
-    pointer-events: none;
-}
-
-::deep.modal.profile-modal .profile-content .heading.profile-name {
-    /* Content: */
-    text-align: center;
-}
-
-::deep.modal.profile-modal .profile-content .paragraph.profile-email {
-    /* Size: */
-    margin-top: -10px;
-    /* Content: */
-    text-align: center;
-}
-
-::deep.modal.profile-modal .profile-content .paragraph.profile-activated {
-    /* Content: */
-    text-align: center;
-}
-::deep.modal.profile-modal .profile-content .user-activated-icon,
-::deep.modal.profile-modal .profile-content .user-not-activated-icon {
-    /* Position: */
-    position: relative;
-    bottom: -2px;
-    /* Size: */
-    margin: 0 5px 0 -8px;
-    /* Content: */
-    font-size: 22px;
-}
-::deep.modal.profile-modal .profile-content .user-activated-icon {
-    /* Style: */
-    color: var(--theme-status-success-accent-color);
-}
-::deep.modal.profile-modal .profile-content .user-not-activated-icon {
-    /* Style: */
-    color: var(--theme-status-danger-accent-color);
-}
-::deep.modal.profile-modal .profile-content .activated-box {
-    /* Display: */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--modal-padding-content-y);
     /* Size: */
     width: 100%;
-    padding-top: 12px;
+}
+
+::deep.modal.profile-modal .profile-tab-buttons {
+    /* Position: */
+    position: sticky;
+    top: 0;
+    z-index: var(--profile-tabs-menu-z-index);   
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 14px;
+    /* Size: */
+    width: calc(100% + 2 * var(--modal-padding-content-x));
+    margin: calc(-1 * var(--modal-padding-content-y)) calc(-1 * var(--modal-padding-content-x)) 0;
+    height: var(--tab-buttons-height);
+    /* Style: */
+    background: var(--theme-surface-background);
+}
+
+::deep.modal.profile-modal .profile-tab-button {
+    /* Display: */
+    display: inline-flex;
+    align-items: center;
+    /* Size: */
+    padding: 2px 6px;
+    /* Style: */
+    background: none;
+    outline: none;
+    border: none;
+    color: var(--theme-modal-profile-tab-button-color);
+    border: 3px solid transparent;
+    /* Content: */
+    white-space: nowrap;
+    font-size: 15px;
+    /* Actions: */
+    cursor: pointer;
+    /* Animations: */
+    transition-property: color, text-shadow;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease;
+}
+
+::deep.modal.profile-modal .profile-tab-button.active {
+    /* Style: */
+    color: var(--theme-modal-profile-tab-button-active-color);
+    text-shadow: var(--theme-modal-profile-tab-button-active-text-shadow);
+    border-bottom-color: var(--theme-modal-profile-tab-button-active-color);
+}
+
+::deep.modal.profile-modal .profile-tab-button:not(.active):hover,
+::deep.modal.profile-modal .profile-tab-button:not(.active):focus-visible {
+    /* Style: */
+    color: var(--theme-modal-profile-tab-button-highlight-color);
+}
+
+::deep.modal.profile-modal .profile-tab-buttons::after {
+    /* Position: */
+    position: absolute;
+    right: auto;
+    bottom: 0;
+    /* Size: */
+    width: calc(100% - 2 * var(--modal-padding-content-x));
+    height: 0;
+    /* Style: */
+    border: 0 solid var(--theme-modal-profile-tab-button-divider-color);
+    border-bottom-width: 1px;
+    /* Content: */
+    content: "";
+}
+
+::deep.modal.profile-modal .profile-tabs { 
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    width: 100%;
+    min-height: calc(100% - var(--tab-buttons-height) - var(--modal-padding-content-y));
+}
+
+@media (min-width: 768px) {
+    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
+    ::deep.modal.profile-modal .profile-modal-tab-switch {
+        /* Display: */
+        flex-direction: row;
+        gap: var(--modal-padding-content-x);
+    }
+
+    ::deep.modal.profile-modal .profile-tab-buttons {
+        /* Display: */
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        /* Size: */
+        width: 200px;
+        height: 100%;
+        margin: 0;
+    }
+
+    ::deep.modal.profile-modal .profile-tab-buttons::after {
+        /* Position: */
+        right: 0;
+        bottom: auto;
+        /* Size: */
+        width: 0;
+        height: 100%;
+        /* Style: */
+        border-right-width: 1px;
+    }
+
+    ::deep.modal.profile-modal .profile-tab-button {
+        /* Size: */
+        width: 100%;
+    }
+
+    ::deep.modal.profile-modal .profile-tab-button.active {
+        /* Style: */
+        border-bottom-color: transparent;
+        border-right-color: rgb(245, 208, 0);
+    }
+
+    ::deep.modal.profile-modal .profile-tabs {
+        /* Size: */
+        min-height: 100%;
+    }
 }

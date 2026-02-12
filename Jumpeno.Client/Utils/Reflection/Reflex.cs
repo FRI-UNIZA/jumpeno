@@ -94,9 +94,14 @@ public static class Reflex {
 
     // Instance:
     public static T Invoke<T>(object obj, string method, object?[]? parameters = null) {
+        parameters ??= [];
+        Type[] paramTypes = [.. parameters.Select(p => p?.GetType() ?? typeof(object))];
         MethodInfo? mi = obj.GetType().GetMethod(
             method,
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+            binder: null,
+            types: paramTypes,
+            modifiers: null
         ) ?? throw new InvalidOperationException("Method not found");
         return (T)mi.Invoke(obj, parameters)!;
     }

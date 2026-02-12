@@ -22,8 +22,8 @@ public class ActionHandler {
     public static async Task SaveActiveElementAsync() => await JS.InvokeVoidAsync(JSActionHandler.SaveActiveElement);
     public static string? GetRestoreID() => JS.Invoke<string?>(JSActionHandler.GetRestoreID);
     public static async Task<string?> GetRestoreIDAsync() => await JS.InvokeAsync<string?>(JSActionHandler.GetRestoreID);
-    public static void SetFocus(string id) => JS.InvokeVoid(JSActionHandler.SetFocus, id);
-    public static async Task SetFocusAsync(string id) => await JS.InvokeVoidAsync(JSActionHandler.SetFocus, id);
+    public static void SetFocus(string id, string? fallbackID = null, bool preventScroll = false) => JS.InvokeVoid(JSActionHandler.SetFocus, id, fallbackID, preventScroll);
+    public static async Task SetFocusAsync(string id, string? fallbackID = null, bool preventScroll = false) => await JS.InvokeVoidAsync(JSActionHandler.SetFocus, id, fallbackID, preventScroll);
     public static void FocusFirst(string id) => JS.InvokeVoid(JSActionHandler.FocusFirst, id);
     public static async Task FocusFirstAsync(string id) => await JS.InvokeVoidAsync(JSActionHandler.FocusFirst, id);
     public static void FocusLast(string id) => JS.InvokeVoid(JSActionHandler.FocusLast, id);

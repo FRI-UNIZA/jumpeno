@@ -1,7 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public class TimeFlowUpdate(Game game, double deltaT) : PartialUpdate {
-    public Game Game { get; private set; } = game;
+public class TimeFlowUpdate(double deltaT) : PartialUpdate {
     public double DeltaT { get; private set; } = deltaT;
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------

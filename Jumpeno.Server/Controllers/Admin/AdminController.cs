@@ -14,7 +14,9 @@ public class AdminController : ControllerBase {
         // 2) Authentication:
         string? email = null;
         foreach (var adminEmail in ServerSettings.Auth.Admins) {
-            if (body.Email == adminEmail) { email = adminEmail; break; }
+            if (body.Email.Equals(adminEmail, StringComparison.CurrentCultureIgnoreCase)) {
+                email = adminEmail; break;
+            }
         }
         if (email == null) throw EXCEPTION.NOT_AUTHENTICATED;
         // 3) Create refresh token:
