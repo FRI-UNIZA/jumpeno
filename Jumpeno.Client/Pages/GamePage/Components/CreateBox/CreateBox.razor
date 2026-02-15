@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<div class="create-box">
+<div class="@ComputeClass()">
     <AuthView Roles="[ROLE.USER]">
         <Box Class="create-form">
             <BoxHeader class="create-form-header">
@@ -47,11 +47,11 @@
                             Label="@I18N.T("Select map")"
                             LoadLabel="@($"{I18N.T("Select map")}, {@I18N.T("Disabled field")}")"
                             RoleDescription="combobox"
-                            Class="load-area-map-option"
+                            Class="@LoadAreaMapOptionClass()"
                             NoStyle
                             NoLoader
                         >
-                            <SelectComponent
+                            <SelectField
                                 ViewModel="VMSelectMap"
                                 Disabled="VMSelectMapDisabled"
                                 Label="@I18N.T("Select map")"
@@ -66,7 +66,7 @@
                     </div>
                     <div class="gameplay-options">
                         <FormLabel Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="anonymous-players-label">
-                            <SwitchComponent
+                            <SwitchField
                                 ViewModel="VMSwitchAnonyms"
                                 Label="@I18N.T("TEXT_ANONYMOUS_PLAYERS")"
                                 Size="FORM_SIZE.M"
@@ -79,11 +79,11 @@
                                 <Description>
                                     <AnonymSVG Class="anonymous-players-svg" />
                                 </Description>
-                            </SwitchComponent>
+                            </SwitchField>
                         </FormLabel>
                         <div class="game-additional-options">
                             <div class="rounds-option">
-                                <SelectComponent
+                                <SelectField
                                     ViewModel="VMSelectRounds"
                                     Label="@I18N.T("Number of rounds")"
                                     Align="FORM_ALIGN.LEFT"
@@ -95,7 +95,7 @@
                                 <AntIcon Type="clock-circle" Theme="Outline" Class="rounds-icon" />
                             </div>
                             <div class="capacity-option">
-                                <SelectComponent
+                                <SelectField
                                     ViewModel="VMSelectCapacity"
                                     Label="@I18N.T("Capacity")"
                                     Align="FORM_ALIGN.LEFT"
@@ -121,7 +121,7 @@
                         RoleDescription="@I18N.T("Image")"
                         Class="load-area-canvas"
                     >
-                        <GameCanvas Map="GameMap" Class="map-canvas">
+                        <MapCanvas Map="GameMap" Class="map-canvas">
                             @if (!GameMapLoadArea.Loading) {
                                 @if (VMSelectMapError) {
                                     <Paragraph Size="TEXT_SIZE.L" Class="error-title">@I18N.T("Error")</Paragraph>
@@ -143,7 +143,7 @@
                                     </Button>
                                 }
                             }
-                        </GameCanvas>
+                        </MapCanvas>
                     </LoadArea>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                             <DisplayModeEachOwnSVG Class="option-each-own-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Each has their own")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
@@ -178,7 +178,7 @@
                             <DisplayModeOneScreenSVG Class="option-one-screen-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Play on 1 screen")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
@@ -194,12 +194,15 @@
                             <DisplayModePresentationSVG Class="option-presentation-svg" />
                             <div class="display-mode-description">
                                 <p class="option-label">@option.Label</p>
-                                <p class="option-description">@I18N.T("Host only presents")</p>
+                                <p class="option-description">@VMRadioDisplayModeDescriptions[option.Key]</p>
                             </div>
                         </RadioButtonOption>
                     }
                 </RadioButton>
             </FormLabel>
+            @if (VMRadioDisplayMode.Value != null) {
+                <Paragraph Class="display-mode-dynamic-description">@VMRadioDisplayModeDescriptions[VMRadioDisplayMode.Value.Key]</Paragraph>
+            }
 
             <FormLabel Label="@I18N.T("Game mode")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" Class="game-mode">
                 <RadioButton ViewModel="VMRadioGameMode" Label="@I18N.T("Game mode")" AutoSize>
@@ -212,8 +215,11 @@
                             Align="FORM_ALIGN.CENTER"
                             AutoSize
                         >
-                            <p class="option-label"><GameModeMayhemSVG Class="option-mayhem-svg" />@option.Label</p>
-                            <p class="option-description">@I18N.T("Timed game with respawns")</p>
+                            <p class="option-label">
+                                <GameModeMayhemSVG Class="option-mayhem-svg" />
+                                <span class="option-label-text">@option.Label</span>
+                            </p>
+                            <p class="option-description">@VMRadioGameModeDescriptions[option.Key]</p>
                         </RadioButtonOption>
                     }
                     @if (true) {
@@ -225,12 +231,18 @@
                             Align="FORM_ALIGN.CENTER"
                             AutoSize
                         >
-                            <p class="option-label"><GameModeLastStandingSVG Class="option-last-standing-svg" />@option.Label</p>
-                            <p class="option-description">@I18N.T("Until one player remains")</p>
+                            <p class="option-label">
+                                <GameModeLastStandingSVG Class="option-last-standing-svg" />
+                                <span class="option-label-text">@option.Label</span>
+                            </p>
+                            <p class="option-description">@VMRadioGameModeDescriptions[option.Key]</p>
                         </RadioButtonOption>
                     }
                 </RadioButton>
             </FormLabel>
+            @if (VMRadioGameMode.Value != null) {
+                <Paragraph Class="game-mode-dynamic-description">@VMRadioGameModeDescriptions[VMRadioGameMode.Value.Key]</Paragraph>
+            }
         </Box>
     </AuthView>
     <AuthViewBlock Roles="[ROLE.USER]">

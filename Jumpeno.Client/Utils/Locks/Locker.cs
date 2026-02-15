@@ -1,22 +1,27 @@
 namespace Jumpeno.Client.Utils;
 
-#pragma warning disable CA1816
-
-public class Locker : IDisposable {
+public class Locker {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Semaphore Semaphore = new(1, 1);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public Locker() => Disposer = new(this, Semaphore.Dispose);
-    private readonly Disposer Disposer;
-    public void Dispose() => Disposer.Dispose();
+    public Locker() => Disposer = new(this, () => { Disposed = true; TryUnlock(); Semaphore.Dispose(); });
     ~Locker() => Disposer.Final();
+    // Invalidation:
+    private bool Disposed = false;
+    private void Check() => ObjectDisposedException.ThrowIf(Disposed, this);
+    // Dispose:
+    private readonly Disposer Disposer;
+    /// <summary>Releases Locker resources. (Must run under Lock!)</summary>
+    public void DisposeUnsafe() => Disposer.Dispose();
+    /// <summary>Releases Locker resources.</summary>
+    public void DisposeSafe() { TryLock(); DisposeUnsafe(); }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public void Lock() => Semaphore.WaitOne();
+    public void Lock() { Semaphore.WaitOne(); Check(); }
     public void Unlock() => Semaphore.Release();
     // [Dispose] Exception prone:
-    public void TryLock() { try { Lock(); } catch {} }
+    public void TryLock() { try { Lock(); Check(); } catch {} }
     public void TryUnlock() { try { Semaphore.Release(); } catch {} }
 
     // Callbacks --------------------------------------------------------------------------------------------------------------------------
@@ -52,22 +57,22 @@ public class Locker : IDisposable {
 
     // Token callbacks --------------------------------------------------------------------------------------------------------------------
     public void Exclusive(Action<LockToken> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { Lock(); callback(token); }
         finally { token.Unlock(); }
     }
     public T Exclusive<T>(Func<LockToken, T> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { Lock(); return callback(token); }
         finally { token.Unlock(); }
     }
     public async Task Exclusive(Func<LockToken, Task> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { Lock(); await callback(token); }
         finally { token.Unlock(); }
     }
     public async Task<T> Exclusive<T>(Func<LockToken, Task<T>> callback) {
-        var token = new LockToken(TryUnlock);
+        var token = new LockToken(Unlock, TryUnlock);
         try { Lock(); return await callback(token); }
         finally { token.Unlock(); }
     }

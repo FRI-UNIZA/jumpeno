@@ -20,12 +20,7 @@ class DOTNET {
         ON_ERROR: "JS_OnError"
     }
 
-    static NAVIGATOR = {
-        POP_STATE: "JS_PopState"
-    }
-
     static PAGE_LOADER = {
-        SHOW: "JS_Show",
         AFTER_ANIMATION_FRAME: "JS_AfterAnimationFrame"
     }
 

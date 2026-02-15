@@ -38,9 +38,9 @@ public partial class Notification {
         SSRStorage.State.ServerNotifications.Clear();
     }
 
-    protected override void OnComponentDispose() {
-        DisplayLock.Dispose();
-        AriaLock.Dispose();
+    protected override async ValueTask OnComponentDisposeAsync() {
+        await DisplayLock.DisposeSafe();
+        await AriaLock.DisposeSafe();
     }
 
     // ARIA -------------------------------------------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ public partial class Notification {
         if (notification.Duration is not null && notification.Duration < 1) {
             throw new Exception("Minimal duration is 1ms!");
         }
-        await instance.DisplayLock.Exclusive(() => {
+        await instance.DisplayLock.TryExclusive(() => {
             instance.Notifications[notification.Key] = notification;
             instance.NotificationList.Add(notification);
             instance.SetDelay(notification);
@@ -97,7 +97,7 @@ public partial class Notification {
     }
 
     private async Task StopDelay(NotificationData notification) {
-        await DisplayLock.Exclusive(() => {
+        await DisplayLock.TryExclusive(() => {
             if (!Notifications.ContainsKey(notification.Key)) return;
             if (Closing.ContainsKey(notification.Key)) return;
             ClearDelay(notification);
@@ -105,7 +105,7 @@ public partial class Notification {
     }
 
     private async Task RestartDelay(NotificationData notification) {
-        await DisplayLock.Exclusive(() => {
+        await DisplayLock.TryExclusive(() => {
             if (!Notifications.ContainsKey(notification.Key)) return;
             if (Closing.ContainsKey(notification.Key)) return;
             SetDelay(notification);
@@ -113,7 +113,7 @@ public partial class Notification {
     }
 
     private async Task Close(NotificationData notification) {
-        await DisplayLock.Exclusive(() => {
+        await DisplayLock.TryExclusive(() => {
             if (!Notifications.ContainsKey(notification.Key)) return;
             if (Closing.ContainsKey(notification.Key)) return;
             ClearDelay(notification);
@@ -123,7 +123,7 @@ public partial class Notification {
     }
 
     private async Task OnClose(NotificationData notification) {
-        await DisplayLock.Exclusive(() => {
+        await DisplayLock.TryExclusive(() => {
             if (!Closing.ContainsKey(notification.Key)) return;
             Notifications.Remove(notification.Key);
             NotificationList.Remove(notification);

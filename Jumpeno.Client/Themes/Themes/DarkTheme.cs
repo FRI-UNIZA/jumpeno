@@ -7,7 +7,9 @@ public class DarkTheme : BaseTheme {
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE => new(255, 255, 255);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX => new(250, 250, 175);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX_COLLAPSE => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS => new(SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX, 0.6f);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => new(SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX, 0.6f);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT_COLLAPSE => new(255, 255, 255);
+    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS => new(0, 0, 0, 0.04f);
     public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS_COLLAPSE => new(255, 255, 255);
 
     // Secondary --------------------------------------------------------------------------------------------------------------------------
@@ -122,25 +124,23 @@ public class DarkTheme : BaseTheme {
 
 // NOTE: Pages ----------------------------------------------------------------------------------------------------------------------------
     // Game -------------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor GAME_STATE_COLOR => new(255, 255, 255);
-    public override string GAME_STATE_TEXT_SHADOW => "0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8)";
-
-    // CreateBox:
+    // Game > Components > CreateBox:
     public override string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY => "0.5";
 
-    // GameScreen > Control:
+    // Game > Components > GameScreen:
+    // Control:
     public override RGBAColor GAME_SCREEN_CONTROL_COLOR => new(236, 240, 241);
     public override RGBAColor GAME_SCREEN_CONTROL_BACKGROUND => new(42, 33, 56);
     public override string GAME_SCREEN_CONTROL_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgb(0, 0, 0)";
-
-    // GameScreen > Control [pressed]:
+    // Control [pressed]:
     public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_COLOR => new(236, 240, 241);
     public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_BACKGROUND => new(42, 33, 56, 0.7f);
     public override string GAME_SCREEN_CONTROL_PRESSED_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.7)";
 
-    // Lobby:
+    // Game > Components > Lobby:
     public override string LOBBY_BOX_SHADOW => "0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2)";
     public override RGBAColor LOBBY_EMPTY_COLOR => new(0, 0, 0, 0.4f);
+    // Players:
     public override RGBAColor LOBBY_LINE_BACKGROUND => new(255, 215, 0, 0.7f);
     public override string LOBBY_PRESENCE_BOX_SHADOW => "0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7)";
     public override RGBAColor LOBBY_DASH_COLOR => new(0, 0, 0, 0.14f);
@@ -157,9 +157,13 @@ public class DarkTheme : BaseTheme {
     public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX => SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX;
     public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
 
+    // Box [transparent] ------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT;
+    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_TRANSPARENT => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
+
     // Box [glass] ------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS => SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS;
-    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
+    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 3em 6em rgba(0, 0, 0, 0.14)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
     // Button [primary] -------------------------------------------------------------------------------------------------------------------

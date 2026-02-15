@@ -4,7 +4,7 @@ public partial class ModalClose {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS = "modal-close";
     public const string CLASS_ICON = "modal-close-icon";
-    public static string CLASS_UNCLOSABLE => ModalElement.CLASS_UNCLOSABLE;
+    public static string CLASS_UNCLOSABLE => Modal.CLASS_UNCLOSABLE;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

@@ -48,10 +48,13 @@ public class SelectMultiViewModel<T> : FormViewModel {
     public EventDelegate<SelectMultiOptionEvent<T>> OnDeselect { get; set; }
     public EventDelegate<SelectMultiCancelEvent<T>> OnCancel { get; set; }
     public EventDelegate<SelectMultiCancelEvent<T>> OnCancelClose { get; set; }
+    public EventDelegate<SelectMultiCancelEvent<T>> OnAfterCancelClose { get; set; }
     public EventDelegate<SelectMultiEvent<T>> OnClear { get; set; }
     public EventDelegate<SelectMultiEvent<T>> OnClearClose { get; set; }
+    public EventDelegate<SelectMultiEvent<T>> OnAfterClearClose { get; set; }
     public EventDelegate<SelectMultiEvent<T>> OnOK { get; set; }
     public EventDelegate<SelectMultiEvent<T>> OnOKClose { get; set; }
+    public EventDelegate<SelectMultiEvent<T>> OnAfterOKClose { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SelectMultiViewModel(SelectMultiViewModelParams<T> p) : base(p.Form, p.ID, p.OnError) {
@@ -80,9 +83,12 @@ public class SelectMultiViewModel<T> : FormViewModel {
         OnDeselect = p.OnDeselect ?? EventDelegate<SelectMultiOptionEvent<T>>.EMPTY;
         OnCancel = p.OnCancel ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
         OnCancelClose = p.OnCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
+        OnAfterCancelClose = p.OnAfterCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
         OnClear = p.OnClear ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
         OnClearClose = p.OnClearClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
+        OnAfterClearClose = p.OnAfterClearClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
         OnOK = p.OnOK ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
         OnOKClose = p.OnOKClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
+        OnAfterOKClose = p.OnAfterOKClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
     }
 }

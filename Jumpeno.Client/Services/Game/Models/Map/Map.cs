@@ -35,6 +35,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         Math.Min(ScreenMinX, ScreenMaxX), Math.Min(ScreenMinY, ScreenMaxY),
         ScreenWidth, ScreenHeight
     );
+    public double DPR { get; private set; } = 0.0;
 
     // Tiles ------------------------------------------------------------------------------------------------------------------------------
     [JsonInclude][Newtonsoft.Json.JsonProperty]
@@ -59,11 +60,11 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     private Map(
         string name,
         float worldMinX, float worldMaxX, float worldMinY, float worldMaxY,
-        int screenMinX, int screenMaxX, int screenMinY, int screenMaxY,
+        int screenMinX, int screenMaxX, int screenMinY, int screenMaxY, double dpr,
         List<Tile> tiles, Shrink shrink,
         RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     ) {
-        Name = name;
+        Name = MapValidator.AssertName(name);
         WorldMinX = worldMinX;
         WorldMaxX = worldMaxX;
         WorldMinY = worldMinY;
@@ -72,6 +73,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         ScreenMaxX = screenMaxX;
         ScreenMinY = screenMinY;
         ScreenMaxY = screenMaxY;
+        DPR = dpr;
         Tiles = tiles;
         TileQT = InitTileQT(Tiles);
         Shrink = shrink;
@@ -90,7 +92,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         string name, float minX, float maxX, float minY, float maxY, List<Tile> tiles,
         RGBColor background, string? backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, tiles, null!, background, backgroundImage, tileImage, foreground, tint, border) {
+    : this(name, minX, maxX, minY, maxY, 0, 0, 0, 0, 0.0, tiles, null!, background, backgroundImage, tileImage, foreground, tint, border) {
         Shrink = new(this);
     }
 
@@ -119,19 +121,21 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     }
 
     // Screen -----------------------------------------------------------------------------------------------------------------------------
-    public void UpdateScreen(int minX, int maxX, int minY, int maxY) {
+    public void UpdateScreen(int minX, int maxX, int minY, int maxY, double dpr) {
         ScreenMinX = minX;
         ScreenMaxX = maxX;
         ScreenMinY = minY;
         ScreenMaxY = maxY;
+        DPR = dpr;
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
-    public bool Update(GameUpdate update) {
-        if (update is TimeFlowUpdate time) return TimeFlowUpdate(time);
-        if (update is StateUpdate state) return StateUpdate(state);
-        return false;
-    }
+    public bool Update(GameUpdate update)
+    => update switch {
+        TimeFlowUpdate time => TimeFlowUpdate(time),
+        StateUpdate state => StateUpdate(state),
+        _ => false
+    };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) => Shrink.Update(update);
 
@@ -163,6 +167,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
     private readonly PreRenderer<Map> PreRendererTiles;
     private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+
     private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
     {
         // 1) Clear:
@@ -189,6 +194,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return true;
     }
+
     private static async Task<bool> PreRenderTiles(Canvas2DContext ctx, Map map)
     {
         // 1) Initialize:
@@ -205,6 +211,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         // 4) Return result:
         return prerendered;
     }
+
     private static async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Map map)
     {
         var (source, ctx) = context;
@@ -217,7 +224,20 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         return true;
     }
     public bool IsPrerendered => PreRendererBG.IsPrerendered && PreRendererTiles.IsPrerendered;
-    public async Task<bool> PreRender() => await PreRendererBG.PreRender(this) & await PreRendererTiles.PreRender(this);
+
+    public async Task<bool> PreRender(Game? game = null)
+    {
+        // 1) Save result:
+        var isPrerendered = false;
+        // 2.1) Background:
+        isPrerendered &= await PreRendererBG.PreRender(this);
+        // 2.2) Shrink:
+        if (game != null) isPrerendered &= await Shrink.PreRender(game);
+        // 2.3) Tiles:
+        isPrerendered &= await PreRendererTiles.PreRender(this);
+        // 3) Return result:
+        return isPrerendered;
+    }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> Render(Canvas2DContext ctx, Game? game = null)

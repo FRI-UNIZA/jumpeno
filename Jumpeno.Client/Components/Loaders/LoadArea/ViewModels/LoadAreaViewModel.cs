@@ -10,27 +10,23 @@ public class LoadAreaViewModel(string? ID = null, bool loading = false) : ViewMo
     private readonly MinWatch MinWatch = new(LoadArea.MIN_LOADING);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public void OnViewDispose() { try { Lock.Dispose(); } catch {} }
+    public async Task OnViewDispose() => await Lock.DisposeSafe();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task StartLoading(bool preventScroll = true) {
-        try {
-            await Lock.Exclusive(async () => {
-                if (AppEnvironment.IsClient) MinWatch.Start();
-                Loading = true;
-                await NotifyAsync(MESSAGE_START, new MessageStartData(preventScroll)); 
-            });
-        } catch {}
+        await Lock.TryExclusive(async () => {
+            if (AppEnvironment.IsClient) MinWatch.Start();
+            Loading = true;
+            await NotifyAsync(MESSAGE_START, new MessageStartData(preventScroll)); 
+        });
     }
 
     public async Task FinishLoading(bool minLoading = true, bool restoreFocus = false, bool preventScroll = true) {
-        try {
-            await Lock.Exclusive(async () => {
-                if (AppEnvironment.IsClient && minLoading) await MinWatch.Task;
-                Loading = false;
-                await NotifyAsync(MESSAGE_FINISH, new MessageFinishData(restoreFocus, preventScroll));
-            });
-        } catch {}
+        await Lock.TryExclusive(async () => {
+            if (AppEnvironment.IsClient && minLoading) await MinWatch.Task;
+            Loading = false;
+            await NotifyAsync(MESSAGE_FINISH, new MessageFinishData(restoreFocus, preventScroll));
+        });
     }
 
     public async Task RestoreFocus(string id, bool preventScroll = true) {

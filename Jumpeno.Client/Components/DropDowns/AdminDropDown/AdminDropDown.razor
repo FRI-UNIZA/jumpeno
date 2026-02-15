@@ -1,5 +1,7 @@
 @namespace Jumpeno.Client.Components
 
+@inherits BasicComponent
+
 <AuthView Roles="[ROLE.ADMIN]">
     <DropDown @ref="DropDownRef" Title="@I18N.T("Admin menu")" Class="@CLASS">
         <DropDownButton>

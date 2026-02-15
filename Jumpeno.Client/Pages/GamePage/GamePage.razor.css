@@ -1,3 +1,18 @@
+/* Aspect ratio ------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-page,
+::deep.modal.game-modal {
+    --min-aspect-size: 1000px;
+    --aspect-size: max(100vw, var(--min-aspect-size));
+}
+
+@media (min-aspect-ratio: 1) {
+    ::deep.game-page,
+    ::deep.modal.game-modal {
+        --aspect-size: max(100vh, var(--min-aspect-size));
+        --aspect-size: max(100dvh, var(--min-aspect-size));
+    }
+}
+
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.game-page {
     /* Display: */

@@ -10,6 +10,7 @@
         <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
         <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
     </div>
+    <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FORM" ID="@nameof(UserLoginDTO.CAPTCHAToken)" Class="recaptcha-login" />
     <Button Size="BUTTON_SIZE.M" OnClick="Login">
         <Text>@I18N.T("Log in")</Text>
     </Button>

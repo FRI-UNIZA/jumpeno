@@ -9,8 +9,10 @@ public class FormErrorViewModel {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public FormErrorViewModel(FormViewModel formViewModel) {
         FormViewModel = formViewModel;
-        FormManager.Add(FormViewModel.FormID, this);
+        FormManager.Add(FormViewModel.Form, FormViewModel.ID, this);
     }
+
+    public void Detach() => FormManager.Remove(FormViewModel.Form, FormViewModel.ID);
 
     // Private actions --------------------------------------------------------------------------------------------------------------------
     private void SetError(string message) {

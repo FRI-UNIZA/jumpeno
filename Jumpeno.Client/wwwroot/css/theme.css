@@ -31,8 +31,14 @@ body {
     --theme-breakpoint-mobile: 768;
     --theme-breakpoint-tablet-sm: 992;
     --theme-breakpoint-tablet: 1200;
-    --theme-email-color: rgba(42, 33, 56, 1);
-    --theme-email-accent-color: rgba(255, 215, 0, 1);
+    --theme-email-title-font: Arial;
+    --theme-email-text-font: Helvetica;
+    --theme-email-button-font: Arial;
+    --theme-email-background: rgb(255, 255, 255);
+    --theme-email-text-color: rgb(0, 0, 0);
+    --theme-email-button-color: rgb(0, 0, 0);
+    --theme-email-button-background: rgb(255, 215, 0);
+    --theme-email-button-background-highlight: rgb(255, 239, 0);
 }
 
 body.light-theme.surface-primary,
@@ -86,8 +92,6 @@ body.light-theme .surface-primary {
     --theme-nav-menu-mobile-button-highlight-color: rgba(132, 124, 145, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(42, 33, 56, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
-    --theme-game-state-color: rgba(255, 255, 255, 1);
-    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-create-box-canvas-box-shadow-opacity: 0.25;
     --theme-game-screen-control-color: rgba(105, 99, 115, 1);
     --theme-game-screen-control-background: rgba(255, 255, 255, 1);
@@ -331,14 +335,39 @@ body.light-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-game-state-color: rgba(255, 255, 255, 1);
+    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
+    --theme-game-waiting-background: rgb(61, 61, 61);
+    --theme-game-waiting-drop-shadow: 0 0.043em 0.086em rgba(0, 0, 0, 0.8);
     --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
     --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
     --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-lobby-player-settings-color: rgb(65, 65, 65);
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-button-success-color: rgba(255, 255, 255, 1);
+    --theme-button-success-background: linear-gradient(rgb(159 221 1) 00%, #6b9700 90%);
+    --theme-button-success-tint-color: rgb(89, 184, 0);
+    --theme-button-success-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
+    --theme-button-success-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-success-highlight-background: linear-gradient(rgb(166 231 0) 0%, #7caf00 90%);
+    --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
+    --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-tab-button-color: rgb(42, 33, 56);
+    --theme-modal-profile-tab-button-highlight-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
+    --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
+    --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
+    --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
+    --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
+    --theme-password-strength-bar-segment-n2-filled-background: linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38));
+    --theme-password-strength-bar-segment-n3-filled-background: linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0));
+    --theme-password-strength-bar-segment-n4-filled-background: linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106));
 }
 body.light-theme.surface-primary-collapse,
 body.light-theme .surface-primary-collapse {
@@ -354,11 +383,21 @@ body.light-theme.surface-primary-box-collapse,
 body.light-theme .surface-primary-box-collapse {
     --theme-surface-background: rgba(255, 255, 255, 1);
 }
-body.light-theme.surface-primary-glass,
-body.light-theme .surface-primary-glass {
+body.light-theme.surface-primary-transparent,
+body.light-theme .surface-primary-transparent {
     --theme-surface-background: rgba(250, 250, 175, 0.6);
     --theme-box-background: rgba(250, 250, 175, 0.6);
     --theme-box-box-shadow: 0 6em 16em 0 rgba(0, 0, 0, 0.15);
+}
+body.light-theme.surface-primary-transparent-collapse,
+body.light-theme .surface-primary-transparent-collapse {
+    --theme-surface-background: rgba(255, 255, 255, 1);
+}
+body.light-theme.surface-primary-glass,
+body.light-theme .surface-primary-glass {
+    --theme-surface-background: rgba(0, 0, 0, 0.04);
+    --theme-box-background: rgba(0, 0, 0, 0.04);
+    --theme-box-box-shadow: 0 3em 6em rgba(0, 0, 0, 0.14);
 }
 body.light-theme.surface-primary-glass-collapse,
 body.light-theme .surface-primary-glass-collapse {
@@ -457,8 +496,6 @@ body.dark-theme .surface-primary {
     --theme-nav-menu-mobile-button-highlight-color: rgba(255, 255, 255, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(236, 240, 241, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
-    --theme-game-state-color: rgba(255, 255, 255, 1);
-    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-create-box-canvas-box-shadow-opacity: 0.5;
     --theme-game-screen-control-color: rgba(236, 240, 241, 1);
     --theme-game-screen-control-background: rgba(42, 33, 56, 1);
@@ -702,14 +739,39 @@ body.dark-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-game-state-color: rgba(255, 255, 255, 1);
+    --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
+    --theme-game-waiting-background: rgb(61, 61, 61);
+    --theme-game-waiting-drop-shadow: 0 0.043em 0.086em rgba(0, 0, 0, 0.8);
     --theme-create-box-settings-icon-color: rgba(255, 255, 255, 1);
     --theme-create-box-settings-icon-drop-shadow: 0 0 0.03em rgba(0, 0, 0, 0.6);
     --theme-create-box-logo-drop-shadow: 0 0 2em rgba(0, 0, 0, 0.6);
     --theme-create-box-map-icon-color: rgba(210, 210, 150, 1);
     --theme-create-box-canvas-box-shadow-size: 0 0.009em 0.04em 0.014em;
+    --theme-lobby-player-settings-color: rgb(65, 65, 65);
     --theme-box-header-background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), transparent);
     --theme-box-header-box-shadow: 0 2em 10em -2em rgba(0, 0, 0, 0.05);
+    --theme-button-success-color: rgba(255, 255, 255, 1);
+    --theme-button-success-background: linear-gradient(rgb(159 221 1) 00%, #6b9700 90%);
+    --theme-button-success-tint-color: rgb(89, 184, 0);
+    --theme-button-success-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
+    --theme-button-success-highlight-color: rgba(255, 255, 255, 1);
+    --theme-button-success-highlight-background: linear-gradient(rgb(166 231 0) 0%, #7caf00 90%);
+    --theme-button-success-highlight-tint-color: rgb(89, 184, 0);
+    --theme-button-success-highlight-box-shadow: 0.8em 3em 4em rgba(0, 0, 0, 0.55);
     --theme-game-canvas-box-shadow-size: 0 0.0025em 0.025em 0.01em;
+    --theme-modal-profile-tab-button-color: rgb(42, 33, 56);
+    --theme-modal-profile-tab-button-highlight-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-color: rgb(245, 208, 0);
+    --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
+    --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
+    --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
+    --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
+    --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
+    --theme-password-strength-bar-segment-n2-filled-background: linear-gradient(90deg, rgb(251, 140, 0), rgb(255, 167, 38));
+    --theme-password-strength-bar-segment-n3-filled-background: linear-gradient(90deg, rgb(255, 191, 0), rgb(255, 215, 0));
+    --theme-password-strength-bar-segment-n4-filled-background: linear-gradient(90deg, rgb(67, 160, 71), rgb(102, 187, 106));
 }
 body.dark-theme.surface-primary-collapse,
 body.dark-theme .surface-primary-collapse {
@@ -725,11 +787,21 @@ body.dark-theme.surface-primary-box-collapse,
 body.dark-theme .surface-primary-box-collapse {
     --theme-surface-background: rgba(255, 255, 255, 1);
 }
-body.dark-theme.surface-primary-glass,
-body.dark-theme .surface-primary-glass {
+body.dark-theme.surface-primary-transparent,
+body.dark-theme .surface-primary-transparent {
     --theme-surface-background: rgba(250, 250, 175, 0.6);
     --theme-box-background: rgba(250, 250, 175, 0.6);
     --theme-box-box-shadow: 0 6em 16em 0 rgba(0, 0, 0, 0.2);
+}
+body.dark-theme.surface-primary-transparent-collapse,
+body.dark-theme .surface-primary-transparent-collapse {
+    --theme-surface-background: rgba(255, 255, 255, 1);
+}
+body.dark-theme.surface-primary-glass,
+body.dark-theme .surface-primary-glass {
+    --theme-surface-background: rgba(0, 0, 0, 0.04);
+    --theme-box-background: rgba(0, 0, 0, 0.04);
+    --theme-box-box-shadow: 0 3em 6em rgba(0, 0, 0, 0.14);
 }
 body.dark-theme.surface-primary-glass-collapse,
 body.dark-theme .surface-primary-glass-collapse {

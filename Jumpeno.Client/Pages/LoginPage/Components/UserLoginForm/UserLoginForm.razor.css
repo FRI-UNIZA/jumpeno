@@ -24,6 +24,16 @@
     width: 100%;
 }
 
+::deep.user-login-form .login-inputs .recaptcha.recaptcha-login {
+    /* Size */
+    margin: auto;
+}
+
+::deep.user-login-form .login-inputs .recaptcha.recaptcha-login > div {
+    /* Size */
+    margin: 0 -10px;
+}
+
 ::deep.user-login-form .paragraph.register-block {
     /* Content: */
     text-align: center;

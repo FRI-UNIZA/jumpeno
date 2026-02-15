@@ -5,18 +5,12 @@ public partial class GameScreen {
     [Parameter]
     public required GameViewModel VM { get; set; }
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly DotNetObjectReference<GameScreen> Ref;
     private GameCanvas Canvas = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass GameScreenClass() {
-        var c = new CSSClass("game-screen");
-        if (VM.IsHost) c.Set("host");
-        if (VM.IsWatching) c.Set("watching");
-        if (VM.IsPlayer) c.Set("player");
-        return c;
-    }
+    public override CSSClass ComputeClass() => base.ComputeClass().Set("game-screen", Base).Set(VM.CSSClass());
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
@@ -24,6 +18,7 @@ public partial class GameScreen {
     protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
         if (!firstRender) return;
         if (VM.IsWatching) {
+            await Render();
             await VM.AddAfterUpdatesListener(AfterUpdates);
         }
         if (VM.IsPlayer) {
@@ -33,7 +28,6 @@ public partial class GameScreen {
             await Window.AddMouseUpEventListener(Ref, JS_OnMouseUp);
         }
         await Animator.AddAnimator(Ref, JS_OnAnimationFrame);
-        await VM.InitOnRender();
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
@@ -49,8 +43,8 @@ public partial class GameScreen {
             }
             await Animator.RemoveAnimator(Ref, JS_OnAnimationFrame);
         }
-        ControlLock.Dispose();
-        MouseReleaseKeyEventLock.Dispose();
+        await ControlLock.DisposeSafe();
+        await MouseReleaseKeyEventLock.DisposeSafe();
         Ref.Dispose();
         GC.SuppressFinalize(this);
     }
@@ -63,11 +57,9 @@ public partial class GameScreen {
     public async Task AfterUpdates() {
         var deltaT = await VM.Game.Clock.AwaitDelta();
         VM.Game.Update(VM.Game.NewTimeFlowUpdate(deltaT));
-    } 
+    }
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
-    // Actions:
-    private static async Task Pause() => await GameViewModel.Request(async () => await HTTP.Patch(API.BASE.GAME_PAUSE, body: Game.DEFAULT_CODE));
     // Arrows:
     private readonly List<GAME_CONTROLS> ArrowsPressed = [];
     private GAME_CONTROLS? LastArrowPressed = null;
@@ -110,17 +102,22 @@ public partial class GameScreen {
             }
         });
     }
-    private Func<Task> TouchKeyEvent(GAME_CONTROLS control) => async () => await PressKey(control);
-    private Func<Task> MouseTouchKeyEvent(GAME_CONTROLS control) => async () => await MouseReleaseKeyEventLock.TryExclusive(async () => {
+    private Func<Task> TouchKeyEvent(GAME_CONTROLS control) => () => PressKey(control);
+    private Func<MouseEventArgs, Task> MouseTouchKeyEvent(GAME_CONTROLS control)
+    => e => MouseReleaseKeyEventLock.TryExclusive(async () => {
+        if (e.Button != MOUSE_BUTTON.LEFT.Raw()) return;
         await PressKey(control);
-        MouseReleaseKeyEvent = async () => await MouseReleaseKeyEventLock.TryExclusive(async () => {
-            await ReleaseKey(control);
-            MouseReleaseKeyEvent = () => Task.CompletedTask;
-        });
+        MouseReleaseKeyEvent = () => MouseReleaseKeyEventLock.TryExclusive(
+            async () => {
+                await ReleaseKey(control);
+                MouseReleaseKeyEvent = () => Task.CompletedTask;
+            }
+        );
     });
     [JSInvokable]
-    public async Task JS_OnKeyDown(string key) {
-        if (GameControlsExtension.Get(key) is not GAME_CONTROLS control) return;
+    public async Task JS_OnKeyDown(WindowKeyEvent e) {
+        if (e.Repeat) return;
+        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
         await PressKey(control);
     }
 
@@ -138,16 +135,19 @@ public partial class GameScreen {
             }
         });
     }
-    private Func<Task> ReleaseKeyEvent(GAME_CONTROLS control) => async () => await ReleaseKey(control);
+    private Func<Task> ReleaseKeyEvent(GAME_CONTROLS control) => () => ReleaseKey(control);
     private Func<Task> MouseReleaseKeyEvent = () => Task.CompletedTask;
     private readonly LockerSlim MouseReleaseKeyEventLock = new();
     [JSInvokable]
-    public async Task JS_OnKeyUp(string key) {
-        if (GameControlsExtension.Get(key) is not GAME_CONTROLS control) return;
+    public async Task JS_OnKeyUp(WindowKeyEvent e) {
+        if (e.Repeat) return;
+        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
         await ReleaseKey(control);
     }
     [JSInvokable]
-    public async Task JS_OnMouseUp((int X, int Y) position) => await MouseReleaseKeyEvent();
+    public async Task JS_OnMouseUp(WindowMouseEvent e) {
+        if (e.Button == MOUSE_BUTTON.LEFT) await MouseReleaseKeyEvent();
+    }
 
     // Check pressed key:
     protected bool IsPressed(GAME_CONTROLS control) {
@@ -192,10 +192,7 @@ public partial class GameScreen {
     }
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    private async Task Render() {
-        try { if (VM.IsWatching) await Canvas.Render(); }
-        catch {}
-    }
+    private async Task Render() { try { if (VM.IsWatching) await Canvas.Render(); } catch {} }
 
     // Game loop --------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]

@@ -3,6 +3,7 @@ namespace Jumpeno.Client.ViewModels;
 public class SelectViewModel<T> : FormViewModel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public readonly Predicate<SelectSearchEvent<T>> DEFAULT_CUSTOM_SEARCH = e => e.Option.Label.ToLower().IndexOf(e.Search) >= 0;
+    public readonly SelectOption<T> EMPTY_OPTION = SELECT<T>.EMPTY_OPTION;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
@@ -22,6 +23,7 @@ public class SelectViewModel<T> : FormViewModel {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     public EventDelegate<SelectEvent<T>> OnSelect { get; set; }
     public EventDelegate<SelectEvent<T>> OnCloseSelected { get; set; }
+    public EventDelegate<SelectEvent<T>> OnAfterCloseSelected { get; set; }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SelectViewModel(SelectViewModelParams<T> p) : base(p.Form, p.ID, p.OnError) {
@@ -49,5 +51,6 @@ public class SelectViewModel<T> : FormViewModel {
         // Events:
         OnSelect = p.OnSelect ?? EventDelegate<SelectEvent<T>>.EMPTY;
         OnCloseSelected = p.OnCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
+        OnAfterCloseSelected = p.OnAfterCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
     }
 }

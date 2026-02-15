@@ -1,0 +1,54 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-text-button {
+    /* Content: */
+    --font-size: 4vh;
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-page .game-text-button {
+    /* Display: */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    /* Size: */
+    width: auto;
+    padding: 0;
+    margin: 0;
+    /* Style: */
+    color: var(--theme-text-color);
+    background: transparent;
+    border: none;
+    outline: none;
+    appearance: none;
+    /* Content: */
+    font-size: var(--font-size);
+    font-weight: 600;
+    white-space: nowrap;
+    /* Animations: */
+    transition: color calc(var(--theme-transition-fast) * 1ms);
+    /* Actions: */
+    cursor: pointer;
+}
+
+::deep.game-page .game-text-button .game-button-content {
+    /* Display: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--font-size) * 0.6);
+}
+
+/* Styles [active] --------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-text-button.active:not(.disabled) {
+    /* Style: */
+    color: var(--theme-text-highlight-color);
+}
+
+/* Styles [disabled] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-text-button.disabled {
+    /* Style: */
+    color: var(--theme-text-disabled-color);
+    /* Actions: */
+    cursor: not-allowed;
+}

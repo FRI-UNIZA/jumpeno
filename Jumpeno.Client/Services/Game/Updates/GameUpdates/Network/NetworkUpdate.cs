@@ -8,4 +8,7 @@ public abstract class NetworkUpdate(ulong id, int round) : GameUpdate {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public ulong ID { get; private set; } = id;
     public int Round { get; private set; } = round;
+
+    /// <summary>ConnectionIDs for response.</summary>
+    public LinkedList<string>? ResponseIDs { get; set; } = null;
 }

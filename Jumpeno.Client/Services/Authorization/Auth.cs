@@ -31,11 +31,11 @@ public static class Auth {
     private static async Task StopProcessing() { Processing = false; await InvokeUpdate(); }
 
     // Login anonymous --------------------------------------------------------------------------------------------------------------------
-    public static void LogInAnonymous(string name, SKIN skin) => User = new User(name, skin);
+    public static void LogInAnonymous(string name) => User = new User(name);
     public static void LogOutAnonymous() => User = null!;
 
     // Login registered -------------------------------------------------------------------------------------------------------------------
-    public static async Task LogInUser(string email, string password) {
+    public static async Task LogInUser(string email, string password, string? captchaToken = null) {
         await Window.Lock(async () => {
             Token.Data? access; try { access = Token.Access; } catch { access = null; }
             try {
@@ -43,7 +43,8 @@ public static class Auth {
                 // 1.2) Create body:
                 var body = new UserLoginDTO(
                     Email: email,
-                    Password: password
+                    Password: password,
+                    CAPTCHAToken: captchaToken
                 );
                 // 1.2) Validation:
                 body.Assert();
@@ -224,8 +225,24 @@ public static class Auth {
     public static async Task RemoveUpdateListener(Func<Task> listener) => await (UpdateLock?.TryExclusive(() => UpdateEventAsync -= listener) ?? Task.CompletedTask);
     // Components:
     public static async Task Register(Component component) => await AddUpdateListener(component.Notify);
-    public static bool Freezed(Component component) => Processing;
+    
+    public static bool FreezeRequested { get; private set; } = false;
+    private static readonly LockerSlim FreezeLock = AppEnvironment.IsClient ? new() : null!;
+
+    public static bool Freezed(Component component) => Processing || FreezeRequested;
     public static bool NotFreezed(Component component) => !Freezed(component);
+
+    public static async Task RequestFreeze() {
+        if (AppEnvironment.IsServer) return;
+        await FreezeLock.TryLock();
+        FreezeRequested = true;
+    }
+    public static Task ResolveFreeze() {
+        if (AppEnvironment.IsServer) return Task.CompletedTask;
+        FreezeRequested = false;
+        FreezeLock.TryUnlock(); return Task.CompletedTask;
+    }
+
     public static async Task Unregister(Component component) => await RemoveUpdateListener(component.Notify);
     // Actions:
     private static async Task LoadAuthProfile(bool processing = true, HTTPResult<UserProfileDTOR>? response = null) {

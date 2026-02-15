@@ -6,21 +6,15 @@
     --modal-min-height: 0;
     --modal-max-height: 100vh;
     /* Modal padding: */
-    --modal-padding: 16px;
-    --modal-padding-header: var(--modal-padding);
-    --modal-padding-header-mobile: var(--modal-padding-header);
-    --modal-padding-header-tablet: var(--modal-padding-header);
-    --modal-padding-header-desktop: var(--modal-padding-header);
-    --modal-padding-content: var(--modal-padding);
-    --modal-padding-content-mobile: var(--modal-padding-content);
-    --modal-padding-content-tablet: var(--modal-padding-content);
-    --modal-padding-content-desktop: var(--modal-padding-content);
-    --modal-padding-footer: var(--modal-padding);
-    --modal-padding-footer-mobile: 14px var(--modal-padding-footer);
-    --modal-padding-footer-tablet: 14px var(--modal-padding-footer);
-    --modal-padding-footer-desktop: 15px var(--modal-padding-footer);
+    --modal-padding: 16px; /* NOTE: Global setup */
+    --modal-padding-header-x: var(--modal-padding);
+    --modal-padding-header-y: var(--modal-padding);
+    --modal-padding-content-x: var(--modal-padding);
+    --modal-padding-content-y: var(--modal-padding);
+    --modal-padding-footer-x: var(--modal-padding);
+    --modal-padding-footer-y: calc(var(--modal-padding) * 0.875);
     /* Margin: */
-    --modal-margin: var(--theme-size-container-padding-mobile);
+    --modal-margin: calc(var(--theme-size-container-padding-mobile) * 1px);
     /* Border radius: */
     --modal-border-radius: 8px;
     /* Animations: */
@@ -81,12 +75,12 @@
     display: flex;
     flex-direction: column;
     /* Size: */
-    min-width: min(var(--modal-min-width), var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
-    max-width: min(var(--modal-max-width), calc(100vw - 2 * var(--modal-margin) * 1px));
-    min-height: min(var(--modal-min-height), calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
-    min-height: min(var(--modal-min-height), calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
-    max-height: min(calc(100vh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
-    max-height: min(calc(100dvh - 2 * var(--modal-margin) * 1px), var(--modal-max-height));
+    min-width: min(var(--modal-min-width), var(--modal-max-width), calc(100vw - 2 * var(--modal-margin)));
+    max-width: min(var(--modal-max-width), calc(100vw - 2 * var(--modal-margin)));
+    min-height: min(var(--modal-min-height), calc(100vh - 2 * var(--modal-margin)), var(--modal-max-height));
+    min-height: min(var(--modal-min-height), calc(100dvh - 2 * var(--modal-margin)), var(--modal-max-height));
+    max-height: min(calc(100vh - 2 * var(--modal-margin)), var(--modal-max-height));
+    max-height: min(calc(100dvh - 2 * var(--modal-margin)), var(--modal-max-height));
     /* Style: */
     color: var(--theme-text-color);
     background: transparent;
@@ -119,13 +113,15 @@
     pointer-events: none;
 }
 
-::deep.modal .modal-container {
+::deep.modal .container.modal-container {
     /* Position: */
     z-index: 1;
     /* Display: */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Size: */
+    padding: 0;
     /* Actions: */
     pointer-events: none;
 }
@@ -140,10 +136,11 @@
     flex-shrink: 0;
     gap: 18px;
     /* Size: */
-    padding: var(--modal-padding-header-mobile);
+    padding: var(--modal-padding-header-y) var(--modal-padding-header-x);
     /* Style: */
     background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
+    border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
     /* Base: */
     font-size: var(--modal-base-size);
 }
@@ -164,11 +161,17 @@
 }
 
 ::deep.modal .modal-scroll {
+    /* Position: */
+    z-index: -1;
     /* Display: */
     flex-grow: 1;
     /* Size: */
     width: 100%;
     height: 100%;
+}
+::deep.modal .modal-scroll > [data-overlayscrollbars-viewport] {
+    /* Position: */
+    z-index: -1;
 }
 ::deep.modal .modal-scroll .os-scrollbar {
     /* Variables: */
@@ -181,9 +184,21 @@
     display: flex;
     flex-wrap: wrap;
     /* Size: */
-    padding: var(--modal-padding-content-mobile);
+    min-height: fit-content;
+    height: 100%;
+    padding: 0;
     /* Style: */
     background: transparent;
+}
+
+::deep.modal .modal-content-box {
+    /* Display: */
+    display: flex;
+    flex-wrap: wrap;
+    /* Size: */
+    width: 100%;
+    min-height: 100%;
+    padding: var(--modal-padding-content-y) var(--modal-padding-content-x);
 }
 
 ::deep.modal .modal-footer {
@@ -195,12 +210,35 @@
     align-items: center;
     flex-shrink: 0;
     /* Size: */
-    padding: var(--modal-padding-footer-mobile);
+    padding: var(--modal-padding-footer-y) var(--modal-padding-footer-x);
     /* Style: */
     background: var(--theme-surface-background);
     box-shadow: var(--theme-modal-ending-box-shadow);
-    /* Content: */
-    font-size: 1px;
+    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
+    /* Base: */
+    font-size: var(--modal-base-size);
+}
+
+/* NoHeader ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.no-header .modal-scroll,
+::deep.modal.no-header .modal-scroll > [data-overlayscrollbars-viewport],
+::deep.modal.no-header .modal-scroll > [data-overlayscrollbars-viewport] > .scroll-area-content,
+::deep.modal.no-header .modal-content,
+::deep.modal.no-header .modal-content-box {
+    /* Style: */
+    border-top-left-radius: var(--modal-border-radius);
+    border-top-right-radius: var(--modal-border-radius);
+}
+
+/* NoFooter ---------------------------------------------------------------------------------------------------------------------------- */
+::deep.modal.no-footer .modal-scroll,
+::deep.modal.no-footer .modal-scroll > [data-overlayscrollbars-viewport],
+::deep.modal.no-footer .modal-scroll > [data-overlayscrollbars-viewport] > .scroll-area-content,
+::deep.modal.no-header .modal-content,
+::deep.modal.no-header .modal-content-box {
+    /* Style: */
+    border-bottom-left-radius: var(--modal-border-radius);
+    border-bottom-right-radius: var(--modal-border-radius);
 }
 
 /* Focus trap -------------------------------------------------------------------------------------------------------------------------- */
@@ -276,15 +314,18 @@
     ::deep.modal {
         /* Modal padding: */
         --modal-padding: 17px;
+        --modal-padding-header-x: var(--modal-padding);
+        --modal-padding-header-y: var(--modal-padding);
+        --modal-padding-content-x: var(--modal-padding);
+        --modal-padding-content-y: var(--modal-padding);
+        --modal-padding-footer-x: var(--modal-padding);
+        --modal-padding-footer-y: calc(var(--modal-padding) * 0.875);
         /* Margin: */
-        --modal-margin: var(--theme-size-container-padding-tablet);
+        --modal-margin: calc(var(--theme-size-container-padding-tablet) * 1px);
     }
     
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
-    ::deep.modal .modal-header { padding: var(--modal-padding-header-tablet); }
     ::deep.modal .modal-scroll .os-scrollbar { --os-padding-axis: 5px; }
-    ::deep.modal .modal-content { padding: var(--modal-padding-content-tablet); }
-    ::deep.modal .modal-footer { padding: var(--modal-padding-footer-tablet); }
 }
 
 @media (min-width: 1200px) {
@@ -292,13 +333,16 @@
     ::deep.modal {
         /* Modal padding: */
         --modal-padding: 18px;
+        --modal-padding-header-x: var(--modal-padding);
+        --modal-padding-header-y: var(--modal-padding);
+        --modal-padding-content-x: var(--modal-padding);
+        --modal-padding-content-y: var(--modal-padding);
+        --modal-padding-footer-x: var(--modal-padding);
+        --modal-padding-footer-y: calc(var(--modal-padding) * 0.9375);
         /* Margin: */
-        --modal-margin: var(--theme-size-container-padding-desktop);
+        --modal-margin: calc(var(--theme-size-container-padding-desktop) * 1px);
     }
     
     /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
-    ::deep.modal .modal-header { padding: var(--modal-padding-header-desktop); }
     ::deep.modal .modal-scroll .os-scrollbar { --os-padding-axis: 4px; }
-    ::deep.modal .modal-content { padding: var(--modal-padding-content-desktop); }
-    ::deep.modal .modal-footer { padding: var(--modal-padding-footer-desktop); }
 }

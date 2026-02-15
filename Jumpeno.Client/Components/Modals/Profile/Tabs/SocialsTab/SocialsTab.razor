@@ -1,0 +1,24 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<AuthView Roles="[ROLE.USER]">
+    <div class="@ComputeClass()" style="@Style">
+        <Button Variant="BUTTON_VARIANT.PRIMARY" OnClick="ConnectGoogle" Disabled>
+            <Icon>
+                <AntIcon Type="google" Theme="outline" />
+            </Icon>
+            <Text>
+                @I18N.T("Sign in with Google")
+            </Text>
+        </Button>
+        <Button Variant="BUTTON_VARIANT.PRIMARY" OnClick="ConnectFacebook" Disabled>
+            <Icon>
+                <AntIcon Type="facebook" Theme="outline" />
+            </Icon>
+            <Text>
+                @I18N.T("Connect Facebook account")
+            </Text>
+        </Button>
+    </div>
+</AuthView>

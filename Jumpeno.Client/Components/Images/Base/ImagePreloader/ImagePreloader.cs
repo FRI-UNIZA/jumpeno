@@ -25,8 +25,13 @@ public partial class ImagePreloader {
         Add(IMAGE.SPRITE_MAGE_AIR);
         Add(IMAGE.SPRITE_MAGE_EARTH);
         Add(IMAGE.SPRITE_MAGE_FIRE);
+        Add(IMAGE.SPRITE_MAGE_ICE);
+        Add(IMAGE.SPRITE_MAGE_LAVA);
         Add(IMAGE.SPRITE_MAGE_MAGIC);
+        Add(IMAGE.SPRITE_MAGE_PLANT);
+        Add(IMAGE.SPRITE_MAGE_SNOW);
         Add(IMAGE.SPRITE_MAGE_WATER);
+        Add(IMAGE.SPRITE_MAGE_WOOD);
     }
 
     protected override bool ShouldComponentRender() => false;

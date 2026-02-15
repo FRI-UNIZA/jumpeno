@@ -42,7 +42,7 @@ public partial class FormError {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentDispose() => FormManager.Remove(ViewModel.FormViewModel.FormID);
+    protected override void OnComponentDispose() => ViewModel.Detach();
     
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void Activate() {

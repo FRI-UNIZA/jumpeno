@@ -3,14 +3,12 @@ namespace Jumpeno.Server.Middlewares;
 using Newtonsoft.Json;
 
 public class ErrorMiddleware(RequestDelegate next) {
-    private readonly RequestDelegate Next = next;
-
     public async Task InvokeAsync(HttpContext ctx) {
         Exception? exception = null;
         TInfo? info = null;
 
         try {
-            await Next(ctx);
+            await next(ctx);
         } catch (AppException e) {
             ctx.Response.StatusCode = e.Code;
             foreach (var header in e.Headers) {

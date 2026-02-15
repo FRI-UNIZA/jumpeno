@@ -1,8 +1,11 @@
 namespace Jumpeno.Client.Services;
 
-#pragma warning disable CS8618
+using System.Diagnostics;
 
-public class Navigator : StaticService<Navigator>, IDisposable {
+#pragma warning disable CS8618
+#pragma warning disable CA1816
+
+public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly NavigationManager Manager;
     private static Action<string, bool, bool> ServerRedirect;
@@ -21,11 +24,18 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     private const int MIN_LOADING = 175; // ms
     private readonly MinWatch MinLoadingWatch = new(MIN_LOADING);
     private TaskCompletionSource NavigationFinished;
+    // PopState:
+    private bool IsPopState = false;
+    private readonly Stopwatch PopWatch = new();
+    private readonly int POP_THROTTLE = 500; // ms
+    // Events:
+    private TaskCompletionSource NavEventTCS = new();
+    private bool IsRunning = false;
+    private readonly int RUN_DELAY = 100; // ms
     // Locks:
     private readonly LockerSlim NavLock = new();
     // Listeners & interceptors:
-    private readonly List<EventPredicate<NavigationEvent>> Blockers = [];
-    private readonly List<EventDelegate<NavigationEvent>> BeforeListeners = [];
+    private readonly List<Func<NavigationEvent, bool>> Blockers = [];
     private readonly List<EventDelegate<NavigationEvent>> AfterListeners = [];
     private readonly List<EventDelegate<NavigationEvent>> AfterFinishListeners = [];
     
@@ -35,11 +45,12 @@ public class Navigator : StaticService<Navigator>, IDisposable {
             Manager = AppEnvironment.GetService<NavigationManager>();
             Manager.RegisterLocationChangingHandler(BeforeLocationChanged);
             Manager.LocationChanged += AfterLocationChanged;
+            PopWatch.Start();
         }
-        Disposer = new(this, NavLock.Dispose);
+        Disposer = new(this, NavLock.DisposeSafe);
     }
     private readonly Disposer Disposer;
-    public void Dispose() => Disposer.Dispose();
+    public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
     ~Navigator() => Disposer.Final();
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
@@ -51,84 +62,123 @@ public class Navigator : StaticService<Navigator>, IDisposable {
 
     public static void Init() => Init((url, forceLoad, replace) => {}, () => {});
 
-    // Events -----------------------------------------------------------------------------------------------------------------------------
-    private async ValueTask BeforeLocationChanged(LocationChangingContext ctx) {
-        if (ctx.IsNavigationIntercepted || IsPopState) await NavLock.TryLock();
-        await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION, true);
-        PreviousURL = URL.Url();
-
-        foreach (var blocker in Blockers) {
-            if (!await blocker.Invoke(new(PreviousURL, ctx.TargetLocation))) {
-                ctx.PreventNavigation();
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
-                NavLock.TryUnlock();
-                return;
-            }
-        }
-        
-        if (URL.IsLocal(ctx.TargetLocation) && !ProgramNavigation) {
-            if (Page.Current.GetType() == typeof(Error404Page) && PreviousURL == ctx.TargetLocation) {
-                ctx.PreventNavigation();
-                await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
-                NavLock.TryUnlock();
-                return;
-            }
-        }
-
-        if (Loader) {
-            await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
-            MinLoadingWatch.Start();
-        }
-
-        foreach (var listener in BeforeListeners) {
-            await listener.Invoke(new(PreviousURL, ctx.TargetLocation));
-        }
-    }
-
-    private TaskCompletionSource PageRenderedTCS = new();
-    protected static void PageRendered() => Instance().PageRenderedTCS.TrySetResult();
-    public const string PAGE_RENDERED = nameof(PageRendered);
-
-    private async void AfterLocationChanged (object? sender, LocationChangedEventArgs e) {
-        if (Notify != NOTIFY.STATE && !SettingQueries) PageRenderedTCS = new();
-        foreach (var listener in AfterListeners) {
-            await listener.Invoke(new(PreviousURL, e.Location));
-        }
-
-        if (Notify is NOTIFY notify) {
-            AppLayout.Notify(notify);
-            NavigationFinished.TrySetResult();
-        } else {
-            var samePage = URL.PathMatches(URL.Path(PreviousURL), URL.Path(e.Location));
-            if (ProgramNavigation) {
-                if (!SettingQueries && URL.IsLocal(e.Location)) {
-                    AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
-                }
-                NavigationFinished.TrySetResult();
-            } else {
-                AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
-            }
-        }
-
-        if (NavState != null) SetState(NavState.Value.Key, NavState.Value.Data);
-
-        if (Notify != NOTIFY.STATE && !SettingQueries) await PageRenderedTCS.Task;
-
+    // Reset ------------------------------------------------------------------------------------------------------------------------------
+    private void ResetStats() {
+        PreviousURL = "";
         ProgramNavigation = false;
         SettingQueries = false;
         NavData = null;
         NavState = null;
         Notify = null;
         IsPopState = false;
+        IsRunning = false;
+    }
 
-        if (Loader) await MinLoadingWatch.Task;
-        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
-        Loader = true;
-        
-        foreach (var listener in AfterFinishListeners) {
-            await listener.Invoke(new(PreviousURL, e.Location));
-        }
+    private void Release() {
+        ResetStats(); Loader = true;
+        NavEventTCS.TrySetResult();
+        NavigationFinished?.TrySetResult();
         NavLock.TryUnlock();
+    }
+
+    private async Task Terminate() {
+        Release();
+        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
+    }
+
+    private void PreventNavigation(LocationChangingContext ctx) {
+        ctx.PreventNavigation();
+        Release();
+    }
+
+    // Events -----------------------------------------------------------------------------------------------------------------------------
+    private async ValueTask BeforeLocationChanged(LocationChangingContext ctx) {
+        try {
+            // 1) Check allowed:
+            CheckAllowed();
+            // 2) Diff [sync (navigation can not be prevented after async call)]:
+            if (!ProgramNavigation) {
+                if (IsRunning) { ctx.PreventNavigation(); return; }
+                if (!ctx.IsNavigationIntercepted) {
+                    if (PopWatch.ElapsedMilliseconds < POP_THROTTLE) {
+                        ctx.PreventNavigation(); return;
+                    }
+                    IsPopState = true;
+                }
+            }
+            PopWatch.Restart();
+            // 3) Set running:
+            IsRunning = true;
+            // 4) Run blockers:
+            foreach (var blocker in Blockers) {
+                if (!blocker(new(ProgramNavigation, IsPopState, PreviousURL, ctx.TargetLocation))) {
+                    PreventNavigation(ctx); return;
+                }
+            }
+            // 5) Create event (ensure run before AfterChange):
+            NavEventTCS = new();
+            // 6) Lock if not program:
+            if (!ProgramNavigation) await NavLock.TryLock();
+            // 7) Remember URL:
+            PreviousURL = URL.Url();
+            // 8) Loader:
+            if (Loader) {
+                await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
+                MinLoadingWatch.Start();
+            } else {
+                await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION, true);   
+            }
+            // 9) Check cancellation:
+            ctx.CancellationToken.ThrowIfCancellationRequested();
+            // 10) Set event:
+            NavEventTCS.TrySetResult();
+        } catch {
+            // 11) Terminate on error:
+            await Terminate();
+        }
+    }
+
+    private async void AfterLocationChanged (object? sender, LocationChangedEventArgs e) {
+        try {
+            // 1) Await event from before:
+            await NavEventTCS.Task;
+            // 2) Run listeners:
+            foreach (var listener in AfterListeners) {
+                await listener.Invoke(new(ProgramNavigation, IsPopState, PreviousURL, e.Location));
+            }
+            // 3) Notify:
+            if (Notify is NOTIFY notify) {
+                AppLayout.Notify(notify);
+                NavigationFinished.TrySetResult();
+            } else {
+                var samePage = URL.PathMatches(URL.Path(PreviousURL), URL.Path(e.Location));
+                if (ProgramNavigation) {
+                    if (!SettingQueries && URL.IsLocal(e.Location)) {
+                        AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+                    }
+                    NavigationFinished.TrySetResult();
+                } else {
+                    AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+                }
+            }
+            // 4) Set state:
+            if (NavState != null) SetState(NavState.Value.Key, NavState.Value.Data);
+            // 5) Reset stats:
+            ResetStats();
+            // 6) Handle loader:
+            if (Loader) await MinLoadingWatch.Task;
+            await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
+            Loader = true;
+            // 7) Run after listeners:
+            foreach (var listener in AfterFinishListeners) {
+                await listener.Invoke(new(ProgramNavigation, IsPopState, PreviousURL, e.Location));
+            }
+            // 8) Unlock:
+            NavLock.TryUnlock();
+        } catch {
+            // 9) Terminate on error:
+            await Terminate();
+        }
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
@@ -138,15 +188,25 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         object? data = null, (string Key, object? Data)? state = null, NOTIFY? notify = null,
         bool loader = true
     ) {
+        // 1) Set running:
+        if (AppEnvironment.IsClient) {
+            while (IsRunning) await Task.Delay(RUN_DELAY);
+            IsRunning = true;
+        }
+        // 2) Lock program navigation:
         await NavLock.TryLock();
-
+        // 3) Show program loader before start:
+        if (AppEnvironment.IsClient) {
+            if (loader) await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
+        }
+        // 4) Handle server:
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
             RequestStorage.Set(REQUEST_STORAGE.URL, url);
             NavLock.TryUnlock();
             return;
         }
-
+        // 5) Set stats:
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
@@ -154,12 +214,13 @@ public class Navigator : StaticService<Navigator>, IDisposable {
         NavState = AppEnvironment.IsClient ? state : null;
         Notify = notify;
         NavigationFinished = new TaskCompletionSource();
-
+        // 6) Handle culture:
         if (!queries && URL.IsLocal(url)) {
             if (!I18N.IsCurrentCultureUrl(url)) forceLoad = true;
         }
-
+        // 7) Navigate:
         Manager.NavigateTo(url, forceLoad, replace);
+        // 8) Wait until finished:
         await NavigationFinished.Task;
     }
 
@@ -198,25 +259,22 @@ public class Navigator : StaticService<Navigator>, IDisposable {
     public static T State<T>(string key, T fallback) => AppEnvironment.IsClient ? JS.Invoke<T?>(JSNavigator.State, key) ?? fallback : fallback;
     public static void SetState<T>(string key, T state, string? url = null) { if (AppEnvironment.IsClient) JS.InvokeVoid(JSNavigator.SetState, key, state, url); }
 
-    // Pop state --------------------------------------------------------------------------------------------------------------------------
-    public static bool IsPopState { get; private set; } = false;
-
-    [JSInvokable]
-    public static void JS_PopState() => IsPopState = true;
+    // Assert [Browser navigation interference] -------------------------------------------------------------------------------------------
+    private static uint Counter = 0;
+    private static byte? AllowedCount = null;
+    private static void CheckAllowed() { if (AllowedCount != null && ++Counter > AllowedCount) Refresh(); }
+    // Actions:
+    public static void AllowNone() { AllowedCount = 0; Counter = 0; }
+    public static void AllowOne() { AllowedCount = 1; Counter = 0; }
+    public static void AllowAny() { AllowedCount = null; Counter = 0; }
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
-    public static async Task AddBlocker(EventPredicate<NavigationEvent> predicate) {
+    public static async Task AddBlocker(Func<NavigationEvent, bool> predicate) {
         var instance = Instance();
         await instance.NavLock.TryExclusive(() => instance.Blockers.Add(predicate));
     }
-    public static async Task AddBlocker(Func<NavigationEvent, bool> predicate) {
-        await AddBlocker(new EventPredicate<NavigationEvent>(predicate));
-    }
-    public static async Task AddBlocker(Func<NavigationEvent, Task<bool>> predicate) {
-        await AddBlocker(new EventPredicate<NavigationEvent>(predicate));
-    }
 
-    public static async Task RemoveBlocker(EventPredicate<NavigationEvent> predicate) {
+    public static async Task RemoveBlocker(Func<NavigationEvent, bool> predicate) {
         var instance = Instance();
         await instance.NavLock.TryExclusive(() => {
             for (int i = 0; i < instance.Blockers.Count; i++) {
@@ -224,39 +282,6 @@ public class Navigator : StaticService<Navigator>, IDisposable {
                 instance.Blockers.RemoveAt(i); break;
             }
         });
-    }
-    public static async Task RemoveBlocker(Func<NavigationEvent, bool> predicate) {
-        await RemoveBlocker(new EventPredicate<NavigationEvent>(predicate));
-    }
-    public static async Task RemoveBlocker(Func<NavigationEvent, Task<bool>> predicate) {
-        await RemoveBlocker(new EventPredicate<NavigationEvent>(predicate));
-    }
-
-    public static async Task AddBeforeEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.TryExclusive(() => instance.BeforeListeners.Add(listener));
-    }
-    public static async Task AddBeforeEventListener(Action<NavigationEvent> listener) {
-        await AddBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
-    }
-    public static async Task AddBeforeEventListener(Func<NavigationEvent, Task> listener) {
-        await AddBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
-    }
-
-    public static async Task RemoveBeforeEventListener(EventDelegate<NavigationEvent> listener) {
-        var instance = Instance();
-        await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.BeforeListeners.Count; i++) {
-                if (!listener.Equals(instance.BeforeListeners[i])) continue;
-                instance.BeforeListeners.RemoveAt(i); break;
-            }
-        });
-    }
-    public static async Task RemoveBeforeEventListener(Action<NavigationEvent> listener) {
-        await RemoveBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
-    }
-    public static async Task RemoveBeforeEventListener(Func<NavigationEvent, Task> listener) {
-        await RemoveBeforeEventListener(new EventDelegate<NavigationEvent>(listener));
     }
 
     public static async Task AddAfterEventListener(EventDelegate<NavigationEvent> listener) {

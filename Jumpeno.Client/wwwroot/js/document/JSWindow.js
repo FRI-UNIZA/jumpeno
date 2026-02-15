@@ -10,6 +10,11 @@ class JSWindow {
     static GetSizeOf = selector => {
         const element = document.querySelector(selector);
         if (!element) return null;
+        return { Width: element.offsetWidth, Height: element.offsetHeight };
+    }
+    static GetRealSizeOf = selector => {
+        const element = document.querySelector(selector);
+        if (!element) return null;
         const rect = element.getBoundingClientRect();
         return { Width: rect.width, Height: rect.height };
     }
@@ -45,7 +50,7 @@ class JSWindow {
     }
 
     // KeyDown ----------------------------------------------------------------------------------------------------------------------------
-    static #KeyDownStorage = new ListenerStorage('keydown', e => e.key)
+    static #KeyDownStorage = new ListenerStorage('keydown', e => ({ Key: e.key, Repeat: e.repeat }))
     
     static async AddKeyDownEventListener(objRef, method) {
         await this.#KeyDownStorage.AddEventListener(objRef, method)
@@ -56,7 +61,7 @@ class JSWindow {
     }
     
     // KeyUp ------------------------------------------------------------------------------------------------------------------------------
-    static #KeyUpStorage = new ListenerStorage('keyup', e => e.key)
+    static #KeyUpStorage = new ListenerStorage('keyup', e => ({ Key: e.key, Repeat: e.repeat }))
     
     static async AddKeyUpEventListener(objRef, method) {
         await this.#KeyUpStorage.AddEventListener(objRef, method)
@@ -67,7 +72,7 @@ class JSWindow {
     }
 
     // MouseDown --------------------------------------------------------------------------------------------------------------------------
-    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ X: e.clientX, Y: e.clientY }))
+    static #MouseDownStorage = new ListenerStorage('mousedown', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddMouseDownEventListener(objRef, method) {
         await this.#MouseDownStorage.AddEventListener(objRef, method)
@@ -78,7 +83,7 @@ class JSWindow {
     }
 
     // MouseUp ----------------------------------------------------------------------------------------------------------------------------
-    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ X: e.clientX, Y: e.clientY }))
+    static #MouseUpStorage = new ListenerStorage('mouseup', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddMouseUpEventListener(objRef, method) {
         await this.#MouseUpStorage.AddEventListener(objRef, method)
@@ -89,7 +94,7 @@ class JSWindow {
     }
 
     // Click ------------------------------------------------------------------------------------------------------------------------------
-    static #ClickStorage = new ListenerStorage('click', e => ({ X: e.clientX, Y: e.clientY }))
+    static #ClickStorage = new ListenerStorage('click', e => ({ RawButton: e.button, X: e.clientX, Y: e.clientY }))
     
     static async AddClickEventListener(objRef, method) {
         await this.#ClickStorage.AddEventListener(objRef, method)
@@ -108,6 +113,17 @@ class JSWindow {
 
     static async RemoveScrollEventListener(objRef, method) {
         await this.#ScrollStorage.RemoveEventListener(objRef, method, true)
+    }
+
+    // Visibility change ------------------------------------------------------------------------------------------------------------------
+    static #VisibilityChangeStorage = new ListenerStorage('visibilitychange', () => ({ Hidden: document.hidden }))
+
+    static async AddVisibilityChangeEventListener(objRef, method) {
+        await this.#VisibilityChangeStorage.AddEventListener(objRef, method)
+    }
+
+    static async RemoveVisibilityChangeEventListener(objRef, method) {
+        await this.#VisibilityChangeStorage.RemoveEventListener(objRef, method)
     }
 
     // User select ------------------------------------------------------------------------------------------------------------------------    

@@ -5,11 +5,12 @@ public partial class UserLoginForm {
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
 
-    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    // Form -------------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<UserLoginForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPassword;
-    
+    private ReCAPTCHA ReCAPTCHARef = null!;
+
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public UserLoginForm() {
         VMEmail = new(new InputViewModelTextParams(
@@ -40,8 +41,10 @@ public partial class UserLoginForm {
     private async Task Login() {
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
         await HTTP.Try(async () => {
-            await Auth.LogInUser(VMEmail.Value, VMPassword.Value);
-            ActionHandler.PopFocus();
+            // 1) Get CAPTCHA token:
+            var captchaToken = await ReCAPTCHARef.GetToken();
+            // 2) Login:
+            await Auth.LogInUser(VMEmail.Value, VMPassword.Value, captchaToken);
         }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
     }

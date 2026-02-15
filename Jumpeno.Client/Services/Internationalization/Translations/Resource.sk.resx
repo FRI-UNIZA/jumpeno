@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -321,7 +321,7 @@
   <data name="Game" xml:space="preserve">
     <value>Hra</value>
   </data>
-  <data name="Length must be equal to I18N{length}" xml:space="preserve">
+  <data name="Length must be I18N{length}" xml:space="preserve">
     <value>Dĺžka musí byť I18N{length}</value>
   </data>
   <data name="Code must be alphanumeric" xml:space="preserve">
@@ -346,7 +346,7 @@
     <value>Kód hry je nesprávny!</value>
   </data>
   <data name="Capacity not between I18N{min} and I18N{max}" xml:space="preserve">
-    <value>Kapacita nie je medzi I18N{min} and I18N{max}</value>
+    <value>Kapacita nie je medzi I18N{min} a I18N{max}</value>
   </data>
   <data name="The game is currently full!" xml:space="preserve">
     <value>Kapacita hry je naplnená!</value>
@@ -365,12 +365,6 @@
   </data>
   <data name="The game is already running." xml:space="preserve">
     <value>Hra práve prebieha.</value>
-  </data>
-  <data name="Show" xml:space="preserve">
-    <value>Zobraziť</value>
-  </data>
-  <data name="Hide" xml:space="preserve">
-    <value>Skryť</value>
   </data>
   <data name="Screen too small" xml:space="preserve">
     <value>Príliš malá obrazovka</value>
@@ -812,5 +806,230 @@
   </data>
   <data name="Invalid map ID" xml:space="preserve">
     <value>Nesprávne ID mapy</value>
+  </data>
+  <data name="Number of rounds not between I18N{min} and I18N{max}" xml:space="preserve">
+    <value>Počet kôl nie je medzi I18N{min} a I18N{max}</value>
+  </data>
+  <data name="Game code already exists!" xml:space="preserve">
+    <value>Kód hry už existuje!</value>
+  </data>
+  <data name="Maximum games limit exceeded!" xml:space="preserve">
+    <value>Prekročený maximálny počet hier!</value>
+  </data>
+  <data name="Game controller" xml:space="preserve">
+    <value>Ovládač hry</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Štart</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Zmazať</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Ovládač</value>
+  </data>
+  <data name="Anonymous players not allowed!" xml:space="preserve">
+    <value>Anonymní hráči zakázaní!</value>
+  </data>
+  <data name="Host can not participate as a player!" xml:space="preserve">
+    <value>Host sa nemôže zúčastniť ako hráč!</value>
+  </data>
+  <data name="At least 2 players required to start!" xml:space="preserve">
+    <value>Spustenie vyžaduje aspoň 2 hráčov!</value>
+  </data>
+  <data name="You already host a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>Už máš vytvorenú hru s kódom "I18N{code}"!</value>
+  </data>
+  <data name="Host must be registered!" xml:space="preserve">
+    <value>Host musí byť registrovaný!</value>
+  </data>
+  <data name="You already play a game with code &quot;I18N{code}&quot;!" xml:space="preserve">
+    <value>Už hráš hru s kódom "I18N{code}"!</value>
+  </data>
+  <data name="Game is finished!" xml:space="preserve">
+    <value>Hra je ukončená!</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Koniec</value>
+  </data>
+  <data name="Game is running!" xml:space="preserve">
+    <value>Hra je spustená!</value>
+  </data>
+  <data name="Game is not running!" xml:space="preserve">
+    <value>Hra nie je spustená!</value>
+  </data>
+  <data name="Invalid game state!" xml:space="preserve">
+    <value>Nesprávny stav hry!</value>
+  </data>
+  <data name="Game already deleted!" xml:space="preserve">
+    <value>Hra už je zmazaná!</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Účet</value>
+  </data>
+  <data name="Socials" xml:space="preserve">
+    <value>Sociálne siete</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Zmeniť</value>
+  </data>
+  <data name="Delete account" xml:space="preserve">
+    <value>Vymazať účet</value>
+  </data>
+  <data name="User data has been updated." xml:space="preserve">
+    <value>Používateľské informácie boli aktualizované</value>
+  </data>
+  <data name="Sign in with Google" xml:space="preserve">
+    <value>Prihlásenie cez Google </value>
+  </data>
+  <data name="Connect Facebook account" xml:space="preserve">
+    <value>Prihlásenie cez Facebook </value>
+  </data>
+  <data name="Password has been changed." xml:space="preserve">
+    <value>Heslo bolo úspešne zmenené.</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Zmeniť heslo</value>
+  </data>
+  <data name="Password change" xml:space="preserve">
+    <value>Zmena hesla</value>
+  </data>
+  <data name="Current avatar" xml:space="preserve">
+    <value>Aktuálny avatar</value>
+  </data>
+  <data name="Selected avatar" xml:space="preserve">
+    <value>Vybraný avatar</value>
+  </data>
+  <data name="Choose skin" xml:space="preserve">
+    <value>Výber skinov</value>
+  </data>
+  <data name="Avatar option" xml:space="preserve">
+    <value>Avatar možnosť</value>
+  </data>
+  <data name="Are you sure you want to delete your account?" xml:space="preserve">
+    <value>Naozaj chceš vymazať svoj účet?</value>
+  </data>
+  <data name="This action is irreversible." xml:space="preserve">
+    <value>Túto akciu nieje možné vrátiť.</value>
+  </data>
+  <data name="Password rules" xml:space="preserve">
+    <value>Pravidlá hesla</value>
+  </data>
+  <data name="Password rule n1" xml:space="preserve">
+    <value>Dĺžka medzi 6 a 30 znakov</value>
+  </data>
+  <data name="Password rule n2" xml:space="preserve">
+    <value>Obsahuje veľké písmeno</value>
+  </data>
+  <data name="Password rule n3" xml:space="preserve">
+    <value>Obsahuje číslo</value>
+  </data>
+  <data name="Password rule n4" xml:space="preserve">
+    <value>Obsahuje špeciálny znak (!@#$...)</value>
+  </data>
+  <data name="Does not contain uppercase letter" xml:space="preserve">
+    <value>Neobsahuje veľké písmeno</value>
+  </data>
+  <data name="Does not contain digit" xml:space="preserve">
+    <value>Neobsahuje číslo</value>
+  </data>
+  <data name="Does not contain special character" xml:space="preserve">
+    <value>Neobsahuje špeciálny znak</value>
+  </data>
+  <data name="Lobby" xml:space="preserve">
+    <value>Lobby</value>
+  </data>
+  <data name="Playing" xml:space="preserve">
+    <value>Hrá sa</value>
+  </data>
+  <data name="You must be connected as a player!" xml:space="preserve">
+    <value>Musíš byť pripojený ako hráč!</value>
+  </data>
+  <data name="Name is reserved!" xml:space="preserve">
+    <value>Meno je rezervované!</value>
+  </data>
+  <data name="End game" xml:space="preserve">
+    <value>Ukončiť hru</value>
+  </data>
+  <data name="Do you really want to end this game?" xml:space="preserve">
+    <value>Naozaj chcete ukončiť hru?</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Ukončiť</value>
+  </data>
+  <data name="Everyone will be disconnected!" xml:space="preserve">
+    <value>Všetci budú odpojení!</value>
+  </data>
+  <data name="QR code" xml:space="preserve">
+    <value>QR kód</value>
+  </data>
+  <data name="Invalid game action!" xml:space="preserve">
+    <value>Nesprávna akcia hry!</value>
+  </data>
+  <data name="You are not a host!" xml:space="preserve">
+    <value>Nie si host!</value>
+  </data>
+  <data name="Game is deleted!" xml:space="preserve">
+    <value>Hra je zmazaná!</value>
+  </data>
+  <data name="Server can not start the game now!" xml:space="preserve">
+    <value>Server teraz nemôže spustiť hru!</value>
+  </data>
+  <data name="Space reserved for the host!" xml:space="preserve">
+    <value>Miesto rezervované pre hosta!</value>
+  </data>
+  <data name="Host already connected!" xml:space="preserve">
+    <value>Host už je pripojený!</value>
+  </data>
+  <data name="You are not a player!" xml:space="preserve">
+    <value>Nie si hráč!</value>
+  </data>
+  <data name="Player is ready." xml:space="preserve">
+    <value>Hráč je ready.</value>
+  </data>
+  <data name="Players are not ready." xml:space="preserve">
+    <value>Hráči nie sú ready.</value>
+  </data>
+  <data name="Not a player of this game!" xml:space="preserve">
+    <value>Nie je hráč tejto hry!</value>
+  </data>
+  <data name="Player not connected." xml:space="preserve">
+    <value>Hráč nie je pripojený.</value>
+  </data>
+  <data name="Player shifts" xml:space="preserve">
+    <value>Akcie</value>
+  </data>
+  <data name="Do you want to kick this player?" xml:space="preserve">
+    <value>Chceš vyhodiť tohto hráča?</value>
+  </data>
+  <data name="Kick" xml:space="preserve">
+    <value>Vyhodiť</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Host can not be kicked!" xml:space="preserve">
+    <value>Hosta nemožno vyhodiť!</value>
+  </data>
+  <data name="Game must have at least 2 players!" xml:space="preserve">
+    <value>Hra musí mať aspoň 2 hráčov!</value>
+  </data>
+  <data name="Incorrect version! Please refresh." xml:space="preserve">
+    <value>Nesprávna verzia! Obnov stránku.</value>
+  </data>
+  <data name="Account deleted." xml:space="preserve">
+    <value>Účet zmazaný.</value>
+  </data>
+  <data name="Invalid reCAPTCHA token." xml:space="preserve">
+    <value>Neplatný reCAPTCHA token.</value>
+  </data>
+  <data name="ReCAPTCHA is missing." xml:space="preserve">
+    <value>ReCAPTCHA nie je vyplnená.</value>
+  </data>
+  <data name="Problem with reCAPTCHA." xml:space="preserve">
+    <value>Problém s reCAPTCHA.</value>
   </data>
 </root>

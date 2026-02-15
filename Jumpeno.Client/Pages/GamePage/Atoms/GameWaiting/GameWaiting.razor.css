@@ -1,0 +1,48 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-waiting {
+    --width: 60px; /* px or viewport units */
+    --height: 30px; /* px or viewport units */
+    --padding-x: 17%; /* percentage from width */
+    --padding-y: 20%; /* percentage from height */
+    --size: 0.18; /* fraction of width (max 1/3 (0.3333..)) */
+}
+
+/* Constants --------------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-waiting {
+    --game-waiting-background: no-repeat radial-gradient(circle closest-side, var(--theme-game-waiting-background) 90%, transparent);
+}
+
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes game-waiting-animation {
+    20% { background-position: var(--padding-x) var(--padding-y), 50% 50%, calc(100% - var(--padding-x)) 50% }
+    40% { background-position: var(--padding-x) calc(100% - var(--padding-y)), 50% var(--padding-y), calc(100% - var(--padding-x)) 50% }
+    60% { background-position: var(--padding-x) 50%, 50% calc(100% - var(--padding-y)), calc(100% - var(--padding-x)) var(--padding-y) }
+    80% { background-position: var(--padding-x) 50%, 50% 50%, calc(100% - var(--padding-x)) calc(100% - var(--padding-y)) }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.game-page .game-waiting {
+    /* Display: */
+    flex-shrink: 0;
+    /* Size: */
+    width: var(--width);
+    height: var(--height);
+    /* Style: */
+    background: 
+        var(--game-waiting-background) var(--padding-x) 50%,
+        var(--game-waiting-background) 50% 50%,
+        var(--game-waiting-background) calc(100% - var(--padding-x)) 50%;
+    background-size: calc(var(--size) * 100%) 50%;
+    filter: drop-shadow(var(--theme-game-waiting-drop-shadow));
+    opacity: 0.5;
+    /* Animations: */
+    animation: game-waiting-animation 1.8s linear infinite;
+    /* Base: */
+    font-size: calc(var(--size) * var(--width));
+}
+
+/* Styles [finished] ------------------------------------------------------------------------------------------------------------------- */
+::deep.game-page .game-waiting.finished {
+    /* Animations: */
+    animation: none;
+}
