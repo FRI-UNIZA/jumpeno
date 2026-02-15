@@ -41,4 +41,19 @@ public static class API {
         public static string GAME_SET_PLAYER_READY => $"{URL}/Game/SetPlayerReady";
         public static string GAME_KICK_PLAYER => $"{URL}/Game/KickPlayer";
     }
+
+    public static class GOOGLE  {
+        // URL ----------------------------------------------------------------------------------------------------------------------------
+        public static string URL => AppSettings.Api.Google.URL;
+
+        // ReCAPTCHA ----------------------------------------------------------------------------------------------------------------------
+        public static class RECAPTCHA  {
+            public static string PREFIX => AppSettings.Api.Google.ReCAPTCHA.Prefix;
+            public static string URL => $"{GOOGLE.URL}{PREFIX}";
+
+            // Endpoints ------------------------------------------------------------------------------------------------------------------
+            public static string API => $"{URL}.js";
+            public static string SITE_VERIFY => $"{URL}/siteverify";
+        }
+    }
 }

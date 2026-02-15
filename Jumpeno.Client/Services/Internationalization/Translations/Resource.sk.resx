@@ -1023,4 +1023,13 @@
   <data name="Account deleted." xml:space="preserve">
     <value>Účet zmazaný.</value>
   </data>
+  <data name="Invalid reCAPTCHA token." xml:space="preserve">
+    <value>Neplatný reCAPTCHA token.</value>
+  </data>
+  <data name="ReCAPTCHA is missing." xml:space="preserve">
+    <value>ReCAPTCHA nie je vyplnená.</value>
+  </data>
+  <data name="Problem with reCAPTCHA." xml:space="preserve">
+    <value>Problém s reCAPTCHA.</value>
+  </data>
 </root>

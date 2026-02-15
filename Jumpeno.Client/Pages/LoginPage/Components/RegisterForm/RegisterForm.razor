@@ -18,6 +18,7 @@
                 <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT" Class="password-strength-box-mobile">
                     <PasswordStrength Password="@Password" HideLock />
                 </Box>
+                <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FORM" ID="@nameof(UserRegisterDTO.CAPTCHAToken)" />
                 <Button Size="BUTTON_SIZE.M" OnClick="Register" Class="button-register">
                     <Text>@I18N.T("Register")</Text>
                 </Button>

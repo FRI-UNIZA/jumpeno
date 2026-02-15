@@ -5,6 +5,9 @@ public static class EXCEPTION {
     public static AppException CLIENT => new AppException().SetCode(CODE.CLIENT).SetInfo(MESSAGE.CLIENT);
     public static AppException VALUES => new AppException().SetCode(CODE.VALUES).SetInfo(MESSAGE.VALUES);
     public static AppException BAD_REQUEST => new AppException().SetCode(CODE.BAD_REQUEST).SetInfo(MESSAGE.BAD_REQUEST);
+    public static AppException CAPTCHA_MISSING => new AppException().SetCode(CODE.CAPTCHA_MISSING).SetInfo(MESSAGE.CAPTCHA_MISSING);
+    public static AppException CAPTCHA_INVALID => new AppException().SetCode(CODE.CAPTCHA_INVALID).SetInfo(MESSAGE.CAPTCHA_INVALID);
+    public static AppException CAPTCHA_ERROR => new AppException().SetCode(CODE.CAPTCHA_ERROR).SetInfo(MESSAGE.CAPTCHA_ERROR);
     public static AppException NOT_AUTHENTICATED => new AppException().SetCode(CODE.NOT_AUTHENTICATED).SetInfo(MESSAGE.NOT_AUTHENTICATED);
     public static AppException NOT_AUTHORIZED => new AppException().SetCode(CODE.NOT_AUTHORIZED).SetInfo(MESSAGE.NOT_AUTHORIZED);
     public static AppException NOT_FOUND => new AppException().SetCode(CODE.NOT_FOUND).SetInfo(MESSAGE.NOT_FOUND);

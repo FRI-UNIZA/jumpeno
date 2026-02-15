@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class UserController : ControllerBase {
+public class UserController (CaptchaValidatorService captchaService) : ControllerBase {
     /// <summary>New user account registration.</summary>
     /// <param name="body">Registration data.</param>
     /// <response code="201">User is successfully registered.</response>
@@ -11,6 +11,7 @@ public class UserController : ControllerBase {
     public async Task<MessageDTOR> Register([FromBody] UserRegisterDTO body) {
         // 1) Validation:
         body.Assert();
+        await captchaService.AssertTokenForIP(ATTEMPTS_CATEGORY.REGISTER, body.CAPTCHAToken, nameof(UserRegisterDTO.CAPTCHAToken));
         // 2) Transaction:
         UserEntity user = null!;
         await DB.Transaction(async () => {
@@ -68,6 +69,7 @@ public class UserController : ControllerBase {
     public async Task<UserLoginDTOR> Login([FromBody] UserLoginDTO body) {
         // 1) Validation:
         body.Assert();
+        await captchaService.AssertTokenForEmailAndIP(body.CAPTCHAToken, body.Email, ATTEMPTS_CATEGORY.LOGIN, nameof(UserLoginDTO.CAPTCHAToken));
         // 2) Authentication:
         var user = await UserEntity.ByEmailLeftJoinPassword(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
         if (user.Password == null) throw EXCEPTION.NOT_AUTHENTICATED;

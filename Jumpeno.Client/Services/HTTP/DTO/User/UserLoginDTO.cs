@@ -2,7 +2,8 @@ namespace Jumpeno.Client.Models;
 
 public record UserLoginDTO(
     string Email,
-    string Password
+    string Password,
+    string? CAPTCHAToken = null
 ) : IValidable<UserLoginDTO> {
     public List<Error> Validate() {
         var errors = UserValidator.ValidateEmail(Email, nameof(Email));
