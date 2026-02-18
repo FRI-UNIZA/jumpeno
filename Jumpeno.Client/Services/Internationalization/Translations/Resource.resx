@@ -1023,4 +1023,13 @@
   <data name="Account deleted." xml:space="preserve">
     <value />
   </data>
+  <data name="Invalid reCAPTCHA token." xml:space="preserve">
+    <value />
+  </data>
+  <data name="ReCAPTCHA is missing." xml:space="preserve">
+    <value />
+  </data>
+  <data name="Problem with reCAPTCHA." xml:space="preserve">
+    <value />
+  </data>
 </root>

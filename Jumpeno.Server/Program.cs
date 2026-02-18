@@ -12,6 +12,7 @@ var appSettingsClient = new ConfigurationBuilder()
     .AddJsonFile(appSettingsPath, optional: true, reloadOnChange: true)
     .Build();
 AppSettings.Init(builder.Configuration, appSettingsClient);
+
 // Load AppSettings.Server.json:
 var assembly = typeof(ServerSettings).Assembly;
 using var stream = assembly.GetManifestResourceStream("Jumpeno.Server.AppSettings.Server.json")
@@ -117,6 +118,11 @@ builder.Services.AddSingleton(sp => {
     return new HttpClient { BaseAddress = new Uri(baseAddress) };
 });
 
+// Security Services:
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<AttemptService>();
+builder.Services.AddScoped<CaptchaValidatorService>();
+
 // SignalR & Hubs:
 builder.Services.AddSignalR();
 
@@ -140,12 +146,13 @@ app.UseCors(ORIGIN_POLICY);
 app.UseStaticFiles();
 // Configure Forwarded Headers Middleware:
 var forwardedHeadersOptions = new ForwardedHeadersOptions {
-    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
-                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | 
-                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto |
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost,
+    KnownNetworks = {}, // Clears the default networks
+    KnownProxies = {} // Clears the default proxies
 };
-forwardedHeadersOptions.KnownNetworks.Clear(); // Clears the default networks
-forwardedHeadersOptions.KnownProxies.Clear();  // Clears the default proxies
+
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
 // App services:

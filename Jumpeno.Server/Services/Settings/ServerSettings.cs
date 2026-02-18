@@ -61,6 +61,9 @@ public static class ServerSettings {
             public int Minutes { get; init; }
         }
     }
+    public static ServerSettingsReCAPTCHA ReCAPTCHA { get; private set; } public class ServerSettingsReCAPTCHA {
+        public string Secret { get; init; }
+    }
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(IConfiguration config, IConfiguration file) {
@@ -103,6 +106,9 @@ public static class ServerSettings {
         Schedule = new() {
             ActivationCleaner = new() { Minutes = file.GetValue<int>("Schedule:ActivationCleaner:Minutes")! },
             RefreshCleaner = new() { Minutes = file.GetValue<int>("Schedule:RefreshCleaner:Minutes")! }
+        };
+        ReCAPTCHA = new() {
+            Secret = file.GetValue<string>("ReCAPTCHA:Secret")!,
         };
     }
 }

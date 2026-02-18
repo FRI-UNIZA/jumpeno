@@ -5,12 +5,13 @@ public partial class RegisterForm {
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
 
-    // ViewModels -------------------------------------------------------------------------------------------------------------------------
+    // Form -------------------------------------------------------------------------------------------------------------------------------
     public readonly string FORM = Form.Of<RegisterForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMPassword;
     private readonly InputViewModel<string> VMConfirmPassword;
+    private ReCAPTCHA ReCAPTCHARef = null!;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private string Password = "";
@@ -77,23 +78,29 @@ public partial class RegisterForm {
     private async Task Register() {
         await PageLoader.Show(PAGE_LOADER_TASK.REGISTRATION);
         await HTTP.Try(async () => {
-            // 1) Create body:
+            // 1) Get CAPTCHA token:
+            var captchaToken = await ReCAPTCHARef.GetToken();
+
+            // 2) Create body:
             var body = new UserRegisterDTO(
                 Email: VMEmail.Value,
                 Name: VMPlayerName.Value,
-                Password: VMPassword.Value
+                Password: VMPassword.Value,
+                CAPTCHAToken: captchaToken
             );
-            // 2) Validation:
+                
+            // 3) Validation:
             var errors = body.Validate();
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
             Checker.AssertWith(errors, EXCEPTION.VALUES);
-            // 3) Send request:
+                
+            // 4) Send request:
             var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_REGISTER, body: body);
-            // 4) Show result:
+
+            // 5) Show result:
             Notification.Success(result.Body.Message);
             Success = true;
             StateHasChanged();
-            ActionHandler.PopFocus();
         }, FORM);
         await PageLoader.Hide(PAGE_LOADER_TASK.REGISTRATION);
     }

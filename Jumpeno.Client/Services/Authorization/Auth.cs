@@ -35,7 +35,7 @@ public static class Auth {
     public static void LogOutAnonymous() => User = null!;
 
     // Login registered -------------------------------------------------------------------------------------------------------------------
-    public static async Task LogInUser(string email, string password) {
+    public static async Task LogInUser(string email, string password, string? captchaToken = null) {
         await Window.Lock(async () => {
             Token.Data? access; try { access = Token.Access; } catch { access = null; }
             try {
@@ -43,7 +43,8 @@ public static class Auth {
                 // 1.2) Create body:
                 var body = new UserLoginDTO(
                     Email: email,
-                    Password: password
+                    Password: password,
+                    CAPTCHAToken: captchaToken
                 );
                 // 1.2) Validation:
                 body.Assert();
