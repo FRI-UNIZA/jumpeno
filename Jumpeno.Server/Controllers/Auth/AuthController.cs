@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class AuthController : ControllerBase {
+public class AuthController(CookieStorage CookieStorage) : ControllerBase {
     /// <summary>Refresh of tokens.</summary>
     /// <param name="body">Refresh token. (can be set as cookie)</param>
     /// <response code="200">Extended tokens.</response>

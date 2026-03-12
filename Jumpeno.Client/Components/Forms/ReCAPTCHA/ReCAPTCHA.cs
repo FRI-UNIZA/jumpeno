@@ -1,9 +1,17 @@
 namespace Jumpeno.Client.Components;
 
+/// <summary>
+/// In order to use this component, you need to have ReCAPTCHA cookies allowed.
+/// Otherwise component will not be shown and will return empty token.
+/// </summary>
 public partial class ReCAPTCHA
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string CLASS_NAME = "recaptcha";
+
+    // Injections -------------------------------------------------------------------------------------------------------------------------
+    [Inject]
+    private CookieStorage CookieStorage { get; set; } = null!;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter] public required string Form { get; set; }
@@ -15,7 +23,7 @@ public partial class ReCAPTCHA
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private ReCAPTCHAViewModel ViewModel { get; set; } = null!;
-
+    
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS_NAME, Base);
 
@@ -27,6 +35,7 @@ public partial class ReCAPTCHA
         if (!firstRender) return;
         try
         {
+            if (await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))) return;
             await JS.EvalVoidAsync($$"""
                 grecaptcha.render('{{CAPTCHA_ID}}', {
                     sitekey : '{{AppSettings.ReCAPTCHA.SiteKey}}',
@@ -45,7 +54,7 @@ public partial class ReCAPTCHA
     /// <exception cref="EXCEPTION.DEFAULT">Can throw if grecaptcha is not loaded properly.</exception>
     public async Task<string> GetToken() 
     {
-        if (!AppSettings.ReCAPTCHA.On) return string.Empty;
+        if (!AppSettings.ReCAPTCHA.On || await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))) return string.Empty;
         try
         {
             if (!Showing) return string.Empty;

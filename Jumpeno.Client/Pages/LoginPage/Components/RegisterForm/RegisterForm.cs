@@ -1,6 +1,10 @@
 namespace Jumpeno.Client.Components;
 
 public partial class RegisterForm {
+    // Injections -------------------------------------------------------------------------------------------------------------------------
+    [Inject]
+    private CookieStorage CookieStorage { get; set; } = null!;
+    
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
@@ -16,7 +20,7 @@ public partial class RegisterForm {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private string Password = "";
     private bool Success = false;
-
+    
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public RegisterForm() {
         VMEmail = new(new InputViewModelTextParams(
@@ -76,6 +80,18 @@ public partial class RegisterForm {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Register() {
+        if (!await HTTP.Sync(
+            async () => {
+                if (!CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))
+                {
+                    await CookieModal.Open(sync: false);
+                    Notification.Error(I18N.T("You must accept the security cookie."));
+                    return false;
+                }
+                return true;
+            }
+        )) return;
+
         await PageLoader.Show(PAGE_LOADER_TASK.REGISTRATION);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:

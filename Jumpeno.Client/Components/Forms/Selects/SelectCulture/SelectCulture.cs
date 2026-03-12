@@ -31,10 +31,11 @@ public partial class SelectCulture {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static async Task Init() {
+        CookieStorage cookieStorage = AppEnvironment.GetService<CookieStorage>();
         await HTTP.Sync(() => {
-            var cookie = CookieStorage.Get(COOKIE.PREFERENCES.APP_CULTURE);
+            var cookie = cookieStorage.Get(COOKIE.PREFERENCES.APP_CULTURE);
             if (cookie is null) return;
-            CookieStorage.Set(new Cookie(
+            cookieStorage.Set(new Cookie(
                 COOKIE.PREFERENCES.APP_CULTURE,
                 cookie,
                 DateTimeOffset.UtcNow.AddYears(1)
