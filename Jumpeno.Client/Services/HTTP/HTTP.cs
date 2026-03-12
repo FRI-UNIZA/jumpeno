@@ -291,18 +291,36 @@ public class HTTP : StaticService<HTTP> {
     }
 
     // Sync -------------------------------------------------------------------------------------------------------------------------------
+    private static bool IsSyncing = false;
+
+    public static void EnforceSync()
+    {
+        if (AppEnvironment.IsServer || IsSyncing) return;
+        throw new InvalidOperationException("This operation needs to be synced with other browsers using Sync method!");
+    }
+
     /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
     /// <param name="callback">Delegated action to synchronize.</param>
     /// <returns>Task to await.</returns>
     public static async Task Sync(Func<Task> callback) {
-        await TabLock(new(async () => { await callback(); return true; }));
+        await TabLock(new(async () => { 
+            IsSyncing = true;
+            await callback();
+            IsSyncing = false;
+            return true; 
+        }));
     }
 
     /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
     /// <param name="callback">Delegated action to synchronize.</param>
     /// <returns>Task to await.</returns>
     public static async Task Sync(Action callback) {
-        await TabLock(new(() => { callback(); return true; }));
+        await TabLock(new(() => { 
+            IsSyncing = true;
+            callback();
+            IsSyncing = false;
+            return true; 
+        }));
     }
 
     /// <summary>Wrap any client action inside to sync across browser tabs.</summary>
@@ -310,7 +328,12 @@ public class HTTP : StaticService<HTTP> {
     /// <returns>Task to await with response.</returns>
     public static async Task<R> Sync<R>(Func<Task<R>> callback) {
         R? response = default;
-        await TabLock(new(async () => { response = await callback(); return true; }));
+        await TabLock(new(async () => { 
+            IsSyncing = true;
+            response = await callback();
+            IsSyncing = false;
+            return true; 
+        }));
         return response!;
     }
 
@@ -319,7 +342,11 @@ public class HTTP : StaticService<HTTP> {
     /// <returns>Task to await with response.</returns>
     public static async Task<R> Sync<R>(Func<R> callback) {
         R? response = default;
-        await TabLock(new(() => { response = callback(); return true; }));
+        await TabLock(new(() => {
+            IsSyncing = true;
+            response = callback();
+            IsSyncing = false;
+            return true; }));
         return response!;
     }
 

@@ -71,7 +71,7 @@ public partial class ConnectBox {
         q.Remove(WATCH_QUERY);
         await Navigator.SetQueryParams(q);
         // 4) Check if cookie modal is displayed:
-        if (CookieStorage.ModalOpenOnInit) return false;
+        if (RequestStorage.Get<CookieModal>(REQUEST_STORAGE.COOKIE_MODAL)!.IsOpened) return false;
         // 5) Set AutoWatch:
         AutoWatch = true;
         // 6) Show loader:

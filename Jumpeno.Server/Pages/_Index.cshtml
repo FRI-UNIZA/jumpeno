@@ -50,7 +50,10 @@
         <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")" no-antblazor-js @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")" @Import.Critical></script>
-        @if (AppSettings.ReCAPTCHA.On) { <script src="@API.GOOGLE.RECAPTCHA.API?render=explicit"></script> }
+        @if (AppSettings.ReCAPTCHA.On && (AppEnvironment.GetService<CookieStorage>().IsCookieAccepted(typeof(COOKIE.SECURITY))))
+        {
+            <script src="@API.GOOGLE.RECAPTCHA.API?render=explicit"></script>
+        }
         <!-- JS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
             <script src="@AppEnvironment.Import("js/bundle.js")" @Import.Critical></script>

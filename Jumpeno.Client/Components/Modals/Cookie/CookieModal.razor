@@ -7,6 +7,7 @@
     Unclosable="@Unclosable"
     Label="@I18N.T("Cookie settings")"
     Class="@CLASS"
+    OnCloseFinish="OnClose"
 >
     <Content>
         <div class="consent-container">
@@ -31,6 +32,18 @@
                     </Title>
                     <Content>
                         @I18N.T("Preference cookies text")
+                    </Content>
+                </CollapseItem>
+                <CollapseItem Label="@I18N.T("Security")">
+                    <Title>
+                        <div class="@CLASS_COOKIE_TITLE">
+                            @I18N.T("Security")
+                            <SwitchField ViewModel="SwitchSecurityVM" Label="@I18N.T("Allow security cookies")" AutoSize NoError />
+                        </div>
+                    </Title>
+                    <Content>
+                        <Paragraph Class="category-header">@I18N.T("ReCaptcha")</Paragraph>
+                        @((MarkupString)I18N.T("RECAPTCHA_COOKIES_TEXT"))
                     </Content>
                 </CollapseItem>
             </Collapse>

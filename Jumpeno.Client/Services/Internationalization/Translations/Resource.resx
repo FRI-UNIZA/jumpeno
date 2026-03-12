@@ -1032,4 +1032,19 @@
   <data name="Problem with reCAPTCHA." xml:space="preserve">
     <value />
   </data>
+  <data name="Allow security cookies" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ReCaptcha" xml:space="preserve">
+    <value />
+  </data>
+  <data name="You must accept the security cookie." xml:space="preserve">
+    <value />
+  </data>
+  <data name="RECAPTCHA_COOKIES_TEXT" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value />
+  </data>
 </root>

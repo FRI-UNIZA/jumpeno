@@ -14,5 +14,5 @@ public partial class CookieButton {
     public CookieButton() => ID = IDGenerator.Generate(nameof(CookieButton));
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task OpenModal() => await CookieStorage.OpenModal();
+    public static async Task OpenModal() => await CookieModal.Open();
 }

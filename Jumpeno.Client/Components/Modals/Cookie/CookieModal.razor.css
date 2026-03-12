@@ -22,6 +22,31 @@
     width: 100%;
 }
 
+::deep.modal.cookie-modal .consent-container .category-header {
+    /* Content: */
+    font-weight: 600;
+}
+
+::deep.modal.cookie-modal a {
+    /* Content: */
+    font-weight: 600;
+    text-decoration: underline;
+    /* Style: */
+    color: var(--theme-text-accent-color);
+    /* Actions: */
+    cursor: pointer;
+    /* Transition: */
+    transition-property: color;
+    transition-duration: calc(var(--theme-transition-fast) * 1ms);
+    transition-timing-function: ease-in-out;
+}
+
+::deep.modal.cookie-modal a:hover,
+::deep.modal.cookie-modal a:focus-visible {
+    /* Style: */
+    color: var(--theme-text-accent-highlight-color);
+}
+
 ::deep.modal.cookie-modal .consent-container .paragraph.cookie-paragraph {
     /* Size: */
     max-width: 400px;

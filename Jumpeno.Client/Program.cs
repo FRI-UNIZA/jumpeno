@@ -10,6 +10,7 @@ AppSettings.Init(builder.Configuration, appSettingsClient);
 builder.Services.AddLocalization();
 builder.Services.AddAntDesign();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddSingleton<CookieStorage, CookieStorageClient>();
 
 var app = builder.Build();
 AppEnvironment.Init(
@@ -44,33 +45,6 @@ HTTP.Init(
         await Task.CompletedTask;
     },
     async callback => await Window.Lock(callback.Invoke, WINDOW_LOCK.HTTP)
-);
-CookieStorage.Init(
-    key => {
-        var value = JS.Invoke<string>(JSCookies.Get, key);
-        if (value is null) return value;
-        else return URL.DecodeValue(value);
-    },
-    cookie => {
-        JS.InvokeVoid(
-            JSCookies.Set,
-            cookie.Key.String(),
-            URL.EncodeValue(cookie.Value),
-            cookie.Expires is not null ? ((DateTimeOffset) cookie.Expires).UtcDateTime.ToString("R") : null,
-            cookie.Domain == Cookie.NormDomain(cookie.Domain),
-            cookie.Path,
-            cookie.Secure,
-            cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.String()
-        );
-    },
-    (key, domain, path) => {
-        JS.InvokeVoid(JSCookies.Delete, key, Cookie.NormDomain(domain), path);
-    },
-    async unclosable => {
-        var modal = RequestStorage.Get<CookieModal>(REQUEST_STORAGE.COOKIE_MODAL);
-        if (modal is null) return;
-        await modal.OpenModal(unclosable);
-    }
 );
 ThemeProvider.Init();
 

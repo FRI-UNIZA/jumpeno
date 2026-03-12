@@ -1032,4 +1032,21 @@
   <data name="Problem with reCAPTCHA." xml:space="preserve">
     <value>Problém s reCAPTCHA.</value>
   </data>
+  <data name="Allow security cookies" xml:space="preserve">
+    <value>Povoliť bezpečnostné cookies</value>
+  </data>
+  <data name="ReCaptcha" xml:space="preserve">
+    <value>ReCaptcha</value>
+  </data>
+  <data name="You must accept the security cookie." xml:space="preserve">
+    <value>Je nutné prijať bezpečnostné cookies.</value>
+  </data>
+  <data name="RECAPTCHA_COOKIES_TEXT" xml:space="preserve">
+    <value>Na ochranu našej webovej stránky pred spamom a zneužitím používame službu Google reCAPTCHA poskytovanú spoločnosťou Google. Táto služba môže analyzovať správanie používateľa a ukladať cookies (napr. _GRECAPTCHA) vo vašom zariadení na overenie, či ide o človeka.
+
+Niektoré cookies môžu byť spoločnosťou Google použité aj na bezpečnostné a reklamné účely. Spracúvané údaje môžu zahŕňať IP adresu, informácie o prehliadači a interakcie s webovou stránkou. Spracovanie sa riadi &lt;a href="https://policies.google.com/privacy"&gt;zásadami ochrany súkromia&lt;/a&gt; a &lt;a href="https://policies.google.com/terms"&gt;podmienkami &lt;/a&gt;.spoločnosti Google.</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Bezpečnosť</value>
+  </data>
 </root>

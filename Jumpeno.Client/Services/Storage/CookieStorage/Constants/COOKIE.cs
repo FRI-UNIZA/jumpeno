@@ -16,6 +16,10 @@ public static class COOKIE {
         [StringValue("App.Theme")] APP_THEME
     }
 
+    public enum SECURITY {
+        [StringValue("App.Recaptcha")] APP_RECAPTCHA
+    }
+
     // Types ------------------------------------------------------------------------------------------------------------------------------
     public static readonly List<Type> TYPES_REQUIRED = [
         typeof(COOKIE.MANDATORY)
@@ -23,7 +27,8 @@ public static class COOKIE {
     
     public static readonly List<Type> TYPES = [
         typeof(COOKIE.MANDATORY),
-        typeof(COOKIE.PREFERENCES)
+        typeof(COOKIE.PREFERENCES),
+        typeof(COOKIE.SECURITY)
     ];
 
     // Origin (domain and path) -----------------------------------------------------------------------------------------------------------
