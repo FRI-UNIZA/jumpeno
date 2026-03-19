@@ -1,6 +1,10 @@
 namespace Jumpeno.Client.Components;
 
 public partial class UserLoginForm {
+    // Injections -------------------------------------------------------------------------------------------------------------------------
+    [Inject]
+    private CookieStorage CookieStorage { get; set; } = null!;
+
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required LoginPageViewModel VM { get; set; }
@@ -39,6 +43,18 @@ public partial class UserLoginForm {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Login() {
+        if (!await HTTP.Sync(
+            async () => {
+                if (!CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))
+                {
+                    await CookieModal.Open(sync: false);
+                    Notification.Error(I18N.T("You must accept the security cookie."));
+                    return false;
+                }
+                return true;
+            }
+        )) return;
+
         await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:

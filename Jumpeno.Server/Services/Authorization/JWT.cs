@@ -121,31 +121,33 @@ public static class JWT {
 
     // Refresh ----------------------------------------------------------------------------------------------------------------------------
     public static void SetRefreshTokenCookie(string token) {
+        var cookieStorage = AppEnvironment.GetService<CookieStorage>();
         var expires = DateTimeOffset.UtcNow.AddMilliseconds(EXPIRATION_REFRESH);
         var cookie = new Cookie(
             COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_REFRESH, httpOnly: true, secure: true
         );
-        CookieStorage.Set(cookie);
+        cookieStorage.Set(cookie);
         cookie = new Cookie(
             COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_INVALIDATE, httpOnly: true, secure: true
         );
-        CookieStorage.Set(cookie);
+        cookieStorage.Set(cookie);
         cookie = new Cookie(
             COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_DELETE, httpOnly: true, secure: true
         );
-        CookieStorage.Set(cookie);
+        cookieStorage.Set(cookie);
     }
 
     public static void DeleteRefreshTokenCookie() {
-        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
-        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
-        CookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
+        var cookieStorage = AppEnvironment.GetService<CookieStorage>();
+        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
+        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
+        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
     }
 
     // Authorization ----------------------------------------------------------------------------------------------------------------------

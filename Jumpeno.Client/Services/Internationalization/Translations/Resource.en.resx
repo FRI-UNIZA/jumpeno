@@ -1032,4 +1032,21 @@
   <data name="Problem with reCAPTCHA." xml:space="preserve">
     <value>Problem with reCAPTCHA.</value>
   </data>
+  <data name="Allow security cookies" xml:space="preserve">
+    <value>Allow security cookies</value>
+  </data>
+  <data name="ReCaptcha" xml:space="preserve">
+    <value>ReCaptcha</value>
+  </data>
+  <data name="You must accept the security cookie." xml:space="preserve">
+    <value>You must accept the security cookie.</value>
+  </data>
+  <data name="RECAPTCHA_COOKIES_TEXT" xml:space="preserve">
+    <value>We use Google reCAPTCHA to protect our website from spam and abuse. The service is provided by Google and may analyze user behavior and store cookies (such as _GRECAPTCHA) on your device to determine whether you are a human user. Some cookies may also be used by Google for security and advertising purposes.
+
+Information collected may include your IP address, browser data, and interactions with the website. This processing is subject to Google’s &lt;a href="https://policies.google.com/privacy"&gt;Privacy Policy &lt;/a&gt; and &lt;a href="https://policies.google.com/terms"&gt;Terms of Service&lt;/a&gt;.</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
 </root>

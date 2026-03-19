@@ -1,11 +1,26 @@
 namespace Jumpeno.Client.Services;
 
 public static class LocalStorage {
-    public static string Get(string key) => JS.Invoke<string>(JSLocalStorage.Get, key);
+    public static string Get(string key)
+    {
+        HTTP.EnforceSync();
+        return JS.Invoke<string>(JSLocalStorage.Get, key);
+    }
 
-    public static bool IsSet(string key) => JS.Invoke<string>(JSLocalStorage.Get, key) != null;
+    public static bool IsSet(string key)
+    {
+        HTTP.EnforceSync();
+        return JS.Invoke<string>(JSLocalStorage.Get, key) != null;
+    }
+    public static void Set(string key, string value = "true")
+    {
+        HTTP.EnforceSync();
+        JS.InvokeVoid(JSLocalStorage.Set, key, value);
+    }
 
-    public static void Set(string key, string value = "true") => JS.InvokeVoid(JSLocalStorage.Set, key, value);
-
-    public static void Delete(string key) => JS.InvokeVoid(JSLocalStorage.Delete, key);
+    public static void Delete(string key)
+    {
+        HTTP.EnforceSync();
+        JS.InvokeVoid(JSLocalStorage.Delete, key);
+    }
 }

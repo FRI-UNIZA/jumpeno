@@ -1,5 +1,7 @@
 @namespace Jumpeno.Client
 
+@inject CookieStorage CookieStorage
+
 @code {
     // Views ------------------------------------------------------------------------------------------------------------------------------
     private ThemeProvider ThemeProviderRef = null!;
@@ -21,14 +23,17 @@
             });
             // Culture:
             await SelectCulture.Init();
-            // Cookie modal:
-            var cookieModalOpen = await CookieStorage.InitModal();
             // Init actions:
             await Init.RunBeforeLayout();
             // Authorization [layout render]:
             await AuthPage.NextStage();
             await AuthPage.ChangePath();
             await AuthPage.AddRedirect();
+            // Cookie modal:
+            // Only show cookie modal if no cookies have been accepted.
+            // User needs to accept at least mandatory cookies to use the app.
+            bool shouldCookiesModalShow = await HTTP.Sync(() => CookieStorage.GetAcceptedCookies().Count) <= 0;
+            if (shouldCookiesModalShow) await CookieModal.Open(true);
             // [After layout rendered] ----------------------------------------------------------------------------------------------------
             // Theme:
             await ThemeProviderRef.Initialization;
@@ -43,8 +48,10 @@
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
             await PageLoader.AwaitAllLoaders();
             // Focus:
-            if (cookieModalOpen) ActionHandler.SetFocus(CookieModalRef.GetDialogID());
-            else ActionHandler.SetFocus(WebDocument.ID);
+            if (shouldCookiesModalShow)
+                ActionHandler.SetFocus(CookieModalRef.GetDialogID());
+            else
+                ActionHandler.SetFocus(WebDocument.ID);
         } catch (AppException e) {
             // App error:
             ServerPageLoader.Stop();

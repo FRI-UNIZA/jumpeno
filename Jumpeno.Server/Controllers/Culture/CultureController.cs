@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Localization;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class CultureController : Controller {
+public class CultureController(CookieStorage CookieStorage) : Controller {
     // Endpoints --------------------------------------------------------------------------------------------------------------------------
     /// <summary>Sets culture cookie and redirects to given URI.</summary>
     /// <param name="culture">Culture to set.</param>
@@ -24,26 +24,24 @@ public class CultureController : Controller {
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    public static Action<RequestLocalizationOptions> SetupAction() {
-        return options => {
-            var supportedCultures = I18N.LANGUAGES.Select(lang => new CultureInfo(lang)).ToList();
-        
-            options.DefaultRequestCulture = new RequestCulture(I18N.FALLBACK);
-            options.SupportedCultures = supportedCultures;
-            options.SupportedUICultures = supportedCultures;
-            options.RequestCultureProviders.Clear();
-            options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(
-                async ctx => {
-                    if (ServerEnvironment.IsStaticPath(ctx.Request.Path)) return null;
-                    string culture = GetCultureString([.. I18N.LANGUAGES], I18N.FALLBACK, ctx);
-                    UpdateURL(culture, ctx);
-                    return await Task.FromResult(new ProviderCultureResult(culture));
-                }
-            ));
-            options.ApplyCurrentCultureToResponseHeaders = true;
-            options.CultureInfoUseUserOverride = false;
-        };
-    }
+    public static Action<RequestLocalizationOptions> SetupAction() => options => {
+        var supportedCultures = I18N.LANGUAGES.Select(lang => new CultureInfo(lang)).ToList();
+    
+        options.DefaultRequestCulture = new RequestCulture(I18N.FALLBACK);
+        options.SupportedCultures = supportedCultures;
+        options.SupportedUICultures = supportedCultures;
+        options.RequestCultureProviders.Clear();
+        options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(
+            async ctx => {
+                if (ServerEnvironment.IsStaticPath(ctx.Request.Path)) return null;
+                string culture = GetCultureString([.. I18N.LANGUAGES], I18N.FALLBACK, ctx);
+                UpdateURL(culture, ctx);
+                return await Task.FromResult(new ProviderCultureResult(culture));
+            }
+        ));
+        options.ApplyCurrentCultureToResponseHeaders = true;
+        options.CultureInfoUseUserOverride = false;
+    };
 
     public static string GetCultureString(List<string> languages, string defaultLanguage, HttpContext ctx) {
         // 1) Page rendering (not API nor HUB):
@@ -65,7 +63,7 @@ public class CultureController : Controller {
             }
 
             // 1.3) Check cookies:
-            string? cookie = CookieStorage.Get(COOKIE.PREFERENCES.APP_CULTURE);
+            string? cookie = AppEnvironment.GetService<CookieStorage>().Get(COOKIE.PREFERENCES.APP_CULTURE);
             cookie = $"{cookie}";
             if (languages.Contains(cookie)) {
                 return cookie;
@@ -83,7 +81,7 @@ public class CultureController : Controller {
                 .OrderByDescending(s => s.Quality.GetValueOrDefault(1))
                 .ToArray();
 
-            for (var i = 0; i < preferredLanguages.Count(); i++) {
+            for (var i = 0; i < preferredLanguages.Length; i++) {
                 string language = preferredLanguages[i].Value;
                 for (var j = 0; j < languages.Count; j++) {
                     if (language.StartsWith(languages[j])) {
