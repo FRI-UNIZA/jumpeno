@@ -1,0 +1,45 @@
+@namespace Jumpeno.Client.Components
+
+@inherits FormField<TextAreaViewModel>
+
+@code {
+    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.AUTOHIDE;
+    protected override RenderFragment RenderField() => @<Fragment>
+        <div class="@CLASS_CONTAINER" inert="@Disabled">
+            @if (Icon is not null) { <div class="textarea-icon-before">@Icon</div> }
+            <textarea
+                id="@ViewModel.FormID"
+                name="@Name"
+                class="@CLASS_TEXTAREA_ELEMENT"
+                placeholder="@ViewModel.Placeholder"
+                aria-label="@HTML.Label.First(Label)"
+                aria-invalid="@ViewModel.Error.HasError"
+                rows="@ViewModel.Rows"
+                style="@ComputeTextAreaStyle()"
+                @bind:event="oninput"
+                @bind:get="@TextAreaValue"
+                @bind:set="HandleInput"
+                @onblur="HandleChange"
+                @onkeydown="HandleKeyDown"
+                @onkeydown:preventDefault="ShouldPreventKeyDown"
+            ></textarea>
+            @if (AllowClear) {
+                <div class="textarea-clear">
+                    <button
+                        type="button"
+                        class="textarea-clear-button"
+                        tabindex="@ComputeTabindexClear()"
+                        aria-label="@I18N.T("Clear")"
+                        @onclick="@(async () => await InvokeUpdate())"
+                    >
+                        <ThumbButton Class="textarea-clear-thumb" />
+                        <AntIcon Type="close" Theme="outline" />
+                    </button>
+                </div>
+            }
+            @if (IconAfter is not null) { <div class="textarea-icon-after">@IconAfter</div> }
+        </div>
+    </Fragment>;
+}
+
+@Render()
