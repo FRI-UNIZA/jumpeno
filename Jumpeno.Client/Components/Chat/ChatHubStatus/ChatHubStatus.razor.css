@@ -1,0 +1,43 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.chat-hub-status {
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Styles > Icon ----------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-hub-status .chat-hub-status__icon {
+    font-size: 14px;
+}
+
+/* Styles > Label ---------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-hub-status .chat-hub-status__label {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Styles [Connecting] ----------------------------------------------------------------------------------------------------------------- */
+::deep.chat-hub-status.status-connecting .chat-hub-status__icon,
+::deep.chat-hub-status.status-connecting .chat-hub-status__label {
+    color: var(--color-text-muted);
+}
+
+/* Styles [Connected] ------------------------------------------------------------------------------------------------------------------ */
+::deep.chat-hub-status.status-connected .chat-hub-status__icon,
+::deep.chat-hub-status.status-connected .chat-hub-status__label {
+    color: var(--color-success);
+}
+
+/* Styles [Reconnecting] --------------------------------------------------------------------------------------------------------------- */
+::deep.chat-hub-status.status-reconnecting .chat-hub-status__icon,
+::deep.chat-hub-status.status-reconnecting .chat-hub-status__label {
+    color: var(--color-warning);
+}
+
+/* Styles [Disconnected] --------------------------------------------------------------------------------------------------------------- */
+::deep.chat-hub-status.status-disconnected .chat-hub-status__icon,
+::deep.chat-hub-status.status-disconnected .chat-hub-status__label {
+    color: var(--color-danger);
+}

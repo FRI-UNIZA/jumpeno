@@ -1,0 +1,41 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+::deep.chat-message-item {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Size: */
+    padding: 8px 12px;
+    /* Style: */
+    border-radius: var(--border-radius);
+    background: var(--color-background-primary);
+}
+
+/* Styles > Header --------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-message-item .chat-message-item__header {
+    /* Display: */
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+}
+
+/* Styles > Sender --------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-message-item .chat-message-item__sender {
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Styles > Time ----------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-message-item .chat-message-item__time {
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+}
+
+/* Styles > Text ----------------------------------------------------------------------------------------------------------------------- */
+::deep.chat-message-item .chat-message-item__text {
+    font-size: 0.9rem;
+    word-break: break-word;
+    margin: 0;
+}

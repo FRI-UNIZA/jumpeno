@@ -1,0 +1,32 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div class="@ComputeClass()">
+    <div class="global-chat__header">
+        <span class="global-chat__title">@I18N.T("Global Chat")</span>
+        <ChatHubStatus Status="VM.Status" />
+    </div>
+    <div class="global-chat__messages">
+        @foreach (var message in VM.Messages) {
+            <ChatMessageItem Message="message" />
+        }
+    </div>
+    <div class="global-chat__footer">
+        <TextAreaField
+            ViewModel="VM.InputVM"
+            Name="chat-message"
+            Size="FORM_SIZE.M"
+            Disabled="@(VM.Status == CHAT_HUB_STATUS.DISCONNECTED)"
+        />
+        <Button
+            Size="BUTTON_SIZE.M"
+            OnClick="async _ => await VM.Send()"
+            Disabled="@(VM.Status == CHAT_HUB_STATUS.DISCONNECTED)"
+        >
+            <Icon>
+                <AntIcon Type="send" Theme="outline" />
+            </Icon>
+        </Button>
+    </div>
+</div>
