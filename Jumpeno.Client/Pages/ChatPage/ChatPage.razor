@@ -6,7 +6,119 @@
 
 <div class="chat-page">
     <DocTitle Value="@I18N.T("Chat")" />
-    <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin-right: -24px" />
-    <Heading1 Size="TEXT_SIZE.XL" Style="text-align: center; line-height: 1.2">@I18N.T("Under construction")</Heading1>
-    <Paragraph Size="TEXT_SIZE.L" Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
+
+    <div class="chat-container">
+        <ScrollArea ID="chatMessages" Class="chat-messages-wrapper" AutoHide="SCROLLAREA_AUTOHIDE.NEVER" OverflowX="false" OverflowY="true">
+            @if (VM.Messages.Count == 0) {
+                <div class="empty-state">
+                    <AntIcon Type="coffee" Theme="outline" Class="empty-icon" />
+                    <Paragraph Size="TEXT_SIZE.M" Class="empty-text">@I18N.T("No messages yet. Start the conversation!")</Paragraph>
+                </div>
+            } else {
+                string? prevSender = null;
+                @foreach (var msg in VM.Messages) {
+                    var isOwn = msg.SenderName == Auth.User.Name;
+                    var isGrouped = msg.SenderName == prevSender;
+                    prevSender = msg.SenderName;
+
+                    <div class="chat-message @(isOwn ? "own-message" : "other-message") @(isGrouped ? "grouped" : "")">
+                        @if (!isOwn && !isGrouped) {
+                            <span class="message-sender">@msg.SenderName</span>
+                        }
+                        <div class="message-bubble">
+                            <span class="message-content">
+                                @foreach (var (segment, url) in ParseMessageSegments(msg.Text)) {
+                                    if (url is not null) {
+                                        <a class="game-code-link"
+                                        href="@url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="@I18N.T("Join lobby")">@segment</a>
+                                    } else {
+                                        @segment
+                                    }
+                                }
+                            </span>
+                            <span class="message-time">@msg.SentAt.ToLocalTime().ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+            }
+        </ScrollArea>
+
+        <div class="chat-input-area">
+            @* Error floats above input, doesn't push layout *@
+            <div class="chat-error-wrapper">
+                @if (VM.Status == CHAT_HUB_STATUS.ERROR && VM.ErrorMessage is not null) {
+                    <div class="chat-error">
+                        <AntIcon Type="warning" Theme="outline" />
+                        <Paragraph Size="TEXT_SIZE.S" Class="error-text">@VM.ErrorMessage</Paragraph>
+                    </div>
+                }
+            </div>
+            <div class="jump-to-bottom-wrapper">
+                @if (!_autoScrollEnabled) {
+                    <div class="jump-to-bottom">
+                        <Button OnClick="JumpToBottom" Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.S">
+                            <Icon><AntIcon Type="down" Theme="outline" /></Icon>
+                            <Text>@I18N.T("Jump to bottom")</Text>
+                        </Button>
+                    </div>
+                }
+            </div>
+
+            <div class="input-wrapper">
+                @* Status dot sits in the top-left corner of the textarea *@
+                <div class="chat-input-wrapper">
+                    <span class="status-dot @VM.Status.CSSClass()" title="@StatusTooltip"></span>
+                    <TextAreaField
+                        ViewModel="VM.InputVM"
+                        Name="message"
+                        Label="@I18N.T("Message")"
+                        Size="FORM_SIZE.M"
+                        AllowClear
+                        Class="chat-input"
+                    />
+                </div>
+                <Button
+                    OnClick="@(async () => { if (VM.Send is not null) await VM.Send(); })"
+                    Variant="BUTTON_VARIANT.PRIMARY"
+                    Size="BUTTON_SIZE.M"
+                    Disabled="@(string.IsNullOrWhiteSpace(VM.CurrentInputText) || VM.Status != CHAT_HUB_STATUS.CONNECTED)"
+                    Class="send-button">
+                    <Icon><AntIcon Type="send" Theme="outline" /></Icon>
+                    <Text>@I18N.T("Send")</Text>
+                </Button>
+            </div>
+
+            @* Connection status bar — only when not connected *@
+            @if (VM.Status != CHAT_HUB_STATUS.CONNECTED && VM.Status != CHAT_HUB_STATUS.ERROR) {
+                <div class="connection-status @VM.Status.CSSClass()">
+                    <p class="status-text">
+                        @switch (VM.Status) {
+                            case CHAT_HUB_STATUS.CONNECTING:
+                                @I18N.T("Connecting to chat...")
+                                break;
+                            case CHAT_HUB_STATUS.RECONNECTING:
+                                @I18N.T($"Connection lost. Reconnecting... ({VM.ReconnectAttempts}/{GlobalChatViewModel.MAX_RECONNECT_ATTEMPTS})")
+                                break;
+                            case CHAT_HUB_STATUS.DISCONNECTED:
+                                @I18N.T("Disconnected from chat.")
+                                break;
+                        }
+                    </p>
+                    @if (VM.CanManualReconnect) {
+                        <Button
+                            OnClick="ManualReconnect"
+                            Variant="BUTTON_VARIANT.PRIMARY"
+                            Size="BUTTON_SIZE.S"
+                            Class="reconnect-button">
+                            <Icon><AntIcon Type="reload" Theme="outline" /></Icon>
+                            <Text>@I18N.T("Reconnect")</Text>
+                        </Button>
+                    }
+                </div>
+            }
+        </div>
+    </div>
 </div>
