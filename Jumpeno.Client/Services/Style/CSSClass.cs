@@ -28,7 +28,7 @@ public class CSSClass {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     // Set class:
-    public CSSClass SetSurface<T>(T? prop, bool? apply = true) { Set(CLASS_SURFACE, prop != null && apply == true); return Set(((SURFACE?)(dynamic?)prop)?.CSSClass(), apply); }
+    public CSSClass SetSurface<T>(T? prop, bool? apply = true) { Set(CLASS_SURFACE, prop != null && apply == true); return Set(((Surface?)(dynamic?)prop)?.CSSClass(), apply); }
     public CSSClass SetVariant(Enum? prop, bool? apply = true) { Set(CLASS_VARIANT, prop != null && apply == true); return Set(prop?.CSSClass(), apply); }
     public CSSClass SetSize(Enum? prop, bool? apply = true) { Set(CLASS_SIZE, prop != null && apply == true); return Set(prop?.CSSClass(), apply); }
     public CSSClass Set(Enum? prop, bool? apply = true) => Set(prop?.CSSClass(), apply);
@@ -42,7 +42,7 @@ public class CSSClass {
     }
 
     // Remove class:
-    public CSSClass RemoveSurface<T>(T? prop, bool? apply = true) { Remove(((SURFACE?)(dynamic?)prop)?.CSSClass(), apply); return Remove(CLASS_SURFACE, apply); }
+    public CSSClass RemoveSurface<T>(T? prop, bool? apply = true) { Remove(((Surface?)(dynamic?)prop)?.CSSClass(), apply); return Remove(CLASS_SURFACE, apply); }
     public CSSClass RemoveVariant(Enum? prop, bool? apply = true) { Remove(prop?.CSSClass(), apply); return Remove(CLASS_VARIANT, apply); }
     public CSSClass RemoveSize(Enum? prop, bool? apply = true) { Remove(prop?.CSSClass(), apply); return Remove(CLASS_SIZE, apply); }
     public CSSClass Remove(Enum? prop, bool? apply = true) => Remove(prop?.CSSClass(), apply);

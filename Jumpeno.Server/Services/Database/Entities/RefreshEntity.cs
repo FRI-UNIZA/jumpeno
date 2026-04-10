@@ -34,10 +34,10 @@ public class RefreshEntity {
         // 1) Validation:
         var errors = TokenValidator.ValidateToken(token, tokenID);
         if (id != null) errors.AddRange(UserValidator.ValidateID(id, idID));
-        errors.AddRange(Checker.Validate(token == origin, ERROR.MATCH(nameof(token), nameof(origin)).SetID(originID)));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        errors.AddRange(Checker.Validate(token == origin, Errors.MATCH(nameof(token), nameof(origin)).SetID(originID)));
+        Checker.Assert(errors, Exceptions.VALUES);
         // 2) Read token:
-        var data = Client.Utils.Token.Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        var data = Client.Utils.Token.Decode(token) ?? throw Exceptions.NOT_AUTHENTICATED;
         if (id != null && id != data.sub) throw new InvalidDataException(nameof(UserEntity.ID));
         // 3) Create record:
         var record = new RefreshEntity() {
@@ -117,7 +117,7 @@ public class RefreshEntity {
         // 1) Validation:
         var errors = TokenValidator.ValidateToken(origin, originID);
         if (except != null) errors.AddRange(TokenValidator.ValidateToken(except, exceptID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        Checker.Assert(errors, Exceptions.VALUES);
         // 2) Delete records:
         var ctx = await DB.Context();
         int rows = await ctx.Refresh

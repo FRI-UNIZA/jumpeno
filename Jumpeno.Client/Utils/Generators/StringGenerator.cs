@@ -7,12 +7,12 @@ public class StringGenerator {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private string Generate(
         // Parameters:
-        int minLength, int maxLength, string characters = CHARS.ALPHA_UPPER,
+        int minLength, int maxLength, string characters = Chars.ALPHA_UPPER,
         // Exceptions:
         string minLengthID = "", string maxLengthID = "", string charactersID = ""
         ) {
         // 1) Check values:
-        if (string.IsNullOrEmpty(characters)) throw EXCEPTION.VALUES.Add(ERROR.UNDEFINED.SetID(charactersID));
+        if (string.IsNullOrEmpty(characters)) throw Exceptions.VALUES.Add(Errors.UNDEFINED.SetID(charactersID));
         Checker.CheckGreaterOrEqualTo(minLength, 0, minLengthID);
         Checker.CheckGreaterOrEqualTo(maxLength, minLength, maxLengthID);
         if (maxLength <= 0) return string.Empty;
@@ -22,13 +22,13 @@ public class StringGenerator {
         return new string([.. Enumerable.Range(0, length).Select(_ => characters[G.Next(characters.Length)])]);
     }
 
-    public string Generate(int minLength, int maxLength, string characters = CHARS.ALPHA_UPPER)
+    public string Generate(int minLength, int maxLength, string characters = Chars.ALPHA_UPPER)
     => Generate(
         minLength, maxLength, characters, 
         nameof(minLength), nameof(maxLength), nameof(characters)
     );
 
-    public string Generate(int length, string characters = CHARS.ALPHA_UPPER)
+    public string Generate(int length, string characters = Chars.ALPHA_UPPER)
     => Generate(
         length, length, characters,
         nameof(length), nameof(length), nameof(characters)
@@ -42,10 +42,10 @@ public class StringGenerator {
         // 2) Generate:
         int length = G.Next(minLength, maxLength + 1);
         int partLength = length / 4;
-        string password = Generate(partLength, CHARS.ALPHA_LOWER);
-        password += Generate(partLength, CHARS.ALPHA_UPPER);
-        password += Generate(partLength, CHARS.NUM);
-        password += Generate(length - (partLength * 3), CHARS.SPECIAL);
+        string password = Generate(partLength, Chars.ALPHA_LOWER);
+        password += Generate(partLength, Chars.ALPHA_UPPER);
+        password += Generate(partLength, Chars.NUM);
+        password += Generate(length - (partLength * 3), Chars.SPECIAL);
         var passwordArray = password.ToCharArray();
         G.Shuffle(passwordArray);
         // 3) Convert to string:

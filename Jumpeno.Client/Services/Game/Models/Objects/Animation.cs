@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Models;
 
 using System.Diagnostics;
 
-public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
+public class Animation : IRenderable<(Game Game, Skin Skin, Body Body)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const int WIDTH = 64; // px
     public const int HEIGHT = 76; // px
@@ -52,7 +52,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
         Running = direction.X != 0;
     }
 
-    private static ElementReference? GetImage(SKIN skin) {
+    private static ElementReference? GetImage(Skin skin) {
         if (AppEnvironment.IsServer) return null;
         string id = skin.ToImagePath();
         if (ImageReferrer.Get(id) is not ElementReference img) return null;
@@ -70,7 +70,7 @@ public class Animation : IRenderable<(Game Game, SKIN Skin, Body Body)> {
     } 
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, (Game Game, SKIN Skin, Body Body) @params) {
+    public async Task<bool> Render(Canvas2DContext ctx, (Game Game, Skin Skin, Body Body) @params) {
         var (game, skin, body) = @params;
         // 1) Check image:
         if (GetImage(skin) is not ElementReference img) return false;

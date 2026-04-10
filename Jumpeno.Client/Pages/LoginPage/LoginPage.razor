@@ -1,4 +1,4 @@
-﻿@namespace Jumpeno.Client.Pages
+@namespace Jumpeno.Client.Pages
 
 @inherits Page
 @attribute [Route(LoginPage.ROUTE_EN)]
@@ -8,9 +8,9 @@
 
 <div class="login-page">
     @switch (VM.Form) {
-        case LOGIN_FORM.ADMIN: <AdminLoginForm VM="VM" /> break;
-        case LOGIN_FORM.PASSWORD_RESET: <PasswordResetForm VM="VM" /> break;
-        case LOGIN_FORM.REGISTER: <RegisterForm VM="VM" /> break;
-        case LOGIN_FORM.USER: <UserLoginForm VM="VM" /> break;
+        case LoginFormType.ADMIN: <AdminLoginForm VM="VM" /> break;
+        case LoginFormType.PASSWORD_RESET: <PasswordResetForm VM="VM" /> break;
+        case LoginFormType.REGISTER: <RegisterForm VM="VM" /> break;
+        case LoginFormType.USER: <UserLoginForm VM="VM" /> break;
     }
 </div>

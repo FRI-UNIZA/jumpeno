@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Constants;
 
-public enum LANGUAGE {
+public enum Language {
     [StringValue("en")] EN,
     [StringValue("sk")] SK
 }

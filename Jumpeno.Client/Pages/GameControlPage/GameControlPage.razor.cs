@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Pages;
 public partial class GameControlPage {
     public const string ROUTE_EN = "/en/game-control";
     public const string ROUTE_SK = "/sk/ovladac-hry";
-    public static readonly ROLE[] ROLES = [ROLE.ADMIN];
+    public static readonly Role[] ROLES = [Role.ADMIN];
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
     private readonly string FORM = Form.Of<GameControlPage>();
@@ -34,7 +34,7 @@ public partial class GameControlPage {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(VMCode),
-            TextMode: INPUT_TEXT_MODE.UPPERCASE,
+            TextMode: InputTextMode.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
@@ -54,7 +54,7 @@ public partial class GameControlPage {
 
     // Actions > Game ---------------------------------------------------------------------------------------------------------------------
     private async Task ActionRequest(string url) {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Show(PageLoaderTask.GAME_REQUEST);
         await HTTP.Try(async () => {
             try {
                 // 1) Data:
@@ -68,7 +68,7 @@ public partial class GameControlPage {
                 MapGameControlErrors(e); throw;                
             }
         }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Hide(PageLoaderTask.GAME_REQUEST);
     }
 
     private Task Delete() => DeleteConfirmModalRef.Open(() => ActionRequest(API.BASE.GAME_DELETE));
@@ -77,7 +77,7 @@ public partial class GameControlPage {
 
     // Actions > Player -------------------------------------------------------------------------------------------------------------------
     private async Task PlayerRequest(string url) {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Show(PageLoaderTask.GAME_REQUEST);
         await HTTP.Try(async () => {
             try {
                 // 1) Data:
@@ -91,7 +91,7 @@ public partial class GameControlPage {
                 MapGamePlayerControlErrors(e); throw;
             }
         }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Hide(PageLoaderTask.GAME_REQUEST);
     }
 
     private Task PlayerReady() => PlayerRequest(API.BASE.GAME_SET_PLAYER_READY);

@@ -13,7 +13,7 @@ public partial class Footer {
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
         .Set(CLASS, Base)
-        .Set(SURFACE.SECONDARY, Base)
+        .Set(Surface.SECONDARY, Base)
         .Set(CLASS_DISPLAY, Display);
     }
 }

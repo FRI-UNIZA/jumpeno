@@ -6,7 +6,7 @@ public partial class HeadingComponent {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required HEADING_TYPE Type { get; set; }
+    public required HeadingType Type { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);

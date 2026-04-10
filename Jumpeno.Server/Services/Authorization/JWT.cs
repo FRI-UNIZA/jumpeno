@@ -21,8 +21,8 @@ public static class JWT {
 
     // Generators -------------------------------------------------------------------------------------------------------------------------
     private static string Generate(
-        TOKEN_TYPE type, string secret, int expiration,
-        string sub, ROLE role, string aud,
+        TokenType type, string secret, int expiration,
+        string sub, Role role, string aud,
         string data = ""
     ) {
         var credentials = new SigningCredentials(
@@ -50,38 +50,38 @@ public static class JWT {
     }
 
     public static string GenerateAdminAccess(string email) => Generate(
-        TOKEN_TYPE.ACCESS, ACCESS_SECRET, EXPIRATION_ACCESS,
-        email, ROLE.ADMIN, AUDIENCE_ADMIN
+        TokenType.ACCESS, ACCESS_SECRET, EXPIRATION_ACCESS,
+        email, Role.ADMIN, AUDIENCE_ADMIN
     );
     public static string GenerateAdminRefresh(string email) => Generate(
-        TOKEN_TYPE.REFRESH, REFRESH_SECRET, EXPIRATION_REFRESH,
-        email, ROLE.ADMIN, AUDIENCE_ADMIN,
+        TokenType.REFRESH, REFRESH_SECRET, EXPIRATION_REFRESH,
+        email, Role.ADMIN, AUDIENCE_ADMIN,
         $"{nameof(Guid)}:{Guid.NewGuid()}"
     );
 
     public static string GenerateUserAccess(Guid id) => Generate(
-        TOKEN_TYPE.ACCESS, ACCESS_SECRET, EXPIRATION_ACCESS,
-        id.ToString(), ROLE.USER, AUDIENCE_USER
+        TokenType.ACCESS, ACCESS_SECRET, EXPIRATION_ACCESS,
+        id.ToString(), Role.USER, AUDIENCE_USER
     );
     public static string GenerateUserRefresh(Guid id) => Generate(
-        TOKEN_TYPE.REFRESH, REFRESH_SECRET, EXPIRATION_REFRESH,
-        id.ToString(), ROLE.USER, AUDIENCE_USER,
+        TokenType.REFRESH, REFRESH_SECRET, EXPIRATION_REFRESH,
+        id.ToString(), Role.USER, AUDIENCE_USER,
         $"{nameof(Guid)}:{Guid.NewGuid()}"
     );
 
     public static string GenerateActivation(Guid id) => Generate(
-        TOKEN_TYPE.ACTIVATION, DATA_SECRET, EXPIRATION_ACTIVATION,
-        id.ToString(), ROLE.USER, AUDIENCE_USER
+        TokenType.ACTIVATION, DATA_SECRET, EXPIRATION_ACTIVATION,
+        id.ToString(), Role.USER, AUDIENCE_USER
     );
 
     public static string GeneratePasswordReset(string email, string password) => Generate(
-        TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, EXPIRATION_PASSWORD_RESET,
-        email, ROLE.USER, AUDIENCE_USER,
+        TokenType.PASSWORD_RESET, DATA_SECRET, EXPIRATION_PASSWORD_RESET,
+        email, Role.USER, AUDIENCE_USER,
         password
     );
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
-    private static bool Validate(TOKEN_TYPE type, string secret, string token) {
+    private static bool Validate(TokenType type, string secret, string token) {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(secret);
 
@@ -103,40 +103,40 @@ public static class JWT {
             return false;
         }
     }
-    private static string Assert(TOKEN_TYPE type, string secret, string token) {
-        return Validate(type, secret, token) ? token : throw EXCEPTION.NOT_AUTHENTICATED;
+    private static string Assert(TokenType type, string secret, string token) {
+        return Validate(type, secret, token) ? token : throw Exceptions.NOT_AUTHENTICATED;
     }
 
-    public static bool ValidateAccess(string token) => Validate(TOKEN_TYPE.ACCESS, ACCESS_SECRET, token);
-    public static string AssertAccess(string token) => Assert(TOKEN_TYPE.ACCESS, ACCESS_SECRET, token);
+    public static bool ValidateAccess(string token) => Validate(TokenType.ACCESS, ACCESS_SECRET, token);
+    public static string AssertAccess(string token) => Assert(TokenType.ACCESS, ACCESS_SECRET, token);
     
-    public static bool ValidateRefresh(string token) => Validate(TOKEN_TYPE.REFRESH, REFRESH_SECRET, token);
-    public static string AssertRefresh(string token) => Assert(TOKEN_TYPE.REFRESH, REFRESH_SECRET, token);
+    public static bool ValidateRefresh(string token) => Validate(TokenType.REFRESH, REFRESH_SECRET, token);
+    public static string AssertRefresh(string token) => Assert(TokenType.REFRESH, REFRESH_SECRET, token);
     
-    public static bool ValidateActivation(string token) => Validate(TOKEN_TYPE.ACTIVATION, DATA_SECRET, token);
-    public static string AssertActivation(string token) => Assert(TOKEN_TYPE.ACTIVATION, DATA_SECRET, token);
+    public static bool ValidateActivation(string token) => Validate(TokenType.ACTIVATION, DATA_SECRET, token);
+    public static string AssertActivation(string token) => Assert(TokenType.ACTIVATION, DATA_SECRET, token);
     
-    public static bool ValidatePasswordReset(string token) => Validate(TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, token);
-    public static string AssertPasswordReset(string token) => Assert(TOKEN_TYPE.PASSWORD_RESET, DATA_SECRET, token);
+    public static bool ValidatePasswordReset(string token) => Validate(TokenType.PASSWORD_RESET, DATA_SECRET, token);
+    public static string AssertPasswordReset(string token) => Assert(TokenType.PASSWORD_RESET, DATA_SECRET, token);
 
     // Refresh ----------------------------------------------------------------------------------------------------------------------------
     public static void SetRefreshTokenCookie(string token) {
         var cookieStorage = AppEnvironment.GetService<CookieStorage>();
         var expires = DateTimeOffset.UtcNow.AddMilliseconds(EXPIRATION_REFRESH);
-        var cookie = new Cookie(
-            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
+        var cookie = new Client.Models.Cookie(
+            Cookies.Mandatory.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_REFRESH, httpOnly: true, secure: true
         );
         cookieStorage.Set(cookie);
-        cookie = new Cookie(
-            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
+        cookie = new Client.Models.Cookie(
+            Cookies.Mandatory.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_INVALIDATE, httpOnly: true, secure: true
         );
         cookieStorage.Set(cookie);
-        cookie = new Cookie(
-            COOKIE.MANDATORY.APP_REFRESH_TOKEN, token,
+        cookie = new Client.Models.Cookie(
+            Cookies.Mandatory.APP_REFRESH_TOKEN, token,
             expires: expires,
             path: API.BASE.AUTH_DELETE, httpOnly: true, secure: true
         );
@@ -145,15 +145,15 @@ public static class JWT {
 
     public static void DeleteRefreshTokenCookie() {
         var cookieStorage = AppEnvironment.GetService<CookieStorage>();
-        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
-        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
-        cookieStorage.Delete(COOKIE.MANDATORY.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
+        cookieStorage.Delete(Cookies.Mandatory.APP_REFRESH_TOKEN, path: API.BASE.AUTH_REFRESH);
+        cookieStorage.Delete(Cookies.Mandatory.APP_REFRESH_TOKEN, path: API.BASE.AUTH_INVALIDATE);
+        cookieStorage.Delete(Cookies.Mandatory.APP_REFRESH_TOKEN, path: API.BASE.AUTH_DELETE);
     }
 
     // Authorization ----------------------------------------------------------------------------------------------------------------------
-    public static void Authorize(string token, ROLE[] roles) {
+    public static void Authorize(string token, Role[] roles) {
         // Validate token:
-        if (!ValidateAccess(token)) throw EXCEPTION.NOT_AUTHENTICATED;
+        if (!ValidateAccess(token)) throw Exceptions.NOT_AUTHENTICATED;
         // Store token:
         Token.StoreAccess(token);
         // Check roles:
@@ -164,7 +164,7 @@ public static class JWT {
                 break;
             }
         }
-        if (!allowed) throw EXCEPTION.NOT_AUTHORIZED;
+        if (!allowed) throw Exceptions.NOT_AUTHORIZED;
     }
     
     public static void Authorize(HttpContext ctx) {
@@ -188,8 +188,8 @@ public static class JWT {
             
         // Get token:
         var authHeader = ctx.Request.Headers.Authorization.FirstOrDefault();
-        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AUTH.BEARER} "))) throw EXCEPTION.NOT_AUTHENTICATED;
-        string token = authHeader.Substring($"{AUTH.BEARER} ".Length).Trim();
+        if (!(!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith($"{AuthTypes.BEARER} "))) throw Exceptions.NOT_AUTHENTICATED;
+        string token = authHeader.Substring($"{AuthTypes.BEARER} ".Length).Trim();
 
         // Authorize:
         Authorize(token, roleAttribute.Allowed);

@@ -7,11 +7,11 @@ public abstract partial class TextComponent {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public TEXT_VARIANT? Variant { get; set; } = TEXT_VARIANT.PRIMARY;
+    public TextVariant? Variant { get; set; } = TextVariant.PRIMARY;
     [Parameter]
-    public TEXT_SIZE? Size { get; set; } = TEXT_SIZE.M;
+    public TextSize? Size { get; set; } = TextSize.M;
     [Parameter]
-    public TEXT_ALIGN? Align { get; set; } = null;
+    public TextAlignTypes? Align { get; set; } = null;
     [Parameter]
     public bool NoWrap { get; set; }
     [Parameter]

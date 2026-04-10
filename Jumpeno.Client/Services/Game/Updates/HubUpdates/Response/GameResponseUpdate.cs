@@ -12,7 +12,7 @@ public abstract class GameResponseUpdate : GameHubUpdate
     
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     protected static AppExceptionDTO? DTO(Exception? exception)
-    => exception is null ? null : (exception is AppException e ? e : EXCEPTION.DEFAULT).DTO;
+    => exception is null ? null : (exception is AppException e ? e : Exceptions.DEFAULT).DTO;
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public override string ToString() => Format.JSON_PRETTY(this);

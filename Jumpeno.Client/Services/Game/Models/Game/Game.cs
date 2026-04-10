@@ -10,17 +10,17 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     public static readonly double ROUND_DURATION = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TOTAL_DURATION; // ms
     public static readonly double ROUND_FINISH_DELAY = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
     // States:
-    public static readonly List<GAME_STATE> LOBBY_STATES = [GAME_STATE.LOBBY, GAME_STATE.SCOREBOARD];
-    public static readonly List<GAME_STATE> PAUSE_STATES = [GAME_STATE.PAUSE];
-    public static readonly List<GAME_STATE> RUN_STATES = [GAME_STATE.GAMEPLAY, GAME_STATE.SHRINKING];
+    public static readonly List<GameStates> LOBBY_STATES = [GameStates.LOBBY, GameStates.SCOREBOARD];
+    public static readonly List<GameStates> PAUSE_STATES = [GameStates.PAUSE];
+    public static readonly List<GameStates> RUN_STATES = [GameStates.GAMEPLAY, GameStates.SHRINKING];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Identifier:
     public ulong ID { get; }
     private static ulong IDAutoIncrement = 0;
     // Settings:
-    public DISPLAY_MODE DisplayMode { get; }
-    public GAME_MODE Mode { get; }
+    public DisplayMode DisplayMode { get; }
+    public GameMode Mode { get; }
     public User Host { get;  }
     public string Code { get; }
     public string Name { get; }
@@ -32,8 +32,8 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     public int Round { get; private set; }
     public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
     public double Time { get; private set; }
-    public GAME_STATE State { get; private set; }
-    public bool IsFinished => State == GAME_STATE.SCOREBOARD && Rounds <= Round;
+    public GameStates State { get; private set; }
+    public bool IsFinished => State == GameStates.SCOREBOARD && Rounds <= Round;
     // Clock:
     public readonly GameClock Clock;
     public readonly GameClock TouchClock;
@@ -62,9 +62,9 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     [JsonConstructor]
     private Game(
         ulong id,
-        DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
+        DisplayMode displayMode, GameMode mode, User host, string code, string name,
         Map map, bool anonyms, byte rounds, byte capacity,
-        int round, double time, GAME_STATE state,
+        int round, double time, GameStates state,
         bool hostConnected,
         Dictionary<byte, Player> players, List<Player> activePlayers,
         int spectatorCount
@@ -103,12 +103,12 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         SpectatorCount = spectatorCount;
     }
     public Game(
-        DISPLAY_MODE displayMode, GAME_MODE mode, User host, string code, string name,
+        DisplayMode displayMode, GameMode mode, User host, string code, string name,
         Map map, bool anonyms, byte rounds, byte capacity
     ) : this(
         IDAutoIncrement++,
         displayMode, mode, host, code, name, map, anonyms, rounds, capacity,
-        0, 0, GAME_STATE.LOBBY,
+        0, 0, GameStates.LOBBY,
         false, [], [], 0
     ) {}
 
@@ -184,13 +184,13 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name.ToLower() != connection.User.Name.ToLower()) continue;
-                if (State == GAME_STATE.LOBBY) {
-                    throw EXCEPTION.DEFAULT.SetInfo("Player name is taken!")
-                    .SetErrors(ERROR.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
+                if (State == GameStates.LOBBY) {
+                    throw Exceptions.DEFAULT.SetInfo("Player name is taken!")
+                    .SetErrors(Errors.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
-                    throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
+                    throw Exceptions.DEFAULT.SetInfo("The game is already running.");
                 }
-            } else if (State == GAME_STATE.LOBBY || player.User.Equals(connection.User)) {
+            } else if (State == GameStates.LOBBY || player.User.Equals(connection.User)) {
                 AssertReservedPlayerHostName(connection.User, userNameID: nameID);
                 space = player;
                 break;
@@ -198,8 +198,8 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         }
         // 2.1) Space not found:
         if (space == null) {
-            if (State == GAME_STATE.LOBBY) throw EXCEPTION.DEFAULT.SetInfo("The game is currently full!");
-            else throw EXCEPTION.DEFAULT.SetInfo("The game is already running.");
+            if (State == GameStates.LOBBY) throw Exceptions.DEFAULT.SetInfo("The game is currently full!");
+            else throw Exceptions.DEFAULT.SetInfo("The game is already running.");
         }
         // 2.2) Or return found space:
         else return space;
@@ -343,11 +343,11 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         }
     }
 
-    private SKIN GetAvailableSkin()
+    private Skin GetAvailableSkin()
     {
         // 1) Select free skins:
         var usedSkins = ActivePlayers.Select(p => p.User.Skin);
-        var allSkins = Enum.GetValues<SKIN>();
+        var allSkins = Enum.GetValues<Skin>();
         var freeSkins = allSkins.Except(usedSkins);
         // 2.1) Find random avaible skin:
         if (freeSkins.Any())
@@ -514,13 +514,13 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     private bool StateUpdate(StateUpdate update) {
         // 1) Current state:
         switch (State) {
-            case GAME_STATE.PAUSE:
-                if (update.State != GAME_STATE.PAUSE) ResetClocks();
+            case GameStates.PAUSE:
+                if (update.State != GameStates.PAUSE) ResetClocks();
             break;
         }
         // 2) New state:
         switch (update.State) {
-            case GAME_STATE.PAUSE:
+            case GameStates.PAUSE:
                 foreach (var player in Players.Values) {
                     player.Update(update);
                 }

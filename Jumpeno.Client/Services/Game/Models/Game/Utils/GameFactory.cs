@@ -57,7 +57,7 @@ public partial class Game {
         return new(player.ID, position, Body.DEFAULT_DIRECTION, null, Body.DEFAULT_NORMAL, new(random.NextDouble() < 0.5 ? 1 : -1, -1));
     }
 
-    public StateUpdate NewStateUpdate(double time, GAME_STATE state, int? level = null, double? timer = null) {
+    public StateUpdate NewStateUpdate(double time, GameStates state, int? level = null, double? timer = null) {
         return new(time, state, level ?? Map.Shrink.Level, timer ?? Map.Shrink.Timer);
     }
     public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) => new(deltaT);
@@ -104,7 +104,7 @@ public partial class Game {
     private PlayerUpdate NewPlayerRemoveUpdate(Player player, bool kick) {
         bool isHost = player.User.ID == Host.ID;
         var update = NewPlayerManipulationUpdate(player);
-        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GAME_STATE.LOBBY, update);
+        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GameStates.LOBBY, update);
     }
     public PlayerUpdate NewPlayerRemoveUpdate(Player player) => NewPlayerRemoveUpdate(player, false);
     public PlayerUpdate NewPlayerKickUpdate(Player player) => NewPlayerRemoveUpdate(player, true);
@@ -120,12 +120,12 @@ public partial class Game {
         KillPlayers();
         ResurrectPlayers();
         return Updater.NewRoundUpdate(
-            Round + 1, NewStateUpdate(0, GAME_STATE.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
+            Round + 1, NewStateUpdate(0, GameStates.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
             Players
         );
     }
     public RoundUpdate NewRoundFinishUpdate() {
         KillPlayers();
-        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GAME_STATE.SCOREBOARD), Players);
+        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GameStates.SCOREBOARD), Players);
     }
 }

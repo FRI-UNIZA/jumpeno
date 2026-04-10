@@ -146,7 +146,7 @@ public static class Collision {
     // Discrete collision resolution ------------------------------------------------------------------------------------------------------
     // Resolves collision of position with given level value (denies position to go on other side of level):
     public static bool Resolve(
-        float level, POSITION deny, RectFPosition position,
+        float level, PositionDir deny, RectFPosition position,
         Action<(RectFPosition Resolved, PointF Normal)> onResolve
     ) {
         // 1) Define variables:
@@ -155,10 +155,10 @@ public static class Collision {
         var normal = new PointF(0, 0);
         // 2) Check collision:
         switch (deny) {
-            case POSITION.LEFT: if (position.Center.X - halfWidth < level) normal.X = 1; break;
-            case POSITION.RIGHT: if (position.Center.X + halfWidth > level) normal.X = -1; break;
-            case POSITION.BOTTOM: if (position.Center.Y - halfHeight < level) normal.Y = 1; break;
-            case POSITION.TOP: if (position.Center.Y + halfHeight > level) normal.Y = -1; break;
+            case PositionDir.LEFT: if (position.Center.X - halfWidth < level) normal.X = 1; break;
+            case PositionDir.RIGHT: if (position.Center.X + halfWidth > level) normal.X = -1; break;
+            case PositionDir.BOTTOM: if (position.Center.Y - halfHeight < level) normal.Y = 1; break;
+            case PositionDir.TOP: if (position.Center.Y + halfHeight > level) normal.Y = -1; break;
         }
         // 3) Resolve collision:
         if (normal.Equals(ZERO_VECTOR)) return false;
@@ -183,10 +183,10 @@ public static class Collision {
             normal.Y = fix.normal.Y;
         };
         // 3) Resolve collisions:
-        if (!Resolve(boundary.X, POSITION.LEFT, position, resolve))
-            Resolve(boundary.X + boundary.Width, POSITION.RIGHT, position, resolve);
-        if (!Resolve(boundary.Y, POSITION.BOTTOM, position, resolve))
-            Resolve(boundary.Y + boundary.Height, POSITION.TOP, position, resolve);
+        if (!Resolve(boundary.X, PositionDir.LEFT, position, resolve))
+            Resolve(boundary.X + boundary.Width, PositionDir.RIGHT, position, resolve);
+        if (!Resolve(boundary.Y, PositionDir.BOTTOM, position, resolve))
+            Resolve(boundary.Y + boundary.Height, PositionDir.TOP, position, resolve);
         // 4) Apply result:
         if (normal.Equals(ZERO_VECTOR)) return false;
         onResolve((position, normal)); return true;

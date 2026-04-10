@@ -28,14 +28,14 @@ public partial class ImageBase {
     [Parameter]
     public bool Preloaded { get; set; } = false;
     [Parameter]
-    public IMAGE_LOADING Loading { get; set; } = IMAGE_LOADING.LAZY;
+    public ImageLoadingType Loading { get; set; } = ImageLoadingType.LAZY;
     [Parameter]
     public Action<bool> OnLoadingFinish { get; set; } = success => {};
     private readonly Dictionary<string, object> Attributes = [];
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly string ID = null!;
-    private IMAGE_STATE State = IMAGE_STATE.LOADING;
+    private ImageState State = ImageState.LOADING;
     
     private static readonly Dictionary<string, ImageBase> Images = [];
 
@@ -61,11 +61,11 @@ public partial class ImageBase {
         Attributes["alt"] = alt;
         if (alt == "") Attributes["aria-hidden"] = "true";
         if (AppEnvironment.IsServer) {
-            State = IMAGE_STATE.LOADING;
+            State = ImageState.LOADING;
         } else {
             State = Preloaded
-                    ? (IMAGE_STATE) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
-                    : (IMAGE_STATE) JS.Invoke<int>(JSImage.CheckState, URL);
+                    ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
+                    : (ImageState) JS.Invoke<int>(JSImage.CheckState, URL);
             HandleLoadFinish(State, OnLoadingFinish);
         } 
     }
@@ -81,12 +81,12 @@ public partial class ImageBase {
     }
     
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    public static void HandleLoadFinish(IMAGE_STATE state, Action<bool> OnLoadingFinish) {
+    public static void HandleLoadFinish(ImageState state, Action<bool> OnLoadingFinish) {
         switch (state) {
-            case IMAGE_STATE.ERROR:
+            case ImageState.ERROR:
                 OnLoadingFinish(false);
             break;
-            case IMAGE_STATE.FINISHED:
+            case ImageState.FINISHED:
                 OnLoadingFinish(true);
             break;
         }
@@ -97,7 +97,7 @@ public partial class ImageBase {
     public static void JS_OnLoad(string id) {
         try {
             var image = Images[id];
-            image.State = IMAGE_STATE.FINISHED;
+            image.State = ImageState.FINISHED;
             image.StateHasChanged();
             HandleLoadFinish(image.State, image.OnLoadingFinish);
         } catch {}
@@ -107,7 +107,7 @@ public partial class ImageBase {
     public static void JS_OnError(string id) {
         try {
             var image = Images[id];
-            image.State = IMAGE_STATE.ERROR;
+            image.State = ImageState.ERROR;
             image.StateHasChanged();
             HandleLoadFinish(image.State, image.OnLoadingFinish);
         } catch {}

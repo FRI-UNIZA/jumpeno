@@ -11,7 +11,7 @@ public partial class NavMenu {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public NAV_MENU_SURFACE Surface { get; set; } = NAV_MENU_SURFACE.SECONDARY;
+    public NavMenuSurface Surface { get; set; } = NavMenuSurface.SECONDARY;
     [Parameter]
     public required NavMenuMobile MobileRef { get; set; }
     [Parameter]
@@ -38,9 +38,9 @@ public partial class NavMenu {
     }
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentInitialized() => ScrollArea.AddScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
+    protected override void OnComponentInitialized() => ScrollArea.AddScrollListener(ScrollAreaId.PAGE, OnScroll);
 
-    protected override void OnComponentDispose() => ScrollArea.RemoveScrollListener(SCROLLAREA_ID.PAGE, OnScroll);
+    protected override void OnComponentDispose() => ScrollArea.RemoveScrollListener(ScrollAreaId.PAGE, OnScroll);
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private double TopPosition = 0;

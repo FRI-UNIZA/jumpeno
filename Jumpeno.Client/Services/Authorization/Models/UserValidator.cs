@@ -6,32 +6,32 @@ using System.Text.RegularExpressions;
 public static class UserValidator {
     // ID ---------------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateID(Guid? value, string id = "") {
-        return Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        return Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
     }
     public static Guid AssertID(Guid? value, string id = "", AppException? exception = null) {
-        return (Guid) Checker.Assert(value, ValidateID(value, id), exception ?? EXCEPTION.VALUES)!;
+        return (Guid) Checker.Assert(value, ValidateID(value, id), exception ?? Exceptions.VALUES)!;
     }
 
     public static List<Error> ValidateID(string value, string id = "") {
-        return Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        return Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
     }
     public static string AssertID(string value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateID(value, id), exception ?? EXCEPTION.VALUES);
+        return Checker.Assert(value, ValidateID(value, id), exception ?? Exceptions.VALUES);
     }
 
     // Email ------------------------------------------------------------------------------------------------------------------------------
-    public static byte EMAIL_MAX_LENGTH => EMAIL.MAX_LENGTH;
+    public static byte EMAIL_MAX_LENGTH => Email.MAX_LENGTH;
 
     public static bool IsEmail(string value) => Checker.IsEmail(value);
     public static List<Error> ValidateEmail(string? value, string id = "") {
-        var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        var errors = Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
-        Checker.Validate(errors, value.Length == 0, ERROR.EMPTY.SetID(id));
-        Checker.Validate(errors, !Checker.IsValidEmail(value), ERROR.FORMAT.SetID(id));
+        Checker.Validate(errors, value.Length == 0, Errors.EMPTY.SetID(id));
+        Checker.Validate(errors, !Checker.IsValidEmail(value), Errors.FORMAT.SetID(id));
         return errors;
     }
     public static string AssertEmail(string? value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateEmail(value, id), exception ?? EXCEPTION.VALUES)!;
+        return Checker.Assert(value, ValidateEmail(value, id), exception ?? Exceptions.VALUES)!;
     }
 
     // Name -------------------------------------------------------------------------------------------------------------------------------
@@ -40,27 +40,27 @@ public static class UserValidator {
 
     public static bool IsName(string value) => Checker.IsAlphaNum(value);
     public static List<Error> ValidateName(string? value, bool checkUnknown = true, string id = "") {
-        var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        var errors = Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
         Checker.Validate(errors, value.Length < NAME_MIN_LENGTH || NAME_MAX_LENGTH < value.Length,
-            ERROR.DEFAULT.SetID(id)
+            Errors.DEFAULT.SetID(id)
             .SetInfo("Length is not between I18N{min} and I18N{max}", new() {{ "min", NAME_MIN_LENGTH }, { "max", NAME_MAX_LENGTH }})
         );
         if (errors.Count > 0) return errors;
-        if (checkUnknown) Checker.Validate(errors, value.ToLower() == User.NAME_UNKNOWN.ToLower(), ERROR.DEFAULT.SetID(id).SetInfo("Name forbidden"));
-        Checker.Validate(errors, !Checker.IsAlphaNum(value), ERROR.DEFAULT.SetID(id).SetInfo("Name must be alphanumeric"));
-        Checker.Validate(errors, value.Length > 0 && char.IsDigit(value[0]), ERROR.DEFAULT.SetID(id).SetInfo("Name must not start with number"));
+        if (checkUnknown) Checker.Validate(errors, value.ToLower() == User.NAME_UNKNOWN.ToLower(), Errors.DEFAULT.SetID(id).SetInfo("Name forbidden"));
+        Checker.Validate(errors, !Checker.IsAlphaNum(value), Errors.DEFAULT.SetID(id).SetInfo("Name must be alphanumeric"));
+        Checker.Validate(errors, value.Length > 0 && char.IsDigit(value[0]), Errors.DEFAULT.SetID(id).SetInfo("Name must not start with number"));
         return errors;
     }
     public static string AssertName(string? value, bool checkUnknown = true, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateName(value, checkUnknown, id), exception ?? EXCEPTION.VALUES)!;
+        return Checker.Assert(value, ValidateName(value, checkUnknown, id), exception ?? Exceptions.VALUES)!;
     }
 
     public static List<Error> ValidateUnknown(User value, string id = "") => Checker.Validate(
-        User.UNKNOWN.Equals(value), ERROR.DEFAULT.SetID(id).SetInfo("User undefined!")
+        User.UNKNOWN.Equals(value), Errors.DEFAULT.SetID(id).SetInfo("User undefined!")
     );
     public static User AssertUnknown(User value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateUnknown(value, id), exception ?? EXCEPTION.VALUES);
+        return Checker.Assert(value, ValidateUnknown(value, id), exception ?? Exceptions.VALUES);
     }
 
     // Password ---------------------------------------------------------------------------------------------------------------------------
@@ -73,43 +73,43 @@ public static class UserValidator {
     [
         // Length 6-30:
         (new Func<string, bool>(x => string.IsNullOrEmpty(x) || x.Length < PASSWORD_MIN_LENGTH || PASSWORD_MAX_LENGTH < x.Length),
-        ERROR.DEFAULT.SetInfo("Length is not between I18N{min} and I18N{max}", new() { { "min", PASSWORD_MIN_LENGTH }, { "max", PASSWORD_MAX_LENGTH } })),
+        Errors.DEFAULT.SetInfo("Length is not between I18N{min} and I18N{max}", new() { { "min", PASSWORD_MIN_LENGTH }, { "max", PASSWORD_MAX_LENGTH } })),
         // Contains uppercase letter:
         (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[A-Z]")),
-        ERROR.DEFAULT.SetInfo("Does not contain uppercase letter")),
+        Errors.DEFAULT.SetInfo("Does not contain uppercase letter")),
         // Contains digit:
         (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[0-9]")),
-        ERROR.DEFAULT.SetInfo("Does not contain digit")),
+        Errors.DEFAULT.SetInfo("Does not contain digit")),
         // Contains special character:
         (new Func<string, bool>(x => string.IsNullOrEmpty(x) || !Regex.IsMatch(x, "[^a-zA-Z0-9]")),
-        ERROR.DEFAULT.SetInfo("Does not contain special character"))
+        Errors.DEFAULT.SetInfo("Does not contain special character"))
     ];
 
     public static bool IsPassword(string value) => Checker.IsPassword(value);
 
     public static List<Error> ValidateWeakPassword(string? value, string id = "") {
-        var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        var errors = Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
-        Checker.Validate(errors, value.Trim() == "", ERROR.EMPTY.SetID(id));
+        Checker.Validate(errors, value.Trim() == "", Errors.EMPTY.SetID(id));
         Checker.Validate(errors, value.Length < PASSWORD_MIN_LENGTH || PASSWORD_MAX_LENGTH < value.Length,
-            ERROR.DEFAULT.SetID(id)
+            Errors.DEFAULT.SetID(id)
             .SetInfo("Length is not between I18N{min} and I18N{max}", new() {{ "min", PASSWORD_MIN_LENGTH }, { "max", PASSWORD_MAX_LENGTH }})
         );
-        Checker.Validate(errors, !Checker.IsPassword(value), ERROR.DEFAULT.SetID(id).SetInfo("Invalid characters"));
+        Checker.Validate(errors, !Checker.IsPassword(value), Errors.DEFAULT.SetID(id).SetInfo("Invalid characters"));
         return errors;
     }
 
     public static string AssertWeakPassword(string? value, string id = "", AppException? exception = null)
     {
-        return Checker.Assert(value, ValidateWeakPassword(value, id), exception ?? EXCEPTION.VALUES)!;
+        return Checker.Assert(value, ValidateWeakPassword(value, id), exception ?? Exceptions.VALUES)!;
     }
 
     public static List<Error> ValidatePassword(string? value, string id = "")
     {
-        var errors = Checker.Validate(value == null, ERROR.UNDEFINED.SetID(id));
+        var errors = Checker.Validate(value == null, Errors.UNDEFINED.SetID(id));
         if (errors.Count > 0) return errors; value = $"{value}";
-        Checker.Validate(errors, value.Trim() == "", ERROR.EMPTY.SetID(id));
-        Checker.Validate(errors, !Checker.IsPassword(value), ERROR.DEFAULT.SetID(id).SetInfo("Invalid characters"));
+        Checker.Validate(errors, value.Trim() == "", Errors.EMPTY.SetID(id));
+        Checker.Validate(errors, !Checker.IsPassword(value), Errors.DEFAULT.SetID(id).SetInfo("Invalid characters"));
         foreach (var (invalid, error) in PASSWORD_RULES)
         {
             Checker.Validate(errors, invalid(value), error.SetID(id));
@@ -119,25 +119,25 @@ public static class UserValidator {
 
     public static string AssertPassword(string? value, string id = "", AppException? exception = null)
     {
-        return Checker.Assert(value, ValidatePassword(value, id), exception ?? EXCEPTION.VALUES)!;
+        return Checker.Assert(value, ValidatePassword(value, id), exception ?? Exceptions.VALUES)!;
     }
 
     public static List<Error> ValidateConfirmPassword(string value, string password, string id = "") {
         List<Error> errors = [];
-        Checker.Validate(errors, value.Trim() == "", ERROR.EMPTY.SetID(id));
-        Checker.Validate(errors, value != password, ERROR.NOT_MATCH().SetID(id));
+        Checker.Validate(errors, value.Trim() == "", Errors.EMPTY.SetID(id));
+        Checker.Validate(errors, value != password, Errors.NOT_MATCH().SetID(id));
         return errors;
     }
     public static string AssertConfirmPassword(string value, string password, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateConfirmPassword(value, password, id), exception ?? EXCEPTION.VALUES);
+        return Checker.Assert(value, ValidateConfirmPassword(value, password, id), exception ?? Exceptions.VALUES);
     }
 
     // Skin -------------------------------------------------------------------------------------------------------------------------------
-    public static List<Error> ValidateSkin(SKIN? value, string id = "") => Checker.Validate(
-        value == null, ERROR.UNDEFINED.SetID(id)
+    public static List<Error> ValidateSkin(Skin? value, string id = "") => Checker.Validate(
+        value == null, Errors.UNDEFINED.SetID(id)
     );
-    public static SKIN AssertSkin(SKIN? value, string id = "", AppException? exception = null) {
-        return (SKIN) Checker.Assert(value, ValidateSkin(value, id), exception ?? EXCEPTION.VALUES)!;
+    public static Skin AssertSkin(Skin? value, string id = "", AppException? exception = null) {
+        return (Skin) Checker.Assert(value, ValidateSkin(value, id), exception ?? Exceptions.VALUES)!;
     }
     
     // Registered user --------------------------------------------------------------------------------------------------------------------
@@ -150,21 +150,21 @@ public static class UserValidator {
         return errors;
     }
     public static User Assert(User? value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, Validate(value, id), exception ?? EXCEPTION.VALUES)!;
+        return Checker.Assert(value, Validate(value, id), exception ?? Exceptions.VALUES)!;
     }
 
     // Connection -------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateConnectionType(Connection value, string id = "") => Checker.Validate(
         value.GetType() != typeof(Connection),
-        ERROR.DEFAULT.SetID(id).SetInfo("Connection type invalid!")
+        Errors.DEFAULT.SetID(id).SetInfo("Connection type invalid!")
     );
     public static Connection AssertConnectionType(Connection value, string id = "", AppException? exception = null) {
-        return Checker.Assert(value, ValidateConnectionType(value, id), exception ?? EXCEPTION.VALUES);
+        return Checker.Assert(value, ValidateConnectionType(value, id), exception ?? Exceptions.VALUES);
     }
 
     // Device -----------------------------------------------------------------------------------------------------------------------------
-    public static List<Error> ValidateDeviceType(DEVICE_TYPE? value, string id = "") => Checker.ValidateUndefined(value, id);
-    public static DEVICE_TYPE AssertDeviceType(DEVICE_TYPE? value, string id = "", AppException? exception = null) {
-        return (DEVICE_TYPE)Checker.Assert(value, ValidateDeviceType(value, id), exception ?? EXCEPTION.VALUES)!;
+    public static List<Error> ValidateDeviceType(DeviceType? value, string id = "") => Checker.ValidateUndefined(value, id);
+    public static DeviceType AssertDeviceType(DeviceType? value, string id = "", AppException? exception = null) {
+        return (DeviceType)Checker.Assert(value, ValidateDeviceType(value, id), exception ?? Exceptions.VALUES)!;
     }
 }

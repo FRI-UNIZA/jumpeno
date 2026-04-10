@@ -132,5 +132,5 @@ public partial class DropDown {
     public async Task JS_OnResize(WindowResizeEvent e) => await Close();
 
     [JSInvokable]
-    public async Task JS_OnKeyDown(WindowKeyEvent e) { if (e.Key == KEYBOARD.ESC) await Close(); }
+    public async Task JS_OnKeyDown(WindowKeyEvent e) { if (e.Key == KeyBoard.ESC) await Close(); }
 }

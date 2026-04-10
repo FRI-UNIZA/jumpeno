@@ -8,7 +8,7 @@ public partial class InputComponent<T> {
     public const string CLASS_CONTAINER = "input-container";
     public const string CLASS_INPUT_ELEMENT = "input-element";
     // Delimiter:
-    public const NUMBER_DELIMITER DEFAULT_DELIMITER = NUMBER_DELIMITER.COMMA;
+    public const NumberDelimeter DEFAULT_DELIMITER = NumberDelimeter.COMMA;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -18,7 +18,7 @@ public partial class InputComponent<T> {
     [Parameter]
     public bool Autocomplete { get; set; } = false;
     [Parameter]
-    public NUMBER_DELIMITER Delimiter { get; set; } = DEFAULT_DELIMITER;
+    public NumberDelimeter Delimiter { get; set; } = DEFAULT_DELIMITER;
     [Parameter]
     public RenderFragment? Icon { get; set; } = null;
     [Parameter]
@@ -41,8 +41,8 @@ public partial class InputComponent<T> {
 
     protected string? ComputeInputMode() {
         switch (ViewModel.Type) {
-            case INPUT_TYPE.LONG:
-            case INPUT_TYPE.DOUBLE:
+            case InputType.LONG:
+            case InputType.DOUBLE:
                 return "text";
         }
         return null;
@@ -50,8 +50,8 @@ public partial class InputComponent<T> {
 
     protected string ComputeAutocomplete() {
         switch (ViewModel.Type) {
-            case INPUT_TYPE.LONG:
-            case INPUT_TYPE.DOUBLE:
+            case InputType.LONG:
+            case InputType.DOUBLE:
                 return "off";
         }
         return Autocomplete ? "on" : "off";
@@ -106,7 +106,7 @@ public partial class InputComponent<T> {
 
     private string FormatValue(T value) {
         var val = $"{value}";
-        if (ViewModel.Type == INPUT_TYPE.DOUBLE) {
+        if (ViewModel.Type == InputType.DOUBLE) {
             val = val.Replace(".", DELIMITER);
             val = val.Replace(",", DELIMITER);
 
@@ -131,7 +131,7 @@ public partial class InputComponent<T> {
                     throw new InvalidDataException();
                 }
                 if (ViewModel.MaxLength is not null) {
-                    if (ViewModel.Type == INPUT_TYPE.DOUBLE) {
+                    if (ViewModel.Type == InputType.DOUBLE) {
                         var index = value.IndexOf(DELIMITER);
                         if (index >= 0) {
                             var val = value.Substring(0, index);
@@ -146,14 +146,14 @@ public partial class InputComponent<T> {
                     }
                 }
 
-                if (ViewModel.Type == INPUT_TYPE.TEXT) {
+                if (ViewModel.Type == InputType.TEXT) {
                     if (ViewModel.TextCheck != null && !ViewModel.TextCheck(value)) {
                         throw new InvalidDataException();
                     }
                     InputValue = value;
                     FinalValue = (string)(object) ViewModel.ApplyTextMode((T)(object)value)!;
-                } else if (ViewModel.Type == INPUT_TYPE.LONG || ViewModel.Type == INPUT_TYPE.DOUBLE) {
-                    var isDecimal = ViewModel.Type == INPUT_TYPE.DOUBLE;
+                } else if (ViewModel.Type == InputType.LONG || ViewModel.Type == InputType.DOUBLE) {
+                    var isDecimal = ViewModel.Type == InputType.DOUBLE;
 
                     if (value.StartsWith("00") || value.StartsWith("-00")) {
                         throw new InvalidDataException();
@@ -213,11 +213,11 @@ public partial class InputComponent<T> {
         var val = FinalValue;
         var changedValue = ViewModel.Value;
         try {
-            if (ViewModel.Type == INPUT_TYPE.TEXT) {
+            if (ViewModel.Type == InputType.TEXT) {
                 changedValue = (T)(object) val;
-            } else if (ViewModel.Type == INPUT_TYPE.LONG || ViewModel.Type == INPUT_TYPE.DOUBLE) {
+            } else if (ViewModel.Type == InputType.LONG || ViewModel.Type == InputType.DOUBLE) {
 
-                var isDecimal = ViewModel.Type == INPUT_TYPE.DOUBLE;
+                var isDecimal = ViewModel.Type == InputType.DOUBLE;
 
                 if (val == "" || val == "-" || (isDecimal && (val == DELIMITER || val == $"-{DELIMITER}"))) {
                     val = isDecimal ? Precision.ToStringDouble((double)(object) ViewModel.ClearValue!) : $"{ViewModel.ClearValue}";
@@ -277,7 +277,7 @@ public partial class InputComponent<T> {
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e) {
-        if (e.Key == KEYBOARD.ENTER) await ViewModel.OnEnter.Invoke(new(
+        if (e.Key == KeyBoard.ENTER) await ViewModel.OnEnter.Invoke(new(
             FinalValue, FinalValue,
             ViewModel.Value, ViewModel.Value
         ));

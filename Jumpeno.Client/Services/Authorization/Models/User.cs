@@ -29,7 +29,7 @@ public class User {
     public Guid? ID { get; private set; }
     public string? Email { get; private set; }
     public string Name { get; private set; }
-    public SKIN Skin { get; set; }
+    public Skin Skin { get; set; }
     public bool Activated { get; private set; }
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
@@ -42,17 +42,17 @@ public class User {
     // Generators -------------------------------------------------------------------------------------------------------------------------
     public static Guid GenerateID() => Guid.NewGuid();
     public static string GenerateName() => DEFAULT_NAMES[new Random().Next(DEFAULT_NAMES.Length)];
-    public static SKIN GenerateSkin() => (SKIN) new Random().Next(Enum.GetValues(typeof(SKIN)).Length);
+    public static Skin GenerateSkin() => (Skin) new Random().Next(Enum.GetValues(typeof(Skin)).Length);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    private User(Guid? id, string? email, string name, SKIN skin, bool activated) {
+    private User(Guid? id, string? email, string name, Skin skin, bool activated) {
         ID = id;
         Email = email;
         Name = UserValidator.AssertName(name, checkUnknown: false);
         Skin = UserValidator.AssertSkin(skin);
         Activated = activated;
     }
-    public User(Guid id, string email, string name, SKIN skin, bool activated) : this((Guid?) id, email, name, skin, activated) {}
+    public User(Guid id, string email, string name, Skin skin, bool activated) : this((Guid?) id, email, name, skin, activated) {}
     public User(string name) : this(null, null, name, default, true) {}
 }

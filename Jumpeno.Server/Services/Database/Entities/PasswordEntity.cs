@@ -53,7 +53,7 @@ public class PasswordEntity {
         // 1) Validation:
         var errors = UserValidator.ValidateID(id, idID);
         errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        Checker.Assert(errors, Exceptions.VALUES);
         // 2) Create record:
         var salt = GenerateSalt();
         var record = new PasswordEntity() {
@@ -81,7 +81,7 @@ public class PasswordEntity {
         // 1) Validation:
         var errors = UserValidator.ValidateID(id, idID);
         errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        Checker.Assert(errors, Exceptions.VALUES);
         // 2) Update record:
         var ctx = await DB.Context();
         var salt = GenerateSalt();

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKIN Skin)> {
+public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Skin Skin)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const double IMMORTAL_MS = 2000; // ms
     // Size:
@@ -88,9 +88,9 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     public Body() : this(false, false, false, 0, DEFAULT_POSITION, DEFAULT_DIRECTION, null, new(DEFAULT_DIRECTION)) {}
 
     // Movement ---------------------------------------------------------------------------------------------------------------------------
-    private void ChangeDirection(GAME_CONTROLS key, bool pressed) {
+    private void ChangeDirection(GameControls key, bool pressed) {
         if (!pressed) direction.X = 0;
-        else direction.X = key == GAME_CONTROLS.LEFT ? -1 : 1;
+        else direction.X = key == GameControls.LEFT ? -1 : 1;
     }
 
     private float ComputeNextX(double deltaT) => (float)(Center.X + deltaT * Direction.X * SPEED);
@@ -192,7 +192,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
             Collision.Resolve(update.Game.Map.Shrink.Rect, position, ResolveCollision);
         // 3.2) Resolve jump height:
         if (JumpFinishY != null)
-            Collision.Resolve((float) JumpFinishY, POSITION.TOP, position, ResolveCollision);
+            Collision.Resolve((float)JumpFinishY, PositionDir.TOP, position, ResolveCollision);
         // 3.3) Resolve tile collisions:
         var moveBox = Collision.GetMoveBox(LastPosition, position);
         List<Tile> tiles = update.Game.Map.GetCollidingTiles(moveBox);
@@ -218,13 +218,13 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
         if (!Alive) return updated;
         foreach (var control in update.Controls) {
             switch (control.Key) {
-                case GAME_CONTROLS.LEFT:
-                case GAME_CONTROLS.RIGHT:
+                case GameControls.LEFT:
+                case GameControls.RIGHT:
                     if (KeyUpdateGuard.Update(
                         update, () => ChangeDirection(control.Key, control.Pressed)
                     )) updated = true;
                 break;
-                case GAME_CONTROLS.SPACE:
+                case GameControls.SPACE:
                     if (IsJumping) {
                         PendingJump = (update, DateTime.UtcNow);
                         break;
@@ -265,7 +265,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
 
     private bool StateUpdate(StateUpdate update) {
         switch (update.State) {
-            case GAME_STATE.PAUSE:
+            case GameStates.PAUSE:
                 direction.X = 0;
                 Animation.UpdateDirection(direction);
             return true;
@@ -276,7 +276,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, SKI
     public void ResetUpdateGuards() => KeyUpdateGuard.Reset();
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    public async Task<bool> Render(Canvas2DContext ctx, (Game Game, SKIN Skin) @params) {
+    public async Task<bool> Render(Canvas2DContext ctx, (Game Game, Skin Skin) @params) {
         var (game, skin) = @params;
         return await Animation.Render(ctx, (game, skin, this));
     }

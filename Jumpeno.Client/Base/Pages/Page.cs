@@ -15,8 +15,8 @@ public class Page : ComponentBase, IAsyncDisposable {
     public BaseTheme AppTheme { get; set; } = null!;
 
     // Current page -----------------------------------------------------------------------------------------------------------------------
-    public static Page Current => RequestStorage.Get<Page>(REQUEST_STORAGE.PAGE) ?? new Error404Page();
-    private static void SetCurrent(Page page) => RequestStorage.Set(REQUEST_STORAGE.PAGE, page);
+    public static Page Current => RequestStorage.Get<Page>(RequestStorages.PAGE) ?? new Error404Page();
+    private static void SetCurrent(Page page) => RequestStorage.Set(RequestStorages.PAGE, page);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
@@ -52,31 +52,31 @@ public class Page : ComponentBase, IAsyncDisposable {
     }
 
     // Roles ------------------------------------------------------------------------------------------------------------------------------
-    public static ROLE[] Roles(Type? type) {
+    public static Role[] Roles(Type? type) {
         if (type == null) return [];
         var attr = type.GetField(ROLES_NAME);
         if (attr == null) return [];
-        ROLE[]? roles = (ROLE[]?) attr.GetValue(null);
+        Role[]? roles = (Role[]?) attr.GetValue(null);
         return roles ?? [];
     }
-    public static ROLE[] Roles(RenderFragment? body) {
+    public static Role[] Roles(RenderFragment? body) {
         if (body == null) return [];
         return Roles(Type(body));
     }
-    public static ROLE[] Roles(string url) => Roles(Type(url));
+    public static Role[] Roles(string url) => Roles(Type(url));
 
-    public static ROLE[] RolesBlock(Type? type) {
+    public static Role[] RolesBlock(Type? type) {
         if (type == null) return [];
         var attr = type.GetField(ROLES_BLOCK_NAME);
         if (attr == null) return [];
-        ROLE[]? roles = (ROLE[]?) attr.GetValue(null);
+        Role[]? roles = (Role[]?) attr.GetValue(null);
         return roles ?? [];
     }
-    public static ROLE[] RolesBlock(RenderFragment? body) {
+    public static Role[] RolesBlock(RenderFragment? body) {
         if (body == null) return [];
         return RolesBlock(Type(body));
     }
-    public static ROLE[] RolesBlock(string url) => RolesBlock(Type(url));
+    public static Role[] RolesBlock(string url) => RolesBlock(Type(url));
 
     // Useful methods ---------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -113,7 +113,7 @@ public class Page : ComponentBase, IAsyncDisposable {
         SetCurrent(this);
         OnPageInitialized();
         if (AppEnvironment.IsServer) return;
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.PAGE, 0, 0);
     }
     protected override sealed Task OnInitializedAsync() => LifeLock.TryExclusive(
         async () => {

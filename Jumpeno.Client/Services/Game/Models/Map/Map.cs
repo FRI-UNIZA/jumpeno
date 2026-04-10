@@ -164,9 +164,9 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
     private readonly PreRenderer<Map> PreRendererBG;
-    private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
+    private static PreRenderer<Map> InitPrerendererBG() => new(CanvasType.MAP_BACKGROUND, PreRenderBG, ApplyRender);
     private readonly PreRenderer<Map> PreRendererTiles;
-    private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+    private static PreRenderer<Map> InitPrerendererTiles() => new(CanvasType.MAP_TILES, PreRenderTiles, ApplyRender);
 
     private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
     {

@@ -2,9 +2,9 @@ namespace Jumpeno.Client.ViewModels;
 
 public class InputViewModel<T> : FormViewModel {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly INPUT_TYPE Type;
+    public readonly InputType Type;
     // Input:
-    public readonly INPUT_TEXT_MODE TextMode;
+    public readonly InputTextMode TextMode;
     public readonly bool Trim;
     public readonly Predicate<string>? TextCheck;
     public readonly int? MaxLength;
@@ -68,12 +68,12 @@ public class InputViewModel<T> : FormViewModel {
     public InputViewModel(InputViewModelDoubleParams @params) : this((InputViewModelParams<T>)(object) @params) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
-    private static INPUT_TYPE InitType(InputViewModelParams<T> @params) {
+    private static InputType InitType(InputViewModelParams<T> @params) {
         var paramsType = @params.GetType();
-        if (paramsType == typeof(InputViewModelTextParams)) return INPUT_TYPE.TEXT;
-        else if (paramsType == typeof(InputViewModelLongParams)) return INPUT_TYPE.LONG;
-        else if (paramsType == typeof(InputViewModelDoubleParams)) return INPUT_TYPE.DOUBLE;
-        else return INPUT_TYPE.TEXT;
+        if (paramsType == typeof(InputViewModelTextParams)) return InputType.TEXT;
+        else if (paramsType == typeof(InputViewModelLongParams)) return InputType.LONG;
+        else if (paramsType == typeof(InputViewModelDoubleParams)) return InputType.DOUBLE;
+        else return InputType.TEXT;
     }
     private static int InitDecimals(InputViewModelParams<T> @params) {
         if (@params.GetType() == typeof(InputViewModelDoubleParams)) {
@@ -131,18 +131,18 @@ public class InputViewModel<T> : FormViewModel {
         return [new(default!, false), new(default!, false)];
     }
     public T ApplyTextMode(T value) {
-        if (Type == INPUT_TYPE.TEXT) {
+        if (Type == InputType.TEXT) {
             switch (TextMode) {
-                case INPUT_TEXT_MODE.LOWERCASE:
+                case InputTextMode.LOWERCASE:
                     return (T)(object)value!.ToString()!.ToLower();
-                case INPUT_TEXT_MODE.UPPERCASE:
+                case InputTextMode.UPPERCASE:
                     return (T)(object)value!.ToString()!.ToUpper();
             }
         }
         return value;
     }
     public T ApplyTrim(T value) {
-        if (Type == INPUT_TYPE.TEXT && Trim) {
+        if (Type == InputType.TEXT && Trim) {
             return (T)(object) value!.ToString()!.Trim();
         }
         return value;
@@ -151,7 +151,7 @@ public class InputViewModel<T> : FormViewModel {
         var valString = $"{value}";
         T valResult;
         try {
-            if (Type == INPUT_TYPE.LONG) {
+            if (Type == InputType.LONG) {
                 var val = long.Parse(valString);
                 var minValue = (long)(object) MinValue!;
                 var maxValue = (long)(object) MaxValue!;
@@ -165,7 +165,7 @@ public class InputViewModel<T> : FormViewModel {
 
                 valResult = (T)(object) val;
 
-            } else if (Type == INPUT_TYPE.DOUBLE) {
+            } else if (Type == InputType.DOUBLE) {
                 var val = Precision.ParseDouble(valString);
                 var minValue = (double)(object) MinValue!;
                 var maxValue = (double)(object) MaxValue!;

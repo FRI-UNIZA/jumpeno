@@ -27,7 +27,7 @@ public class CookieStorageClient : CookieStorage
             cookie.Domain == Cookie.NormDomain(cookie.Domain),
             cookie.Path,
             cookie.Secure,
-            cookie.SameSite == SAME_SITE.UNSPECIFIED ? null : cookie.SameSite.String()
+            cookie.SameSite == SameSite.UNSPECIFIED ? null : cookie.SameSite.String()
         );
     }
 }

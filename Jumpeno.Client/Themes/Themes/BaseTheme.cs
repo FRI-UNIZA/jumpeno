@@ -156,7 +156,7 @@ public class BaseTheme {
     // Body -------------------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor BODY_BACKGROUND { get; }
     // Scrollbars:
-    public virtual SCROLLAREA_THEME BODY_SCROLL_THEME { get; }
+    public virtual ScrollAreaTheme BODY_SCROLL_THEME { get; }
     // Selection:
     public virtual RGBAColor BODY_SELECTION_COLOR { get; }
     public virtual RGBAColor BODY_SELECTION_BACKGROUND { get; }
@@ -168,7 +168,7 @@ public class BaseTheme {
 
     // NavMenu [mobile]:
     public virtual RGBAColor NAV_MENU_MOBILE_BUTTON_COLOR { get; }
-    public virtual SCROLLAREA_THEME NAV_MENU_MOBILE_SCROLL_THEME { get; }
+    public virtual ScrollAreaTheme NAV_MENU_MOBILE_SCROLL_THEME { get; }
 
     // NavMenu [mobile][highlight]:
     public virtual RGBAColor NAV_MENU_MOBILE_BUTTON_HIGHLIGHT_COLOR { get; }

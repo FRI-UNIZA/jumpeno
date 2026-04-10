@@ -10,5 +10,5 @@ public record AuthRefreshDTOR(
         errors.AddRange(TokenValidator.ValidateToken(RefreshToken, nameof(RefreshToken)));
         return errors;
     }
-    public AuthRefreshDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.SERVER);
+    public AuthRefreshDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.SERVER);
 }

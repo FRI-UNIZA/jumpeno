@@ -1,5 +1,5 @@
 namespace Jumpeno.Client.Constants;
 
-public class SCOPE {
+public class Scope {
     public const string GLOBAL = "global";
 }

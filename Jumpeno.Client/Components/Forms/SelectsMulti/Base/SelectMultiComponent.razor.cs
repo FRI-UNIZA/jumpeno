@@ -31,15 +31,15 @@ public partial class SelectMultiComponent<T> {
     [Parameter]
     public string ModalClass { get; set; } = "";
     [Parameter]
-    public MODAL_SURFACE? ModalSurface { get; set; } = MODAL_SURFACE.FLOATING;
+    public ModalSurface? MSurface { get; set; } = ModalSurface.FLOATING;
     // Search:
     [Parameter]
-    public FORM_SIZE? SearchSize { get; set; } = FORM_SIZE.S;
+    public FormSize? SearchSize { get; set; } = FormSize.S;
     [Parameter]
-    public FORM_ALIGN? SearchAlign { get; set; } = FORM_ALIGN.LEFT;
+    public FormAlign? SearchAlign { get; set; } = FormAlign.LEFT;
     // Options:
     [Parameter]
-    public SELECT_OPTION_ALIGN? OptionAlign { get; set; } = SELECT_OPTION_ALIGN.LEFT;
+    public SelectOptionAlign? OptionAlign { get; set; } = SelectOptionAlign.LEFT;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
@@ -112,7 +112,7 @@ public partial class SelectMultiComponent<T> {
 
     // Search -----------------------------------------------------------------------------------------------------------------------------
     private Task Search(string value) => UI.Lock.TryExclusive(async () => {
-        await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
+        await PageLoader.Show(PageLoaderTask.SEARCH);
         MinSearchTime.Start();
         List<SelectOption<T>> newOptions = [];
         foreach (var option in ViewModel.Options) {
@@ -125,7 +125,7 @@ public partial class SelectMultiComponent<T> {
         StateHasChanged();
         await SearchTCS.Task;
         await MinSearchTime.Task;
-        await PageLoader.Hide(PAGE_LOADER_TASK.SEARCH);
+        await PageLoader.Hide(PageLoaderTask.SEARCH);
     });
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
@@ -140,14 +140,14 @@ public partial class SelectMultiComponent<T> {
     });
 
     private Task ClearSelect() => ModalRef.Close(async () => {
-        await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.MODAL, true);
         ClosedAs = SELECT_MULTI_CLOSE.CLEAR;
         LastValue = new(ViewModel.Value);
         ValueChanged = ViewModel.SetValue(new Dictionary<string, SelectOption<T>>());
     });
 
     private Task ConfirmSelect() => ModalRef.Close(async () => {
-        await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.MODAL, true);
         ClosedAs = SELECT_MULTI_CLOSE.OK;
         LastValue = new(ViewModel.Value);
         ValueChanged = ViewModel.SetValue(DisplayedValue);

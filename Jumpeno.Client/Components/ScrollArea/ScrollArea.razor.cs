@@ -18,12 +18,12 @@ public partial class ScrollArea {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
     [Parameter]
-    public SCROLLAREA_THEME? Theme { get; set; }
+    public ScrollAreaTheme? Theme { get; set; }
     // Next parameters can only be set once:
     [Parameter]
     public string ID { get; set; }
     [Parameter]
-    public SCROLLAREA_AUTOHIDE AutoHide { get; set; }
+    public ScrollAreaAutoHide AutoHide { get; set; }
     [Parameter]
     public bool OverflowX { get; set; }
     [Parameter]
@@ -34,14 +34,14 @@ public partial class ScrollArea {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<string, ScrollArea> Areas =>
-        RequestStorage.Access<Dictionary<string, ScrollArea>>(REQUEST_STORAGE.SCROLLAREA_AREAS, []);
+        RequestStorage.Access<Dictionary<string, ScrollArea>>(RequestStorages.SCROLLAREA_AREAS, []);
     // Listeners:
     private Action<ScrollAreaPosition>[] Listeners = [];
     private static Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners =>
-        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(REQUEST_STORAGE.SCROLLAREA_REGISTER_LISTENERS, []);
+        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(RequestStorages.SCROLLAREA_REGISTER_LISTENERS, []);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");
+    private static string GetThemeString(ScrollAreaTheme theme) => theme.ToString()!.ToLower().Replace("_", "-");
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
@@ -49,7 +49,7 @@ public partial class ScrollArea {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {
         Theme = null;
-        AutoHide = SCROLLAREA_AUTOHIDE.NEVER;
+        AutoHide = ScrollAreaAutoHide.NEVER;
         OverflowX = true;
         OverflowY = true;
         Class = "";
@@ -62,12 +62,12 @@ public partial class ScrollArea {
             Areas.Add(ID, this);
             JS.InvokeVoid(
                 JSScrollArea.Activate, ID,
-                Theme is null ? null : GetThemeString((SCROLLAREA_THEME) Theme), AutoHide.StringLower(), OverflowX, OverflowY
+                Theme is null ? null : GetThemeString((ScrollAreaTheme) Theme), AutoHide.StringLower(), OverflowX, OverflowY
             );
             RegisterAreaListeners(ID);
         } else {
             if (Theme is null) return;
-            JS.InvokeVoid(JSScrollArea.Update, ID, GetThemeString((SCROLLAREA_THEME) Theme));
+            JS.InvokeVoid(JSScrollArea.Update, ID, GetThemeString((ScrollAreaTheme) Theme));
         }
     }
 
@@ -105,7 +105,7 @@ public partial class ScrollArea {
     }
 
     // Theme ------------------------------------------------------------------------------------------------------------------------------
-    public static void SetTheme(SCROLLAREA_THEME theme) {
+    public static void SetTheme(ScrollAreaTheme theme) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.SetTheme, GetThemeString(theme));
     }

@@ -74,7 +74,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
-        if (update.Game.State != GAME_STATE.SHRINKING) return false;
+        if (update.Game.State != GameStates.SHRINKING) return false;
         Timer += update.DeltaT;
         return true;
     }
@@ -87,7 +87,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
     private readonly PreRenderer<Game> PreRenderer;
-    private PreRenderer<Game> InitPrerenderer() => new(CANVAS.TILE_PATTERN, PreRender, ApplyRender);
+    private PreRenderer<Game> InitPrerenderer() => new(CanvasType.TILE_PATTERN, PreRender, ApplyRender);
     private async Task<bool> PreRender(Canvas2DContext ctx, Game game) {
         // 1) Initialize:
         var prerendered = false;
@@ -107,7 +107,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     }
     private async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Game game) {
         // 1) Check state & init:
-        if (game.State != GAME_STATE.SHRINKING || Level < 0) return false;
+        if (game.State != GameStates.SHRINKING || Level < 0) return false;
         var (source, ctx) = context; var rect = Rect;
 
         // 2) Highlight area color & size:

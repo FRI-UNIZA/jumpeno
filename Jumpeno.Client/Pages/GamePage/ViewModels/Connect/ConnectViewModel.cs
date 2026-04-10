@@ -36,9 +36,9 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         await URLCodeChangedLock.TryExclusive(async () => {
             if (
                 URLCodeChanged == null || !request && LastURLCode == URLCode ||
-                await PageLoader.IsActiveTask(PAGE_LOADER_TASK.NAVIGATION) ||
-                await PageLoader.IsActiveTask(PAGE_LOADER_TASK.ANIMATION) ||
-                await PageLoader.IsActiveTask(PAGE_LOADER_TASK.GAME_CONNECT)
+                await PageLoader.IsActiveTask(PageLoaderTask.NAVIGATION) ||
+                await PageLoader.IsActiveTask(PageLoaderTask.ANIMATION) ||
+                await PageLoader.IsActiveTask(PageLoaderTask.GAME_CONNECT)
             ) return;
             await URLCodeChanged.Invoke(URLCode);
             LastURLCode = URLCode;
@@ -109,7 +109,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     // Connect methods --------------------------------------------------------------------------------------------------------------------
     private async Task StartConnection(Func<Task> request) {
         Navigator.AllowOne();
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+        await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
         await ConnectLock.TryExclusive(async () => {
             if (!await HTTP.Try(async () => {
                 // 1) Authorization:
@@ -128,44 +128,44 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     private async Task CreateConnection<P>(string type, P dto) {
         // 0) Check connection:
-        if (IsConnected) throw EXCEPTION.DEFAULT;
+        if (IsConnected) throw Exceptions.DEFAULT;
         // 1) Create data URL:
         var q = new QueryParams();
             // 1.1) Add meta:
-            q.Set(HEADER.APP_VERSION, AppSettings.Version);
+            q.Set(Header.APP_VERSION, AppSettings.Version);
             // 1.2) Add DTO:
-            q.Set(GAME_HUB.DTO_TYPE, type);
-            q.Set(GAME_HUB.DTO, JsonSerializer.Serialize(dto));
-        var hubURL = URL.SetQueryParams(URL.ToAbsolute(GAME_HUB.URL), q);
+            q.Set(GameHubs.DTO_TYPE, type);
+            q.Set(GameHubs.DTO, JsonSerializer.Serialize(dto));
+        var hubURL = URL.SetQueryParams(URL.ToAbsolute(GameHubs.URL), q);
         // 2) Create HUB:
         HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
-            options.Headers[HEADER.ACCEPT_LANGUAGE] = I18N.Culture;
+            options.Headers[Header.ACCEPT_LANGUAGE] = I18N.Culture;
         }).Build();
         // 3) Add events:
-        HubConnection.On<Game>(GAME_HUB.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
-        HubConnection.On<GameActionResponseUpdate>(GAME_HUB.GAME_ACTION_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<GameActionResponseUpdate>(GAME_HUB.PLAYER_KICK_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<GameActionResponseUpdate>(GAME_HUB.PLAYER_READY_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<RoundUpdate>(GAME_HUB.ROUND_UPDATE, GameUpdate);
-        HubConnection.On<GamePlayUpdate>(GAME_HUB.GAME_PLAY_UPDATE, GameUpdate);
-        HubConnection.On<PlayerUpdate>(GAME_HUB.PLAYER_UPDATE, GameUpdate);
-        HubConnection.On<SpectatorUpdate>(GAME_HUB.SPECTATOR_UPDATE, GameUpdate);
-        HubConnection.On<PingUpdate>(GAME_HUB.PING_UPDATE, PingUpdate);
-        HubConnection.On<AppExceptionDTO>(GAME_HUB.ERROR, HandleErrors);
+        HubConnection.On<Game>(GameHubs.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.GAME_ACTION_RESPONSE_UPDATE, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.PLAYER_KICK_RESPONSE_UPDATE, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.PLAYER_READY_RESPONSE_UPDATE, GameResponse);
+        HubConnection.On<RoundUpdate>(GameHubs.ROUND_UPDATE, GameUpdate);
+        HubConnection.On<GamePlayUpdate>(GameHubs.GAME_PLAY_UPDATE, GameUpdate);
+        HubConnection.On<PlayerUpdate>(GameHubs.PLAYER_UPDATE, GameUpdate);
+        HubConnection.On<SpectatorUpdate>(GameHubs.SPECTATOR_UPDATE, GameUpdate);
+        HubConnection.On<PingUpdate>(GameHubs.PING_UPDATE, PingUpdate);
+        HubConnection.On<AppExceptionDTO>(GameHubs.ERROR, HandleErrors);
         HubConnection.Closed += OnConnectionClosed;
         // 4) Connect:
         await HubConnection.StartAsync();
         // 5) Check connection:
-        if (!IsConnected) throw EXCEPTION.DEFAULT;
+        if (!IsConnected) throw Exceptions.DEFAULT;
     }
 
     private async Task ConnectionSuccessful(Game game) {
         await ConnectLock.TryExclusive(async () => {
             try {
                 // 1) Show loader & check:
-                await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
-                if (HubConnection is null) throw EXCEPTION.DEFAULT;
-                if (HubConnection.ConnectionId is null) throw EXCEPTION.DEFAULT;
+                await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
+                if (HubConnection is null) throw Exceptions.DEFAULT;
+                if (HubConnection.ConnectionId is null) throw Exceptions.DEFAULT;
                 IsConnecting = true;
                 // 2) Authorization:
                 Authorization.OnSuccess();
@@ -186,7 +186,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 // 5) Set URL:
                 var state = GamePage.NavState.Get();
                 bool isCodeSet = URLCode != "";
-                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>(), replace: true, notify: NOTIFY.STATE);
+                if (isCodeSet) await Navigator.NavigateTo(I18N.Link<GamePage>(), replace: true, notify: NotifyType.STATE);
                 else await Navigator.SetQueryParams(new());
                 GamePage.NavState.Set(new GamePage.HistoryState(state.WasRedirect, Create));
                 Navigator.AllowOne();
@@ -194,12 +194,12 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                     URL.WithQuery(I18N.Link<GamePage>([GameVM.Game.Code]), ""),
                     replace: state.WasRedirect && isCodeSet,
                     state: GamePage.NavState.New(new GamePage.HistoryState(true, Create)),
-                    notify: NOTIFY.STATE
+                    notify: NotifyType.STATE
                 );
                 // 6) Update and render:
                 await OnConnect.Invoke(GameVM); Notify();
                 while (true) {
-                    if (Page.Current is not GamePage page) { Navigator.Refresh(); throw EXCEPTION.DEFAULT; }
+                    if (Page.Current is not GamePage page) { Navigator.Refresh(); throw Exceptions.DEFAULT; }
                     if (GamePage.GAME_VIEWS.Contains(page.View?.GetType())) break;
                     await Task.Delay(FIRST_RENDER_CHECK_INTERVAL);
                 }
@@ -208,7 +208,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 Navigator.AllowNone();
                 IsConnecting = false;
                 await DisposeGame();
-                Notification.Error(MESSAGE.DEFAULT.T);
+                Notification.Error(Messages.DEFAULT.T);
             } finally {
                 // 8) Finalize:
                 IsConnecting = false;
@@ -228,7 +228,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private async Task SendRequest(string action, object message) {
         await ConnectLock.TryExclusive(async () => {
             if (HubConnection is null) return;
-            await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+            await PageLoader.Show(PageLoaderTask.GAME_REQUEST);
             await HubConnection.SendAsync(action, message);
         });
     }
@@ -262,7 +262,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             // 2) Show error if any: 
             if (update.Exception is AppExceptionDTO e) ErrorHandler.Display(update.Exception.Exception);
             // 3) Hide loader after request:
-            await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+            await PageLoader.Hide(PageLoaderTask.GAME_REQUEST);
         });
     }
 
@@ -278,7 +278,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             // 3.2) Check if for me:
             if (!netUpdate.ResponseIDs.Contains(HubConnection.ConnectionId)) return;
             // 3.3) Hide loader after application:
-            await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+            await PageLoader.Hide(PageLoaderTask.GAME_REQUEST);
         });
     }
 
@@ -287,14 +287,14 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
         await ConnectLock.TryExclusive(async () => {
             if (HubConnection == null) return;
             Navigator.AllowNone();
-            await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+            await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
             if (exceptionDTO is null) {
                 await DisposeGame();
             } else {
                 // 1) Authorization:
                 var exception = await Authorization.OnError(exceptionDTO, DisposeGame) ?? exceptionDTO.Exception;
                 // 2) Disconnect:
-                if (exception.Code == CODE.DISCONNECT) await DisposeGame();
+                if (exception.Code == Codes.DISCONNECT) await DisposeGame();
                 // 3) Display errors:
                 ErrorHandler.Display(exception, Form);
             }
@@ -303,7 +303,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     private async Task OnConnectionClosed(Exception? e) {
-        if (e is not null) await HandleErrors(EXCEPTION.DISCONNECT.DTO);
+        if (e is not null) await HandleErrors(Exceptions.DISCONNECT.DTO);
     }
 
     // Disposal ---------------------------------------------------------------------------------------------------------------------------
@@ -329,8 +329,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     private async Task HideGameLoaders() {
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_CONNECT);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Hide(PageLoaderTask.GAME_CONNECT);
+        await PageLoader.Hide(PageLoaderTask.GAME_REQUEST);
         Navigator.AllowAny();
         Notify();
     }

@@ -10,7 +10,7 @@ public partial class GameButton {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public GAME_BUTTON_VARIANT Variant { get; set; } = GAME_BUTTON_VARIANT.PRIMARY;
+    public GameButtonVariant Variant { get; set; } = GameButtonVariant.PRIMARY;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {

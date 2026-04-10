@@ -12,7 +12,7 @@ public class HeadersMiddleware(RequestDelegate next) {
             .OfType<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()
             .FirstOrDefault();
         if (controllerActionDescriptor == null) return;
-        ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON;
+        ctx.Response.Headers.ContentType = ContentType.JSON;
     }
 
     // Invoke -----------------------------------------------------------------------------------------------------------------------------

@@ -2,12 +2,12 @@ namespace Jumpeno.Client.ViewModels;
 
 public class LoginPageViewModel(LoginPage page) {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public LOGIN_FORM Form { get; private set; } = LOGIN_FORM.USER;
+    public LoginFormType Form { get; private set; } = LoginFormType.USER;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public void Show(LOGIN_FORM form) {
+    public void Show(LoginFormType form) {
         Form = form;
         page.Notify();
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.PAGE, 0, 0);
     }
 }

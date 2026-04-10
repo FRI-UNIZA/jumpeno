@@ -11,14 +11,14 @@ public static class Auth {
     public static bool IsAnonymousUser => IsUser && !IsRegisteredUser;
     public static bool IsAdmin => Admin != null;
     public static bool IsLoggedIn => IsRegisteredUser || IsAdmin;
-    public static bool IsRole(ROLE role) {
+    public static bool IsRole(Role role) {
         switch (role) {
-            case ROLE.USER: return IsRegisteredUser;
-            case ROLE.ADMIN: return IsAdmin;
+            case Role.USER: return IsRegisteredUser;
+            case Role.ADMIN: return IsAdmin;
             default: return false;
         }
     }
-    public static bool IsRole(ROLE[] roles) {
+    public static bool IsRole(Role[] roles) {
         foreach (var role in roles) {
             if (IsRole(role)) return true;
         }
@@ -69,7 +69,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.AUTHENTICATION);
     }
 
     public static async Task<bool> TryLogInAdmin() {
@@ -78,7 +78,7 @@ public static class Auth {
             if (AppEnvironment.IsServer) return false;
             // 2) Read token:
             var q = URL.GetQueryParams();
-            var token = q.GetString(TOKEN_TYPE.REFRESH.String());
+            var token = q.GetString(TokenType.REFRESH.String());
             if (token == null) return false;
             // 3) Send request:
             try {
@@ -111,16 +111,16 @@ public static class Auth {
                 // 3.2.3) Reset profile:
                 await ResetAuthProfile(false);
                 // 3.2.4) Show notification:
-                if (e.Code == CODE.INVALID_TOKEN) Notification.Error(e.Message);
+                if (e.Code == Codes.INVALID_TOKEN) Notification.Error(e.Message);
                 // 3.2.5) Return fail:
                 return false;
             } finally {
                 // 4) Update URL:
-                q.Remove(TOKEN_TYPE.REFRESH.String());
+                q.Remove(TokenType.REFRESH.String());
                 await Navigator.SetQueryParams(q);
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.AUTHENTICATION);
     }
 
     public static async Task<bool> TryLogInToken() {
@@ -151,7 +151,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.AUTHENTICATION);
     }
 
     public static async Task Refresh(int iteration) {
@@ -159,13 +159,13 @@ public static class Auth {
             try {
                 StartProcessing();
                 // 1.1) Check iteration:
-                if (iteration > 1) throw EXCEPTION.INVALID_TOKEN;
+                if (iteration > 1) throw Exceptions.INVALID_TOKEN;
                 // 1.2) Request access token:
                 var response = await HTTP.Post<AuthRefreshDTOR>(API.BASE.AUTH_REFRESH);
                 // 1.3) Validate response:
                 response.Body.Assert();
                 // 1.4) Check if correct (across tabs):
-                var data = Token.Decode(response.Body.AccessToken) ?? throw EXCEPTION.INVALID_TOKEN;
+                var data = Token.Decode(response.Body.AccessToken) ?? throw Exceptions.INVALID_TOKEN;
                 if (data.sub != Token.Access.sub) Navigator.Refresh();
                 // 1.5) Invalidate origin:
                 await RequestInvalidate();
@@ -181,11 +181,11 @@ public static class Auth {
                 // 2.4) Navigate to login:
                 await Navigator.NavigateTo(I18N.Link<LoginPage>(), forceLoad: true);
                 // 2.5) Throw back:
-                throw EXCEPTION.NOT_AUTHENTICATED;
+                throw Exceptions.NOT_AUTHENTICATED;
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.AUTHENTICATION);
     }
 
     public static async Task LogOut() {
@@ -205,7 +205,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.AUTHENTICATION);
     }
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ public static class Auth {
         await UpdateLock.Exclusive(async () => {
             try {
                 if (processing) StartProcessing();
-                if (Token.Access.role == ROLE.USER) {
+                if (Token.Access.role == Role.USER) {
                     // 1.1) Load user profile:
                     response ??= await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
                     // 1.2) Validate response:
@@ -269,7 +269,7 @@ public static class Auth {
     public static async Task LoadProfile() {
         if (AppEnvironment.IsServer) return;
         var response = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
-        await Window.Lock(async () => await LoadAuthProfile(true, response), WINDOW_LOCK.AUTHENTICATION);
+        await Window.Lock(async () => await LoadAuthProfile(true, response), WindowLock.AUTHENTICATION);
     }
 
     private static async Task ResetAuthProfile(bool processing = true) {
@@ -282,12 +282,12 @@ public static class Auth {
     }
     public static async Task ResetProfile() {
         if (AppEnvironment.IsServer) return;
-        await Window.Lock(async () => await ResetAuthProfile(), WINDOW_LOCK.AUTHENTICATION);
+        await Window.Lock(async () => await ResetAuthProfile(), WindowLock.AUTHENTICATION);
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------
     private static void AssertInvalidToken(AppException e) {
-        if (e.Code == CODE.INVALID_TOKEN) return;
+        if (e.Code == Codes.INVALID_TOKEN) return;
         else throw e;
     }
     private static async Task RequestInvalidate() {

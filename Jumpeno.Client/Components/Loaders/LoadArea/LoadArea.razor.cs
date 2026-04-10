@@ -16,7 +16,7 @@ public partial class LoadArea {
     [Parameter]
     public required LoadAreaViewModel ViewModel { get; set; }
     [Parameter]
-    public required LOAD_AREA_TYPE Type { get; set; } = LOAD_AREA_TYPE.FOCUSABLE;
+    public required LoadAreaType Type { get; set; } = LoadAreaType.FOCUSABLE;
     [Parameter]
     public required string Label { get; set; }
     [Parameter]
@@ -54,7 +54,7 @@ public partial class LoadArea {
     private void StartLoading(LoadAreaViewModel.MessageStartData data) {
         try {
             if (IsDisposed) return;
-            if (Type == LOAD_AREA_TYPE.NO_FOCUS) { StateHasChanged(); return; }
+            if (Type == LoadAreaType.NO_FOCUS) { StateHasChanged(); return; }
             RestoreFocusID = ActionHandler.ActiveID() ?? ViewModel.ID;
             if (RestoreFocusID == "") RestoreFocusID = ViewModel.ID;
             var focusChildID = ActionHandler.FocusedChildID($"#{ViewModel.ID}");
@@ -68,7 +68,7 @@ public partial class LoadArea {
     private async Task FinishLoading(LoadAreaViewModel.MessageFinishData data) {
         try {
             if (IsDisposed) return;
-            if (Type == LOAD_AREA_TYPE.NO_FOCUS) { StateHasChanged(); return; }
+            if (Type == LoadAreaType.NO_FOCUS) { StateHasChanged(); return; }
             try {
                 if (!data.RestoreFocus) { StateHasChanged(); return; }
                 var hasFocus = ViewModel.HasFocus();

@@ -13,11 +13,11 @@ public partial class FormLabel {
     public required OneOf<string, List<string>> Label { get; set; }
     // Style:
     [Parameter]
-    public FORM_VARIANT? Variant { get; set; } = FORM_VARIANT.PRIMARY;
+    public FormVariant? Variant { get; set; } = FormVariant.PRIMARY;
     [Parameter]
-    public FORM_SIZE? Size { get; set; } = FORM_SIZE.M;
+    public FormSize? Size { get; set; } = FormSize.M;
     [Parameter]
-    public FORM_ALIGN? Align { get; set; } = null;
+    public FormAlign? Align { get; set; } = null;
     // Content:
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

@@ -13,7 +13,7 @@ public partial class Container {
     [Parameter]
     public string? ID { get; set; }
     [Parameter]
-    public CONTAINER_TYPE Type { get; set; } = CONTAINER_TYPE.NONE;
+    public ContainerType Type { get; set; } = ContainerType.NONE;
     [Parameter]
     public bool Boundary { get; set; } = false;
     [Parameter]
@@ -41,7 +41,7 @@ public partial class Container {
     private RenderFragment Render() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, Tag);
-        builder.AddAttribute(sequence++, SCOPE.GLOBAL);
+        builder.AddAttribute(sequence++, Scope.GLOBAL);
         builder.AddAttribute(sequence++, "class", ComputeClass());
         builder.AddAttribute(sequence++, "style", Style);
         if (ID is not null) builder.AddAttribute(sequence++, "id", ID);

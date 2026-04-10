@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Constants;
 
-public static class KEYBOARD {
+public static class KeyBoard {
     public const string ESC = "Escape";
     public const string ENTER = "Enter";
 }

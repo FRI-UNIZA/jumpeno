@@ -15,7 +15,7 @@ public partial class DesignerPage {
     private readonly List<DesignerSurface> Surfaces; 
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private static CSSClass ClassSurface(SURFACE surface) => new CSSClass(CLASS_SURFACE).Set(surface);
+    private static CSSClass ClassSurface(Surface surface) => new CSSClass(CLASS_SURFACE).Set(surface);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public DesignerPage() {
@@ -23,7 +23,7 @@ public partial class DesignerPage {
         Dictionary<string, DesignerSurface> index = [];
         Surfaces = [];
         // 2) Store surfaces:
-        foreach (SURFACE surface in Enum.GetValues(typeof(SURFACE))) {
+        foreach (Surface surface in Enum.GetValues(typeof(Surface))) {
             // 2.1) Create structure:
             var name = $"{surface}";
             var ds = new DesignerSurface(surface);

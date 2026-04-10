@@ -9,10 +9,10 @@ public static class Checker {
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public static List<Error> Validate(bool condition, Error? error = null) {
         List<Error> errors = [];
-        Validate(errors, condition, error ?? ERROR.DEFAULT);
+        Validate(errors, condition, error ?? Errors.DEFAULT);
         return errors;
     }
-    public static void Validate(List<Error> errors, bool condition, Error? error = null) { if (condition) errors.Add(error ?? ERROR.DEFAULT); }
+    public static void Validate(List<Error> errors, bool condition, Error? error = null) { if (condition) errors.Add(error ?? Errors.DEFAULT); }
 
     // Assert -----------------------------------------------------------------------------------------------------------------------------
     private static T Assert<T>(T value, List<Error> errors, AppException exception, bool force) {
@@ -21,7 +21,7 @@ public static class Checker {
         var e = errors.Count == 1 ? new AppException(exception).SetInfo(errors[0].Info) : new AppException(exception);
         throw e.SetErrors(errors);
     }
-    public static T Assert<T>(T value, List<Error> errors, AppException? exception = null) => Assert(value, errors, exception ?? EXCEPTION.DEFAULT, false);
+    public static T Assert<T>(T value, List<Error> errors, AppException? exception = null) => Assert(value, errors, exception ?? Exceptions.DEFAULT, false);
     public static void Assert(List<Error> errors, AppException? exception = null) => Assert(true, errors, exception);
     // NOTE: Custom exception is used even for single error:
     public static T AssertWith<T>(T value, List<Error> errors, AppException exception) => Assert(value, errors, exception, true);
@@ -65,13 +65,13 @@ public static class Checker {
     public static List<Error> ValidateUndefined(object? value, string id) {
         return Validate(
             value == null,
-            ERROR.DEFAULT.SetID(id).SetInfo(FIELD.UNDEFINED)
+            Errors.DEFAULT.SetID(id).SetInfo(Fields.UNDEFINED)
         );
     }
     public static List<Error> ValidateEmpty(object? value, string id) {
         return Validate(
             value == null || (value is string s && s.Trim() == ""),
-            ERROR.DEFAULT.SetID(id).SetInfo(FIELD.EMPTY)
+            Errors.DEFAULT.SetID(id).SetInfo(Fields.EMPTY)
         );
     }
 
@@ -152,7 +152,7 @@ public static class Checker {
     // Email ------------------------------------------------------------------------------------------------------------------------------
     public static bool IsValidEmail(string value) {
         if (string.IsNullOrWhiteSpace(value)) return false;
-        if (value.Length > EMAIL.MAX_LENGTH) return false;
+        if (value.Length > Email.MAX_LENGTH) return false;
         string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
         return Regex.IsMatch(value, pattern);
     }

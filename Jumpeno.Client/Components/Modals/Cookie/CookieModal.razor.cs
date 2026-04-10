@@ -34,16 +34,16 @@ public partial class CookieModal {
             Form: FORM,
             ID: nameof(SwitchFunctionalVM),
             DefaultValue: true,
-            OnChange: new(e => UpdateSelection(typeof(COOKIE.PREFERENCES), e.Value))
+            OnChange: new(e => UpdateSelection(typeof(Cookies.Preference), e.Value))
         ));
         SwitchSecurityVM = new(new(
             Form: FORM,
             ID: nameof(SwitchSecurityVM),
             DefaultValue: true,
-            OnChange: new(e => UpdateSelection(typeof(COOKIE.SECURITY), e.Value))
+            OnChange: new(e => UpdateSelection(typeof(Cookies.Security), e.Value))
         ));
     }
-    protected override void OnComponentInitialized() => RequestStorage.Set(REQUEST_STORAGE.COOKIE_MODAL, this);
+    protected override void OnComponentInitialized() => RequestStorage.Set(RequestStorages.COOKIE_MODAL, this);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
@@ -64,7 +64,7 @@ public partial class CookieModal {
             // Init:
             if (unclosable && acceptedCookies.Count <= 0)
             {
-                acceptedCookies = COOKIE.TYPES;
+                acceptedCookies = Cookies.TYPES;
                 Initial = [];
             }
             else
@@ -73,8 +73,8 @@ public partial class CookieModal {
             }
             // Select:
             Selected = ToDictionary(acceptedCookies);
-            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.PREFERENCES)));
-            SwitchSecurityVM.SetValue(IsSelected(typeof(COOKIE.SECURITY)));
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(Cookies.Preference)));
+            SwitchSecurityVM.SetValue(IsSelected(typeof(Cookies.Security)));
         }
         if (sync) await HTTP.Sync(init);
         else init();
@@ -88,7 +88,7 @@ public partial class CookieModal {
 
     public static async Task Open(bool unclosable = false, bool sync = true) 
     {
-        var modal = RequestStorage.Get<CookieModal>(REQUEST_STORAGE.COOKIE_MODAL);
+        var modal = RequestStorage.Get<CookieModal>(RequestStorages.COOKIE_MODAL);
         if (modal is not null) await modal.OpenModal(unclosable, sync);
     }
 
@@ -103,13 +103,13 @@ public partial class CookieModal {
     }
 
     private async Task AcceptCookies(List<Type> accept) {
-        await PageLoader.Show(PAGE_LOADER_TASK.COOKIE_CONSENT);
+        await PageLoader.Show(PageLoaderTask.COOKIE_CONSENT);
         await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
 
-            SwitchFunctionalVM.SetValue(IsSelected(typeof(COOKIE.PREFERENCES)));
-            SwitchSecurityVM.SetValue(IsSelected(typeof(COOKIE.SECURITY)));
+            SwitchFunctionalVM.SetValue(IsSelected(typeof(Cookies.Preference)));
+            SwitchSecurityVM.SetValue(IsSelected(typeof(Cookies.Security)));
             StateHasChanged();
            
             await Task.Delay(AppTheme.TRANSITION_FAST); // NOTE: Switch transition
@@ -123,10 +123,10 @@ public partial class CookieModal {
             await HTTP.Patch(API.BASE.COOKIE_SET, body: body);
             await ModalRef.Close();
 
-            if ((Initial.TryGetValue(typeof(COOKIE.SECURITY), out var initialValue) && initialValue) != SwitchSecurityVM.Value)
+            if ((Initial.TryGetValue(typeof(Cookies.Security), out var initialValue) && initialValue) != SwitchSecurityVM.Value)
                 Navigator.Refresh();
         });
-        await PageLoader.Hide(PAGE_LOADER_TASK.COOKIE_CONSENT);
+        await PageLoader.Hide(PageLoaderTask.COOKIE_CONSENT);
     }
 
     public void OnClose() 

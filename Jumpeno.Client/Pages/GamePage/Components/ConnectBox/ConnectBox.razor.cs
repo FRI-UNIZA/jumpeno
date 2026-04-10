@@ -22,7 +22,7 @@ public partial class ConnectBox {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
             ID: Auth.IsRegisteredUser ? nameof(GameHubRegisteredDTO.Code) : nameof(GameHubAnonymousDTO.Code),
-            TextMode: INPUT_TEXT_MODE.UPPERCASE,
+            TextMode: InputTextMode.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
@@ -71,11 +71,11 @@ public partial class ConnectBox {
         q.Remove(WATCH_QUERY);
         await Navigator.SetQueryParams(q);
         // 4) Check if cookie modal is displayed:
-        if (RequestStorage.Get<CookieModal>(REQUEST_STORAGE.COOKIE_MODAL)!.IsOpened) return false;
+        if (RequestStorage.Get<CookieModal>(RequestStorages.COOKIE_MODAL)!.IsOpened) return false;
         // 5) Set AutoWatch:
         AutoWatch = true;
         // 6) Show loader:
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+        await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
         // 7) Return result:
         return true;
     }

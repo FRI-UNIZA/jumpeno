@@ -20,7 +20,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
             await ActivationEntity.Create(user.ID);
         });
         // 3) Activation email:
-        Email.TrySendActivation(user.Email, user.ID);
+        Services.Email.TrySendActivation(user.Email, user.ID);
         // 4) Response:
         Response.StatusCode = StatusCodes.Status201Created;
         return new(I18N.T("Registration successful."));
@@ -28,15 +28,15 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>Sends activation email to authenticated user.</summary>
     /// <response code="200">Activation email sent.</response>
-    [HttpPost][Role(ROLE.USER)]
+    [HttpPost][Role(Role.USER)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> SendActivation() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NOT_AUTHENTICATED;
         // 2) Check activation:
-        if (user.Activation == null) throw EXCEPTION.NOT_FOUND.SetInfo("Account already activated.");
+        if (user.Activation == null) throw Exceptions.NOT_FOUND.SetInfo("Account already activated.");
         // 3) Activation email:
-        Email.SendActivation(user.Email, user.ID);
+        Services.Email.SendActivation(user.Email, user.ID);
         // 4) Response:
         return new(I18N.T("Activation email sent."));
     }
@@ -53,10 +53,10 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
             JWT.AssertActivation(body.ActivationToken);
             Token.StoreActivation(body.ActivationToken);
         } catch {
-            throw EXCEPTION.INVALID_TOKEN;
+            throw Exceptions.INVALID_TOKEN;
         }
         // 2) Activation:
-        if (!await ActivationEntity.Delete(Token.Activation.sub, nameof(body.ActivationToken))) throw EXCEPTION.INVALID_TOKEN;
+        if (!await ActivationEntity.Delete(Token.Activation.sub, nameof(body.ActivationToken))) throw Exceptions.INVALID_TOKEN;
         // 3) Response:
         return new($"{I18N.T("Account activated")}.");
     }
@@ -71,9 +71,9 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
         body.Assert();
         await captchaService.AssertTokenForEmailAndIP(body.CAPTCHAToken, body.Email, ATTEMPTS_CATEGORY.LOGIN, nameof(UserLoginDTO.CAPTCHAToken));
         // 2) Authentication:
-        var user = await UserEntity.ByEmailLeftJoinPassword(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
-        if (user.Password == null) throw EXCEPTION.NOT_AUTHENTICATED;
-        if (!PasswordEntity.Validate(body.Password, user.Password.Salt, user.Password.Hash)) throw EXCEPTION.NOT_AUTHENTICATED;
+        var user = await UserEntity.ByEmailLeftJoinPassword(body.Email, nameof(body.Email)) ?? throw Exceptions.NOT_AUTHENTICATED;
+        if (user.Password == null) throw Exceptions.NOT_AUTHENTICATED;
+        if (!PasswordEntity.Validate(body.Password, user.Password.Salt, user.Password.Hash)) throw Exceptions.NOT_AUTHENTICATED;
         // 3) Create tokens:
         var id = Guid.Parse(user.ID);
         var accessToken = JWT.GenerateUserAccess(id);
@@ -98,12 +98,12 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
         // 1) Validation:
         body.Assert();
         // 2) Authentication:
-        var user = await UserEntity.ByEmail(body.Email, nameof(body.Email)) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        var user = await UserEntity.ByEmail(body.Email, nameof(body.Email)) ?? throw Exceptions.NOT_AUTHENTICATED;
         // 3) Generate password:
         var g = new StringGenerator();
         var password = g.GenerateResetPassword(UserValidator.PASSWORD_GENERATOR_MIN_LENGTH, UserValidator.PASSWORD_GENERATOR_MAX_LENGTH);
         // 4) Send email:
-        Email.SendPasswordReset(user.Email, password, JWT.GeneratePasswordReset(user.Email, password));
+        Services.Email.SendPasswordReset(user.Email, password, JWT.GeneratePasswordReset(user.Email, password));
         // 5) Send response:
         return new(I18N.T("Check your email address."));
     }
@@ -120,18 +120,18 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
             JWT.AssertPasswordReset(body.ResetToken);
             Token.StorePasswordReset(body.ResetToken);
         } catch {
-            throw EXCEPTION.INVALID_TOKEN;
+            throw Exceptions.INVALID_TOKEN;
         }
         // 2) Password reset:
-        var user = await UserEntity.ByEmail(Token.PasswordReset.sub, nameof(body.ResetToken)) ?? throw EXCEPTION.INVALID_TOKEN;
-        if (!await PasswordEntity.Update(user.ID, Token.PasswordReset.data, nameof(body.ResetToken), nameof(body.ResetToken))) throw EXCEPTION.INVALID_TOKEN;
+        var user = await UserEntity.ByEmail(Token.PasswordReset.sub, nameof(body.ResetToken)) ?? throw Exceptions.INVALID_TOKEN;
+        if (!await PasswordEntity.Update(user.ID, Token.PasswordReset.data, nameof(body.ResetToken), nameof(body.ResetToken))) throw Exceptions.INVALID_TOKEN;
         // 3) Response:
         return new(I18N.T("Password reset successful."));
     }
 
     /// <summary>Changes authenticated user password.</summary>
     /// <response code="200">Password changed.</response>
-    [HttpPatch][Role(ROLE.USER)]
+    [HttpPatch][Role(Role.USER)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> PasswordChange([FromBody] UserPasswordChangeDTO body)
     {
@@ -144,7 +144,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
                 var existing = await PasswordEntity.ByIDLeftJoinRefresh(Token.Access.sub);
                 if (existing != null)
                 {
-                    if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw EXCEPTION.DEFAULT;
+                    if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.DEFAULT;
                 }
                 else
                 {
@@ -160,20 +160,20 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>User profile info.</summary>
     /// <response code="200">User profile.</response>
-    [HttpGet][Role(ROLE.USER)]
+    [HttpGet][Role(Role.USER)]
     [ProducesResponseType(typeof(UserProfileDTOR), StatusCodes.Status200OK)]
     public async Task<UserProfileDTOR> Profile() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NOT_AUTHENTICATED;
         // 2) Cast to profile:
-        var profile = new User(Guid.Parse(user.ID), user.Email, user.Name, (SKIN)user.Skin, user.Activation == null);
+        var profile = new User(Guid.Parse(user.ID), user.Email, user.Name, (Skin)user.Skin, user.Activation == null);
         // 3) Response:
         return new(profile);
     }
 
     /// <summary>Updates authenticated user data.</summary>
     /// <response code="200">User data updated.</response>
-    [HttpPatch][Role(ROLE.USER)]
+    [HttpPatch][Role(Role.USER)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Update([FromBody] UserUpdateDTO body)
     {
@@ -184,18 +184,18 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
             name: body.NewName, nameID: nameof(UserUpdateDTO.NewName),
             skin: body.NewSkin, skinID: nameof(UserUpdateDTO.NewSkin),
             email: body.NewEmail, emailID: nameof(UserUpdateDTO.NewEmail)
-        )) throw EXCEPTION.DEFAULT;
+        )) throw Exceptions.DEFAULT;
         // 3) Response:
         return new(I18N.T("User data has been updated."));
     }
 
     /// <summary>Deletes authenticated user account.</summary>
     /// <response code="200">Account deleted.</response>
-    [HttpDelete][Role(ROLE.USER)]
+    [HttpDelete][Role(Role.USER)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Delete() {
         // 1) Delete User:
-        if(!await UserEntity.Delete(Token.Access.sub)) throw EXCEPTION.DEFAULT;
+        if(!await UserEntity.Delete(Token.Access.sub)) throw Exceptions.DEFAULT;
         // 2) Response:
         return new(I18N.T("Account deleted."));
     }

@@ -12,5 +12,5 @@ public record UserRegisterDTO(
         errors.AddRange(UserValidator.ValidatePassword(Password, nameof(Password)));
         return errors;
     }
-    public UserRegisterDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public UserRegisterDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
 }

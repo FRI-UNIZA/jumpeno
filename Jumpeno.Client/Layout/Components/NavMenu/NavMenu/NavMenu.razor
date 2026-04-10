@@ -1,16 +1,16 @@
-﻿@namespace Jumpeno.Client.Layouts
+@namespace Jumpeno.Client.Layouts
 
 @inherits BasicComponent
 
 <nav class="@ComputeClass()" style="@Style">
-    <Container Type="CONTAINER_TYPE.INLINE" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
+    <Container Type="ContainerType.INLINE" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
         <LogoLink />
         <div class="@CLASS_NAVIGATION">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
-            <AuthView Roles="[ROLE.USER]">
+            <AuthView Roles="[Role.USER]">
                 <UserDropDown />
             </AuthView>
-            <AuthView Roles="[ROLE.ADMIN]">
+            <AuthView Roles="[Role.ADMIN]">
                 <AdminDropDown />
             </AuthView>
             <NavMenuOpenButton

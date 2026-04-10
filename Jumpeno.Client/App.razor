@@ -43,7 +43,7 @@
             ServerPageLoader.Hide();
             // Init actions:
             await Init.RunAfterLoader();
-            await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL, false);
+            await PageLoader.Hide(PageLoaderTask.INITIAL, false);
             // PageLoader:
             await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
             await PageLoader.AwaitAllLoaders();
@@ -59,7 +59,7 @@
         } catch {
             // Initialization error:
             ServerPageLoader.Stop();
-            Notification.Error(MESSAGE.DEFAULT.T);
+            Notification.Error(Messages.DEFAULT.T);
         }
     }
 }

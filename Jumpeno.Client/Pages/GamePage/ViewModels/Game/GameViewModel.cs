@@ -19,7 +19,7 @@ public class GameViewModel : IAsyncDisposable {
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool IsHost => Game.Host.Equals(Auth.User);
-    public bool IsWatching => Game.DisplayMode == DISPLAY_MODE.EACH_OWN || !IsPlayer || IsHost;
+    public bool IsWatching => Game.DisplayMode == DisplayMode.EACH_OWN || !IsPlayer || IsHost;
     public bool IsPlayer => Player != null;
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
@@ -221,9 +221,9 @@ public class GameViewModel : IAsyncDisposable {
     public Task SwitchToWebInput() => Exec(() => AllowUserActions(zoom: false));
 
     // Game -------------------------------------------------------------------------------------------------------------------------------
-    public Task Play() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.TOGGLE));
-    public Task Pause() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.PAUSE));
-    public Task Delete() => SendGameRequest(new GameActionRequestUpdate(GAME_ACTION.DELETE));
+    public Task Play() => SendGameRequest(new GameActionRequestUpdate(GameAction.TOGGLE));
+    public Task Pause() => SendGameRequest(new GameActionRequestUpdate(GameAction.PAUSE));
+    public Task Delete() => SendGameRequest(new GameActionRequestUpdate(GameAction.DELETE));
 
     // Player -----------------------------------------------------------------------------------------------------------------------------
     public Task IamReady() => SendGameRequest(new PlayerReadyRequestUpdate());
@@ -242,8 +242,8 @@ public class GameViewModel : IAsyncDisposable {
 
     private void InitControls() {
         ControlsDisplayed = Player != null && (
-            Player.Device == DEVICE_TYPE.TOUCH ||
-            (Game.DisplayMode != DISPLAY_MODE.EACH_OWN && !IsHost)
+            Player.Device == DeviceType.TOUCH ||
+            (Game.DisplayMode != DisplayMode.EACH_OWN && !IsHost)
         );
     }
 
