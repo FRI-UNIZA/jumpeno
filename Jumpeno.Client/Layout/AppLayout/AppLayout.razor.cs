@@ -37,11 +37,11 @@ public partial class AppLayout {
     private void NotifyState() { Layout.Current.Notify(); StateHasChanged(); }
     private void NotifyPage() { PageKey = !PageKey; NotifyState(); }
     private void NotifyAll() { Key = !Key; NotifyState(); }
-    public static void Notify(NOTIFY notify) {
+    public static void Notify(NotifyType notify) {
         switch (notify) {
-            case NOTIFY.STATE: Instance().NotifyState(); break;
-            case NOTIFY.PAGE: Instance().NotifyPage(); break;
-            case NOTIFY.ALL: Instance().NotifyAll(); break;
+            case NotifyType.STATE: Instance().NotifyState(); break;
+            case NotifyType.PAGE: Instance().NotifyPage(); break;
+            case NotifyType.ALL: Instance().NotifyAll(); break;
         }
     }
 

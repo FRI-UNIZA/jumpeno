@@ -257,10 +257,10 @@
                         <p class="notification-message">@notification.Message</p>
                     }
                     @switch (notification.Type) {
-                        case NOTIFICATION_TYPE.SUCCESS: <AntIcon Class="notification-icon" Type="check-circle" Theme="Outline" /> break;
-                        case NOTIFICATION_TYPE.ERROR: <AntIcon Class="notification-icon" Type="close-circle" Theme="Outline" /> break;
-                        case NOTIFICATION_TYPE.WARNING: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
-                        case NOTIFICATION_TYPE.INFO: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
+                        case NotificationType.SUCCESS: <AntIcon Class="notification-icon" Type="check-circle" Theme="Outline" /> break;
+                        case NotificationType.ERROR: <AntIcon Class="notification-icon" Type="close-circle" Theme="Outline" /> break;
+                        case NotificationType.WARNING: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
+                        case NotificationType.INFO: <AntIcon Class="notification-icon" Type="exclamation-circle" Theme="Outline" /> break;
                     }
                     <div class="notification-close-button" @onpointerdown="async () => await Close(notification)">
                         <ThumbButton Class="notification-close-thumb" />

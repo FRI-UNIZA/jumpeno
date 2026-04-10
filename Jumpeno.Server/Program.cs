@@ -33,7 +33,7 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.Secure = CookieSecurePolicy.Always; // Enforce secure cookies
 });
 builder.Services.AddAntiforgery(options => {
-    options.Cookie.Name = COOKIE.MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
+    options.Cookie.Name = Cookies.Mandatory.ASP_NET_CORE_ANTIFORGERY.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
@@ -58,11 +58,12 @@ builder.Services.AddRazorPages();
         options.SwaggerDoc(AppSettings.Version, new OpenApiInfo { Title = AppSettings.Name, Version = AppSettings.Version });
 
         // Enable JWT Authentication in Swagger:
-        options.AddSecurityDefinition(AUTH.BEARER, new OpenApiSecurityScheme {
-            Name = HEADER.AUTHORIZATION,
+        options.AddSecurityDefinition(AuthTypes.BEARER, new OpenApiSecurityScheme
+        {
+            Name = Header.AUTHORIZATION,
             Type = SecuritySchemeType.Http,
-            Scheme = AUTH.BEARER,
-            BearerFormat = AUTH.JWT,
+            Scheme = AuthTypes.BEARER,
+            BearerFormat = AuthTypes.JWT,
             In = ParameterLocation.Header,
             Description = "Enter 'Bearer {token}'"
         });
@@ -72,7 +73,7 @@ builder.Services.AddRazorPages();
                 new OpenApiSecurityScheme {
                     Reference = new OpenApiReference {
                         Type = ReferenceType.SecurityScheme,
-                        Id = AUTH.BEARER
+                        Id = AuthTypes.BEARER
                     }
                 },
                 Array.Empty<string>()
@@ -197,7 +198,7 @@ RequestStorage.Init(
 URL.Init(
     () => {
         var ctx = ServerContext.Instance;
-        var replaceURL = RequestStorage.Get<string>(REQUEST_STORAGE.URL);
+        var replaceURL = RequestStorage.Get<string>(RequestStorages.URL);
         return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
     },
     ThemeProvider.ThemeCSSClass
@@ -209,7 +210,7 @@ HTTP.Init(
     async (e, form) => {
         if (AppEnvironment.IsController) return;
         if (e is AppException eApp) ErrorHandler.Notify(eApp);
-        else ErrorHandler.Notify(EXCEPTION.DEFAULT);
+        else ErrorHandler.Notify(Exceptions.DEFAULT);
         await Task.CompletedTask;
     },
     async callback => await callback.Invoke(),

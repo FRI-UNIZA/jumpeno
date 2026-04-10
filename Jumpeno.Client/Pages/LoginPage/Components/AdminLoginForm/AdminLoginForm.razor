@@ -6,18 +6,18 @@
 
 @if (!Verified) {
     <div class="admin-login-form">
-        <Heading1 Class="admin-heading" Size="TEXT_SIZE.L">@I18N.T("Admin")</Heading1>
+        <Heading1 Class="admin-heading" Size="TextSize.L">@I18N.T("Admin")</Heading1>
         <div class="form-inputs">
-            <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email address verification")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
+            <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email address verification")" Size="FormSize.M" Align="FormAlign.CENTER" Autocomplete />
         </div>
-        <Button Size="BUTTON_SIZE.M" OnClick="Send">
+        <Button Size="ButtonSize.M" OnClick="Send">
             <Text>@I18N.T("Send")</Text>
         </Button>
         <WebLink
-            Size="TEXT_SIZE.S"
+            Size="TextSize.S"
             NoWrap
-            OnClick="() => VM.Show(LOGIN_FORM.USER)"
-            OnEnter="() => VM.Show(LOGIN_FORM.USER)"
+            OnClick="() => VM.Show(LoginFormType.USER)"
+            OnEnter="() => VM.Show(LoginFormType.USER)"
         >
             <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Login")&nbsp;
         </WebLink>
@@ -28,7 +28,7 @@
             <div class="verification-box">
                 <AntIcon Type="mail" Theme="outline" Class="verification-icon" />
                 <Paragraph Class="verification-text">@I18N.T("Check your email address.")</Paragraph>
-                <Paragraph Class="verification-text-info" Size="TEXT_SIZE.S">(@I18N.T("You can now close this page."))</Paragraph>
+                <Paragraph Class="verification-text-info" Size="TextSize.S">(@I18N.T("You can now close this page."))</Paragraph>
             </div>
         </div>
     </Box>

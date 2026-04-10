@@ -20,13 +20,13 @@ public class ErrorMiddleware(RequestDelegate next) {
             exception = e;
             info = e.Info;
         } catch {
-            ctx.Response.StatusCode = CODE.DEFAULT;
-            exception = EXCEPTION.DEFAULT;
-            info = MESSAGE.DEFAULT;
+            ctx.Response.StatusCode = Codes.DEFAULT;
+            exception = Exceptions.DEFAULT;
+            info = Messages.DEFAULT;
         }
 
         if (exception is not null) {
-            ctx.Response.Headers.ContentType = CONTENT_TYPE.JSON;
+            ctx.Response.Headers.ContentType = ContentType.JSON;
             var errors = exception switch {
                 AppException e => e.Errors,
                 _ => []

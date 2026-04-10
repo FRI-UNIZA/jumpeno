@@ -24,15 +24,15 @@ public partial class SelectComponent<T> {
     [Parameter]
     public string ModalClass { get; set; } = "";
     [Parameter]
-    public MODAL_SURFACE? ModalSurface { get; set; } = MODAL_SURFACE.FLOATING;
+    public ModalSurface? MSurface { get; set; } = ModalSurface.FLOATING;
     // Search:
     [Parameter]
-    public FORM_SIZE? SearchSize { get; set; } = FORM_SIZE.S;
+    public FormSize? SearchSize { get; set; } = FormSize.S;
     [Parameter]
-    public FORM_ALIGN? SearchAlign { get; set; } = FORM_ALIGN.LEFT;
+    public FormAlign? SearchAlign { get; set; } = FormAlign.LEFT;
     // Options:
     [Parameter]
-    public SELECT_OPTION_ALIGN? OptionAlign { get; set; } = SELECT_OPTION_ALIGN.LEFT;
+    public SelectOptionAlign? OptionAlign { get; set; } = SelectOptionAlign.LEFT;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
@@ -40,7 +40,7 @@ public partial class SelectComponent<T> {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
     private List<SelectOption<T>> DisplayedOptions = [];
-    private SelectOption<T> LastSelected { get; set; } = SELECT<T>.EMPTY_OPTION;
+    private SelectOption<T> LastSelected { get; set; } = Select<T>.EMPTY_OPTION;
     // Tasks:
     private TaskCompletionSource SearchTCS = new();
     private TaskCompletionSource SelectTCS = new();
@@ -48,7 +48,7 @@ public partial class SelectComponent<T> {
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private string OptionPlaceholder() {
-        if (ViewModel.Value == SELECT<T>.EMPTY_OPTION) {
+        if (ViewModel.Value == Select<T>.EMPTY_OPTION) {
             if (ViewModel.Placeholder != null) return ViewModel.Placeholder;
             return I18N.T("Empty");
         }
@@ -83,7 +83,7 @@ public partial class SelectComponent<T> {
     private void HandleOpenStart() {
         ViewModel.SearchVM.Clear();
         DisplayedOptions = [.. ViewModel.Options];
-        if (ViewModel.Empty) DisplayedOptions.Insert(0, SELECT<T>.EMPTY_OPTION);
+        if (ViewModel.Empty) DisplayedOptions.Insert(0, Select<T>.EMPTY_OPTION);
         LastSelected = ViewModel.Value;
     }
 
@@ -94,10 +94,10 @@ public partial class SelectComponent<T> {
 
     // Search -----------------------------------------------------------------------------------------------------------------------------
     private Task Search(string value) => UI.Lock.TryExclusive(async () => {
-        await PageLoader.Show(PAGE_LOADER_TASK.SEARCH);
+        await PageLoader.Show(PageLoaderTask.SEARCH);
         MinSearchWatch.Start();
         List<SelectOption<T>> newOptions = [];
-        if (ViewModel.Empty && value == ViewModel.SearchVM.InputVM.ClearValue) newOptions.Add(SELECT<T>.EMPTY_OPTION);
+        if (ViewModel.Empty && value == ViewModel.SearchVM.InputVM.ClearValue) newOptions.Add(Select<T>.EMPTY_OPTION);
         foreach (var option in ViewModel.Options) {
             if (ViewModel.CustomSearch(new(value, option))) {
                 newOptions.Add(option);
@@ -108,13 +108,13 @@ public partial class SelectComponent<T> {
         StateHasChanged();
         await SearchTCS.Task;
         await MinSearchWatch.Task;
-        await PageLoader.Hide(PAGE_LOADER_TASK.SEARCH);
+        await PageLoader.Hide(PageLoaderTask.SEARCH);
     });
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
     private Task SelectOption(SelectOption<T> option) => ModalRef.Close(async () => {
         if (LastSelected == option) return;
-        await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.MODAL, true);
         ViewModel.SetValue(option);
         SelectTCS = new TaskCompletionSource();
         StateHasChanged();
@@ -133,7 +133,7 @@ public partial class SelectComponent<T> {
     private async Task HandleAfterCloseFinish() {
         ActionHandler.SetFocus(ViewModel.FormID);
         DisplayedOptions = [];
-        var lastSelected = LastSelected; LastSelected = SELECT<T>.EMPTY_OPTION;
+        var lastSelected = LastSelected; LastSelected = Select<T>.EMPTY_OPTION;
         if (lastSelected == ViewModel.Value) return;
         await ViewModel.OnAfterCloseSelected.Invoke(new SelectEvent<T>(lastSelected, ViewModel.Value));
     }

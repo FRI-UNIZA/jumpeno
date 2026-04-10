@@ -14,8 +14,8 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
     [ProducesResponseType(StatusCodes.Status302Found)]
     public IActionResult Redirect(string culture, string redirectURI) {
         if (culture != null) {
-            CookieStorage.Set(new Cookie(
-                COOKIE.PREFERENCES.APP_CULTURE,
+            CookieStorage.Set(new Client.Models.Cookie(
+                Cookies.Preference.APP_CULTURE,
                 culture,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -63,7 +63,7 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
             }
 
             // 1.3) Check cookies:
-            string? cookie = AppEnvironment.GetService<CookieStorage>().Get(COOKIE.PREFERENCES.APP_CULTURE);
+            string? cookie = AppEnvironment.GetService<CookieStorage>().Get(Cookies.Preference.APP_CULTURE);
             cookie = $"{cookie}";
             if (languages.Contains(cookie)) {
                 return cookie;

@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Constants;
 
-public enum SURFACE {
+public enum Surface {
     // Primary:
     [CSSClass("surface-primary")] PRIMARY,
     [CSSClass("surface-primary-collapse")] PRIMARY_COLLAPSE,

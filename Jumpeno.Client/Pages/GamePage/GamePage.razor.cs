@@ -13,9 +13,9 @@ public partial class GamePage {
     public record HistoryState(bool WasRedirect, bool WasCreate);
     public static readonly HistoryState DEFAULT_HISTORY_STATE = new(false, false);
     public static class NavState {
-        public static (string Key, HistoryState? Data)? New(HistoryState? state) => new(HISTORY_STATE.GAME_PAGE, state);
-        public static HistoryState Get() => Navigator.State(HISTORY_STATE.GAME_PAGE, DEFAULT_HISTORY_STATE);
-        public static void Set(HistoryState state) => Navigator.SetState(HISTORY_STATE.GAME_PAGE, state);
+        public static (string Key, HistoryState? Data)? New(HistoryState? state) => new(Constants.HistoryState.GAME_PAGE, state);
+        public static HistoryState Get() => Navigator.State(Constants.HistoryState.GAME_PAGE, DEFAULT_HISTORY_STATE);
+        public static void Set(HistoryState state) => Navigator.SetState(Constants.HistoryState.GAME_PAGE, state);
     }
     // Navigation init:
     public static void InitNavigation() {
@@ -39,7 +39,7 @@ public partial class GamePage {
                 data: new NavData(create),
                 state: NavState.New(new HistoryState(false, create))
             )
-        , PAGE_LOADER_TASK.ANIMATION);
+        , PageLoaderTask.ANIMATION);
         Navigator.AllowAny();
     }
     public static async Task NavigateToConnect() => await NavigateTo(false);
@@ -65,12 +65,12 @@ public partial class GamePage {
     // Layout -----------------------------------------------------------------------------------------------------------------------------
     private void ShowWebLayout() {
         LayoutVM?.ShowNavigation();
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.PAGE, 0, 0);
     }
 
     private void ShowGameLayout() {
         LayoutVM?.HideNavigation(false);
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.PAGE, 0, 0);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

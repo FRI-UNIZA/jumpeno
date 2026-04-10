@@ -86,12 +86,12 @@ public partial class ConfirmModal {
     // Confirm ----------------------------------------------------------------------------------------------------------------------------
     private async Task Confirm() {
         try {
-            await PageLoader.Show(PAGE_LOADER_TASK.CONFIRM, !Loader);
+            await PageLoader.Show(PageLoaderTask.CONFIRM, !Loader);
             if (Loader) await Task.Delay(Theme.TRANSITION_FAST);
             await ModalRef.Close();
             await Action.Invoke();
         } finally {
-            await PageLoader.Hide(PAGE_LOADER_TASK.CONFIRM, Loader);
+            await PageLoader.Hide(PageLoaderTask.CONFIRM, Loader);
         }
     }
 }

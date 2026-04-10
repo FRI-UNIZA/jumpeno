@@ -4,7 +4,7 @@
 @inherits FormField<InputViewModel<T>>
 
 @code {
-    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.AUTOHIDE;
+    protected override FormErrorType? ErrorType => FormErrorType.AUTOHIDE;
     protected override RenderFragment RenderField() => @<Fragment>
         <div class="@CLASS_CONTAINER" inert="@Disabled">
             @if (Icon is not null) { <div class="input-icon-before">@Icon</div> }

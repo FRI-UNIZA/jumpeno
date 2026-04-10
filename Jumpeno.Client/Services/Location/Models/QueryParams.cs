@@ -2,11 +2,11 @@ namespace Jumpeno.Client.Models;
 
 public class QueryParams {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private Dictionary<string, QUERY_ARRAY_TYPE> ArrayTypes;
+    private Dictionary<string, QuaryArrayType> ArrayTypes;
     private Dictionary<string, StringValues> Items;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public QueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, Dictionary<string, StringValues> items) {
+    public QueryParams(Dictionary<string, QuaryArrayType> arrayTypes, Dictionary<string, StringValues> items) {
         ArrayTypes = arrayTypes;
         Items = items;
     }
@@ -35,9 +35,9 @@ public class QueryParams {
     public bool IsTrue(string key) => GetBool(key) is bool value && value;
 
     public QueryArray GetArray(string key) {
-        QUERY_ARRAY_TYPE type;
+        QuaryArrayType type;
         try { type = ArrayTypes[key]; }
-        catch { type = QUERY_ARRAY_TYPE.REPEATED_KEY; }
+        catch { type = QuaryArrayType.REPEATED_KEY; }
         try { return new QueryArray(type, Items[key]); }
         catch { return new QueryArray(type); }
     }

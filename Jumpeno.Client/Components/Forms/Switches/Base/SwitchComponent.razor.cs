@@ -14,7 +14,7 @@ public partial class SwitchComponent {
     [Parameter]
     public bool ActiveDescription { get; set; } = false;
     [Parameter]
-    public SWITCH_POSITION? Position { get; set; } = SWITCH_POSITION.START;
+    public SwitchPosition? Position { get; set; } = SwitchPosition.START;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {

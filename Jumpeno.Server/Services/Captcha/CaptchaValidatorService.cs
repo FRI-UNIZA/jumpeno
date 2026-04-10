@@ -14,13 +14,13 @@ public class CaptchaValidatorService(AttemptService attemptService)
         var response = await HTTP.Post<GoogleReCAPTCHA_DTOR>(API.GOOGLE.RECAPTCHA.SITE_VERIFY, query: q);
         response.Body.Assert();
 
-        return response.Code == CODE.SUCCESS && response.Body.Success;
+        return response.Code == Codes.SUCCESS && response.Body.Success;
     }
 
     /// <summary>Validates the provided captcha token.</summary>
     /// <param name="token">Captcha token to validate.</param>
     /// <param name="captchaID">ID of the captcha component for error tracking.</param>
-    /// <exception cref="EXCEPTION.CAPTCHA_MISSING">Throws if the captcha is invalid.</exception>
+    /// <exception cref="Exceptions.CAPTCHA_MISSING">Throws if the captcha is invalid.</exception>
     public async Task AssertAsync(
         // Parameters:
         string? token,
@@ -28,8 +28,8 @@ public class CaptchaValidatorService(AttemptService attemptService)
         string captchaID = ""
     ) {
         if (!AppSettings.ReCAPTCHA.On) return;
-        if (string.IsNullOrEmpty(token)) throw EXCEPTION.CAPTCHA_MISSING.Add(ERROR.EMPTY.SetID(captchaID));
-        if (!await ValidateAsync(token)) throw EXCEPTION.CAPTCHA_INVALID.Add(ERROR.INVALID.SetID(captchaID));
+        if (string.IsNullOrEmpty(token)) throw Exceptions.CAPTCHA_MISSING.Add(Errors.EMPTY.SetID(captchaID));
+        if (!await ValidateAsync(token)) throw Exceptions.CAPTCHA_INVALID.Add(Errors.INVALID.SetID(captchaID));
     }
 
     // Actions [email] --------------------------------------------------------------------------------------------------------------------

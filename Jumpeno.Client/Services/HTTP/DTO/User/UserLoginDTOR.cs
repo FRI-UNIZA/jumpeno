@@ -9,5 +9,5 @@ public record UserLoginDTOR(
         errors.AddRange(TokenValidator.ValidateToken(RefreshToken, nameof(RefreshToken)));
         return errors;
     }
-    public UserLoginDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.SERVER);
+    public UserLoginDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.SERVER);
 }

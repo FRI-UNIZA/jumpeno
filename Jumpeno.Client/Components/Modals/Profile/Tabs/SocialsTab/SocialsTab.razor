@@ -2,9 +2,9 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
+<AuthView Roles="[Role.USER]">
     <div class="@ComputeClass()" style="@Style">
-        <Button Variant="BUTTON_VARIANT.PRIMARY" OnClick="ConnectGoogle" Disabled>
+        <Button Variant="ButtonVariant.PRIMARY" OnClick="ConnectGoogle" Disabled>
             <Icon>
                 <AntIcon Type="google" Theme="outline" />
             </Icon>
@@ -12,7 +12,7 @@
                 @I18N.T("Sign in with Google")
             </Text>
         </Button>
-        <Button Variant="BUTTON_VARIANT.PRIMARY" OnClick="ConnectFacebook" Disabled>
+        <Button Variant="ButtonVariant.PRIMARY" OnClick="ConnectFacebook" Disabled>
             <Icon>
                 <AntIcon Type="facebook" Theme="outline" />
             </Icon>

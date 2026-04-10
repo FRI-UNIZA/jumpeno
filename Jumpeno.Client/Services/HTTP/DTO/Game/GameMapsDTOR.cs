@@ -15,5 +15,5 @@ public record GameMapsDTOR(
         }
         return errors;
     }
-    public GameMapsDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public GameMapsDTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
 }

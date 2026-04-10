@@ -1,4 +1,4 @@
-﻿namespace Jumpeno.Server.Services;
+namespace Jumpeno.Server.Services;
 
 using MySqlConnector;
 
@@ -74,11 +74,11 @@ public class DB : DbContext {
     public static async Task<DB> Context() {
         if (AppEnvironment.IsController) {
             // 1) Try to get existing context:
-            var ctx = RequestStorage.Get<DB>(REQUEST_STORAGE.DB);
+            var ctx = RequestStorage.Get<DB>(RequestStorages.DB);
             if (ctx != null) return ctx;
             // 2) Or create a new context:
             ctx = await AppEnvironment.GetService<IDbContextFactory<DB>>().CreateDbContextAsync();
-            RequestStorage.Set(REQUEST_STORAGE.DB, ctx);
+            RequestStorage.Set(RequestStorages.DB, ctx);
             Disposer.RequestRegister(ctx);
             return ctx;
         } else {   

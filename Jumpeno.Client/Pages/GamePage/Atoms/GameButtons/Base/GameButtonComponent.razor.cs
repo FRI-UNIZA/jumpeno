@@ -33,6 +33,6 @@ public partial class GameButtonComponent : IDisabledComponent {
         if (!Disabled && valid) await Action.Invoke();
         if (!MouseOn) Active = false;
     }
-    private async Task PressEndMouse(MouseEventArgs e) => await PressEnd(PressStarted && e.Button == MOUSE_BUTTON.LEFT.Raw());
+    private async Task PressEndMouse(MouseEventArgs e) => await PressEnd(PressStarted && e.Button == MouseButton.LEFT.Raw());
     private async Task PressEndTouch(TouchEventArgs e) => await PressEnd(true);
 }

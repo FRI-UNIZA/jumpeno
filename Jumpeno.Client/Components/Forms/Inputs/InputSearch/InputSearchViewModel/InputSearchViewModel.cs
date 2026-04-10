@@ -8,7 +8,7 @@ public class InputSearchViewModel : FormViewModel {
     public readonly InputViewModel<string> InputVM = new(new InputViewModelTextParams());
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly INPUT_SEARCH_MODE SearchMode;
+    public readonly InputSearchMode SearchMode;
     public readonly bool Trim;
     public EventDelegate<string> OnSearch { get; set; }
 
@@ -20,10 +20,10 @@ public class InputSearchViewModel : FormViewModel {
         if (Trim) value = value.Trim();
         InputVM.SetValue(value);
         switch (SearchMode) {
-            case INPUT_SEARCH_MODE.LOWERCASE:
+            case InputSearchMode.LOWERCASE:
                 value = value.ToLower();
             break;
-            case INPUT_SEARCH_MODE.UPPERCASE:
+            case InputSearchMode.UPPERCASE:
                 value = value.ToUpper();
             break;
         }

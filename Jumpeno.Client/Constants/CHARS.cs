@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Constants;
 
-public static class CHARS {
+public static class Chars {
     public const string ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public const string ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz";
     public static readonly string ALPHA = $"{ALPHA_UPPER}{ALPHA_LOWER}";

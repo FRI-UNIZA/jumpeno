@@ -16,7 +16,7 @@ public record InputViewModelDoubleParams(
     Action<string>? OnError = null
 ) : InputViewModelParams<double>(
     Form, ID,
-    INPUT_TEXT_MODE.NORMAL, true, null,
+    InputTextMode.NORMAL, true, null,
     MaxLength, Decimals,
     Placeholder, DefaultValue, ClearValue,
     Secret,

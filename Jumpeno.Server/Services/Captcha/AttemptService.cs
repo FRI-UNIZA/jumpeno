@@ -42,7 +42,7 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     // Actions [email] --------------------------------------------------------------------------------------------------------------------
     private int IncrementFailedEmail(string email)
     {
-        var key = MEMORY_CACHE.USER_ATTEMPT(email);
+        var key = MemoryCaches.USER_ATTEMPT(email);
 
         return Lock.Exclusive(() => {
             var counter = cache.GetOrCreate(key, e => 
@@ -64,7 +64,7 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     private int IncrementFailedIP(ATTEMPTS_CATEGORY category)
     {
         string ip = httpContext.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? IP_UNKNOWN;
-        var key = MEMORY_CACHE.IP_ATTEMPT(category, ip);
+        var key = MemoryCaches.IP_ATTEMPT(category, ip);
         
         return Lock.Exclusive(() => {
             var counter = cache.GetOrCreate(key, e => 

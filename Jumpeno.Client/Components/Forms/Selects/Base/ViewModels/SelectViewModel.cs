@@ -3,7 +3,7 @@ namespace Jumpeno.Client.ViewModels;
 public class SelectViewModel<T> : FormViewModel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public readonly Predicate<SelectSearchEvent<T>> DEFAULT_CUSTOM_SEARCH = e => e.Option.Label.ToLower().IndexOf(e.Search) >= 0;
-    public readonly SelectOption<T> EMPTY_OPTION = SELECT<T>.EMPTY_OPTION;
+    public readonly SelectOption<T> EMPTY_OPTION = Select<T>.EMPTY_OPTION;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
@@ -32,7 +32,7 @@ public class SelectViewModel<T> : FormViewModel {
         }
         // Options:
         Options = p.Options;
-        DefaultValue = p.DefaultValue ?? (p.Empty ? SELECT<T>.EMPTY_OPTION : Options[0]);
+        DefaultValue = p.DefaultValue ?? (p.Empty ? Select<T>.EMPTY_OPTION : Options[0]);
         Placeholder = p.Placeholder;
         Empty = p.Empty;
         // Search:

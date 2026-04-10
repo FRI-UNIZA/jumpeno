@@ -41,10 +41,10 @@ HTTP.Init(
     },
     async (e, form) => {
         if (e is AppException eApp) ErrorHandler.Display(eApp, form);
-        else ErrorHandler.Notify(EXCEPTION.DEFAULT);
+        else ErrorHandler.Notify(Exceptions.DEFAULT);
         await Task.CompletedTask;
     },
-    async callback => await Window.Lock(callback.Invoke, WINDOW_LOCK.HTTP)
+    async callback => await Window.Lock(callback.Invoke, WindowLock.HTTP)
 );
 ThemeProvider.Init();
 

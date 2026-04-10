@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
+<AuthView Roles="[Role.USER]">
     <DropDown @ref="DropDownRef" Title="@I18N.T("User menu")" Class="@CLASS">
         <DropDownButton>
             <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="@CLASS_PROFILE_IMAGE" />

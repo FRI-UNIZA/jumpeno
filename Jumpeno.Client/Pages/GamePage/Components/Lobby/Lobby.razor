@@ -8,7 +8,7 @@
             <div class="game-name-line">
                 <h1 class="lobby-text game-name">@VM.Game.Name</h1>
                 @if (VM.IsHost) {
-                    <GameButton Variant="GAME_BUTTON_VARIANT.DANGER" Class="game-delete-button" Action="new(() => DeleteConfirmModalRef.Open(VM.Delete))">
+                    <GameButton Variant="GameButtonVariant.DANGER" Class="game-delete-button" Action="new(() => DeleteConfirmModalRef.Open(VM.Delete))">
                         <ThumbButton Class="game-delete-button-thumb" />
                         <CloseSVG Class="game-delete-button-icon" />
                     </GameButton>
@@ -47,7 +47,7 @@
             </GameState>
             <div class="game-round-buttons">
                 @if (VM.LobbyDisplayed) {
-                    <GameButton Variant="GAME_BUTTON_VARIANT.PRIMARY" Class="game-action-button lobby-hide-button" Action="new(VM.HideLobby)">
+                    <GameButton Variant="GameButtonVariant.PRIMARY" Class="game-action-button lobby-hide-button" Action="new(VM.HideLobby)">
                         <ThumbButton Class="game-action-button-thumb" />
                         <GameControllerSVG Class="lobby-hide-button-icon" />
                     </GameButton>
@@ -58,7 +58,7 @@
                             ||
                             Game.PAUSE_STATES.Contains(VM.Game.State)
                         ) {
-                            <GameButton Variant="GAME_BUTTON_VARIANT.SUCCESS" Class="game-action-button game-start-button" Action="new(VM.Play)">
+                            <GameButton Variant="GameButtonVariant.SUCCESS" Class="game-action-button game-start-button" Action="new(VM.Play)">
                                 <ThumbButton Class="game-action-button-thumb" />
                                 <AntIcon Class="game-start-button-icon" Type="caret-right" Theme="outline" />
                             </GameButton>
@@ -69,7 +69,7 @@
                         if (VM.Player.IsReady(VM.Game)) {
                             <GameWaiting Finished="VM.Game.IsFinished" />
                         } else {
-                            <GameButton Variant="GAME_BUTTON_VARIANT.SUCCESS" Class="game-action-button player-ready-button" Action="new(VM.IamReady)">
+                            <GameButton Variant="GameButtonVariant.SUCCESS" Class="game-action-button player-ready-button" Action="new(VM.IamReady)">
                                 <ThumbButton Class="game-action-button-thumb" />
                                 <CheckMarkSVG Class="player-ready-button-icon" />
                             </GameButton>
@@ -103,7 +103,7 @@
                         @if (VM.IsHost && PlayerSettingsOpen) {
                             <div class="player-action-buttons">
                                 <GameButton
-                                    Variant="GAME_BUTTON_VARIANT.DANGER"
+                                    Variant="GameButtonVariant.DANGER"
                                     Class="player-action-button player-kick-button"
                                     Action="new(() => PlayerKickConfirmModalRef.Open(
                                         () => PlayerToKick = new(player),
@@ -112,7 +112,7 @@
                                     Disabled="
                                         player.User.ID == VM.Game.Host.ID ||
                                         VM.Game.IsFinished ||
-                                        VM.Game.State != GAME_STATE.LOBBY && VM.Game.ValidPlayersCount <= 2
+                                        VM.Game.State != GameStates.LOBBY && VM.Game.ValidPlayersCount <= 2
                                     "
                                 >
                                     <ThumbButton Class="player-kick-button-thumb" />

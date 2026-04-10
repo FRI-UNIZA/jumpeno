@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
-public record UserUpdateDTO(string? NewName = null, SKIN? NewSkin = null, string? NewEmail = null) : IValidable<UserUpdateDTO>
+public record UserUpdateDTO(string? NewName = null, Skin? NewSkin = null, string? NewEmail = null) : IValidable<UserUpdateDTO>
 {
     public List<Error> Validate()
     {
@@ -11,5 +11,5 @@ public record UserUpdateDTO(string? NewName = null, SKIN? NewSkin = null, string
         return errors;
     }
 
-    public UserUpdateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public UserUpdateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
 }

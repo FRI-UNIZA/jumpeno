@@ -5,11 +5,11 @@
 @inherits FormField<SelectViewModel<T>>
 
 @code {
-    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.CONNECTED;
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@BUTTON_TYPE.BUTTON.String()"
+            type="@ButtonType.BUTTON.String()"
             aria-roledescription="combobox"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
@@ -17,7 +17,7 @@
             disabled="@Disabled"
             @onclick="@Open"
         >
-            @if (ViewModel.Value == SELECT<T>.EMPTY_OPTION) {
+            @if (ViewModel.Value == Select<T>.EMPTY_OPTION) {
                 if (ViewModel.Placeholder == null) {
                     <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
                 } else {
@@ -30,7 +30,7 @@
         </button>
         <Modal
             @ref="@ModalRef"
-            Surface="ModalSurface"
+            Surface="MSurface"
             Label="Label"
             NoFooter
             NoInitScroll
@@ -44,7 +44,7 @@
                 @if (ViewModel.Search) {
                     <InputSearch
                         ViewModel="ViewModel.SearchVM"
-                        Variant="FORM_VARIANT.PRIMARY"
+                        Variant="FormVariant.PRIMARY"
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
@@ -58,14 +58,14 @@
                         @foreach(var option in DisplayedOptions) {
                             <button
                                 @key="option.Label"
-                                type="@BUTTON_TYPE.BUTTON.String()"
+                                type="@ButtonType.BUTTON.String()"
                                 role="option"
                                 aria-label="@option.Label"
                                 aria-selected="false"
                                 class="@ComputeOptionClass(option)"
                                 @onclick="@(() => SelectOption(option))"
                             >
-                                @(option == SELECT<T>.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
+                                @(option == Select<T>.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
                             </button>
                         }
                     } else {

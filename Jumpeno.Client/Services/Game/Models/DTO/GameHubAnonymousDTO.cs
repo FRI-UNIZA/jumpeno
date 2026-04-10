@@ -5,7 +5,7 @@ public record GameHubAnonymousDTO(
     string Code,
     // Player:
     string Name,
-    DEVICE_TYPE Device,
+    DeviceType Device,
     bool Spectate
 ) : IValidable<GameHubAnonymousDTO> {
     public List<Error> Validate() {
@@ -15,5 +15,5 @@ public record GameHubAnonymousDTO(
         errors.AddRange(Checker.ValidateUndefined(Spectate, nameof(Spectate)));
         return errors;
     }
-    public GameHubAnonymousDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public GameHubAnonymousDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
 }

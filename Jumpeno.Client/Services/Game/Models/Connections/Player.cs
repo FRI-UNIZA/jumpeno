@@ -22,7 +22,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
     private Player(
-        string? connectionID, User user, DEVICE_TYPE device,
+        string? connectionID, User user, DeviceType device,
         byte id, Body body, int score, int readyForRound
     ) : base(connectionID, user, device) {
         ID = id;
@@ -32,7 +32,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     public Player(byte id) : this(
-        null, User.UNKNOWN, DEVICE_TYPE.POINTER,
+        null, User.UNKNOWN, DeviceType.POINTER,
         id, new(), 0, 0
     ) {}
 
@@ -42,7 +42,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     ) {}
 
     private void Invalidate() {
-        Synchronize(null, User.UNKNOWN, DEVICE_TYPE.POINTER);
+        Synchronize(null, User.UNKNOWN, DeviceType.POINTER);
         // NOTE: Body is preserved!
         Score = 0;
         ReadyForRound = 0;

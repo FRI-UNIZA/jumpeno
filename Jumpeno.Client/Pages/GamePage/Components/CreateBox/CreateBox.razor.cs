@@ -15,8 +15,8 @@ public partial class CreateBox {
         return new CSSClass("load-area-map-option")
         // NOTE: Styled as field:
         .Set(FormField<SelectViewModel<int>>.CLASS)
-        .Set(FORM_VARIANT.PRIMARY.CSSClass())
-        .Set(FORM_SIZE.S.CSSClass());
+        .Set(FormVariant.PRIMARY.CSSClass())
+        .Set(FormSize.S.CSSClass());
     }
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
@@ -83,16 +83,16 @@ public partial class CreateBox {
     private readonly List<SelectOption<byte>> VMSelectCapacityOptions;
     private readonly SelectViewModel<byte> VMSelectCapacity;
     // Display mode:
-    private readonly List<RadioOptionViewModel<DISPLAY_MODE>> VMRadioDisplayModeOptions;
+    private readonly List<RadioOptionViewModel<DisplayMode>> VMRadioDisplayModeOptions;
     private readonly List<string> VMRadioDisplayModeDescriptions = [];
-    private readonly RadioViewModel<DISPLAY_MODE> VMRadioDisplayMode;
+    private readonly RadioViewModel<DisplayMode> VMRadioDisplayMode;
     // Game mode:
-    private readonly List<RadioOptionViewModel<GAME_MODE>> VMRadioGameModeOptions;
+    private readonly List<RadioOptionViewModel<GameMode>> VMRadioGameModeOptions;
     private readonly List<string> VMRadioGameModeDescriptions = [];
-    private readonly RadioViewModel<GAME_MODE> VMRadioGameMode;
+    private readonly RadioViewModel<GameMode> VMRadioGameMode;
 
     // Form > InitialValues ---------------------------------------------------------------------------------------------------------------
-    public class InitialValuesKey : IFormInitialValuesKey { public static string Key => SESSION_STORAGE.GAME_PAGE_CREATE_BOX_FORM; }
+    public class InitialValuesKey : IFormInitialValuesKey { public static string Key => SesionStorage.GAME_PAGE_CREATE_BOX_FORM; }
     public class InitialValues : FormInitialValues<InitialValuesKey, InitialValues> {
         // Name:
         public string InputName { get; set; } = AppSettings.Name;
@@ -110,9 +110,9 @@ public partial class CreateBox {
         // Capacity:
         public SelectOption<byte>? SelectCapacity { get; set; } = null;
         // Display mode:
-        public RadioOptionDTO<DISPLAY_MODE>? RadioDisplayMode { get; set; } = null;
+        public RadioOptionDTO<DisplayMode>? RadioDisplayMode { get; set; } = null;
         // Game mode:
-        public RadioOptionDTO<GAME_MODE>? RadioGameMode { get; set; } = null;
+        public RadioOptionDTO<GameMode>? RadioGameMode { get; set; } = null;
     }
     private readonly InitialValues InitValues;
 
@@ -145,7 +145,7 @@ public partial class CreateBox {
         VMInputCode = new(new InputViewModelTextParams(
             Form: FORM,
             ID: ID_CODE_INPUT,
-            TextMode: INPUT_TEXT_MODE.UPPERCASE,
+            TextMode: InputTextMode.UPPERCASE,
             Trim: true,
             TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
@@ -194,9 +194,9 @@ public partial class CreateBox {
         ));
         // Display mode:
         VMRadioDisplayModeOptions = [
-            new(new(0, DISPLAY_MODE.EACH_OWN, DISPLAY_MODE.EACH_OWN.String())),
-            new(new(1, DISPLAY_MODE.ONE_SCREEN, DISPLAY_MODE.ONE_SCREEN.String())),
-            new(new(2, DISPLAY_MODE.PRESENTATION, DISPLAY_MODE.PRESENTATION.String()))
+            new(new(0, DisplayMode.EACH_OWN, DisplayMode.EACH_OWN.String())),
+            new(new(1, DisplayMode.ONE_SCREEN, DisplayMode.ONE_SCREEN.String())),
+            new(new(2, DisplayMode.PRESENTATION, DisplayMode.PRESENTATION.String()))
         ];
         VMRadioDisplayModeDescriptions.Add(I18N.T("Each has their own"));
         VMRadioDisplayModeDescriptions.Add(I18N.T("Play on 1 screen"));
@@ -212,8 +212,8 @@ public partial class CreateBox {
         ));
         // Game mode:
         VMRadioGameModeOptions = [
-            new(new(0, GAME_MODE.MAYHEM, GAME_MODE.MAYHEM.String())),
-            new(new(1, GAME_MODE.LAST_STANDING, GAME_MODE.LAST_STANDING.String()))
+            new(new(0, GameMode.MAYHEM, GameMode.MAYHEM.String())),
+            new(new(1, GameMode.LAST_STANDING, GameMode.LAST_STANDING.String()))
         ];
         VMRadioGameModeDescriptions.Add(I18N.T("Timed game with respawns"));
         VMRadioGameModeDescriptions.Add(I18N.T("Until one player remains"));
@@ -236,7 +236,7 @@ public partial class CreateBox {
 
     protected override void OnComponentAfterRender(bool firstTime) {
         if (!firstTime) return;
-        if (!Auth.IsRole(ROLE.USER)) return;
+        if (!Auth.IsRole(Role.USER)) return;
         Async.Fire(LoadMaps);
     }
 
@@ -387,7 +387,7 @@ public partial class CreateBox {
 
     // Create -----------------------------------------------------------------------------------------------------------------------------
     private async Task Create() {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_CONNECT);
+        await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
         await CancelMapRequests();
         await VM.CreateRequest(new(
             Code: VMInputCodeDisabled ? null : VMInputCode.Value,

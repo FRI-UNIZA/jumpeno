@@ -8,38 +8,38 @@
 
 <div class="game-control-page">
     <div class="game-control-form">
-        <Heading1 Size="TEXT_SIZE.L" Class="game-control-heading">@I18N.T("Game controller")</Heading1>
+        <Heading1 Size="TextSize.L" Class="game-control-heading">@I18N.T("Game controller")</Heading1>
         <div class="form-inputs">
-            <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Code")" Size="FORM_SIZE.L" Align="FORM_ALIGN.CENTER" />
+            <InputField ViewModel="VMCode" Name="code" Label="@I18N.T("Code")" Size="FormSize.L" Align="FormAlign.CENTER" />
         </div>
         <div class="game-controls">
-            <Button Variant="BUTTON_VARIANT.DANGER" Size="BUTTON_SIZE.M" Class="button-end-game" OnClick="Delete">
+            <Button Variant="ButtonVariant.DANGER" Size="ButtonSize.M" Class="button-end-game" OnClick="Delete">
                 <Icon><CloseSVG Label="@I18N.T("End game")" /></Icon>
             </Button>
-            <Button Size="BUTTON_SIZE.M" Class="button-toggle-game" OnClick="Toggle">
+            <Button Size="ButtonSize.M" Class="button-toggle-game" OnClick="Toggle">
                 <Icon><AntIcon Type="caret-right" Theme="outline" Label="@I18N.T("Start")" /></Icon>
                 <Text>/</Text>
                 <IconAfter><AntIcon Type="pause" Theme="outline" Label="@I18N.T("Pause")" /></IconAfter>
             </Button>
         </div>
     </div>
-    <Box Surface="BOX_SURFACE.PRIMARY_GLASS" class="player-control-form">
+    <Box Surface="BoxSurface.PRIMARY_GLASS" class="player-control-form">
         <div class="player-control-area">
-            <Heading2 Size="TEXT_SIZE.M" Class="player-form-heading">
+            <Heading2 Size="TextSize.M" Class="player-form-heading">
                 <AntIcon Class="player-form-heading-icon" Type="team" Theme="outline" Label="@I18N.T("Players")" />
                 @I18N.T("Players")
             </Heading2>
             <div class="player-controls">
-                <Button Variant="BUTTON_VARIANT.SUCCESS" Size="BUTTON_SIZE.S" Class="button-player-ready" OnClick="PlayerReady">
+                <Button Variant="ButtonVariant.SUCCESS" Size="ButtonSize.S" Class="button-player-ready" OnClick="PlayerReady">
                     <Icon><CheckMarkSVG Label="@I18N.T("Ready")" /></Icon>
                 </Button>
-                <Button Variant="BUTTON_VARIANT.DANGER" Size="BUTTON_SIZE.S" Class="button-player-kick" OnClick="PlayerKick">
+                <Button Variant="ButtonVariant.DANGER" Size="ButtonSize.S" Class="button-player-kick" OnClick="PlayerKick">
                     <Icon><AntIcon Type="delete" Theme="outline" Label="@I18N.T("Kick")" /></Icon>
                 </Button>
             </div>
         </div>
         <div class="form-inputs">
-            <InputField ViewModel="VMName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" AllowClear />
+            <InputField ViewModel="VMName" Name="name" Label="@I18N.T("Player name")" Size="FormSize.M" Align="FormAlign.CENTER" AllowClear />
         </div>
     </Box>
     <AntIcon Type="double-left" Theme="outline" Class="game-illustration-icon game-illustration-left" />

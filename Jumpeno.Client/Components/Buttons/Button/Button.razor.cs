@@ -7,9 +7,9 @@ public partial class Button {
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public BUTTON_VARIANT? Variant { get; set; } = BUTTON_VARIANT.PRIMARY;
+    public ButtonVariant? Variant { get; set; } = ButtonVariant.PRIMARY;
     [Parameter]
-    public BUTTON_SIZE? Size { get; set; } = BUTTON_SIZE.M;
+    public ButtonSize? Size { get; set; } = ButtonSize.M;
     [Parameter]
     public bool NoShadow { get; set; } = false;
     

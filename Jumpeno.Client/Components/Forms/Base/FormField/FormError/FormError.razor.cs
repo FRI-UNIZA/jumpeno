@@ -14,15 +14,15 @@ public partial class FormError {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Type:
     [Parameter]
-    public required FORM_ERROR_TYPE? Type { get; set; }
+    public required FormErrorType? Type { get; set; }
     // References:
     [Parameter]
     public required FormErrorViewModel ViewModel { get; set; }
     // Style:
     [Parameter]
-    public FORM_ALIGN? Align { get; set; }
+    public FormAlign? Align { get; set; }
     [Parameter]
-    public FORM_ALIGN? ErrorAlign { get; set; }
+    public FormAlign? ErrorAlign { get; set; }
     // Display:
     [Parameter]
     public bool? NoError { get; set; } = false;
@@ -46,7 +46,7 @@ public partial class FormError {
     
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void Activate() {
-        if (Type == FORM_ERROR_TYPE.PASSIVE) return;
+        if (Type == FormErrorType.PASSIVE) return;
         ActionHandler.SetFocus(ViewModel.FormViewModel.FormID);
         ActionHandler.Click($"#{ViewModel.FormViewModel.FormID}");
     }
@@ -55,7 +55,7 @@ public partial class FormError {
     private void OnClick(MouseEventArgs e) => Activate();
 
     private async Task OnKeyDown(KeyboardEventArgs e) {
-        if (e.Key != KEYBOARD.ENTER) return;
+        if (e.Key != KeyBoard.ENTER) return;
         await Task.Yield();
         Activate();
     }

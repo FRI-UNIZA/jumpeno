@@ -23,10 +23,10 @@ public static class Init {
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
         var q = URL.GetQueryParams();
-        var token = q.GetString(TOKEN_TYPE.ACTIVATION.String());
+        var token = q.GetString(TokenType.ACTIVATION.String());
         if (token == null) return false;
         // 3) Send request:
-        await PageLoader.Show(PAGE_LOADER_TASK.ACTIVATION);
+        await PageLoader.Show(PageLoaderTask.ACTIVATION);
         await HTTP.Try(async () => {
             // 3.1) Create data:
             var body = new UserActivateDTO(
@@ -40,9 +40,9 @@ public static class Init {
             Notification.Success(response.Body.Message);
         });
         // 4) Update UI:
-        q.Remove(TOKEN_TYPE.ACTIVATION.String());
+        q.Remove(TokenType.ACTIVATION.String());
         await Navigator.SetQueryParams(q);
-        await PageLoader.Hide(PAGE_LOADER_TASK.ACTIVATION);
+        await PageLoader.Hide(PageLoaderTask.ACTIVATION);
         return true;
     }
 
@@ -52,10 +52,10 @@ public static class Init {
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
         var q = URL.GetQueryParams();
-        var token = q.GetString(TOKEN_TYPE.PASSWORD_RESET.String());
+        var token = q.GetString(TokenType.PASSWORD_RESET.String());
         if (token == null) return false;
         // 3) Send request:
-        await PageLoader.Show(PAGE_LOADER_TASK.PASSWORD_RESET);
+        await PageLoader.Show(PageLoaderTask.PASSWORD_RESET);
         await HTTP.Try(async () => {
             // 3.1) Create body:
             var body = new UserPasswordResetDTO(
@@ -69,9 +69,9 @@ public static class Init {
             Notification.Success(response.Body.Message);
         });
         // 4) Update UI:
-        q.Remove(TOKEN_TYPE.PASSWORD_RESET.String());
+        q.Remove(TokenType.PASSWORD_RESET.String());
         await Navigator.SetQueryParams(q);
-        await PageLoader.Hide(PAGE_LOADER_TASK.PASSWORD_RESET);
+        await PageLoader.Hide(PageLoaderTask.PASSWORD_RESET);
         return true;
     }
 

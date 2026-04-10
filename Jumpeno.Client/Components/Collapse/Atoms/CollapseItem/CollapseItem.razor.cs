@@ -42,10 +42,10 @@ public partial class CollapseItem {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Toggle() {
-        await PageLoader.Show(PAGE_LOADER_TASK.COLLAPSE, true);
+        await PageLoader.Show(PageLoaderTask.COLLAPSE, true);
         Collapsed = !Collapsed;
         StateHasChanged();
         await Task.Delay(AppTheme.TRANSITION_NORMAL);
-        await PageLoader.Hide(PAGE_LOADER_TASK.COLLAPSE, false);
+        await PageLoader.Hide(PageLoaderTask.COLLAPSE, false);
     }
 }

@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 public partial class ServerPageLoader {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public SERVER_PAGE_LOADER_SURFACE? Surface { get; set; } = SERVER_PAGE_LOADER_SURFACE.SECONDARY;
+    public ServerPageLoaderSurface? Surface { get; set; } = ServerPageLoaderSurface.SECONDARY;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass().SetSurface(Surface);

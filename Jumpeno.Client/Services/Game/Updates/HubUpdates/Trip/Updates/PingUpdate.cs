@@ -4,7 +4,7 @@ public class PingUpdate(DateTime createdAt) : GameTripUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GAME_HUB.PING_UPDATE;
+    public override string HUB_ACTION => GameHubs.PING_UPDATE;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public DateTime CreatedAt { get; private set; } = createdAt;

@@ -14,7 +14,7 @@ public partial class Game {
         errors.AddRange(
             Checker.Validate(
                 HostConnected && user.ID == Host.ID,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Host already connected!")
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("Host already connected!")
             )
         );
         return errors;
@@ -29,7 +29,7 @@ public partial class Game {
     => Checker.Assert(
         user,
         ValidateHostConnectedOnce(user, userID, user_IDID),
-        exception ?? EXCEPTION.CLIENT
+        exception ?? Exceptions.CLIENT
     )!;
     
     // Settings > Anonyms -----------------------------------------------------------------------------------------------------------------
@@ -45,15 +45,15 @@ public partial class Game {
         Checker.Assert(
             Checker.Validate(
                 !Anonyms && user.ID == null,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Anonymous players not allowed!")
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("Anonymous players not allowed!")
             ),
-            exception ?? EXCEPTION.CLIENT
+            exception ?? Exceptions.CLIENT
         );
     }
 
     // Settings > Capacity ----------------------------------------------------------------------------------------------------------------
     protected void AssertCapacity(AppException? exception = null) {
-        if (Capacity <= ActivePlayersCount) throw (exception ?? EXCEPTION.VALUES).SetInfo("The game is currently full!");
+        if (Capacity <= ActivePlayersCount) throw (exception ?? Exceptions.VALUES).SetInfo("The game is currently full!");
     }
 
     // Settings > Players -----------------------------------------------------------------------------------------------------------------
@@ -68,8 +68,8 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode == DISPLAY_MODE.PRESENTATION && user.ID == Host.ID,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Host can not participate as a player!")
+                DisplayMode == DisplayMode.PRESENTATION && user.ID == Host.ID,
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("Host can not participate as a player!")
             )
         );
         return errors;
@@ -84,7 +84,7 @@ public partial class Game {
     => Checker.Assert(
         user,
         ValidatePlayerHostPresentation(user, userID, user_IDID),
-        exception ?? EXCEPTION.CLIENT
+        exception ?? Exceptions.CLIENT
     )!;
     
     private List<Error> ValidateReservedPlayerHostSpace(
@@ -98,12 +98,12 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DISPLAY_MODE.PRESENTATION &&
-                State == GAME_STATE.LOBBY &&
+                DisplayMode != DisplayMode.PRESENTATION &&
+                State == GameStates.LOBBY &&
                 Capacity - 1 <= ActivePlayersCount &&
                 !HostConnected &&
                 user.ID != Host.ID,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
             )
         );
         return errors;
@@ -118,7 +118,7 @@ public partial class Game {
     => Checker.Assert(
         user,
         ValidateReservedPlayerHostSpace(user, userID, user_IDID),
-        exception ?? EXCEPTION.DEFAULT
+        exception ?? Exceptions.DEFAULT
     )!;
     
     private List<Error> ValidateReservedPlayerHostName(
@@ -132,8 +132,8 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DISPLAY_MODE.PRESENTATION && user.ID != Host.ID && user.Name == Host.Name,
-                ERROR.DEFAULT.SetID(userNameID).SetInfo("Name is reserved!")
+                DisplayMode != DisplayMode.PRESENTATION && user.ID != Host.ID && user.Name == Host.Name,
+                Errors.DEFAULT.SetID(userNameID).SetInfo("Name is reserved!")
             )
         );
         return errors;
@@ -148,12 +148,12 @@ public partial class Game {
     => Checker.Assert(
         user?.Name,
         ValidateReservedPlayerHostName(user, userID, userNameID),
-        exception ?? EXCEPTION.VALUES
+        exception ?? Exceptions.VALUES
     )!;
 
     // Settings > Spectators --------------------------------------------------------------------------------------------------------------
     private void AssertSpectatorCount(AppException? exception = null) {
-        if (GameValidator.MAX_SPECTATORS <= SpectatorCount) throw (exception ?? EXCEPTION.VALUES)
+        if (GameValidator.MAX_SPECTATORS <= SpectatorCount) throw (exception ?? Exceptions.VALUES)
         .SetInfo("Game can not have more spectators!");
     }
 
@@ -168,8 +168,8 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DISPLAY_MODE.PRESENTATION && user.ID == Host.ID,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("You must be connected as a player!")
+                DisplayMode != DisplayMode.PRESENTATION && user.ID == Host.ID,
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("You must be connected as a player!")
             )
         );
         return errors;
@@ -184,7 +184,7 @@ public partial class Game {
     => Checker.Assert(
         user,
         ValidateSpectatorHostNonPresentation(user, userID, user_IDID),
-        exception ?? EXCEPTION.CLIENT
+        exception ?? Exceptions.CLIENT
     )!;
 
     private List<Error> ValidateReservedSpectatorHostSpace(
@@ -198,11 +198,11 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode == DISPLAY_MODE.PRESENTATION &&
+                DisplayMode == DisplayMode.PRESENTATION &&
                 GameValidator.MAX_SPECTATORS - 1 <= SpectatorCount &&
                 !HostConnected &&
                 user.ID != Host.ID,
-                ERROR.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
+                Errors.DEFAULT.SetID(user_IDID).SetInfo("Space reserved for the host!")
             )
         );
         return errors;
@@ -217,7 +217,7 @@ public partial class Game {
     => Checker.Assert(
         user,
         ValidateReservedSpectatorHostSpace(user, userID, user_IDID),
-        exception ?? EXCEPTION.DEFAULT
+        exception ?? Exceptions.DEFAULT
     )!;
 
     // Player > Getters > Found player ----------------------------------------------------------------------------------------------------
@@ -227,7 +227,7 @@ public partial class Game {
         // Exceptions:
         string playerID = ""
     )
-    => Checker.Validate(player == null, ERROR.INVALID.SetID(playerID).SetInfo("Not a player of this game!"));
+    => Checker.Validate(player == null, Errors.INVALID.SetID(playerID).SetInfo("Not a player of this game!"));
     private static Player AssertFoundPlayer(
         // Parameters:
         Player? player,
@@ -235,7 +235,7 @@ public partial class Game {
         string playerID = "",
         AppException? exception = null
     )
-    => Checker.Assert(player, ValidateFoundPlayer(player, playerID), exception ?? EXCEPTION.VALUES)!;
+    => Checker.Assert(player, ValidateFoundPlayer(player, playerID), exception ?? Exceptions.VALUES)!;
 
     // Player > Getters > Host ------------------------------------------------------------------------------------------------------------
     public Player AssertHostPlayer(string hostID = "") => AssertFoundPlayer(GetHostPlayer(), hostID);

@@ -15,5 +15,5 @@ public class Error {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor][Newtonsoft.Json.JsonConstructor]
     protected Error(string id, TInfo info) { ID = id; Info = info; }
-    public Error() : this(DEFAULT_ID, new(MESSAGE.DEFAULT)) {}
+    public Error() : this(DEFAULT_ID, new(Messages.DEFAULT)) {}
 }

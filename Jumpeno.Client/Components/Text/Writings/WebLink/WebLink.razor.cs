@@ -10,7 +10,7 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public string ID { get; set; } = "";
     [Parameter]
-    public WEBLINK_ROLE Role { get; set; } = WEBLINK_ROLE.LINK;
+    public WebLinkRole Role { get; set; } = WebLinkRole.LINK;
     [Parameter]
     public string? Href { get; set; } = null;
     [Parameter]
@@ -24,9 +24,9 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public EventCallback<WebLinkKeyEvent> OnEnter { get; set; } = EventCallback<WebLinkKeyEvent>.Empty;
     [Parameter]
-    public OneOf<WEBLINK_TARGET, string> Target { get; set; } = WEBLINK_TARGET.SELF;
+    public OneOf<WebLinkTarget, string> Target { get; set; } = WebLinkTarget.SELF;
     [Parameter]
-    public WEBLINK_MATCH Match { get; set; } = WEBLINK_MATCH.PREFIX;
+    public WebLinkMatch Match { get; set; } = WebLinkMatch.PREFIX;
     [Parameter]
     public bool Underline { get; set; } = false;
     [Parameter]
@@ -41,7 +41,7 @@ public partial class WebLink : IDisabledComponent {
     private bool IsActive() {
         if (Href == null) return false;
         if (URL.Schema(Href) != "") return false;
-        return Match == WEBLINK_MATCH.ALL ? IsExactMatch() : IsPrefixMatch();
+        return Match == WebLinkMatch.ALL ? IsExactMatch() : IsPrefixMatch();
     }
 
     private bool IsExactMatch() {
@@ -92,7 +92,7 @@ public partial class WebLink : IDisabledComponent {
     }
     private async Task OnKeyPressEvent(KeyboardEventArgs e) {
         if (Disabled) return;
-        if (e.Key == KEYBOARD.ENTER) await OnEnter.InvokeAsync(new(this, e));
+        if (e.Key == KeyBoard.ENTER) await OnEnter.InvokeAsync(new(this, e));
         await OnKeyPress.InvokeAsync(new(this, e));
     }
 

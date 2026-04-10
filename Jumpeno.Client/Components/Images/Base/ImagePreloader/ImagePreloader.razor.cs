@@ -12,26 +12,26 @@ public partial class ImagePreloader {
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     static ImagePreloader() {
-        Add(IMAGE.BG_YELLOW);
-        Add(IMAGE.BG_BLUE);
-        Add(IMAGE.JUMPER_YELLOW);
-        Add(IMAGE.MAP_JUMPERS_HOME_TILE);
-        Add(IMAGE.MAP_MAGIC_TEMPLE_TILE);
-        Add(IMAGE.MAP_MAGIC_TEMPLE_BACKGROUND);
-        Add(IMAGE.MAP_EMERALD_GROVE_TILE);
-        Add(IMAGE.MAP_EMERALD_GROVE_BACKGROUND);
-        Add(IMAGE.MAP_AMETHYST_DAWN_TILE);
-        Add(IMAGE.MAP_AMETHYST_DAWN_BACKGROUND);
-        Add(IMAGE.SPRITE_MAGE_AIR);
-        Add(IMAGE.SPRITE_MAGE_EARTH);
-        Add(IMAGE.SPRITE_MAGE_FIRE);
-        Add(IMAGE.SPRITE_MAGE_ICE);
-        Add(IMAGE.SPRITE_MAGE_LAVA);
-        Add(IMAGE.SPRITE_MAGE_MAGIC);
-        Add(IMAGE.SPRITE_MAGE_PLANT);
-        Add(IMAGE.SPRITE_MAGE_SNOW);
-        Add(IMAGE.SPRITE_MAGE_WATER);
-        Add(IMAGE.SPRITE_MAGE_WOOD);
+        Add(ImageType.BG_YELLOW);
+        Add(ImageType.BG_BLUE);
+        Add(ImageType.JUMPER_YELLOW);
+        Add(ImageType.MAP_JUMPERS_HOME_TILE);
+        Add(ImageType.MAP_MAGIC_TEMPLE_TILE);
+        Add(ImageType.MAP_MAGIC_TEMPLE_BACKGROUND);
+        Add(ImageType.MAP_EMERALD_GROVE_TILE);
+        Add(ImageType.MAP_EMERALD_GROVE_BACKGROUND);
+        Add(ImageType.MAP_AMETHYST_DAWN_TILE);
+        Add(ImageType.MAP_AMETHYST_DAWN_BACKGROUND);
+        Add(ImageType.SPRITE_MAGE_AIR);
+        Add(ImageType.SPRITE_MAGE_EARTH);
+        Add(ImageType.SPRITE_MAGE_FIRE);
+        Add(ImageType.SPRITE_MAGE_ICE);
+        Add(ImageType.SPRITE_MAGE_LAVA);
+        Add(ImageType.SPRITE_MAGE_MAGIC);
+        Add(ImageType.SPRITE_MAGE_PLANT);
+        Add(ImageType.SPRITE_MAGE_SNOW);
+        Add(ImageType.SPRITE_MAGE_WATER);
+        Add(ImageType.SPRITE_MAGE_WOOD);
     }
 
     protected override bool ShouldComponentRender() => false;

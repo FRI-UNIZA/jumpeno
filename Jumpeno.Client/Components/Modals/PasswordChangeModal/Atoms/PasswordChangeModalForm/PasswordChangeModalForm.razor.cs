@@ -13,7 +13,7 @@ public partial class PasswordChangeModalForm
         VMPassword = new(new InputViewModelTextParams(
            Form: FORM,
            ID: nameof(UserPasswordChangeDTO.NewPassword),
-           TextMode: INPUT_TEXT_MODE.NORMAL,
+           TextMode: InputTextMode.NORMAL,
            TextCheck: UserValidator.IsPassword,
            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
            Placeholder: I18N.T("Password"),
@@ -29,7 +29,7 @@ public partial class PasswordChangeModalForm
         VMConfirmPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: "ConfirmPasssword",
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.NORMAL,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Confirm password"),
@@ -42,7 +42,7 @@ public partial class PasswordChangeModalForm
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangePassword() 
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.PASSWORD_CHANGE);
+        await PageLoader.Show(PageLoaderTask.PASSWORD_CHANGE);
         await Auth.RequestFreeze();
 
         await HTTP.Try(async () => {
@@ -54,7 +54,7 @@ public partial class PasswordChangeModalForm
             var errors = new List<Error>();
             errors.AddRange(body.Validate());
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
-            Checker.AssertWith(errors, EXCEPTION.VALUES);
+            Checker.AssertWith(errors, Exceptions.VALUES);
             // 3) Send request:
             var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_PASSWORD_CHANGE, body: body);
             // 4) Show result:
@@ -64,6 +64,6 @@ public partial class PasswordChangeModalForm
         }, FORM);
 
         await Auth.ResolveFreeze();
-        await PageLoader.Hide(PAGE_LOADER_TASK.PASSWORD_CHANGE);
+        await PageLoader.Hide(PageLoaderTask.PASSWORD_CHANGE);
     }
 }

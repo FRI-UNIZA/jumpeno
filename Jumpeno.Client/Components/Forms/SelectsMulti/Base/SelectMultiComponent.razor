@@ -5,11 +5,11 @@
 @inherits FormField<SelectMultiViewModel<T>>
 
 @code {
-    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.CONNECTED;
     protected override RenderFragment? RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@BUTTON_TYPE.BUTTON.String()"
+            type="@ButtonType.BUTTON.String()"
             aria-roledescription="multi-select"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
@@ -38,7 +38,7 @@
         </button>
         <Modal
             @ref="@ModalRef"
-            Surface="ModalSurface"
+            Surface="MSurface"
             Label="Label"
             Class="@ComputeModalClass()"
             OnOpenStart="@HandleOpenStart"
@@ -50,7 +50,7 @@
                 @if (ViewModel.Search) {
                     <InputSearch
                         ViewModel="ViewModel.SearchVM"
-                        Variant="FORM_VARIANT.PRIMARY"
+                        Variant="FormVariant.PRIMARY"
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
@@ -67,7 +67,7 @@
                             <button
                                 @key="option.Label"
                                 id="@($"{ViewModel.FormID}-{index++}")"
-                                type="@BUTTON_TYPE.BUTTON.String()"
+                                type="@ButtonType.BUTTON.String()"
                                 role="option"
                                 aria-label="@HTML.Label.OptionAria(option.Label, isSelected)"
                                 aria-selected="@HTML.Label.OptionAriaActive(isSelected)"
@@ -86,8 +86,8 @@
             </Content>
             <Footer>
                 <WebLink
-                    Role="WEBLINK_ROLE.BUTTON"
-                    Size="TEXT_SIZE.M"
+                    Role="WebLinkRole.BUTTON"
+                    Size="TextSize.M"
                     NoWrap
                     OnClick="ClearSelect"
                     OnEnter="ClearSelect"
@@ -95,8 +95,8 @@
                     @I18N.T("Clear")
                 </WebLink>
                 <Button
-                    Variant="BUTTON_VARIANT.QUATERNARY"
-                    Size="BUTTON_SIZE.S"
+                    Variant="ButtonVariant.QUATERNARY"
+                    Size="ButtonSize.S"
                     NoShadow
                     OnClick="ConfirmSelect"
                 >

@@ -11,7 +11,7 @@ public partial class MapCanvas {
     private Map DEFAULT_MAP => new(
         Map.DEFAULT_NAME, [],
         AppTheme.GAME_CANVAS_DEFAULT_BACKGROUND,
-        IMAGE.MAP_JUMPERS_HOME_TILE,
+        ImageType.MAP_JUMPERS_HOME_TILE,
         AppTheme.GAME_CANVAS_DEFAULT_FOREGROUND,
         AppTheme.GAME_CANVAS_DEFAULT_TINT,
         AppTheme.GAME_CANVAS_DEFAULT_BORDER

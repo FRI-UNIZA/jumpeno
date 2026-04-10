@@ -6,15 +6,15 @@ public class APIMiddleware(RequestDelegate next) {
             await next(ctx); return;
         }
         // Get endpoint metadata:
-        var endpoint = ctx.GetEndpoint() ?? throw EXCEPTION.BAD_REQUEST;
+        var endpoint = ctx.GetEndpoint() ?? throw Exceptions.BAD_REQUEST;
 
         // Get controller and action metadata:
         var controllerActionDescriptor = endpoint.Metadata
             .OfType<Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor>()
-            .FirstOrDefault() ?? throw EXCEPTION.BAD_REQUEST;
+            .FirstOrDefault() ?? throw Exceptions.BAD_REQUEST;
 
         // Check the method info:
-        if (controllerActionDescriptor?.MethodInfo == null) throw EXCEPTION.BAD_REQUEST;
+        if (controllerActionDescriptor?.MethodInfo == null) throw Exceptions.BAD_REQUEST;
         // Move to next:
         await next(ctx);
     }

@@ -13,16 +13,16 @@ public partial class ModalElement {
         .Set(Modal.CLASS, Base)
         .SetSurface(Modal.Surface);
         switch (Modal.State) {
-            case MODAL_STATE.PRE_OPEN:
+            case ModalStateType.PRE_OPEN:
                 c.Set("pre-open");
             break;
-            case MODAL_STATE.LOADING:
+            case ModalStateType.LOADING:
                 c.Set("loading");
             break;
-            case MODAL_STATE.CLOSING:
+            case ModalStateType.CLOSING:
                 c.Set("closing");
             break;
-            case MODAL_STATE.CLOSING_LOADING:
+            case ModalStateType.CLOSING_LOADING:
                 c.Set("closing"); c.Set("closing-loading");
             break;
         }
@@ -38,9 +38,9 @@ public partial class ModalElement {
     public CSSClass ComputeDialogClass() => new(Modal.CLASS_DIALOG);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    private MODAL_STATE LastState = MODAL_STATE.CLOSED;
+    private ModalStateType LastState = ModalStateType.CLOSED;
     protected override async Task OnComponentAfterRenderAsync(bool firstRender) {
-        if (LastState != MODAL_STATE.OPEN && Modal.State == MODAL_STATE.OPEN) {
+        if (LastState != ModalStateType.OPEN && Modal.State == ModalStateType.OPEN) {
             ModalProvider.NotifyOpen();
         }
         LastState = Modal.State;
@@ -58,8 +58,8 @@ public partial class ModalElement {
         if (prop is null) return;
         MethodInfo? setMethod = prop.GetSetMethod(nonPublic: true);
         if (setMethod is null) return;
-        var loading = Modal.State == MODAL_STATE.LOADING;
-        setMethod.Invoke(Modal, loading ? [MODAL_STATE.CLOSING_LOADING] : [MODAL_STATE.CLOSING]);
+        var loading = Modal.State == ModalStateType.LOADING;
+        setMethod.Invoke(Modal, loading ? [ModalStateType.CLOSING_LOADING] : [ModalStateType.CLOSING]);
         JS.InvokeVoid(JSModal.Deactivate, Modal.ID, loading);
         StateHasChanged();
     }

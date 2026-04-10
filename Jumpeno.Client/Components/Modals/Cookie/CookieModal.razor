@@ -11,7 +11,7 @@
 >
     <Content>
         <div class="consent-container">
-            <Collapse Surface="COLLAPSE_SURFACE.FLOATING_COLLAPSE">
+            <Collapse Surface="CollapseSurface.FLOATING_COLLAPSE">
                 <CollapseItem Label="@I18N.T("Mandatory cookies")">
                     <Title>
                         <div class="@CLASS_COOKIE_TITLE">
@@ -47,9 +47,9 @@
                     </Content>
                 </CollapseItem>
             </Collapse>
-            <Paragraph Size="TEXT_SIZE.S" Class="cookie-paragraph">
+            <Paragraph Size="TextSize.S" Class="cookie-paragraph">
                 @I18N.T("Cookie message cookie files (Cookie message)")
-                <WebLink Href="@URL.Link(I18N.T("LINK_COOKIE"))" Target="WEBLINK_TARGET.BLANK" Size="TEXT_SIZE.S" NoWrap Underline>
+                <WebLink Href="@I18N.T("Mandatory cookies")" Target="WebLinkTarget.BLANK" Size="TextSize.S" NoWrap Underline>
                     @I18N.T("Cookie message cookie files (cookie files)")
                 </WebLink>
             </Paragraph>
@@ -57,13 +57,13 @@
     </Content>
     <Footer>
         <div class="consent-footer">
-            <Button Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
+            <Button Variant="ButtonVariant.TERTIARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
                 <Text>@I18N.T("Accept chosen")</Text>
             </Button>
-            <Button Variant="BUTTON_VARIANT.TERTIARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES_REQUIRED))">
+            <Button Variant="ButtonVariant.TERTIARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES_REQUIRED))">
                 <Text>@I18N.T("Only mandatory")</Text>
             </Button>
-            <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="@(async () => await AcceptCookies(COOKIE.TYPES))">
+            <Button Variant="ButtonVariant.QUATERNARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES))">
                 <Text>@I18N.T("Accept all")</Text>
             </Button>
         </div>

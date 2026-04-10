@@ -20,7 +20,7 @@ public partial class UserLoginForm {
         VMEmail = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserLoginDTO.Email),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.NORMAL,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
@@ -31,7 +31,7 @@ public partial class UserLoginForm {
         VMPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserLoginDTO.Password),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.NORMAL,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Password"),
@@ -45,7 +45,7 @@ public partial class UserLoginForm {
     private async Task Login() {
         if (!await HTTP.Sync(
             async () => {
-                if (!CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))
+                if (!CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))
                 {
                     await CookieModal.Open(sync: false);
                     Notification.Error(I18N.T("You must accept the security cookie."));
@@ -55,13 +55,13 @@ public partial class UserLoginForm {
             }
         )) return;
 
-        await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
+        await PageLoader.Show(PageLoaderTask.LOGIN);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:
             var captchaToken = await ReCAPTCHARef.GetToken();
             // 2) Login:
             await Auth.LogInUser(VMEmail.Value, VMPassword.Value, captchaToken);
         }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
+        await PageLoader.Hide(PageLoaderTask.LOGIN);
     }
 }

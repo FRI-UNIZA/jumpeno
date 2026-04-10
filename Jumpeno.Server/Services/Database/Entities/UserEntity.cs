@@ -34,14 +34,14 @@ public class UserEntity {
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static async Task<User?> SelectUser(string id) {
         var user = await ByIDLeftJoinActivation(id);
-        return user != null ? new(Guid.Parse(user.ID), user.Email, user.Name, (SKIN)user.Skin, user.Activation == null) : null;
+        return user != null ? new(Guid.Parse(user.ID), user.Email, user.Name, (Skin)user.Skin, user.Activation == null) : null;
     }
 
-    public static async Task<User> SelectCurrentUser() => await SelectUser(Token.Access.sub) ?? throw EXCEPTION.NOT_AUTHENTICATED;
+    public static async Task<User> SelectCurrentUser() => await SelectUser(Token.Access.sub) ?? throw Exceptions.NOT_AUTHENTICATED;
 
     public static async Task<User> SelectCurrentActivatedUser() {
         var user = await SelectCurrentUser();
-        if (!user.Activated) throw EXCEPTION.CLIENT.SetInfo("Account is not activated!");
+        if (!user.Activated) throw Exceptions.CLIENT.SetInfo("Account is not activated!");
         return user;
     }
 
@@ -55,7 +55,7 @@ public class UserEntity {
         // 1) Validation:
         var errors = UserValidator.ValidateEmail(email, emailID);
         errors.AddRange(UserValidator.ValidateName(name, true, nameID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        Checker.Assert(errors, Exceptions.VALUES);
         // 2) Create record:
         var at = DateTime.UtcNow;
         var record = new UserEntity() {
@@ -71,10 +71,10 @@ public class UserEntity {
         ctx.User.Add(record);
         // 3.2) Unique constraints:
         var result = await DB.Save(new() {
-            { INDEX_EMAIL, ERROR.EXISTS.SetID(emailID) },
-            { INDEX_NAME, ERROR.EXISTS.SetID(nameID) }
+            { INDEX_EMAIL, Errors.EXISTS.SetID(emailID) },
+            { INDEX_NAME, Errors.EXISTS.SetID(nameID) }
         });
-        Checker.Assert(result.errors, EXCEPTION.VALUES);
+        Checker.Assert(result.errors, Exceptions.VALUES);
         // 4) Return record:
         return record;
     }
@@ -170,7 +170,7 @@ public class UserEntity {
         string id,
         string? email = null,
         string? name = null,
-        SKIN? skin = null,
+        Skin? skin = null,
         // Exceptions:
         string idID = "",
         string emailID = "",
@@ -183,7 +183,7 @@ public class UserEntity {
         if (email is not null) errors.AddRange(UserValidator.ValidateEmail(email, emailID));
         if (name is not null) errors.AddRange(UserValidator.ValidateName(name, false, nameID));
         if (skin is not null) errors.AddRange(UserValidator.ValidateSkin(skin, skinID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        Checker.Assert(errors, Exceptions.VALUES);
     
         // 2) Modify record:
         var ctx = await DB.Context();
@@ -195,13 +195,13 @@ public class UserEntity {
                 .SetProperty(o => o.Skin, o => skin != null ? (int)skin : o.Skin)
                 .SetProperty(o => o.ModifiedAt, o => DateTime.UtcNow)
         ), new() {
-            { INDEX_EMAIL, ERROR.EXISTS.SetID(emailID) },
-            { INDEX_NAME, ERROR.EXISTS.SetID(nameID) }
+            { INDEX_EMAIL, Errors.EXISTS.SetID(emailID) },
+            { INDEX_NAME, Errors.EXISTS.SetID(nameID) }
         }
         );
     
         // 3) Unique constraints:
-        Checker.Assert(result.errors, EXCEPTION.VALUES);
+        Checker.Assert(result.errors, Exceptions.VALUES);
 
         // 4) True if modified:
         return result.rows > 0;

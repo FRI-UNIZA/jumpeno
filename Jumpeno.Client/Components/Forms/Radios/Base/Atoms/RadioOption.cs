@@ -10,13 +10,13 @@ public class RadioOption<T> : FormField<RadioOptionViewModel<T>> {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public override FORM_VARIANT? Variant { get; set; } = null;
+    public override FormVariant? Variant { get; set; } = null;
     [Parameter]
-    public override FORM_SIZE? Size { get; set; } = null;
+    public override FormSize? Size { get; set; } = null;
     [Parameter]
-    public override FORM_ALIGN? Align { get; set; } = null;
+    public override FormAlign? Align { get; set; } = null;
     [Parameter]
-    public override FORM_ALIGN? ErrorAlign { get; set; } = null;
+    public override FormAlign? ErrorAlign { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     protected bool IsSelected => Radio.ViewModel.Value?.DTO == ViewModel.DTO;

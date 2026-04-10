@@ -31,7 +31,7 @@ public partial class Modal {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Surface:
     [Parameter]
-    public MODAL_SURFACE? Surface { get; set; } = MODAL_SURFACE.FLOATING;
+    public ModalSurface? Surface { get; set; } = ModalSurface.FLOATING;
     // Content:
     [Parameter]
     public required OneOf<string, List<string>> Label { get; set; }
@@ -49,7 +49,7 @@ public partial class Modal {
     public RenderFragment? Footer { get; set; }
     // Scrollbars:
     [Parameter]
-    public SCROLLAREA_AUTOHIDE ScrollAutoHide { get; set; } = SCROLLAREA_AUTOHIDE.MOVE;
+    public ScrollAreaAutoHide ScrollAutoHide { get; set; } = ScrollAreaAutoHide.MOVE;
     [Parameter]
     public bool NoInitScroll { get; set; } = false;
     // Loading (ms):
@@ -81,7 +81,7 @@ public partial class Modal {
     public virtual async Task CallOnBeforeOpenStart() => await OnBeforeOpenStart.InvokeAsync(this);
     public virtual async Task CallOnOpenStart() => await OnOpenStart.InvokeAsync(this);
     public virtual async Task CallOnOpenFinish() { 
-        if (!NoInitScroll && ScrollAutoHide != SCROLLAREA_AUTOHIDE.NEVER) ScrollAreaRef.InitScrollTo(0, 0);
+        if (!NoInitScroll && ScrollAutoHide != ScrollAreaAutoHide.NEVER) ScrollAreaRef.InitScrollTo(0, 0);
         await OnOpenFinish.InvokeAsync(this);
     }
     public virtual async Task CallOnAfterOpenFinish() => await OnAfterOpenFinish.InvokeAsync(this);
@@ -98,7 +98,7 @@ public partial class Modal {
     public readonly string ID_DIALOG;
     public readonly string ID_DIALOG_END;
     public bool CreatedLoading { get; private set; }
-    public MODAL_STATE State { get; private set; }
+    public ModalStateType State { get; private set; }
     public required ScrollArea ScrollAreaRef { get; set; }
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -108,11 +108,11 @@ public partial class Modal {
         ID_DIALOG_START = $"{ID_DIALOG_START_PREFIX}-{ID}";
         ID_DIALOG = $"{ID_DIALOG_PREFIX}-{ID}";
         ID_DIALOG_END = $"{ID_DIALOG_END_PREFIX}-{ID}";
-        State = MODAL_STATE.CLOSED;
+        State = ModalStateType.CLOSED;
     }
 
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (State == MODAL_STATE.OPEN) await ModalProvider.NotifyElement(this);
+        if (State == ModalStateType.OPEN) await ModalProvider.NotifyElement(this);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

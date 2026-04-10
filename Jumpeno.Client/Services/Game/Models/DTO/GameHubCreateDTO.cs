@@ -8,11 +8,11 @@ public record GameHubCreateDTO(
     bool Anonyms,
     byte Rounds,
     byte Capacity,
-    DISPLAY_MODE DisplayMode,
-    GAME_MODE GameMode,
+    DisplayMode DisplayMode,
+    GameMode GameMode,
     // Player:
     string AccessToken,
-    DEVICE_TYPE Device
+    DeviceType Device
 ) : IValidable<GameHubCreateDTO> {
     public List<Error> Validate() {
         var errors = Code != null ? GameValidator.ValidateCode(Code, nameof(Code)) : [];
@@ -27,5 +27,5 @@ public record GameHubCreateDTO(
         errors.AddRange(UserValidator.ValidateDeviceType(Device, nameof(Device)));
         return errors;
     }
-    public GameHubCreateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public GameHubCreateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
 }

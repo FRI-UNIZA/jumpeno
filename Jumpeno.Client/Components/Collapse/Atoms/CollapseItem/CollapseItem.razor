@@ -8,7 +8,7 @@
         id="@ID_TITLE"
         class="@CLASS_COLLAPSE_ITEM_TITLE"
         @onclick="Toggle"
-        @onkeypress="@(async e => { if (e.Key == KEYBOARD.ENTER) await Toggle(); })"
+        @onkeypress="@(async e => { if (e.Key == KeyBoard.ENTER) await Toggle(); })"
         role="button"
         aria-controls="@ID_CONTENT"
         aria-expanded="@($"{!Collapsed}".ToLower())"

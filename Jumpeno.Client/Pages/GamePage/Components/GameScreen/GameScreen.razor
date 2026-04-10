@@ -44,7 +44,7 @@
 
     <div class="@GameControlsClass()">
         @code {
-            private RenderFragment RenderControl(GAME_CONTROLS control, RenderFragment icon) =>
+            private RenderFragment RenderControl(GameControls control, RenderFragment icon) =>
                 @<div
                     class="control-wrap"
                     @ontouchstart="TouchKeyEvent(control)" @ontouchend="ReleaseKeyEvent(control)"
@@ -53,7 +53,7 @@
                 >
                     <button
                         class="@ControlClass(control)"
-                        type="@BUTTON_TYPE.BUTTON.String()"
+                        type="@ButtonType.BUTTON.String()"
                         @onmousedown="MouseTouchKeyEvent(control)"
                         tabindex="-1"
                     >
@@ -63,11 +63,11 @@
             ;
         }
         <div class="arrows">
-            @RenderControl(GAME_CONTROLS.LEFT, @<AntIcon Type="left" Theme="outline" Class="control-icon" />)
-            @RenderControl(GAME_CONTROLS.RIGHT, @<AntIcon Type="right" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.LEFT, @<AntIcon Type="left" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.RIGHT, @<AntIcon Type="right" Theme="outline" Class="control-icon" />)
         </div>
         <div class="abilities">
-            @RenderControl(GAME_CONTROLS.SPACE, @<AntIcon Type="to-top" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.SPACE, @<AntIcon Type="to-top" Theme="outline" Class="control-icon" />)
         </div>
     </div>
 

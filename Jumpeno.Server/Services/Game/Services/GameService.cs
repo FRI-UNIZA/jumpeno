@@ -22,8 +22,8 @@ public static class GameService {
         var engine = FindEngine(code);
         return Checker.Assert(
             engine,
-            Checker.Validate(engine == null, ERROR.INVALID.SetID(codeID).SetInfo("Game code is incorrect!")),
-            EXCEPTION.VALUES
+            Checker.Validate(engine == null, Errors.INVALID.SetID(codeID).SetInfo("Game code is incorrect!")),
+            Exceptions.VALUES
         )!;
     }
 
@@ -62,24 +62,24 @@ public static class GameService {
         data.Assert();
         // 1) Check host:
         if (connection.User.ID is not Guid hostID)
-            throw EXCEPTION.DEFAULT.SetInfo("Host must be registered!");
+            throw Exceptions.DEFAULT.SetInfo("Host must be registered!");
         if (FindHostEngine(hostID) is GameEngine hostEngine)
-            throw EXCEPTION.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
+            throw Exceptions.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
         // 2) Check games limit:
         try { GameValidator.AssertMaxInstances(Engines.Count); }
-        catch { throw EXCEPTION.SERVER.SetInfo("Maximum games limit exceeded!"); }
+        catch { throw Exceptions.SERVER.SetInfo("Maximum games limit exceeded!"); }
         // 3) Obtain code:
         var code = "";
         if (data.Code == null) {
             var g = new StringGenerator();
-            do code = g.Generate(GameValidator.CODE_LENGTH, CHARS.ALPHA_UPPER_NUM);
+            do code = g.Generate(GameValidator.CODE_LENGTH, Chars.ALPHA_UPPER_NUM);
             while (Engines.ContainsKey(code));
         } else {
             code = !Engines.ContainsKey(data.Code) ? data.Code :
-            throw EXCEPTION.VALUES.SetInfo("Game code already exists!").SetErrors(ERROR.EXISTS.SetID(nameof(data.Code)));
+            throw Exceptions.VALUES.SetInfo("Game code already exists!").SetErrors(Errors.EXISTS.SetID(nameof(data.Code)));
         }
         // 4) Select map:
-        var map = MAP.ByID(data.Map ?? 0, nameof(data.Map));
+        var map = MapType.ByID(data.Map ?? 0, nameof(data.Map));
         // 5) Create engine:
         var engine = new GameEngine(
             data.DisplayMode, data.GameMode,
@@ -87,7 +87,7 @@ public static class GameService {
             map, data.Anonyms, data.Rounds, data.Capacity
         );
         // 6) Connect:
-        var ctx =  await Connect(engine, connection, data.DisplayMode == DISPLAY_MODE.PRESENTATION);
+        var ctx =  await Connect(engine, connection, data.DisplayMode == DisplayMode.PRESENTATION);
         // 7) Save engine:
         SaveEngine(engine);
         // 8) Return context:
@@ -107,9 +107,9 @@ public static class GameService {
             // 2.1) Check registered player:
             if (connection.User.ID is Guid playerID) {
                 if (FindHostEngine(playerID) is GameEngine hostEngine && playerID != engine.Game.Host.ID)
-                    throw EXCEPTION.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
+                    throw Exceptions.DEFAULT.SetInfo("You already host a game with code \"I18N{code}\"!", new() { ["code"] = hostEngine.Game.Code });
                 if (FindPlayerEngine(playerID) is GameEngine playerEngine)
-                    throw EXCEPTION.DEFAULT.SetInfo("You already play a game with code \"I18N{code}\"!", new() { ["code"] = playerEngine.Game.Code });
+                    throw Exceptions.DEFAULT.SetInfo("You already play a game with code \"I18N{code}\"!", new() { ["code"] = playerEngine.Game.Code });
             }
             // 2.2) Add player:
             var ctx = await engine.AddPlayer(connection, nameID);
@@ -201,8 +201,8 @@ public static class GameService {
         // 1.1) Remove engine:
         if (RemoveEngine(engine)) await engine.Delete();
         // 1.2) Or throw exception:
-        else throw EXCEPTION.VALUES.SetInfo("Game code is incorrect!")
-        .SetErrors(ERROR.INVALID.SetID(codeID).SetInfo("Game code is incorrect!"));
+        else throw Exceptions.VALUES.SetInfo("Game code is incorrect!")
+        .SetErrors(Errors.INVALID.SetID(codeID).SetInfo("Game code is incorrect!"));
     }
     public static async Task DeleteGame(GameContext ctx) => await Lock.Exclusive(() => DeleteGame(ctx.Engine));
     public static async Task DeleteGame(

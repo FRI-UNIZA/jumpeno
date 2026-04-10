@@ -2,23 +2,23 @@ namespace Jumpeno.Client.Models;
 
 public class QueryArray {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public QUERY_ARRAY_TYPE Type { get; set; }
+    public QuaryArrayType Type { get; set; }
     private readonly List<string> Items;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public QueryArray(QUERY_ARRAY_TYPE type, StringValues? value) {
+    public QueryArray(QuaryArrayType type, StringValues? value) {
         Type = type;
         Items = ParseArray(value);
     }
-    public QueryArray(QUERY_ARRAY_TYPE type) : this(type, null) {}
-    public QueryArray() : this(QUERY_ARRAY_TYPE.REPEATED_KEY, null) {}
+    public QueryArray(QuaryArrayType type) : this(type, null) {}
+    public QueryArray() : this(QuaryArrayType.REPEATED_KEY, null) {}
 
     // Type specific ----------------------------------------------------------------------------------------------------------------------
     private List<string> ParseArray(StringValues? value) {
         if (value is null) return [];
         try {
             switch (Type) {
-                case QUERY_ARRAY_TYPE.REPEATED_KEY:
+                case QuaryArrayType.REPEATED_KEY:
                     return ParseArrayRepeatedKey((StringValues) value);
                 default:
                     return [];
@@ -111,7 +111,7 @@ public class QueryArray {
     // Conversions ------------------------------------------------------------------------------------------------------------------------
     public StringValues ToArray() {
         switch (Type) {
-            case QUERY_ARRAY_TYPE.REPEATED_KEY:
+            case QuaryArrayType.REPEATED_KEY:
                 return ToArrayRepeatedKey();
             default:
                 return [];
@@ -119,7 +119,7 @@ public class QueryArray {
     }
     public string ToString(string key) {
         switch (Type) {
-            case QUERY_ARRAY_TYPE.REPEATED_KEY:
+            case QuaryArrayType.REPEATED_KEY:
                 return ToStringRepeatedKey(key);
             default:
                 return "";

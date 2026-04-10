@@ -61,8 +61,8 @@ public partial class GameScreen {
 
     // Controls ---------------------------------------------------------------------------------------------------------------------------
     // Arrows:
-    private readonly List<GAME_CONTROLS> ArrowsPressed = [];
-    private GAME_CONTROLS? LastArrowPressed = null;
+    private readonly List<GameControls> ArrowsPressed = [];
+    private GameControls? LastArrowPressed = null;
     // Space:
     private (bool Pressed, DateTime? At) Space = (false, null);
     private DateTime? LastSpacePressedAt = null;
@@ -75,37 +75,37 @@ public partial class GameScreen {
         if (!VM.ControlsDisplayed) c.Set("hidden");
         return c;
     }
-    private CSSClass ControlClass(GAME_CONTROLS control) {
+    private CSSClass ControlClass(GameControls control) {
         var c = new CSSClass("control");
         switch (control) {
-            case GAME_CONTROLS.SPACE: c.Set("space"); break;
-            case GAME_CONTROLS.LEFT: c.Set("left"); break;
-            case GAME_CONTROLS.RIGHT: c.Set("right"); break;
+            case GameControls.SPACE: c.Set("space"); break;
+            case GameControls.LEFT: c.Set("left"); break;
+            case GameControls.RIGHT: c.Set("right"); break;
         }
         if (IsPressed(control)) c.Set("pressed");
         return c;
     }
 
     // Save pressed keys:
-    private async Task PressKey(GAME_CONTROLS control) {
+    private async Task PressKey(GameControls control) {
         await ControlLock.TryExclusive(() => {
             switch (control) {
-                case GAME_CONTROLS.SPACE:
+                case GameControls.SPACE:
                     if (Space.Pressed) break;
                     Space = (true, DateTime.UtcNow);
                 break;
-                case GAME_CONTROLS.LEFT:
-                case GAME_CONTROLS.RIGHT:
+                case GameControls.LEFT:
+                case GameControls.RIGHT:
                     if (ArrowsPressed.Contains(control)) break;
                     ArrowsPressed.Add(control);
                 break;
             }
         });
     }
-    private Func<Task> TouchKeyEvent(GAME_CONTROLS control) => () => PressKey(control);
-    private Func<MouseEventArgs, Task> MouseTouchKeyEvent(GAME_CONTROLS control)
+    private Func<Task> TouchKeyEvent(GameControls control) => () => PressKey(control);
+    private Func<MouseEventArgs, Task> MouseTouchKeyEvent(GameControls control)
     => e => MouseReleaseKeyEventLock.TryExclusive(async () => {
-        if (e.Button != MOUSE_BUTTON.LEFT.Raw()) return;
+        if (e.Button != MouseButton.LEFT.Raw()) return;
         await PressKey(control);
         MouseReleaseKeyEvent = () => MouseReleaseKeyEventLock.TryExclusive(
             async () => {
@@ -117,51 +117,51 @@ public partial class GameScreen {
     [JSInvokable]
     public async Task JS_OnKeyDown(WindowKeyEvent e) {
         if (e.Repeat) return;
-        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
+        if (GameControlsExtension.Get(e.Key) is not GameControls control) return;
         await PressKey(control);
     }
 
     // Save released keys:
-    private async Task ReleaseKey(GAME_CONTROLS control) {
+    private async Task ReleaseKey(GameControls control) {
         await ControlLock.TryExclusive(() => {
             switch (control) {
-                case GAME_CONTROLS.SPACE:
+                case GameControls.SPACE:
                     Space = (false, Space.At);
                 break;
-                case GAME_CONTROLS.LEFT:
-                case GAME_CONTROLS.RIGHT:
+                case GameControls.LEFT:
+                case GameControls.RIGHT:
                     ArrowsPressed.Remove(control);
                 break;
             }
         });
     }
-    private Func<Task> ReleaseKeyEvent(GAME_CONTROLS control) => () => ReleaseKey(control);
+    private Func<Task> ReleaseKeyEvent(GameControls control) => () => ReleaseKey(control);
     private Func<Task> MouseReleaseKeyEvent = () => Task.CompletedTask;
     private readonly LockerSlim MouseReleaseKeyEventLock = new();
     [JSInvokable]
     public async Task JS_OnKeyUp(WindowKeyEvent e) {
         if (e.Repeat) return;
-        if (GameControlsExtension.Get(e.Key) is not GAME_CONTROLS control) return;
+        if (GameControlsExtension.Get(e.Key) is not GameControls control) return;
         await ReleaseKey(control);
     }
     [JSInvokable]
     public async Task JS_OnMouseUp(WindowMouseEvent e) {
-        if (e.Button == MOUSE_BUTTON.LEFT) await MouseReleaseKeyEvent();
+        if (e.Button == MouseButton.LEFT) await MouseReleaseKeyEvent();
     }
 
     // Check pressed key:
-    protected bool IsPressed(GAME_CONTROLS control) {
+    protected bool IsPressed(GameControls control) {
         switch (control) {
-            case GAME_CONTROLS.SPACE:
+            case GameControls.SPACE:
                 return Space.Pressed;
-            case GAME_CONTROLS.LEFT:
-            case GAME_CONTROLS.RIGHT:
+            case GameControls.LEFT:
+            case GameControls.RIGHT:
                 return ArrowsPressed.Contains(control);
             default:
                 return false;
         }
     }
-    protected async Task<bool> IsPressedAsync(GAME_CONTROLS control) {
+    protected async Task<bool> IsPressedAsync(GameControls control) {
         return await ControlLock.TryExclusive(() => IsPressed(control), false);
     }
 
@@ -177,14 +177,14 @@ public partial class GameScreen {
                     LastArrowPressed = ArrowsPressed[0];
                 }
             } else {
-                if (LastArrowPressed is GAME_CONTROLS control) {
+                if (LastArrowPressed is GameControls control) {
                     update.Controls.AddLast(new Control(control, false));
                     LastArrowPressed = null;
                 }
             }
             // 2) Space:
             if (LastSpacePressedAt != Space.At) {
-                update.Controls.AddLast(new Control(GAME_CONTROLS.SPACE, true));
+                update.Controls.AddLast(new Control(GameControls.SPACE, true));
                 LastSpacePressedAt = Space.At;
             }
             if (update.Controls.Count > 0) await VM.SendGameUpdate(update);

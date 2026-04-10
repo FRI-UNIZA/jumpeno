@@ -35,7 +35,7 @@ public partial class ReCAPTCHA
         if (!firstRender) return;
         try
         {
-            if (await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))) return;
+            if (await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))) return;
             await JS.EvalVoidAsync($$"""
                 grecaptcha.render('{{CAPTCHA_ID}}', {
                     sitekey : '{{AppSettings.ReCAPTCHA.SiteKey}}',
@@ -55,21 +55,21 @@ public partial class ReCAPTCHA
     ///     <seealso cref="HTTP.Sync(Action)"/>.
     /// </summary>
     /// <returns>Returns ReCaptcha token or empty string if ReCaptcha is not shown.</returns>
-    /// <exception cref="EXCEPTION.DEFAULT">Can throw if grecaptcha is not loaded properly.</exception>
+    /// <exception cref="Exceptions.DEFAULT">Can throw if grecaptcha is not loaded properly.</exception>
     public async Task<string> GetToken() 
     {
-        if (!AppSettings.ReCAPTCHA.On || !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY))) return string.Empty;
+        if (!AppSettings.ReCAPTCHA.On || await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))) return string.Empty;
         try
         {
             if (!Showing) return string.Empty;
 
             var captchaToken = await JS.InvokeAsync<string>("grecaptcha.getResponse");
             await JS.InvokeVoidAsync("grecaptcha.reset"); // Reset captcha after each request bcs tokens live only for 1 check
-            if (string.IsNullOrWhiteSpace(captchaToken)) throw EXCEPTION.CAPTCHA_MISSING;
+            if (string.IsNullOrWhiteSpace(captchaToken)) throw Exceptions.CAPTCHA_MISSING;
             return captchaToken;
         }
         catch (AppException) { throw; }
-        catch (Exception) { throw EXCEPTION.CAPTCHA_ERROR; }
+        catch (Exception) { throw Exceptions.CAPTCHA_ERROR; }
     }
 
     public void Show()
