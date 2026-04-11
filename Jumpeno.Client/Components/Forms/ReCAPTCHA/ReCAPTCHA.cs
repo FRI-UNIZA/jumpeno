@@ -49,12 +49,16 @@ public partial class ReCAPTCHA
     protected override void OnComponentDispose() => ViewModel.Error.Detach();
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    /// <summary>Retrieves token and resets ReCaptcha.</summary>
+    /// <summary>
+    ///     Retrieves token and resets ReCaptcha. 
+    ///     Needs to be called inside tab synced context (HTTP.Try, HTTP.Sync etc..) 
+    ///     <seealso cref="HTTP.Sync(Action)"/>.
+    /// </summary>
     /// <returns>Returns ReCaptcha token or empty string if ReCaptcha is not shown.</returns>
     /// <exception cref="EXCEPTION.DEFAULT">Can throw if grecaptcha is not loaded properly.</exception>
     public async Task<string> GetToken() 
     {
-        if (!AppSettings.ReCAPTCHA.On || await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))) return string.Empty;
+        if (!AppSettings.ReCAPTCHA.On || !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY))) return string.Empty;
         try
         {
             if (!Showing) return string.Empty;
