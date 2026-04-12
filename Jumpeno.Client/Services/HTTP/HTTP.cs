@@ -305,8 +305,12 @@ public class HTTP : StaticService<HTTP> {
     public static async Task Sync(Func<Task> callback) {
         await TabLock(new(async () => { 
             IsSyncing = true;
-            await callback();
-            IsSyncing = false;
+            try {
+                await callback();
+            }
+            finally {
+                IsSyncing = false;
+            }
             return true; 
         }));
     }
@@ -317,8 +321,12 @@ public class HTTP : StaticService<HTTP> {
     public static async Task Sync(Action callback) {
         await TabLock(new(() => { 
             IsSyncing = true;
-            callback();
-            IsSyncing = false;
+            try {
+                callback();
+            }
+            finally {
+                IsSyncing = false;
+            }
             return true; 
         }));
     }
@@ -330,8 +338,12 @@ public class HTTP : StaticService<HTTP> {
         R? response = default;
         await TabLock(new(async () => { 
             IsSyncing = true;
-            response = await callback();
-            IsSyncing = false;
+            try {
+                response = await callback();
+            }
+            finally {
+                IsSyncing = false;
+            }
             return true; 
         }));
         return response!;
@@ -344,8 +356,12 @@ public class HTTP : StaticService<HTTP> {
         R? response = default;
         await TabLock(new(() => {
             IsSyncing = true;
-            response = callback();
-            IsSyncing = false;
+            try {
+                response = callback();
+            }
+            finally {
+                IsSyncing = false;
+            }
             return true; }));
         return response!;
     }
@@ -357,15 +373,23 @@ public class HTTP : StaticService<HTTP> {
     /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> Try(Func<Task> callback, string? form = null) {
         return await TabLock(new(async () => {
+            IsSyncing = true;
             if (form != null) FormManager.ClearErrors(form);
-            try { await callback(); return true; }
+            try {
+                await callback();
+                return true;
+            }
             catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
             catch (AggregateException e) {
                 foreach (var inner in e.InnerExceptions) {
                     if (inner is AppException app && app.Code == CODE.REQUEST_CANCELLED) continue;
                     await OnError(inner, form);
                 }
-            } catch (Exception e) { await OnError(e, form); }
+            }
+            catch (Exception e) { await OnError(e, form); }
+            finally {
+                IsSyncing = false;
+            }
             return false;
         }));
     }
@@ -375,8 +399,15 @@ public class HTTP : StaticService<HTTP> {
     /// <returns>A task to await that returns true if no error occurs.</returns>
     public static async Task<bool> TrySilent(Func<Task> callback) {
         return await TabLock(new(async () => {
-            try { await callback(); return true; }
+            try { 
+                IsSyncing = true;
+                await callback(); 
+                return true;
+            }
             catch { return false; }
+            finally {
+                IsSyncing = false;
+            }
         }));
     }
 
@@ -388,15 +419,12 @@ public class HTTP : StaticService<HTTP> {
     public static async Task Await(Task[] tasks) {
         try {
             await Task.WhenAll(tasks);
-        } catch {
-            var exceptions = new List<Exception>();
-            foreach (var task in tasks) {
-                if (task.Exception != null) {
-                    foreach (var e in task.Exception.InnerExceptions) {
-                        exceptions.Add(e);
-                    }
-                }
-            }
+        } 
+        catch {
+            var exceptions = tasks
+                .Where(x => x.Exception is not null)
+                .SelectMany(x => x.Exception!.InnerExceptions)
+                .ToList();
             throw new AggregateException(exceptions);
         }
     }
