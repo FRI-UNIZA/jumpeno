@@ -22,7 +22,7 @@ public partial class BackgroundBase {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private string ID { get; set; }
-    private ImageState State { get; set; } = ImageState.LOADING;
+    private ImageState State { get; set; } = ImageState.Loading;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {
@@ -39,7 +39,7 @@ public partial class BackgroundBase {
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
         if (AppEnvironment.IsServer) {
-            State = ImageState.LOADING;
+            State = ImageState.Loading;
         } else {
             State = Preloaded
                     ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
@@ -50,8 +50,8 @@ public partial class BackgroundBase {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private void OnImageLoaded(bool success) {
-        if (success) State = ImageState.FINISHED;
-        else State = ImageState.ERROR;
+        if (success) State = ImageState.Finished;
+        else State = ImageState.Error;
         StateHasChanged();
         ImageBase.HandleLoadFinish(State, OnLoadingFinish);
     }

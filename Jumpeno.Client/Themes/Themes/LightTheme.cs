@@ -98,7 +98,7 @@ public class LightTheme : BaseTheme {
     // Body -------------------------------------------------------------------------------------------------------------------------------
     public override RGBAColor BODY_BACKGROUND => SURFACE_BACKGROUND__SURFACE_SECONDARY;
     // Scrollbars:
-    public override ScrollAreaTheme BODY_SCROLL_THEME => ScrollAreaTheme.OS_THEME_DARK;
+    public override ScrollAreaTheme BODY_SCROLL_THEME => ScrollAreaTheme.OSThemeDark;
     // Selection:
     public override RGBAColor BODY_SELECTION_COLOR => new(42, 33, 56);
     public override RGBAColor BODY_SELECTION_BACKGROUND => new(255, 239, 0);
@@ -113,7 +113,7 @@ public class LightTheme : BaseTheme {
 
     // NavMenu [mobile]:
     public override RGBAColor NAV_MENU_MOBILE_BUTTON_COLOR => new(82, 69, 103);
-    public override ScrollAreaTheme NAV_MENU_MOBILE_SCROLL_THEME => ScrollAreaTheme.OS_THEME_DARK;
+    public override ScrollAreaTheme NAV_MENU_MOBILE_SCROLL_THEME => ScrollAreaTheme.OSThemeDark;
 
     // NavMenu [mobile][highlight]:
     public override RGBAColor NAV_MENU_MOBILE_BUTTON_HIGHLIGHT_COLOR => new(132, 124, 145);

@@ -13,11 +13,11 @@ public partial class AdminDropDown {
     private static async Task OpenSettings() => await Navigator.NavigateTo(I18N.Link<AdminPage>());
 
     private async Task LogOut() {
-        await PageLoader.Show(PageLoaderTask.LOGOUT);
+        await PageLoader.Show(PageLoaderTask.Logout);
         AnimationHandler.CallOnTransitionEnd(Selector.ID(DropDownRef.ID_BUTTON), async () => {
             await HTTP.Try(Auth.LogOut);
             ActionHandler.PopFocus();
-            await PageLoader.Hide(PageLoaderTask.LOGOUT);
+            await PageLoader.Hide(PageLoaderTask.Logout);
         });
     }
 }

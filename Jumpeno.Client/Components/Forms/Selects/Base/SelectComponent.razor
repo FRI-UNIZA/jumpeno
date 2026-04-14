@@ -5,11 +5,11 @@
 @inherits FormField<SelectViewModel<T>>
 
 @code {
-    protected override FormErrorType? ErrorType => FormErrorType.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.Connected;
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@ButtonType.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             aria-roledescription="combobox"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
@@ -44,7 +44,7 @@
                 @if (ViewModel.Search) {
                     <InputSearch
                         ViewModel="ViewModel.SearchVM"
-                        Variant="FormVariant.PRIMARY"
+                        Variant="FormVariant.Primary"
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
@@ -58,7 +58,7 @@
                         @foreach(var option in DisplayedOptions) {
                             <button
                                 @key="option.Label"
-                                type="@ButtonType.BUTTON.String()"
+                                type="@ButtonType.Button.String()"
                                 role="option"
                                 aria-label="@option.Label"
                                 aria-selected="false"

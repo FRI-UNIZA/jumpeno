@@ -37,7 +37,7 @@ public class QueryParams {
     public QueryArray GetArray(string key) {
         QuaryArrayType type;
         try { type = ArrayTypes[key]; }
-        catch { type = QuaryArrayType.REPEATED_KEY; }
+        catch { type = QuaryArrayType.RepeatedKey; }
         try { return new QueryArray(type, Items[key]); }
         catch { return new QueryArray(type); }
     }

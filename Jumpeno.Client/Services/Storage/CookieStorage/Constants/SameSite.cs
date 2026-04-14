@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum SameSite {
-    [StringValue("Unspecified")] UNSPECIFIED = -1,
-    [StringValue("None")] NONE = 0,
-    [StringValue("Lax")] LAX = 1,
-    [StringValue("Strict")] STRICT = 2
+    [StringValue("Unspecified")] Unspecified = -1,
+    [StringValue("None")] None = 0,
+    [StringValue("Lax")] Lax = 1,
+    [StringValue("Strict")] Strict = 2
 }

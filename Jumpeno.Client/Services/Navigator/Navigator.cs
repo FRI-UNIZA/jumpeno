@@ -83,7 +83,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     private async Task Terminate() {
         Release();
-        await PageLoader.Hide(PageLoaderTask.NAVIGATION, false);
+        await PageLoader.Hide(PageLoaderTask.Navigator, false);
     }
 
     private void PreventNavigation(LocationChangingContext ctx) {
@@ -123,10 +123,10 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             PreviousURL = URL.Url();
             // 8) Loader:
             if (Loader) {
-                await PageLoader.Show(PageLoaderTask.NAVIGATION);
+                await PageLoader.Show(PageLoaderTask.Navigator);
                 MinLoadingWatch.Start();
             } else {
-                await PageLoader.Show(PageLoaderTask.NAVIGATION, true);   
+                await PageLoader.Show(PageLoaderTask.Navigator, true);   
             }
             // 9) Check cancellation:
             ctx.CancellationToken.ThrowIfCancellationRequested();
@@ -154,11 +154,11 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
                 var samePage = URL.PathMatches(URL.Path(PreviousURL), URL.Path(e.Location));
                 if (ProgramNavigation) {
                     if (!SettingQueries && URL.IsLocal(e.Location)) {
-                        AppLayout.Notify(samePage ? NotifyType.PAGE : NotifyType.STATE);
+                        AppLayout.Notify(samePage ? NotifyType.Page : NotifyType.State);
                     }
                     NavigationFinished.TrySetResult();
                 } else {
-                    AppLayout.Notify(samePage ? NotifyType.PAGE : NotifyType.STATE);
+                    AppLayout.Notify(samePage ? NotifyType.Page : NotifyType.State);
                 }
             }
             // 4) Set state:
@@ -167,7 +167,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             ResetStats();
             // 6) Handle loader:
             if (Loader) await MinLoadingWatch.Task;
-            await PageLoader.Hide(PageLoaderTask.NAVIGATION, false);
+            await PageLoader.Hide(PageLoaderTask.Navigator, false);
             Loader = true;
             // 7) Run after listeners:
             foreach (var listener in AfterFinishListeners) {
@@ -197,7 +197,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         await NavLock.TryLock();
         // 3) Show program loader before start:
         if (AppEnvironment.IsClient) {
-            if (loader) await PageLoader.Show(PageLoaderTask.NAVIGATION);
+            if (loader) await PageLoader.Show(PageLoaderTask.Navigator);
         }
         // 4) Handle server:
         if (AppEnvironment.IsServer) {

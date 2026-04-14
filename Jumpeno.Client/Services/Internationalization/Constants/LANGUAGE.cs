@@ -1,4 +1,4 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum Language {
     [StringValue("en")] EN,

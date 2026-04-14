@@ -39,9 +39,9 @@ public partial class AppLayout {
     private void NotifyAll() { Key = !Key; NotifyState(); }
     public static void Notify(NotifyType notify) {
         switch (notify) {
-            case NotifyType.STATE: Instance().NotifyState(); break;
-            case NotifyType.PAGE: Instance().NotifyPage(); break;
-            case NotifyType.ALL: Instance().NotifyAll(); break;
+            case NotifyType.State: Instance().NotifyState(); break;
+            case NotifyType.Page: Instance().NotifyPage(); break;
+            case NotifyType.All: Instance().NotifyAll(); break;
         }
     }
 

@@ -8,7 +8,7 @@
     <div class="admin-login-form">
         <Heading1 Class="admin-heading" Size="TextSize.L">@I18N.T("Admin")</Heading1>
         <div class="form-inputs">
-            <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email address verification")" Size="FormSize.M" Align="FormAlign.CENTER" Autocomplete />
+            <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email address verification")" Size="FormSize.M" Align="FormAlign.Center" Autocomplete />
         </div>
         <Button Size="ButtonSize.M" OnClick="Send">
             <Text>@I18N.T("Send")</Text>
@@ -16,8 +16,8 @@
         <WebLink
             Size="TextSize.S"
             NoWrap
-            OnClick="() => VM.Show(LoginFormType.USER)"
-            OnEnter="() => VM.Show(LoginFormType.USER)"
+            OnClick="() => VM.Show(LoginFormType.User)"
+            OnEnter="() => VM.Show(LoginFormType.User)"
         >
             <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Login")&nbsp;
         </WebLink>

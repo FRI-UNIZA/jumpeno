@@ -155,10 +155,10 @@ public static class Collision {
         var normal = new PointF(0, 0);
         // 2) Check collision:
         switch (deny) {
-            case PositionDir.LEFT: if (position.Center.X - halfWidth < level) normal.X = 1; break;
-            case PositionDir.RIGHT: if (position.Center.X + halfWidth > level) normal.X = -1; break;
-            case PositionDir.BOTTOM: if (position.Center.Y - halfHeight < level) normal.Y = 1; break;
-            case PositionDir.TOP: if (position.Center.Y + halfHeight > level) normal.Y = -1; break;
+            case PositionDir.Left: if (position.Center.X - halfWidth < level) normal.X = 1; break;
+            case PositionDir.Right: if (position.Center.X + halfWidth > level) normal.X = -1; break;
+            case PositionDir.Bottom: if (position.Center.Y - halfHeight < level) normal.Y = 1; break;
+            case PositionDir.Top: if (position.Center.Y + halfHeight > level) normal.Y = -1; break;
         }
         // 3) Resolve collision:
         if (normal.Equals(ZERO_VECTOR)) return false;
@@ -183,10 +183,10 @@ public static class Collision {
             normal.Y = fix.normal.Y;
         };
         // 3) Resolve collisions:
-        if (!Resolve(boundary.X, PositionDir.LEFT, position, resolve))
-            Resolve(boundary.X + boundary.Width, PositionDir.RIGHT, position, resolve);
-        if (!Resolve(boundary.Y, PositionDir.BOTTOM, position, resolve))
-            Resolve(boundary.Y + boundary.Height, PositionDir.TOP, position, resolve);
+        if (!Resolve(boundary.X, PositionDir.Left, position, resolve))
+            Resolve(boundary.X + boundary.Width, PositionDir.Right, position, resolve);
+        if (!Resolve(boundary.Y, PositionDir.Bottom, position, resolve))
+            Resolve(boundary.Y + boundary.Height, PositionDir.Top, position, resolve);
         // 4) Apply result:
         if (normal.Equals(ZERO_VECTOR)) return false;
         onResolve((position, normal)); return true;

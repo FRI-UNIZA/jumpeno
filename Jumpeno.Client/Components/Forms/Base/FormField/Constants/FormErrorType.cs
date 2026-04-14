@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum FormErrorType {
-    [CSSClass("error-autohide")] AUTOHIDE,
-    [CSSClass("error-connected")] CONNECTED,
-    [CSSClass("error-passive")] PASSIVE
+    [CSSClass("error-autohide")] AutoHide,
+    [CSSClass("error-connected")] Connected,
+    [CSSClass("error-passive")] Passive
 }

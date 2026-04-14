@@ -31,7 +31,7 @@ public partial class Modal {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Surface:
     [Parameter]
-    public ModalSurface? Surface { get; set; } = ModalSurface.FLOATING;
+    public ModalSurface? Surface { get; set; } = ModalSurface.Floating;
     // Content:
     [Parameter]
     public required OneOf<string, List<string>> Label { get; set; }
@@ -49,7 +49,7 @@ public partial class Modal {
     public RenderFragment? Footer { get; set; }
     // Scrollbars:
     [Parameter]
-    public ScrollAreaAutoHide ScrollAutoHide { get; set; } = ScrollAreaAutoHide.MOVE;
+    public ScrollAreaAutoHide ScrollAutoHide { get; set; } = ScrollAreaAutoHide.Move;
     [Parameter]
     public bool NoInitScroll { get; set; } = false;
     // Loading (ms):
@@ -81,7 +81,7 @@ public partial class Modal {
     public virtual async Task CallOnBeforeOpenStart() => await OnBeforeOpenStart.InvokeAsync(this);
     public virtual async Task CallOnOpenStart() => await OnOpenStart.InvokeAsync(this);
     public virtual async Task CallOnOpenFinish() { 
-        if (!NoInitScroll && ScrollAutoHide != ScrollAreaAutoHide.NEVER) ScrollAreaRef.InitScrollTo(0, 0);
+        if (!NoInitScroll && ScrollAutoHide != ScrollAreaAutoHide.Never) ScrollAreaRef.InitScrollTo(0, 0);
         await OnOpenFinish.InvokeAsync(this);
     }
     public virtual async Task CallOnAfterOpenFinish() => await OnAfterOpenFinish.InvokeAsync(this);
@@ -108,11 +108,11 @@ public partial class Modal {
         ID_DIALOG_START = $"{ID_DIALOG_START_PREFIX}-{ID}";
         ID_DIALOG = $"{ID_DIALOG_PREFIX}-{ID}";
         ID_DIALOG_END = $"{ID_DIALOG_END_PREFIX}-{ID}";
-        State = ModalStateType.CLOSED;
+        State = ModalStateType.Closed;
     }
 
     protected override async Task OnComponentParametersSetAsync(bool firstTime) {
-        if (State == ModalStateType.OPEN) await ModalProvider.NotifyElement(this);
+        if (State == ModalStateType.Open) await ModalProvider.NotifyElement(this);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

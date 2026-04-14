@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[Role.USER]">
+<AuthView Roles="[Role.User]">
     <Modal
         @ref="@ModalRef"
         Label="@I18N.T("My profile")"
@@ -19,19 +19,19 @@
                             </button>
                         </Fragment>;
                     }
-                    @TabButton(ProfileTabType.ACCOUNT)
-                    @TabButton(ProfileTabType.SOCIALS)
-                    @TabButton(ProfileTabType.AVATAR)
+                    @TabButton(ProfileTabType.Account)
+                    @TabButton(ProfileTabType.Socials)
+                    @TabButton(ProfileTabType.Avatar)
                 </div>
                 <div class="profile-tabs">
                     @switch (Tab) {
-                        case ProfileTabType.ACCOUNT:
+                        case ProfileTabType.Account:
                             <AccountTab ModalRef="@ModalRef" PasswordChangeModalRef="@PasswordChangeModalRef" />
                         break;
-                        case ProfileTabType.SOCIALS:
+                        case ProfileTabType.Socials:
                             <SocialsTab />
                         break;
-                        case ProfileTabType.AVATAR:
+                        case ProfileTabType.Avatar:
                             <AvatarTab />
                         break;
                     }

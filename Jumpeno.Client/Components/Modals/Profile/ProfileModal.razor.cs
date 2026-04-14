@@ -4,7 +4,7 @@ public partial class ProfileModal {
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
     // Tabs:
-    private ProfileTabType Tab = ProfileTabType.ACCOUNT;
+    private ProfileTabType Tab = ProfileTabType.Account;
     // Modals:
     private PasswordChangeModal PasswordChangeModalRef { get; set; } = null!;
 
@@ -14,7 +14,7 @@ public partial class ProfileModal {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {
         await ModalRef.OpenLoading();
-        Tab = ProfileTabType.ACCOUNT;
+        Tab = ProfileTabType.Account;
         var success = await HTTP.Try(Auth.LoadProfile);
         if (success) await ModalRef.FinishLoading();
         else await ModalRef.CloseLoading();

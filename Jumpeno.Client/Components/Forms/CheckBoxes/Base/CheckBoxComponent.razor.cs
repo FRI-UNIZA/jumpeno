@@ -15,7 +15,7 @@ public partial class CheckBoxComponent {
     [Parameter]
     public bool ActiveDescription { get; set; } = false;
     [Parameter]
-    public CheckBoxPosition? Position { get; set; } = CheckBoxPosition.START;
+    public CheckBoxPosition? Position { get; set; } = CheckBoxPosition.Start;
     [Parameter]
     public RenderFragment? Icon { get; set; } = null;
 

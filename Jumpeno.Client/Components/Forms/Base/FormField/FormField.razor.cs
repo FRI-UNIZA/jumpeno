@@ -15,7 +15,7 @@ public abstract partial class FormField<T> : IDisabledComponent {
     public virtual required OneOf<string, List<string>> Label { get; set; }
     // Style:
     [Parameter]
-    public virtual FormVariant? Variant { get; set; } = FormVariant.PRIMARY;
+    public virtual FormVariant? Variant { get; set; } = FormVariant.Primary;
     [Parameter]
     public virtual FormSize? Size { get; set; } = FormSize.M;
     [Parameter]

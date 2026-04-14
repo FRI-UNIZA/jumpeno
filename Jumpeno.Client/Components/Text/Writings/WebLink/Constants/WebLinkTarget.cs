@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum WebLinkTarget {
-    [StringValue("_self")] SELF,
-    [StringValue("_blank")] BLANK,
-    [StringValue("_parent")] PARENT,
-    [StringValue("_top")] TOP
+    [StringValue("_self")] Self,
+    [StringValue("_blank")] Blank,
+    [StringValue("_parent")] Parent,
+    [StringValue("_top")] Top
 }

@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum SelectOptionAlign {
-    [CSSClass("select-option-align-left")] LEFT,
-    [CSSClass("select-option-align-center")] CENTER,
-    [CSSClass("select-option-align-right")] RIGHT,
-    [CSSClass("select-option-align-custom")] CUSTOM
+    [CSSClass("select-option-align-left")] Left,
+    [CSSClass("select-option-align-center")] Center,
+    [CSSClass("select-option-align-right")] Right,
+    [CSSClass("select-option-align-custom")] Custom
 }

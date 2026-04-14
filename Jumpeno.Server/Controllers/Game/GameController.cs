@@ -39,35 +39,35 @@ public class GameController : ControllerBase {
     /// <summary>Starts or resumes paused game.</summary>
     /// <param name="body">Game control data.</param>
     /// <response code="200">Game is running.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task Start([FromBody] GameControlDTO body) => await GameService.StartGame(body.Assert().Code, nameof(GameControlDTO.Code));
 
     /// <summary>Pauses the game.</summary>
     /// <param name="body">Game control data.</param>
     /// <response code="200">Game is paused.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task Pause([FromBody] GameControlDTO body) => await GameService.PauseGame(body.Assert().Code, nameof(GameControlDTO.Code));
 
     /// <summary>Starts, resumes or pauses the game based on its current state.</summary>
     /// <param name="body">Game control data.</param>
     /// <response code="200">Game state updated.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task Toggle([FromBody] GameControlDTO body) => await GameService.ToggleGame(body.Assert().Code, nameof(GameControlDTO.Code));
 
     /// <summary>Deletes the game.</summary>
     /// <param name="body">Game control data.</param>
     /// <response code="200">Game is deleted.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task Delete([FromBody] GameControlDTO body) => await GameService.DeleteGame(body.Assert().Code, nameof(GameControlDTO.Code));
 
     /// <summary>Sets the player as ready.</summary>
     /// <param name="body">Player control data.</param>
     /// <response code="200">Player is now ready.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task SetPlayerReady([FromBody] GamePlayerControlDTO body)
     {
@@ -87,7 +87,7 @@ public class GameController : ControllerBase {
     /// <summary>Kicks the player from game.</summary>
     /// <param name="body">Player control data.</param>
     /// <response code="200">Player is kicked out.</response>
-    [HttpPatch][Role(Role.ADMIN)]
+    [HttpPatch][Role(Role.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task KickPlayer([FromBody] GamePlayerControlDTO body)
     {

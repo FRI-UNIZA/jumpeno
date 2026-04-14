@@ -16,9 +16,9 @@
     } else {
         <GameChat @key="@nameof(GameChat)" @ref="ChatRef" VM="GameVM" />
         switch (GameVM.Game.State) {
-            case GameStates.LOBBY:
-            case GameStates.PAUSE:
-            case GameStates.SHRINKING:
+            case GameStates.Lobby:
+            case GameStates.Pause:
+            case GameStates.Shrinking:
                 if (GameVM.LobbyDisplayed) {
                     <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
                 } else {

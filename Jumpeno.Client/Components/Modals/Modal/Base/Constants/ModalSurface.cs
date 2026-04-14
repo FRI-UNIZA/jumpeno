@@ -1,5 +1,5 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ModalSurface {
-    FLOATING = Surface.FLOATING
+    Floating = Surface.Floating
 }

@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum InputTextMode {
-    LOWERCASE,
-    NORMAL,
-    UPPERCASE
+    LowerCase,
+    Normal,
+    UpperCase
 }

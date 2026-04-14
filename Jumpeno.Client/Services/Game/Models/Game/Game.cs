@@ -10,9 +10,9 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     public static readonly double ROUND_DURATION = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TOTAL_DURATION; // ms
     public static readonly double ROUND_FINISH_DELAY = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
     // States:
-    public static readonly List<GameStates> LOBBY_STATES = [GameStates.LOBBY, GameStates.SCOREBOARD];
-    public static readonly List<GameStates> PAUSE_STATES = [GameStates.PAUSE];
-    public static readonly List<GameStates> RUN_STATES = [GameStates.GAMEPLAY, GameStates.SHRINKING];
+    public static readonly List<GameStates> LOBBY_STATES = [GameStates.Lobby, GameStates.ScoreBoard];
+    public static readonly List<GameStates> PAUSE_STATES = [GameStates.Pause];
+    public static readonly List<GameStates> RUN_STATES = [GameStates.GamePlay, GameStates.Shrinking];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Identifier:
@@ -33,7 +33,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
     public double Time { get; private set; }
     public GameStates State { get; private set; }
-    public bool IsFinished => State == GameStates.SCOREBOARD && Rounds <= Round;
+    public bool IsFinished => State == GameStates.ScoreBoard && Rounds <= Round;
     // Clock:
     public readonly GameClock Clock;
     public readonly GameClock TouchClock;
@@ -108,7 +108,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     ) : this(
         IDAutoIncrement++,
         displayMode, mode, host, code, name, map, anonyms, rounds, capacity,
-        0, 0, GameStates.LOBBY,
+        0, 0, GameStates.Lobby,
         false, [], [], 0
     ) {}
 
@@ -184,13 +184,13 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         foreach (var (id, player) in Players) {
             if (player.IsConnected) {
                 if (player.User.Name.ToLower() != connection.User.Name.ToLower()) continue;
-                if (State == GameStates.LOBBY) {
+                if (State == GameStates.Lobby) {
                     throw Exceptions.DEFAULT.SetInfo("Player name is taken!")
                     .SetErrors(Errors.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
                     throw Exceptions.DEFAULT.SetInfo("The game is already running.");
                 }
-            } else if (State == GameStates.LOBBY || player.User.Equals(connection.User)) {
+            } else if (State == GameStates.Lobby || player.User.Equals(connection.User)) {
                 AssertReservedPlayerHostName(connection.User, userNameID: nameID);
                 space = player;
                 break;
@@ -198,7 +198,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         }
         // 2.1) Space not found:
         if (space == null) {
-            if (State == GameStates.LOBBY) throw Exceptions.DEFAULT.SetInfo("The game is currently full!");
+            if (State == GameStates.Lobby) throw Exceptions.DEFAULT.SetInfo("The game is currently full!");
             else throw Exceptions.DEFAULT.SetInfo("The game is already running.");
         }
         // 2.2) Or return found space:
@@ -514,13 +514,13 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     private bool StateUpdate(StateUpdate update) {
         // 1) Current state:
         switch (State) {
-            case GameStates.PAUSE:
-                if (update.State != GameStates.PAUSE) ResetClocks();
+            case GameStates.Pause:
+                if (update.State != GameStates.Pause) ResetClocks();
             break;
         }
         // 2) New state:
         switch (update.State) {
-            case GameStates.PAUSE:
+            case GameStates.Pause:
                 foreach (var player in Players.Values) {
                     player.Update(update);
                 }

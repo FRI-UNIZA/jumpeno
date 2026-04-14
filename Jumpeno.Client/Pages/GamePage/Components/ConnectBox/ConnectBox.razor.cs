@@ -22,7 +22,7 @@ public partial class ConnectBox {
         VMCode = new(new InputViewModelTextParams(
             Form: FORM,
             ID: Auth.IsRegisteredUser ? nameof(GameHubRegisteredDTO.Code) : nameof(GameHubAnonymousDTO.Code),
-            TextMode: InputTextMode.UPPERCASE,
+            TextMode: InputTextMode.UpperCase,
             Trim: true,
             TextCheck: GameValidator.IsCode,
             MaxLength: GameValidator.CODE_LENGTH,
@@ -75,7 +75,7 @@ public partial class ConnectBox {
         // 5) Set AutoWatch:
         AutoWatch = true;
         // 6) Show loader:
-        await PageLoader.Show(PageLoaderTask.GAME_CONNECT);
+        await PageLoader.Show(PageLoaderTask.GameConsent);
         // 7) Return result:
         return true;
     }

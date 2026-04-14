@@ -1,16 +1,16 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum GameControls {
-    [StringValue("ArrowLeft")] LEFT,
-    [StringValue("ArrowRight")] RIGHT,
-    [StringValue(" ")] SPACE
+    [StringValue("ArrowLeft")] Left,
+    [StringValue("ArrowRight")] Right,
+    [StringValue(" ")] Space
 }
 
 public static class GameControlsExtension {
     public static GameControls? Get(string key) {
-        if (key == GameControls.LEFT.String()) return GameControls.LEFT;
-        else if (key == GameControls.RIGHT.String()) return GameControls.RIGHT;
-        else if (key == GameControls.SPACE.String()) return GameControls.SPACE;
+        if (key == GameControls.Left.String()) return GameControls.Left;
+        else if (key == GameControls.Right.String()) return GameControls.Right;
+        else if (key == GameControls.Space.String()) return GameControls.Space;
         return null;
     }
 }

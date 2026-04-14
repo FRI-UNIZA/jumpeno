@@ -19,7 +19,7 @@ public partial class SwitchTheme {
     public SwitchTheme() => SwitchVM = new(new(
         FORM,
         CLASS,
-        OnChange: new(async e => await PageLoader.Show(PageLoaderTask.THEME_CHANGE_SWITCH)),
+        OnChange: new(async e => await PageLoader.Show(PageLoaderTask.ThemeChangeSwitch)),
         OnAfterChange: new(TriggerChange)
     ));
     protected override void OnComponentParametersSet(bool firstTime) => SwitchVM.SetValue(AppTheme is LightTheme);
@@ -29,6 +29,6 @@ public partial class SwitchTheme {
         if (!await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme())) {
             SwitchVM.SetValue(!e.Value);
         }
-        await PageLoader.Hide(PageLoaderTask.THEME_CHANGE_SWITCH);
+        await PageLoader.Hide(PageLoaderTask.ThemeChangeSwitch);
     }
 }

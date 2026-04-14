@@ -6,7 +6,7 @@ public partial class Box {
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public BoxSurface? Surface { get; set; } = BoxSurface.PRIMARY_BOX;
+    public BoxSurface? Surface { get; set; } = BoxSurface.PrimaryBox;
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 

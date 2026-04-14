@@ -11,10 +11,10 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     public const int EMAIL_BLOCK_THRESHOLD = 4;
 
     // IP block thresholds per category for 1 minute:
-    public readonly Dictionary<ATTEMPTS_CATEGORY, int> IP_BLOCK_TRESHOLD = new()
+    public readonly Dictionary<AttemptsCategory, int> IP_BLOCK_TRESHOLD = new()
     {
-        { ATTEMPTS_CATEGORY.LOGIN, 10 },
-        { ATTEMPTS_CATEGORY.REGISTER, 7 }
+        { AttemptsCategory.Login, 10 },
+        { AttemptsCategory.Register, 7 }
     };
 
     // Structures -------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     }
 
     // Actions [IP] -----------------------------------------------------------------------------------------------------------------------
-    private int IncrementFailedIP(ATTEMPTS_CATEGORY category)
+    private int IncrementFailedIP(AttemptsCategory category)
     {
         string ip = httpContext.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? IP_UNKNOWN;
         var key = MemoryCaches.IP_ATTEMPT(category, ip);
@@ -76,7 +76,7 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
         });
     }
 
-    public bool IncrementAndCheckIfIPBlocked(ATTEMPTS_CATEGORY category)
+    public bool IncrementAndCheckIfIPBlocked(AttemptsCategory category)
     {
         int count = IncrementFailedIP(category);
         return count >= IP_BLOCK_TRESHOLD[category];

@@ -29,19 +29,19 @@ public class Token {
         var data = Decode(token) ?? throw Exceptions.NOT_AUTHENTICATED;
         RequestStorage.Set(key, data);
     }
-    public static void StoreAccess(string token) => Store(TokenType.ACCESS.String(), token);
-    public static void StoreRefresh(string token) => Store(TokenType.REFRESH.String(), token);
-    public static void StoreActivation(string token) => Store(TokenType.ACTIVATION.String(), token);
-    public static void StorePasswordReset(string token) => Store(TokenType.PASSWORD_RESET.String(), token);
+    public static void StoreAccess(string token) => Store(TokenType.Access.String(), token);
+    public static void StoreRefresh(string token) => Store(TokenType.Refresh.String(), token);
+    public static void StoreActivation(string token) => Store(TokenType.Activation.String(), token);
+    public static void StorePasswordReset(string token) => Store(TokenType.PasswordReset.String(), token);
     
     private static void Delete(string key) {
         if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw Exceptions.NOT_AUTHENTICATED;
         RequestStorage.Delete(key);
     }
-    public static void DeleteAccess() => Delete(TokenType.ACCESS.String());
-    public static void DeleteRefresh() => Delete(TokenType.REFRESH.String());
-    public static void DeleteActivation() => Delete(TokenType.ACTIVATION.String());
-    public static void DeletePasswordReset() => Delete(TokenType.PASSWORD_RESET.String());
+    public static void DeleteAccess() => Delete(TokenType.Access.String());
+    public static void DeleteRefresh() => Delete(TokenType.Refresh.String());
+    public static void DeleteActivation() => Delete(TokenType.Activation.String());
+    public static void DeletePasswordReset() => Delete(TokenType.PasswordReset.String());
 
     // Decoding ---------------------------------------------------------------------------------------------------------------------------
     public static Data? Decode(string token) {

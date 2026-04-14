@@ -1,9 +1,9 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum TokenType {
-    [StringValue("AccessToken")] ACCESS,
-    [StringValue("RefreshToken")] REFRESH,
-    [StringValue("ActivationToken")] ACTIVATION,
-    [StringValue("PasswordResetToken")] PASSWORD_RESET,
-    [StringValue("EmailChangeToken")] EMAIL_CHANGE
+    [StringValue("AccessToken")] Access,
+    [StringValue("RefreshToken")] Refresh,
+    [StringValue("ActivationToken")] Activation,
+    [StringValue("PasswordResetToken")] PasswordReset,
+    [StringValue("EmailChangeToken")] EmailChange
 }

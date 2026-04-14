@@ -16,7 +16,7 @@
                 <Icon><AntIcon Type="aim" Theme="outline" Label="@I18N.T("Controller")" /></Icon>
             </Button>
         </div>
-        <Box Surface="BoxSurface.PRIMARY_TRANSPARENT">
+        <Box Surface="BoxSurface.PrimaryTransparent">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 440px; padding: 40px 0;">
                 <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin: 0 auto 30px; transform: translateX(14px)" />
                 <Paragraph Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
@@ -38,13 +38,13 @@
             <div class="db-buttons">
                 <Button Size="ButtonSize.S" Class="db-button" Params="@(new ButtonLinkParams(
                     Href: AppSettings.Links.Adminer,
-                    Target: WebLinkTarget.BLANK
+                    Target: WebLinkTarget.Blank
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>Adminer</Text>
                 </Button>
                 <CredentialsModal Label="@I18N.T("Credentials")" URL="@API.BASE.ADMIN_DB_CREDENTIALS" @ref="@DBCredentialsModalRef" />
-                <Button Variant="ButtonVariant.SECONDARY" Size="ButtonSize.S" Class="db-button" OnClick="OpenDBCredentials">
+                <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="db-button" OnClick="OpenDBCredentials">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Credentials")</Text>
                 </Button>
@@ -61,13 +61,13 @@
             <div class="email-buttons">
                 <Button Size="ButtonSize.S" Class="email-button" Params="@(new ButtonLinkParams(
                     Href: AppSettings.Links.Email,
-                    Target: WebLinkTarget.BLANK
+                    Target: WebLinkTarget.Blank
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>@I18N.T("Email")</Text>
                 </Button>
                 <CredentialsModal Label="@I18N.T("Password")" URL="@API.BASE.ADMIN_EMAIL_PASSWORD" @ref="@EmailPasswordModalRef" />
-                <Button Variant="ButtonVariant.SECONDARY" Size="ButtonSize.S" Class="email-button" OnClick="OpenEmailPassword">
+                <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="email-button" OnClick="OpenEmailPassword">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Password")</Text>
                 </Button>
@@ -87,7 +87,7 @@
                 </Paragraph>
             </div>
             <CredentialsModal Label="@I18N.T("Backup keys")" URL="@API.BASE.ADMIN_EMAIL_BACKUP_KEYS" @ref="@EmailBackupKeysModalRef" />
-            <Button Variant="ButtonVariant.SECONDARY" Size="ButtonSize.S" Class="db-button" OnClick="OpenEmailBackupKeys">
+            <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="db-button" OnClick="OpenEmailBackupKeys">
                 <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                 <Text>@I18N.T("Backup keys")</Text>
             </Button>

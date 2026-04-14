@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<Container Tag="footer" Type="ContainerType.INLINE" Boundary PaddingHorizontal Class="@ComputeClass()" Style="@Style">
+<Container Tag="footer" Type="ContainerType.Inline" Boundary PaddingHorizontal Class="@ComputeClass()" Style="@Style">
     <Paragraph Class="footer-text">
         🎮
         <TextSpan NoWrap>
@@ -17,7 +17,7 @@
         @I18N.T("Students from")
         <WebLink
             Href="@URL.Link(I18N.T("LINK_FRI"))"
-            Target="WebLinkTarget.BLANK"
+            Target="WebLinkTarget.Blank"
             Class="footer-link"
         >
             FRI&nbsp;UNIZA

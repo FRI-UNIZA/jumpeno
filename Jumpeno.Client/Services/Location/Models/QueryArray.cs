@@ -11,14 +11,14 @@ public class QueryArray {
         Items = ParseArray(value);
     }
     public QueryArray(QuaryArrayType type) : this(type, null) {}
-    public QueryArray() : this(QuaryArrayType.REPEATED_KEY, null) {}
+    public QueryArray() : this(QuaryArrayType.RepeatedKey, null) {}
 
     // Type specific ----------------------------------------------------------------------------------------------------------------------
     private List<string> ParseArray(StringValues? value) {
         if (value is null) return [];
         try {
             switch (Type) {
-                case QuaryArrayType.REPEATED_KEY:
+                case QuaryArrayType.RepeatedKey:
                     return ParseArrayRepeatedKey((StringValues) value);
                 default:
                     return [];
@@ -111,7 +111,7 @@ public class QueryArray {
     // Conversions ------------------------------------------------------------------------------------------------------------------------
     public StringValues ToArray() {
         switch (Type) {
-            case QuaryArrayType.REPEATED_KEY:
+            case QuaryArrayType.RepeatedKey:
                 return ToArrayRepeatedKey();
             default:
                 return [];
@@ -119,7 +119,7 @@ public class QueryArray {
     }
     public string ToString(string key) {
         switch (Type) {
-            case QuaryArrayType.REPEATED_KEY:
+            case QuaryArrayType.RepeatedKey:
                 return ToStringRepeatedKey(key);
             default:
                 return "";

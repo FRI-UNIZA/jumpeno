@@ -4,12 +4,12 @@
 @inherits RadioOption<T>
 
 @code {
-    protected override FormErrorType? ErrorType => FormErrorType.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.Connected;
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
             class="@CLASS_ELEMENT"
-            type="@ButtonType.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             role="radio"
             aria-label="@HTML.Label.Aria(Label, IsSelected)"
             aria-checked="@HTML.Label.AriaActive(IsSelected)"

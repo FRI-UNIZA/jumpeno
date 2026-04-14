@@ -21,8 +21,8 @@ public static class RequestStorages {
     // Theme:
     public const string THEME_PROVIDER = $"{nameof(ThemeProvider)}";
     // Tokens:
-    public static string TOKEN_ACCESS => TokenType.ACCESS.String();
-    public static string TOKEN_REFRESH => TokenType.REFRESH.String();
-    public static string TOKEN_ACTIVATION => TokenType.ACTIVATION.String();
-    public static string TOKEN_PASSWORD_RESET => TokenType.PASSWORD_RESET.String();
+    public static string TOKEN_ACCESS => TokenType.Access.String();
+    public static string TOKEN_REFRESH => TokenType.Refresh.String();
+    public static string TOKEN_ACTIVATION => TokenType.Activation.String();
+    public static string TOKEN_PASSWORD_RESET => TokenType.PasswordReset.String();
 }

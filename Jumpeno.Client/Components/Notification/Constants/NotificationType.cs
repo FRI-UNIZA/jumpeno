@@ -1,9 +1,9 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum NotificationType {
-    [CSSClass("notification-basic")] BASIC,
-    [CSSClass("notification-success")] SUCCESS,
-    [CSSClass("notification-error")] ERROR,
-    [CSSClass("notification-warning")] WARNING,
-    [CSSClass("notification-info")] INFO
+    [CSSClass("notification-basic")] Basic,
+    [CSSClass("notification-success")] Succcess,
+    [CSSClass("notification-error")] Error,
+    [CSSClass("notification-warning")] Warning,
+    [CSSClass("notification-info")] Info
 }

@@ -10,7 +10,7 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public string ID { get; set; } = "";
     [Parameter]
-    public WebLinkRole Role { get; set; } = WebLinkRole.LINK;
+    public WebLinkRole Role { get; set; } = WebLinkRole.Link;
     [Parameter]
     public string? Href { get; set; } = null;
     [Parameter]
@@ -24,9 +24,9 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public EventCallback<WebLinkKeyEvent> OnEnter { get; set; } = EventCallback<WebLinkKeyEvent>.Empty;
     [Parameter]
-    public OneOf<WebLinkTarget, string> Target { get; set; } = WebLinkTarget.SELF;
+    public OneOf<WebLinkTarget, string> Target { get; set; } = WebLinkTarget.Self;
     [Parameter]
-    public WebLinkMatch Match { get; set; } = WebLinkMatch.PREFIX;
+    public WebLinkMatch Match { get; set; } = WebLinkMatch.Prefix;
     [Parameter]
     public bool Underline { get; set; } = false;
     [Parameter]
@@ -41,7 +41,7 @@ public partial class WebLink : IDisabledComponent {
     private bool IsActive() {
         if (Href == null) return false;
         if (URL.Schema(Href) != "") return false;
-        return Match == WebLinkMatch.ALL ? IsExactMatch() : IsPrefixMatch();
+        return Match == WebLinkMatch.All ? IsExactMatch() : IsPrefixMatch();
     }
 
     private bool IsExactMatch() {

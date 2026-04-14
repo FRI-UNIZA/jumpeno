@@ -78,9 +78,9 @@ public partial class GameScreen {
     private CSSClass ControlClass(GameControls control) {
         var c = new CSSClass("control");
         switch (control) {
-            case GameControls.SPACE: c.Set("space"); break;
-            case GameControls.LEFT: c.Set("left"); break;
-            case GameControls.RIGHT: c.Set("right"); break;
+            case GameControls.Space: c.Set("space"); break;
+            case GameControls.Left: c.Set("left"); break;
+            case GameControls.Right: c.Set("right"); break;
         }
         if (IsPressed(control)) c.Set("pressed");
         return c;
@@ -90,12 +90,12 @@ public partial class GameScreen {
     private async Task PressKey(GameControls control) {
         await ControlLock.TryExclusive(() => {
             switch (control) {
-                case GameControls.SPACE:
+                case GameControls.Space:
                     if (Space.Pressed) break;
                     Space = (true, DateTime.UtcNow);
                 break;
-                case GameControls.LEFT:
-                case GameControls.RIGHT:
+                case GameControls.Left:
+                case GameControls.Right:
                     if (ArrowsPressed.Contains(control)) break;
                     ArrowsPressed.Add(control);
                 break;
@@ -105,7 +105,7 @@ public partial class GameScreen {
     private Func<Task> TouchKeyEvent(GameControls control) => () => PressKey(control);
     private Func<MouseEventArgs, Task> MouseTouchKeyEvent(GameControls control)
     => e => MouseReleaseKeyEventLock.TryExclusive(async () => {
-        if (e.Button != MouseButton.LEFT.Raw()) return;
+        if (e.Button != MouseButton.Left.Raw()) return;
         await PressKey(control);
         MouseReleaseKeyEvent = () => MouseReleaseKeyEventLock.TryExclusive(
             async () => {
@@ -125,11 +125,11 @@ public partial class GameScreen {
     private async Task ReleaseKey(GameControls control) {
         await ControlLock.TryExclusive(() => {
             switch (control) {
-                case GameControls.SPACE:
+                case GameControls.Space:
                     Space = (false, Space.At);
                 break;
-                case GameControls.LEFT:
-                case GameControls.RIGHT:
+                case GameControls.Left:
+                case GameControls.Right:
                     ArrowsPressed.Remove(control);
                 break;
             }
@@ -146,16 +146,16 @@ public partial class GameScreen {
     }
     [JSInvokable]
     public async Task JS_OnMouseUp(WindowMouseEvent e) {
-        if (e.Button == MouseButton.LEFT) await MouseReleaseKeyEvent();
+        if (e.Button == MouseButton.Left) await MouseReleaseKeyEvent();
     }
 
     // Check pressed key:
     protected bool IsPressed(GameControls control) {
         switch (control) {
-            case GameControls.SPACE:
+            case GameControls.Space:
                 return Space.Pressed;
-            case GameControls.LEFT:
-            case GameControls.RIGHT:
+            case GameControls.Left:
+            case GameControls.Right:
                 return ArrowsPressed.Contains(control);
             default:
                 return false;
@@ -184,7 +184,7 @@ public partial class GameScreen {
             }
             // 2) Space:
             if (LastSpacePressedAt != Space.At) {
-                update.Controls.AddLast(new Control(GameControls.SPACE, true));
+                update.Controls.AddLast(new Control(GameControls.Space, true));
                 LastSpacePressedAt = Space.At;
             }
             if (update.Controls.Count > 0) await VM.SendGameUpdate(update);

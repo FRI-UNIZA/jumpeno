@@ -14,7 +14,7 @@ public partial class Image {
     [Parameter]
     public bool Preloaded { get; set; } = false;
     [Parameter]
-    public ImageLoadingType Loading { get; set; } = ImageLoadingType.LAZY;
+    public ImageLoadingType Loading { get; set; } = ImageLoadingType.Lazy;
     [Parameter]
     public Action<bool> OnLoadingFinish { get; set; } = success => {};
 }

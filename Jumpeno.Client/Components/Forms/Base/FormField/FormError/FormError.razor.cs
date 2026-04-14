@@ -46,7 +46,7 @@ public partial class FormError {
     
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void Activate() {
-        if (Type == FormErrorType.PASSIVE) return;
+        if (Type == FormErrorType.Passive) return;
         ActionHandler.SetFocus(ViewModel.FormViewModel.FormID);
         ActionHandler.Click($"#{ViewModel.FormViewModel.FormID}");
     }

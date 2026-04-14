@@ -24,15 +24,15 @@ public partial class SelectComponent<T> {
     [Parameter]
     public string ModalClass { get; set; } = "";
     [Parameter]
-    public ModalSurface? MSurface { get; set; } = ModalSurface.FLOATING;
+    public ModalSurface? MSurface { get; set; } = ModalSurface.Floating;
     // Search:
     [Parameter]
     public FormSize? SearchSize { get; set; } = FormSize.S;
     [Parameter]
-    public FormAlign? SearchAlign { get; set; } = FormAlign.LEFT;
+    public FormAlign? SearchAlign { get; set; } = FormAlign.Left;
     // Options:
     [Parameter]
-    public SelectOptionAlign? OptionAlign { get; set; } = SelectOptionAlign.LEFT;
+    public SelectOptionAlign? OptionAlign { get; set; } = SelectOptionAlign.Left;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
@@ -94,7 +94,7 @@ public partial class SelectComponent<T> {
 
     // Search -----------------------------------------------------------------------------------------------------------------------------
     private Task Search(string value) => UI.Lock.TryExclusive(async () => {
-        await PageLoader.Show(PageLoaderTask.SEARCH);
+        await PageLoader.Show(PageLoaderTask.Search);
         MinSearchWatch.Start();
         List<SelectOption<T>> newOptions = [];
         if (ViewModel.Empty && value == ViewModel.SearchVM.InputVM.ClearValue) newOptions.Add(Select<T>.EMPTY_OPTION);
@@ -108,13 +108,13 @@ public partial class SelectComponent<T> {
         StateHasChanged();
         await SearchTCS.Task;
         await MinSearchWatch.Task;
-        await PageLoader.Hide(PageLoaderTask.SEARCH);
+        await PageLoader.Hide(PageLoaderTask.Search);
     });
 
     // Select -----------------------------------------------------------------------------------------------------------------------------
     private Task SelectOption(SelectOption<T> option) => ModalRef.Close(async () => {
         if (LastSelected == option) return;
-        await PageLoader.Show(PageLoaderTask.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.Modal, true);
         ViewModel.SetValue(option);
         SelectTCS = new TaskCompletionSource();
         StateHasChanged();

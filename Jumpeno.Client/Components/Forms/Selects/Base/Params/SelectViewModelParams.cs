@@ -12,8 +12,8 @@ public record SelectViewModelParams<T> (
     bool Search = false,
     Predicate<SelectSearchEvent<T>>? CustomSearch = null,
     // Search input:
-    InputTextMode SearchTextMode = InputTextMode.NORMAL,
-    InputSearchMode SearchMode = InputSearchMode.LOWERCASE,
+    InputTextMode SearchTextMode = InputTextMode.Normal,
+    InputSearchMode SearchMode = InputSearchMode.LowerCase,
     bool SearchTrim = true,
     Predicate<string>? SearchTextCheck = null,
     int? SearchMaxLength = null,

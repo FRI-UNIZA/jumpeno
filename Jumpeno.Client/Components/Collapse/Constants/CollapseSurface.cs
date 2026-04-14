@@ -1,10 +1,10 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum CollapseSurface {
-    PRIMARY_COLLAPSE = Surface.PRIMARY_COLLAPSE,
-    PRIMARY_BOX_COLLAPSE = Surface.PRIMARY_BOX_COLLAPSE,
-    PRIMARY_TRANSPARENT_COLLAPSE = Surface.PRIMARY_TRANSPARENT_COLLAPSE,
-    PRIMARY_GLASS_COLLAPSE = Surface.PRIMARY_GLASS_COLLAPSE,
-    FLOATING_COLLAPSE = Surface.FLOATING_COLLAPSE,
-    FLOATING_ADDITIONAL_COLLAPSE = Surface.FLOATING_ADDITIONAL_COLLAPSE
+    PrimaryCollapse = Surface.PrimaryCollapse,
+    PrimaryBoxCollpase = Surface.PrimaryBoxCollapse,
+    PrimaryTransparentCollapse = Surface.PrimaryTransparentCollapse,
+    PrimaryGlassCollapse = Surface.PrimaryGlassCollapse,
+    FloatingCollapse = Surface.FloatingCollapse,
+    FloatingAdditionalCollapse = Surface.FloatingAddtitionalCollapse
 }

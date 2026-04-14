@@ -44,7 +44,7 @@ HTTP.Init(
         else ErrorHandler.Notify(Exceptions.DEFAULT);
         await Task.CompletedTask;
     },
-    async callback => await Window.Lock(callback.Invoke, WindowLock.HTTP)
+    async callback => await Window.Lock(callback.Invoke, WindowLock.Http)
 );
 ThemeProvider.Init();
 

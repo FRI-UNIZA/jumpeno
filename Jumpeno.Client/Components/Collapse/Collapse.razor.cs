@@ -6,7 +6,7 @@ public partial class Collapse {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public CollapseSurface? Surface { get; set; } = CollapseSurface.PRIMARY_COLLAPSE;
+    public CollapseSurface? Surface { get; set; } = CollapseSurface.PrimaryCollapse;
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 

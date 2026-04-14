@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum InputType {
-    TEXT,
-    LONG,
-    DOUBLE
+    Text,
+    Long,
+    Double
 }

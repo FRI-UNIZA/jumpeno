@@ -104,7 +104,7 @@ public class DB : DbContext {
     }
 
     // Transaction ------------------------------------------------------------------------------------------------------------------------
-    public static async Task Transaction(Func<Task> action, ISOLATION isolation = ISOLATION.READ_COMMITED) {
+    public static async Task Transaction(Func<Task> action, Isolation isolation = Isolation.ReadCommitted) {
         var db = await Context();
         using var transaction = await db.Database.BeginTransactionAsync((System.Data.IsolationLevel) isolation);
         try {

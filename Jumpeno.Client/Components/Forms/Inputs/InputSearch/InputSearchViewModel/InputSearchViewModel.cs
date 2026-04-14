@@ -20,10 +20,10 @@ public class InputSearchViewModel : FormViewModel {
         if (Trim) value = value.Trim();
         InputVM.SetValue(value);
         switch (SearchMode) {
-            case InputSearchMode.LOWERCASE:
+            case InputSearchMode.LowerCase:
                 value = value.ToLower();
             break;
-            case InputSearchMode.UPPERCASE:
+            case InputSearchMode.UpperCase:
                 value = value.ToUpper();
             break;
         }

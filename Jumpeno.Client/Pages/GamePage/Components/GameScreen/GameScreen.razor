@@ -53,7 +53,7 @@
                 >
                     <button
                         class="@ControlClass(control)"
-                        type="@ButtonType.BUTTON.String()"
+                        type="@ButtonType.Button.String()"
                         @onmousedown="MouseTouchKeyEvent(control)"
                         tabindex="-1"
                     >
@@ -63,11 +63,11 @@
             ;
         }
         <div class="arrows">
-            @RenderControl(GameControls.LEFT, @<AntIcon Type="left" Theme="outline" Class="control-icon" />)
-            @RenderControl(GameControls.RIGHT, @<AntIcon Type="right" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.Left, @<AntIcon Type="left" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.Right, @<AntIcon Type="right" Theme="outline" Class="control-icon" />)
         </div>
         <div class="abilities">
-            @RenderControl(GameControls.SPACE, @<AntIcon Type="to-top" Theme="outline" Class="control-icon" />)
+            @RenderControl(GameControls.Space, @<AntIcon Type="to-top" Theme="outline" Class="control-icon" />)
         </div>
     </div>
 

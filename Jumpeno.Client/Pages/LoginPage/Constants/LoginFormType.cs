@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum LoginFormType {
-    ADMIN,
-    PASSWORD_RESET,
-    REGISTER,
-    USER
+    Admin,
+    PasswordReset,
+    Register,
+    User
 }

@@ -16,13 +16,13 @@ public partial class AuthPage {
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     private static App App = null!;
-    public static InitStage Stage { get; private set; } = InitStage.AUTHORIZATION;
+    public static InitStage Stage { get; private set; } = InitStage.Authorizing;
     private static TaskCompletionSource StageTCS = new();
     public static Task NextStage() { try { Stage++; StageTCS = new(); return StageTCS.Task; } finally { App.Notify(); } }
     public static void FinishStage() => StageTCS.TrySetResult();
     private static bool IsRendering() {
         if (AppEnvironment.IsServer) return true;
-        else return Stage == InitStage.RENDERING;
+        else return Stage == InitStage.Rendering;
     }
 
     // Layout -----------------------------------------------------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ModalStateType
 {
-    PRE_OPEN,
-    OPENING, LOADING,
-    OPEN,
-    CLOSING, CLOSING_LOADING,
-    CLOSED
+    PreOpen,
+    Openning, Loading,
+    Open,
+    Closing, ClosingLoading,
+    Closed
 }

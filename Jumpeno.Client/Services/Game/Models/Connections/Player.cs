@@ -32,7 +32,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     public Player(byte id) : this(
-        null, User.UNKNOWN, DeviceType.POINTER,
+        null, User.UNKNOWN, DeviceType.Pointer,
         id, new(), 0, 0
     ) {}
 
@@ -42,7 +42,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     ) {}
 
     private void Invalidate() {
-        Synchronize(null, User.UNKNOWN, DeviceType.POINTER);
+        Synchronize(null, User.UNKNOWN, DeviceType.Pointer);
         // NOTE: Body is preserved!
         Score = 0;
         ReadyForRound = 0;

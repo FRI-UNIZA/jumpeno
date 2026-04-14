@@ -30,13 +30,13 @@
                 </div>
             </Content>
             <Footer>
-                <Button Class="confirm-button" Variant="ButtonVariant.TERTIARY" NoShadow Size="ButtonSize.S" OnClick="Close">
+                <Button Class="confirm-button" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="Close">
                     <Text>
                         @if (TextCancel != null) @TextCancel
                         else @I18N.T("Cancel")
                     </Text>
                 </Button>
-                <Button Class="confirm-button" Variant="Danger ? ButtonVariant.DANGER : ButtonVariant.QUATERNARY" NoShadow Size="ButtonSize.S" OnClick="Confirm">
+                <Button Class="confirm-button" Variant="Danger ? ButtonVariant.Danger : ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="Confirm">
                     <Text>
                         @if (TextOK != null) @TextOK
                         else @I18N.T("OK")

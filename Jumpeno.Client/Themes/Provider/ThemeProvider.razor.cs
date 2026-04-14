@@ -46,7 +46,7 @@ public partial class ThemeProvider {
     public static string ServerBodyClass() {
         AppEnvironment.AssertServer();
         var c = new CSSClass(Window.CLASS_BODY)
-        .SetSurface(Surface.PRIMARY);
+        .SetSurface(Surface.Priamary);
         var cookie = GetThemeCookie();
         if (cookie is null) {
             c.Set(ThemeCSSClass(ThemeType.DEFAULT));
@@ -94,11 +94,11 @@ public partial class ThemeProvider {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Get cookie:
-    private static string? GetThemeCookie() => AppEnvironment.GetService<CookieStorage>().Get(Cookies.Preference.APP_THEME);
+    private static string? GetThemeCookie() => AppEnvironment.GetService<CookieStorage>().Get(Cookies.Preference.AppTheme);
     // Set cookie:
     private static void SetThemeCookie(string className) {
         AppEnvironment.GetService<CookieStorage>().Set(new Models.Cookie(
-            Cookies.Preference.APP_THEME,
+            Cookies.Preference.AppTheme,
             className,
             DateTimeOffset.UtcNow.AddYears(1)
         ));
@@ -117,7 +117,7 @@ public partial class ThemeProvider {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> ChangeAppTheme(BaseTheme theme) {
         try {
-            await PageLoader.Show(PageLoaderTask.THEME_CHANGE);
+            await PageLoader.Show(PageLoaderTask.ThemeChange);
             if (AppEnvironment.IsServer) throw new InvalidOperationException("Theme change not allowed on the server!");
             if (theme.GetType().Name == AppTheme.GetType().Name) throw new InvalidOperationException("Theme already set!");
             await HTTP.Sync(() => SetThemeCookie(theme));
@@ -142,7 +142,7 @@ public partial class ThemeProvider {
             await Task.Delay(AppTheme.TRANSITION_EXTRA_SLOW);
             ActionHandler.RestoreScroll();
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
-            await PageLoader.Hide(PageLoaderTask.THEME_CHANGE);
+            await PageLoader.Hide(PageLoaderTask.ThemeChange);
         }
     }
 }

@@ -13,7 +13,7 @@ public partial class PasswordChangeModalForm
         VMPassword = new(new InputViewModelTextParams(
            Form: FORM,
            ID: nameof(UserPasswordChangeDTO.NewPassword),
-           TextMode: InputTextMode.NORMAL,
+           TextMode: InputTextMode.Normal,
            TextCheck: UserValidator.IsPassword,
            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
            Placeholder: I18N.T("Password"),
@@ -29,7 +29,7 @@ public partial class PasswordChangeModalForm
         VMConfirmPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: "ConfirmPasssword",
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Confirm password"),
@@ -42,7 +42,7 @@ public partial class PasswordChangeModalForm
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangePassword() 
     {
-        await PageLoader.Show(PageLoaderTask.PASSWORD_CHANGE);
+        await PageLoader.Show(PageLoaderTask.PasswordChange);
         await Auth.RequestFreeze();
 
         await HTTP.Try(async () => {
@@ -64,6 +64,6 @@ public partial class PasswordChangeModalForm
         }, FORM);
 
         await Auth.ResolveFreeze();
-        await PageLoader.Hide(PageLoaderTask.PASSWORD_CHANGE);
+        await PageLoader.Hide(PageLoaderTask.PasswordChange);
     }
 }

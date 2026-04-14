@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum Role {
-    ADMIN,
-    USER
+    Admin,
+    User
 }

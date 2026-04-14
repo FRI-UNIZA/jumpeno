@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ImageState {
-    [CSSClass("loading")] LOADING,
-    [CSSClass("error")] ERROR,
-    [CSSClass("")] FINISHED
+    [CSSClass("loading")] Loading,
+    [CSSClass("error")] Error,
+    [CSSClass("")] Finished
 }

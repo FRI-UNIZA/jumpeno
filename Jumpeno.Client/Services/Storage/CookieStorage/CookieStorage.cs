@@ -59,7 +59,7 @@ public abstract class CookieStorage {
     public bool IsCookieAccepted(Type key) => GetAcceptedCookies().Any(x => x == key);
 
     public List<Type> GetAcceptedCookies() {
-        var json = GetCookie(Cookies.Mandatory.APP_COOKIES_ACCEPTED);
+        var json = GetCookie(Cookies.Mandatory.AppCookiesAccepted);
         if (json is null) return [];
         
         var acceptedNames = JsonConvert.DeserializeObject<List<string>>(json);
@@ -71,11 +71,11 @@ public abstract class CookieStorage {
     private void SetAcceptedCookies(List<Type> accepted) {
         var names = accepted.Select(x => x.Name).ToList();
         if (names.Count <= 0) {
-            DeleteCookie(Cookies.Mandatory.APP_COOKIES_ACCEPTED);
+            DeleteCookie(Cookies.Mandatory.AppCookiesAccepted);
         } else {
             var json = JsonConvert.SerializeObject(names);
             SetCookie(new Models.Cookie(
-                Cookies.Mandatory.APP_COOKIES_ACCEPTED,
+                Cookies.Mandatory.AppCookiesAccepted,
                 json,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -120,7 +120,7 @@ public abstract class CookieStorage {
         if (!AppEnvironment.IsServer && cookie.HttpOnly) {
             cookie.HttpOnly = false;
         }
-        if (!cookie.Secure && cookie.SameSite == SameSite.NONE) {
+        if (!cookie.Secure && cookie.SameSite == SameSite.None) {
             throw new Exception("Only secure cookies can have \"SameSite: None\"");
         }
         cookie.Value = cookie.Value;

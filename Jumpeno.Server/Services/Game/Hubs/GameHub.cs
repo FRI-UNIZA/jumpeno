@@ -23,17 +23,17 @@ public class GameHub : Hub {
         var id = ctx.Engine.Game.ID;
         var code = ctx.Engine.Game.Code;
         // 1) Common group:
-        List<string> groups = [GroupName(id, code, UpdateGroup.ALL)];
+        List<string> groups = [GroupName(id, code, UpdateGroup.All)];
         // 2) All spectators:
         if (
-            ctx.Engine.Game.DisplayMode != DisplayMode.EACH_OWN
+            ctx.Engine.Game.DisplayMode != DisplayMode.EachOwn
             && ctx.Connection is Player
             && !ctx.Connection.User.Equals(ctx.Engine.Game.Host)
         ) return groups;
-        groups.Add(GroupName(id, code, UpdateGroup.WATCH));
+        groups.Add(GroupName(id, code, UpdateGroup.Watch));
         // 3) Touch spectators:
-        if (ctx.Connection.Device != DeviceType.TOUCH) return groups;
-        groups.Add(GroupName(id, code, UpdateGroup.WATCH_TOUCH));
+        if (ctx.Connection.Device != DeviceType.Touch) return groups;
+        groups.Add(GroupName(id, code, UpdateGroup.WatchTouch));
         return groups;
     }
     private static async Task AddToGroups(GameContext ctx) {
@@ -91,7 +91,7 @@ public class GameHub : Hub {
                 var dto = JsonSerializer.Deserialize<GameHubCreateDTO>(queryDTO!)
                 ?? throw Exceptions.VALUES.SetErrors(Errors.UNDEFINED.SetID(GameHubs.DTO));
                 dto.Assert();
-                JWT.Authorize(dto.AccessToken, [Role.USER]);
+                JWT.Authorize(dto.AccessToken, [Role.User]);
                 return (await UserEntity.SelectCurrentActivatedUser(), dto);
             }
             case nameof(GameHubAnonymousDTO): {
@@ -104,7 +104,7 @@ public class GameHub : Hub {
                 var dto = JsonSerializer.Deserialize<GameHubRegisteredDTO>(queryDTO!)
                 ?? throw Exceptions.VALUES.SetErrors(Errors.UNDEFINED.SetID(GameHubs.DTO));
                 dto.Assert();
-                JWT.Authorize(dto.AccessToken, [Role.USER]);
+                JWT.Authorize(dto.AccessToken, [Role.User]);
                 return (await UserEntity.SelectCurrentActivatedUser(), dto);
             }
         }
@@ -156,10 +156,10 @@ public class GameHub : Hub {
                 throw Exceptions.CLIENT.SetInfo("You are not a host!");
             // 2) Control game:
             switch (update.Action) {
-                case GameAction.START: await GameService.StartGame(GameContext); return;
-                case GameAction.PAUSE: await GameService.PauseGame(GameContext); return;
-                case GameAction.TOGGLE: await GameService.ToggleGame(GameContext); return;
-                case GameAction.DELETE: await GameService.DeleteGame(GameContext); return;
+                case GameAction.Start: await GameService.StartGame(GameContext); return;
+                case GameAction.Pause: await GameService.PauseGame(GameContext); return;
+                case GameAction.Toggle: await GameService.ToggleGame(GameContext); return;
+                case GameAction.Delete: await GameService.DeleteGame(GameContext); return;
             }
             // 3) Throw if invalid:
             throw Exceptions.CLIENT.SetInfo("Invalid game action!");

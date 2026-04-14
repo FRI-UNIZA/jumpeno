@@ -13,7 +13,7 @@ public partial class RadioFieldOption<T> {
     [Parameter]
     public bool ActiveDescription { get; set; } = false;
     [Parameter]
-    public RadioPosition? Position { get; set; } = RadioPosition.START;
+    public RadioPosition? Position { get; set; } = RadioPosition.Start;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() {

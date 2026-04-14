@@ -90,7 +90,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
     // Movement ---------------------------------------------------------------------------------------------------------------------------
     private void ChangeDirection(GameControls key, bool pressed) {
         if (!pressed) direction.X = 0;
-        else direction.X = key == GameControls.LEFT ? -1 : 1;
+        else direction.X = key == GameControls.Left ? -1 : 1;
     }
 
     private float ComputeNextX(double deltaT) => (float)(Center.X + deltaT * Direction.X * SPEED);
@@ -192,7 +192,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
             Collision.Resolve(update.Game.Map.Shrink.Rect, position, ResolveCollision);
         // 3.2) Resolve jump height:
         if (JumpFinishY != null)
-            Collision.Resolve((float)JumpFinishY, PositionDir.TOP, position, ResolveCollision);
+            Collision.Resolve((float)JumpFinishY, PositionDir.Top, position, ResolveCollision);
         // 3.3) Resolve tile collisions:
         var moveBox = Collision.GetMoveBox(LastPosition, position);
         List<Tile> tiles = update.Game.Map.GetCollidingTiles(moveBox);
@@ -218,13 +218,13 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         if (!Alive) return updated;
         foreach (var control in update.Controls) {
             switch (control.Key) {
-                case GameControls.LEFT:
-                case GameControls.RIGHT:
+                case GameControls.Left:
+                case GameControls.Right:
                     if (KeyUpdateGuard.Update(
                         update, () => ChangeDirection(control.Key, control.Pressed)
                     )) updated = true;
                 break;
-                case GameControls.SPACE:
+                case GameControls.Space:
                     if (IsJumping) {
                         PendingJump = (update, DateTime.UtcNow);
                         break;
@@ -265,7 +265,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
 
     private bool StateUpdate(StateUpdate update) {
         switch (update.State) {
-            case GameStates.PAUSE:
+            case GameStates.Pause:
                 direction.X = 0;
                 Animation.UpdateDirection(direction);
             return true;

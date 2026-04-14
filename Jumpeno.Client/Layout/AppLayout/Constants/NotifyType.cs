@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum NotifyType {
-    STATE,
-    PAGE,
-    ALL
+    State,
+    Page,
+    All
 }

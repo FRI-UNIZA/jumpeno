@@ -3,14 +3,14 @@
 @inherits BasicComponent
 
 <nav class="@ComputeClass()" style="@Style">
-    <Container Type="ContainerType.INLINE" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
+    <Container Type="ContainerType.Inline" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
         <LogoLink />
         <div class="@CLASS_NAVIGATION">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
-            <AuthView Roles="[Role.USER]">
+            <AuthView Roles="[Role.User]">
                 <UserDropDown />
             </AuthView>
-            <AuthView Roles="[Role.ADMIN]">
+            <AuthView Roles="[Role.Admin]">
                 <AdminDropDown />
             </AuthView>
             <NavMenuOpenButton

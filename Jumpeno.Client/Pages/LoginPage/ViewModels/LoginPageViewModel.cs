@@ -2,7 +2,7 @@ namespace Jumpeno.Client.ViewModels;
 
 public class LoginPageViewModel(LoginPage page) {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public LoginFormType Form { get; private set; } = LoginFormType.USER;
+    public LoginFormType Form { get; private set; } = LoginFormType.User;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public void Show(LoginFormType form) {

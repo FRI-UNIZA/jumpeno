@@ -3,7 +3,7 @@ namespace Jumpeno.Server.Services;
 public static partial class Email {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void SendAdminLogin(string email, string refreshToken) {
-        var q = new QueryParams(); q.Set(TokenType.REFRESH.String(), refreshToken);
+        var q = new QueryParams(); q.Set(TokenType.Refresh.String(), refreshToken);
         Send(
             email,
             I18N.T("Jumpeno login"),

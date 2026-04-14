@@ -4,7 +4,7 @@ public static partial class Email {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void SendActivation(string email, string id) {
         try {
-            var q = new QueryParams(); q.Set(TokenType.ACTIVATION.String(), JWT.GenerateActivation(Guid.Parse(id)));
+            var q = new QueryParams(); q.Set(TokenType.Activation.String(), JWT.GenerateActivation(Guid.Parse(id)));
             Send(
                 email,
                 I18N.T("Jumpeno activation"),

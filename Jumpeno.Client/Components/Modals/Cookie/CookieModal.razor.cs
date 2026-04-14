@@ -103,7 +103,7 @@ public partial class CookieModal {
     }
 
     private async Task AcceptCookies(List<Type> accept) {
-        await PageLoader.Show(PageLoaderTask.COOKIE_CONSENT);
+        await PageLoader.Show(PageLoaderTask.CookieConsent);
         await HTTP.Try(async() => {
             var newSelected = ToDictionary(accept);
             Selected = ToDictionary(accept);
@@ -126,7 +126,7 @@ public partial class CookieModal {
             if ((Initial.TryGetValue(typeof(Cookies.Security), out var initialValue) && initialValue) != SwitchSecurityVM.Value)
                 Navigator.Refresh();
         });
-        await PageLoader.Hide(PageLoaderTask.COOKIE_CONSENT);
+        await PageLoader.Hide(PageLoaderTask.CookieConsent);
     }
 
     public void OnClose() 

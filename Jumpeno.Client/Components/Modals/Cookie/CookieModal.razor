@@ -11,7 +11,7 @@
 >
     <Content>
         <div class="consent-container">
-            <Collapse Surface="CollapseSurface.FLOATING_COLLAPSE">
+            <Collapse Surface="CollapseSurface.FloatingCollapse">
                 <CollapseItem Label="@I18N.T("Mandatory cookies")">
                     <Title>
                         <div class="@CLASS_COOKIE_TITLE">
@@ -49,7 +49,7 @@
             </Collapse>
             <Paragraph Size="TextSize.S" Class="cookie-paragraph">
                 @I18N.T("Cookie message cookie files (Cookie message)")
-                <WebLink Href="@I18N.T("Mandatory cookies")" Target="WebLinkTarget.BLANK" Size="TextSize.S" NoWrap Underline>
+                <WebLink Href="@I18N.T("Mandatory cookies")" Target="WebLinkTarget.Blank" Size="TextSize.S" NoWrap Underline>
                     @I18N.T("Cookie message cookie files (cookie files)")
                 </WebLink>
             </Paragraph>
@@ -57,13 +57,13 @@
     </Content>
     <Footer>
         <div class="consent-footer">
-            <Button Variant="ButtonVariant.TERTIARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
+            <Button Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
                 <Text>@I18N.T("Accept chosen")</Text>
             </Button>
-            <Button Variant="ButtonVariant.TERTIARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES_REQUIRED))">
+            <Button Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES_REQUIRED))">
                 <Text>@I18N.T("Only mandatory")</Text>
             </Button>
-            <Button Variant="ButtonVariant.QUATERNARY" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES))">
+            <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES))">
                 <Text>@I18N.T("Accept all")</Text>
             </Button>
         </div>

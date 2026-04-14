@@ -49,7 +49,7 @@ public partial class ScrollArea {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {
         Theme = null;
-        AutoHide = ScrollAreaAutoHide.NEVER;
+        AutoHide = ScrollAreaAutoHide.Never;
         OverflowX = true;
         OverflowY = true;
         Class = "";

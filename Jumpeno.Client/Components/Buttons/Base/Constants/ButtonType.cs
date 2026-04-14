@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ButtonType {
-    [StringValue("button")] BUTTON,
-    [StringValue("submit")] SUBMIT,
-    [StringValue("reset")] RESET
+    [StringValue("button")] Button,
+    [StringValue("submit")] Submit,
+    [StringValue("reset")] Reset
 }

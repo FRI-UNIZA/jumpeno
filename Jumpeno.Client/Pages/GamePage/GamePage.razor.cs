@@ -39,7 +39,7 @@ public partial class GamePage {
                 data: new NavData(create),
                 state: NavState.New(new HistoryState(false, create))
             )
-        , PageLoaderTask.ANIMATION);
+        , PageLoaderTask.Animation);
         Navigator.AllowAny();
     }
     public static async Task NavigateToConnect() => await NavigateTo(false);

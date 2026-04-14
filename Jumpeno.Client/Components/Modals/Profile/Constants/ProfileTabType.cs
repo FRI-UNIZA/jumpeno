@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ProfileTabType
 {
-    [StringValue("Account")] ACCOUNT,
-    [StringValue("Socials")] SOCIALS,
-    [StringValue("Avatar")] AVATAR
+    [StringValue("Account")] Account,
+    [StringValue("Socials")] Socials,
+    [StringValue("Avatar")] Avatar
 }

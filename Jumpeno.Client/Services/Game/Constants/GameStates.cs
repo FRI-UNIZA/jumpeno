@@ -1,9 +1,9 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum GameStates {
-    LOBBY,
-    GAMEPLAY,
-    PAUSE,
-    SHRINKING,
-    SCOREBOARD
+    Lobby,
+    GamePlay,
+    Pause,
+    Shrinking,
+    ScoreBoard
 }
