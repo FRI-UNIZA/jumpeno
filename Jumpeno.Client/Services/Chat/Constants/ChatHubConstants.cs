@@ -1,17 +1,17 @@
 namespace Jumpeno.Client.Constants;
 
-public static class CHAT_HUB {
+public static class ChatHubConstants {
     // Routes -------------------------------------------------------------------------------------------------------------------------
     public static string URL => HUB.BASE.CHAT;
     // Params -------------------------------------------------------------------------------------------------------------------------
-    public const string PARAM_CHAT_PARAMS_TYPE = "ChatParamsType";
-    public const string PARAM_CHAT_PARAMS = "ChatParams";
-    public const string PARAM_ACCESS_TOKEN = "AccessToken";
-    public const string GLOBAL_GROUP = "GlobalChat";
+    public const string ParamChatParamsType = "ChatParamsType";
+    public const string ParamChatParams = "ChatParams";
+    public const string ParamAccessToken = "AccessToken";
+    public const string GlobalGroup = "GlobalChat";
     // Client updates -----------------------------------------------------------------------------------------------------------------
-    public const string RECEIVE_GLOBAL_MESSAGE = "ReceiveGlobalMessage";
+    public const string ReceiveGlobalMessage = "ReceiveGlobalMessage";
     // Server updates -----------------------------------------------------------------------------------------------------------------
-    public const string SEND_GLOBAL_MESSAGE = "SendGlobalMessage";
-    public const string CONNECTION_SUCCESSFUL = "ConnectionSuccessful";
-    public const string ERROR = "Error";
+    public const string SendGlobalMessage = "SendGlobalMessage";
+    public const string ConnectionSuccessful = "ConnectionSuccessful";
+    public const string Error = "Error";
 }

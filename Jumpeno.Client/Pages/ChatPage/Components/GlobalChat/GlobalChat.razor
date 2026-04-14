@@ -17,12 +17,12 @@
             ViewModel="VM.InputVM"
             Name="chat-message"
             Size="FORM_SIZE.M"
-            Disabled="@(VM.Status == CHAT_HUB_STATUS.DISCONNECTED)"
+            Disabled="@(VM.Status == ChatHubConnectionStatus.Disconnected)"
         />
         <Button
             Size="BUTTON_SIZE.M"
             OnClick="async _ => await VM.Send()"
-            Disabled="@(VM.Status == CHAT_HUB_STATUS.DISCONNECTED)"
+            Disabled="@(VM.Status == ChatHubConnectionStatus.Disconnected)"
         >
             <Icon>
                 <AntIcon Type="send" Theme="outline" />

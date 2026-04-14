@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Components;
 
 public partial class GlobalChat : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "global-chat";
+    public new const string Class = "global-chat";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required GlobalChatViewModel VM { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(Class, Base);
 }

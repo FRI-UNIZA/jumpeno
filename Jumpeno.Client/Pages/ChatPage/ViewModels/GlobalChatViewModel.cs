@@ -5,7 +5,7 @@ public class GlobalChatViewModel {
     public void Notify() => NotifyCallback();
     public string CurrentInputText { get; set; } = string.Empty;
     private CancellationTokenSource? _errorCts = null;
-    public const int MAX_RECONNECT_ATTEMPTS = 3;
+    public const int MaxReconnectAttempts = 3;
     private int _reconnectAttempts = 0;
 
     public GlobalChatViewModel(Action notify) {
@@ -48,30 +48,30 @@ public class GlobalChatViewModel {
     }
 
     // Status ------------------------------------------------------------
-    public CHAT_HUB_STATUS Status { get; private set; } = CHAT_HUB_STATUS.DISCONNECTED;
+    public ChatHubConnectionStatus Status { get; private set; } = ChatHubConnectionStatus.Disconnected;
     public string? ErrorMessage { get; private set; } = null;
     public int ReconnectAttempts => _reconnectAttempts;
-    public bool CanManualReconnect => Status == CHAT_HUB_STATUS.DISCONNECTED && _reconnectAttempts >= MAX_RECONNECT_ATTEMPTS;
+    public bool CanManualReconnect => Status == ChatHubConnectionStatus.Disconnected && _reconnectAttempts >= MaxReconnectAttempts;
 
     public void SetConnected(bool connected) {
-        Status = connected ? CHAT_HUB_STATUS.CONNECTED : CHAT_HUB_STATUS.DISCONNECTED;
+        Status = connected ? ChatHubConnectionStatus.Connected : ChatHubConnectionStatus.Disconnected;
         if (connected) _reconnectAttempts = 0;
         Notify();
     }
 
     public void SetConnecting() {
-        Status = CHAT_HUB_STATUS.CONNECTING;
+        Status = ChatHubConnectionStatus.Connecting;
         Notify();
     }
 
     public void SetReconnecting() {
-        Status = CHAT_HUB_STATUS.RECONNECTING;
+        Status = ChatHubConnectionStatus.Reconnecting;
         _reconnectAttempts++;
         Notify();
     }
 
     public void SetDisconnected() {
-        Status = CHAT_HUB_STATUS.DISCONNECTED;
+        Status = ChatHubConnectionStatus.Disconnected;
         Notify();
     }
 
@@ -93,7 +93,7 @@ public class GlobalChatViewModel {
         _errorCts = new CancellationTokenSource();
         var token = _errorCts.Token;
 
-        Status = CHAT_HUB_STATUS.ERROR;
+        Status = ChatHubConnectionStatus.Error;
         ErrorMessage = message;
         Notify();
 
@@ -101,7 +101,7 @@ public class GlobalChatViewModel {
             try {
                 await Task.Delay(seconds * 1000, token);
                 if (!token.IsCancellationRequested) {
-                    Status = CHAT_HUB_STATUS.CONNECTED;
+                    Status = ChatHubConnectionStatus.Connected;
                     ErrorMessage = null;
                     Notify();
                 }
@@ -118,5 +118,5 @@ public class GlobalChatViewModel {
     public TextAreaViewModel InputVM { get; private set; } = null!;
 
     // Send --------------------------------------------------------------
-    public Func<Task>? Send { get; set; } = null;
+    public Func<Task> Send { get; set; } = () => Task.CompletedTask;
 }

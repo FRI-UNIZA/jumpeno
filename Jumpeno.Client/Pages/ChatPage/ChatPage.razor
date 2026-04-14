@@ -49,7 +49,7 @@
         <div class="chat-input-area">
             @* Error floats above input, doesn't push layout *@
             <div class="chat-error-wrapper">
-                @if (VM.Status == CHAT_HUB_STATUS.ERROR && VM.ErrorMessage is not null) {
+                @if (VM.Status == ChatHubConnectionStatus.Error && VM.ErrorMessage is not null) {
                     <div class="chat-error">
                         <AntIcon Type="warning" Theme="outline" />
                         <Paragraph Size="TEXT_SIZE.S" Class="error-text">@VM.ErrorMessage</Paragraph>
@@ -84,7 +84,7 @@
                     OnClick="@(async () => { if (VM.Send is not null) await VM.Send(); })"
                     Variant="BUTTON_VARIANT.PRIMARY"
                     Size="BUTTON_SIZE.M"
-                    Disabled="@(string.IsNullOrWhiteSpace(VM.CurrentInputText) || VM.Status != CHAT_HUB_STATUS.CONNECTED)"
+                    Disabled="@(string.IsNullOrWhiteSpace(VM.CurrentInputText) || VM.Status != ChatHubConnectionStatus.Connected)"
                     Class="send-button">
                     <Icon><AntIcon Type="send" Theme="outline" /></Icon>
                     <Text>@I18N.T("Send")</Text>
@@ -92,17 +92,17 @@
             </div>
 
             @* Connection status bar — only when not connected *@
-            @if (VM.Status != CHAT_HUB_STATUS.CONNECTED && VM.Status != CHAT_HUB_STATUS.ERROR) {
+            @if (VM.Status != ChatHubConnectionStatus.Connected && VM.Status != ChatHubConnectionStatus.Error) {
                 <div class="connection-status @VM.Status.CSSClass()">
                     <p class="status-text">
                         @switch (VM.Status) {
-                            case CHAT_HUB_STATUS.CONNECTING:
+                            case ChatHubConnectionStatus.Connecting:
                                 @I18N.T("Connecting to chat...")
                                 break;
-                            case CHAT_HUB_STATUS.RECONNECTING:
-                                @I18N.T($"Connection lost. Reconnecting... ({VM.ReconnectAttempts}/{GlobalChatViewModel.MAX_RECONNECT_ATTEMPTS})")
+                            case ChatHubConnectionStatus.Reconnecting:
+                                @I18N.T($"Connection lost. Reconnecting... ({VM.ReconnectAttempts}/{GlobalChatViewModel.MaxReconnectAttempts})")
                                 break;
-                            case CHAT_HUB_STATUS.DISCONNECTED:
+                            case ChatHubConnectionStatus.Disconnected:
                                 @I18N.T("Disconnected from chat.")
                                 break;
                         }

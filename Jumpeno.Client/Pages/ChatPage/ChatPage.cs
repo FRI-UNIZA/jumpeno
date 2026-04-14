@@ -1,10 +1,12 @@
+using System.Text.RegularExpressions;
+
 namespace Jumpeno.Client.Pages;
 
 public partial class ChatPage : Page {
     public const string ROUTE_EN = "/en/chat";
     public const string ROUTE_SK = "/sk/chat";
     public static readonly ROLE[] ROLES = [ROLE.USER, ROLE.ADMIN];
-    private static readonly System.Text.RegularExpressions.Regex GameUrlRegex =
+    private static readonly Regex GameUrlRegex =
         new(@"https?://[^\s]+/(?:en|sk)/game/([A-Z]{4})\b", System.Text.RegularExpressions.RegexOptions.Compiled);
 
     private bool _hubConnected = false;
@@ -32,7 +34,7 @@ public partial class ChatPage : Page {
     }
 
     protected override async ValueTask OnPageDisposeAsync() {
-        VM.Send = null;
+        VM.Send = () => Task.CompletedTask;
         try {
             if (!AppEnvironment.IsServer && _scrollListenerRegistered) {
                 ScrollArea.RemoveScrollListener("chatMessages", OnScrollListener);

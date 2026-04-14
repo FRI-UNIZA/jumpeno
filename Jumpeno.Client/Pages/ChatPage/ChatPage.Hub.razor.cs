@@ -9,22 +9,22 @@ public partial class ChatPage {
         TimeSpan.FromSeconds(10),
     ];
     private string StatusTooltip => VM.Status switch {
-        CHAT_HUB_STATUS.CONNECTING => I18N.T("Connecting..."),
-        CHAT_HUB_STATUS.CONNECTED => I18N.T("Connected"),
-        CHAT_HUB_STATUS.RECONNECTING => I18N.T($"Reconnecting ({VM.ReconnectAttempts}/{GlobalChatViewModel.MAX_RECONNECT_ATTEMPTS})"),
-        CHAT_HUB_STATUS.DISCONNECTED => I18N.T("Disconnected"),
-        CHAT_HUB_STATUS.ERROR => I18N.T("Server error"),
+        ChatHubConnectionStatus.Connecting => I18N.T("Connecting..."),
+        ChatHubConnectionStatus.Connected => I18N.T("Connected"),
+        ChatHubConnectionStatus.Reconnecting => I18N.T($"Reconnecting ({VM.ReconnectAttempts}/{GlobalChatViewModel.MaxReconnectAttempts})"),
+        ChatHubConnectionStatus.Disconnected => I18N.T("Disconnected"),
+        ChatHubConnectionStatus.Error => I18N.T("Server error"),
         _ => string.Empty
     };
 
-
+    //TODO: split into separate methods to improve the readability of the code
     private async Task ConnectToHub() {
         try {
             VM.SetConnecting();
 
             var q = new QueryParams();
-            q.Set(CHAT_HUB.PARAM_ACCESS_TOKEN, Token.Access.raw);
-            var hubURL = URL.SetQueryParams(URL.ToAbsolute(CHAT_HUB.URL), q);
+            q.Set(ChatHubConstants.ParamAccessToken, Token.Access.raw);
+            var hubURL = URL.SetQueryParams(URL.ToAbsolute(ChatHubConstants.URL), q);
 
             HubConnection = new HubConnectionBuilder()
                 .WithUrl(hubURL, options => {
@@ -32,8 +32,7 @@ public partial class ChatPage {
                 })
                 .Build();
 
-            HubConnection.On<ChatMessageReceiveUpdate>(CHAT_HUB.RECEIVE_GLOBAL_MESSAGE, async (msg) => {
-                Console.WriteLine($"[ChatHub] Received message from {msg.SenderName}: {msg.Text}");
+            HubConnection.On<ChatMessageReceiveUpdate>(ChatHubConstants.ReceiveGlobalMessage, async (msg) => {
                 await InvokeAsync(async () => {
                     VM.AddMessage(msg);
                     StateHasChanged();
@@ -41,7 +40,7 @@ public partial class ChatPage {
                 });
             });
 
-            HubConnection.On<AppExceptionDTO>(CHAT_HUB.ERROR, async (error) => {
+            HubConnection.On<AppExceptionDTO>(ChatHubConstants.Error, async (error) => {
                 await InvokeAsync(() => {
                     VM.SetValidationError(error);
                     StateHasChanged();
@@ -62,8 +61,9 @@ public partial class ChatPage {
         }
     }
 
+    //TODO: split into separate methods to improve the readability of the code
     private async Task TryAutoReconnect() {
-        if (VM.ReconnectAttempts >= GlobalChatViewModel.MAX_RECONNECT_ATTEMPTS) {
+        if (VM.ReconnectAttempts >= GlobalChatViewModel.MaxReconnectAttempts) {
             await InvokeAsync(() => {
                 VM.SetDisconnected();
                 StateHasChanged();
@@ -101,12 +101,12 @@ public partial class ChatPage {
     }
 
     private Func<Task> BuildSendAction() => async () => {
-        if (VM.Status == CHAT_HUB_STATUS.ERROR) return;
+        if (VM.Status == ChatHubConnectionStatus.Error) return;
         var text = VM.CurrentInputText.Trim();
         if (string.IsNullOrWhiteSpace(text)) return;
         if (HubConnection is null || !IsConnected) return;
         try {
-            await HubConnection.SendAsync(CHAT_HUB.SEND_GLOBAL_MESSAGE, new ChatMessageSendUpdate(Text: text));
+            await HubConnection.SendAsync(ChatHubConstants.SendGlobalMessage, new ChatMessageSendUpdate(Text: text));
         } catch (Exception e) {
             Console.Error.WriteLine($"[ChatHub] Failed to send message: {e.Message}");
             return;

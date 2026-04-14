@@ -2,28 +2,28 @@ namespace Jumpeno.Client.Components;
 
 public partial class ChatHubStatus {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "chat-hub-status";
+    public new const string Class = "chat-hub-status";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public CHAT_HUB_STATUS Status { get; set; } = CHAT_HUB_STATUS.CONNECTING;
+    public ChatHubConnectionStatus Status { get; set; } = ChatHubConnectionStatus.Connecting;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CSSClass ComputeClass() => base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(Class, Base)
         .SetVariant(Status);
 
     private string Icon => Status switch {
-        CHAT_HUB_STATUS.CONNECTED    => "check-circle",
-        CHAT_HUB_STATUS.RECONNECTING => "loading",
-        CHAT_HUB_STATUS.DISCONNECTED => "disconnect",
-        _                            => "loading"
+        ChatHubConnectionStatus.Connected    => "check-circle",
+        ChatHubConnectionStatus.Reconnecting => "loading",
+        ChatHubConnectionStatus.Disconnected => "disconnect",
+        _                                    => "loading"
     };
 
     private string Label => Status switch {
-        CHAT_HUB_STATUS.CONNECTED    => I18N.T("Connected"),
-        CHAT_HUB_STATUS.RECONNECTING => I18N.T("Reconnecting"),
-        CHAT_HUB_STATUS.DISCONNECTED => I18N.T("Disconnected"),
-        _                            => I18N.T("Connecting")
+        ChatHubConnectionStatus.Connected    => I18N.T("Connected"),
+        ChatHubConnectionStatus.Reconnecting => I18N.T("Reconnecting"),
+        ChatHubConnectionStatus.Disconnected => I18N.T("Disconnected"),
+        _                                    => I18N.T("Connecting")
     };
 }

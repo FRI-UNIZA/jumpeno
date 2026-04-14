@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 public partial class TextAreaComponent {
     [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "textarea";
-    public const string CLASS_CONTAINER = "textarea-container";
-    public const string CLASS_TEXTAREA_ELEMENT = "textarea-element";
-    public const double DEFAULT_MAX_ROWS = 3.5;
+    public new const string Class = "textarea";
+    public const string ClassContainer = "textarea-container";
+    public const string ClassTextareaElement = "textarea-element";
+    public const double DefaultMaxRows = 3.5;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -28,12 +28,12 @@ public partial class TextAreaComponent {
     protected int ComputeTabindexClear() => ValueIsClear() ? -1 : 0;
 
     protected string ComputeTextAreaStyle() => ViewModel.AutoResize
-        ? $"--textarea-max-rows: {DEFAULT_MAX_ROWS};"
+        ? $"--textarea-max-rows: {DefaultMaxRows};"
         : string.Empty;
 
     public override CSSClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(Class, Base)
         .Set($"text-mode-{ViewModel.TextMode.StringLower()}")
         .Set("allow-clear", AllowClear)
         .Set("value-default", ValueIsClear())

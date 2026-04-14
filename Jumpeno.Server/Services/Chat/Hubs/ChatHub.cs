@@ -1,23 +1,20 @@
-using Jumpeno.Client.Constants;
-
 namespace Jumpeno.Server.Hubs;
-
-#pragma warning disable CS1998
 
 public class ChatHub : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(WebApplication app) => app.MapHub<ChatHub>(CHAT_HUB.URL);
+    public static void Init(WebApplication app) => app.MapHub<ChatHub>(ChatHubConstants.URL);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static IHubContext<ChatHub> Hub => AppEnvironment.GetService<IHubContext<ChatHub>>();
 
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    private const int MAX_HISTORY = 10;
-    private const int MIN_LENGTH = 2;
-    private const int RATE_LIMIT_COUNT = 3;
-    private const int RATE_LIMIT_WINDOW_SEC = 5;
-    private const int DUPLICATE_LIMIT_COUNT = 2;
-    private const int DUPLICATE_WINDOW_SEC = 10;
+    private const int HistoryMessageCapacity = 10;
+    private const int MinMessageLength = 2;
+    private const int RateLimitMessageCount = 3;
+    private const int RateLimitMessageWindowSec = 5;
+    private const int DuplicateMessageLimitCount = 2;
+    private const int DuplicateMessageWindowSec = 10;
+    private const int MaxMessageLength = 500;
 
     // History ----------------------------------------------------------------------------------------------------------------------------
     private static readonly Dictionary<Guid, ChatMessageReceiveUpdate> MessageIndex = new();
@@ -32,7 +29,7 @@ public class ChatHub : Hub {
 
     // Exceptions -------------------------------------------------------------------------------------------------------------------------
     private static async Task HandleException(IClientProxy proxy, Exception e) {
-        await proxy.SendAsync(CHAT_HUB.ERROR, (e is AppException exception ? exception : EXCEPTION.DEFAULT).DTO);
+        await proxy.SendAsync(ChatHubConstants.Error, (e is AppException exception ? exception : EXCEPTION.DEFAULT).DTO);
         // NOTE: Client must close the connection!
     }
 
@@ -42,13 +39,14 @@ public class ChatHub : Hub {
     }
 
     // Connect ----------------------------------------------------------------------------------------------------------------------------
+    //TODO: XML documentation comments (/// <summary>) or extraction into better-named private methods
     public override async Task OnConnectedAsync() {
         try {
             // 1) Check app version:
             var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
             VersionMiddleware.CheckHubVersion(ctx);
             // 2) Authorize — only activated registered/admin users may use chat:
-            var token = ctx.Request.Query[CHAT_HUB.PARAM_ACCESS_TOKEN].ToString();
+            var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
             JWT.Authorize(token, [ROLE.USER, ROLE.ADMIN]);
             await UserEntity.SelectCurrentActivatedUser(); // throws if not activated
             await base.OnConnectedAsync();
@@ -63,7 +61,7 @@ public class ChatHub : Hub {
                 history = MessageOrder.Select(id => MessageIndex[id]).ToList();
             }
             foreach (var msg in history) {
-                await Clients.Caller.SendAsync(CHAT_HUB.RECEIVE_GLOBAL_MESSAGE, msg);
+                await Clients.Caller.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
             }
         } catch (Exception e) {
             await HandleCallException(e);
@@ -95,9 +93,9 @@ public class ChatHub : Hub {
         var window = RateWindows.GetOrAdd(Context.ConnectionId, _ => new Queue<DateTime>());
         lock (window) {
             // Remove timestamps outside the window:
-            while (window.Count > 0 && (now - window.Peek()).TotalSeconds > RATE_LIMIT_WINDOW_SEC)
+            while (window.Count > 0 && (now - window.Peek()).TotalSeconds > RateLimitMessageWindowSec)
                 window.Dequeue();
-            if (window.Count >= RATE_LIMIT_COUNT)
+            if (window.Count >= RateLimitMessageCount)
                 throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID("RateLimit"));
             window.Enqueue(now);
         }
@@ -108,21 +106,22 @@ public class ChatHub : Hub {
         var window = DuplicateWindows.GetOrAdd(Context.ConnectionId, _ => new Queue<(string, DateTime)>());
         lock (window) {
             // Remove entries outside the window:
-            while (window.Count > 0 && (now - window.Peek().SentAt).TotalSeconds > DUPLICATE_WINDOW_SEC)
+            while (window.Count > 0 && (now - window.Peek().SentAt).TotalSeconds > DuplicateMessageWindowSec)
                 window.Dequeue();
             var recentCount = window.Count(e => e.Text == text);
-            if (recentCount >= DUPLICATE_LIMIT_COUNT)
+            if (recentCount >= DuplicateMessageLimitCount)
                 throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID("DuplicateMessage"));
             window.Enqueue((text, now));
         }
     }
 
     // Client → Server --------------------------------------------------------------------------------------------------------------------
+    //TODO: XML documentation comments (/// <summary>) or extraction into better-named private methods
     public async Task SendGlobalMessage(ChatMessageSendUpdate update) {
         try {
             // 1) Re-authorize on every message:
             var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
-            var token = ctx.Request.Query[CHAT_HUB.PARAM_ACCESS_TOKEN].ToString();
+            var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
             JWT.Authorize(token, [ROLE.USER, ROLE.ADMIN]);
             var user = await UserEntity.SelectCurrentActivatedUser();
 
@@ -130,9 +129,9 @@ public class ChatHub : Hub {
             var text = Sanitize(update.Text ?? string.Empty);
 
             // 2) Validate length:
-            if (text.Length < MIN_LENGTH)
+            if (text.Length < MinMessageLength)
                 throw EXCEPTION.VALUES.SetErrors(ERROR.EMPTY.SetID(nameof(update.Text)));
-            if (text.Length > 500)
+            if (text.Length > MaxMessageLength)
                 throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID(nameof(update.Text)));
 
             // 3) Rate limit:
@@ -152,13 +151,13 @@ public class ChatHub : Hub {
             lock (HistoryLock) {
                 MessageIndex[msg.ID] = msg;
                 MessageOrder.Enqueue(msg.ID);
-                if (MessageOrder.Count > MAX_HISTORY) {
+                if (MessageOrder.Count > HistoryMessageCapacity) {
                     var oldID = MessageOrder.Dequeue();
                     MessageIndex.Remove(oldID);
                 }
             }
 
-            await Hub.Clients.All.SendAsync(CHAT_HUB.RECEIVE_GLOBAL_MESSAGE, msg);
+            await Hub.Clients.All.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
         } catch (Exception e) {
             await HandleException(Clients.Caller, e);
         }
