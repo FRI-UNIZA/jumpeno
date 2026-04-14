@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum InputSearchMode {
-    LOWERCASE,
-    NORMAL,
-    UPPERCASE
+    LowerCase,
+    Normal,
+    UpperCase
 }

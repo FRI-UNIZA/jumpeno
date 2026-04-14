@@ -31,19 +31,19 @@ public class AdminController : ControllerBase {
 
     /// <summary>Returns database credentials.</summary>
     /// <response code="200">Database credentials.</response>
-    [HttpGet][Role(Role.ADMIN)]
+    [HttpGet][Role(Role.Admin)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public MessageDTOR DBCredentials() => new(ServerSettings.Database.ConnectionString);
 
     /// <summary>Returns email password.</summary>
     /// <response code="200">Email password.</response>
-    [HttpGet][Role(Role.ADMIN)]
+    [HttpGet][Role(Role.Admin)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public MessageDTOR EmailPassword() => new(ServerSettings.Email.Password);
     
     /// <summary>Returns email backup keys.</summary>
     /// <response code="200">Email backup keys.</response>
-    [HttpGet][Role(Role.ADMIN)]
+    [HttpGet][Role(Role.Admin)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public MessageDTOR EmailBackupKeys() => new(ServerSettings.Email.BackupKeys);
 }

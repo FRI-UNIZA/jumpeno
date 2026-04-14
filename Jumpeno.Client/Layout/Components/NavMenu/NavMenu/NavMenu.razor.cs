@@ -11,7 +11,7 @@ public partial class NavMenu {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public NavMenuSurface Surface { get; set; } = NavMenuSurface.SECONDARY;
+    public NavMenuSurface Surface { get; set; } = NavMenuSurface.Secondary;
     [Parameter]
     public required NavMenuMobile MobileRef { get; set; }
     [Parameter]

@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum CanvasType
 {
-    MAP_BACKGROUND,
-    MAP_TILES,
-    TILE_PATTERN
+    MapBackground,
+    MapTiles,
+    TilePatern
 }

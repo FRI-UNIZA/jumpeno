@@ -104,7 +104,7 @@ public partial class Game {
     private PlayerUpdate NewPlayerRemoveUpdate(Player player, bool kick) {
         bool isHost = player.User.ID == Host.ID;
         var update = NewPlayerManipulationUpdate(player);
-        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GameStates.LOBBY, update);
+        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GameStates.Lobby, update);
     }
     public PlayerUpdate NewPlayerRemoveUpdate(Player player) => NewPlayerRemoveUpdate(player, false);
     public PlayerUpdate NewPlayerKickUpdate(Player player) => NewPlayerRemoveUpdate(player, true);
@@ -120,12 +120,12 @@ public partial class Game {
         KillPlayers();
         ResurrectPlayers();
         return Updater.NewRoundUpdate(
-            Round + 1, NewStateUpdate(0, GameStates.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
+            Round + 1, NewStateUpdate(0, GameStates.GamePlay, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
             Players
         );
     }
     public RoundUpdate NewRoundFinishUpdate() {
         KillPlayers();
-        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GameStates.SCOREBOARD), Players);
+        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GameStates.ScoreBoard), Players);
     }
 }

@@ -3,11 +3,11 @@
 @inherits FormField<CheckBoxViewModel>
 
 @code {
-    protected override FormErrorType? ErrorType => FormErrorType.PASSIVE;
+    protected override FormErrorType? ErrorType => FormErrorType.Passive;
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@ButtonType.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             class="@CLASS_ELEMENT"
             role="checkbox"
             aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"

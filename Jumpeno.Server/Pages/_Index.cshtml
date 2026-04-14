@@ -89,7 +89,7 @@
         <script>
             (async () => {
                 JSActionHandler.SetFocus(JSServerPageLoader.ID);
-                JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@Cookies.Preference.APP_THEME.String()");
+                JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@Cookies.Preference.AppTheme.String()");
                 JSTempTitle.Add();
                 JSWindow.Init();
                 JSImage.InitAll();

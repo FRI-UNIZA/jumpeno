@@ -1,9 +1,9 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum GameAction
 {
-    START,
-    PAUSE,
-    TOGGLE,
-    DELETE
+    Start,
+    Pause,
+    Toggle,
+    Delete
 }

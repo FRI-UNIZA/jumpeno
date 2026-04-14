@@ -14,7 +14,7 @@ public partial class PasswordResetForm {
         VMEmail = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserPasswordResetRequestDTO.Email),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
@@ -26,7 +26,7 @@ public partial class PasswordResetForm {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Send() {
-        await PageLoader.Show(PageLoaderTask.LOGIN);
+        await PageLoader.Show(PageLoaderTask.Login);
         await HTTP.Try(async () => {
             // 1) Create body:
             var body = new UserPasswordResetRequestDTO(
@@ -38,9 +38,9 @@ public partial class PasswordResetForm {
             var response = await HTTP.Post<MessageDTOR>(API.BASE.USER_PASSWORD_RESET_REQUEST, body: body);
             // 4) Show result:
             Notification.Success(response.Body.Message);
-            VM.Show(LoginFormType.USER);
+            VM.Show(LoginFormType.User);
             ActionHandler.PopFocus();
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.LOGIN);
+        await PageLoader.Hide(PageLoaderTask.Login);
     }
 }

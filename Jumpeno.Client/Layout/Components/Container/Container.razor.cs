@@ -13,7 +13,7 @@ public partial class Container {
     [Parameter]
     public string? ID { get; set; }
     [Parameter]
-    public ContainerType Type { get; set; } = ContainerType.NONE;
+    public ContainerType Type { get; set; } = ContainerType.None;
     [Parameter]
     public bool Boundary { get; set; } = false;
     [Parameter]

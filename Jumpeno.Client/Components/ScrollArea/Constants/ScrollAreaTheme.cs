@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ScrollAreaTheme {
-    OS_THEME_LIGHT,
-    OS_THEME_DARK
+    OSThemeLight,
+    OSThemeDark
 }

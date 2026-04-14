@@ -1,20 +1,20 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum Surface {
     // Primary:
-    [CSSClass("surface-primary")] PRIMARY,
-    [CSSClass("surface-primary-collapse")] PRIMARY_COLLAPSE,
-    [CSSClass("surface-primary-box")] PRIMARY_BOX,
-    [CSSClass("surface-primary-box-collapse")] PRIMARY_BOX_COLLAPSE,
-    [CSSClass("surface-primary-transparent")] PRIMARY_TRANSPARENT,
-    [CSSClass("surface-primary-transparent-collapse")] PRIMARY_TRANSPARENT_COLLAPSE,
-    [CSSClass("surface-primary-glass")] PRIMARY_GLASS,
-    [CSSClass("surface-primary-glass-collapse")] PRIMARY_GLASS_COLLAPSE,
+    [CSSClass("surface-primary")] Priamary,
+    [CSSClass("surface-primary-collapse")] PrimaryCollapse,
+    [CSSClass("surface-primary-box")] PrimaryBox,
+    [CSSClass("surface-primary-box-collapse")] PrimaryBoxCollapse,
+    [CSSClass("surface-primary-transparent")] PrimaryTransparent,
+    [CSSClass("surface-primary-transparent-collapse")] PrimaryTransparentCollapse,
+    [CSSClass("surface-primary-glass")] PrimaryGlass,
+    [CSSClass("surface-primary-glass-collapse")] PrimaryGlassCollapse,
     // Secondary:
-    [CSSClass("surface-secondary")] SECONDARY,
+    [CSSClass("surface-secondary")] Secondary,
     // Floating:
-    [CSSClass("surface-floating")] FLOATING,
-    [CSSClass("surface-floating-collapse")] FLOATING_COLLAPSE,
-    [CSSClass("surface-floating-additional")] FLOATING_ADDITIONAL,
-    [CSSClass("surface-floating-additional-collapse")] FLOATING_ADDITIONAL_COLLAPSE
+    [CSSClass("surface-floating")] Floating,
+    [CSSClass("surface-floating-collapse")] FloatingCollapse,
+    [CSSClass("surface-floating-additional")] FloatingAditional,
+    [CSSClass("surface-floating-additional-collapse")] FloatingAddtitionalCollapse
 }

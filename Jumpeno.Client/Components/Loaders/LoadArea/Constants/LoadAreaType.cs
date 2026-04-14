@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum LoadAreaType {
-    FOCUSABLE,
-    NO_FOCUS,
-    FOCUS_LOADING
+    Focusable,
+    NoFocus,
+    FocusLoading
 }

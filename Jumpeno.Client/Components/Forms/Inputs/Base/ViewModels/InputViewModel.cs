@@ -70,10 +70,10 @@ public class InputViewModel<T> : FormViewModel {
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private static InputType InitType(InputViewModelParams<T> @params) {
         var paramsType = @params.GetType();
-        if (paramsType == typeof(InputViewModelTextParams)) return InputType.TEXT;
-        else if (paramsType == typeof(InputViewModelLongParams)) return InputType.LONG;
-        else if (paramsType == typeof(InputViewModelDoubleParams)) return InputType.DOUBLE;
-        else return InputType.TEXT;
+        if (paramsType == typeof(InputViewModelTextParams)) return InputType.Text;
+        else if (paramsType == typeof(InputViewModelLongParams)) return InputType.Long;
+        else if (paramsType == typeof(InputViewModelDoubleParams)) return InputType.Double;
+        else return InputType.Text;
     }
     private static int InitDecimals(InputViewModelParams<T> @params) {
         if (@params.GetType() == typeof(InputViewModelDoubleParams)) {
@@ -131,18 +131,18 @@ public class InputViewModel<T> : FormViewModel {
         return [new(default!, false), new(default!, false)];
     }
     public T ApplyTextMode(T value) {
-        if (Type == InputType.TEXT) {
+        if (Type == InputType.Text) {
             switch (TextMode) {
-                case InputTextMode.LOWERCASE:
+                case InputTextMode.LowerCase:
                     return (T)(object)value!.ToString()!.ToLower();
-                case InputTextMode.UPPERCASE:
+                case InputTextMode.UpperCase:
                     return (T)(object)value!.ToString()!.ToUpper();
             }
         }
         return value;
     }
     public T ApplyTrim(T value) {
-        if (Type == InputType.TEXT && Trim) {
+        if (Type == InputType.Text && Trim) {
             return (T)(object) value!.ToString()!.Trim();
         }
         return value;
@@ -151,7 +151,7 @@ public class InputViewModel<T> : FormViewModel {
         var valString = $"{value}";
         T valResult;
         try {
-            if (Type == InputType.LONG) {
+            if (Type == InputType.Long) {
                 var val = long.Parse(valString);
                 var minValue = (long)(object) MinValue!;
                 var maxValue = (long)(object) MaxValue!;
@@ -165,7 +165,7 @@ public class InputViewModel<T> : FormViewModel {
 
                 valResult = (T)(object) val;
 
-            } else if (Type == InputType.DOUBLE) {
+            } else if (Type == InputType.Double) {
                 var val = Precision.ParseDouble(valString);
                 var minValue = (double)(object) MinValue!;
                 var maxValue = (double)(object) MaxValue!;

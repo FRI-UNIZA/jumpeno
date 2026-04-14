@@ -4,7 +4,7 @@ public class Cookie(
     Enum key, string value, DateTimeOffset? expires = null,
     string? domain = null, string? path = null,
     bool httpOnly = false, bool secure = true,
-    SameSite sameSite = SameSite.STRICT
+    SameSite sameSite = SameSite.Strict
 ) {
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public static string? NormDomain(string domain) => domain == Cookies.DEFAULT_DOMAIN ? null : domain;

@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum NumberDelimeter {
-    [StringValue(",")] COMMA,
-    [StringValue(".")] DOT
+    [StringValue(",")] Comma,
+    [StringValue(".")] Dot
 }

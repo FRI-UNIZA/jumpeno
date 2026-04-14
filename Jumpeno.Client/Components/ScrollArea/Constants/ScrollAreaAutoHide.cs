@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ScrollAreaAutoHide {
-    NEVER,
-    SCROLL,
-    LEAVE,
-    MOVE
+    Never,
+    Scroll,
+    Leave,
+    Move
 }

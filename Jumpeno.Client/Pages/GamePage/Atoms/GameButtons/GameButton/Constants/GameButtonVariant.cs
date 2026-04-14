@@ -1,9 +1,9 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum GameButtonVariant
 {
-    [CSSClass("variant-primary")] PRIMARY,
-    [CSSClass("variant-secondary")] SECONDARY,
-    [CSSClass("variant-success")] SUCCESS,
-    [CSSClass("variant-danger")] DANGER    
+    [CSSClass("variant-primary")] Primary,
+    [CSSClass("variant-secondary")] Secondary,
+    [CSSClass("variant-success")] Success,
+    [CSSClass("variant-danger")] Danger    
 }

@@ -23,10 +23,10 @@ public static class Init {
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
         var q = URL.GetQueryParams();
-        var token = q.GetString(TokenType.ACTIVATION.String());
+        var token = q.GetString(TokenType.Activation.String());
         if (token == null) return false;
         // 3) Send request:
-        await PageLoader.Show(PageLoaderTask.ACTIVATION);
+        await PageLoader.Show(PageLoaderTask.Activation);
         await HTTP.Try(async () => {
             // 3.1) Create data:
             var body = new UserActivateDTO(
@@ -40,9 +40,9 @@ public static class Init {
             Notification.Success(response.Body.Message);
         });
         // 4) Update UI:
-        q.Remove(TokenType.ACTIVATION.String());
+        q.Remove(TokenType.Activation.String());
         await Navigator.SetQueryParams(q);
-        await PageLoader.Hide(PageLoaderTask.ACTIVATION);
+        await PageLoader.Hide(PageLoaderTask.Activation);
         return true;
     }
 
@@ -52,10 +52,10 @@ public static class Init {
         if (AppEnvironment.IsServer) return false;
         // 2) Read token:
         var q = URL.GetQueryParams();
-        var token = q.GetString(TokenType.PASSWORD_RESET.String());
+        var token = q.GetString(TokenType.PasswordReset.String());
         if (token == null) return false;
         // 3) Send request:
-        await PageLoader.Show(PageLoaderTask.PASSWORD_RESET);
+        await PageLoader.Show(PageLoaderTask.PasswordReset);
         await HTTP.Try(async () => {
             // 3.1) Create body:
             var body = new UserPasswordResetDTO(
@@ -69,9 +69,9 @@ public static class Init {
             Notification.Success(response.Body.Message);
         });
         // 4) Update UI:
-        q.Remove(TokenType.PASSWORD_RESET.String());
+        q.Remove(TokenType.PasswordReset.String());
         await Navigator.SetQueryParams(q);
-        await PageLoader.Hide(PageLoaderTask.PASSWORD_RESET);
+        await PageLoader.Hide(PageLoaderTask.PasswordReset);
         return true;
     }
 

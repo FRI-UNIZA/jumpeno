@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum BoxSurface {
-    PRIMARY_BOX = Surface.PRIMARY_BOX,
-    PRIMARY_TRANSPARENT = Surface.PRIMARY_TRANSPARENT,
-    PRIMARY_GLASS = Surface.PRIMARY_GLASS
+    PrimaryBox = Surface.PrimaryBox,
+    PrimaryTransparent = Surface.PrimaryTransparent,
+    PrimaryGlass = Surface.PrimaryGlass
 }

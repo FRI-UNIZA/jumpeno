@@ -2,9 +2,9 @@ namespace Jumpeno.Client.Components;
 
 public enum DividerOrientation
 {
-    LEFT,
-    CENTER,
-    RIGHT
+    Left,
+    Center,
+    Right
 }
 
 public static class DividerOrientationExtension
@@ -13,9 +13,9 @@ public static class DividerOrientationExtension
     {
         return orientation switch
         {
-            DividerOrientation.LEFT => AntDesign.DividerOrientation.Left,
-            DividerOrientation.CENTER => AntDesign.DividerOrientation.Center,
-            DividerOrientation.RIGHT => AntDesign.DividerOrientation.Right,
+            DividerOrientation.Left => AntDesign.DividerOrientation.Left,
+            DividerOrientation.Center => AntDesign.DividerOrientation.Center,
+            DividerOrientation.Right => AntDesign.DividerOrientation.Right,
             _ => throw new ArgumentException("Invalid orientation value")
         };
     }

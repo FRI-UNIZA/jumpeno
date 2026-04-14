@@ -1,5 +1,5 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ServerPageLoaderSurface {
-    SECONDARY = Surface.SECONDARY
+    Secondary = Surface.Secondary
 }

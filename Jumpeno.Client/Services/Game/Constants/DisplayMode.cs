@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum DisplayMode {
-    [StringValue("One screen")] ONE_SCREEN,
-    [StringValue("Each own")] EACH_OWN,
-    [StringValue("Presentation")] PRESENTATION
+    [StringValue("One screen")] OneScreen,
+    [StringValue("Each own")] EachOwn,
+    [StringValue("Presentation")] Presentation
 }

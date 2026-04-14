@@ -43,18 +43,18 @@ public partial class AccountTab : IProfileTab
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private async Task SendActivationLink()
     {
-        await PageLoader.Show(PageLoaderTask.ACTIVATION);
+        await PageLoader.Show(PageLoaderTask.Activation);
         await HTTP.Try(async () => {
             var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_SEND_ACTIVATION);
             var body = result.Body.Assert();
             Notification.Success(body.Message);
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.ACTIVATION);
+        await PageLoader.Hide(PageLoaderTask.Activation);
     }
 
     private async Task UpdateUserProfileInfo() 
     {
-        await PageLoader.Show(PageLoaderTask.USER_UPDATE);
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
         await HTTP.Try(async () => {
             var model = new UserUpdateDTO(NewName: VMPlayerName.Value, NewEmail: VMEmail.Value);
             var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_UPDATE, body: model);
@@ -64,13 +64,13 @@ public partial class AccountTab : IProfileTab
             await ResetForm();
             Notification.Success(body.Message);
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.USER_UPDATE);
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
     private async Task DeleteAccount() 
     {
         await ConfirmModalRef.Open(async () => {
-            await PageLoader.Show(PageLoaderTask.DELETE_ACCOUNT);
+            await PageLoader.Show(PageLoaderTask.DeleteAccount);
             await Auth.RequestFreeze();
             await HTTP.Try(async () => {
                 var result = await HTTP.Delete<MessageDTOR>(API.BASE.USER_DELETE);
@@ -80,7 +80,7 @@ public partial class AccountTab : IProfileTab
                 Notification.Success(body.Message);
             }, FORM);
             await Auth.ResolveFreeze();
-            await PageLoader.Hide(PageLoaderTask.DELETE_ACCOUNT);
+            await PageLoader.Hide(PageLoaderTask.DeleteAccount);
         });
     }
 

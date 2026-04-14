@@ -16,14 +16,14 @@ public partial class PageLoader {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public PageLoaderSurface? Surface { get; set; } = PageLoaderSurface.SECONDARY;
+    public PageLoaderSurface? Surface { get; set; } = PageLoaderSurface.Secondary;
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool PageLoaderDisplayed { get; set; } = true;
     private readonly LockerSlim Lock = new();
-    private readonly HashSet<PageLoaderTask> PageLoaderTasks = [PageLoaderTask.INITIAL];
+    private readonly HashSet<PageLoaderTask> PageLoaderTasks = [PageLoaderTask.Initial];
     private readonly HashSet<PageLoaderTask> GlobalLoaders = [];
     private readonly MinWatch MinWatch = new(MIN_LOADING);
     private TaskCompletionSource NoLoaderTCS = new();
@@ -68,7 +68,7 @@ public partial class PageLoader {
     /// <param name="task">Task to show page loader for</param>
     /// <param name="custom">True means invisible to only block user input (we can show custom loader)</param>
     /// <returns>Task to await</returns>
-    public static async Task Show(PageLoaderTask task = PageLoaderTask.DEFAULT, bool custom = false) {
+    public static async Task Show(PageLoaderTask task = PageLoaderTask.Default, bool custom = false) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
             // 1) Set tasks:
             instance.PageLoaderTasks.Add(task);
@@ -97,7 +97,7 @@ public partial class PageLoader {
     /// <param name="task">Task to hide page loader for</param>
     /// <param name="minLoading">True ensures that the page loader was displayed for at least the minimum loading time</param>
     /// <returns>True if page loader is hidden (no more active loaders)</returns>
-    public static async Task<bool> Hide(PageLoaderTask task = PageLoaderTask.DEFAULT, bool minLoading = true) {
+    public static async Task<bool> Hide(PageLoaderTask task = PageLoaderTask.Default, bool minLoading = true) {
         var instance = Instance(); return await instance.Lock.TryExclusive(async () => {
             // 0) Check state:
             if (!instance.PageLoaderDisplayed) return true;
@@ -128,7 +128,7 @@ public partial class PageLoader {
     }
 
     public static async Task Show(
-        Func<Task> action, PageLoaderTask task = PageLoaderTask.DEFAULT,
+        Func<Task> action, PageLoaderTask task = PageLoaderTask.Default,
         bool custom = false, bool minLoading = true
     ) {
         await Show(task, custom);
@@ -137,7 +137,7 @@ public partial class PageLoader {
     }
 
     public static async Task Try(
-        Func<Task> action, PageLoaderTask task = PageLoaderTask.DEFAULT,
+        Func<Task> action, PageLoaderTask task = PageLoaderTask.Default,
         bool custom = false, bool minLoading = true
     ) {
         try { await Show(action, task, custom, minLoading); }

@@ -22,7 +22,7 @@ public partial class AvatarTab : IProfileTab
 
     private async Task ChangeSkin() 
     {
-        await PageLoader.Show(PageLoaderTask.USER_UPDATE);
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
         await HTTP.Try(async () => {
             var model = new UserUpdateDTO(NewSkin: SelectedSkin);
 
@@ -33,7 +33,7 @@ public partial class AvatarTab : IProfileTab
             await ResetForm();
             Notification.Success(result.Body.Message);
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.USER_UPDATE);
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
     public Task ResetForm()

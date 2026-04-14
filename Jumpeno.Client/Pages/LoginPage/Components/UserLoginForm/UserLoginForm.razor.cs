@@ -20,7 +20,7 @@ public partial class UserLoginForm {
         VMEmail = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserLoginDTO.Email),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
@@ -31,7 +31,7 @@ public partial class UserLoginForm {
         VMPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserLoginDTO.Password),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Password"),
@@ -55,13 +55,13 @@ public partial class UserLoginForm {
             }
         )) return;
 
-        await PageLoader.Show(PageLoaderTask.LOGIN);
+        await PageLoader.Show(PageLoaderTask.Login);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:
             var captchaToken = await ReCAPTCHARef.GetToken();
             // 2) Login:
             await Auth.LogInUser(VMEmail.Value, VMPassword.Value, captchaToken);
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.LOGIN);
+        await PageLoader.Hide(PageLoaderTask.Login);
     }
 }

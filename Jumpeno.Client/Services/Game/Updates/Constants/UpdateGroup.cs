@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum UpdateGroup
 {
-    ALL,
-    WATCH,
-    WATCH_TOUCH
+    All,
+    Watch,
+    WatchTouch
 }

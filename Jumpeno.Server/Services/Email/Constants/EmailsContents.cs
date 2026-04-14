@@ -31,7 +31,7 @@ public static class EmailsContents {
         text +=                                 paragraph;
         text +=                             $"</p>";
         text +=                             $"<a ";
-        text +=                                 $"href=\"{link}\" target=\"{WebLinkTarget.BLANK}\" ";
+        text +=                                 $"href=\"{link}\" target=\"{WebLinkTarget.Blank}\" ";
         text +=                                 $"class=\"jumpeno-btn\"";
         text +=                                 $"style=\"";
         text +=                                     $"display: inline-block; padding: 12px 20px; border-radius: 100px;";

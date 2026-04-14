@@ -7,7 +7,7 @@ public abstract partial class TextComponent {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public TextVariant? Variant { get; set; } = TextVariant.PRIMARY;
+    public TextVariant? Variant { get; set; } = TextVariant.Primary;
     [Parameter]
     public TextSize? Size { get; set; } = TextSize.M;
     [Parameter]

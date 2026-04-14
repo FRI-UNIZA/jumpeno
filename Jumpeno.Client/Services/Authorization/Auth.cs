@@ -13,8 +13,8 @@ public static class Auth {
     public static bool IsLoggedIn => IsRegisteredUser || IsAdmin;
     public static bool IsRole(Role role) {
         switch (role) {
-            case Role.USER: return IsRegisteredUser;
-            case Role.ADMIN: return IsAdmin;
+            case Role.User: return IsRegisteredUser;
+            case Role.Admin: return IsAdmin;
             default: return false;
         }
     }
@@ -69,7 +69,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WindowLock.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task<bool> TryLogInAdmin() {
@@ -78,7 +78,7 @@ public static class Auth {
             if (AppEnvironment.IsServer) return false;
             // 2) Read token:
             var q = URL.GetQueryParams();
-            var token = q.GetString(TokenType.REFRESH.String());
+            var token = q.GetString(TokenType.Refresh.String());
             if (token == null) return false;
             // 3) Send request:
             try {
@@ -116,11 +116,11 @@ public static class Auth {
                 return false;
             } finally {
                 // 4) Update URL:
-                q.Remove(TokenType.REFRESH.String());
+                q.Remove(TokenType.Refresh.String());
                 await Navigator.SetQueryParams(q);
                 await StopProcessing();
             }
-        }, WindowLock.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task<bool> TryLogInToken() {
@@ -151,7 +151,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WindowLock.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task Refresh(int iteration) {
@@ -185,7 +185,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WindowLock.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task LogOut() {
@@ -205,7 +205,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WindowLock.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ public static class Auth {
         await UpdateLock.Exclusive(async () => {
             try {
                 if (processing) StartProcessing();
-                if (Token.Access.role == Role.USER) {
+                if (Token.Access.role == Role.User) {
                     // 1.1) Load user profile:
                     response ??= await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
                     // 1.2) Validate response:
@@ -269,7 +269,7 @@ public static class Auth {
     public static async Task LoadProfile() {
         if (AppEnvironment.IsServer) return;
         var response = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
-        await Window.Lock(async () => await LoadAuthProfile(true, response), WindowLock.AUTHENTICATION);
+        await Window.Lock(async () => await LoadAuthProfile(true, response), WindowLock.Authentication);
     }
 
     private static async Task ResetAuthProfile(bool processing = true) {
@@ -282,7 +282,7 @@ public static class Auth {
     }
     public static async Task ResetProfile() {
         if (AppEnvironment.IsServer) return;
-        await Window.Lock(async () => await ResetAuthProfile(), WindowLock.AUTHENTICATION);
+        await Window.Lock(async () => await ResetAuthProfile(), WindowLock.Authentication);
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------

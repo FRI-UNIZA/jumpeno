@@ -244,7 +244,7 @@ public class Window {
     public static bool IsTouchDevice => JS.Invoke<bool>(JSWindow.IsTouchDevice);
     public static DeviceType GetDeviceType() {
         AppEnvironment.AssertClient();
-        return IsTouchDevice ? DeviceType.TOUCH : DeviceType.POINTER;
+        return IsTouchDevice ? DeviceType.Touch : DeviceType.Pointer;
     }
 
     // Tab reload -------------------------------------------------------------------------------------------------------------------------
@@ -294,20 +294,20 @@ public class Window {
     private static async Task Lock(EmptyDelegate action, WindowLock id) { await Lock<object?>(action, id); }
     private static async Task<R> Lock<R>(EmptyResponse<R> action, WindowLock id) => (await Lock<R>((object)action, id))!;
 
-    public static async Task Lock(Action action, WindowLock id = WindowLock.DEFAULT) => await Lock(new EmptyDelegate(action), id);
-    public static async Task TryLock(Action action, WindowLock id = WindowLock.DEFAULT) {
+    public static async Task Lock(Action action, WindowLock id = WindowLock.Default) => await Lock(new EmptyDelegate(action), id);
+    public static async Task TryLock(Action action, WindowLock id = WindowLock.Default) {
         try { await Lock(action, id); } catch {}
     }
-    public static async Task Lock(Func<Task> action, WindowLock id = WindowLock.DEFAULT) => await Lock(new EmptyDelegate(action), id);
-    public static async Task TryLock(Func<Task> action, WindowLock id = WindowLock.DEFAULT) {
+    public static async Task Lock(Func<Task> action, WindowLock id = WindowLock.Default) => await Lock(new EmptyDelegate(action), id);
+    public static async Task TryLock(Func<Task> action, WindowLock id = WindowLock.Default) {
         try { await Lock(action, id); } catch {}
     }
-    public static async Task<R> Lock<R>(Func<R> action, WindowLock id = WindowLock.DEFAULT) => await Lock(new EmptyResponse<R>(action), id);
-    public static async Task<R> TryLock<R>(Func<R> action, WindowLock id = WindowLock.DEFAULT, R fallback = default!) {
+    public static async Task<R> Lock<R>(Func<R> action, WindowLock id = WindowLock.Default) => await Lock(new EmptyResponse<R>(action), id);
+    public static async Task<R> TryLock<R>(Func<R> action, WindowLock id = WindowLock.Default, R fallback = default!) {
         try { return await Lock(action, id); } catch { return fallback; }
     }
-    public static async Task<R> Lock<R>(Func<Task<R>> action, WindowLock id = WindowLock.DEFAULT) => await Lock(new EmptyResponse<R>(action), id);
-    public static async Task<R> TryLock<R>(Func<Task<R>> action, WindowLock id = WindowLock.DEFAULT, R fallback = default!) {
+    public static async Task<R> Lock<R>(Func<Task<R>> action, WindowLock id = WindowLock.Default) => await Lock(new EmptyResponse<R>(action), id);
+    public static async Task<R> TryLock<R>(Func<Task<R>> action, WindowLock id = WindowLock.Default, R fallback = default!) {
         try { return await Lock(action, id); } catch { return fallback; }
     }
 }

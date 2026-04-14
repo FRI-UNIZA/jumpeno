@@ -87,7 +87,7 @@ public static class GameService {
             map, data.Anonyms, data.Rounds, data.Capacity
         );
         // 6) Connect:
-        var ctx =  await Connect(engine, connection, data.DisplayMode == DisplayMode.PRESENTATION);
+        var ctx =  await Connect(engine, connection, data.DisplayMode == DisplayMode.Presentation);
         // 7) Save engine:
         SaveEngine(engine);
         // 8) Return context:

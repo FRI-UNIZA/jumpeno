@@ -7,7 +7,7 @@ public partial class Button {
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public ButtonVariant? Variant { get; set; } = ButtonVariant.PRIMARY;
+    public ButtonVariant? Variant { get; set; } = ButtonVariant.Primary;
     [Parameter]
     public ButtonSize? Size { get; set; } = ButtonSize.M;
     [Parameter]

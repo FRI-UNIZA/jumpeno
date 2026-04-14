@@ -13,7 +13,7 @@ public partial class FormLabel {
     public required OneOf<string, List<string>> Label { get; set; }
     // Style:
     [Parameter]
-    public FormVariant? Variant { get; set; } = FormVariant.PRIMARY;
+    public FormVariant? Variant { get; set; } = FormVariant.Primary;
     [Parameter]
     public FormSize? Size { get; set; } = FormSize.M;
     [Parameter]

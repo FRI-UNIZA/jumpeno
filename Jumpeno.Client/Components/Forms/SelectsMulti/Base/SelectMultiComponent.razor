@@ -5,11 +5,11 @@
 @inherits FormField<SelectMultiViewModel<T>>
 
 @code {
-    protected override FormErrorType? ErrorType => FormErrorType.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.Connected;
     protected override RenderFragment? RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@ButtonType.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             aria-roledescription="multi-select"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
@@ -50,7 +50,7 @@
                 @if (ViewModel.Search) {
                     <InputSearch
                         ViewModel="ViewModel.SearchVM"
-                        Variant="FormVariant.PRIMARY"
+                        Variant="FormVariant.Primary"
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
@@ -67,7 +67,7 @@
                             <button
                                 @key="option.Label"
                                 id="@($"{ViewModel.FormID}-{index++}")"
-                                type="@ButtonType.BUTTON.String()"
+                                type="@ButtonType.Button.String()"
                                 role="option"
                                 aria-label="@HTML.Label.OptionAria(option.Label, isSelected)"
                                 aria-selected="@HTML.Label.OptionAriaActive(isSelected)"
@@ -86,7 +86,7 @@
             </Content>
             <Footer>
                 <WebLink
-                    Role="WebLinkRole.BUTTON"
+                    Role="WebLinkRole.Button"
                     Size="TextSize.M"
                     NoWrap
                     OnClick="ClearSelect"
@@ -95,7 +95,7 @@
                     @I18N.T("Clear")
                 </WebLink>
                 <Button
-                    Variant="ButtonVariant.QUATERNARY"
+                    Variant="ButtonVariant.Quaternary"
                     Size="ButtonSize.S"
                     NoShadow
                     OnClick="ConfirmSelect"

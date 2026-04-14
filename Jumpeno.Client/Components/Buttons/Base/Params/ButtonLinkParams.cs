@@ -11,7 +11,7 @@ public class ButtonLinkParams(
     public string? Href { get; private set; } = Href;
     public bool HrefPrevent { get; private set; } = HrefPrevent;
     public string Label { get; } = Label is null ? "" : Label;
-    public OneOf<WebLinkTarget, string> Target { get; set; } = Target is null ? WebLinkTarget.SELF : (OneOf<WebLinkTarget, string>) Target;
-    public WebLinkMatch Match { get; set; } = Match is null ? WebLinkMatch.PREFIX : (WebLinkMatch) Match;
+    public OneOf<WebLinkTarget, string> Target { get; set; } = Target is null ? WebLinkTarget.Self : (OneOf<WebLinkTarget, string>) Target;
+    public WebLinkMatch Match { get; set; } = Match is null ? WebLinkMatch.Prefix : (WebLinkMatch) Match;
     public string ActiveClass { get; set; } = ActiveClass is null ? WebLink.CLASS_DEFAULT_ACTIVE : ActiveClass;
 }

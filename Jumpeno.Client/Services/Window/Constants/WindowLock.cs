@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum WindowLock {
-    DEFAULT,
-    HTTP,
-    AUTHENTICATION
+    Default,
+    Http,
+    Authentication
 }

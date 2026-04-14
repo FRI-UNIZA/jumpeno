@@ -11,7 +11,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     public async Task<MessageDTOR> Register([FromBody] UserRegisterDTO body) {
         // 1) Validation:
         body.Assert();
-        await captchaService.AssertTokenForIP(ATTEMPTS_CATEGORY.REGISTER, body.CAPTCHAToken, nameof(UserRegisterDTO.CAPTCHAToken));
+        await captchaService.AssertTokenForIP(AttemptsCategory.Register, body.CAPTCHAToken, nameof(UserRegisterDTO.CAPTCHAToken));
         // 2) Transaction:
         UserEntity user = null!;
         await DB.Transaction(async () => {
@@ -28,7 +28,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>Sends activation email to authenticated user.</summary>
     /// <response code="200">Activation email sent.</response>
-    [HttpPost][Role(Role.USER)]
+    [HttpPost][Role(Role.User)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> SendActivation() {
         // 1) Select user:
@@ -69,7 +69,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     public async Task<UserLoginDTOR> Login([FromBody] UserLoginDTO body) {
         // 1) Validation:
         body.Assert();
-        await captchaService.AssertTokenForEmailAndIP(body.CAPTCHAToken, body.Email, ATTEMPTS_CATEGORY.LOGIN, nameof(UserLoginDTO.CAPTCHAToken));
+        await captchaService.AssertTokenForEmailAndIP(body.CAPTCHAToken, body.Email, AttemptsCategory.Login, nameof(UserLoginDTO.CAPTCHAToken));
         // 2) Authentication:
         var user = await UserEntity.ByEmailLeftJoinPassword(body.Email, nameof(body.Email)) ?? throw Exceptions.NOT_AUTHENTICATED;
         if (user.Password == null) throw Exceptions.NOT_AUTHENTICATED;
@@ -131,7 +131,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>Changes authenticated user password.</summary>
     /// <response code="200">Password changed.</response>
-    [HttpPatch][Role(Role.USER)]
+    [HttpPatch][Role(Role.User)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> PasswordChange([FromBody] UserPasswordChangeDTO body)
     {
@@ -152,7 +152,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
                 }
                 await RefreshEntity.DeleteByUserID(Token.Access.sub);
             },
-            ISOLATION.SERIALIZABLE
+            Isolation.Serializable
         );
         // 3) Response:
         return new(I18N.T("Password has been changed."));
@@ -160,7 +160,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>User profile info.</summary>
     /// <response code="200">User profile.</response>
-    [HttpGet][Role(Role.USER)]
+    [HttpGet][Role(Role.User)]
     [ProducesResponseType(typeof(UserProfileDTOR), StatusCodes.Status200OK)]
     public async Task<UserProfileDTOR> Profile() {
         // 1) Select user:
@@ -173,7 +173,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>Updates authenticated user data.</summary>
     /// <response code="200">User data updated.</response>
-    [HttpPatch][Role(Role.USER)]
+    [HttpPatch][Role(Role.User)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Update([FromBody] UserUpdateDTO body)
     {
@@ -191,7 +191,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
 
     /// <summary>Deletes authenticated user account.</summary>
     /// <response code="200">Account deleted.</response>
-    [HttpDelete][Role(Role.USER)]
+    [HttpDelete][Role(Role.User)]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Delete() {
         // 1) Delete User:

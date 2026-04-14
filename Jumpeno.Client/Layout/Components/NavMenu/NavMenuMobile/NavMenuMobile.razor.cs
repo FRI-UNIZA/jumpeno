@@ -8,7 +8,7 @@ public partial class NavMenuMobile {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public NavMenuSurface? Surface { get; set; } = NavMenuSurface.SECONDARY;
+    public NavMenuSurface? Surface { get; set; } = NavMenuSurface.Secondary;
     [Parameter]
     public required NavMenu MenuRef { get; set; }
     [Parameter]
@@ -22,7 +22,7 @@ public partial class NavMenuMobile {
     public string ID { get; private set; }
     private readonly DotNetObjectReference<NavMenuMobile> ObjRef;
     private ScrollArea ScrollAreaRef = null!;
-    private MenuState State { get; set; } = MenuState.CLOSED;
+    private MenuState State { get; set; } = MenuState.Closed;
     private readonly LockerSlim Lock = new();
     private TaskCompletionSource StateTCS { get; set; } = null!;
     
@@ -45,7 +45,7 @@ public partial class NavMenuMobile {
             await Window.AddResizeEventListener(ObjRef, JS_OnWindowResize);
             await Navigator.AddAfterFinishEventListener(CloseAfter);
         } else {
-            if (State == MenuState.OPENED || State == MenuState.CLOSED) {
+            if (State == MenuState.Opened || State == MenuState.Closed) {
                 StateTCS?.TrySetResult();
             } 
         }
@@ -71,25 +71,25 @@ public partial class NavMenuMobile {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {
         await Lock.TryExclusive(async () => {
-            if (State != MenuState.CLOSED) return;
+            if (State != MenuState.Closed) return;
 
-            await PageLoader.Show(PageLoaderTask.MENU, true);
+            await PageLoader.Show(PageLoaderTask.Menu, true);
 
             var objRef = DotNetObjectReference.Create(this);
             AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
-            State = MenuState.OPENING;
+            State = MenuState.Opening;
             StateTCS = new TaskCompletionSource();
             StateHasChanged();
             ScrollAreaRef.ScrollTo(0, 0);
             await StateTCS.Task;
 
-            State = MenuState.OPENED;
+            State = MenuState.Opened;
             StateTCS = new TaskCompletionSource();
             StateHasChanged();
             await StateTCS.Task;
 
             objRef.Dispose();
-            await PageLoader.Hide(PageLoaderTask.MENU, false);
+            await PageLoader.Hide(PageLoaderTask.Menu, false);
 
             ActionHandler.SetFocus(ID);
 
@@ -98,23 +98,23 @@ public partial class NavMenuMobile {
     }
     public async Task Close() {
         await Lock.TryExclusive(async () => {
-            if (State != MenuState.OPENED) return;
-            await PageLoader.Show(PageLoaderTask.MENU, true);
+            if (State != MenuState.Opened) return;
+            await PageLoader.Show(PageLoaderTask.Menu, true);
 
             var objRef = DotNetObjectReference.Create(this);
             AnimationHandler.CallOnAnimationEnd(CLASS_SELECTOR, objRef, nameof(JS_OnAnimationEnd));
-            State = MenuState.CLOSING;
+            State = MenuState.Closing;
             StateTCS = new TaskCompletionSource();
             StateHasChanged();
             await StateTCS.Task;
 
-            State = MenuState.CLOSED;
+            State = MenuState.Closed;
             StateTCS = new TaskCompletionSource();
             StateHasChanged();
             await StateTCS.Task;
 
             objRef.Dispose();
-            await PageLoader.Hide(PageLoaderTask.MENU, false);
+            await PageLoader.Hide(PageLoaderTask.Menu, false);
         
             var windowSize = Window.GetSize();
             if (windowSize.Width < MOBILE_MENU_BREAKPOINT) {
@@ -135,14 +135,14 @@ public partial class NavMenuMobile {
     public async Task JS_OnWindowResize(WindowResizeEvent e) {
         // Change to desktop:
         if (e.WidthPrevious < MOBILE_MENU_BREAKPOINT && MOBILE_MENU_BREAKPOINT <= e.Width) {
-            if (State == MenuState.CLOSED && MenuRef.MobileMenuButtonFocused) {
+            if (State == MenuState.Closed && MenuRef.MobileMenuButtonFocused) {
                 ActionHandler.SetFocus(MenuControls.FIRST_LINK_ID);
-            } else if (State == MenuState.OPENED) {
+            } else if (State == MenuState.Opened) {
                 await Close();
             }
         // Change to mobile:
         } else if (MOBILE_MENU_BREAKPOINT <= e.WidthPrevious && e.Width < MOBILE_MENU_BREAKPOINT) {
-            if (State == MenuState.CLOSED && MenuRef.ControlsFocused) {
+            if (State == MenuState.Closed && MenuRef.ControlsFocused) {
                 ActionHandler.SetFocus(NavMenu.MOBILE_MENU_BUTTON_ID);
             }
         }

@@ -17,7 +17,7 @@ public partial class AdminLoginForm {
         VMEmail = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(AdminLoginDTO.Email),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: AdminValidator.IsEmail,
             MaxLength: AdminValidator.EMAIL_MAX_LENGTH,
@@ -29,7 +29,7 @@ public partial class AdminLoginForm {
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private async Task Send() {
-        await PageLoader.Show(PageLoaderTask.LOGIN);
+        await PageLoader.Show(PageLoaderTask.Login);
         await HTTP.Try(async () => {
             // 1) Create body:
             var body = new AdminLoginDTO(
@@ -45,6 +45,6 @@ public partial class AdminLoginForm {
             StateHasChanged();
             ActionHandler.PopFocus();
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.LOGIN);
+        await PageLoader.Hide(PageLoaderTask.Login);
     }
 }

@@ -28,14 +28,14 @@ public partial class ImageBase {
     [Parameter]
     public bool Preloaded { get; set; } = false;
     [Parameter]
-    public ImageLoadingType Loading { get; set; } = ImageLoadingType.LAZY;
+    public ImageLoadingType Loading { get; set; } = ImageLoadingType.Lazy;
     [Parameter]
     public Action<bool> OnLoadingFinish { get; set; } = success => {};
     private readonly Dictionary<string, object> Attributes = [];
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly string ID = null!;
-    private ImageState State = ImageState.LOADING;
+    private ImageState State = ImageState.Loading;
     
     private static readonly Dictionary<string, ImageBase> Images = [];
 
@@ -61,7 +61,7 @@ public partial class ImageBase {
         Attributes["alt"] = alt;
         if (alt == "") Attributes["aria-hidden"] = "true";
         if (AppEnvironment.IsServer) {
-            State = ImageState.LOADING;
+            State = ImageState.Loading;
         } else {
             State = Preloaded
                     ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
@@ -83,10 +83,10 @@ public partial class ImageBase {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     public static void HandleLoadFinish(ImageState state, Action<bool> OnLoadingFinish) {
         switch (state) {
-            case ImageState.ERROR:
+            case ImageState.Error:
                 OnLoadingFinish(false);
             break;
-            case ImageState.FINISHED:
+            case ImageState.Finished:
                 OnLoadingFinish(true);
             break;
         }
@@ -97,7 +97,7 @@ public partial class ImageBase {
     public static void JS_OnLoad(string id) {
         try {
             var image = Images[id];
-            image.State = ImageState.FINISHED;
+            image.State = ImageState.Finished;
             image.StateHasChanged();
             HandleLoadFinish(image.State, image.OnLoadingFinish);
         } catch {}
@@ -107,7 +107,7 @@ public partial class ImageBase {
     public static void JS_OnError(string id) {
         try {
             var image = Images[id];
-            image.State = ImageState.ERROR;
+            image.State = ImageState.Error;
             image.StateHasChanged();
             HandleLoadFinish(image.State, image.OnLoadingFinish);
         } catch {}

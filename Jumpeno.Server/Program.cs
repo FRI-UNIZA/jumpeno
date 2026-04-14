@@ -33,7 +33,7 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.Secure = CookieSecurePolicy.Always; // Enforce secure cookies
 });
 builder.Services.AddAntiforgery(options => {
-    options.Cookie.Name = Cookies.Mandatory.ASP_NET_CORE_ANTIFORGERY.String();
+    options.Cookie.Name = Cookies.Mandatory.AspNetCoreAntiforgery.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 

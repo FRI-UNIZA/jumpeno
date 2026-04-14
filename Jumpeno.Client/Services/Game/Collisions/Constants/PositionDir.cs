@@ -1,8 +1,8 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum PositionDir {
-    LEFT,
-    RIGHT,
-    TOP,
-    BOTTOM
+    Left,
+    Right,
+    Top,
+    Bottom
 }

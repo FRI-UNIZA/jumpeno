@@ -1,11 +1,11 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum MouseButton
 {
-    LEFT,
-    MIDDLE,
-    RIGHT,
-    OTHER
+    Left,
+    Middle,
+    Right,
+    Other
 }
 
 public static class MouseButtonExtension
@@ -14,10 +14,10 @@ public static class MouseButtonExtension
     {
         return button switch
         {
-            MouseButton.LEFT => 0,
-            MouseButton.MIDDLE => 1,
-            MouseButton.RIGHT => 2,
-            MouseButton.OTHER => 3,
+            MouseButton.Left => 0,
+            MouseButton.Middle => 1,
+            MouseButton.Right => 2,
+            MouseButton.Other => 3,
             _ => throw new ArgumentException("Invalid value")
         };
     }
@@ -26,10 +26,10 @@ public static class MouseButtonExtension
     {
         return value switch
         {
-            0 => MouseButton.LEFT,
-            1 => MouseButton.MIDDLE,
-            2 => MouseButton.RIGHT,
-            _ => MouseButton.OTHER
+            0 => MouseButton.Left,
+            1 => MouseButton.Middle,
+            2 => MouseButton.Right,
+            _ => MouseButton.Other
         };
     }
 }

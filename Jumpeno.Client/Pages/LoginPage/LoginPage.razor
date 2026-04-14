@@ -8,9 +8,9 @@
 
 <div class="login-page">
     @switch (VM.Form) {
-        case LoginFormType.ADMIN: <AdminLoginForm VM="VM" /> break;
-        case LoginFormType.PASSWORD_RESET: <PasswordResetForm VM="VM" /> break;
-        case LoginFormType.REGISTER: <RegisterForm VM="VM" /> break;
-        case LoginFormType.USER: <UserLoginForm VM="VM" /> break;
+        case LoginFormType.Admin: <AdminLoginForm VM="VM" /> break;
+        case LoginFormType.PasswordReset: <PasswordResetForm VM="VM" /> break;
+        case LoginFormType.Register: <RegisterForm VM="VM" /> break;
+        case LoginFormType.User: <UserLoginForm VM="VM" /> break;
     }
 </div>

@@ -3,7 +3,7 @@ namespace Jumpeno.Server.Services;
 public static partial class Email {
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void SendPasswordReset(string email, string password, string resetToken) {
-        var q = new QueryParams(); q.Set(TokenType.PASSWORD_RESET.String(), resetToken);
+        var q = new QueryParams(); q.Set(TokenType.PasswordReset.String(), resetToken);
         Send(
             email,
             I18N.T("Jumpeno password reset"),

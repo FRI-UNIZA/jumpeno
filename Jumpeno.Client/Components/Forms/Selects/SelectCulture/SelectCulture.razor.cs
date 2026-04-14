@@ -24,7 +24,7 @@ public partial class SelectCulture {
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private static async Task OnSelect(SelectEvent<string> ev) {
-        await PageLoader.Show(PageLoaderTask.CULTURE_CHANGE);
+        await PageLoader.Show(PageLoaderTask.CultureChange);
         await Task.Delay(CHANGE_DELAY);
         await ChangeCulture(ev);
     }
@@ -33,10 +33,10 @@ public partial class SelectCulture {
     public static async Task Init() {
         CookieStorage cookieStorage = AppEnvironment.GetService<CookieStorage>();
         await HTTP.Sync(() => {
-            var cookie = cookieStorage.Get(Cookies.Preference.APP_CULTURE);
+            var cookie = cookieStorage.Get(Cookies.Preference.AppCulture);
             if (cookie is null) return;
             cookieStorage.Set(new Models.Cookie(
-                Cookies.Preference.APP_CULTURE,
+                Cookies.Preference.AppCulture,
                 cookie,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -86,7 +86,7 @@ public partial class SelectCulture {
             try { pageURI = page.CustomURL($"{value}", pageURI); }
             catch (Exception e) {
                 Notification.Error(e.Message);
-                await PageLoader.Hide(PageLoaderTask.CULTURE_CHANGE);
+                await PageLoader.Hide(PageLoaderTask.CultureChange);
                 return;
             } 
             path = I18N.USE_PREFIX ? $"/{CultureInfo.CurrentCulture}{pageURI}" : pageURI;

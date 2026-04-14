@@ -2,14 +2,14 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[Role.USER]">
+<AuthView Roles="[Role.User]">
     <div class="@ComputeClass()" style="@Style">
         <div class="profile-row">
             <div class="user-profile-image-wrap">
                 <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="user-profile-image" />
             </div>
-            <InputField Class="profile-name" Name="name" ViewModel="@VMPlayerName" Style="width: 100%; max-width: 360px" Align="FormAlign.CENTER" AllowClear />
-            <InputField Class="profile-name" Name="email" ViewModel="@VMEmail" Size="FormSize.S" Style="width: 100%; max-width: 360px" Align="FormAlign.CENTER" AllowClear Disabled />
+            <InputField Class="profile-name" Name="name" ViewModel="@VMPlayerName" Style="width: 100%; max-width: 360px" Align="FormAlign.Center" AllowClear />
+            <InputField Class="profile-name" Name="email" ViewModel="@VMEmail" Size="FormSize.S" Style="width: 100%; max-width: 360px" Align="FormAlign.Center" AllowClear Disabled />
             <Button OnClick="UpdateUserProfileInfo" Size="ButtonSize.S">
                 <Text>
                     @I18N.T("Change")
@@ -33,7 +33,7 @@
                         <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
                         @I18N.T("Account not activated")
                     </Paragraph>
-                    <Button Variant="ButtonVariant.QUATERNARY" NoShadow Size="ButtonSize.S" OnClick="SendActivationLink">
+                    <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="SendActivationLink">
                         <Text>@I18N.T("Resend link")</Text>
                     </Button>
                 </div>
@@ -43,7 +43,7 @@
                     @I18N.T("Change password")
                 </Text>
             </Button>
-            <Button OnClick="DeleteAccount" Size="ButtonSize.S" Variant="ButtonVariant.DANGER">
+            <Button OnClick="DeleteAccount" Size="ButtonSize.S" Variant="ButtonVariant.Danger">
                 <Text>
                     @I18N.T("Delete account")
                 </Text>

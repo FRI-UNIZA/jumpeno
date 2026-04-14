@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum CheckBoxPosition {
-    [CSSClass("position-start")] START,
-    [CSSClass("position-end")] END
+    [CSSClass("position-start")] Start,
+    [CSSClass("position-end")] End
 }

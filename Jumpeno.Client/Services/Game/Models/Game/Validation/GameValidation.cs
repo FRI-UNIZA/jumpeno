@@ -68,7 +68,7 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode == DisplayMode.PRESENTATION && user.ID == Host.ID,
+                DisplayMode == DisplayMode.Presentation && user.ID == Host.ID,
                 Errors.DEFAULT.SetID(user_IDID).SetInfo("Host can not participate as a player!")
             )
         );
@@ -98,8 +98,8 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DisplayMode.PRESENTATION &&
-                State == GameStates.LOBBY &&
+                DisplayMode != DisplayMode.Presentation &&
+                State == GameStates.Lobby &&
                 Capacity - 1 <= ActivePlayersCount &&
                 !HostConnected &&
                 user.ID != Host.ID,
@@ -132,7 +132,7 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DisplayMode.PRESENTATION && user.ID != Host.ID && user.Name == Host.Name,
+                DisplayMode != DisplayMode.Presentation && user.ID != Host.ID && user.Name == Host.Name,
                 Errors.DEFAULT.SetID(userNameID).SetInfo("Name is reserved!")
             )
         );
@@ -168,7 +168,7 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode != DisplayMode.PRESENTATION && user.ID == Host.ID,
+                DisplayMode != DisplayMode.Presentation && user.ID == Host.ID,
                 Errors.DEFAULT.SetID(user_IDID).SetInfo("You must be connected as a player!")
             )
         );
@@ -198,7 +198,7 @@ public partial class Game {
         if (user == null) return errors;
         errors.AddRange(
             Checker.Validate(
-                DisplayMode == DisplayMode.PRESENTATION &&
+                DisplayMode == DisplayMode.Presentation &&
                 GameValidator.MAX_SPECTATORS - 1 <= SpectatorCount &&
                 !HostConnected &&
                 user.ID != Host.ID,

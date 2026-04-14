@@ -47,7 +47,7 @@ public class CaptchaValidatorService(AttemptService attemptService)
     // Actions [IP] -----------------------------------------------------------------------------------------------------------------------
     public async Task AssertTokenForIP(
         // Parameters:
-        ATTEMPTS_CATEGORY category, string? token,
+        AttemptsCategory category, string? token,
         // Exceptions:
         string captchaID = ""
     ) {
@@ -67,14 +67,14 @@ public class CaptchaValidatorService(AttemptService attemptService)
     /// <returns>Task to await</returns>
     public async Task AssertTokenForEmailAndIP(
         // Parameters:
-        string? token, string? email = null, ATTEMPTS_CATEGORY? category = null,
+        string? token, string? email = null, AttemptsCategory? category = null,
         // Exceptions:
         string captchaID = ""
     ) {
         if (!AppSettings.ReCAPTCHA.On) return;
         if (
             (email is null || !attemptService.IncrementAndCheckIfEmailBlocked(email)) &
-            (category is null || !attemptService.IncrementAndCheckIfIPBlocked((ATTEMPTS_CATEGORY)category))
+            (category is null || !attemptService.IncrementAndCheckIfIPBlocked((AttemptsCategory)category))
         ) return;
         await AssertAsync(token, captchaID);
     }

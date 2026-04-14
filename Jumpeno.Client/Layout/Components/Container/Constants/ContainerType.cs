@@ -1,7 +1,7 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum ContainerType {
-    [CSSClass("container-inline")] INLINE,
-    [CSSClass("container-size")] SIZE,
-    [CSSClass("container-none")] NONE
+    [CSSClass("container-inline")] Inline,
+    [CSSClass("container-size")] Size,
+    [CSSClass("container-none")] None
 }

@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum WebLinkRole {
-    [StringValue("link")] LINK,
-    [StringValue("button")] BUTTON
+    [StringValue("link")] Link,
+    [StringValue("button")] Button
 }

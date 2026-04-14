@@ -1,12 +1,12 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum PageLoaderTask {
-    DEFAULT,
-    INITIAL, NAVIGATION, ANIMATION,
-    MENU, MODAL, COLLAPSE, SEARCH, CONFIRM,
-    CULTURE_CHANGE, THEME_CHANGE, THEME_CHANGE_SWITCH, COOKIE_CONSENT,
-    GAME_CONNECT, GAME_REQUEST,
-    LOGIN, LOGOUT, REGISTRATION, ACTIVATION, PASSWORD_RESET, USER_UPDATE, DELETE_ACCOUNT, PASSWORD_CHANGE,
-    PROFILE,
-    ADMIN_CREDENTIALS
+    Default,
+    Initial, Navigator, Animation,
+    Menu, Modal, Collapse, Search, Confirm,
+    CultureChange, ThemeChange, ThemeChangeSwitch, CookieConsent,
+    GameConsent, GameRequest,
+    Login, Logout, Registration, Activation, PasswordReset, UserUpdate, DeleteAccount, PasswordChange,
+    Profile,
+    AdminCredentials
 }

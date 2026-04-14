@@ -3,11 +3,11 @@
 @inherits FormField<SwitchViewModel>
 
 @code {
-    protected override FormErrorType? ErrorType => FormErrorType.PASSIVE;
+    protected override FormErrorType? ErrorType => FormErrorType.Passive;
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@ButtonType.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             class="@CLASS_SWITCH_ELEMENT"
             role="switch"
             aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"

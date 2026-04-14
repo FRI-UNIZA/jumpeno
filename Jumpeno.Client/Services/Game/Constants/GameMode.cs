@@ -1,6 +1,6 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum GameMode {
-    [StringValue("Last standing")] LAST_STANDING,
-    [StringValue("Mayhem")] MAYHEM
+    [StringValue("Last standing")] LastStanding,
+    [StringValue("Mayhem")] Mayhem
 }

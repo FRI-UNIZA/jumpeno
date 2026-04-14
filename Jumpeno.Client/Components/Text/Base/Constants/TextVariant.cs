@@ -1,5 +1,5 @@
-namespace Jumpeno.Client.Constants;
+namespace Jumpeno.Client.Enums;
 
 public enum TextVariant {
-    [CSSClass("variant-primary")] PRIMARY
+    [CSSClass("variant-primary")] Primary
 }

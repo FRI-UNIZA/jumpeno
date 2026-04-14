@@ -10,12 +10,12 @@
             <div class="register-box">
                 <Heading1 Class="register-heading" Size="TextSize.L">@I18N.T("Registration")</Heading1>
                 <div class="register-inputs">
-                    <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FormSize.M" Align="FormAlign.CENTER" Autocomplete />
-                    <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FormSize.M" Align="FormAlign.CENTER" />
-                    <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FormSize.M" Align="FormAlign.CENTER" />
-                    <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FormSize.M" Align="FormAlign.CENTER" />
+                    <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FormSize.M" Align="FormAlign.Center" Autocomplete />
+                    <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FormSize.M" Align="FormAlign.Center" />
+                    <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FormSize.M" Align="FormAlign.Center" />
+                    <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FormSize.M" Align="FormAlign.Center" />
                 </div>
-                <Box Surface="BoxSurface.PRIMARY_TRANSPARENT" Class="password-strength-box-mobile">
+                <Box Surface="BoxSurface.PrimaryTransparent" Class="password-strength-box-mobile">
                     <PasswordStrength Password="@Password" HideLock />
                 </Box>
                 <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FORM" ID="@nameof(UserRegisterDTO.CAPTCHAToken)" />
@@ -26,15 +26,15 @@
                     @I18N.T("Have an account?")&nbsp;
                     <WebLink Size="TextSize.S"
                         NoWrap
-                        OnClick="() => VM.Show(LoginFormType.USER)"
-                        OnEnter="() => VM.Show(LoginFormType.USER)"
+                        OnClick="() => VM.Show(LoginFormType.User)"
+                        OnEnter="() => VM.Show(LoginFormType.User)"
                         Underline
                     >
                         @I18N.T("Log in")
                     </WebLink>
                 </Paragraph>
             </div>
-            <Box Surface="BoxSurface.PRIMARY_TRANSPARENT" Class="password-strength-box">
+            <Box Surface="BoxSurface.PrimaryTransparent" Class="password-strength-box">
                 <PasswordStrength Password="@Password" />
             </Box>
         </div>
@@ -50,8 +50,8 @@
             <WebLink
                 Size="TextSize.S"
                 NoWrap
-                OnClick="() => VM.Show(LoginFormType.USER)"
-                OnEnter="() => VM.Show(LoginFormType.USER)"
+                OnClick="() => VM.Show(LoginFormType.User)"
+                OnEnter="() => VM.Show(LoginFormType.User)"
                 Class="register-redirect"
             >
                 <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Log in")&nbsp;

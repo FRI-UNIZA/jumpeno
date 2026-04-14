@@ -133,18 +133,18 @@ public partial class Notification {
     }
 
     // Open -------------------------------------------------------------------------------------------------------------------------------
-    public static void Basic(string title, string message, int? duration = null) => Open(new(NotificationType.BASIC, title, message, duration));
+    public static void Basic(string title, string message, int? duration = null) => Open(new(NotificationType.Basic, title, message, duration));
     public static void Basic(string message, int? duration = null) => Basic(I18N.T("Notification"), message, duration);
 
-    public static void Success(string title, string message, int? duration = null) => Open(new(NotificationType.SUCCESS, title, message, duration));
+    public static void Success(string title, string message, int? duration = null) => Open(new(NotificationType.Succcess, title, message, duration));
     public static void Success(string message, int? duration = null) => Success(I18N.T("Success"), message, duration);
     
-    public static void Error(string title, string message, int? duration = null) => Open(new(NotificationType.ERROR, title, message, duration));
+    public static void Error(string title, string message, int? duration = null) => Open(new(NotificationType.Error, title, message, duration));
     public static void Error(string message, int? duration = null) => Error(I18N.T("Error occurred"), message, duration);
 
-    public static void Warning(string title, string message, int? duration = null) => Open(new(NotificationType.WARNING, title, message, duration));
+    public static void Warning(string title, string message, int? duration = null) => Open(new(NotificationType.Warning, title, message, duration));
     public static void Warning(string message, int? duration = null) => Warning(I18N.T("Warning"), message, duration);
 
-    public static void Info(string title, string message, int? duration = null) => Open(new(NotificationType.INFO, title, message, duration));
+    public static void Info(string title, string message, int? duration = null) => Open(new(NotificationType.Info, title, message, duration));
     public static void Info(string message, int? duration = null) => Info(I18N.T("Information"), message, duration);
 }

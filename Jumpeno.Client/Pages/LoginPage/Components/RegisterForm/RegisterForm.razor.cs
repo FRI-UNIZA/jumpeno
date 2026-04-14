@@ -26,7 +26,7 @@ public partial class RegisterForm {
         VMEmail = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserRegisterDTO.Email),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
             MaxLength: UserValidator.EMAIL_MAX_LENGTH,
@@ -37,7 +37,7 @@ public partial class RegisterForm {
         VMPlayerName = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserRegisterDTO.Name),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsName,
             MaxLength: UserValidator.NAME_MAX_LENGTH,
@@ -48,7 +48,7 @@ public partial class RegisterForm {
         VMPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserRegisterDTO.Password),
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Password"),
@@ -68,7 +68,7 @@ public partial class RegisterForm {
         VMConfirmPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: "ConfirmPassword",
-            TextMode: InputTextMode.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
             MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
             Placeholder: I18N.T("Confirm password"),
@@ -92,7 +92,7 @@ public partial class RegisterForm {
             }
         )) return;
 
-        await PageLoader.Show(PageLoaderTask.REGISTRATION);
+        await PageLoader.Show(PageLoaderTask.Registration);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:
             var captchaToken = await ReCAPTCHARef.GetToken();
@@ -118,6 +118,6 @@ public partial class RegisterForm {
             Success = true;
             StateHasChanged();
         }, FORM);
-        await PageLoader.Hide(PageLoaderTask.REGISTRATION);
+        await PageLoader.Hide(PageLoaderTask.Registration);
     }
 }

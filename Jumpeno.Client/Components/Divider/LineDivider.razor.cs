@@ -6,7 +6,7 @@ public partial class LineDivider
     [Parameter]
     public string Text { get; set; } = "";
     [Parameter]
-    public DividerOrientation Orientation { get; set; } = DividerOrientation.CENTER;
+    public DividerOrientation Orientation { get; set; } = DividerOrientation.Center;
     [Parameter]
     public bool Plain { get; set; } = false;
 
