@@ -101,6 +101,7 @@ builder.Services.AddRazorPages();
 
 // Storage:
 builder.Services.AddSingleton<CookieStorage, CookieStorageServer>();
+builder.Services.AddScoped<RequestStorage>();
 
 // Localization:
 builder.Services.AddLocalization();
@@ -181,27 +182,13 @@ AppEnvironment.Init(
     #endif
     T => app.Services.GetService(T)!
 );
-RequestStorage.Init(
-    key => {
-        var ctx = ServerContext.Instance;
-        return ctx.Items[key]!;
-    },
-    (key, o) => {
-        var ctx = ServerContext.Instance;
-        ctx.Items[key] = o;
-    },
-    key => {
-        var ctx = ServerContext.Instance;
-        return ctx.Items.Remove(key);
-    }
-);
+
+
 URL.Init(
     () => {
         var ctx = ServerContext.Instance;
-        var replaceURL = RequestStorage.Get<string>(RequestStorages.Url);
-        return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
-    },
-    ThemeProvider.ThemeCSSClass
+        return ctx.Request.GetEncodedUrl(); 
+    }
 );
 app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
@@ -223,17 +210,7 @@ HTTP.Init(
         }
     }
 );
-Navigator.Init(
-    (url, forceLoad, replace) => {
-        var ctx = ServerContext.Instance;
-        var currentURL = URL.Url();
-        if (url != currentURL) {
-            ctx.Response.Redirect(url);
-        }
-    },
-    () => {}
-);
-ThemeProvider.Init();
+
 
 // Swagger:
 #if IS_DEVELOPMENT

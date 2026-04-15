@@ -13,9 +13,10 @@ public class AuthController(CookieStorage cookieStorage) : ControllerBase {
         // 1) Validation:
         try { body?.Assert(); } catch { throw Exceptions.InvalidToken; }
         var token = body?.RefreshToken ?? cookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.InvalidToken;
+        Token.Data decodedToken;
         try {
             JWT.AssertRefresh(token);
-            Token.StoreRefresh(token);
+            decodedToken = Token.Decode(token) ?? throw Exceptions.InvalidToken;
         } catch {
             throw Exceptions.InvalidToken;
         }
@@ -23,13 +24,13 @@ public class AuthController(CookieStorage cookieStorage) : ControllerBase {
         // 2) Create new tokens:
         string accessToken;
         string refreshToken;
-        if (Token.Refresh.role == Role.User) {
-            var id = Guid.Parse(Token.Refresh.sub);
+        if (decodedToken.role == Role.User) {
+            var id = Guid.Parse(decodedToken.sub);
             accessToken = JWT.GenerateUserAccess(id);
             refreshToken = JWT.GenerateUserRefresh(id);
-            await RefreshEntity.Create(refreshToken, Token.Refresh.sub, token);
+            await RefreshEntity.Create(refreshToken, decodedToken.sub, token);
         } else {
-            var email = Token.Refresh.sub;
+            var email = decodedToken.sub;
             accessToken = JWT.GenerateAdminAccess(email);
             refreshToken = JWT.GenerateAdminRefresh(email);
             await RefreshEntity.Create(refreshToken, null, token);

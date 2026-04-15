@@ -34,12 +34,11 @@ public partial class ScrollArea {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<string, ScrollArea> Areas =>
-        RequestStorage.Access<Dictionary<string, ScrollArea>>(RequestStorages.ScrollareaAreas, []);
+        AppEnvironment.MemoryStorage.Access<Dictionary<string, ScrollArea>>(MemoryStorageKeys.ScrollareaAreas, []);
     // Listeners:
     private Action<ScrollAreaPosition>[] Listeners = [];
     private static Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners =>
-        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(RequestStorages.ScrollareaRegisterListeners, []);
-
+        AppEnvironment.MemoryStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(MemoryStorageKeys.ScrollareaRegisterListeners, []);
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static string GetThemeString(ScrollAreaTheme theme) => theme.ToString()!.ToLower().Replace("_", "-");
 

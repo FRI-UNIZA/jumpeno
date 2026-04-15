@@ -10,7 +10,10 @@ AppSettings.Init(builder.Configuration, appSettingsClient);
 builder.Services.AddLocalization();
 builder.Services.AddAntDesign();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+// Storages: 
 builder.Services.AddSingleton<CookieStorage, CookieStorageClient>();
+builder.Services.AddSingleton<MemoryStorage>(); 
 
 var app = builder.Build();
 AppEnvironment.Init(
@@ -24,14 +27,11 @@ AppEnvironment.Init(
     #endif
     T => app.Services.GetService(T)!
 );
-RequestStorage.Init();
-Navigator.Init();
 URL.Init(
     () => {
         var manager = AppEnvironment.GetService<NavigationManager>();
         return manager.Uri;
-    },
-    ThemeProvider.ThemeCSSClass
+    }
 );
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
 HTTP.Init(
@@ -46,6 +46,5 @@ HTTP.Init(
     },
     async callback => await Window.Lock(callback.Invoke, WindowLock.Http)
 );
-ThemeProvider.Init();
 
 await app.RunAsync();

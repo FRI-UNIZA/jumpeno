@@ -5,11 +5,21 @@ using System.Diagnostics;
 #pragma warning disable CS8618
 #pragma warning disable CA1816
 
-public class Navigator : StaticService<Navigator>, IAsyncDisposable {
+public class Navigator : IAsyncDisposable {
+
+    protected static Navigator Instance()
+    {
+        var key = MemoryStorageKeys.Navigator;
+        var instance = AppEnvironment.MemoryStorage.Get<Navigator>(key);
+        if (instance is null)
+        {
+            instance = new Navigator();
+            AppEnvironment.MemoryStorage.Set(key, instance);
+        }
+        return instance;
+    }
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly NavigationManager Manager;
-    private static Action<string, bool, bool> ServerRedirect;
-    private static Action ServerRefresh;
     // Stats:
     private string PreviousURL = "";
     private bool ProgramNavigation = false;
@@ -52,15 +62,6 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     private readonly Disposer Disposer;
     public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
     ~Navigator() => Disposer.Final();
-
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(Action<string, bool, bool> serverRedirect, Action serverRefresh) {
-        InitOnce.Check(nameof(Navigator));
-        ServerRedirect = serverRedirect;
-        ServerRefresh = serverRefresh;
-    }
-
-    public static void Init() => Init((url, forceLoad, replace) => {}, () => {});
 
     // Reset ------------------------------------------------------------------------------------------------------------------------------
     private void ResetStats() {
@@ -189,24 +190,14 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         bool loader = true
     ) {
         // 1) Set running:
-        if (AppEnvironment.IsClient) {
-            while (IsRunning) await Task.Delay(runDelay);
-            IsRunning = true;
-        }
+        while (IsRunning) await Task.Delay(runDelay);
+        IsRunning = true;
         // 2) Lock program navigation:
         await NavLock.TryLock();
         // 3) Show program loader before start:
-        if (AppEnvironment.IsClient) {
-            if (loader) await PageLoader.Show(PageLoaderTask.Navigator);
-        }
-        // 4) Handle server:
-        if (AppEnvironment.IsServer) {
-            ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(RequestStorages.Url, url);
-            NavLock.TryUnlock();
-            return;
-        }
-        // 5) Set stats:
+        if (loader) await PageLoader.Show(PageLoaderTask.Navigator);
+
+        // 4) Set stats:
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
@@ -214,13 +205,13 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         NavState = AppEnvironment.IsClient ? state : null;
         Notify = notify;
         NavigationFinished = new TaskCompletionSource();
-        // 6) Handle culture:
+        // 5) Handle culture:
         if (!queries && URL.IsLocal(url)) {
             if (!I18N.IsCurrentCultureUrl(url)) forceLoad = true;
         }
-        // 7) Navigate:
+        // 6) Navigate:
         Manager.NavigateTo(url, forceLoad, replace);
-        // 8) Wait until finished:
+        // 7) Wait until finished:
         await NavigationFinished.Task;
     }
 
@@ -234,8 +225,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         loader: !forceLoad
     );
     public static void Refresh() {
-        if (AppEnvironment.IsServer) ServerRefresh();
-        else Instance().Manager.Refresh(forceReload: true);
+        Instance().Manager.Refresh(forceReload: true);
     }
     public static async Task SetQueryParams(QueryParams queryParams) => await Instance().Navigate(
         URL.SetQueryParams(queryParams),
@@ -277,10 +267,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     public static async Task RemoveBlocker(Func<NavigationEvent, bool> predicate) {
         var instance = Instance();
         await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.Blockers.Count; i++) {
-                if (!predicate.Equals(instance.Blockers[i])) continue;
-                instance.Blockers.RemoveAt(i); break;
-            }
+            instance.Blockers.RemoveAll(p => predicate == p);
         });
     }
 
@@ -296,10 +283,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     public static async Task RemoveAfterEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.AfterListeners.Count; i++) {
-                if (!listener.Equals(instance.AfterListeners[i])) continue;
-                instance.AfterListeners.RemoveAt(i); break;
-            }
+            instance.AfterListeners.RemoveAll(l => listener.Equals(l));
         });
     }
     public static async Task RemoveAfterEventListener(Action<NavigationEvent> listener) {
@@ -321,10 +305,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     public static async Task RemoveAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
-                if (!listener.Equals(instance.AfterFinishListeners[i])) continue;
-                instance.AfterFinishListeners.RemoveAt(i); break;
-            }
+            instance.AfterFinishListeners.RemoveAll(l => listener.Equals(l));
         });
     }
     public static async Task RemoveAfterFinishEventListener(Action<NavigationEvent> listener) {

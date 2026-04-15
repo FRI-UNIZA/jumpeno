@@ -15,8 +15,8 @@ public class Page : ComponentBase, IAsyncDisposable {
     public BaseTheme AppTheme { get; set; } = null!;
 
     // Current page -----------------------------------------------------------------------------------------------------------------------
-    public static Page Current => RequestStorage.Get<Page>(RequestStorages.Page) ?? new Error404Page();
-    private static void SetCurrent(Page page) => RequestStorage.Set(RequestStorages.Page, page);
+    public static Page Current => AppEnvironment.MemoryStorage.Get<Page>(MemoryStorageKeys.Page) ?? new Error404Page();
+    private static void SetCurrent(Page page) => AppEnvironment.MemoryStorage.Set(MemoryStorageKeys.Page, page);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public long ComponentCount { get; private set; } = 0;
