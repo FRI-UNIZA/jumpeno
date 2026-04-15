@@ -41,7 +41,7 @@
         <!-- Blazor headers -->
         <component type="typeof(HeadOutlet)" render-mode="@ServerEnvironment.RenderMode()" />
     </head>
-    <body class="@ThemeProvider.ServerBodyClass()" data-overlayscrollbars-initialize global>
+    <body class="@ThemeUtils.ServerBodyClass()" data-overlayscrollbars-initialize global>
         <!-- Blazor content -->
         <component type="typeof(ServerPageLoader)" render-mode="Static" />
         <component type="typeof(App)" render-mode="@ServerEnvironment.RenderMode()" />

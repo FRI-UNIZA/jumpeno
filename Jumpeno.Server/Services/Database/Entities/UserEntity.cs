@@ -37,7 +37,11 @@ public class UserEntity {
         return user != null ? new(Guid.Parse(user.Id), user.Email, user.Name, (Skin)user.Skin, user.Activation == null) : null;
     }
 
-    public static async Task<User> SelectCurrentUser() => await SelectUser(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+    public static async Task<User> SelectCurrentUser()
+    {
+        var token = ServerContext.GetScopedService<RequestStorage>().Get<Token.Data>(RequestStorageKeys.TokenAccess)?.sub ?? throw Exceptions.NotAuthenticated;
+        return await SelectUser(token) ?? throw Exceptions.NotAuthenticated;
+    }
 
     public static async Task<User> SelectCurrentActivatedUser() {
         var user = await SelectCurrentUser();

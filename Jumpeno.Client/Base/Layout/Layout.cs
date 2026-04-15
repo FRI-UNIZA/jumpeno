@@ -4,8 +4,8 @@ namespace Jumpeno.Client.Base;
 
 public class Layout : LayoutComponentBase, IAsyncDisposable {
     // Current layout ---------------------------------------------------------------------------------------------------------------------
-    public static Layout Current => RequestStorage.Get<Layout>(RequestStorages.Layout) ?? new Layout();
-    private static void SetCurrent(Layout layout) => RequestStorage.Set(RequestStorages.Layout, layout);
+    public static Layout Current => AppEnvironment.MemoryStorage.Get<Layout>(MemoryStorageKeys.Layout) ?? new Layout();
+    private static void SetCurrent(Layout layout) => AppEnvironment.MemoryStorage.Set(MemoryStorageKeys.Layout, layout);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Lifecycle:

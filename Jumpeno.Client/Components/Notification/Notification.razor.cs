@@ -30,13 +30,6 @@ public partial class Notification {
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentAfterRender(bool firstRender) {
-        if (!firstRender) return;
-        foreach (var notification in SSRStorage.State.ServerNotifications) {
-            Open(notification);
-        }
-        SSRStorage.State.ServerNotifications.Clear();
-    }
 
     protected override async ValueTask OnComponentDisposeAsync() {
         await DisplayLock.DisposeSafe();
@@ -80,10 +73,6 @@ public partial class Notification {
     // Display ----------------------------------------------------------------------------------------------------------------------------
     private static async void Open(NotificationData notification) {
         var instance = Instance();
-        if (AppEnvironment.IsServer) {
-            SSRStorage.State.ServerNotifications.Add(notification);
-            return;
-        }
         if (notification.Duration is not null && notification.Duration < 1) {
             throw new Exception("Minimal duration is 1ms!");
         }

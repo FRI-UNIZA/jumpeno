@@ -19,29 +19,20 @@ public class Token {
     ) {};
 
     // Token storage ----------------------------------------------------------------------------------------------------------------------
-    public static Data Access => RequestStorage.Get<Data>(RequestStorages.TokenAccess) ?? throw Exceptions.NotAuthenticated;
-    public static Data Refresh => RequestStorage.Get<Data>(RequestStorages.TokenRefresh) ?? throw Exceptions.NotAuthenticated;
-    public static Data Activation => RequestStorage.Get<Data>(RequestStorages.TokenActivation) ?? throw Exceptions.NotAuthenticated;
-    public static Data PasswordReset => RequestStorage.Get<Data>(RequestStorages.TokenPasswordReset) ?? throw Exceptions.NotAuthenticated;
+    public static Data Access => AppEnvironment.MemoryStorage.Get<Data>(MemoryStorageKeys.TokenAccess) ?? throw Exceptions.NotAuthenticated;
 
     private static void Store(string key, string token) {
         if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw Exceptions.NotAuthenticated;
         var data = Decode(token) ?? throw Exceptions.NotAuthenticated;
-        RequestStorage.Set(key, data);
+        AppEnvironment.MemoryStorage.Set(key, data);
     }
     public static void StoreAccess(string token) => Store(TokenType.Access.String(), token);
-    public static void StoreRefresh(string token) => Store(TokenType.Refresh.String(), token);
-    public static void StoreActivation(string token) => Store(TokenType.Activation.String(), token);
-    public static void StorePasswordReset(string token) => Store(TokenType.PasswordReset.String(), token);
     
     private static void Delete(string key) {
         if (AppEnvironment.IsServer && !AppEnvironment.IsController) throw Exceptions.NotAuthenticated;
-        RequestStorage.Delete(key);
+        AppEnvironment.MemoryStorage.Delete(key);
     }
     public static void DeleteAccess() => Delete(TokenType.Access.String());
-    public static void DeleteRefresh() => Delete(TokenType.Refresh.String());
-    public static void DeleteActivation() => Delete(TokenType.Activation.String());
-    public static void DeletePasswordReset() => Delete(TokenType.PasswordReset.String());
 
     // Decoding ---------------------------------------------------------------------------------------------------------------------------
     public static Data? Decode(string token) {

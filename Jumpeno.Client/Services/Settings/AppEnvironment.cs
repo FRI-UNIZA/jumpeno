@@ -12,6 +12,9 @@ public static class AppEnvironment {
     public static bool IsDevelopment => IsDevelopmentCheck(); private static Func<bool> IsDevelopmentCheck;
     public static bool IsProduction => !IsDevelopment;
 
+    // Static helpers ---------------------------------------------------------------------------------------------------------------------
+    public static MemoryStorage MemoryStorage => GetService<MemoryStorage>();
+
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public static List<Error> ValidateServer() => Checker.Validate(!IsServer, Errors.Default.SetInfo("Not a server environment!"));
     public static void AssertServer() => Checker.Assert(ValidateServer());

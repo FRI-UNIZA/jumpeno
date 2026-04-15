@@ -32,7 +32,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> SendActivation() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByIDLeftJoinActivation(User.GetSub()) ?? throw Exceptions.NotAuthenticated;
         // 2) Check activation:
         if (user.Activation == null) throw Exceptions.NotFound.SetInfo("Account already activated.");
         // 3) Activation email:
@@ -47,16 +47,18 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     [HttpPatch]
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Activate([FromBody] UserActivateDTO body) {
-        // 1) Validation:
         try {
+            // 1) Validation:
             body.Assert();
             JWT.AssertActivation(body.ActivationToken);
-            Token.StoreActivation(body.ActivationToken);
+            Token.Data decodedToken = Token.Decode(body.ActivationToken) ?? throw Exceptions.InvalidToken;
+
+            // 2) Activation:
+            if (!await ActivationEntity.Delete(decodedToken.sub, nameof(body.ActivationToken))) throw Exceptions.InvalidToken;
         } catch {
             throw Exceptions.InvalidToken;
         }
-        // 2) Activation:
-        if (!await ActivationEntity.Delete(Token.Activation.sub, nameof(body.ActivationToken))) throw Exceptions.InvalidToken;
+        
         // 3) Response:
         return new($"{I18N.T("Account activated")}.");
     }
@@ -118,13 +120,15 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
         try {
             body.Assert();
             JWT.AssertPasswordReset(body.ResetToken);
-            Token.StorePasswordReset(body.ResetToken);
+            var decodedToken = Token.Decode(body.ResetToken) ?? throw Exceptions.InvalidToken;
+
+            // 2) Password reset:
+            var user = await UserEntity.ByEmail(decodedToken.sub, nameof(body.ResetToken)) ?? throw Exceptions.InvalidToken;
+            if (!await PasswordEntity.Update(user.Id, decodedToken.data, nameof(body.ResetToken), nameof(body.ResetToken))) throw Exceptions.InvalidToken;
         } catch {
             throw Exceptions.InvalidToken;
         }
-        // 2) Password reset:
-        var user = await UserEntity.ByEmail(Token.PasswordReset.sub, nameof(body.ResetToken)) ?? throw Exceptions.InvalidToken;
-        if (!await PasswordEntity.Update(user.Id, Token.PasswordReset.data, nameof(body.ResetToken), nameof(body.ResetToken))) throw Exceptions.InvalidToken;
+       
         // 3) Response:
         return new(I18N.T("Password reset successful."));
     }
@@ -141,16 +145,16 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
         await DB.Transaction(
             async () =>
             {
-                var existing = await PasswordEntity.ByIDLeftJoinRefresh(Token.Access.sub);
+                var existing = await PasswordEntity.ByIDLeftJoinRefresh(User.GetSub());
                 if (existing != null)
                 {
                     if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.Default;
                 }
                 else
                 {
-                    await PasswordEntity.Create(Token.Access.sub, body.NewPassword, passwordID: nameof(body.NewPassword));
+                    await PasswordEntity.Create(User.GetSub(), body.NewPassword, passwordID: nameof(body.NewPassword));
                 }
-                await RefreshEntity.DeleteByUserID(Token.Access.sub);
+                await RefreshEntity.DeleteByUserID(User.GetSub());
             },
             Isolation.Serializable
         );
@@ -164,7 +168,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     [ProducesResponseType(typeof(UserProfileDTOR), StatusCodes.Status200OK)]
     public async Task<UserProfileDTOR> Profile() {
         // 1) Select user:
-        var user = await UserEntity.ByIDLeftJoinActivation(Token.Access.sub) ?? throw Exceptions.NotAuthenticated;
+        var user = await UserEntity.ByIDLeftJoinActivation(User.GetSub()) ?? throw Exceptions.NotAuthenticated;
         // 2) Cast to profile:
         var profile = new User(Guid.Parse(user.Id), user.Email, user.Name, (Skin)user.Skin, user.Activation == null);
         // 3) Response:
@@ -180,7 +184,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
         // 1) Validation:
         body.Assert();
         // 2) Update data:
-        if (!await UserEntity.Modify(Token.Access.sub, 
+        if (!await UserEntity.Modify(User.GetSub(), 
             name: body.NewName, nameId: nameof(UserUpdateDTO.NewName),
             skin: body.NewSkin, skinId: nameof(UserUpdateDTO.NewSkin),
             email: body.NewEmail, emailId: nameof(UserUpdateDTO.NewEmail)
@@ -195,7 +199,7 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Delete() {
         // 1) Delete User:
-        if(!await UserEntity.Delete(Token.Access.sub)) throw Exceptions.Default;
+        if(!await UserEntity.Delete(User.GetSub())) throw Exceptions.Default;
         // 2) Response:
         return new(I18N.T("Account deleted."));
     }

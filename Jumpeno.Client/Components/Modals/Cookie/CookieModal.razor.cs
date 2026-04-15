@@ -8,6 +8,8 @@ public partial class CookieModal {
     // Injections -------------------------------------------------------------------------------------------------------------------------
     [Inject]
     private CookieStorage CookieStorage { get; set; } = null!;
+    [Inject]
+    private MemoryStorage MemoryStorage { get; set; } = null!;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
@@ -43,7 +45,7 @@ public partial class CookieModal {
             OnChange: new(e => UpdateSelection(typeof(Cookies.Security), e.Value))
         ));
     }
-    protected override void OnComponentInitialized() => RequestStorage.Set(RequestStorages.CookieModal, this);
+    protected override void OnComponentInitialized() => MemoryStorage.Set(MemoryStorageKeys.CookieModal, this);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
@@ -88,7 +90,7 @@ public partial class CookieModal {
 
     public static async Task Open(bool unclosable = false, bool sync = true) 
     {
-        var modal = RequestStorage.Get<CookieModal>(RequestStorages.CookieModal);
+        var modal = AppEnvironment.MemoryStorage.Get<CookieModal>(MemoryStorageKeys.CookieModal);
         if (modal is not null) await modal.OpenModal(unclosable, sync);
     }
 

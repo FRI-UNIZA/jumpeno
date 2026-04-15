@@ -74,12 +74,13 @@ public class DB : DbContext {
     public static async Task<DB> Context() {
         if (AppEnvironment.IsController) {
             // 1) Try to get existing context:
-            var ctx = RequestStorage.Get<DB>(RequestStorages.Db);
+            var requestStorage = Services.ServerContext.GetScopedService<RequestStorage>();
+            var ctx = requestStorage.Get<DB>(RequestStorageKeys.DB);
             if (ctx != null) return ctx;
             // 2) Or create a new context:
             ctx = await AppEnvironment.GetService<IDbContextFactory<DB>>().CreateDbContextAsync();
-            RequestStorage.Set(RequestStorages.Db, ctx);
-            Disposer.RequestRegister(ctx);
+            requestStorage.Set(RequestStorageKeys.DB, ctx);
+            RequestDisposer.RequestRegister(ctx);
             return ctx;
         } else {   
             // 3) Server fallback (no HttpContext/RequestStorage):
