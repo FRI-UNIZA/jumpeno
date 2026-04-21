@@ -634,8 +634,15 @@ public class BaseTheme {
     public virtual RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR { get; }
     public virtual string MODAL_PROFILE_AVATAR_BOX_SHADOW { get; }
     public virtual string MODAL_PROFILE_AVATAR_SKIN_BOX_SHADOW => "inset 0 0 0.5em rgba(0, 0, 0, 0.2)";
+    public virtual string MODAL_PROFILE_BORDER_COLOR => new RGBAColor(0, 0, 0, 0.2f);
+    public virtual string MODAL_PROFILE_AVATAR_EDIT_BACKGROUND => new RGBAColor(0, 0, 0, 0.4f);
+    public virtual string MODAL_PROFILE_INPUT_LABEL_COLOR => new RGBColor(153, 153, 153);
+    public virtual string MODAL_PROFILE_NAVIGATION_COLOR => new RGBColor(214, 218, 28);
+    public virtual RGBAColor MODAL_PROFILE_NAVIGATION_BACKGROUND => new(42, 33, 56);
+    public virtual RGBAColor MODAL_PROFILE_NAVIGATION_ITEM_UNACTIVE => new(255, 255, 255, 0.4f);
+    public virtual RGBColor MODAL_PROFILE_NAVIGATION_ITEM_ACTIVE => new(255, 255, 255);
 
-// NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
+    // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // PasswordStrength -------------------------------------------------------------------------------------------------------------------
     public virtual RGBColor PASSWORD_STRENGTH_BAR_SEGMENT_BACKGROUND => new(236, 240, 241);
     public virtual RGBColor PASSWORD_STRENGTH_RULE_COMPLETED_TEXT_COLOR => new(46, 125, 50);

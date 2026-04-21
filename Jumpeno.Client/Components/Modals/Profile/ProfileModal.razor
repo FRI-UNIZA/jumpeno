@@ -3,41 +3,40 @@
 @inherits BasicComponent
 
 <AuthView Roles="[ROLE.USER]">
-    <Modal
-        @ref="@ModalRef"
-        Label="@I18N.T("My profile")"
-        NoFooter
-        Class="profile-modal"
-    >
+    <Modal @ref="@ModalRef"
+           Label="@I18N.T("My profile")"
+           NoFooter
+           Class="profile-modal">
         <Content>
             <div class="profile-modal-tab-switch">
                 <div class="profile-tab-buttons">
                     @code {
-                        private RenderFragment TabButton(PROFILE_TAB tab) => @<Fragment>
-                            <button class="@TabButtonClass(tab)" @onclick="@ChangeTab(tab)">
-                                @I18N.T(tab.String())
-                            </button>
+                        private RenderFragment TabButton(PROFILE_TAB tab, string iconType) => @<Fragment>
+                                <button class="@TabButtonClass(tab)" @onclick="@ChangeTab(tab)">
+                                    <AntIcon Type="@iconType" Theme="outline" />
+                                    <span class="tab-text">@I18N.T(tab.String())</span>
+                                </button>
                         </Fragment>;
                     }
-                    @TabButton(PROFILE_TAB.ACCOUNT)
-                    @TabButton(PROFILE_TAB.SOCIALS)
-                    @TabButton(PROFILE_TAB.AVATAR)
+                    @TabButton(PROFILE_TAB.ACCOUNT, "user")
+                    @TabButton(PROFILE_TAB.PASSWORD, "unlock")
+                    @TabButton(PROFILE_TAB.CONNECTIONS, "link")
                 </div>
                 <div class="profile-tabs">
-                    @switch (Tab) {
+                    @switch (Tab)
+                    {
                         case PROFILE_TAB.ACCOUNT:
-                            <AccountTab ModalRef="@ModalRef" PasswordChangeModalRef="@PasswordChangeModalRef" />
-                        break;
-                        case PROFILE_TAB.SOCIALS:
+                            <AccountTab ModalRef="@ModalRef" />
+                            break;
+                        case PROFILE_TAB.PASSWORD:
+                            <PasswordChangeTab />
+                            break;
+                        case PROFILE_TAB.CONNECTIONS:
                             <SocialsTab />
-                        break;
-                        case PROFILE_TAB.AVATAR:
-                            <AvatarTab />
-                        break;
+                            break;
                     }
                 </div>
             </div>
         </Content>
     </Modal>
-    <PasswordChangeModal @ref="PasswordChangeModalRef" />
 </AuthView>

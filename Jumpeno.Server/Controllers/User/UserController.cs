@@ -144,6 +144,8 @@ public class UserController (CaptchaValidatorService captchaService) : Controlle
                 var existing = await PasswordEntity.ByIDLeftJoinRefresh(Token.Access.sub);
                 if (existing != null)
                 {
+                    if (!PasswordEntity.Validate(body.OldPassword, existing.Value.Item1.Salt, existing.Value.Item1.Hash))
+                        Checker.AssertWith([ERROR.DEFAULT.SetID(nameof(body.OldPassword)).SetInfo("Old password does not match")], EXCEPTION.VALUES);
                     if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw EXCEPTION.DEFAULT;
                 }
                 else

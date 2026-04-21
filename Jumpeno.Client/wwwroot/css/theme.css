@@ -362,6 +362,13 @@ body.light-theme .surface-primary {
     --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
     --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-border-color: rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-avatar-edit-background: rgba(0, 0, 0, 0.4);
+    --theme-modal-profile-input-label-color: rgb(153, 153, 153);
+    --theme-modal-profile-navigation-color: rgb(214, 218, 28);
+    --theme-modal-profile-navigation-background: rgba(42, 33, 56, 1);
+    --theme-modal-profile-navigation-item-unactive: rgba(255, 255, 255, 0.4);
+    --theme-modal-profile-navigation-item-active: rgb(255, 255, 255);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
     --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
@@ -766,6 +773,13 @@ body.dark-theme .surface-primary {
     --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
     --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-border-color: rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-avatar-edit-background: rgba(0, 0, 0, 0.4);
+    --theme-modal-profile-input-label-color: rgb(153, 153, 153);
+    --theme-modal-profile-navigation-color: rgb(214, 218, 28);
+    --theme-modal-profile-navigation-background: rgba(42, 33, 56, 1);
+    --theme-modal-profile-navigation-item-unactive: rgba(255, 255, 255, 0.4);
+    --theme-modal-profile-navigation-item-active: rgb(255, 255, 255);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
     --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
