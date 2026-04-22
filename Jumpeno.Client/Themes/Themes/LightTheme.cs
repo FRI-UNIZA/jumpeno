@@ -580,7 +580,7 @@ public class LightTheme : BaseTheme {
     public virtual RGBAColor TextAccentHighlightColor_SurfaceSecondary => new(235, 219, 0);
 
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor TEXT_DISABLED_COLOR => new(180, 180, 180);
+    public override RGBAColor TextDisabledColor => new(180, 180, 180);
 
 // NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
     // Chat Message -----------------------------------------------------------------------------------------------------------------------

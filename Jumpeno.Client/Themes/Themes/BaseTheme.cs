@@ -662,7 +662,7 @@ public class BaseTheme {
     public virtual RGBAColor TextAccentHighlightColor { get; }
 
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
-    public virtual RGBAColor TEXT_DISABLED_COLOR { get; }
+    public virtual RGBAColor TextDisabledColor { get; }
 
 // NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
     // Chat Message -----------------------------------------------------------------------------------------------------------------------
