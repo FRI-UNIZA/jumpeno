@@ -4,10 +4,8 @@ public static class ChatHubConstants {
     // Routes -------------------------------------------------------------------------------------------------------------------------
     public static string URL => HUB.BASE.CHAT;
     // Params -------------------------------------------------------------------------------------------------------------------------
-    public const string ParamChatParamsType = "ChatParamsType";
-    public const string ParamChatParams = "ChatParams";
     public const string ParamAccessToken = "AccessToken";
-    public const string GlobalGroup = "GlobalChat";
+    public const string ParamLastMessageId = "LastMessageId";
     // Client updates -----------------------------------------------------------------------------------------------------------------
     public const string ReceiveGlobalMessage = "ReceiveGlobalMessage";
     // Server updates -----------------------------------------------------------------------------------------------------------------

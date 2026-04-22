@@ -8,8 +8,7 @@ public partial class ChatPage : Page {
     public static readonly ROLE[] ROLES = [ROLE.USER, ROLE.ADMIN];
     private static readonly Regex GameLinkRegex =
         new(@"https?://\S+/(?:en|sk)/game/([A-Z]{4})(?=\s|$)", RegexOptions.Compiled);
-
-    private bool _hubConnected = false;
+        
     private bool _autoScrollEnabled = true;
     private bool _scrollListenerRegistered = false;
 
@@ -28,8 +27,6 @@ public partial class ChatPage : Page {
             ScrollArea.AddScrollListener("chatMessages", OnScrollListener);
             _scrollListenerRegistered = true;
         }
-        if (_hubConnected) return;
-        _hubConnected = true;
         _ = InvokeAsync(ConnectToHub);
     }
 
@@ -84,7 +81,7 @@ public partial class ChatPage : Page {
                 result.Add((text[last..match.Index], null));
 
             if (URL.IsLocal(match.Value)) {
-            result.Add((match.Groups[1].Value, match.Value));
+                result.Add((match.Groups[1].Value, match.Value));
             } else {
                 // Not our app's link — keep it as plain text
                 result.Add((match.Value, null));
