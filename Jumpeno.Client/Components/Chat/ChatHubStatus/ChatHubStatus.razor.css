@@ -21,23 +21,23 @@
 /* Styles [Connecting] ----------------------------------------------------------------------------------------------------------------- */
 ::deep.chat-hub-status.status-connecting .chat-hub-status__icon,
 ::deep.chat-hub-status.status-connecting .chat-hub-status__label {
-    color: var(--color-text-muted);
+    color: var(--theme-text-highlight-color);
 }
 
 /* Styles [Connected] ------------------------------------------------------------------------------------------------------------------ */
 ::deep.chat-hub-status.status-connected .chat-hub-status__icon,
 ::deep.chat-hub-status.status-connected .chat-hub-status__label {
-    color: var(--color-success);
+    color: var(--theme-status-success-accent-color);
 }
 
 /* Styles [Reconnecting] --------------------------------------------------------------------------------------------------------------- */
 ::deep.chat-hub-status.status-reconnecting .chat-hub-status__icon,
 ::deep.chat-hub-status.status-reconnecting .chat-hub-status__label {
-    color: var(--color-warning);
+    color: var(--theme-status-warning-accent-color);
 }
 
 /* Styles [Disconnected] --------------------------------------------------------------------------------------------------------------- */
 ::deep.chat-hub-status.status-disconnected .chat-hub-status__icon,
 ::deep.chat-hub-status.status-disconnected .chat-hub-status__label {
-    color: var(--color-danger);
+    color: var(--theme-status-danger-accent-color);
 }

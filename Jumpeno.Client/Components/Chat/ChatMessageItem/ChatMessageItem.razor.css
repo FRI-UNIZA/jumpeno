@@ -8,7 +8,7 @@
     padding: 8px 12px;
     /* Style: */
     border-radius: var(--border-radius);
-    background: var(--color-background-primary);
+    background: var(--theme-surface-background);
 }
 
 /* Styles > Header --------------------------------------------------------------------------------------------------------------------- */
@@ -22,14 +22,14 @@
 
 /* Styles > Sender --------------------------------------------------------------------------------------------------------------------- */
 ::deep.chat-message-item .chat-message-item__sender {
-    color: var(--color-primary);
+    color: var(--theme-text-accent-color);
     font-size: 0.8rem;
     font-weight: 600;
 }
 
 /* Styles > Time ----------------------------------------------------------------------------------------------------------------------- */
 ::deep.chat-message-item .chat-message-item__time {
-    color: var(--color-text-muted);
+    color: var(--theme-text-highlight-color);
     font-size: 0.7rem;
 }
 
