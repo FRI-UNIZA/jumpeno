@@ -6,8 +6,8 @@ public partial class ChatPage : Page {
     public const string ROUTE_EN = "/en/chat";
     public const string ROUTE_SK = "/sk/chat";
     public static readonly ROLE[] ROLES = [ROLE.USER, ROLE.ADMIN];
-    private static readonly Regex GameUrlRegex =
-        new(@"https?://[^\s]+/(?:en|sk)/game/([A-Z]{4})\b", System.Text.RegularExpressions.RegexOptions.Compiled);
+    private static readonly Regex GameLinkRegex =
+        new(@"https?://\S+/(?:en|sk)/game/([A-Z]{4})(?=\s|$)", RegexOptions.Compiled);
 
     private bool _hubConnected = false;
     private bool _autoScrollEnabled = true;
@@ -76,13 +76,19 @@ public partial class ChatPage : Page {
     // Game code parsing ----------------------------------------------------------------------------------------------------------------
     private List<(string Text, string? Url)> ParseMessageSegments(string text) {
         var result = new List<(string Text, string? Url)>();
-        var matches = GameUrlRegex.Matches(text);
+        var matches = GameLinkRegex.Matches(text);
         int last = 0;
 
-        foreach (System.Text.RegularExpressions.Match match in matches) {
+        foreach (Match match in matches) {
             if (match.Index > last)
                 result.Add((text[last..match.Index], null));
+
+            if (URL.IsLocal(match.Value)) {
             result.Add((match.Groups[1].Value, match.Value));
+            } else {
+                // Not our app's link — keep it as plain text
+                result.Add((match.Value, null));
+            }
             last = match.Index + match.Length;
         }
 

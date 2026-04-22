@@ -1,13 +1,20 @@
 namespace Jumpeno.Client.ViewModels;
 
 public class GlobalChatViewModel {
+    // Constants --------------------------------------------------------------------------------------------------------------------------
+    public const int MaxReconnectAttempts = 3;
+
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action NotifyCallback;
-    public void Notify() => NotifyCallback();
     public string CurrentInputText { get; set; } = string.Empty;
     private CancellationTokenSource? _errorCts = null;
-    public const int MaxReconnectAttempts = 3;
     private int _reconnectAttempts = 0;
+    public Guid? LastReceivedMessageId { get; private set; } = null;
 
+    // Predicates -------------------------------------------------------------------------------------------------------------------------
+    public void Notify() => NotifyCallback();
+
+    // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GlobalChatViewModel(Action notify) {
         NotifyCallback = notify;
         InputVM = new TextAreaViewModel(new TextAreaViewModelParams(
@@ -45,6 +52,12 @@ public class GlobalChatViewModel {
             Text: update.Text,
             SentAt: update.SentAt
         ));
+        LastReceivedMessageId = update.ID;
+    }
+
+    public void ClearMessages() {
+        Messages.Clear();
+        LastReceivedMessageId = null;
     }
 
     // Status ------------------------------------------------------------

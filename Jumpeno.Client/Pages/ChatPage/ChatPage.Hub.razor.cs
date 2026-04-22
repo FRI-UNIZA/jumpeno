@@ -24,6 +24,8 @@ public partial class ChatPage {
 
             var q = new QueryParams();
             q.Set(ChatHubConstants.ParamAccessToken, Token.Access.raw);
+            if (VM.LastReceivedMessageId.HasValue)
+                q.Set(ChatHubConstants.ParamLastMessageId, VM.LastReceivedMessageId.Value.ToString());
             var hubURL = URL.SetQueryParams(URL.ToAbsolute(ChatHubConstants.URL), q);
 
             HubConnection = new HubConnectionBuilder()
@@ -92,6 +94,7 @@ public partial class ChatPage {
 
     public async Task ManualReconnect() {
         VM.ResetReconnectAttempts();
+        VM.ClearMessages();
         if (HubConnection is not null) {
             try { await HubConnection.DisposeAsync(); } catch { }
             HubConnection = null;

@@ -54,13 +54,22 @@ public class ChatHub : Hub {
             // Initialize per-connection tracking:
             RateWindows[Context.ConnectionId] = new Queue<DateTime>();
             DuplicateWindows[Context.ConnectionId] = new Queue<(string, DateTime)>();
+
+            var rawLastId = ctx.Request.Query[ChatHubConstants.ParamLastMessageId].ToString();
+            Guid? lastKnownId = Guid.TryParse(rawLastId, out var parsed) ? parsed : null;
+
             
             // Send history to the newly connected client:
             List<ChatMessageReceiveUpdate> history;
             lock (HistoryLock) {
                 history = MessageOrder.Select(id => MessageIndex[id]).ToList();
             }
+            bool send = lastKnownId == null;
             foreach (var msg in history) {
+                if (!send) {
+                    if (msg.ID == lastKnownId) send = true;  // start sending AFTER this one
+                    continue;
+                }
                 await Clients.Caller.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
             }
         } catch (Exception e) {
