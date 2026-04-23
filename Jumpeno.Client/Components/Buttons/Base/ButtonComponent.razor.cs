@@ -2,24 +2,24 @@ namespace Jumpeno.Client.Components;
 
 public partial class ButtonComponent : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_PREFIX = "button";
+    public const string IdPrefix = "button";
     // Classes:
-    public const string CLASS = "button-component";
-    public const string CLASS_CONTENT = "button-content";
-    public const string CLASS_ICON_BEFORE = "button-icon-before";
-    public const string CLASS_TEXT = "button-text";
-    public const string CLASS_ICON_AFTER = "button-icon-after";
-    public const string CLASS_HAS_ICON_BEFORE = "has-icon-before";
-    public const string CLASS_HAS_ICON_AFTER = "has-icon-after";
-    public const string CLASS_ICON_ONLY = "icon-only";
+    public const string ClassName = "button-component";
+    public const string ClassContent = "button-content";
+    public const string ClassIconBefore = "button-icon-before";
+    public const string ClassText = "button-text";
+    public const string ClassIconAfter = "button-icon-after";
+    public const string ClassHasIconBefore = "has-icon-before";
+    public const string ClassHasIconAfter = "has-icon-after";
+    public const string ClassIconOnly = "icon-only";
     // Params:
-    public static readonly ButtonParams DEFAULT_PARAMS = new();
+    public static readonly ButtonParams DefaultParams = new();
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string ID { get; set; } = "";
+    public string Id { get; set; } = "";
     [Parameter]
-    public required OneOf<ButtonParams, ButtonLinkParams> Params { get; set; } = DEFAULT_PARAMS;
+    public required OneOf<ButtonParams, ButtonLinkParams> Params { get; set; } = DefaultParams;
     [Parameter]
     public EventCallback<ButtonClickEvent> OnClick { get; set; } = EventCallback<ButtonClickEvent>.Empty;
     [Parameter]
@@ -38,15 +38,15 @@ public partial class ButtonComponent : IDisabledComponent {
     public bool IconOnly() => Text == null && ((Icon != null && IconAfter == null) || (Icon == null && IconAfter != null));
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).Set(CLASS_ICON_ONLY, IconOnly());
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base).Set(ClassIconOnly, IconOnly());
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override sealed void OnInitialized() => base.OnInitialized();
     protected override sealed async Task OnInitializedAsync() => await base.OnInitializedAsync();
     protected override sealed void OnParametersSet() {
-        if (ID == "") ID = IDGenerator.Generate(ID_PREFIX);
-        var Label = Params.IsT0 ? Params.AsT0.Label : Params.AsT1.Label;
-        if (Label != "") Attributes["aria-label"] = Label;
+        if (Id == "") Id = IDGenerator.Generate(IdPrefix);
+        var label = Params.IsT0 ? Params.AsT0.Label : Params.AsT1.Label;
+        if (label != "") Attributes["aria-label"] = label;
         base.OnParametersSet();
     }
     protected override sealed async Task OnParametersSetAsync() => await base.OnParametersSetAsync();
@@ -59,7 +59,7 @@ public partial class ButtonComponent : IDisabledComponent {
     private RenderFragment RenderIconBefore() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
-        builder.AddAttribute(sequence++, "class", CLASS_ICON_BEFORE);
+        builder.AddAttribute(sequence++, "class", ClassIconBefore);
         builder.AddContent(sequence++, Icon);
         builder.CloseElement();
     };
@@ -67,9 +67,9 @@ public partial class ButtonComponent : IDisabledComponent {
     private RenderFragment RenderText() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
-        var c = new CSSClass(CLASS_TEXT);
-        if (Icon != null) c.Set(CLASS_HAS_ICON_BEFORE);
-        if (IconAfter != null) c.Set(CLASS_HAS_ICON_AFTER);
+        var c = new CssClass(ClassText);
+        if (Icon != null) c.Set(ClassHasIconBefore);
+        if (IconAfter != null) c.Set(ClassHasIconAfter);
         builder.AddAttribute(sequence++, "class", c);
         builder.AddContent(sequence++, Text);
         builder.CloseElement();
@@ -78,7 +78,7 @@ public partial class ButtonComponent : IDisabledComponent {
     private RenderFragment RenderIconAfter() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
-        builder.AddAttribute(sequence++, "class", CLASS_ICON_AFTER);
+        builder.AddAttribute(sequence++, "class", ClassIconAfter);
         builder.AddContent(sequence++, IconAfter);
         builder.CloseElement();
     };
@@ -86,7 +86,7 @@ public partial class ButtonComponent : IDisabledComponent {
     private RenderFragment RenderChildContent() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, "span");
-        builder.AddAttribute(sequence++, "class", CLASS_CONTENT);
+        builder.AddAttribute(sequence++, "class", ClassContent);
         if (Icon is not null) builder.AddContent(sequence++, RenderIconBefore()); 
         if (Text is not null) builder.AddContent(sequence++, RenderText()); 
         if (IconAfter is not null) builder.AddContent(sequence++, RenderIconAfter()); 

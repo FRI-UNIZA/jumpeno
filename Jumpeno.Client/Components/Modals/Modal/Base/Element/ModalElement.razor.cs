@@ -8,9 +8,9 @@ public partial class ModalElement {
     public required bool Inert { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         var c = base.ComputeClass()
-        .Set(Modal.CLASS, Base)
+        .Set(Modal.ClassName, Base)
         .SetSurface(Modal.Surface);
         switch (Modal.State) {
             case ModalStateType.PreOpen:
@@ -26,16 +26,16 @@ public partial class ModalElement {
                 c.Set("closing"); c.Set("closing-loading");
             break;
         }
-        c.Set(Modal.CLASS_NO_HEADER, Modal.NoHeader);
-        c.Set(Modal.CLASS_NO_FOOTER, Modal.NoFooter);
-        c.Set(Modal.CLASS_UNCLOSABLE, Modal.Unclosable);
+        c.Set(Modal.ClassNoHeader, Modal.NoHeader);
+        c.Set(Modal.ClassNoFooter, Modal.NoFooter);
+        c.Set(Modal.ClassUnclosable, Modal.Unclosable);
         c.Set(Modal.ComputeClass());
         return c;
     }
 
     public CSSStyle ComputeStyle() => new(Modal.Style);
 
-    public CSSClass ComputeDialogClass() => new(Modal.CLASS_DIALOG);
+    public CssClass ComputeDialogClass() => new(Modal.ClassDialog);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     private ModalStateType LastState = ModalStateType.Closed;
@@ -46,7 +46,7 @@ public partial class ModalElement {
         LastState = Modal.State;
         if (AppEnvironment.IsServer || !firstRender) return;
         await ModalProvider.AddElement(this);
-        JS.InvokeVoid(JSModal.Activate, Modal.ID);
+        JS.InvokeVoid(JSModal.Activate, Modal.Id);
     }
 
     protected override void OnComponentDispose() => ModalProvider.NotifyDispose(Modal);
@@ -60,7 +60,7 @@ public partial class ModalElement {
         if (setMethod is null) return;
         var loading = Modal.State == ModalStateType.Loading;
         setMethod.Invoke(Modal, loading ? [ModalStateType.ClosingLoading] : [ModalStateType.Closing]);
-        JS.InvokeVoid(JSModal.Deactivate, Modal.ID, loading);
+        JS.InvokeVoid(JSModal.Deactivate, Modal.Id, loading);
         StateHasChanged();
     }
 }

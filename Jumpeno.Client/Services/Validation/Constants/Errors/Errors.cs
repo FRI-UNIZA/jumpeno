@@ -1,14 +1,14 @@
 namespace Jumpeno.Client.Constants;
 
 public static class Errors {
-    public static Error DEFAULT => INVALID;
-    public static Error INVALID => new Error().SetInfo(Fields.INVALID);
-    public static Error UNDEFINED => new Error().SetInfo(Fields.UNDEFINED);
-    public static Error EMPTY => new Error().SetInfo(Fields.EMPTY);
-    public static Error FORMAT => new Error().SetInfo(Fields.FORMAT);
-    public static Error MATCH() => new Error().SetInfo(Fields.MATCH());
-    public static Error MATCH(object value1, object value2) => new Error().SetInfo(Fields.MATCH(value1, value2));
-    public static Error NOT_MATCH() => new Error().SetInfo(Fields.NOT_MATCH());
-    public static Error NOT_MATCH(object value1, object value2) => new Error().SetInfo(Fields.NOT_MATCH(value1, value2));
-    public static Error EXISTS => new Error().SetInfo(Fields.EXISTS);
+    public static Error Default => Invalid;
+    public static Error Invalid => new Error().SetInfo(Fields.Invalid);
+    public static Error Undefined => new Error().SetInfo(Fields.Undefined);
+    public static Error Empty => new Error().SetInfo(Fields.Empty);
+    public static Error Format => new Error().SetInfo(Fields.Format);
+    public static Error Match() => new Error().SetInfo(Fields.Match());
+    public static Error Match(object value1, object value2) => new Error().SetInfo(Fields.Match(value1, value2));
+    public static Error NotMatch() => new Error().SetInfo(Fields.NotMatch());
+    public static Error NotMatch(object value1, object value2) => new Error().SetInfo(Fields.NotMatch(value1, value2));
+    public static Error Exists => new Error().SetInfo(Fields.Exists);
 }

@@ -24,7 +24,7 @@
             </BoxHeader>
             <div class="game-identifiers">
                 <AntIcon Type="setting" Theme="Outline" Class="settings-icon" />
-                <Image URL="@ImageType.JUMPER_YELLOW" Transparent NoTransition Class="logo-image" />
+                <Image URL="@ImageType.JumperYellow" Transparent NoTransition Class="logo-image" />
                 <AntIcon Type="qrcode" Theme="Outline" Class="qr-code-icon" />
                 <FormLabel Label="@I18N.T("Game name")" Size="FormSize.L" Align="FormAlign.Center" Class="game-name-label">
                     <InputField ViewModel="VMInputName" Name="name" Label="@I18N.T("Game name")" Size="FormSize.M" Align="FormAlign.Center" AllowClear Class="game-name-input" />
@@ -126,19 +126,19 @@
                                 @if (VMSelectMapError) {
                                     <Paragraph Size="TextSize.L" Class="error-title">@I18N.T("Error")</Paragraph>
                                     <Paragraph Size="TextSize.S" Class="error-description">@I18N.T("Maps could not be loaded")</Paragraph>
-                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="LoadMaps">
+                                    <Button Id="@IdButtonTryAgain" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="LoadMaps">
                                         <Text>@I18N.T("Try again")</Text>
                                     </Button>
                                 } else if (VMSelectMapOptions.Count <= 0) {
                                     <Paragraph Size="TextSize.L" Class="error-title">@I18N.T("Error")</Paragraph>
                                     <Paragraph Size="TextSize.S" Class="error-description">@I18N.T("Empty map list")</Paragraph>
-                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="LoadMaps">
+                                    <Button Id="@IdButtonTryAgain" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="LoadMaps">
                                         <Text>@I18N.T("Try again")</Text>
                                     </Button>
                                 } else if (GameMapError) {
                                     <Paragraph Size="TextSize.L" Class="error-title">@I18N.T("Error")</Paragraph>
                                     <Paragraph Size="TextSize.S" Class="error-description">@I18N.T("Map could not be loaded")</Paragraph>
-                                    <Button id="@ID_BUTTON_TRY_AGAIN" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="() => LoadMap(VMSelectMap.Value.Value)">
+                                    <Button Id="@IdButtonTryAgain" Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="() => LoadMap(VMSelectMap.Value.Value)">
                                         <Text>@I18N.T("Try again")</Text>
                                     </Button>
                                 }

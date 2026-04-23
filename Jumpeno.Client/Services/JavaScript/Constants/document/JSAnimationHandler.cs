@@ -3,8 +3,8 @@ namespace Jumpeno.Client.Constants;
 public static class JSAnimationHandler {
     public static readonly string ClassName = nameof(JSAnimationHandler);
 
-    public const string CLASS_DISABLED_ANIMATION = "disabled-animation";
-    public const string CLASS_PREVENT_DISABLED_ANIMATION = "prevent-disabled-animation";
+    public const string ClassDisabledAnimation = "disabled-animation";
+    public const string ClassPreventDisabledAnimation = "prevent-disabled-animation";
 
     public static readonly string DisableAnimation = $"{ClassName}.{nameof(DisableAnimation)}";
     public static readonly string RestoreAnimation = $"{ClassName}.{nameof(RestoreAnimation)}";

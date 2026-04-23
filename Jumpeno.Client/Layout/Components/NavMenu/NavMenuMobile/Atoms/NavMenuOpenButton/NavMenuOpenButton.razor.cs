@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class NavMenuOpenButton {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "nav-menu-open-button";
-    public const string CLASS_LINE = "nav-menu-open-button-line";
+    public const string ClassName = "nav-menu-open-button";
+    public const string ClassLine = "nav-menu-open-button-line";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

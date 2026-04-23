@@ -2,15 +2,15 @@ namespace Jumpeno.Client.Components;
 
 public partial class RadioComponent<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "radio";
-    public const string CLASS_GROUP = "radio-group";
+    public new const string ClassName = "radio";
+    public const string ClassGroup = "radio-group";
     // Cascade:
-    public const string CASCADE_REF = $"{nameof(RadioComponent<T>)}.{nameof(CASCADE_REF)}";
+    public const string CascadeRef = $"{nameof(RadioComponent<T>)}.{nameof(CascadeRef)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public RenderFragment? ChildContent { get; set; } = null;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Utils;
 
 public class EmptyResponse<R> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static EmptyResponse<R> EMPTY(R response) => new(() => response);
+    public static EmptyResponse<R> Empty(R response) => new(() => response);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Func<R>? WrappedAction;

@@ -6,8 +6,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     public bool Create { get; private set; } = @params.Create;
     public string URLCode => @params.URLCode() ?? "";
-    private readonly EventDelegate<GameViewModel> OnConnect = @params.OnConnect ?? EventDelegate<GameViewModel>.EMPTY;
-    private readonly EmptyDelegate OnDisconnect = @params.OnDisconnect ?? EmptyDelegate.EMPTY;
+    private readonly EventDelegate<GameViewModel> OnConnect = @params.OnConnect ?? EventDelegate<GameViewModel>.Empty;
+    private readonly EmptyDelegate OnDisconnect = @params.OnDisconnect ?? EmptyDelegate.Empty;
     private readonly Action Notify = @params.Notify ?? (() => {});
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     private readonly LockerSlim ConnectLock = new();
     // Game:
     private GameViewModel? GameVM = null;
-    private const int FIRST_RENDER_CHECK_INTERVAL = 100; // ms
+    private const int FirstRenderCheckInterval = 100; // ms
     // Updates:
     private readonly LinkedList<GameUpdate> PendingUpdates = [];
 
@@ -128,35 +128,35 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
 
     private async Task CreateConnection<P>(string type, P dto) {
         // 0) Check connection:
-        if (IsConnected) throw Exceptions.DEFAULT;
+        if (IsConnected) throw Exceptions.Default;
         // 1) Create data URL:
         var q = new QueryParams();
             // 1.1) Add meta:
-            q.Set(Header.APP_VERSION, AppSettings.Version);
+            q.Set(Header.AppVersion, AppSettings.Version);
             // 1.2) Add DTO:
-            q.Set(GameHubs.DTO_TYPE, type);
-            q.Set(GameHubs.DTO, JsonSerializer.Serialize(dto));
-        var hubURL = URL.SetQueryParams(URL.ToAbsolute(GameHubs.URL), q);
+            q.Set(GameHubs.DtoType, type);
+            q.Set(GameHubs.Dto, JsonSerializer.Serialize(dto));
+        var hubURL = URL.SetQueryParams(URL.ToAbsolute(GameHubs.Url), q);
         // 2) Create HUB:
         HubConnection = new HubConnectionBuilder().WithUrl(hubURL, options => {
-            options.Headers[Header.ACCEPT_LANGUAGE] = I18N.Culture;
+            options.Headers[Header.AcceptLanguage] = I18N.Culture;
         }).Build();
         // 3) Add events:
-        HubConnection.On<Game>(GameHubs.CONNECTION_SUCCESSFUL, ConnectionSuccessful);
-        HubConnection.On<GameActionResponseUpdate>(GameHubs.GAME_ACTION_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<GameActionResponseUpdate>(GameHubs.PLAYER_KICK_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<GameActionResponseUpdate>(GameHubs.PLAYER_READY_RESPONSE_UPDATE, GameResponse);
-        HubConnection.On<RoundUpdate>(GameHubs.ROUND_UPDATE, GameUpdate);
-        HubConnection.On<GamePlayUpdate>(GameHubs.GAME_PLAY_UPDATE, GameUpdate);
-        HubConnection.On<PlayerUpdate>(GameHubs.PLAYER_UPDATE, GameUpdate);
-        HubConnection.On<SpectatorUpdate>(GameHubs.SPECTATOR_UPDATE, GameUpdate);
-        HubConnection.On<PingUpdate>(GameHubs.PING_UPDATE, PingUpdate);
-        HubConnection.On<AppExceptionDTO>(GameHubs.ERROR, HandleErrors);
+        HubConnection.On<Game>(GameHubs.ConnectionSuccessful, ConnectionSuccessful);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.GameActionResponseUpdate, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.PlayerKickResponseUpdate, GameResponse);
+        HubConnection.On<GameActionResponseUpdate>(GameHubs.PlayerReadyResponseUpdate, GameResponse);
+        HubConnection.On<RoundUpdate>(GameHubs.RoundUpdate, GameUpdate);
+        HubConnection.On<GamePlayUpdate>(GameHubs.GamePlayUpdate, GameUpdate);
+        HubConnection.On<PlayerUpdate>(GameHubs.PlayerUpdate, GameUpdate);
+        HubConnection.On<SpectatorUpdate>(GameHubs.SpectatorUpdate, GameUpdate);
+        HubConnection.On<PingUpdate>(GameHubs.PingUpdate, PingUpdate);
+        HubConnection.On<AppExceptionDTO>(GameHubs.Error, HandleErrors);
         HubConnection.Closed += OnConnectionClosed;
         // 4) Connect:
         await HubConnection.StartAsync();
         // 5) Check connection:
-        if (!IsConnected) throw Exceptions.DEFAULT;
+        if (!IsConnected) throw Exceptions.Default;
     }
 
     private async Task ConnectionSuccessful(Game game) {
@@ -164,8 +164,8 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
             try {
                 // 1) Show loader & check:
                 await PageLoader.Show(PageLoaderTask.GameConsent);
-                if (HubConnection is null) throw Exceptions.DEFAULT;
-                if (HubConnection.ConnectionId is null) throw Exceptions.DEFAULT;
+                if (HubConnection is null) throw Exceptions.Default;
+                if (HubConnection.ConnectionId is null) throw Exceptions.Default;
                 IsConnecting = true;
                 // 2) Authorization:
                 Authorization.OnSuccess();
@@ -199,16 +199,16 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 // 6) Update and render:
                 await OnConnect.Invoke(GameVM); Notify();
                 while (true) {
-                    if (Page.Current is not GamePage page) { Navigator.Refresh(); throw Exceptions.DEFAULT; }
-                    if (GamePage.GAME_VIEWS.Contains(page.View?.GetType())) break;
-                    await Task.Delay(FIRST_RENDER_CHECK_INTERVAL);
+                    if (Page.Current is not GamePage page) { Navigator.Refresh(); throw Exceptions.Default; }
+                    if (GamePage.GameViews.Contains(page.View?.GetType())) break;
+                    await Task.Delay(FirstRenderCheckInterval);
                 }
             } catch {
                 // 7) Handle errors:
                 Navigator.AllowNone();
                 IsConnecting = false;
                 await DisposeGame();
-                Notification.Error(Messages.DEFAULT.T);
+                Notification.Error(Messages.Default.T);
             } finally {
                 // 8) Finalize:
                 IsConnecting = false;
@@ -294,7 +294,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
                 // 1) Authorization:
                 var exception = await Authorization.OnError(exceptionDTO, DisposeGame) ?? exceptionDTO.Exception;
                 // 2) Disconnect:
-                if (exception.Code == Codes.DISCONNECT) await DisposeGame();
+                if (exception.Code == Codes.Disconnect) await DisposeGame();
                 // 3) Display errors:
                 ErrorHandler.Display(exception, Form);
             }
@@ -303,7 +303,7 @@ public class ConnectViewModel(ConnectViewModelParams @params) {
     }
 
     private async Task OnConnectionClosed(Exception? e) {
-        if (e is not null) await HandleErrors(Exceptions.DISCONNECT.DTO);
+        if (e is not null) await HandleErrors(Exceptions.Disconnect.DTO);
     }
 
     // Disposal ---------------------------------------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ public partial class AntIcon {
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private string? ComputeRole() => Label == "" ? null : "img";
     private string? ComputeLabel() => Label == "" ? null : Label;
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(ButtonIconType.CLASS);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ButtonIconType.ClassName);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private AntDesign.IconThemeType MapTheme => Theme.ToLower() switch {

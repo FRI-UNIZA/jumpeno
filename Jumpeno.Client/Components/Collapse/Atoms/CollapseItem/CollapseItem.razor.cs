@@ -2,11 +2,11 @@ namespace Jumpeno.Client.Components;
 
 public partial class CollapseItem {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_COLLAPSE_ITEM = "collapse-item";
-    public const string CLASS_ITEM_COLLAPSED = "item-collapsed";
-    public const string CLASS_COLLAPSE_ITEM_TITLE = "collapse-item-title";
-    public const string CLASS_COLLAPSE_ITEM_CONTENT_WRAP = "collapse-item-content-wrap";
-    public const string CLASS_COLLAPSE_ITEM_CONTENT = "collapse-item-content";
+    public const string ClassCollapseItem = "collapse-item";
+    public const string ClassItemCollapsed = "item-collapsed";
+    public const string ClassCollapseItemTitle = "collapse-item-title";
+    public const string ClassCollapseItemContentWrap = "collapse-item-content-wrap";
+    public const string ClassCollapseItemContent = "collapse-item-content";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -20,17 +20,17 @@ public partial class CollapseItem {
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private readonly string ID;
-    private string ID_TITLE => $"{ID}-{CLASS_COLLAPSE_ITEM_TITLE}";
-    private string ID_CONTENT => $"{ID}-{CLASS_COLLAPSE_ITEM_CONTENT}";
+    private string IDTitle => $"{ID}-{ClassCollapseItemTitle}";
+    private string IDContent => $"{ID}-{ClassCollapseItemContent}";
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS_COLLAPSE_ITEM, Base)
-        .Set(CLASS_ITEM_COLLAPSED, Collapsed);
+        .Set(ClassCollapseItem, Base)
+        .Set(ClassItemCollapsed, Collapsed);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public CollapseItem() => ID = IDGenerator.Generate(CLASS_COLLAPSE_ITEM);
+    public CollapseItem() => ID = IDGenerator.Generate(ClassCollapseItem);
 
     // NOTE: Fix of auto-height transition not applied to scrollbars
     private bool RenderVar = true;
@@ -45,7 +45,7 @@ public partial class CollapseItem {
         await PageLoader.Show(PageLoaderTask.Collapse, true);
         Collapsed = !Collapsed;
         StateHasChanged();
-        await Task.Delay(AppTheme.TRANSITION_NORMAL);
+        await Task.Delay(AppTheme.TransitionNormal);
         await PageLoader.Hide(PageLoaderTask.Collapse, false);
     }
 }

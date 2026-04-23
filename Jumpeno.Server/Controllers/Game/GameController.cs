@@ -29,7 +29,7 @@ public class GameController : ControllerBase {
     public GameMapDTOR Map([FromQuery] GameMapDTO query)
     {
         // 1) Read query params:
-        var q = query?.Assert() ?? throw Exceptions.VALUES.Add(Errors.EMPTY);
+        var q = query?.Assert() ?? throw Exceptions.Values.Add(Errors.Empty);
         // 2) Select map:
         var map = MapType.ByID(q.ID, nameof(GameMapDTO.ID));
         // 3) Return result:

@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class Collapse {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "collapse";
+    public const string ClassName = "collapse";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -11,5 +11,5 @@ public partial class Collapse {
     public required RenderFragment ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).SetSurface(Surface);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base).SetSurface(Surface);
 }

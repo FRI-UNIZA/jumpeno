@@ -1,6 +1,7 @@
 namespace ThemeProvider;
 
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Jumpeno.Client.Utils;
 
@@ -46,7 +47,7 @@ public class Program {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Property:
-    private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{name.ToLower().Replace("_", "-")}";
+    private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{Regex.Replace(name.Replace('_','-'), "(?<!^)([A-Z])", "-$1").ToLower()}";
     private static string TransformValue(string className, string name, object? value) {
         return value == null ? throw new ArgumentNullException($"{className}.{name}") : $"{value}";
     }

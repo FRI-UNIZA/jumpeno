@@ -16,7 +16,7 @@ public abstract class CookieStorage {
     private bool IsCookieType(Type keyType)
     {
         if (keyType is null) return false;
-        return Cookies.TYPES.Contains(keyType);
+        return Cookies.Types.Contains(keyType);
     }
 
     private List<Type> ConvertToTypes(List<string> acceptedNames) {
@@ -45,12 +45,12 @@ public abstract class CookieStorage {
     // General:
     private bool IsAccepted(Enum key) => AreAccepted([key]);
     private bool AreAccepted(Enum[] keys) {
-        var allRequired = AreAcceptedBy(keys, Cookies.TYPES_REQUIRED);
+        var allRequired = AreAcceptedBy(keys, Cookies.TypesRequired);
         if (allRequired) return true;
 
         var accepted = GetAcceptedCookies();
         if (accepted.Count == 0) {
-            accepted = Cookies.TYPES_REQUIRED;
+            accepted = Cookies.TypesRequired;
         }
         return AreAcceptedBy(keys, accepted);
     }
@@ -86,12 +86,12 @@ public abstract class CookieStorage {
     // Cookie consent ---------------------------------------------------------------------------------------------------------------------
     public void AcceptCookieConsent(List<Type> accept) {
         var acceptedCookies = accept.Where(IsCookieType).ToList();
-        var unacceptedCookies = Cookies.TYPES.Except(acceptedCookies);
+        var unacceptedCookies = Cookies.Types.Except(acceptedCookies);
 
         SetAcceptedCookies(acceptedCookies);
 
         foreach (Enum cookie in unacceptedCookies.SelectMany(x => Enum.GetValues(x).Cast<Enum>())) {
-            Cookies.ORIGIN.TryGetValue(cookie, out var origins);
+            Cookies.Origin.TryGetValue(cookie, out var origins);
             if (origins == null) {
                 DeleteCookie(cookie);
             } else {
@@ -136,8 +136,8 @@ public abstract class CookieStorage {
         Checker.CheckEmptyString(keyValue, name: "key");
         DeleteItem(
             keyValue,
-            domain is null ? Cookies.DEFAULT_DOMAIN : domain,
-            path is null ? Cookies.DEFAULT_PATH : path
+            domain is null ? Cookies.DefaultDomain : domain,
+            path is null ? Cookies.DefaultPath : path
         );
     }
     public void Delete(Enum key, string? domain = null, string? path = null) {

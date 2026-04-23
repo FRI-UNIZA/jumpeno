@@ -12,13 +12,13 @@ public partial class Lobby {
     private Player? PlayerToKick = null;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass().Set("lobby", Base).Set(VM.CSSClass())
         .Set("player-settings-open", PlayerSettingsOpen);
     }
 
-    private CSSClass PlayerLineClass(Player player) {
-        return new CSSClass("player-line")
+    private CssClass PlayerLineClass(Player player) {
+        return new CssClass("player-line")
         .Set("current", VM.Player != null && VM.Player.Equals(player))
         .Set(player.IsConnected ? "connected" : "disconnected")
         .Set("ready", player.IsReady(VM.Game));

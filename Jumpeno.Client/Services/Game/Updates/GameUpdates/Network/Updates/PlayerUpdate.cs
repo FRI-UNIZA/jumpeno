@@ -11,7 +11,7 @@ public class PlayerUpdate(
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GameHubs.PLAYER_UPDATE;
+    public override string HubAction => GameHubs.PlayerUpdate;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public bool HostConnected { get; private set; } = hostConnected;

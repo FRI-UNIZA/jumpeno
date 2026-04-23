@@ -2,14 +2,14 @@ namespace Jumpeno.Client.Components;
 
 public partial class FormError {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "form-error";
-    public const string CLASS_OUTLINE = "form-error-outline";
-    public const string CLASS_MESSAGE = "form-error-message";
+    public const string ClassName = "form-error";
+    public const string ClassOutline = "form-error-outline";
+    public const string ClassMessage = "form-error-message";
     // Error class:
-    public const string CLASS_ERROR = "error";
+    public const string ClassError = "error";
     // Display classes:
-    public const string CLASS_NO_ERROR = "no-error";
-    public const string CLASS_NO_MESSAGE = "no-message";
+    public const string ClassNoError = "no-error";
+    public const string ClassNoMessage = "no-message";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Type:
@@ -30,14 +30,14 @@ public partial class FormError {
     public bool? NoMessage { get; set; } = false;
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         var c = base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .Set(Type);
         if (ErrorAlign != null) c.Set(ErrorAlign);
         else c.Set(Align);
-        c.Set(CLASS_NO_ERROR, NoError);
-        c.Set(CLASS_NO_MESSAGE, NoMessage);
+        c.Set(ClassNoError, NoError);
+        c.Set(ClassNoMessage, NoMessage);
         return c;
     }
 
@@ -55,7 +55,7 @@ public partial class FormError {
     private void OnClick(MouseEventArgs e) => Activate();
 
     private async Task OnKeyDown(KeyboardEventArgs e) {
-        if (e.Key != KeyBoard.ENTER) return;
+        if (e.Key != KeyBoard.Enter) return;
         await Task.Yield();
         Activate();
     }

@@ -10,7 +10,7 @@ public partial class GameScreen {
     private GameCanvas Canvas = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("game-screen", Base).Set(VM.CSSClass());
+    public override CssClass ComputeClass() => base.ComputeClass().Set("game-screen", Base).Set(VM.CSSClass());
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameScreen() => Ref = DotNetObjectReference.Create(this);
@@ -70,13 +70,13 @@ public partial class GameScreen {
     private readonly LockerSlim ControlLock = new();
 
     // Display controls:
-    private CSSClass GameControlsClass() {
-        var c = new CSSClass("game-controls");
+    private CssClass GameControlsClass() {
+        var c = new CssClass("game-controls");
         if (!VM.ControlsDisplayed) c.Set("hidden");
         return c;
     }
-    private CSSClass ControlClass(GameControls control) {
-        var c = new CSSClass("control");
+    private CssClass ControlClass(GameControls control) {
+        var c = new CssClass("control");
         switch (control) {
             case GameControls.Space: c.Set("space"); break;
             case GameControls.Left: c.Set("left"); break;

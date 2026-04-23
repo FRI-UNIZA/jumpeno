@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public partial class RadioFieldOption<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "radio-field-option";
-    public const string CLASS_ELEMENT = "radio-field-option-element";
-    public const string CLASS_DESCRIPTION = "radio-field-option-description";
-    public const string CLASS_ACTIVE_DESCRIPTION = "active-description";
+    public new const string ClassName = "radio-field-option";
+    public const string ClassElement = "radio-field-option-element";
+    public const string ClassDescription = "radio-field-option-description";
+    public const string ClassActiveDescription = "active-description";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -16,10 +16,10 @@ public partial class RadioFieldOption<T> {
     public RadioPosition? Position { get; set; } = RadioPosition.Start;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_ACTIVE_DESCRIPTION, ActiveDescription)
+        .Set(ClassName, Base)
+        .Set(ClassActiveDescription, ActiveDescription)
         .Set(Position);
     }
 }

@@ -10,7 +10,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool Equals(Player? player) => ID == player?.ID;
-    public static bool IsValid(Player? player) => !User.UNKNOWN.Equals(player?.User);
+    public static bool IsValid(Player? player) => !User.Unknown.Equals(player?.User);
     public bool IsValid() => IsValid(this);
     public bool IsJumping => Body.IsJumping;
     public bool JumpedOn(Player player) => Body.JumpedOn(player.Body);
@@ -32,7 +32,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     }
 
     public Player(byte id) : this(
-        null, User.UNKNOWN, DeviceType.Pointer,
+        null, User.Unknown, DeviceType.Pointer,
         id, new(), 0, 0
     ) {}
 
@@ -42,7 +42,7 @@ public class Player : Connection, IRectFQuadStorable, IUpdateable, IRenderable<G
     ) {}
 
     private void Invalidate() {
-        Synchronize(null, User.UNKNOWN, DeviceType.Pointer);
+        Synchronize(null, User.Unknown, DeviceType.Pointer);
         // NOTE: Body is preserved!
         Score = 0;
         ReadyForRound = 0;

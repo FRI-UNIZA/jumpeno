@@ -4,7 +4,7 @@ public class GameActionRequestUpdate(GameAction action) : GameRequestUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GameHubs.GAME_ACTION_REQUEST_UPDATE;
+    public override string HubAction => GameHubs.GameActionRequestUpdate;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public GameAction Action { get; private set; } = action;

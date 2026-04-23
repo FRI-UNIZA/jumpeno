@@ -7,7 +7,7 @@ public static partial class Email {
         Send(
             email,
             I18N.T("Jumpeno password reset"),
-            EmailsContents.LINK(
+            EmailsContents.Link(
                 I18N.T("Jumpeno password reset"),
                 $"{I18N.T("Hello, confirm that your password can be reset to:")}"
                 + "<br><br>"

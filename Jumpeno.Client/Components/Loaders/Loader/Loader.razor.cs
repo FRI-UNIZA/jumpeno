@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Components;
 
 public partial class Loader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "loader";
+    public const string ClassName = "loader";
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION);
+        .Set(ClassName, Base)
+        .Set(AnimationHandler.ClassPreventDisabledAnimation);
     }
 }

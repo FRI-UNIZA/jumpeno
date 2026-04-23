@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Models;
 public class GamePlayUpdate : NetworkUpdate, IRespondable<GamePlayResponse> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GameHubs.GAME_PLAY_UPDATE;
+    public override string HubAction => GameHubs.GamePlayUpdate;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public StateUpdate StateUpdate { get; private set; }

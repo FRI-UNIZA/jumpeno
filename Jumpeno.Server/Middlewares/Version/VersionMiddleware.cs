@@ -4,15 +4,15 @@ public class VersionMiddleware(RequestDelegate next) {
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static void CheckVersion(string? version) {
         if (version == AppSettings.Version) return;
-        throw Exceptions.CLIENT.SetInfo("Incorrect version! Please refresh.");
+        throw Exceptions.Client.SetInfo("Incorrect version! Please refresh.");
     }
 
     public static void CheckHubVersion(HttpContext ctx) {
-        if (ctx.Request.Query.TryGetValue(Header.APP_VERSION, out var version)) CheckVersion(version);
+        if (ctx.Request.Query.TryGetValue(Header.AppVersion, out var version)) CheckVersion(version);
     }
 
     public static void CheckApiVersion(HttpContext ctx) {
-        if (ctx.Request.Headers.TryGetValue(Header.APP_VERSION, out var version)) CheckVersion(version);
+        if (ctx.Request.Headers.TryGetValue(Header.AppVersion, out var version)) CheckVersion(version);
     }
 
     // Invoke -----------------------------------------------------------------------------------------------------------------------------

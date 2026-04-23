@@ -7,5 +7,5 @@ public record GameControlDTO : IValidable<GameControlDTO> {
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public List<Error> Validate() => GameValidator.ValidateCode(Code, nameof(Code));
-    public GameControlDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public GameControlDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

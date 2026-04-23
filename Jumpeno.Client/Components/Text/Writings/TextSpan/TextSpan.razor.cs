@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class TextSpan {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "text-span";
+    public new const string ClassName = "text-span";
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

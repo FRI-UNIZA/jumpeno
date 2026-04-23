@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class ModalProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_CONTENT = "modal-provider-content";
+    public const string ClassContent = "modal-provider-content";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, ModalElement> ElementDictionary = [];
@@ -15,7 +15,7 @@ public partial class ModalProvider {
     private readonly MinWatch MinLoadingWatch = new();
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = PageLoader.CASCADE_PAGE_LOADER_DISPLAYED)]
+    [CascadingParameter(Name = PageLoader.CascadePageLoaderDisplayed)]
     public bool PageLoaderDisplayed { get; set; }
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
@@ -78,9 +78,9 @@ public partial class ModalProvider {
 
     public static async Task AddElement(ModalElement element) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.Add(element.Modal.ID, element);
+            instance.ElementDictionary.Add(element.Modal.Id, element);
         });
-        JS.InvokeVoid(JSModal.PreOpen, element.Modal.ID);
+        JS.InvokeVoid(JSModal.PreOpen, element.Modal.Id);
     }
 
     private static async Task SetModalOpen(string id) {
@@ -98,7 +98,7 @@ public partial class ModalProvider {
 
         // 3) Unblock input:
         await PageLoader.Hide(PageLoaderTask.Modal, false);
-        ActionHandler.SetFocus(element.Modal.ID_DIALOG);
+        ActionHandler.SetFocus(element.Modal.IdDialog);
 
         // 4) After finish events:
         await element.Modal.CallOnAfterOpenFinish();
@@ -113,7 +113,7 @@ public partial class ModalProvider {
     // Notification:
     public static async Task NotifyElement(Modal modal) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+            instance.ElementDictionary.TryGetValue(modal.Id, out var element);
             element?.Notify(); 
         });
     }
@@ -140,7 +140,7 @@ public partial class ModalProvider {
         await instance.TCSLoading.Task;
         await AwaitLoading(modal);
 
-        instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+        instance.ElementDictionary.TryGetValue(modal.Id, out var element);
         instance.TCSDispose = new TaskCompletionSource();
         element?.StartClosing();
         await instance.TCSDispose.Task;
@@ -170,7 +170,7 @@ public partial class ModalProvider {
         await modal.CallOnCloseStart();
 
         // 5) Check element:
-        instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+        instance.ElementDictionary.TryGetValue(modal.Id, out var element);
         if (element == null) {
             await PageLoader.Hide(PageLoaderTask.Modal, false);
             if (withLock) UI.Lock.TryUnlock();
@@ -200,7 +200,7 @@ public partial class ModalProvider {
 
     public static async Task RemoveElement(ModalElement element) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.Remove(element.Modal.ID);
+            instance.ElementDictionary.Remove(element.Modal.Id);
             instance.ModalList.Remove(element.Modal);
             instance.StateHasChanged();
         });

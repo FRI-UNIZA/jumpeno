@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Components;
 
 public partial class GameState {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "game-state";
+    public const string ClassName = "game-state";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

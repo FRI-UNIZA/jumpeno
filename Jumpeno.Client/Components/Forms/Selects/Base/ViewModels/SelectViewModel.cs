@@ -2,8 +2,8 @@ namespace Jumpeno.Client.ViewModels;
 
 public class SelectViewModel<T> : FormViewModel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public readonly Predicate<SelectSearchEvent<T>> DEFAULT_CUSTOM_SEARCH = e => e.Option.Label.ToLower().IndexOf(e.Search) >= 0;
-    public readonly SelectOption<T> EMPTY_OPTION = Select<T>.EMPTY_OPTION;
+    public readonly Predicate<SelectSearchEvent<T>> DefaultCustomSearch = e => e.Option.Label.ToLower().IndexOf(e.Search) >= 0;
+    public readonly SelectOption<T> EmptyOption = Select<T>.EmptyOption;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Options:
@@ -32,12 +32,12 @@ public class SelectViewModel<T> : FormViewModel {
         }
         // Options:
         Options = p.Options;
-        DefaultValue = p.DefaultValue ?? (p.Empty ? Select<T>.EMPTY_OPTION : Options[0]);
+        DefaultValue = p.DefaultValue ?? (p.Empty ? Select<T>.EmptyOption : Options[0]);
         Placeholder = p.Placeholder;
         Empty = p.Empty;
         // Search:
         Search = p.Search;
-        CustomSearch = p.CustomSearch ?? DEFAULT_CUSTOM_SEARCH;
+        CustomSearch = p.CustomSearch ?? DefaultCustomSearch;
         // Search input:
         SearchVM = new(new(
             TextMode: p.SearchTextMode,
@@ -49,8 +49,8 @@ public class SelectViewModel<T> : FormViewModel {
         // Value:
         Value = DefaultValue;
         // Events:
-        OnSelect = p.OnSelect ?? EventDelegate<SelectEvent<T>>.EMPTY;
-        OnCloseSelected = p.OnCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
-        OnAfterCloseSelected = p.OnAfterCloseSelected ?? EventDelegate<SelectEvent<T>>.EMPTY;
+        OnSelect = p.OnSelect ?? EventDelegate<SelectEvent<T>>.Empty;
+        OnCloseSelected = p.OnCloseSelected ?? EventDelegate<SelectEvent<T>>.Empty;
+        OnAfterCloseSelected = p.OnAfterCloseSelected ?? EventDelegate<SelectEvent<T>>.Empty;
     }
 }

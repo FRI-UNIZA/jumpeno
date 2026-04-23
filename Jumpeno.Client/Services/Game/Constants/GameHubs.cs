@@ -2,33 +2,33 @@ namespace Jumpeno.Client.Constants;
 
 public static class GameHubs {
     // Routes -----------------------------------------------------------------------------------------------------------------------------
-    public static string URL => HUB.BASE.GAME;
+    public static string Url => HUB.Base.Game;
 
     // Data Transfer Object ---------------------------------------------------------------------------------------------------------------
-    public const string DTO_TYPE = nameof(DTO_TYPE);
-    public const string DTO = nameof(DTO);
+    public const string DtoType = nameof(DtoType);
+    public const string Dto = nameof(Dto);
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
     // Game:
-    public const string KEY_UPDATE = "KeyUpdate";
+    public const string KeyUpdate = "KeyUpdate";
     // Request:
-    public const string GAME_ACTION_REQUEST_UPDATE = "GameActionRequestUpdate";
-    public const string PLAYER_KICK_REQUEST_UPDATE = "PlayerKickRequestUpdate";
-    public const string PLAYER_READY_REQUEST_UPDATE = "PlayerReadyRequestUpdate";
+    public const string GameActionRequestUpdate = "GameActionRequestUpdate";
+    public const string PlayerKickRequestUpdate = "PlayerKickRequestUpdate";
+    public const string PlayerReadyRequestUpdate = "PlayerReadyRequestUpdate";
 
     // Trip updates -----------------------------------------------------------------------------------------------------------------------
-    public const string PING_UPDATE = "PingUpdate";
+    public const string PingUpdate = "PingUpdate";
 
     // Server updates ---------------------------------------------------------------------------------------------------------------------
-    public const string CONNECTION_SUCCESSFUL = "ConnectionSuccessful";
+    public const string ConnectionSuccessful = "ConnectionSuccessful";
     // Game:
-    public const string GAME_PLAY_UPDATE = "GamePlayUpdate";
-    public const string PLAYER_UPDATE = "PlayerUpdate";
-    public const string ROUND_UPDATE = "RoundUpdate";
-    public const string SPECTATOR_UPDATE = "SpectatorUpdate";
-    public const string ERROR = "Error";
+    public const string GamePlayUpdate = "GamePlayUpdate";
+    public const string PlayerUpdate = "PlayerUpdate";
+    public const string RoundUpdate = "RoundUpdate";
+    public const string SpectatorUpdate = "SpectatorUpdate";
+    public const string Error = "Error";
     // Response:
-    public const string GAME_ACTION_RESPONSE_UPDATE = "GameActionResponseUpdate";
-    public const string PLAYER_KICK_RESPONSE_UPDATE = "PlayerKickResponseUpdate";
-    public const string PLAYER_READY_RESPONSE_UPDATE = "PlayerReadyResponseUpdate";
+    public const string GameActionResponseUpdate = "GameActionResponseUpdate";
+    public const string PlayerKickResponseUpdate = "PlayerKickResponseUpdate";
+    public const string PlayerReadyResponseUpdate = "PlayerReadyResponseUpdate";
 }

@@ -6,12 +6,12 @@ public partial class AvatarTab : IProfileTab
     private readonly ICollection<Skin> Skins = Enum.GetValues<Skin>();
 
     // Forms ------------------------------------------------------------------------------------------------------------------------------
-    private readonly string FORM = Form.Of<AvatarTab>();
+    private readonly string form = Form.Of<AvatarTab>();
     private Skin SelectedSkin = Auth.User.Skin;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("avatar-tab", Base);
-    private string ComputeAvatarOptionClass(Skin skin) => new CSSClass("avatar-option").Set("selected", SelectedSkin == skin);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("avatar-tab", Base);
+    private string ComputeAvatarOptionClass(Skin skin) => new CssClass("avatar-option").Set("selected", SelectedSkin == skin);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void SelectSkin(Skin skin) 
@@ -26,13 +26,13 @@ public partial class AvatarTab : IProfileTab
         await HTTP.Try(async () => {
             var model = new UserUpdateDTO(NewSkin: SelectedSkin);
 
-            var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_UPDATE, body: model);
+            var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
             var body = result.Body.Assert();
 
             await Auth.LoadProfile();
             await ResetForm();
             Notification.Success(result.Body.Message);
-        }, FORM);
+        }, form);
         await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 

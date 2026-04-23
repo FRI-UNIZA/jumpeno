@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Utils;
 
 public static class Format {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly JsonSerializerOptions JSON_OPTIONS_PRETTY = new() { WriteIndented = true };
+    public static readonly JsonSerializerOptions JsonOptionsPretty = new() { WriteIndented = true };
 
     // Time -------------------------------------------------------------------------------------------------------------------------------
     public static string Ms_To_MMSS(double ms, bool space = false) {
@@ -28,5 +28,5 @@ public static class Format {
 
     // Objects ----------------------------------------------------------------------------------------------------------------------------
     public static string JSON(object item) => JsonSerializer.Serialize(item);
-    public static string JSON_PRETTY(object item) => JsonSerializer.Serialize(item, JSON_OPTIONS_PRETTY);
+    public static string JSON_PRETTY(object item) => JsonSerializer.Serialize(item, JsonOptionsPretty);
 }

@@ -41,7 +41,7 @@ HTTP.Init(
     },
     async (e, form) => {
         if (e is AppException eApp) ErrorHandler.Display(eApp, form);
-        else ErrorHandler.Notify(Exceptions.DEFAULT);
+        else ErrorHandler.Notify(Exceptions.Default);
         await Task.CompletedTask;
     },
     async callback => await Window.Lock(callback.Invoke, WindowLock.Http)

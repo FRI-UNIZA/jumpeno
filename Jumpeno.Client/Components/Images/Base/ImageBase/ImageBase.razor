@@ -2,11 +2,11 @@
 
 @inherits BasicComponent
 
-<div id="@ID" class="@ComputeClass()" style="@Style">
+<div id="@_id" class="@ComputeClass()" style="@Style">
     <div class="image-ratio" />
     <img
         class="image-element"
-        src="@URL"
+        src="@Url"
         loading="@Loading.StringLower()"
         draggable="@Draggable.ToString().ToLower()"
         @attributes="@Attributes"

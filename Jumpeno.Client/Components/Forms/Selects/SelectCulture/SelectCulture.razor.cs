@@ -2,17 +2,17 @@ namespace Jumpeno.Client.Components;
 
 public partial class SelectCulture {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "select-culture";
+    public const string ClassName = "select-culture";
     // Delay:
-    public const int CHANGE_DELAY = 300; // ms
+    public const int ChangeDelay = 300; // ms
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private readonly SelectViewModel<string> VM = new(new(
-        Options: [.. I18N.LANGUAGES.Select((x, index) => new SelectOption<string>(index, x, x.ToUpper()))],
-        DefaultValue: new(Array.IndexOf(I18N.LANGUAGES, I18N.Culture), I18N.Culture, I18N.Culture.ToUpper()),
+        Options: [.. I18N.Languages.Select((x, index) => new SelectOption<string>(index, x, x.ToUpper()))],
+        DefaultValue: new(Array.IndexOf(I18N.Languages, I18N.Culture), I18N.Culture, I18N.Culture.ToUpper()),
         OnSelect: new(OnSelect)
     ));
 
@@ -25,7 +25,7 @@ public partial class SelectCulture {
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private static async Task OnSelect(SelectEvent<string> ev) {
         await PageLoader.Show(PageLoaderTask.CultureChange);
-        await Task.Delay(CHANGE_DELAY);
+        await Task.Delay(ChangeDelay);
         await ChangeCulture(ev);
     }
 
@@ -73,7 +73,7 @@ public partial class SelectCulture {
             }
 
             pageURI = "";
-            for (var i = I18N.USE_PREFIX ? 1 : 0; i < newSegments.Length; i++) {
+            for (var i = I18N.UsePrefix ? 1 : 0; i < newSegments.Length; i++) {
                 var segment = newSegments[i];
                 if (segment.StartsWith(URL.EncodeValue("{")) && segment.EndsWith(URL.EncodeValue("}"))) {
                     segment = currentSegments[i];
@@ -89,11 +89,11 @@ public partial class SelectCulture {
                 await PageLoader.Hide(PageLoaderTask.CultureChange);
                 return;
             } 
-            path = I18N.USE_PREFIX ? $"/{CultureInfo.CurrentCulture}{pageURI}" : pageURI;
+            path = I18N.UsePrefix ? $"/{CultureInfo.CurrentCulture}{pageURI}" : pageURI;
         }
 
         // Change prefix or host:
-        if (I18N.USE_PREFIX) {
+        if (I18N.UsePrefix) {
             if (path.StartsWith($"/{CultureInfo.CurrentCulture}/")) {
                 path = $"/{value}{path.Substring(path.IndexOf("/", 1))}";
             }
@@ -110,6 +110,6 @@ public partial class SelectCulture {
         q.Set("redirectURI", path);
 
         // Request redirect:
-        await Navigator.NavigateTo(URL.SetQueryParams(API.BASE.CULTURE_REDIRECT, q), forceLoad: true);
+        await Navigator.NavigateTo(URL.SetQueryParams(API.Base.CultureRedirect, q), forceLoad: true);
     }
 }

@@ -21,17 +21,17 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     private NotifyType? Notify = null;
     // Loading:
     private bool Loader = true;
-    private const int MIN_LOADING = 175; // ms
-    private readonly MinWatch MinLoadingWatch = new(MIN_LOADING);
+    private const int MinLoading = 175; // ms
+    private readonly MinWatch MinLoadingWatch = new(MinLoading);
     private TaskCompletionSource NavigationFinished;
     // PopState:
     private bool IsPopState = false;
     private readonly Stopwatch PopWatch = new();
-    private readonly int POP_THROTTLE = 500; // ms
+    private readonly int popThrottle = 500; // ms
     // Events:
     private TaskCompletionSource NavEventTCS = new();
     private bool IsRunning = false;
-    private readonly int RUN_DELAY = 100; // ms
+    private readonly int runDelay = 100; // ms
     // Locks:
     private readonly LockerSlim NavLock = new();
     // Listeners & interceptors:
@@ -100,7 +100,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             if (!ProgramNavigation) {
                 if (IsRunning) { ctx.PreventNavigation(); return; }
                 if (!ctx.IsNavigationIntercepted) {
-                    if (PopWatch.ElapsedMilliseconds < POP_THROTTLE) {
+                    if (PopWatch.ElapsedMilliseconds < popThrottle) {
                         ctx.PreventNavigation(); return;
                     }
                     IsPopState = true;
@@ -190,7 +190,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     ) {
         // 1) Set running:
         if (AppEnvironment.IsClient) {
-            while (IsRunning) await Task.Delay(RUN_DELAY);
+            while (IsRunning) await Task.Delay(runDelay);
             IsRunning = true;
         }
         // 2) Lock program navigation:
@@ -202,7 +202,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         // 4) Handle server:
         if (AppEnvironment.IsServer) {
             ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(RequestStorages.URL, url);
+            RequestStorage.Set(RequestStorages.Url, url);
             NavLock.TryUnlock();
             return;
         }

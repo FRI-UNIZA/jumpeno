@@ -22,7 +22,7 @@ public static partial class Email
         }
         catch
         {
-            throw Exceptions.SERVER.SetInfo(I18N.T("Failed to send email address change email."));
+            throw Exceptions.Server.SetInfo(I18N.T("Failed to send email address change email."));
         }
     }
 

@@ -9,7 +9,7 @@ public partial class ProfileModal {
     private PasswordChangeModal PasswordChangeModalRef { get; set; } = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass TabButtonClass(ProfileTabType tab) => new CSSClass("profile-tab-button").Set("active", Tab == tab);
+    private CssClass TabButtonClass(ProfileTabType tab) => new CssClass("profile-tab-button").Set("active", Tab == tab);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {

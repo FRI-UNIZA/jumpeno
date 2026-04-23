@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class Box {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "box";
+    public const string ClassName = "box";
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -11,5 +11,5 @@ public partial class Box {
     public required RenderFragment ChildContent { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).SetSurface(Surface);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base).SetSurface(Surface);
 }

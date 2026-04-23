@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class ManualPage {
-    public const string ROUTE_EN = "/en/manual";
-    public const string ROUTE_SK = "/sk/navod";
+    public const string RouteEn = "/en/manual";
+    public const string RouteSk = "/sk/navod";
 }

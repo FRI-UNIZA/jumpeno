@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class AuthController(CookieStorage CookieStorage) : ControllerBase {
+public class AuthController(CookieStorage cookieStorage) : ControllerBase {
     /// <summary>Refresh of tokens.</summary>
     /// <param name="body">Refresh token. (can be set as cookie)</param>
     /// <response code="200">Extended tokens.</response>
@@ -11,15 +11,15 @@ public class AuthController(CookieStorage CookieStorage) : ControllerBase {
     [ProducesResponseType(typeof(AuthRefreshDTOR), StatusCodes.Status200OK)]
     public async Task<AuthRefreshDTOR> Refresh([FromBody] AuthRefreshDTO? body) {
         // 1) Validation:
-        try { body?.Assert(); } catch { throw Exceptions.INVALID_TOKEN; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.INVALID_TOKEN;
+        try { body?.Assert(); } catch { throw Exceptions.InvalidToken; }
+        var token = body?.RefreshToken ?? cookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.InvalidToken;
         try {
             JWT.AssertRefresh(token);
             Token.StoreRefresh(token);
         } catch {
-            throw Exceptions.INVALID_TOKEN;
+            throw Exceptions.InvalidToken;
         }
-        if (!await RefreshEntity.IsValid(token, nameof(body.RefreshToken))) throw Exceptions.INVALID_TOKEN;
+        if (!await RefreshEntity.IsValid(token, nameof(body.RefreshToken))) throw Exceptions.InvalidToken;
         // 2) Create new tokens:
         string accessToken;
         string refreshToken;
@@ -51,12 +51,12 @@ public class AuthController(CookieStorage CookieStorage) : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Invalidate([FromBody] AuthInvalidateDTO? body) {
         // 1) Validation:
-        try { body?.Assert(); } catch { throw Exceptions.INVALID_TOKEN; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.INVALID_TOKEN;
-        try { JWT.AssertRefresh(token); } catch { throw Exceptions.INVALID_TOKEN; }
+        try { body?.Assert(); } catch { throw Exceptions.InvalidToken; }
+        var token = body?.RefreshToken ?? cookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.InvalidToken;
+        try { JWT.AssertRefresh(token); } catch { throw Exceptions.InvalidToken; }
         // 2) Delete origin with successors:
         await DB.Transaction(async () => {
-            var refresh = await RefreshEntity.ByToken(token, nameof(body.RefreshToken)) ?? throw Exceptions.INVALID_TOKEN;
+            var refresh = await RefreshEntity.ByToken(token, nameof(body.RefreshToken)) ?? throw Exceptions.InvalidToken;
             if (refresh.Origin == null) return;
             await RefreshEntity.Delete(refresh.Origin, nameof(body.RefreshToken));
             await RefreshEntity.DeleteByOrigin(refresh.Origin, token, nameof(body.RefreshToken), nameof(body.RefreshToken));
@@ -73,9 +73,9 @@ public class AuthController(CookieStorage CookieStorage) : ControllerBase {
     [ProducesResponseType(typeof(MessageDTOR), StatusCodes.Status200OK)]
     public async Task<MessageDTOR> Delete([FromBody] AuthDeleteDTO? body) {
         // 1) Validation:
-        try { body?.Assert(); } catch { throw Exceptions.INVALID_TOKEN; }
-        var token = body?.RefreshToken ?? CookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.INVALID_TOKEN;
-        try { JWT.AssertRefresh(token); } catch { throw Exceptions.INVALID_TOKEN; }
+        try { body?.Assert(); } catch { throw Exceptions.InvalidToken; }
+        var token = body?.RefreshToken ?? cookieStorage.Get(Cookies.Mandatory.AppRefershToken) ?? throw Exceptions.InvalidToken;
+        try { JWT.AssertRefresh(token); } catch { throw Exceptions.InvalidToken; }
         // 2) Delete refresh token:
         await RefreshEntity.Delete(token, nameof(body.RefreshToken));
         // 3) Delete cookie:

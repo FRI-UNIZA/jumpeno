@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Services;
 
 public class StaticService<T> {
     protected static T Instance() {
-        var key = RequestStorages.STATIC_SERVICE<T>();
+        var key = RequestStorages.StaticService<T>();
         var instance = RequestStorage.Get<T>(key);
         if (instance is null) {
             instance = Reflex.CreateInstance<T>(typeof(T));

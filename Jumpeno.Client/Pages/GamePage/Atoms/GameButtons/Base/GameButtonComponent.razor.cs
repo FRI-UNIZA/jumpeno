@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public partial class GameButtonComponent : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_CONTENT = "game-button-content";
+    public const string ClassContent = "game-button-content";
     // States:
-    public const string CLASS_ACTIVE = "active";
-    public const string CLASS_DISABLED = "disabled";
+    public const string ClassActive = "active";
+    public const string ClassDisabled = "disabled";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -21,7 +21,7 @@ public partial class GameButtonComponent : IDisabledComponent {
     private bool MouseOn = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS_ACTIVE, Active).Set(CLASS_DISABLED, Disabled);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassActive, Active).Set(ClassDisabled, Disabled);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     private void PressStart() { Active = true; PressStarted = true; }

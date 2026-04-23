@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Models;
 
 public class User {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string[] DEFAULT_NAMES = [
+    public static readonly string[] DefaultNames = [
         "Whistlejacket",
         "Niatross",
         "Exterminator",
@@ -22,8 +22,8 @@ public class User {
         "Jumper",
         "Stonks"
     ];
-    public const string NAME_UNKNOWN = "Unknown";
-    public static readonly User UNKNOWN = new(NAME_UNKNOWN);
+    public const string NameUnknown = "Unknown";
+    public static readonly User Unknown = new(NameUnknown);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public Guid? ID { get; private set; }
@@ -41,7 +41,7 @@ public class User {
 
     // Generators -------------------------------------------------------------------------------------------------------------------------
     public static Guid GenerateID() => Guid.NewGuid();
-    public static string GenerateName() => DEFAULT_NAMES[new Random().Next(DEFAULT_NAMES.Length)];
+    public static string GenerateName() => DefaultNames[new Random().Next(DefaultNames.Length)];
     public static Skin GenerateSkin() => (Skin) new Random().Next(Enum.GetValues(typeof(Skin)).Length);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@ public static partial class Email {
         Send(
             email,
             I18N.T("Jumpeno login"),
-            EmailsContents.LINK(
+            EmailsContents.Link(
                 I18N.T("Jumpeno login"),
                 I18N.T("Hello, here is your login link:"),
                 I18N.T("Log in"),

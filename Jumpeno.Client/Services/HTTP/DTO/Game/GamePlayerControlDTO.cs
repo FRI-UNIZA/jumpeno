@@ -14,5 +14,5 @@ public record GamePlayerControlDTO : IValidable<GamePlayerControlDTO> {
         errors.AddRange(UserValidator.ValidateName(Name, checkUnknown: true, nameof(Name)));
         return errors;
     }
-    public GamePlayerControlDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public GamePlayerControlDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

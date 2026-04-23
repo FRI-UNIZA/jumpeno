@@ -1,15 +1,15 @@
 namespace Jumpeno.Client.Constants;
 
-public static class JSScrollArea {
-    public static readonly string ClassName = nameof(JSScrollArea);
+public static class JsScrollArea {
+    public static readonly string ClassName = nameof(JsScrollArea);
 
-    public const string CLASS = "scroll-area";
-    public const string CLASS_CONTENT = $"{CLASS}-content";
-    public const string CLASS_SCROLLBAR = "os-scrollbar";
+    public const string Class = "scroll-area";
+    public const string ClassContent = $"{Class}-content";
+    public const string ClassScrollbar = "os-scrollbar";
 
-    public const string LIGHT_THEME = "os-theme-light";
-    public const string DARK_THEME = "os-theme-dark";
-    public const string CUSTOM_THEME = "scroll-area-custom-theme";
+    public const string LightTheme = "os-theme-light";
+    public const string DarkTheme = "os-theme-dark";
+    public const string CustomTheme = "scroll-area-custom-theme";
 
     public static readonly string Activate = $"{ClassName}.{nameof(Activate)}";
     public static readonly string Destroy = $"{ClassName}.{nameof(Destroy)}";

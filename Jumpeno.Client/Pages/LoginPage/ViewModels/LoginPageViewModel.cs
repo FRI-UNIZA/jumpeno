@@ -8,6 +8,6 @@ public class LoginPageViewModel(LoginPage page) {
     public void Show(LoginFormType form) {
         Form = form;
         page.Notify();
-        ScrollArea.ScrollTo(ScrollAreaId.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.Page, 0, 0);
     }
 }

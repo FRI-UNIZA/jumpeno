@@ -27,5 +27,5 @@ public record GameHubCreateDTO(
         errors.AddRange(UserValidator.ValidateDeviceType(Device, nameof(Device)));
         return errors;
     }
-    public GameHubCreateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public GameHubCreateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

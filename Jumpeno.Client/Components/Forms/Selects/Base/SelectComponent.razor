@@ -13,20 +13,20 @@
             aria-roledescription="combobox"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
-            class="@CLASS_SELECT_INPUT"
+            class="@ClassSelectInput"
             disabled="@Disabled"
             @onclick="@Open"
         >
-            @if (ViewModel.Value == Select<T>.EMPTY_OPTION) {
+            @if (ViewModel.Value == Select<T>.EmptyOption) {
                 if (ViewModel.Placeholder == null) {
-                    <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
+                    <span class="@ClassSelectInputEmpty">&nbsp;</span>
                 } else {
-                    <span class="@CLASS_SELECT_INPUT_TEXT @CLASS_SELECT_INPUT_PLACEHOLDER">@ViewModel.Placeholder</span>
+                    <span class="@ClassSelectInputText @ClassSelectInputPlaceholder">@ViewModel.Placeholder</span>
                 }
             } else {
-                <span class="@CLASS_SELECT_INPUT_TEXT">@ViewModel.Value.Label</span>
+                <span class="@ClassSelectInputText">@ViewModel.Value.Label</span>
             }
-            <AntIcon Type="down" Theme="outline" Class="@CLASS_SELECT_INPUT_ICON" />
+            <AntIcon Type="down" Theme="outline" Class="@ClassSelectInputIcon" />
         </button>
         <Modal
             @ref="@ModalRef"
@@ -48,12 +48,12 @@
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
-                        Class="@CLASS_SELECT_INPUT_SEARCH"
+                        Class="@ClassSelectInputSearch"
                     />
                 }
             </SubHeader>
             <Content>
-                <div class="@CLASS_OPTIONS" role="listbox">
+                <div class="@ClassOptions" role="listbox">
                     @if (DisplayedOptions.Count > 0) {
                         @foreach(var option in DisplayedOptions) {
                             <button
@@ -65,11 +65,11 @@
                                 class="@ComputeOptionClass(option)"
                                 @onclick="@(() => SelectOption(option))"
                             >
-                                @(option == Select<T>.EMPTY_OPTION ? $"-- {@option.Label} --" : @option.Label)
+                                @(option == Select<T>.EmptyOption ? $"-- {@option.Label} --" : @option.Label)
                             </button>
                         }
                     } else {
-                        <p tabindex="0" class="@CLASS_SELECT_EMPTY_TEXT">-- @I18N.T("No data") --</p>
+                        <p tabindex="0" class="@ClassSelectEmptyText">-- @I18N.T("No data") --</p>
                     }
                 </div>
             </Content>

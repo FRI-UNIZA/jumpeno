@@ -41,7 +41,7 @@
                 @(
                     VM.Game.IsFinished ? I18N.T("Finish") :
                     VM.LobbyDisplayed ? I18N.T("Playing") :
-                    Game.PAUSE_STATES.Contains(VM.Game.State) ? I18N.T("Pause") :
+                    Game.PauseStates.Contains(VM.Game.State) ? I18N.T("Pause") :
                     @I18N.T("Lobby")
                 )
             </GameState>
@@ -54,9 +54,9 @@
                 } else {
                     if (VM.IsHost) {
                         if (
-                            Game.LOBBY_STATES.Contains(VM.Game.State) && !VM.Game.IsFinished && VM.Game.ActivePlayersCount >= 2 && VM.Game.ActivePlayersReady()
+                            Game.LobbyStates.Contains(VM.Game.State) && !VM.Game.IsFinished && VM.Game.ActivePlayersCount >= 2 && VM.Game.ActivePlayersReady()
                             ||
-                            Game.PAUSE_STATES.Contains(VM.Game.State)
+                            Game.PauseStates.Contains(VM.Game.State)
                         ) {
                             <GameButton Variant="GameButtonVariant.Success" Class="game-action-button game-start-button" Action="new(VM.Play)">
                                 <ThumbButton Class="game-action-button-thumb" />

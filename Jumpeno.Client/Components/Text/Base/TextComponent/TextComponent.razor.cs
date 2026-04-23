@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public abstract partial class TextComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "text";
-    public const string CLASS_NO_WRAP = "no-wrap";
+    public const string ClassName = "text";
+    public const string ClassNoWrap = "no-wrap";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -18,12 +18,12 @@ public abstract partial class TextComponent {
     public RenderFragment? ChildContent { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .SetVariant(Variant)
         .SetSize(Size)
         .Set(Align)
-        .Set(CLASS_NO_WRAP, NoWrap);
+        .Set(ClassNoWrap, NoWrap);
     }
 }

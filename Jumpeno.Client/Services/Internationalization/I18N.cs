@@ -5,29 +5,29 @@ namespace Jumpeno.Client.Services;
 public class I18N {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private static IStringLocalizer<Resource> Localizer;
-    public static bool USE_PREFIX { get; private set; }
-    public static string [] HOSTS { get; private set; }
-    public static string[] LANGUAGES { get; private set; }
-    public static string FALLBACK { get; private set; }
+    public static bool UsePrefix { get; private set; }
+    public static string [] Hosts { get; private set; }
+    public static string[] Languages { get; private set; }
+    public static string Fallback { get; private set; }
     private static Dictionary<string, string> LanguageHost;
     private static Dictionary<string, string> HostLanguage;
-    private const string ESCAPE_START = "I18N{";
-    private const string ESCAPE_END = "}";
-    private const string SPLIT = "@I18N_SPLIT{}";
+    private const string EscapeStart = "I18N{";
+    private const string EscapeEnd = "}";
+    private const string SplitSeparator = "@I18N_SPLIT{}";
 
     // Initializer ------------------------------------------------------------------------------------------------------------------------
     public static void Init(IStringLocalizer<Resource> localizer) {
         InitOnce.Check(nameof(I18N));
         Localizer = localizer;
-        USE_PREFIX = AppSettings.Language.UsePrefix;
-        HOSTS = AppSettings.Language.Hosts;
-        LANGUAGES = AppSettings.Language.Languages;
-        FALLBACK = AppSettings.Language.DefaultLanguage;
+        UsePrefix = AppSettings.Language.UsePrefix;
+        Hosts = AppSettings.Language.Hosts;
+        Languages = AppSettings.Language.Languages;
+        Fallback = AppSettings.Language.DefaultLanguage;
         LanguageHost = [];
         HostLanguage = [];
-        for (var i = 0; i < HOSTS.Length; i++) {
-            LanguageHost.Add(LANGUAGES[i], HOSTS[i]);
-            HostLanguage.Add(HOSTS[i], LANGUAGES[i]);
+        for (var i = 0; i < Hosts.Length; i++) {
+            LanguageHost.Add(Languages[i], Hosts[i]);
+            HostLanguage.Add(Hosts[i], Languages[i]);
         }
     }
 
@@ -71,12 +71,12 @@ public class I18N {
         try {
             string result = Localizer[key];
             do {
-                var index = result.IndexOf(ESCAPE_START);
+                var index = result.IndexOf(EscapeStart);
                 if (index < 0) break;
-                int end = result.IndexOf(ESCAPE_END, index);
+                int end = result.IndexOf(EscapeEnd, index);
 
-                string name = result.Substring(index + ESCAPE_START.Length, end - (index + ESCAPE_START.Length));
-                result = result.Replace($"{ESCAPE_START}{name}{ESCAPE_END}", $"{values[name]}");
+                string name = result.Substring(index + EscapeStart.Length, end - (index + EscapeStart.Length));
+                result = result.Replace($"{EscapeStart}{name}{EscapeEnd}", $"{values[name]}");
             } while (true);
 
             return result;
@@ -90,13 +90,13 @@ public class I18N {
     }
     public static string T(TInfo message, bool unsplit = false) => T(message.Key, message.Values, unsplit);
 
-    public static string[] Split(string value) => value.Split(SPLIT);
-    public static string UnSplit(string value) => value.Replace(SPLIT, "");
+    public static string[] Split(string value) => value.Split(SplitSeparator);
+    public static string UnSplit(string value) => value.Replace(SplitSeparator, "");
 
     // Links ------------------------------------------------------------------------------------------------------------------------------
     private static string PageLink<T>() {
         string link = typeof(T).GetField($"ROUTE_{Culture.ToUpper()}")!.GetValue(null)!.ToString()!;
-        if (USE_PREFIX && link == $"/{Culture}") {
+        if (UsePrefix && link == $"/{Culture}") {
             return $"{link}/";
         }
         if (link.EndsWith('/')) {
@@ -111,7 +111,7 @@ public class I18N {
     }
     public static string Link<T>(object[] parameters) {
         var link = URL.Encode(PageLink<T>());
-        if (USE_PREFIX && link.StartsWith($"/{Culture}")) {
+        if (UsePrefix && link.StartsWith($"/{Culture}")) {
             link = link[$"/{Culture}".Length..];
         }
         var linkParams = parameters.Prepend(link).ToArray();
@@ -124,6 +124,6 @@ public class I18N {
 
         if (link.EndsWith('/')) link = link[..^1];
         
-        return USE_PREFIX ? $"/{URL.EncodeValue(Culture)}{link}" : link;
+        return UsePrefix ? $"/{URL.EncodeValue(Culture)}{link}" : link;
     }
 }

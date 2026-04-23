@@ -5,12 +5,12 @@ using System.Security.Cryptography;
 public class PasswordEntity {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly string PEPPER = ServerSettings.Auth.Pepper;
-    public const int HASH_SIZE = 32; // Bytes
-    public const int SALT_SIZE = 16; // Bytes
-    public const int HASH_ITERATIONS = 100_000;
+    public const int HashSize = 32; // Bytes
+    public const int SaltSize = 16; // Bytes
+    public const int HashIterations = 100_000;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public const string INDEX_ID = "PRIMARY";
+    public const string IndexId = "PRIMARY";
     [Key]
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]
@@ -30,14 +30,14 @@ public class PasswordEntity {
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static string Pepper(string password) => $"{password}{PEPPER}";
 
-    public static byte[] GenerateSalt() => RandomNumberGenerator.GetBytes(SALT_SIZE);
+    public static byte[] GenerateSalt() => RandomNumberGenerator.GetBytes(SaltSize);
     
     public static byte[] HashPassword(string password, byte[] salt) => Rfc2898DeriveBytes.Pbkdf2(
         Pepper(password),
         salt,
-        HASH_ITERATIONS,
+        HashIterations,
         HashAlgorithmName.SHA256,
-        HASH_SIZE
+        HashSize
     );
 
     public static bool Validate(string password, byte[] salt, byte[] hash)
@@ -53,7 +53,7 @@ public class PasswordEntity {
         // 1) Validation:
         var errors = UserValidator.ValidateID(id, idID);
         errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
-        Checker.Assert(errors, Exceptions.VALUES);
+        Checker.Assert(errors, Exceptions.Values);
         // 2) Create record:
         var salt = GenerateSalt();
         var record = new PasswordEntity() {
@@ -81,7 +81,7 @@ public class PasswordEntity {
         // 1) Validation:
         var errors = UserValidator.ValidateID(id, idID);
         errors.AddRange(UserValidator.ValidatePassword(password, passwordID));
-        Checker.Assert(errors, Exceptions.VALUES);
+        Checker.Assert(errors, Exceptions.Values);
         // 2) Update record:
         var ctx = await DB.Context();
         var salt = GenerateSalt();
@@ -168,7 +168,7 @@ public class PasswordEntity {
             .GroupJoin(
                 ctx.Refresh,
                 password => password.ID,
-                refresh => refresh.ID,
+                refresh => refresh.Id,
                 (password, refreshes) => new { Password = password, Refresh = refreshes }
             )
             .Where(x => x.Password.ID == id)

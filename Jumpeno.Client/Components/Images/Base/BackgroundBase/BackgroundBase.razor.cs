@@ -2,15 +2,15 @@ namespace Jumpeno.Client.Components;
 
 public partial class BackgroundBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_PREFIX = "background";
+    public const string IdPrefix = "background";
     // Class:
-    public const string CLASS = "background";
-    public const string CLASS_IMG = "background-loader-image";
-    public const string CLASS_ELEMENT = "background-element";
+    public const string ClassName = "background";
+    public const string ClassImg = "background-loader-image";
+    public const string ClassElement = "background-element";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required string URL { get; set; }
+    public required string Url { get; set; }
     [Parameter]
     public bool Transparent { get; set; } = false;
     [Parameter]
@@ -21,20 +21,20 @@ public partial class BackgroundBase {
     public Action<bool> OnLoadingFinish { get; set; } = success => {};
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private string ID { get; set; }
+    private string Id { get; set; }
     private ImageState State { get; set; } = ImageState.Loading;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .Set(State)
-        .Set(ImageBase.CLASS_TRANSPARENT, Transparent)
-        .Set(ImageBase.CLASS_NO_TRANSITION, NoTransition);
+        .Set(ImageBase.ClassTransparent, Transparent)
+        .Set(ImageBase.ClassNoTransition, NoTransition);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    public BackgroundBase() => ID = IDGenerator.Generate(ID_PREFIX);
+    public BackgroundBase() => Id = IDGenerator.Generate(IdPrefix);
 
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
@@ -42,8 +42,8 @@ public partial class BackgroundBase {
             State = ImageState.Loading;
         } else {
             State = Preloaded
-                    ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
-                    : (ImageState) JS.Invoke<int>(JSImage.CheckState, URL);
+                    ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, Url)
+                    : (ImageState) JS.Invoke<int>(JSImage.CheckState, Url);
             ImageBase.HandleLoadFinish(State, OnLoadingFinish);
         } 
     }

@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Constants;
 
 public static class ContentType {
-    public const string JSON = "application/json";
-    public const string X_SQLITE3 = "application/x-sqlite3";
-    public const string OCTET_STREAM = "application/octet-stream";
-    public const string DATA_SVG = "data:image/svg+xml;base64";
+    public const string Json = "application/json";
+    public const string XSqlite3 = "application/x-sqlite3";
+    public const string OctetStream = "application/octet-stream";
+    public const string DataSvg = "data:image/svg+xml;base64";
 }

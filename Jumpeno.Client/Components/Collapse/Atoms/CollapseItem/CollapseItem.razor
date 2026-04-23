@@ -1,24 +1,25 @@
 @namespace Jumpeno.Client.Components
 
+@using CSSClassConstants = Jumpeno.Client.Constants.CSSClassConstants
 @inherits BasicComponent
 
 <div class="@ComputeClass()">
-    <div class="@CSS_CLASS.NO_DISPLAY">@RenderVar</div>
+    <div class="@CSSClassConstants.NoDisplay">@RenderVar</div>
     <div
-        id="@ID_TITLE"
-        class="@CLASS_COLLAPSE_ITEM_TITLE"
+        id="@IDTitle"
+        class="@ClassCollapseItemTitle"
         @onclick="Toggle"
-        @onkeypress="@(async e => { if (e.Key == KeyBoard.ENTER) await Toggle(); })"
+        @onkeypress="@(async e => { if (e.Key == KeyBoard.Enter) await Toggle(); })"
         role="button"
-        aria-controls="@ID_CONTENT"
+        aria-controls="@IDContent"
         aria-expanded="@($"{!Collapsed}".ToLower())"
         tabindex="0"
         aria-label="@Label"
     >
         <CollapseTitle>@Title</CollapseTitle>
     </div>
-    <div id="@ID_CONTENT" class="@CLASS_COLLAPSE_ITEM_CONTENT_WRAP" inert="@Collapsed">
-        <div class="@CLASS_COLLAPSE_ITEM_CONTENT" tabindex="0">
+    <div id="@IDContent" class="@ClassCollapseItemContentWrap" inert="@Collapsed">
+        <div class="@ClassCollapseItemContent" tabindex="0">
             <CollapseContent>@Content</CollapseContent>
         </div>
     </div>

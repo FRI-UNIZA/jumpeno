@@ -11,5 +11,5 @@ public record UserUpdateDTO(string? NewName = null, Skin? NewSkin = null, string
         return errors;
     }
 
-    public UserUpdateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public UserUpdateDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }
