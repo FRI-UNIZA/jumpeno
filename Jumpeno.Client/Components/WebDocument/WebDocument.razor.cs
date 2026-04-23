@@ -4,7 +4,7 @@ public partial class WebDocument {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ID = "app-web-document";
     // Cascade:
-    public const string CASCADE_TITLE = $"{nameof(WebDocument)}.{nameof(CASCADE_TITLE)}";
+    public const string CascadeTitle = $"{nameof(WebDocument)}.{nameof(CascadeTitle)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

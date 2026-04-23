@@ -6,6 +6,6 @@ public class CheckBoxViewModel(CheckBoxViewModelParams p) : FormViewModel(p.Form
     public void SetValue(bool value) { if (value != Value) { Value = value; Error.Clear(); } }
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    public EventDelegate<CheckBoxEvent> OnChange { get; set; } = p.OnChange ?? EventDelegate<CheckBoxEvent>.EMPTY;
-    public EventDelegate<CheckBoxEvent> OnAfterChange { get; set; } = p.OnAfterChange ?? EventDelegate<CheckBoxEvent>.EMPTY;
+    public EventDelegate<CheckBoxEvent> OnChange { get; set; } = p.OnChange ?? EventDelegate<CheckBoxEvent>.Empty;
+    public EventDelegate<CheckBoxEvent> OnAfterChange { get; set; } = p.OnAfterChange ?? EventDelegate<CheckBoxEvent>.Empty;
 }

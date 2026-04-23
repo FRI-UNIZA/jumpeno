@@ -10,7 +10,7 @@ public partial class RegisterForm {
     public required LoginPageViewModel VM { get; set; }
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<RegisterForm>();
+    public readonly string FormId = Form.Of<RegisterForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMPassword;
@@ -24,33 +24,33 @@ public partial class RegisterForm {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public RegisterForm() {
         VMEmail = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Email),
             TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
-            MaxLength: UserValidator.EMAIL_MAX_LENGTH,
+            MaxLength: UserValidator.EmailMaxLength,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(async e => await Register())
         ));
         VMPlayerName = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Name),
             TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsName,
-            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            MaxLength: UserValidator.NameMaxLength,
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
             OnEnter: new(async e => await Register())
         ));
         VMPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Password),
             TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
@@ -66,11 +66,11 @@ public partial class RegisterForm {
             OnEnter: new(async e => await Register())
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: "ConfirmPassword",
             TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
             Secret: true,
@@ -108,16 +108,16 @@ public partial class RegisterForm {
             // 3) Validation:
             var errors = body.Validate();
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
-            Checker.AssertWith(errors, Exceptions.VALUES);
+            Checker.AssertWith(errors, Exceptions.Values);
                 
             // 4) Send request:
-            var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_REGISTER, body: body);
+            var result = await HTTP.Post<MessageDTOR>(API.Base.UserRegister, body: body);
 
             // 5) Show result:
             Notification.Success(result.Body.Message);
             Success = true;
             StateHasChanged();
-        }, FORM);
+        }, FormId);
         await PageLoader.Hide(PageLoaderTask.Registration);
     }
 }

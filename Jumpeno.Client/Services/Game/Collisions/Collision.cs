@@ -15,9 +15,9 @@ namespace Jumpeno.Client.Utils;
 /// </summary>
 public static class Collision {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const int PRECISION = 3;
-    public static readonly float UNIT = MathF.Pow(10, -PRECISION);
-    public static readonly PointF ZERO_VECTOR = new(0, 0);
+    public const int Precision = 3;
+    public static readonly float Unit = MathF.Pow(10, -Precision);
+    public static readonly PointF ZeroVector = new(0, 0);
 
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public static bool ValidateBoundary(RectangleF boundary, RectFPosition position) {
@@ -129,10 +129,10 @@ public static class Collision {
         CheckRectMoveDimensions(before, after);
         // 2) Compute boundary:
         var boundary = new RectangleF(
-            rect.X - before.Width / 2 + UNIT,
-            rect.Y - before.Height / 2 + UNIT,
-            rect.Width + before.Width - 2 * UNIT,
-            rect.Height + before.Height - 2 * UNIT
+            rect.X - before.Width / 2 + Unit,
+            rect.Y - before.Height / 2 + Unit,
+            rect.Width + before.Width - 2 * Unit,
+            rect.Height + before.Height - 2 * Unit
         );
         // 3) Check vector collision with boundary:
         return RectVSLine(
@@ -161,7 +161,7 @@ public static class Collision {
             case PositionDir.Top: if (position.Center.Y + halfHeight > level) normal.Y = -1; break;
         }
         // 3) Resolve collision:
-        if (normal.Equals(ZERO_VECTOR)) return false;
+        if (normal.Equals(ZeroVector)) return false;
         if (normal.X != 0) position.Center.X = level + normal.X * halfWidth;
         if (normal.Y != 0) position.Center.Y = level + normal.Y * halfHeight;
         // 4) Apply result:
@@ -177,18 +177,18 @@ public static class Collision {
         CheckBoundary(boundary, position);
         // 2) Define variables:
         var normal = new PointF(0, 0);
-        void resolve((RectFPosition resolved, PointF normal) fix) {
+        void Resolve((RectFPosition resolved, PointF normal) fix) {
             position = fix.resolved;
             normal.X = fix.normal.X;
             normal.Y = fix.normal.Y;
         };
         // 3) Resolve collisions:
-        if (!Resolve(boundary.X, PositionDir.Left, position, resolve))
-            Resolve(boundary.X + boundary.Width, PositionDir.Right, position, resolve);
-        if (!Resolve(boundary.Y, PositionDir.Bottom, position, resolve))
-            Resolve(boundary.Y + boundary.Height, PositionDir.Top, position, resolve);
+        if (!Collision.Resolve(boundary.X, PositionDir.Left, position, Resolve))
+            Collision.Resolve(boundary.X + boundary.Width, PositionDir.Right, position, Resolve);
+        if (!Collision.Resolve(boundary.Y, PositionDir.Bottom, position, Resolve))
+            Collision.Resolve(boundary.Y + boundary.Height, PositionDir.Top, position, Resolve);
         // 4) Apply result:
-        if (normal.Equals(ZERO_VECTOR)) return false;
+        if (normal.Equals(ZeroVector)) return false;
         onResolve((position, normal)); return true;
     }
 

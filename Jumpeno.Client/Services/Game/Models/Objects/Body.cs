@@ -2,25 +2,25 @@ namespace Jumpeno.Client.Models;
 
 public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Skin Skin)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const double IMMORTAL_MS = 2000; // ms
+    public const double ImmortalMs = 2000; // ms
     // Size:
-    public const int WIDTH = 50; // px
-    public const int HEIGHT = 63; // px
+    public const int Width = 50; // px
+    public const int Height = 63; // px
     // Speed:
-    public const float SPEED = 0.38f; // px per ms
+    public const float Speed = 0.38f; // px per ms
     // Jump:
-    public const float JUMP_HEIGHT = 160f; // px
-    public const float JUMP_SPEED = 0.95f; // px per ms (at the start)
-    public const float JUMP_SPEED_BASE = 0.2f; // minimal fraction of JUMP_SPEED
-    public const float JUMP_SPEED_MAX = 1.3f; // px per ms
-    public const double PENDING_JUMP_TIMEOUT = 150; // ms
+    public const float JumpHeight = 160f; // px
+    public const float JumpSpeed = 0.95f; // px per ms (at the start)
+    public const float JumpSpeedBase = 0.2f; // minimal fraction of JUMP_SPEED
+    public const float JumpSpeedMax = 1.3f; // px per ms
+    public const double PendingJumpTimeout = 150; // ms
 
     // Computed constants -----------------------------------------------------------------------------------------------------------------
-    public const int HALF_WIDTH = WIDTH / 2;
-    public const int HALF_HEIGHT = HEIGHT / 2;
-    public static readonly PointF DEFAULT_POSITION = new(0, 0);
-    public static readonly PointF DEFAULT_DIRECTION = new(0, -1);
-    public static readonly PointF DEFAULT_NORMAL = new(0, 1);
+    public const int HalfWidth = Width / 2;
+    public const int HalfHeight = Height / 2;
+    public static readonly PointF DefaultPosition = new(0, 0);
+    public static readonly PointF DefaultDirection = new(0, -1);
+    public static readonly PointF DefaultNormal = new(0, 1);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Health:
@@ -52,17 +52,17 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         return Alive && body.Alive && !IsImmortal && !body.IsImmortal
         && Direction.Y < 0 && Normal.Y <= 0
         && bodyRect.IntersectsWith(Rect)
-        && (FallStartY == null || (FallStartY - Position.Center.Y > Tile.HALF_SIZE))
-        && (LastPosition.Center.Y - HALF_HEIGHT >= body.LastPosition.Center.Y + HALF_HEIGHT)
-        && (Position.Center.Y - HALF_HEIGHT <= body.Position.Center.Y + HALF_HEIGHT);
+        && (FallStartY == null || (FallStartY - Position.Center.Y > Tile.HalfSize))
+        && (LastPosition.Center.Y - HalfHeight >= body.LastPosition.Center.Y + HalfHeight)
+        && (Position.Center.Y - HalfHeight <= body.Position.Center.Y + HalfHeight);
     }
     
-    public bool CollisionDetected => !(Normal.Equals(Collision.ZERO_VECTOR) || Normal.Equals(LastNormal));
+    public bool CollisionDetected => !(Normal.Equals(Collision.ZeroVector) || Normal.Equals(LastNormal));
     
     public bool IsShrinked(Shrink shrink) {
         if (!Alive) return false;
         var rect = shrink.Rect;
-        return Center.X - HALF_WIDTH < rect.X - 1 || rect.X + rect.Width + 1 < Center.X + HALF_WIDTH;
+        return Center.X - HalfWidth < rect.X - 1 || rect.X + rect.Width + 1 < Center.X + HalfWidth;
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -77,15 +77,15 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         Fallen = fallen;
         IsImmortal = isImmortal;
         ImmortalUntil = immortalUntil;
-        Position = new(center, WIDTH, HEIGHT);
+        Position = new(center, Width, Height);
         LastPosition = Position;
         Direction = direction;
         JumpFinishY = jumpFinishY;
-        LastNormal = DEFAULT_NORMAL;
-        Normal = DEFAULT_NORMAL;
+        LastNormal = DefaultNormal;
+        Normal = DefaultNormal;
         Animation = animation;
     }
-    public Body() : this(false, false, false, 0, DEFAULT_POSITION, DEFAULT_DIRECTION, null, new(DEFAULT_DIRECTION)) {}
+    public Body() : this(false, false, false, 0, DefaultPosition, DefaultDirection, null, new(DefaultDirection)) {}
 
     // Movement ---------------------------------------------------------------------------------------------------------------------------
     private void ChangeDirection(GameControls key, bool pressed) {
@@ -93,13 +93,13 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         else direction.X = key == GameControls.Left ? -1 : 1;
     }
 
-    private float ComputeNextX(double deltaT) => (float)(Center.X + deltaT * Direction.X * SPEED);
+    private float ComputeNextX(double deltaT) => (float)(Center.X + deltaT * Direction.X * Speed);
 
     private float ComputeNextY(double deltaT) {
         if (JumpFinishY == null) return Center.Y;
         var jumpSpeed = Math.Min((double)
-            (JUMP_SPEED_BASE + (JumpFinishY - (Center.Y + HALF_HEIGHT)) / JUMP_HEIGHT) * JUMP_SPEED,
-            JUMP_SPEED_MAX // NOTE: Gravity restriction
+            (JumpSpeedBase + (JumpFinishY - (Center.Y + HalfHeight)) / JumpHeight) * JumpSpeed,
+            JumpSpeedMax // NOTE: Gravity restriction
         );
         return (float)(Center.Y + deltaT * Direction.Y * jumpSpeed);
     }
@@ -114,22 +114,22 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         var isUnderMap = pointTop.Y <= game.Map.WorldMinY;
         // 2) Apply:
         Fallen = isUnderMap || Fallen;
-        Normal = Collision.ZERO_VECTOR;
+        Normal = Collision.ZeroVector;
         position.Center.Y = isUnderMap ? game.Map.WorldMinY - halfHeight : position.Center.Y;
         direction.X = 0;
         direction.Y = isUnderMap ? 0 : -1 ;
-        JumpFinishY = Center.Y + HALF_HEIGHT + JUMP_HEIGHT;
+        JumpFinishY = Center.Y + HalfHeight + JumpHeight;
     }
     
     private void StartFall() {
         direction.Y = -1;
-        JumpFinishY = Center.Y + HALF_HEIGHT + JUMP_HEIGHT * 0.3f;
+        JumpFinishY = Center.Y + HalfHeight + JumpHeight * 0.3f;
         FallStartY = Position.Center.Y;
     }
 
     private void StartJump() {
         direction.Y = 1;
-        JumpFinishY = Center.Y + HALF_HEIGHT + JUMP_HEIGHT;
+        JumpFinishY = Center.Y + HalfHeight + JumpHeight;
     }
 
     private void ReverseJump() {
@@ -172,13 +172,13 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
         // 1) Check delta:
         if (update.DeltaT <= 0) return false;
-        if (Alive && update.Game.Map.Shrink.Rect.Width < WIDTH) return false;
+        if (Alive && update.Game.Map.Shrink.Rect.Width < Width) return false;
         
         // 2) Save last & compute new position:
         LastPosition = Position;
         LastNormal = Normal;
         // 2.1) Reset normall & fall:
-        Normal = Collision.ZERO_VECTOR;
+        Normal = Collision.ZeroVector;
         if (JumpFinishY == null) StartFall();
         // 2.2) Killed player:
         if (!Alive) ApplyDeathFall(update.Game);
@@ -188,7 +188,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         // 3) Resolve collisions for alive body:
         if (!Alive) return true;
         // 3.1) Resolve map collisions:
-        if (update.Game.Map.Shrink.Rect.Width > WIDTH)
+        if (update.Game.Map.Shrink.Rect.Width > Width)
             Collision.Resolve(update.Game.Map.Shrink.Rect, position, ResolveCollision);
         // 3.2) Resolve jump height:
         if (JumpFinishY != null)
@@ -202,7 +202,7 @@ public class Body : IRectFPositionable, IUpdateable, IRenderable<(Game Game, Ski
         // 4) Apply pending jump:
         if (Normal.Y == 1 && PendingJump.Update != null) {
             PendingJump.Update = null;
-            if (GameClock.DeltaAhead(PendingJump.Time) <= PENDING_JUMP_TIMEOUT) StartJump();
+            if (GameClock.DeltaAhead(PendingJump.Time) <= PendingJumpTimeout) StartJump();
         }
 
         // 5) Resolve immortality:

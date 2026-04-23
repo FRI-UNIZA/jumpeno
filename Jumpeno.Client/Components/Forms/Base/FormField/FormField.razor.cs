@@ -2,9 +2,9 @@ namespace Jumpeno.Client.Components;
 
 public abstract partial class FormField<T> : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "field";
-    public const string CLASS_CONTENT = "field-content";
-    public const string CLASS_AUTO_SIZE = "auto-size";
+    public const string ClassName = "field";
+    public const string ClassContent = "field-content";
+    public const string ClassAutoSize = "auto-size";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // ViewModel:
@@ -37,15 +37,15 @@ public abstract partial class FormField<T> : IDisabledComponent {
     public virtual bool Propagate { get; set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .SetVariant(Variant)
         .SetSize(Size)
         .Set(Align)
-        .Set(CLASS_AUTO_SIZE, AutoSize)
-        .Set(FormError.CLASS_ERROR, ViewModel.Error.HasError)
-        .Set(Disabler.CLASS, Disabled)
+        .Set(ClassAutoSize, AutoSize)
+        .Set(FormError.ClassError, ViewModel.Error.HasError)
+        .Set(Disabler.ClassName, Disabled)
         .Set(ErrorType);
     }
 

@@ -3,612 +3,612 @@ namespace Jumpeno.Client.Constants;
 public class DarkTheme : BaseTheme {
 // NOTE: Surface --------------------------------------------------------------------------------------------------------------------------
     // Primary ----------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY => new(255, 255, 83);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX => new(250, 250, 175);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX_COLLAPSE => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => new(SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX, 0.6f);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT_COLLAPSE => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS => new(0, 0, 0, 0.04f);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS_COLLAPSE => new(255, 255, 255);
+    public override RGBAColor SurfaceBackground_SurfacePrimary => new(255, 255, 83);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryCollapse => new(255, 255, 255);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryBox => new(250, 250, 175);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryBoxCollapse => new(255, 255, 255);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryTransparent => new(SurfaceBackground_SurfacePrimaryBox, 0.6f);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryTransparentCollapse => new(255, 255, 255);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryGlass => new(0, 0, 0, 0.04f);
+    public override RGBAColor SurfaceBackground_SurfacePrimaryGlassCollapse => new(255, 255, 255);
 
     // Secondary --------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_SECONDARY => new(42, 33, 56);
+    public override RGBAColor SurfaceBackground_SurfaceSecondary => new(42, 33, 56);
 
     // Floating ---------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_FLOATING => new(255, 255, 255);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_FLOATING_COLLAPSE => new(241, 241, 241);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_FLOATING_ADDITIONAL => new(220, 220, 220);
-    public override RGBAColor SURFACE_BACKGROUND__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => new(241, 241, 241);
+    public override RGBAColor SurfaceBackground_SurfaceFloating => new(255, 255, 255);
+    public override RGBAColor SurfaceBackground_SurfaceFloatingCollapse => new(241, 241, 241);
+    public override RGBAColor SurfaceBackground_SurfaceFloatingAdditional => new(220, 220, 220);
+    public override RGBAColor SurfaceBackground_SurfaceFloatingAdditionalCollapse => new(241, 241, 241);
 
 // NOTE: Status ---------------------------------------------------------------------------------------------------------------------------
     // Danger -----------------------------------------------------------------------------------------------------------------------------
     // Box:
-    public override RGBAColor STATUS_DANGER_BOX_COLOR => new(83, 0, 0);
-    public override RGBAColor STATUS_DANGER_BOX_BACKGROUND => new(255, 186, 186);
-    public override RGBAColor STATUS_DANGER_BOX_OUTLINE_COLOR => new(255, 0, 0);
+    public override RGBAColor StatusDangerBoxColor => new(83, 0, 0);
+    public override RGBAColor StatusDangerBoxBackground => new(255, 186, 186);
+    public override RGBAColor StatusDangerBoxOutlineColor => new(255, 0, 0);
     // Box [highlight]:
-    public override RGBAColor STATUS_DANGER_BOX_HIGHLIGHT_COLOR => new(143, 0, 0);
-    public override RGBAColor STATUS_DANGER_BOX_HIGHLIGHT_BACKGROUND => new(255, 219, 219);
-    public override RGBAColor STATUS_DANGER_BOX_HIGHLIGHT_OUTLINE_COLOR => new(253, 118, 118);
+    public override RGBAColor StatusDangerBoxHighlightColor => new(143, 0, 0);
+    public override RGBAColor StatusDangerBoxHighlightBackground => new(255, 219, 219);
+    public override RGBAColor StatusDangerBoxHighlightOutlineColor => new(253, 118, 118);
 
     // Accent:
-    public override RGBAColor STATUS_DANGER_ACCENT_COLOR => new(255, 77, 79);
+    public override RGBAColor StatusDangerAccentColor => new(255, 77, 79);
     // Accent [highlight]:
-    public override RGBAColor STATUS_DANGER_ACCENT_HIGHLIGHT_COLOR => new(255, 0, 4);
+    public override RGBAColor StatusDangerAccentHighlightColor => new(255, 0, 4);
 
     // Neon:
-    public override RGBAColor STATUS_DANGER_NEON_COLOR => new(255, 0, 0);
+    public override RGBAColor StatusDangerNeonColor => new(255, 0, 0);
 
     // Success ----------------------------------------------------------------------------------------------------------------------------
     // Box:
-    public override RGBAColor STATUS_SUCCESS_BOX_COLOR => new(21, 87, 36);
-    public override RGBAColor STATUS_SUCCESS_BOX_BACKGROUND => new(212, 237, 218);
-    public override RGBAColor STATUS_SUCCESS_BOX_OUTLINE_COLOR => new(82, 196, 26);
+    public override RGBAColor StatusSuccessBoxColor => new(21, 87, 36);
+    public override RGBAColor StatusSuccessBoxBackground => new(212, 237, 218);
+    public override RGBAColor StatusSuccessBoxOutlineColor => new(82, 196, 26);
     // Box [highlight]:
-    public override RGBAColor STATUS_SUCCESS_BOX_HIGHLIGHT_COLOR => new(41, 107, 56);
-    public override RGBAColor STATUS_SUCCESS_BOX_HIGHLIGHT_BACKGROUND => new(233, 242, 235);
-    public override RGBAColor STATUS_SUCCESS_BOX_HIGHLIGHT_OUTLINE_COLOR => new(102, 216, 46);
+    public override RGBAColor StatusSuccessBoxHighlightColor => new(41, 107, 56);
+    public override RGBAColor StatusSuccessBoxHighlightBackground => new(233, 242, 235);
+    public override RGBAColor StatusSuccessBoxHighlightOutlineColor => new(102, 216, 46);
 
     // Accent:
-    public override RGBAColor STATUS_SUCCESS_ACCENT_COLOR => new(82, 196, 26);
+    public override RGBAColor StatusSuccessAccentColor => new(82, 196, 26);
     // Accent [highlight]:
-    public override RGBAColor STATUS_SUCCESS_ACCENT_HIGHLIGHT_COLOR => new(72, 217, 0);
+    public override RGBAColor StatusSuccessAccentHighlightColor => new(72, 217, 0);
 
     // Neon:
-    public override RGBAColor STATUS_SUCCESS_NEON_COLOR => new(0, 255, 0);
+    public override RGBAColor StatusSuccessNeonColor => new(0, 255, 0);
 
     // Warning ----------------------------------------------------------------------------------------------------------------------------
     // Box:
-    public override RGBAColor STATUS_WARNING_BOX_COLOR => new(135, 92, 5);
-    public override RGBAColor STATUS_WARNING_BOX_BACKGROUND => new(247, 225, 183);
-    public override RGBAColor STATUS_WARNING_BOX_OUTLINE_COLOR => new(250, 173, 20);
+    public override RGBAColor StatusWarningBoxColor => new(135, 92, 5);
+    public override RGBAColor StatusWarningBoxBackground => new(247, 225, 183);
+    public override RGBAColor StatusWarningBoxOutlineColor => new(250, 173, 20);
     // Box [highlight]:
-    public override RGBAColor STATUS_WARNING_BOX_HIGHLIGHT_COLOR => new(145, 107, 31);
-    public override RGBAColor STATUS_WARNING_BOX_HIGHLIGHT_BACKGROUND => new(252, 239, 213);
-    public override RGBAColor STATUS_WARNING_BOX_HIGHLIGHT_OUTLINE_COLOR => new(255, 191, 0);
+    public override RGBAColor StatusWarningBoxHighlightColor => new(145, 107, 31);
+    public override RGBAColor StatusWarningBoxHighlightBackground => new(252, 239, 213);
+    public override RGBAColor StatusWarningBoxHighlightOutlineColor => new(255, 191, 0);
 
     // Accent:
-    public override RGBAColor STATUS_WARNING_ACCENT_COLOR => new(250, 173, 20);
+    public override RGBAColor StatusWarningAccentColor => new(250, 173, 20);
     // Accent [highlight]:
-    public override RGBAColor STATUS_WARNING_ACCENT_HIGHLIGHT_COLOR => new(255, 191, 0);
+    public override RGBAColor StatusWarningAccentHighlightColor => new(255, 191, 0);
 
     // Neon:
-    public override RGBAColor STATUS_WARNING_NEON_COLOR => new(255, 255, 0);
+    public override RGBAColor StatusWarningNeonColor => new(255, 255, 0);
 
     // Info -------------------------------------------------------------------------------------------------------------------------------
     // Box:
-    public override RGBAColor STATUS_INFO_BOX_COLOR => new(12, 63, 110);
-    public override RGBAColor STATUS_INFO_BOX_BACKGROUND => new(191, 224, 255);
-    public override RGBAColor STATUS_INFO_BOX_OUTLINE_COLOR => new(24, 144, 255);
+    public override RGBAColor StatusInfoBoxColor => new(12, 63, 110);
+    public override RGBAColor StatusInfoBoxBackground => new(191, 224, 255);
+    public override RGBAColor StatusInfoBoxOutlineColor => new(24, 144, 255);
     // Box [highlight]:
-    public override RGBAColor STATUS_INFO_BOX_HIGHLIGHT_COLOR => new(15, 77, 135);
-    public override RGBAColor STATUS_INFO_BOX_HIGHLIGHT_BACKGROUND => new(217, 234, 250);
-    public override RGBAColor STATUS_INFO_BOX_HIGHLIGHT_OUTLINE_COLOR => new(24, 170, 255);
+    public override RGBAColor StatusInfoBoxHighlightColor => new(15, 77, 135);
+    public override RGBAColor StatusInfoBoxHighlightBackground => new(217, 234, 250);
+    public override RGBAColor StatusInfoBoxHighlightOutlineColor => new(24, 170, 255);
 
     // Accent:
-    public override RGBAColor STATUS_INFO_ACCENT_COLOR => new(24, 144, 255);
+    public override RGBAColor StatusInfoAccentColor => new(24, 144, 255);
     // Accent [highlight]:
-    public override RGBAColor STATUS_INFO_ACCENT_HIGHLIGHT_COLOR => new(24, 170, 255);
+    public override RGBAColor StatusInfoAccentHighlightColor => new(24, 170, 255);
 
     // Neon:
-    public override RGBAColor STATUS_INFO_NEON_COLOR => new(0, 251, 255);
+    public override RGBAColor StatusInfoNeonColor => new(0, 251, 255);
 
 // NOTE: Layout ---------------------------------------------------------------------------------------------------------------------------
     // Body -------------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BODY_BACKGROUND => SURFACE_BACKGROUND__SURFACE_SECONDARY;
+    public override RGBAColor BodyBackground => SurfaceBackground_SurfaceSecondary;
     // Scrollbars:
-    public override ScrollAreaTheme BODY_SCROLL_THEME => ScrollAreaTheme.OSThemeDark;
+    public override ScrollAreaTheme BodyScrollTheme => ScrollAreaTheme.OSThemeDark;
     // Selection:
-    public override RGBAColor BODY_SELECTION_COLOR => new(42, 33, 56);
-    public override RGBAColor BODY_SELECTION_BACKGROUND => new(255, 239, 0);
+    public override RGBAColor BodySelectionColor => new(42, 33, 56);
+    public override RGBAColor BodySelectionBackground => new(255, 239, 0);
     // Backdrop:
-    public override RGBAColor BODY_BACKDROP => new(0, 0, 0, 0.5f);
+    public override RGBAColor BodyBackdrop => new(0, 0, 0, 0.5f);
 
     // QR code ----------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor QR_CODE_BACKGROUND => new(255, 255, 255);
+    public override RGBAColor QrCodeBackground => new(255, 255, 255);
 
     // NavMenu ----------------------------------------------------------------------------------------------------------------------------
-    public override string NAV_MENU_BOX_SHADOW => "0 0 20em rgba(0, 0, 0, 0.8)";
+    public override string NavMenuBoxShadow => "0 0 20em rgba(0, 0, 0, 0.8)";
 
     // NavMenu [mobile]:
-    public override RGBAColor NAV_MENU_MOBILE_BUTTON_COLOR => new(236, 240, 241);
-    public override ScrollAreaTheme NAV_MENU_MOBILE_SCROLL_THEME => ScrollAreaTheme.OSThemeLight;
+    public override RGBAColor NavMenuMobileButtonColor => new(236, 240, 241);
+    public override ScrollAreaTheme NavMenuMobileScrollTheme => ScrollAreaTheme.OSThemeLight;
 
     // NavMenu [mobile][highlight]:
-    public override RGBAColor NAV_MENU_MOBILE_BUTTON_HIGHLIGHT_COLOR => new(255, 255, 255);
+    public override RGBAColor NavMenuMobileButtonHighlightColor => new(255, 255, 255);
 
     // NavMenu [mobile][focus]:
-    public override RGBAColor NAV_MENU_MOBILE_BUTTON_FOCUS_BACKGROUND => new(TEXT_COLOR__SURFACE_SECONDARY, 0.08f);
-    public override string NAV_MENU_MOBILE_BUTTON_FOCUS_BOX_SHADOW => "0 1em 6em rgba(0, 0, 0, 0.4)";
+    public override RGBAColor NavMenuMobileButtonFocusBackground => new(TextColor_SurfaceSecondary, 0.08f);
+    public override string NavMenuMobileButtonFocusBoxShadow => "0 1em 6em rgba(0, 0, 0, 0.4)";
 
 // NOTE: Pages ----------------------------------------------------------------------------------------------------------------------------
     // Game -------------------------------------------------------------------------------------------------------------------------------
     // Game > Components > CreateBox:
-    public override string CREATE_BOX_CANVAS_BOX_SHADOW_OPACITY => "0.5";
+    public override string CreateBoxCanvasBoxShadowOpacity => "0.5";
 
     // Game > Components > GameScreen:
     // Control:
-    public override RGBAColor GAME_SCREEN_CONTROL_COLOR => new(236, 240, 241);
-    public override RGBAColor GAME_SCREEN_CONTROL_BACKGROUND => new(42, 33, 56);
-    public override string GAME_SCREEN_CONTROL_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgb(0, 0, 0)";
+    public override RGBAColor GameScreenControlColor => new(236, 240, 241);
+    public override RGBAColor GameScreenControlBackground => new(42, 33, 56);
+    public override string GameScreenControlBoxShadow => "0 0.04em 0.16em 0.02em rgb(0, 0, 0)";
     // Control [pressed]:
-    public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_COLOR => new(236, 240, 241);
-    public override RGBAColor GAME_SCREEN_CONTROL_PRESSED_BACKGROUND => new(42, 33, 56, 0.7f);
-    public override string GAME_SCREEN_CONTROL_PRESSED_BOX_SHADOW => "0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.7)";
+    public override RGBAColor GameScreenControlPressedColor => new(236, 240, 241);
+    public override RGBAColor GameScreenControlPressedBackground => new(42, 33, 56, 0.7f);
+    public override string GameScreenControlPressedBoxShadow => "0 0.04em 0.16em 0.02em rgba(0, 0, 0, 0.7)";
 
     // Game > Components > Lobby:
-    public override string LOBBY_BOX_SHADOW => "0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2)";
-    public override RGBAColor LOBBY_EMPTY_COLOR => new(0, 0, 0, 0.4f);
+    public override string LobbyBoxShadow => "0 0.006em 0.018em 0 rgba(0, 0, 0, 0.2)";
+    public override RGBAColor LobbyEmptyColor => new(0, 0, 0, 0.4f);
     // Players:
-    public override RGBAColor LOBBY_LINE_BACKGROUND => new(255, 215, 0, 0.7f);
-    public override string LOBBY_PRESENCE_BOX_SHADOW => "0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7)";
-    public override RGBAColor LOBBY_DASH_COLOR => new(0, 0, 0, 0.14f);
+    public override RGBAColor LobbyLineBackground => new(255, 215, 0, 0.7f);
+    public override string LobbyPresenceBoxShadow => "0.02em 0.02em 0.05em rgba(0, 0, 0, 0.7)";
+    public override RGBAColor LobbyDashColor => new(0, 0, 0, 0.14f);
 
     // Manual -----------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor MANUAL_COLOR => new(255, 255, 255);
-    public override string MANUAL_TEXT_SHADOW => "0.5em 0.1em 0.53em rgba(0, 0, 0, 0.4)";
-    public override RGBAColor MANUAL_BACKGROUND => new(42, 144, 244);
-    public override RGBAColor MANUAL_BACKGROUND_TRANSITION => new(73, 175, 255);
-    public override string MANUAL_BOX_SHADOW => "0 12em 26em 5em rgba(0, 0, 0, 0.4)";
+    public override RGBAColor ManualColor => new(255, 255, 255);
+    public override string ManualTextShadow => "0.5em 0.1em 0.53em rgba(0, 0, 0, 0.4)";
+    public override RGBAColor ManualBackground => new(42, 144, 244);
+    public override RGBAColor ManualBackgroundTransition => new(73, 175, 255);
+    public override string ManualBoxShadow => "0 12em 26em 5em rgba(0, 0, 0, 0.4)";
 
 // NOTE: Box ------------------------------------------------------------------------------------------------------------------------------
     // Box [box] --------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_BOX => SURFACE_BACKGROUND__SURFACE_PRIMARY_BOX;
-    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_BOX => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
+    public override RGBAColor BoxBackground_SurfacePrimaryBox => SurfaceBackground_SurfacePrimaryBox;
+    public override string BoxBoxShadow_SurfacePrimaryBox => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
 
     // Box [transparent] ------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT => SURFACE_BACKGROUND__SURFACE_PRIMARY_TRANSPARENT;
-    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_TRANSPARENT => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
+    public override RGBAColor BoxBackground_SurfacePrimaryTransparent => SurfaceBackground_SurfacePrimaryTransparent;
+    public override string BoxBoxShadow_SurfacePrimaryTransparent => "0 6em 16em 0 rgba(0, 0, 0, 0.2)";
 
     // Box [glass] ------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BOX_BACKGROUND__SURFACE_PRIMARY_GLASS => SURFACE_BACKGROUND__SURFACE_PRIMARY_GLASS;
-    public override string BOX_BOX_SHADOW__SURFACE_PRIMARY_GLASS => "0 3em 6em rgba(0, 0, 0, 0.14)";
+    public override RGBAColor BoxBackground_SurfacePrimaryGlass => SurfaceBackground_SurfacePrimaryGlass;
+    public override string BoxBoxShadow_SurfacePrimaryGlass => "0 3em 6em rgba(0, 0, 0, 0.14)";
 
 // NOTE: Buttons --------------------------------------------------------------------------------------------------------------------------
     // Button [primary] -------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_PRIMARY_COLOR => new(236, 240, 241);
-    public override RGBAColor BUTTON_PRIMARY_BACKGROUND => new(42, 33, 56);
-    public override string BUTTON_PRIMARY_BOX_SHADOW => "0 2em 4em rgba(0, 0, 0, 0.55)";
+    public override RGBAColor ButtonPrimaryColor => new(236, 240, 241);
+    public override RGBAColor ButtonPrimaryBackground => new(42, 33, 56);
+    public override string ButtonPrimaryBoxShadow => "0 2em 4em rgba(0, 0, 0, 0.55)";
 
     // Button [primary][highlight]:
-    public override RGBAColor BUTTON_PRIMARY_HIGHLIGHT_COLOR => new(236, 240, 241);
-    public override RGBAColor BUTTON_PRIMARY_HIGHLIGHT_BACKGROUND => new(72, 63, 86);
-    public override string BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW => "0 2em 4em rgba(0, 0, 0, 0.5)";
+    public override RGBAColor ButtonPrimaryHighlightColor => new(236, 240, 241);
+    public override RGBAColor ButtonPrimaryHighlightBackground => new(72, 63, 86);
+    public override string ButtonPrimaryHighlightBoxShadow => "0 2em 4em rgba(0, 0, 0, 0.5)";
 
     // Button [secondary] -----------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_SECONDARY_COLOR => new(42, 33, 56);
-    public override RGBAColor BUTTON_SECONDARY_BACKGROUND => new(255, 215, 0);
-    public override string BUTTON_SECONDARY_BOX_SHADOW => "0 2em 4em rgba(0, 0, 0, 0.35)";
+    public override RGBAColor ButtonSecondaryColor => new(42, 33, 56);
+    public override RGBAColor ButtonSecondaryBackground => new(255, 215, 0);
+    public override string ButtonSecondaryBoxShadow => "0 2em 4em rgba(0, 0, 0, 0.35)";
 
     // Button [secondary][highlight]:
-    public override RGBAColor BUTTON_SECONDARY_HIGHLIGHT_COLOR => new(42, 33, 56);
-    public override RGBAColor BUTTON_SECONDARY_HIGHLIGHT_BACKGROUND => new(255, 239, 0);
-    public override string BUTTON_SECONDARY_HIGHLIGHT_BOX_SHADOW => "0 2em 4em rgba(0, 0, 0, 0.3)";
+    public override RGBAColor ButtonSecondaryHighlightColor => new(42, 33, 56);
+    public override RGBAColor ButtonSecondaryHighlightBackground => new(255, 239, 0);
+    public override string ButtonSecondaryHighlightBoxShadow => "0 2em 4em rgba(0, 0, 0, 0.3)";
 
     // Button [tertiary] ------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_TERTIARY_COLOR => new(42, 33, 56);
-    public override RGBAColor BUTTON_TERTIARY_BACKGROUND => new(230, 230, 230);
-    public override string BUTTON_TERTIARY_BOX_SHADOW => BUTTON_SECONDARY_BOX_SHADOW;
+    public override RGBAColor ButtonTertiaryColor => new(42, 33, 56);
+    public override RGBAColor ButtonTertiaryBackground => new(230, 230, 230);
+    public override string ButtonTertiaryBoxShadow => ButtonSecondaryBoxShadow;
 
     // Button [tertiary][highlight]:
-    public override RGBAColor BUTTON_TERTIARY_HIGHLIGHT_COLOR => new(42, 33, 56);
-    public override RGBAColor BUTTON_TERTIARY_HIGHLIGHT_BACKGROUND => new(236, 236, 236);
-    public override string BUTTON_TERTIARY_HIGHLIGHT_BOX_SHADOW => BUTTON_SECONDARY_HIGHLIGHT_BOX_SHADOW;
+    public override RGBAColor ButtonTertiaryHighlightColor => new(42, 33, 56);
+    public override RGBAColor ButtonTertiaryHighlightBackground => new(236, 236, 236);
+    public override string ButtonTertiaryHighlightBoxShadow => ButtonSecondaryHighlightBoxShadow;
 
     // Button [quaternary] ----------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_QUATERNARY_COLOR => new(236, 240, 241);
-    public override RGBAColor BUTTON_QUATERNARY_BACKGROUND => new(42, 33, 56);
-    public override string BUTTON_QUATERNARY_BOX_SHADOW => BUTTON_PRIMARY_BOX_SHADOW;
+    public override RGBAColor ButtonQuaternaryColor => new(236, 240, 241);
+    public override RGBAColor ButtonQuaternaryBackground => new(42, 33, 56);
+    public override string ButtonQuaternaryBoxShadow => ButtonPrimaryBoxShadow;
 
     // Button [quaternary][highlight]:
-    public override RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_COLOR => new(236, 240, 241);
-    public override RGBAColor BUTTON_QUATERNARY_HIGHLIGHT_BACKGROUND => new(72, 63, 86);
-    public override string BUTTON_QUATERNARY_HIGHLIGHT_BOX_SHADOW => BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW;
+    public override RGBAColor ButtonQuaternaryHighlightColor => new(236, 240, 241);
+    public override RGBAColor ButtonQuaternaryHighlightBackground => new(72, 63, 86);
+    public override string ButtonQuaternaryHighlightBoxShadow => ButtonPrimaryHighlightBoxShadow;
 
     // Button [danger] --------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_DANGER_COLOR => new(255, 255, 255);
-    public override RGBAColor BUTTON_DANGER_BACKGROUND => new(217, 26, 29);
-    public override string BUTTON_DANGER_BOX_SHADOW => BUTTON_PRIMARY_BOX_SHADOW;
+    public override RGBAColor ButtonDangerColor => new(255, 255, 255);
+    public override RGBAColor ButtonDangerBackground => new(217, 26, 29);
+    public override string ButtonDangerBoxShadow => ButtonPrimaryBoxShadow;
 
     // Button [danger][highlight]:
-    public override RGBAColor BUTTON_DANGER_HIGHLIGHT_COLOR => new(255, 255, 255);
-    public override RGBAColor BUTTON_DANGER_HIGHLIGHT_BACKGROUND => new(237, 43, 46);
-    public override string BUTTON_DANGER_HIGHLIGHT_BOX_SHADOW => BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW;
+    public override RGBAColor ButtonDangerHighlightColor => new(255, 255, 255);
+    public override RGBAColor ButtonDangerHighlightBackground => new(237, 43, 46);
+    public override string ButtonDangerHighlightBoxShadow => ButtonPrimaryHighlightBoxShadow;
 
     // Button [disabled] ------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BUTTON_DISABLED_COLOR => new(190, 190, 190);
-    public virtual RGBAColor BUTTON_DISABLED_COLOR__SURFACE_SECONDARY => new(93, 89, 100);
-    public override RGBAColor BUTTON_DISABLED_BACKGROUND => new(240, 240, 240);
-    public virtual RGBAColor BUTTON_DISABLED_BACKGROUND__SURFACE_SECONDARY => new(140, 140, 140);
-    public override string BUTTON_DISABLED_BOX_SHADOW => "0 2em 2em rgba(0, 0, 0, 0.2)";
+    public override RGBAColor ButtonDisabledColor => new(190, 190, 190);
+    public virtual RGBAColor ButtonDisabledColor_SurfaceSecondary => new(93, 89, 100);
+    public override RGBAColor ButtonDisabledBackground => new(240, 240, 240);
+    public virtual RGBAColor ButtonDisabledBackground_SurfaceSecondary => new(140, 140, 140);
+    public override string ButtonDisabledBoxShadow => "0 2em 2em rgba(0, 0, 0, 0.2)";
 
     // MenuButton -------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor MENU_BUTTON_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_BACKGROUND => new(0, 0, 0, 0.0f);
-    public override string MENU_BUTTON_BOX_SHADOW => "none";
+    public override RGBAColor MenuButtonColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonBackground => new(0, 0, 0, 0.0f);
+    public override string MenuButtonBoxShadow => "none";
 
     // MenuButton [highlight]:
-    public override RGBAColor MENU_BUTTON_HIGHLIGHT_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_HIGHLIGHT_BACKGROUND => new(236, 240, 241, 0.04f);
-    public override string MENU_BUTTON_HIGHLIGHT_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 0.6)";
+    public override RGBAColor MenuButtonHighlightColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonHighlightBackground => new(236, 240, 241, 0.04f);
+    public override string MenuButtonHighlightBoxShadow => "0em 2em 12em rgba(0, 0, 0, 0.6)";
 
     // MenuButton [active]:
-    public override RGBAColor MENU_BUTTON_ACTIVE_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_ACTIVE_BACKGROUND => new(236, 240, 241, 0.15f);
-    public override string MENU_BUTTON_ACTIVE_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 0.6)";
+    public override RGBAColor MenuButtonActiveColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonActiveBackground => new(236, 240, 241, 0.15f);
+    public override string MenuButtonActiveBoxShadow => "0em 2em 12em rgba(0, 0, 0, 0.6)";
 
     // MenuButton [active][highlight]:
-    public override RGBAColor MENU_BUTTON_ACTIVE_HIGHLIGHT_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_ACTIVE_HIGHLIGHT_BACKGROUND => new(236, 240, 241, 0.25f);
-    public override string MENU_BUTTON_ACTIVE_HIGHLIGHT_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 1)";
+    public override RGBAColor MenuButtonActiveHighlightColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonActiveHighlightBackground => new(236, 240, 241, 0.25f);
+    public override string MenuButtonActiveHighlightBoxShadow => "0em 2em 12em rgba(0, 0, 0, 1)";
 
     // MenuButton [mobile] ----------------------------------------------------------------------------------------------------------------
-    public override RGBAColor MENU_BUTTON_MOBILE_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_MOBILE_BACKGROUND => new(0, 0, 0, 0.0f);
-    public override string MENU_BUTTON_MOBILE_BOX_SHADOW => "none";
+    public override RGBAColor MenuButtonMobileColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonMobileBackground => new(0, 0, 0, 0.0f);
+    public override string MenuButtonMobileBoxShadow => "none";
 
     // MenuButton [mobile][hover]:
-    public override RGBAColor MENU_BUTTON_MOBILE_HOVER_COLOR => new(255, 255, 255);
-    public override RGBAColor MENU_BUTTON_MOBILE_HOVER_BACKGROUND => new(0, 0, 0, 0.0f);
-    public override string MENU_BUTTON_MOBILE_HOVER_BOX_SHADOW => "none";
+    public override RGBAColor MenuButtonMobileHoverColor => new(255, 255, 255);
+    public override RGBAColor MenuButtonMobileHoverBackground => new(0, 0, 0, 0.0f);
+    public override string MenuButtonMobileHoverBoxShadow => "none";
 
     // MenuButton [mobile][focus]:
-    public override RGBAColor MENU_BUTTON_MOBILE_FOCUS_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_MOBILE_FOCUS_BACKGROUND => new(236, 240, 241, 0.04f);
-    public override string MENU_BUTTON_MOBILE_FOCUS_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 0.6)";
+    public override RGBAColor MenuButtonMobileFocusColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonMobileFocusBackground => new(236, 240, 241, 0.04f);
+    public override string MenuButtonMobileFocusBoxShadow => "0em 2em 12em rgba(0, 0, 0, 0.6)";
 
     // MenuButton [mobile][active]:
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_BACKGROUND => new(236, 240, 241, 0.15f);
-    public override string MENU_BUTTON_MOBILE_ACTIVE_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 0.6)";
+    public override RGBAColor MenuButtonMobileActiveColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonMobileActiveBackground => new(236, 240, 241, 0.15f);
+    public override string MenuButtonMobileActiveBoxShadow => "0em 2em 12em rgba(0, 0, 0, 0.6)";
 
     // MenuButton [mobile][active][hover]:
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_HOVER_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_HOVER_BACKGROUND => new(236, 240, 241, 0.15f);
-    public override string MENU_BUTTON_MOBILE_ACTIVE_HOVER_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 0.6)";
+    public override RGBAColor MenuButtonMobileActiveHoverColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonMobileActiveHoverBackground => new(236, 240, 241, 0.15f);
+    public override string MenuButtonMobileActiveHoverBoxShadow => "0em 2em 12em rgba(0, 0, 0, 0.6)";
 
     // MenuButton [mobile][active][focus]:
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_FOCUS_COLOR => new(236, 240, 241);
-    public override RGBAColor MENU_BUTTON_MOBILE_ACTIVE_FOCUS_BACKGROUND => new(236, 240, 241, 0.25f);
-    public override string MENU_BUTTON_MOBILE_ACTIVE_FOCUS_BOX_SHADOW => "0em 2em 12em rgba(0, 0, 0, 1)";
+    public override RGBAColor MenuButtonMobileActiveFocusColor => new(236, 240, 241);
+    public override RGBAColor MenuButtonMobileActiveFocusBackground => new(236, 240, 241, 0.25f);
+    public override string MenuButtonMobileActiveFocusBoxShadow => "0em 2em 12em rgba(0, 0, 0, 1)";
 
 // NOTE: Collapse -------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor COLLAPSE_TEXT_COLOR => new(42, 33, 56);
-    public override RGBAColor COLLAPSE_ICON_COLOR => new(42, 33, 56);
-    public override RGBAColor COLLAPSE_ICON_BACKGROUND => new(235, 235, 235);
-    public virtual RGBAColor COLLAPSE_ICON_BACKGROUND__SURFACE_FLOATING_COLLAPSE => new(220, 220, 220);
-    public virtual RGBAColor COLLAPSE_ICON_BACKGROUND__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => new(220, 220, 220);
-    public override RGBAColor COLLAPSE_BACKGROUND => SURFACE_BACKGROUND__SURFACE_PRIMARY_COLLAPSE;
-    public virtual RGBAColor COLLAPSE_BACKGROUND__SURFACE_FLOATING_COLLAPSE => SURFACE_BACKGROUND__SURFACE_FLOATING_COLLAPSE;
-    public virtual RGBAColor COLLAPSE_BACKGROUND__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => SURFACE_BACKGROUND__SURFACE_FLOATING_ADDITIONAL_COLLAPSE;
-    public override string COLLAPSE_FOCUS_BOX_SHADOW => "0 0 10em rgb(204, 204, 204)";
-    public virtual string COLLAPSE_FOCUS_BOX_SHADOW__SURFACE_FLOATING_COLLAPSE => "0 0 10em rgb(190, 190, 190)";
-    public virtual string COLLAPSE_FOCUS_BOX_SHADOW__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => "0 0 10em rgb(160, 160, 160)";
+    public override RGBAColor CollapseTextColor => new(42, 33, 56);
+    public override RGBAColor CollapseIconColor => new(42, 33, 56);
+    public override RGBAColor CollapseIconBackground => new(235, 235, 235);
+    public virtual RGBAColor CollapseIconBackground_SurfaceFloatingCollapse => new(220, 220, 220);
+    public virtual RGBAColor CollapseIconBackground_SurfaceFloatingAdditionalCollapse => new(220, 220, 220);
+    public override RGBAColor CollapseBackground => SurfaceBackground_SurfacePrimaryCollapse;
+    public virtual RGBAColor CollapseBackground_SurfaceFloatingCollapse => SurfaceBackground_SurfaceFloatingCollapse;
+    public virtual RGBAColor CollapseBackground_SurfaceFloatingAdditionalCollapse => SurfaceBackground_SurfaceFloatingAdditionalCollapse;
+    public override string CollapseFocusBoxShadow => "0 0 10em rgb(204, 204, 204)";
+    public virtual string CollapseFocusBoxShadow_SurfaceFloatingCollapse => "0 0 10em rgb(190, 190, 190)";
+    public virtual string CollapseFocusBoxShadow_SurfaceFloatingAdditionalCollapse => "0 0 10em rgb(160, 160, 160)";
 
 // NOTE: DropDowns ------------------------------------------------------------------------------------------------------------------------
     // DropDown ---------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor DROPDOWN_OPTIONS_BACKGROUND => new(255, 255, 255);
-    public override RGBAColor DROPDOWN_OPTIONS_DIVIDER_COLOR => new(0, 0, 0, 0.1f);
-    public override string DROPDOWN_OPTIONS_BOX_SHADOW => "0 0 16em rgba(0, 0, 0, 0.3)";
-    public override string DROPDOWN_MARK_BOX_SHADOW => "0 0 8em 2em rgba(0, 0, 0, 0.2)";
+    public override RGBAColor DropdownOptionsBackground => new(255, 255, 255);
+    public override RGBAColor DropdownOptionsDividerColor => new(0, 0, 0, 0.1f);
+    public override string DropdownOptionsBoxShadow => "0 0 16em rgba(0, 0, 0, 0.3)";
+    public override string DropdownMarkBoxShadow => "0 0 8em 2em rgba(0, 0, 0, 0.2)";
 
     // DropDown [highlight]:
-    public override RGBAColor DROPDOWN_OPTIONS_HIGHLIGHT_BACKGROUND => new(241, 241, 241);
+    public override RGBAColor DropdownOptionsHighlightBackground => new(241, 241, 241);
 
     // AdminDropDown ----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor DROPDOWN_ADMIN_BACKGROUND => new(42, 33, 56);
-    public override RGBAColor DROPDOWN_ADMIN_BORDER_COLOR => new(255, 255, 255, 0.9f);
-    public override string DROPDOWN_ADMIN_BOX_SHADOW => "0 0 2em 2em rgb(42, 33, 56)";
+    public override RGBAColor DropdownAdminBackground => new(42, 33, 56);
+    public override RGBAColor DropdownAdminBorderColor => new(255, 255, 255, 0.9f);
+    public override string DropdownAdminBoxShadow => "0 0 2em 2em rgb(42, 33, 56)";
 
     // AdminDropDown [highlight]:
-    public override RGBAColor DROPDOWN_ADMIN_HIGHLIGHT_BORDER_COLOR => new(255, 255, 255);
-    public override string DROPDOWN_ADMIN_HIGHLIGHT_BOX_SHADOW => "0 0 2em 2em rgba(255, 255, 255, 0.8)";
+    public override RGBAColor DropdownAdminHighlightBorderColor => new(255, 255, 255);
+    public override string DropdownAdminHighlightBoxShadow => "0 0 2em 2em rgba(255, 255, 255, 0.8)";
 
     // UserDropDown -----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor DROPDOWN_USER_BACKGROUND => new(42, 33, 56);
-    public override RGBAColor DROPDOWN_USER_BORDER_COLOR => new(255, 255, 255, 0.9f);
-    public override string DROPDOWN_USER_BOX_SHADOW => "0 0 2em 2em rgb(42, 33, 56)";
+    public override RGBAColor DropdownUserBackground => new(42, 33, 56);
+    public override RGBAColor DropdownUserBorderColor => new(255, 255, 255, 0.9f);
+    public override string DropdownUserBoxShadow => "0 0 2em 2em rgb(42, 33, 56)";
 
     // UserDropDown [highlight]:
-    public override RGBAColor DROPDOWN_USER_HIGHLIGHT_BORDER_COLOR => new(255, 255, 255);
-    public override string DROPDOWN_USER_HIGHLIGHT_BOX_SHADOW => "0 0 2em 2em rgba(255, 255, 255, 0.8)";
+    public override RGBAColor DropdownUserHighlightBorderColor => new(255, 255, 255);
+    public override string DropdownUserHighlightBoxShadow => "0 0 2em 2em rgba(255, 255, 255, 0.8)";
 
 // NOTE: Forms ----------------------------------------------------------------------------------------------------------------------------
     // Form [primary] ---------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor FORM_PRIMARY_COLOR => new(42, 33, 56);
-    public override RGBAColor FORM_PRIMARY_PLACEHOLDER_COLOR => new(182, 178, 189);
-    public override RGBAColor FORM_PRIMARY_ICON_COLOR => new(148, 148, 148);
-    public override RGBAColor FORM_PRIMARY_DESCRIPTION_COLOR => new(42, 33, 56);
-    public virtual RGBAColor FORM_PRIMARY_DESCRIPTION_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
-    public override RGBAColor FORM_PRIMARY_BACKGROUND => new(255, 255, 255);
-    public override RGBAColor FORM_PRIMARY_BORDER_COLOR => new(204, 204, 204);
-    public override string FORM_PRIMARY_TEXT_SHADOW => "none";
-    public override string FORM_PRIMARY_BOX_SHADOW => "none";
+    public override RGBAColor FormPrimaryColor => new(42, 33, 56);
+    public override RGBAColor FormPrimaryPlaceholderColor => new(182, 178, 189);
+    public override RGBAColor FormPrimaryIconColor => new(148, 148, 148);
+    public override RGBAColor FormPrimaryDescriptionColor => new(42, 33, 56);
+    public virtual RGBAColor FormPrimaryDescriptionColor_SurfaceSecondary => new(236, 240, 241);
+    public override RGBAColor FormPrimaryBackground => new(255, 255, 255);
+    public override RGBAColor FormPrimaryBorderColor => new(204, 204, 204);
+    public override string FormPrimaryTextShadow => "none";
+    public override string FormPrimaryBoxShadow => "none";
 
     // Form [primary][highlight]:
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_COLOR => new(42, 33, 56);
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_PLACEHOLDER_COLOR => new(182, 178, 189);
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_ICON_COLOR => new(148, 148, 148);
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_DESCRIPTION_COLOR => new(42, 33, 56);
-    public virtual RGBAColor FORM_PRIMARY_HIGHLIGHT_DESCRIPTION_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_BACKGROUND => new(255, 255, 255);
-    public override RGBAColor FORM_PRIMARY_HIGHLIGHT_BORDER_COLOR => new(204, 204, 204);
-    public override string FORM_PRIMARY_HIGHLIGHT_TEXT_SHADOW => "none";
-    public override string FORM_PRIMARY_HIGHLIGHT_BOX_SHADOW => "0 0 5em rgba(0, 0, 0, 0.4)";
-    public virtual string FORM_PRIMARY_HIGHLIGHT_BOX_SHADOW__SURFACE_SECONDARY => "0 0 5em rgb(255, 255, 255)";
+    public override RGBAColor FormPrimaryHighlightColor => new(42, 33, 56);
+    public override RGBAColor FormPrimaryHighlightPlaceholderColor => new(182, 178, 189);
+    public override RGBAColor FormPrimaryHighlightIconColor => new(148, 148, 148);
+    public override RGBAColor FormPrimaryHighlightDescriptionColor => new(42, 33, 56);
+    public virtual RGBAColor FormPrimaryHighlightDescriptionColor_SurfaceSecondary => new(236, 240, 241);
+    public override RGBAColor FormPrimaryHighlightBackground => new(255, 255, 255);
+    public override RGBAColor FormPrimaryHighlightBorderColor => new(204, 204, 204);
+    public override string FormPrimaryHighlightTextShadow => "none";
+    public override string FormPrimaryHighlightBoxShadow => "0 0 5em rgba(0, 0, 0, 0.4)";
+    public virtual string FormPrimaryHighlightBoxShadow_SurfaceSecondary => "0 0 5em rgb(255, 255, 255)";
 
     // Form [primary][disabled]:
-    public override RGBAColor FORM_PRIMARY_DISABLED_COLOR => new(190, 190, 190);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_COLOR__SURFACE_SECONDARY => new(93, 89, 100);
-    public override RGBAColor FORM_PRIMARY_DISABLED_PLACEHOLDER_COLOR => new(190, 190, 190);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_PLACEHOLDER_COLOR__SURFACE_SECONDARY => new(93, 89, 100);
-    public override RGBAColor FORM_PRIMARY_DISABLED_ICON_COLOR => new(190, 190, 190);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_ICON_COLOR__SURFACE_SECONDARY => new(93, 89, 100);
-    public override RGBAColor FORM_PRIMARY_DISABLED_DESCRIPTION_COLOR => new(180, 180, 180);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_DESCRIPTION_COLOR__SURFACE_FLOATING_COLLAPSE => new(160, 160, 160);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_DESCRIPTION_COLOR__SURFACE_FLOATING_ADDITIONAL => new(130, 130, 130);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_DESCRIPTION_COLOR__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => new(160, 160, 160);
-    public override RGBAColor FORM_PRIMARY_DISABLED_BACKGROUND => new(240, 240, 240);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_BACKGROUND__SURFACE_SECONDARY => new(140, 140, 140);
-    public override RGBAColor FORM_PRIMARY_DISABLED_BORDER_COLOR => new(214, 214, 214);
-    public virtual RGBAColor FORM_PRIMARY_DISABLED_BORDER_COLOR__SURFACE_SECONDARY => new(114, 114, 114);
-    public override string FORM_PRIMARY_DISABLED_TEXT_SHADOW => "none";
-    public override string FORM_PRIMARY_DISABLED_BOX_SHADOW => "none";
+    public override RGBAColor FormPrimaryDisabledColor => new(190, 190, 190);
+    public virtual RGBAColor FormPrimaryDisabledColor_SurfaceSecondary => new(93, 89, 100);
+    public override RGBAColor FormPrimaryDisabledPlaceholderColor => new(190, 190, 190);
+    public virtual RGBAColor FormPrimaryDisabledPlaceholderColor_SurfaceSecondary => new(93, 89, 100);
+    public override RGBAColor FormPrimaryDisabledIconColor => new(190, 190, 190);
+    public virtual RGBAColor FormPrimaryDisabledIconColor_SurfaceSecondary => new(93, 89, 100);
+    public override RGBAColor FormPrimaryDisabledDescriptionColor => new(180, 180, 180);
+    public virtual RGBAColor FormPrimaryDisabledDescriptionColor_SurfaceFloatingCollapse => new(160, 160, 160);
+    public virtual RGBAColor FormPrimaryDisabledDescriptionColor_SurfaceFloatingAdditional => new(130, 130, 130);
+    public virtual RGBAColor FormPrimaryDisabledDescriptionColor_SurfaceFloatingAdditionalCollapse => new(160, 160, 160);
+    public override RGBAColor FormPrimaryDisabledBackground => new(240, 240, 240);
+    public virtual RGBAColor FormPrimaryDisabledBackground_SurfaceSecondary => new(140, 140, 140);
+    public override RGBAColor FormPrimaryDisabledBorderColor => new(214, 214, 214);
+    public virtual RGBAColor FormPrimaryDisabledBorderColor_SurfaceSecondary => new(114, 114, 114);
+    public override string FormPrimaryDisabledTextShadow => "none";
+    public override string FormPrimaryDisabledBoxShadow => "none";
 
     // Form [primary] > Icon [highlight]:
-    public override RGBAColor FORM_PRIMARY_ICON_HIGHLIGHT_COLOR => new(70, 70, 70);
+    public override RGBAColor FormPrimaryIconHighlightColor => new(70, 70, 70);
     
     // Form [primary] > Clear:
-    public override RGBAColor FORM_PRIMARY_CLEAR_COLOR => new(42, 33, 56);
-    public override RGBAColor FORM_PRIMARY_CLEAR_BACKGROUND => new(230, 230, 230);
-    public override string FORM_PRIMARY_CLEAR_BOX_SHADOW => "none";
+    public override RGBAColor FormPrimaryClearColor => new(42, 33, 56);
+    public override RGBAColor FormPrimaryClearBackground => new(230, 230, 230);
+    public override string FormPrimaryClearBoxShadow => "none";
 
     // Form [primary] > Clear [highlight]:
-    public override RGBAColor FORM_PRIMARY_CLEAR_HIGHLIGHT_COLOR => new(0, 0, 0);
-    public override RGBAColor FORM_PRIMARY_CLEAR_HIGHLIGHT_BACKGROUND => new(216, 216, 216);
-    public override string FORM_PRIMARY_CLEAR_HIGHLIGHT_BOX_SHADOW => "none";
+    public override RGBAColor FormPrimaryClearHighlightColor => new(0, 0, 0);
+    public override RGBAColor FormPrimaryClearHighlightBackground => new(216, 216, 216);
+    public override string FormPrimaryClearHighlightBoxShadow => "none";
 
 // NOTE: Forms > CheckBoxes ---------------------------------------------------------------------------------------------------------------
     // CheckBox [primary] -----------------------------------------------------------------------------------------------------------------
     // CheckBox [primary][checked]:
-    public override RGBAColor CHECKBOX_PRIMARY_CHECKED_MARK_COLOR => new(255, 255, 255);
-    public override RGBAColor CHECKBOX_PRIMARY_CHECKED_BACKGROUND => new(42, 33, 56);
-    public virtual RGBAColor CHECKBOX_PRIMARY_CHECKED_BACKGROUND__SURFACE_SECONDARY => new(255, 215, 0);
+    public override RGBAColor CheckboxPrimaryCheckedMarkColor => new(255, 255, 255);
+    public override RGBAColor CheckboxPrimaryCheckedBackground => new(42, 33, 56);
+    public virtual RGBAColor CheckboxPrimaryCheckedBackground_SurfaceSecondary => new(255, 215, 0);
 
     // CheckBox [primary][disabled][checked]:
-    public override RGBAColor CHECKBOX_PRIMARY_DISABLED_CHECKED_MARK_COLOR => new(240, 240, 240);
-    public override RGBAColor CHECKBOX_PRIMARY_DISABLED_CHECKED_BACKGROUND => new(180, 180, 180);
+    public override RGBAColor CheckboxPrimaryDisabledCheckedMarkColor => new(240, 240, 240);
+    public override RGBAColor CheckboxPrimaryDisabledCheckedBackground => new(180, 180, 180);
 
 // NOTE: Forms > Radios -------------------------------------------------------------------------------------------------------------------
     // Radio [primary] --------------------------------------------------------------------------------------------------------------------
     // Radio [primary][selected]:
-    public override RGBAColor RADIO_PRIMARY_SELECTED_MARK_COLOR => new(42, 33, 56);
-    public override RGBAColor RADIO_PRIMARY_SELECTED_BACKGROUND => new(255, 255, 255);
+    public override RGBAColor RadioPrimarySelectedMarkColor => new(42, 33, 56);
+    public override RGBAColor RadioPrimarySelectedBackground => new(255, 255, 255);
 
     // Radio [primary][disabled][selected]:
-    public override RGBAColor RADIO_PRIMARY_DISABLED_SELECTED_MARK_COLOR => new(180, 180, 180);
-    public virtual RGBAColor RADIO_PRIMARY_DISABLED_SELECTED_MARK_COLOR__SURFACE_SECONDARY => new(80, 80, 80);
-    public override RGBAColor RADIO_PRIMARY_DISABLED_SELECTED_BACKGROUND => new(240, 240, 240);
-    public virtual RGBAColor RADIO_PRIMARY_DISABLED_SELECTED_BACKGROUND__SURFACE_SECONDARY => new(140, 140, 140);
+    public override RGBAColor RadioPrimaryDisabledSelectedMarkColor => new(180, 180, 180);
+    public virtual RGBAColor RadioPrimaryDisabledSelectedMarkColor_SurfaceSecondary => new(80, 80, 80);
+    public override RGBAColor RadioPrimaryDisabledSelectedBackground => new(240, 240, 240);
+    public virtual RGBAColor RadioPrimaryDisabledSelectedBackground_SurfaceSecondary => new(140, 140, 140);
 
     // RadioButton [primary] --------------------------------------------------------------------------------------------------------------
-    public override RGBAColor RADIO_BUTTON_PRIMARY_COLOR => new(200, 200, 200);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_BACKGROUND => new(40, 40, 40);
-    public virtual RGBAColor RADIO_BUTTON_PRIMARY_BACKGROUND__SURFACE_SECONDARY => new(0, 0, 0);
-    public override string RADIO_BUTTON_PRIMARY_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2)";
-    public virtual string RADIO_BUTTON_PRIMARY_BOX_SHADOW__SURFACE_SECONDARY => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
+    public override RGBAColor RadioButtonPrimaryColor => new(200, 200, 200);
+    public override RGBAColor RadioButtonPrimaryBackground => new(40, 40, 40);
+    public virtual RGBAColor RadioButtonPrimaryBackground_SurfaceSecondary => new(0, 0, 0);
+    public override string RadioButtonPrimaryBoxShadow => "0 0 6em rgba(0, 0, 0, 0.2)";
+    public virtual string RadioButtonPrimaryBoxShadow_SurfaceSecondary => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
 
     // RadioButton [primary][selected]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_SELECTED_COLOR => new(40, 40, 40);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_SELECTED_BACKGROUND => new(255, 215, 0);
-    public override string RADIO_BUTTON_PRIMARY_SELECTED_BOX_SHADOW => "0 0 6em 4em rgba(0, 0, 0, 0.3)";
-    public virtual string RADIO_BUTTON_PRIMARY_SELECTED_BOX_SHADOW__SURFACE_SECONDARY => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
-    public override RGBAColor RADIO_BUTTON_PRIMARY_SELECTED_OUTLINE_COLOR => new(255, 255, 255);
+    public override RGBAColor RadioButtonPrimarySelectedColor => new(40, 40, 40);
+    public override RGBAColor RadioButtonPrimarySelectedBackground => new(255, 215, 0);
+    public override string RadioButtonPrimarySelectedBoxShadow => "0 0 6em 4em rgba(0, 0, 0, 0.3)";
+    public virtual string RadioButtonPrimarySelectedBoxShadow_SurfaceSecondary => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
+    public override RGBAColor RadioButtonPrimarySelectedOutlineColor => new(255, 255, 255);
 
     // RadioButton [primary][highlight]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_COLOR => new(255, 255, 255);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_BACKGROUND => new(70, 70, 70);
-    public override string RADIO_BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2)";
-    public virtual string RADIO_BUTTON_PRIMARY_HIGHLIGHT_BOX_SHADOW__SURFACE_SECONDARY => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
+    public override RGBAColor RadioButtonPrimaryHighlightColor => new(255, 255, 255);
+    public override RGBAColor RadioButtonPrimaryHighlightBackground => new(70, 70, 70);
+    public override string RadioButtonPrimaryHighlightBoxShadow => "0 0 6em rgba(0, 0, 0, 0.2)";
+    public virtual string RadioButtonPrimaryHighlightBoxShadow_SurfaceSecondary => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
 
     // RadioButton [primary][highlight][selected]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_SELECTED_COLOR => new(20, 20, 20);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_SELECTED_BACKGROUND => new(255, 239, 0);
-    public override string RADIO_BUTTON_PRIMARY_HIGHLIGHT_SELECTED_BOX_SHADOW => "0 0 6em 2em rgba(0, 0, 0, 0.3)";
-    public virtual string RADIO_BUTTON_PRIMARY_HIGHLIGHT_SELECTED_BOX_SHADOW__SURFACE_SECONDARY => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
-    public override RGBAColor RADIO_BUTTON_PRIMARY_HIGHLIGHT_SELECTED_OUTLINE_COLOR => new(255, 255, 255);
+    public override RGBAColor RadioButtonPrimaryHighlightSelectedColor => new(20, 20, 20);
+    public override RGBAColor RadioButtonPrimaryHighlightSelectedBackground => new(255, 239, 0);
+    public override string RadioButtonPrimaryHighlightSelectedBoxShadow => "0 0 6em 2em rgba(0, 0, 0, 0.3)";
+    public virtual string RadioButtonPrimaryHighlightSelectedBoxShadow_SurfaceSecondary => "0 0 6em 4em rgba(120, 120, 120, 0.08)";
+    public override RGBAColor RadioButtonPrimaryHighlightSelectedOutlineColor => new(255, 255, 255);
     
     // RadioButton [primary][disabled]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_DISABLED_COLOR => new(220, 220, 220);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_DISABLED_BACKGROUND => new(130, 130, 130);
-    public override string RADIO_BUTTON_PRIMARY_DISABLED_BOX_SHADOW => "0 0 6em rgba(0, 0, 0, 0.2)";
+    public override RGBAColor RadioButtonPrimaryDisabledColor => new(220, 220, 220);
+    public override RGBAColor RadioButtonPrimaryDisabledBackground => new(130, 130, 130);
+    public override string RadioButtonPrimaryDisabledBoxShadow => "0 0 6em rgba(0, 0, 0, 0.2)";
 
     // RadioButton [primary][disabled][selected]:
-    public override RGBAColor RADIO_BUTTON_PRIMARY_DISABLED_SELECTED_COLOR => new(130, 130, 130);
-    public override RGBAColor RADIO_BUTTON_PRIMARY_DISABLED_SELECTED_BACKGROUND => new(220, 220, 220);
-    public override string RADIO_BUTTON_PRIMARY_DISABLED_SELECTED_BOX_SHADOW => "0 0 6em 4em rgba(0, 0, 0, 0.3)";
-    public override RGBAColor RADIO_BUTTON_PRIMARY_DISABLED_SELECTED_OUTLINE_COLOR => new(255, 255, 255);
+    public override RGBAColor RadioButtonPrimaryDisabledSelectedColor => new(130, 130, 130);
+    public override RGBAColor RadioButtonPrimaryDisabledSelectedBackground => new(220, 220, 220);
+    public override string RadioButtonPrimaryDisabledSelectedBoxShadow => "0 0 6em 4em rgba(0, 0, 0, 0.3)";
+    public override RGBAColor RadioButtonPrimaryDisabledSelectedOutlineColor => new(255, 255, 255);
 
 // NOTE: Forms > Selects ------------------------------------------------------------------------------------------------------------------
     // Select [primary] -------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SELECT_OPTION_COLOR => new(42, 33, 56);
-    public override RGBAColor SELECT_OPTION_BACKGROUND => new(255, 255, 255);
-    public override RGBAColor SELECT_OPTION_DIVIDER_COLOR => new(233, 233, 233);
+    public override RGBAColor SelectOptionColor => new(42, 33, 56);
+    public override RGBAColor SelectOptionBackground => new(255, 255, 255);
+    public override RGBAColor SelectOptionDividerColor => new(233, 233, 233);
 
     // Select [primary][highlight]
-    public override RGBAColor SELECT_OPTION_HIGHLIGHT_COLOR => new(42, 33, 56);
-    public override RGBAColor SELECT_OPTION_HIGHLIGHT_BACKGROUND => new(233, 233, 233);
+    public override RGBAColor SelectOptionHighlightColor => new(42, 33, 56);
+    public override RGBAColor SelectOptionHighlightBackground => new(233, 233, 233);
 
     // Select [primary][active]
-    public override RGBAColor SELECT_OPTION_ACTIVE_COLOR => new(255, 255, 255);
-    public override RGBAColor SELECT_OPTION_ACTIVE_BACKGROUND => new(148, 148, 148);
+    public override RGBAColor SelectOptionActiveColor => new(255, 255, 255);
+    public override RGBAColor SelectOptionActiveBackground => new(148, 148, 148);
 
     // Select [primary][active][highlight]
-    public override RGBAColor SELECT_OPTION_ACTIVE_HIGHLIGHT_COLOR => new(255, 255, 255);
-    public override RGBAColor SELECT_OPTION_ACTIVE_HIGHLIGHT_BACKGROUND => new(170, 170, 170);
+    public override RGBAColor SelectOptionActiveHighlightColor => new(255, 255, 255);
+    public override RGBAColor SelectOptionActiveHighlightBackground => new(170, 170, 170);
 
     // SelectCulture ----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SELECT_CULTURE_COLOR => new(236, 240, 241);
-    public override RGBAColor SELECT_CULTURE_BACKGROUND => new(255, 255, 255, 0.08f);
-    public override RGBAColor SELECT_CULTURE_BORDER_COLOR => new(0, 0, 0, 0.0f);
-    public override string SELECT_CULTURE_BOX_SHADOW => "0 2em 6em rgba(0, 0, 0, 0.4)";
+    public override RGBAColor SelectCultureColor => new(236, 240, 241);
+    public override RGBAColor SelectCultureBackground => new(255, 255, 255, 0.08f);
+    public override RGBAColor SelectCultureBorderColor => new(0, 0, 0, 0.0f);
+    public override string SelectCultureBoxShadow => "0 2em 6em rgba(0, 0, 0, 0.4)";
 
     // SelectCulture [highlight]:
-    public override RGBAColor SELECT_CULTURE_HIGHLIGHT_COLOR => new(236, 240, 241);
-    public override RGBAColor SELECT_CULTURE_HIGHLIGHT_BACKGROUND => new(255, 255, 255, 0.18f);
-    public override RGBAColor SELECT_CULTURE_HIGHLIGHT_BORDER_COLOR => new(0, 0, 0, 0.0f);
-    public override string SELECT_CULTURE_HIGHLIGHT_BOX_SHADOW => "0 2em 10em rgba(0, 0, 0, 0.8)";
+    public override RGBAColor SelectCultureHighlightColor => new(236, 240, 241);
+    public override RGBAColor SelectCultureHighlightBackground => new(255, 255, 255, 0.18f);
+    public override RGBAColor SelectCultureHighlightBorderColor => new(0, 0, 0, 0.0f);
+    public override string SelectCultureHighlightBoxShadow => "0 2em 10em rgba(0, 0, 0, 0.8)";
 
 // NOTE: Forms > SelectsMulti -------------------------------------------------------------------------------------------------------------
     // SelectMulti [primary] --------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SELECT_MULTI_PRIMARY_COUNT_COLOR => new(255, 255, 255);
-    public override RGBAColor SELECT_MULTI_PRIMARY_COUNT_BACKGROUND => new(190, 190, 190);
-    public override string SELECT_MULTI_PRIMARY_COUNT_TEXT_SHADOW => "1px 1px 2px rgba(0, 0, 0, 0.4)";
-    public override string SELECT_MULTI_PRIMARY_COUNT_BOX_SHADOW => "1px 0 3px rgba(0, 0, 0, 0.5)";
-    public override RGBAColor SELECT_MULTI_PRIMARY_COUNT_PLUS_COLOR => new(255, 255, 255);
-    public override string SELECT_MULTI_PRIMARY_COUNT_PLUS_TEXT_SHADOW => "1px 1px 2px rgba(0, 0, 0, 0.4)";
+    public override RGBAColor SelectMultiPrimaryCountColor => new(255, 255, 255);
+    public override RGBAColor SelectMultiPrimaryCountBackground => new(190, 190, 190);
+    public override string SelectMultiPrimaryCountTextShadow => "1px 1px 2px rgba(0, 0, 0, 0.4)";
+    public override string SelectMultiPrimaryCountBoxShadow => "1px 0 3px rgba(0, 0, 0, 0.5)";
+    public override RGBAColor SelectMultiPrimaryCountPlusColor => new(255, 255, 255);
+    public override string SelectMultiPrimaryCountPlusTextShadow => "1px 1px 2px rgba(0, 0, 0, 0.4)";
 
     // SelectMulti [primary][disabled]:
-    public override RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_COLOR => new(240, 240, 240);
-    public virtual RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_COLOR__SURFACE_SECONDARY => new(140, 140, 140);
-    public override RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_BACKGROUND => new(220, 220, 220);
-    public virtual RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_BACKGROUND__SURFACE_SECONDARY => new(113, 109, 120);
-    public override string SELECT_MULTI_PRIMARY_DISABLED_COUNT_TEXT_SHADOW => "1px 1px 2px rgba(0, 0, 0, 0.1)";
-    public override string SELECT_MULTI_PRIMARY_DISABLED_COUNT_BOX_SHADOW => "1px 0 3px rgba(0, 0, 0, 0.2)";
-    public override RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_PLUS_COLOR => new(240, 240, 240);
-    public virtual RGBAColor SELECT_MULTI_PRIMARY_DISABLED_COUNT_PLUS_COLOR__SURFACE_SECONDARY => new(140, 140, 140);
-    public override string SELECT_MULTI_PRIMARY_DISABLED_COUNT_PLUS_TEXT_SHADOW => "1px 1px 2px rgba(0, 0, 0, 0.1)";
+    public override RGBAColor SelectMultiPrimaryDisabledCountColor => new(240, 240, 240);
+    public virtual RGBAColor SelectMultiPrimaryDisabledCountColor_SurfaceSecondary => new(140, 140, 140);
+    public override RGBAColor SelectMultiPrimaryDisabledCountBackground => new(220, 220, 220);
+    public virtual RGBAColor SelectMultiPrimaryDisabledCountBackground_SurfaceSecondary => new(113, 109, 120);
+    public override string SelectMultiPrimaryDisabledCountTextShadow => "1px 1px 2px rgba(0, 0, 0, 0.1)";
+    public override string SelectMultiPrimaryDisabledCountBoxShadow => "1px 0 3px rgba(0, 0, 0, 0.2)";
+    public override RGBAColor SelectMultiPrimaryDisabledCountPlusColor => new(240, 240, 240);
+    public virtual RGBAColor SelectMultiPrimaryDisabledCountPlusColor_SurfaceSecondary => new(140, 140, 140);
+    public override string SelectMultiPrimaryDisabledCountPlusTextShadow => "1px 1px 2px rgba(0, 0, 0, 0.1)";
 
 // NOTE: Forms > Switches -----------------------------------------------------------------------------------------------------------------
     // Switch [primary] -------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SWITCH_PRIMARY_BACKGROUND => new(200, 200, 200);
-    public virtual RGBAColor SWITCH_PRIMARY_BACKGROUND__SURFACE_SECONDARY => new(85, 79, 97);
-    public virtual RGBAColor SWITCH_PRIMARY_BACKGROUND__SURFACE_FLOATING_COLLAPSE => new(180, 180, 180);
-    public virtual RGBAColor SWITCH_PRIMARY_BACKGROUND__SURFACE_FLOATING_ADDITIONAL => new(180, 180, 180);
-    public override RGBAColor SWITCH_PRIMARY_BULLET_BACKGROUND => new(255, 255, 255);
+    public override RGBAColor SwitchPrimaryBackground => new(200, 200, 200);
+    public virtual RGBAColor SwitchPrimaryBackground_SurfaceSecondary => new(85, 79, 97);
+    public virtual RGBAColor SwitchPrimaryBackground_SurfaceFloatingCollapse => new(180, 180, 180);
+    public virtual RGBAColor SwitchPrimaryBackground_SurfaceFloatingAdditional => new(180, 180, 180);
+    public override RGBAColor SwitchPrimaryBulletBackground => new(255, 255, 255);
 
     // Switch [primary][checked]:
-    public override RGBAColor SWITCH_PRIMARY_CHECKED_BACKGROUND => new(42, 33, 56);
-    public virtual RGBAColor SWITCH_PRIMARY_CHECKED_BACKGROUND__SURFACE_SECONDARY => new(255, 215, 0);
+    public override RGBAColor SwitchPrimaryCheckedBackground => new(42, 33, 56);
+    public virtual RGBAColor SwitchPrimaryCheckedBackground_SurfaceSecondary => new(255, 215, 0);
 
     // Switch [primary][focus]:
-    public override RGBAColor SWITCH_PRIMARY_FOCUS_OUTLINE_COLOR => new(255, 255, 255);
-    public override string SWITCH_PRIMARY_FOCUS_OUTLINE_SHADOW => "0 0 2em rgb(0, 0, 0)";
+    public override RGBAColor SwitchPrimaryFocusOutlineColor => new(255, 255, 255);
+    public override string SwitchPrimaryFocusOutlineShadow => "0 0 2em rgb(0, 0, 0)";
 
     // Switch [primary][disabled]:
-    public override RGBAColor SWITCH_PRIMARY_DISABLED_BACKGROUND => new(220, 220, 220);
-    public virtual RGBAColor SWITCH_PRIMARY_DISABLED_BACKGROUND__SURFACE_SECONDARY => new(140, 140, 140);
-    public virtual RGBAColor SWITCH_PRIMARY_DISABLED_BACKGROUND__SURFACE_FLOATING_COLLAPSE => new(200, 200, 200);
-    public virtual RGBAColor SWITCH_PRIMARY_DISABLED_BACKGROUND__SURFACE_FLOATING_ADDITIONAL => new(190, 190, 190);
-    public virtual RGBAColor SWITCH_PRIMARY_DISABLED_BACKGROUND__SURFACE_FLOATING_ADDITIONAL_COLLAPSE => new(200, 200, 200);
-    public override RGBAColor SWITCH_PRIMARY_DISABLED_BULLET_BACKGROUND => new(240, 240, 240);
+    public override RGBAColor SwitchPrimaryDisabledBackground => new(220, 220, 220);
+    public virtual RGBAColor SwitchPrimaryDisabledBackground_SurfaceSecondary => new(140, 140, 140);
+    public virtual RGBAColor SwitchPrimaryDisabledBackground_SurfaceFloatingCollapse => new(200, 200, 200);
+    public virtual RGBAColor SwitchPrimaryDisabledBackground_SurfaceFloatingAdditional => new(190, 190, 190);
+    public virtual RGBAColor SwitchPrimaryDisabledBackground_SurfaceFloatingAdditionalCollapse => new(200, 200, 200);
+    public override RGBAColor SwitchPrimaryDisabledBulletBackground => new(240, 240, 240);
 
     // Switch [primary][disabled][checked]:
-    public override RGBAColor SWITCH_PRIMARY_DISABLED_CHECKED_BACKGROUND => new(180, 180, 180);
+    public override RGBAColor SwitchPrimaryDisabledCheckedBackground => new(180, 180, 180);
 
 // NOTE: GameCanvas -----------------------------------------------------------------------------------------------------------------------
-    public override RGBColor GAME_CANVAS_DEFAULT_BACKGROUND => new(42, 33, 56);
-    public override RGBColor GAME_CANVAS_DEFAULT_FOREGROUND => new(255, 255, 255);
-    public override RGBColor GAME_CANVAS_DEFAULT_TINT => new(255, 255, 255);
-    public override RGBColor GAME_CANVAS_DEFAULT_BORDER => new(10, 10, 10);
-    public override string GAME_CANVAS_BOX_SHADOW_OPACITY => "0.6";
+    public override RGBColor GameCanvasDefaultBackground => new(42, 33, 56);
+    public override RGBColor GameCanvasDefaultForeground => new(255, 255, 255);
+    public override RGBColor GameCanvasDefaultTint => new(255, 255, 255);
+    public override RGBColor GameCanvasDefaultBorder => new(10, 10, 10);
+    public override string GameCanvasBoxShadowOpacity => "0.6";
 
 // NOTE: Images ---------------------------------------------------------------------------------------------------------------------------
     // Background -------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor BACKGROUND_LIGHT_COLOR => new(210, 210, 210);
-    public override RGBAColor BACKGROUND_DARK_COLOR => new(180, 180, 180);
+    public override RGBAColor BackgroundLightColor => new(210, 210, 210);
+    public override RGBAColor BackgroundDarkColor => new(180, 180, 180);
 
     // Image ------------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor IMAGE_LIGHT_COLOR => new(210, 210, 210);
-    public override RGBAColor IMAGE_DARK_COLOR => new(180, 180, 180);
-    public override RGBAColor IMAGE_ERROR_COLOR => new(180, 180, 180);
-    public override RGBAColor IMAGE_ICON_COLOR => new(60, 60, 60);
+    public override RGBAColor ImageLightColor => new(210, 210, 210);
+    public override RGBAColor ImageDarkColor => new(180, 180, 180);
+    public override RGBAColor ImageErrorColor => new(180, 180, 180);
+    public override RGBAColor ImageIconColor => new(60, 60, 60);
 
 // NOTE: Links ----------------------------------------------------------------------------------------------------------------------------
     // LogoLink ---------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor LOGO_LINK_COLOR => new(42, 33, 56);
-    public virtual RGBAColor LOGO_LINK_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
-    public override RGBAColor LOGO_LINK_BACKGROUND => new(0, 0, 0, 0.0f);
-    public override string LOGO_LINK_BOX_SHADOW => "none";
+    public override RGBAColor LogoLinkColor => new(42, 33, 56);
+    public virtual RGBAColor LogoLinkColor_SurfaceSecondary => new(236, 240, 241);
+    public override RGBAColor LogoLinkBackground => new(0, 0, 0, 0.0f);
+    public override string LogoLinkBoxShadow => "none";
 
     // LogoLink [focus]:
-    public override RGBAColor LOGO_LINK_FOCUS_COLOR => new(42, 33, 56);
-    public virtual RGBAColor LOGO_LINK_FOCUS_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
-    public override RGBAColor LOGO_LINK_FOCUS_BACKGROUND => new(42, 33, 56, 0.08f);
-    public virtual RGBAColor LOGO_LINK_FOCUS_BACKGROUND__SURFACE_SECONDARY => new(236, 240, 241, 0.08f);
-    public override string LOGO_LINK_FOCUS_BOX_SHADOW => "0 0.05em 0.3em rgba(0, 0, 0, 0.4)";
+    public override RGBAColor LogoLinkFocusColor => new(42, 33, 56);
+    public virtual RGBAColor LogoLinkFocusColor_SurfaceSecondary => new(236, 240, 241);
+    public override RGBAColor LogoLinkFocusBackground => new(42, 33, 56, 0.08f);
+    public virtual RGBAColor LogoLinkFocusBackground_SurfaceSecondary => new(236, 240, 241, 0.08f);
+    public override string LogoLinkFocusBoxShadow => "0 0.05em 0.3em rgba(0, 0, 0, 0.4)";
 
 // NOTE: Loaders --------------------------------------------------------------------------------------------------------------------------
     // Loader -----------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor LOADER_COLOR => new(42, 33, 56);
-    public virtual RGBAColor LOADER_COLOR__SURFACE_SECONDARY => new(255, 215, 0);
-    public override RGBAColor LOADER_BACKGROUND => new(42, 33, 56, 0.4f);
-    public virtual RGBAColor LOADER_BACKGROUND__SURFACE_SECONDARY => new(0, 0, 0, 0.45f);
+    public override RGBAColor LoaderColor => new(42, 33, 56);
+    public virtual RGBAColor LoaderColor_SurfaceSecondary => new(255, 215, 0);
+    public override RGBAColor LoaderBackground => new(42, 33, 56, 0.4f);
+    public virtual RGBAColor LoaderBackground_SurfaceSecondary => new(0, 0, 0, 0.45f);
 
     // PageLoader -------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor PAGE_LOADER_COLOR => new(255, 215, 0);
-    public override RGBAColor PAGE_LOADER_BACKGROUND => new(0, 0, 0, 0.45f);
+    public override RGBAColor PageLoaderColor => new(255, 215, 0);
+    public override RGBAColor PageLoaderBackground => new(0, 0, 0, 0.45f);
 
     // ServerPageLoader -------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor SERVER_PAGE_LOADER_TEXT_COLOR => new(236, 240, 241);
-    public override RGBAColor SERVER_PAGE_LOADER_COLOR => PAGE_LOADER_COLOR;
-    public override RGBAColor SERVER_PAGE_LOADER_BACKGROUND => PAGE_LOADER_BACKGROUND;
-    public override RGBAColor SERVER_PAGE_LOADER_BACKDROP => SURFACE_BACKGROUND__SURFACE_SECONDARY;
+    public override RGBAColor ServerPageLoaderTextColor => new(236, 240, 241);
+    public override RGBAColor ServerPageLoaderColor => PageLoaderColor;
+    public override RGBAColor ServerPageLoaderBackground => PageLoaderBackground;
+    public override RGBAColor ServerPageLoaderBackdrop => SurfaceBackground_SurfaceSecondary;
 
 // NOTE: Modals ---------------------------------------------------------------------------------------------------------------------------
     // Modal ------------------------------------------------------------------------------------------------------------------------------
-    public override string MODAL_DIALOG_BOX_SHADOW => "0 0 30em 0 rgba(0, 0, 0, 0.5)";
-    public override string MODAL_ENDING_BOX_SHADOW => "0 0 10em rgba(0, 0, 0, 0.1)";
+    public override string ModalDialogBoxShadow => "0 0 30em 0 rgba(0, 0, 0, 0.5)";
+    public override string ModalEndingBoxShadow => "0 0 10em rgba(0, 0, 0, 0.1)";
 
     // Modal control:
-    public override RGBAColor MODAL_CONTROL_COLOR => new(255, 255, 255);
-    public override RGBAColor MODAL_CONTROL_BACKGROUND => new(155, 155, 155);
-    public override string MODAL_CONTROL_BOX_SHADOW => "none";
+    public override RGBAColor ModalControlColor => new(255, 255, 255);
+    public override RGBAColor ModalControlBackground => new(155, 155, 155);
+    public override string ModalControlBoxShadow => "none";
 
     // Modal control [highlight]:
-    public override RGBAColor MODAL_CONTROL_HIGHLIGHT_COLOR => new(255, 255, 255);
-    public override RGBAColor MODAL_CONTROL_HIGHLIGHT_BACKGROUND => new(175, 175, 175);
-    public override string MODAL_CONTROL_HIGHLIGHT_BOX_SHADOW => "none";
+    public override RGBAColor ModalControlHighlightColor => new(255, 255, 255);
+    public override RGBAColor ModalControlHighlightBackground => new(175, 175, 175);
+    public override string ModalControlHighlightBoxShadow => "none";
 
     // CookieModal ------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor MODAL_COOKIE_BUTTON_COLOR => new(42, 33, 56);
-    public virtual RGBAColor MODAL_COOKIE_BUTTON_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
+    public override RGBAColor ModalCookieButtonColor => new(42, 33, 56);
+    public virtual RGBAColor ModalCookieButtonColor_SurfaceSecondary => new(236, 240, 241);
 
     // CookieModal [highlight]:
-    public override RGBAColor MODAL_COOKIE_BUTTON_HIGHLIGHT_COLOR => new(42, 33, 56);
-    public virtual RGBAColor MODAL_COOKIE_BUTTON_HIGHLIGHT_COLOR__SURFACE_SECONDARY => new(255, 255, 255);
-    public override string MODAL_COOKIE_BUTTON_HIGHLIGHT_TEXT_SHADOW => "0 0 1em rgb(42, 33, 56)";
-    public virtual string MODAL_COOKIE_BUTTON_HIGHLIGHT_TEXT_SHADOW__SURFACE_SECONDARY => "0 0 1em rgb(255, 255, 255)";
+    public override RGBAColor ModalCookieButtonHighlightColor => new(42, 33, 56);
+    public virtual RGBAColor ModalCookieButtonHighlightColor_SurfaceSecondary => new(255, 255, 255);
+    public override string ModalCookieButtonHighlightTextShadow => "0 0 1em rgb(42, 33, 56)";
+    public virtual string ModalCookieButtonHighlightTextShadow_SurfaceSecondary => "0 0 1em rgb(255, 255, 255)";
 
     // ProfileModal -----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor MODAL_PROFILE_AVATAR_BACKGROUND => new(42, 33, 56);
-    public override RGBAColor MODAL_PROFILE_AVATAR_BORDER_COLOR => new(255, 255, 255);
-    public override string MODAL_PROFILE_AVATAR_BOX_SHADOW => "0 1em 8em 1em rgba(0, 0, 0, 0.7)";
+    public override RGBAColor ModalProfileAvatarBackground => new(42, 33, 56);
+    public override RGBAColor ModalProfileAvatarBorderColor => new(255, 255, 255);
+    public override string ModalProfileAvatarBoxShadow => "0 1em 8em 1em rgba(0, 0, 0, 0.7)";
 
 // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // ProgressCircle ---------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor PROGRESS_CIRCLE_COLOR => new(42, 33, 56);
-    public virtual RGBAColor PROGRESS_CIRCLE_COLOR__SURFACE_SECONDARY => new(255, 215, 0);
-    public override RGBAColor PROGRESS_CIRCLE_BACKGROUND => new(42, 33, 56, 0.4f);
-    public virtual RGBAColor PROGRESS_CIRCLE_BACKGROUND__SURFACE_SECONDARY => new(0, 0, 0, 0.45f);
+    public override RGBAColor ProgressCircleColor => new(42, 33, 56);
+    public virtual RGBAColor ProgressCircleColor_SurfaceSecondary => new(255, 215, 0);
+    public override RGBAColor ProgressCircleBackground => new(42, 33, 56, 0.4f);
+    public virtual RGBAColor ProgressCircleBackground_SurfaceSecondary => new(0, 0, 0, 0.45f);
 
 // NOTE: Text -----------------------------------------------------------------------------------------------------------------------------
     // Text -------------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor TEXT_COLOR => new(42, 33, 56);
-    public virtual RGBAColor TEXT_COLOR__SURFACE_SECONDARY => new(236, 240, 241);
+    public override RGBAColor TextColor => new(42, 33, 56);
+    public virtual RGBAColor TextColor_SurfaceSecondary => new(236, 240, 241);
 
     // Text [highlight]:
-    public override RGBAColor TEXT_HIGHLIGHT_COLOR => new(122, 113, 136);
-    public virtual RGBAColor TEXT_HIGHLIGHT_COLOR__SURFACE_SECONDARY => new(255, 255, 255);
+    public override RGBAColor TextHighlightColor => new(122, 113, 136);
+    public virtual RGBAColor TextHighlightColor_SurfaceSecondary => new(255, 255, 255);
 
     // Text Accent ------------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor TEXT_ACCENT_COLOR => new(42, 33, 56);
-    public virtual RGBAColor TEXT_ACCENT_COLOR__SURFACE_SECONDARY => new(255, 215, 0);
+    public override RGBAColor TextAccentColor => new(42, 33, 56);
+    public virtual RGBAColor TextAccentColor_SurfaceSecondary => new(255, 215, 0);
 
     // Text Accent [highlight]:
-    public override RGBAColor TEXT_ACCENT_HIGHLIGHT_COLOR => new(122, 113, 136);
-    public virtual RGBAColor TEXT_ACCENT_HIGHLIGHT_COLOR__SURFACE_SECONDARY => new(255, 239, 0);
+    public override RGBAColor TextAccentHighlightColor => new(122, 113, 136);
+    public virtual RGBAColor TextAccentHighlightColor_SurfaceSecondary => new(255, 239, 0);
 
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
     public override RGBAColor TEXT_DISABLED_COLOR => new(180, 180, 180);

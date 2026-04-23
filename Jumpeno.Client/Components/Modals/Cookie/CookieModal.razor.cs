@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class CookieModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "cookie-modal";
-    public const string CLASS_COOKIE_TITLE = "cookie-title";
+    public const string ClassName = "cookie-modal";
+    public const string ClassCookieTitle = "cookie-title";
 
     // Injections -------------------------------------------------------------------------------------------------------------------------
     [Inject]
@@ -14,11 +14,11 @@ public partial class CookieModal {
     private bool Unclosable = false;
     private Dictionary<Type, bool> Initial = [];
     private Dictionary<Type, bool> Selected = [];
-    public string GetDialogID() => ModalRef.ID_DIALOG;
+    public string GetDialogID() => ModalRef.IdDialog;
     public bool IsOpened { get; set; } = false;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<CookieModal>();
+    public readonly string Form = Utils.Form.Of<CookieModal>();
     private readonly SwitchViewModel SwitchMandatoryVM;
     private readonly SwitchViewModel SwitchFunctionalVM;
     private readonly SwitchViewModel SwitchSecurityVM;
@@ -26,24 +26,24 @@ public partial class CookieModal {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CookieModal() {
         SwitchMandatoryVM = new(new(
-            Form: FORM,
+            Form: Form,
             ID: nameof(SwitchMandatoryVM),
             DefaultValue: true
         ));
         SwitchFunctionalVM = new(new(
-            Form: FORM,
+            Form: Form,
             ID: nameof(SwitchFunctionalVM),
             DefaultValue: true,
             OnChange: new(e => UpdateSelection(typeof(Cookies.Preference), e.Value))
         ));
         SwitchSecurityVM = new(new(
-            Form: FORM,
+            Form: Form,
             ID: nameof(SwitchSecurityVM),
             DefaultValue: true,
             OnChange: new(e => UpdateSelection(typeof(Cookies.Security), e.Value))
         ));
     }
-    protected override void OnComponentInitialized() => RequestStorage.Set(RequestStorages.COOKIE_MODAL, this);
+    protected override void OnComponentInitialized() => RequestStorage.Set(RequestStorages.CookieModal, this);
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<Type, bool> ToDictionary(List<Type> list) => list.ToDictionary(c => c, c => true);
@@ -57,14 +57,14 @@ public partial class CookieModal {
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     private async Task InitSelected(bool unclosable, bool sync = true) {
-        void init()
+        void Init()
         {
             // Get cookies:
             var acceptedCookies = CookieStorage.GetAcceptedCookies();
             // Init:
             if (unclosable && acceptedCookies.Count <= 0)
             {
-                acceptedCookies = Cookies.TYPES;
+                acceptedCookies = Cookies.Types;
                 Initial = [];
             }
             else
@@ -76,8 +76,8 @@ public partial class CookieModal {
             SwitchFunctionalVM.SetValue(IsSelected(typeof(Cookies.Preference)));
             SwitchSecurityVM.SetValue(IsSelected(typeof(Cookies.Security)));
         }
-        if (sync) await HTTP.Sync(init);
-        else init();
+        if (sync) await HTTP.Sync(Init);
+        else Init();
     }
 
     private bool IsStateInitial(Dictionary<Type, bool> accept) {
@@ -88,7 +88,7 @@ public partial class CookieModal {
 
     public static async Task Open(bool unclosable = false, bool sync = true) 
     {
-        var modal = RequestStorage.Get<CookieModal>(RequestStorages.COOKIE_MODAL);
+        var modal = RequestStorage.Get<CookieModal>(RequestStorages.CookieModal);
         if (modal is not null) await modal.OpenModal(unclosable, sync);
     }
 
@@ -112,7 +112,7 @@ public partial class CookieModal {
             SwitchSecurityVM.SetValue(IsSelected(typeof(Cookies.Security)));
             StateHasChanged();
            
-            await Task.Delay(AppTheme.TRANSITION_FAST); // NOTE: Switch transition
+            await Task.Delay(AppTheme.TransitionFast); // NOTE: Switch transition
             if (IsStateInitial(newSelected)) {
                 await ModalRef.Close();
                 return;
@@ -120,7 +120,7 @@ public partial class CookieModal {
             var body = new CookieSetDTO(
                 AcceptedNames: [.. accept.Select(x => x.Name)]
             );
-            await HTTP.Patch(API.BASE.COOKIE_SET, body: body);
+            await HTTP.Patch(API.Base.CookieSet, body: body);
             await ModalRef.Close();
 
             if ((Initial.TryGetValue(typeof(Cookies.Security), out var initialValue) && initialValue) != SwitchSecurityVM.Value)

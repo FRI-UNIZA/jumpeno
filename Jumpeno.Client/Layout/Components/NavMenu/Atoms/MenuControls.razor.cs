@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public partial class MenuControls {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "menu-controls";
-    public const string CLASS_MOBILE = "mobile";
-    public const string FIRST_LINK_ID = "menu-first-link";
-    public const string FIRST_LINK_ID_MOBILE = "menu-first-link-mobile";
+    public const string ClassName = "menu-controls";
+    public const string ClassMobile = "mobile";
+    public const string FirstLinkId = "menu-first-link";
+    public const string FirstLinkIdMobile = "menu-first-link-mobile";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -18,9 +18,9 @@ public partial class MenuControls {
     public Action OnFocusOut { get; set; } = () => {};
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_MOBILE, Mobile);
+        .Set(ClassName, Base)
+        .Set(ClassMobile, Mobile);
     }
 }

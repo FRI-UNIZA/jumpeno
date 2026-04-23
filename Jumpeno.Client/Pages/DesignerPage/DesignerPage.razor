@@ -1,14 +1,14 @@
 @namespace Jumpeno.Client.Pages
 
 @inherits Page
-@attribute [Route(DesignerPage.ROUTE_EN)]
-@attribute [Route(DesignerPage.ROUTE_SK)]
+@attribute [Route(DesignerPage.RouteEn)]
+@attribute [Route(DesignerPage.RouteSk)]
 
 @code {
     private RenderFragment Render(DesignerSurface surface) => @<Fragment>
-        <Container Class="@ClassSurface(surface.Surface)">
-            <Heading2 Size="TextSize.S" Spacing Class="@CLASS_HEADING">@surface.Surface</Heading2>
-            <div class="@CLASS_CONTAINER">
+        <Container Class="@GetClassSurface(surface.Surface)">
+            <Heading2 Size="TextSize.S" Spacing Class="@ClassHeading">@surface.Surface</Heading2>
+            <div class="@ClassContainer">
                 <PlayGround />
             </div>
             @foreach (var child in surface.Iterator) {
@@ -26,8 +26,8 @@
 
 @if (AppEnvironment.IsDevelopment) {
     <DocTitle Value="@I18N.T("Designer")" />
-    <div class="@CLASS_PAGE">
-        <Heading1 Spacing Class="@CLASS_HEADING_MAIN">@nameof(Surface)</Heading1>
+    <div class="@ClassPage">
+        <Heading1 Spacing Class="@ClassHeadingMain">@nameof(Surface)</Heading1>
         @Render()
     </div>
 } else {

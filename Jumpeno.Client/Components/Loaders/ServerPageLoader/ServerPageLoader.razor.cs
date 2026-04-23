@@ -6,7 +6,7 @@ public partial class ServerPageLoader {
     public ServerPageLoaderSurface? Surface { get; set; } = ServerPageLoaderSurface.Secondary;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().SetSurface(Surface);
+    public override CssClass ComputeClass() => base.ComputeClass().SetSurface(Surface);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void Hide() {

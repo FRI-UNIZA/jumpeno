@@ -2,13 +2,13 @@ namespace Jumpeno.Client.Components;
 
 public partial class WebLink : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "web-link";
-    public const string CLASS_UNDERLINE = "underline";
-    public const string CLASS_DEFAULT_ACTIVE = "active";
+    public new const string ClassName = "web-link";
+    public const string ClassUnderline = "underline";
+    public const string ClassDefaultActive = "active";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string ID { get; set; } = "";
+    public string Id { get; set; } = "";
     [Parameter]
     public WebLinkRole Role { get; set; } = WebLinkRole.Link;
     [Parameter]
@@ -32,7 +32,7 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public bool Disabled { get; set; } = false;
     [Parameter]
-    public string ActiveClass { get; set; } = CLASS_DEFAULT_ACTIVE;
+    public string ActiveClass { get; set; } = ClassDefaultActive;
     [Parameter]
     public int TabIndex { get; set; } = 0;
     private readonly Dictionary<string, object> Attributes = [];
@@ -69,10 +69,10 @@ public partial class WebLink : IDisabledComponent {
         return Target.IsT0 ? Target.AsT0.String() : Target.AsT1;
     }
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_UNDERLINE, Underline)
+        .Set(ClassName, Base)
+        .Set(ClassUnderline, Underline)
         .Set(ActiveClass, IsActive());
     }
 
@@ -80,7 +80,7 @@ public partial class WebLink : IDisabledComponent {
 
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
-        if (ID == "") ID = IDGenerator.Generate(nameof(WebLink));
+        if (Id == "") Id = IDGenerator.Generate(nameof(WebLink));
         if (Label != "") Attributes["aria-label"] = Label;
     }
 
@@ -92,7 +92,7 @@ public partial class WebLink : IDisabledComponent {
     }
     private async Task OnKeyPressEvent(KeyboardEventArgs e) {
         if (Disabled) return;
-        if (e.Key == KeyBoard.ENTER) await OnEnter.InvokeAsync(new(this, e));
+        if (e.Key == KeyBoard.Enter) await OnEnter.InvokeAsync(new(this, e));
         await OnKeyPress.InvokeAsync(new(this, e));
     }
 

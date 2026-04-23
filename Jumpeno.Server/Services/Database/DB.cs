@@ -4,26 +4,26 @@ using MySqlConnector;
 
 public class DB : DbContext {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string VERSION = ServerSettings.Database.Version;
-    public static readonly string CONNECTION_STRING = ServerSettings.Database.ConnectionString;
+    public static readonly string Version = ServerSettings.Database.Version;
+    public static readonly string ConnectionString = ServerSettings.Database.ConnectionString;
 
     // Configuration ----------------------------------------------------------------------------------------------------------------------
     public static void Setup(DbContextOptionsBuilder options) =>
-    options.UseMySql(CONNECTION_STRING, new MySqlServerVersion(new Version(VERSION)));
+    options.UseMySql(ConnectionString, new MySqlServerVersion(new Version(Version)));
     protected override void OnConfiguring(DbContextOptionsBuilder options) => Setup(options);
 
     // Constraints ------------------------------------------------------------------------------------------------------------------------
-    private const string MYSQL_EXCEPTION = "MySqlException";
-    private const string START_PHRASE = "Duplicate entry";
-    private const string SEARCH_PHRASE = "' for key '";
+    private const string MysqlException = "MySqlException";
+    private const string StartPhrase = "Duplicate entry";
+    private const string SearchPhrase = "' for key '";
 
     private static Error? ParseForDuplicates(Exception e, Dictionary<string, Error> uniques) {
         // 1) Check exception type:
-        if (!(e.GetType().Name.Contains(MYSQL_EXCEPTION) && e.Message.StartsWith(START_PHRASE))) return null;
+        if (!(e.GetType().Name.Contains(MysqlException) && e.Message.StartsWith(StartPhrase))) return null;
         // 2) Parse key:
-        var index = e.Message.IndexOf(SEARCH_PHRASE);
+        var index = e.Message.IndexOf(SearchPhrase);
         if (index < 0) return null;
-        var key = e.Message[(index + SEARCH_PHRASE.Length)..];
+        var key = e.Message[(index + SearchPhrase.Length)..];
         key = key[..key.IndexOf('\'')];
         // 3) Set error:
         if (!uniques.TryGetValue(key, out var error)) return null;
@@ -74,11 +74,11 @@ public class DB : DbContext {
     public static async Task<DB> Context() {
         if (AppEnvironment.IsController) {
             // 1) Try to get existing context:
-            var ctx = RequestStorage.Get<DB>(RequestStorages.DB);
+            var ctx = RequestStorage.Get<DB>(RequestStorages.Db);
             if (ctx != null) return ctx;
             // 2) Or create a new context:
             ctx = await AppEnvironment.GetService<IDbContextFactory<DB>>().CreateDbContextAsync();
-            RequestStorage.Set(RequestStorages.DB, ctx);
+            RequestStorage.Set(RequestStorages.Db, ctx);
             Disposer.RequestRegister(ctx);
             return ctx;
         } else {   

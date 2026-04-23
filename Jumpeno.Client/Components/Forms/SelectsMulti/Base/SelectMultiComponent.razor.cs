@@ -2,29 +2,29 @@ namespace Jumpeno.Client.Components;
 
 public partial class SelectMultiComponent<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_PREFIX = "select-multi";
+    public const string IdPrefix = "select-multi";
     // Class:
-    public new const string CLASS = "select-multi";
-    public const string CLASS_SELECT_INPUT = "select-multi-input";
-    public const string CLASS_SELECT_INPUT_EMPTY = "select-multi-input-empty";
-    public const string CLASS_SELECT_INPUT_PLACEHOLDER = "select-multi-input-placeholder";
-    public const string CLASS_SELECT_INPUT_TEXT = "select-multi-input-text";
-    public const string CLASS_SELECT_INPUT_INDICATORS = "select-multi-input-indicators";
-    public const string CLASS_SELECT_INPUT_COUNT = "select-multi-input-count";
-    public const string CLASS_SELECT_INPUT_PLUS = "select-multi-input-plus";
-    public const string CLASS_SELECT_INPUT_ICON = "select-multi-input-icon";
-    public const string CLASS_SELECT_OPTIONS_MODAL = "select-multi-options-modal";
-    public const string CLASS_SELECT_INPUT_SEARCH = "select-multi-input-search";
-    public const string CLASS_OPTIONS = "select-multi-options";
-    public const string CLASS_OPTION = "select-multi-option";
-    public const string CLASS_OPTION_SELECTED = "select-multi-option-selected";
-    public const string CLASS_OPTION_MARKER = "select-multi-option-marker";
-    public const string CLASS_OPTION_MARKER_DISPLAYED = "select-multi-option-marker-displayed";
-    public const string CLASS_SELECT_EMPTY_TEXT = "select-multi-empty-text";
+    public new const string ClassName = "select-multi";
+    public const string ClassSelectInput = "select-multi-input";
+    public const string ClassSelectInputEmpty = "select-multi-input-empty";
+    public const string ClassSelectInputPlaceholder = "select-multi-input-placeholder";
+    public const string ClassSelectInputText = "select-multi-input-text";
+    public const string ClassSelectInputIndicators = "select-multi-input-indicators";
+    public const string ClassSelectInputCount = "select-multi-input-count";
+    public const string ClassSelectInputPlus = "select-multi-input-plus";
+    public const string ClassSelectInputIcon = "select-multi-input-icon";
+    public const string ClassSelectOptionsModal = "select-multi-options-modal";
+    public const string ClassSelectInputSearch = "select-multi-input-search";
+    public const string ClassOptions = "select-multi-options";
+    public const string ClassOption = "select-multi-option";
+    public const string ClassOptionSelected = "select-multi-option-selected";
+    public const string ClassOptionMarker = "select-multi-option-marker";
+    public const string ClassOptionMarkerDisplayed = "select-multi-option-marker-displayed";
+    public const string ClassSelectEmptyText = "select-multi-empty-text";
     // Search:
-    private const int MIN_SEARCH_LOADING = 175; // ms
+    private const int MinSearchLoading = 175; // ms
     // Close:
-    private enum SelectMultiClose { Cancel, Clear, OK }
+    private enum SelectMultiClose { Cancel, Clear, Ok }
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Modal:
@@ -52,8 +52,8 @@ public partial class SelectMultiComponent<T> {
     private bool ValueChanged = false;
     private Dictionary<string, SelectOption<T>> LastValue = [];
     // Tasks:
-    private TaskCompletionSource SearchTCS = new();
-    private readonly MinWatch MinSearchTime = new(MIN_SEARCH_LOADING);
+    private TaskCompletionSource _searchTcs = new();
+    private readonly MinWatch MinSearchTime = new(MinSearchLoading);
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private string OptionPlaceholder() {
@@ -70,20 +70,20 @@ public partial class SelectMultiComponent<T> {
             return I18N.T("Selected total: I18N{count}", new() {{"count", ViewModel.Value.Count}});
     }
 
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
-    private CSSClass ComputeModalClass() => new CSSClass(CLASS_SELECT_OPTIONS_MODAL).Set(ModalClass).Set(OptionAlign);
+    private CssClass ComputeModalClass() => new CssClass(ClassSelectOptionsModal).Set(ModalClass).Set(OptionAlign);
 
-    private CSSClass ComputeOptionClass(SelectOption<T> option) {
-        var c = new CSSClass(CLASS_OPTION);
-        if (DisplayedValue.ContainsKey(option.Label)) c.Set(CLASS_OPTION_SELECTED);
+    private CssClass ComputeOptionClass(SelectOption<T> option) {
+        var c = new CssClass(ClassOption);
+        if (DisplayedValue.ContainsKey(option.Label)) c.Set(ClassOptionSelected);
         return c;
     }
 
-    private CSSClass ComputeMarkerClass(bool isSelected, bool isPlus) {
-        var c = new CSSClass(CLASS_OPTION_MARKER);
-        if (isPlus && !isSelected) c.Set(CLASS_OPTION_MARKER_DISPLAYED);
-        else if (!isPlus && isSelected) c.Set(CLASS_OPTION_MARKER_DISPLAYED);
+    private CssClass ComputeMarkerClass(bool isSelected, bool isPlus) {
+        var c = new CssClass(ClassOptionMarker);
+        if (isPlus && !isSelected) c.Set(ClassOptionMarkerDisplayed);
+        else if (!isPlus && isSelected) c.Set(ClassOptionMarkerDisplayed);
         return c;
     }
 
@@ -92,7 +92,7 @@ public partial class SelectMultiComponent<T> {
 
     protected override void OnComponentAfterRender(bool firstRender) {
         if (firstRender) return;
-        SearchTCS.TrySetResult();
+        _searchTcs.TrySetResult();
     }
 
     // Opening ----------------------------------------------------------------------------------------------------------------------------
@@ -120,10 +120,10 @@ public partial class SelectMultiComponent<T> {
                 newOptions.Add(option);
             }
         }
-        SearchTCS = new();
+        _searchTcs = new();
         DisplayedOptions = newOptions;
         StateHasChanged();
-        await SearchTCS.Task;
+        await _searchTcs.Task;
         await MinSearchTime.Task;
         await PageLoader.Hide(PageLoaderTask.Search);
     });
@@ -148,7 +148,7 @@ public partial class SelectMultiComponent<T> {
 
     private Task ConfirmSelect() => ModalRef.Close(async () => {
         await PageLoader.Show(PageLoaderTask.Modal, true);
-        ClosedAs = SelectMultiClose.OK;
+        ClosedAs = SelectMultiClose.Ok;
         LastValue = new(ViewModel.Value);
         ValueChanged = ViewModel.SetValue(DisplayedValue);
     });
@@ -165,7 +165,7 @@ public partial class SelectMultiComponent<T> {
                 if (ValueChanged) await ViewModel.OnClear.Invoke(new(LastValue, ViewModel.Value));
                 else await ViewModel.OnCancel.Invoke(new(DisplayedValue, ViewModel.Value));
             break;
-            case SelectMultiClose.OK:
+            case SelectMultiClose.Ok:
                 if (ValueChanged) await ViewModel.OnOK.Invoke(new(LastValue, ViewModel.Value));
                 else await ViewModel.OnCancel.Invoke(new(DisplayedValue, ViewModel.Value));
             break;
@@ -181,7 +181,7 @@ public partial class SelectMultiComponent<T> {
                 if (ValueChanged) await ViewModel.OnClearClose.Invoke(new(LastValue, ViewModel.Value));
                 else await ViewModel.OnCancelClose.Invoke(new(DisplayedValue, ViewModel.Value));
             break;
-            case SelectMultiClose.OK:
+            case SelectMultiClose.Ok:
                 if (ValueChanged) await ViewModel.OnOKClose.Invoke(new(LastValue, ViewModel.Value));
                 else await ViewModel.OnCancelClose.Invoke(new(DisplayedValue, ViewModel.Value));
             break;
@@ -200,7 +200,7 @@ public partial class SelectMultiComponent<T> {
                 if (ValueChanged) await ViewModel.OnAfterClearClose.Invoke(new(lastValue, ViewModel.Value));
                 else await ViewModel.OnAfterCancelClose.Invoke(new(displayedValue, ViewModel.Value));
             break;
-            case SelectMultiClose.OK:
+            case SelectMultiClose.Ok:
                 if (ValueChanged) await ViewModel.OnAfterOKClose.Invoke(new(lastValue, ViewModel.Value));
                 else await ViewModel.OnAfterCancelClose.Invoke(new(displayedValue, ViewModel.Value));
             break;

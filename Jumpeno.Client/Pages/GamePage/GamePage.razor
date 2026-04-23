@@ -1,17 +1,17 @@
 @namespace Jumpeno.Client.Pages
 
 @inherits Page
-@attribute [Route(GamePage.ROUTE_EN)]
-@attribute [Route(GamePage.ROUTE_SK)]
+@attribute [Route(GamePage.RouteEn)]
+@attribute [Route(GamePage.RouteSk)]
 
 <DocTitle Value="@I18N.T("Game")" />
 
 <div class="game-page">
     @if (GameVM is null) {
-        if (!ConnectVM.Create) {
-            <ConnectBox @key="@nameof(ConnectBox)" @ref="View" VM="ConnectVM" />
+        if (!_connectVm.Create) {
+            <ConnectBox @key="@nameof(ConnectBox)" @ref="View" VM="_connectVm" />
         } else {
-            <CreateBox @key="@nameof(CreateBox)" @ref="View" VM="ConnectVM" />
+            <CreateBox @key="@nameof(CreateBox)" @ref="View" VM="_connectVm" />
         }
     } else {
         <GameChat @key="@nameof(GameChat)" @ref="ChatRef" VM="GameVM" />

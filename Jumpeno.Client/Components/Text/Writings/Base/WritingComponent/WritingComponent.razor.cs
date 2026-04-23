@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public abstract partial class WritingComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "writing";
+    public new const string ClassName = "writing";
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

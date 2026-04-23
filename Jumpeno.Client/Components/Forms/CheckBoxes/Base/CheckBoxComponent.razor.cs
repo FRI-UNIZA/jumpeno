@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Components;
 
 public partial class CheckBoxComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "checkbox";
-    public const string CLASS_ELEMENT = "checkbox-element";
-    public const string CLASS_ICON = "checkbox-icon";
-    public const string CLASS_DESCRIPTION = "checkbox-description";
-    public const string CLASS_ACTIVE_DESCRIPTION = "active-description";
-    public const string CLASS_CHECKED = "checked";
+    public new const string ClassName = "checkbox";
+    public const string ClassElement = "checkbox-element";
+    public const string ClassIcon = "checkbox-icon";
+    public const string ClassDescription = "checkbox-description";
+    public const string ClassActiveDescription = "active-description";
+    public const string ClassChecked = "checked";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -20,12 +20,12 @@ public partial class CheckBoxComponent {
     public RenderFragment? Icon { get; set; } = null;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_ACTIVE_DESCRIPTION, ActiveDescription)
+        .Set(ClassName, Base)
+        .Set(ClassActiveDescription, ActiveDescription)
         .Set(Position)
-        .Set(CLASS_CHECKED, ViewModel.Value);
+        .Set(ClassChecked, ViewModel.Value);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

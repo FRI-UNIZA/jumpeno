@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class DropDownOptionText {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "dropdown-option-text";
+    public const string ClassName = "dropdown-option-text";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

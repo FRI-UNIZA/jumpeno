@@ -2,17 +2,17 @@ namespace Jumpeno.Client.Components;
 
 public partial class PageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID = "page-loader";
+    public const string Id = "page-loader";
     // Class:
-    public const string CLASS_CONTENT = "page-loader-content";
-    public const string CLASS_BEFORE = "page-loader-before";
-    public const string CLASS_AFTER = "page-loader-after";
-    public const string CLASS_DISPLAYED = "displayed";
-    public const string CLASS_CUSTOM = "custom-loader";
+    public const string ClassContent = "page-loader-content";
+    public const string ClassBefore = "page-loader-before";
+    public const string ClassAfter = "page-loader-after";
+    public const string ClassDisplayed = "displayed";
+    public const string ClassCustom = "custom-loader";
     // Cascade:
-    public const string CASCADE_PAGE_LOADER_DISPLAYED = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_DISPLAYED)}";
+    public const string CascadePageLoaderDisplayed = $"{nameof(PageLoader)}.{nameof(CascadePageLoaderDisplayed)}";
     // Min loading time:
-    public const uint MIN_LOADING = 150; // ms
+    public const uint MinLoading = 150; // ms
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -25,19 +25,19 @@ public partial class PageLoader {
     private readonly LockerSlim Lock = new();
     private readonly HashSet<PageLoaderTask> PageLoaderTasks = [PageLoaderTask.Initial];
     private readonly HashSet<PageLoaderTask> GlobalLoaders = [];
-    private readonly MinWatch MinWatch = new(MIN_LOADING);
+    private readonly MinWatch MinWatch = new(MinLoading);
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public static CSSClass ComputeContentClass() => new CSSClass(CLASS_CONTENT).Set(ThemeProvider.CLASS_THEME_TRANSITION_CONTAINER);
+    public static CssClass ComputeContentClass() => new CssClass(ClassContent).Set(ThemeProvider.ClassThemeTransitionContainer);
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(ID, Base)
+        .Set(Id, Base)
         .SetSurface(Surface)
-        .Set(CLASS_DISPLAYED, PageLoaderDisplayed)
-        .Set(CLASS_CUSTOM, GlobalLoaders.Count == 0);
+        .Set(ClassDisplayed, PageLoaderDisplayed)
+        .Set(ClassCustom, GlobalLoaders.Count == 0);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public partial class PageLoader {
                 }
                 await instance.Render();
                 if (firstLoader) {
-                    ActionHandler.SetFocus(ID);
+                    ActionHandler.SetFocus(Id);
                     Window.Inert();
                 }
             }

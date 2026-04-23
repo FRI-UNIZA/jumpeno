@@ -2,9 +2,9 @@ namespace Jumpeno.Client.Components;
 
 public partial class ModalClose {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "modal-close";
-    public const string CLASS_ICON = "modal-close-icon";
-    public static string CLASS_UNCLOSABLE => Modal.CLASS_UNCLOSABLE;
+    public const string ClassName = "modal-close";
+    public const string ClassIcon = "modal-close-icon";
+    public static string ClassUnclosable => Modal.ClassUnclosable;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -14,18 +14,18 @@ public partial class ModalClose {
     private bool? LastUnclosable;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private string ComputeID() => $"{Modal.ID}-{CLASS}";
+    private string ComputeID() => $"{Modal.Id}-{ClassName}";
     private bool ComputeInert() => Modal.Unclosable;
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_UNCLOSABLE, Modal.Unclosable);
+        .Set(ClassName, Base)
+        .Set(ClassUnclosable, Modal.Unclosable);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentParametersSet(bool firstTime) {
         if (Modal.Unclosable && LastUnclosable == false) {
-            JS.InvokeVoid(JSModal.AdaptCloseFocus, Modal.ID, ComputeID());
+            JS.InvokeVoid(JSModal.AdaptCloseFocus, Modal.Id, ComputeID());
         }
         LastUnclosable = Modal.Unclosable;
     }

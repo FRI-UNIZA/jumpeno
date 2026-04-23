@@ -1,21 +1,21 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class DesignerPage {
-    public const string ROUTE_EN = "/en/designer";
-    public const string ROUTE_SK = "/sk/designer";
+    public const string RouteEn = "/en/designer";
+    public const string RouteSk = "/sk/designer";
     
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_PAGE = "designer-page";
-    public const string CLASS_HEADING_MAIN = "designer-heading-main";
-    public const string CLASS_HEADING = "designer-heading";
-    public const string CLASS_SURFACE = "designer-surface";
-    public const string CLASS_CONTAINER = "designer-container";
+    public const string ClassPage = "designer-page";
+    public const string ClassHeadingMain = "designer-heading-main";
+    public const string ClassHeading = "designer-heading";
+    public const string ClassSurface = "designer-surface";
+    public const string ClassContainer = "designer-container";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly List<DesignerSurface> Surfaces; 
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private static CSSClass ClassSurface(Surface surface) => new CSSClass(CLASS_SURFACE).Set(surface);
+    private static CssClass GetClassSurface(Surface surface) => new CssClass(ClassSurface).Set(surface);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public DesignerPage() {

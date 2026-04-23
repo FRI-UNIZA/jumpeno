@@ -11,5 +11,5 @@ public partial class LineDivider
     public bool Plain { get; set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("line-divider", Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("line-divider", Base);
 }

@@ -2,7 +2,7 @@ namespace Jumpeno.Client.ViewModels;
 
 public class InputSearchViewModel : FormViewModel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string DEFAULT_PLACEHOLDER => $"{I18N.T("Search")}...";
+    public static string DefaultPlaceholder => $"{I18N.T("Search")}...";
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     public readonly InputViewModel<string> InputVM = new(new InputViewModelTextParams());
@@ -47,7 +47,7 @@ public class InputSearchViewModel : FormViewModel {
             Trim: false,
             TextCheck: p.TextCheck,
             MaxLength: p.MaxLength,
-            Placeholder: p.Placeholder ?? DEFAULT_PLACEHOLDER,
+            Placeholder: p.Placeholder ?? DefaultPlaceholder,
             DefaultValue: p.DefaultValue,
             ClearValue: p.ClearValue,
             OnClear: new(async e => await Search(e.After)),
@@ -55,7 +55,7 @@ public class InputSearchViewModel : FormViewModel {
         ));
         SearchMode = p.SearchMode;
         Trim = p.Trim;
-        OnSearch = p.OnSearch ?? EventDelegate<string>.EMPTY;
+        OnSearch = p.OnSearch ?? EventDelegate<string>.Empty;
         LastSearchValue = InputVM.Value;
     }
 }

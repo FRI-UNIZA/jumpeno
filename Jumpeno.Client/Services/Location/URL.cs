@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Services;
 
 public static class URL {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string SCHEMA_DIVIDER = "://";
+    public const string SchemaDivider = "://";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<string> ThemeCSSClass;
@@ -18,8 +18,8 @@ public static class URL {
 
     // Normalization ----------------------------------------------------------------------------------------------------------------------
     public static string NormSchema(string schema) {
-        if (schema.EndsWith(SCHEMA_DIVIDER)) return schema;
-        return $"{schema}{SCHEMA_DIVIDER}";
+        if (schema.EndsWith(SchemaDivider)) return schema;
+        return $"{schema}{SchemaDivider}";
     }
     public static string NormBaseUrl(string baseUrl) {
         if (baseUrl.EndsWith('/')) return baseUrl[..^1];
@@ -66,7 +66,7 @@ public static class URL {
     }
     
     public static string Schema(string url) {
-        var index = url.IndexOf(SCHEMA_DIVIDER);
+        var index = url.IndexOf(SchemaDivider);
         if (index >= 0) {
             return url.Substring(0, index);
         }
@@ -75,7 +75,7 @@ public static class URL {
 
     public static string Host(string url) {
         var schema = Schema(url);
-        if (schema != "" || url.StartsWith(SCHEMA_DIVIDER)) {
+        if (schema != "" || url.StartsWith(SchemaDivider)) {
             url = url.Substring(NormSchema(schema).Length);
         }
         var index = url.IndexOf('/');

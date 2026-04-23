@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class Button {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "button";
-    public const string CLASS_NO_SHADOW = "no-shadow";
+    public new const string ClassName = "button";
+    public const string ClassNoShadow = "no-shadow";
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -14,11 +14,11 @@ public partial class Button {
     public bool NoShadow { get; set; } = false;
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .SetVariant(Variant)
         .SetSize(Size)
-        .Set(CLASS_NO_SHADOW, NoShadow);
+        .Set(ClassNoShadow, NoShadow);
     }
 }

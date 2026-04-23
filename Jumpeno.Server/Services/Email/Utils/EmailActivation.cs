@@ -8,7 +8,7 @@ public static partial class Email {
             Send(
                 email,
                 I18N.T("Jumpeno activation"),
-                EmailsContents.LINK(
+                EmailsContents.Link(
                     I18N.T("Jumpeno activation"),
                     I18N.T("Hello, here is your activation link:"),
                     I18N.T("Activate"),
@@ -16,7 +16,7 @@ public static partial class Email {
                 )
             );
         } catch {
-            throw Exceptions.SERVER.SetInfo(I18N.T("Failed to send activation email."));
+            throw Exceptions.Server.SetInfo(I18N.T("Failed to send activation email."));
         }
     }
 

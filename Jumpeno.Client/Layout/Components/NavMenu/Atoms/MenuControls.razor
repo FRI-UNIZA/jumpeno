@@ -4,38 +4,38 @@
 
 <div class="@ComputeClass()" style="@Style" @onfocusin="OnFocusIn" @onfocusout="OnFocusOut">
     <div class="menu-links">
-        <MenuButton ID="@(Mobile ? FIRST_LINK_ID_MOBILE : FIRST_LINK_ID)" Params="@(new ButtonLinkParams(
-            Href: I18N.Link<HomePage>(),
-            Match: WebLinkMatch.All
+        <MenuButton Id="@(Mobile ? FirstLinkIdMobile : FirstLinkId)" Params="@(new ButtonLinkParams(
+            href: I18N.Link<HomePage>(),
+            match: WebLinkMatch.All
         ))">
             <Icon><AntIcon Type="home" Theme="outline" Style="top: -1px" /></Icon>
             <Text>@I18N.T("Home")</Text>
         </MenuButton>
         <MenuButton Params="@(new ButtonLinkParams(
-            Href: I18N.Link<ManualPage>(),
-            Match: WebLinkMatch.All
+            href: I18N.Link<ManualPage>(),
+            match: WebLinkMatch.All
         ))">
             <Icon><AntIcon Type="question" Theme="outline" /></Icon>
             <Text>@I18N.T("Manual")</Text>
         </MenuButton>
         <MenuButton Params="@(new ButtonLinkParams(
-            Href: I18N.Link<GamePage>()
+            href: I18N.Link<GamePage>()
         ))">
             <Icon><AntIcon Type="play-circle" Theme="outline" /></Icon>
             <Text>@I18N.T("Play")</Text>
         </MenuButton>
         <MenuButton Params="@(new ButtonLinkParams(
-            Href: I18N.T("LINK_FEEDBACK"),
-            Target: WebLinkTarget.Blank,
-            Match: WebLinkMatch.All
+            href: I18N.T("LINK_FEEDBACK"),
+            target: WebLinkTarget.Blank,
+            match: WebLinkMatch.All
         ))">
             <Icon><AntIcon Type="book" Theme="outline" /></Icon>
             <Text>@I18N.T("Feedback")</Text>
         </MenuButton>
         <AuthViewBlock>
             <MenuButton Params="@(new ButtonLinkParams(
-                Href: I18N.Link<LoginPage>(),
-                Match: WebLinkMatch.All
+                href: I18N.Link<LoginPage>(),
+                match: WebLinkMatch.All
             ))">
                 <Icon><AntIcon Type="login" Theme="outline" /></Icon>
                 <Text>@I18N.T("Log in")</Text>
@@ -43,8 +43,8 @@
         </AuthViewBlock>
         <AuthView>
             <MenuButton Params="@(new ButtonLinkParams(
-                Href: I18N.Link<ChatPage>(),
-                Match: WebLinkMatch.All
+                href: I18N.Link<ChatPage>(),
+                match: WebLinkMatch.All
             ))">
                 <Icon><AntIcon Type="message" Theme="outline" /></Icon>
                 <Text>@I18N.T("Chat")</Text>

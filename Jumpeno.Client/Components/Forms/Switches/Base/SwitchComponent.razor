@@ -8,7 +8,7 @@
         <button
             id="@ViewModel.FormID"
             type="@ButtonType.Button.String()"
-            class="@CLASS_SWITCH_ELEMENT"
+            class="@ClassSwitchElement"
             role="switch"
             aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"
             aria-checked="@HTML.Label.AriaActive(ViewModel.Value)"
@@ -17,7 +17,7 @@
         />
         @if (Description != null) {
             <div
-                class="@CLASS_SWITCH_DESCRIPTION"
+                class="@ClassSwitchDescription"
                 @onclick="@(ActiveDescription ? async () => await ChangeValue() : () => {})"
             >
                 @Description

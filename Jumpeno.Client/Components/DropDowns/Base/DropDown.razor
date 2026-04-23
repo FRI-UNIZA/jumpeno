@@ -2,18 +2,18 @@
 
 @inherits BasicComponent
 
-<CascadingValue Name="@CASCADE_REF" Value="this">
+<CascadingValue Name="@CascadeRef" Value="this">
     <div class="@ComputeClass()" style="@Style">
-        @if (Displayed) { <div id="@ID_START" class="@CLASS_START" tabindex="0" @onfocus="() => ActionHandler.FocusLast(ID_OPTIONS)" /> }
-        <button type="@ButtonType.Button.String()" id="@ID_BUTTON" class="@CLASS_BUTTON" @onclick="Open" aria-label="@ComputeLabel()">
+        @if (Displayed) { <div id="@IdStart" class="@ClassStart" tabindex="0" @onfocus="() => ActionHandler.FocusLast(IdOptions)" /> }
+        <button type="@ButtonType.Button.String()" id="@IdButton" class="@ClassButton" @onclick="Open" aria-label="@ComputeLabel()">
             @DropDownButton
         </button>
-        <div class="@CLASS_MENU">
-            <div class="@CLASS_MARK" />
-            <div id="@ID_OPTIONS" class="@CLASS_OPTIONS">
+        <div class="@ClassMenu">
+            <div class="@ClassMark" />
+            <div id="@IdOptions" class="@ClassOptions">
                 @Options
             </div>
         </div>
-        @if (Displayed) { <div id="@ID_END" class="@CLASS_END" tabindex="0" @onfocus="() => ActionHandler.SetFocus(ID_BUTTON)" /> }
+        @if (Displayed) { <div id="@IdEnd" class="@ClassEnd" tabindex="0" @onfocus="() => ActionHandler.SetFocus(IdButton)" /> }
     </div>
 </CascadingValue>

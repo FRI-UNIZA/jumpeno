@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Models;
 public abstract class NetworkUpdate(ulong id, int round) : GameUpdate {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public abstract string HUB_ACTION { get; }
+    public abstract string HubAction { get; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public ulong ID { get; private set; } = id;

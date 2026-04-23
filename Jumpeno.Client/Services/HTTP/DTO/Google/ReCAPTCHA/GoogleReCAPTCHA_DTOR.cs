@@ -6,8 +6,8 @@ public record GoogleReCAPTCHA_DTOR(bool Success, float Score) : IValidable<Googl
     public List<Error> Validate() 
     {
         var errors = new List<Error>();
-        if (Score < 0f || Score > 1f) errors.Add(Errors.INVALID.SetID(nameof(Score)));
+        if (Score < 0f || Score > 1f) errors.Add(Errors.Invalid.SetID(nameof(Score)));
         return errors;
     }
-    public GoogleReCAPTCHA_DTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.SERVER);
+    public GoogleReCAPTCHA_DTOR Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Server);
 }

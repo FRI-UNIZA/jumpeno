@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class LogoLink {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "logo-link";
+    public const string ClassName = "logo-link";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

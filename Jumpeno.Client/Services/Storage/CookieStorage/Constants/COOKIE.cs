@@ -21,27 +21,27 @@ public static class Cookies {
     }
 
     // Types ------------------------------------------------------------------------------------------------------------------------------
-    public static readonly List<Type> TYPES_REQUIRED = [
+    public static readonly List<Type> TypesRequired = [
         typeof(Cookies.Mandatory)
     ];
     
-    public static readonly List<Type> TYPES = [
+    public static readonly List<Type> Types = [
         typeof(Cookies.Mandatory),
         typeof(Cookies.Preference),
         typeof(Cookies.Security)
     ];
 
     // Origin (domain and path) -----------------------------------------------------------------------------------------------------------
-    public static string DEFAULT_DOMAIN => URL.Domain();
-    public static string DEFAULT_PATH => "/";
+    public static string DefaultDomain => URL.Domain();
+    public static string DefaultPath => "/";
 
     // NOTE: Default domain and path values do not have to be specified.
-    public static readonly Dictionary<Enum, List<(string DOMAIN, string PATH)>> ORIGIN = new() {
+    public static readonly Dictionary<Enum, List<(string DOMAIN, string PATH)>> Origin = new() {
         {
             Cookies.Mandatory.AppRefershToken, [
-                (DEFAULT_DOMAIN, API.BASE.AUTH_REFRESH),
-                (DEFAULT_DOMAIN, API.BASE.AUTH_INVALIDATE),
-                (DEFAULT_DOMAIN, API.BASE.AUTH_DELETE)
+                (DefaultDomain, API.Base.AuthRefresh),
+                (DefaultDomain, API.Base.AuthInvalidate),
+                (DefaultDomain, API.Base.AuthDelete)
             ]
         }
     };

@@ -18,7 +18,7 @@ public class AdminController : ControllerBase {
                 email = adminEmail; break;
             }
         }
-        if (email == null) throw Exceptions.NOT_AUTHENTICATED;
+        if (email == null) throw Exceptions.NotAuthenticated;
         // 3) Create refresh token:
         var refreshToken = JWT.GenerateAdminRefresh(email);
         // 4) Store refresh token:

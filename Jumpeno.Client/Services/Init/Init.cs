@@ -35,7 +35,7 @@ public static class Init {
             // 3.2) Validation:
             body.Assert();
             // 3.3) Send request:
-            var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_ACTIVATE, body: body);
+            var response = await HTTP.Patch<MessageDTOR>(API.Base.UserActivate, body: body);
             // 3.4) Show result:
             Notification.Success(response.Body.Message);
         });
@@ -64,7 +64,7 @@ public static class Init {
             // 3.2) Validation:
             body.Assert();
             // 3.3) Send request:
-            var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_PASSWORD_RESET, body: body);
+            var response = await HTTP.Patch<MessageDTOR>(API.Base.UserPasswordReset, body: body);
             // 3.4) Show result:
             Notification.Success(response.Body.Message);
         });

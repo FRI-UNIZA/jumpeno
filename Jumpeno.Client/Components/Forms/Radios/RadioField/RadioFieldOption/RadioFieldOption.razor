@@ -9,7 +9,7 @@
         <button
             id="@ViewModel.FormID"
             type="@ButtonType.Button.String()"
-            class="@CLASS_ELEMENT"
+            class="@ClassElement"
             role="radio"
             aria-label="@HTML.Label.Aria(Label, IsSelected)"
             aria-checked="@HTML.Label.AriaActive(IsSelected)"
@@ -18,7 +18,7 @@
         />
         @if (Description != null) {
             <div
-                class="@CLASS_DESCRIPTION"
+                class="@ClassDescription"
                 @onclick="@(ActiveDescription ? async () => await Set() : () => {})"
             >
                 @Description

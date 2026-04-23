@@ -6,11 +6,11 @@ using System.Timers;
 
 public class GameViewModel : IAsyncDisposable {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static int PING_INTERVAL => From.SToMS(AppSettings.Game.PingInterval.Seconds); // ms
+    public static int PingInterval => From.SToMS(AppSettings.Game.PingInterval.Seconds); // ms
     // Classes:
-    public const string CLASS_HOST = "host";
-    public const string CLASS_WATCHING = "watching";
-    public const string CLASS_PLAYER = "player";
+    public const string ClassHost = "host";
+    public const string ClassWatching = "watching";
+    public const string ClassPlayer = "player";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string QRCode { get; private set; }
@@ -23,11 +23,11 @@ public class GameViewModel : IAsyncDisposable {
     public bool IsPlayer => Player != null;
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public CSSClass CSSClass() {
-        return new CSSClass()
-        .Set(CLASS_HOST, IsHost)
-        .Set(CLASS_WATCHING, IsWatching)
-        .Set(CLASS_PLAYER, IsPlayer);
+    public CssClass CSSClass() {
+        return new CssClass()
+        .Set(ClassHost, IsHost)
+        .Set(ClassWatching, IsWatching)
+        .Set(ClassPlayer, IsPlayer);
     }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
@@ -152,10 +152,10 @@ public class GameViewModel : IAsyncDisposable {
 
     // Server communication ---------------------------------------------------------------------------------------------------------------
     public Func<string, object, Task> Send { get; private set; }
-    public Task SendGameUpdate(NetworkUpdate update) => Send(update.HUB_ACTION, update);
-    public Task SendTripUpdate(GameTripUpdate update) => Send(update.HUB_ACTION, update);
+    public Task SendGameUpdate(NetworkUpdate update) => Send(update.HubAction, update);
+    public Task SendTripUpdate(GameTripUpdate update) => Send(update.HubAction, update);
     public Func<string, object, Task> SendRequest { get; private set; }
-    public Task SendGameRequest(GameRequestUpdate update) => SendRequest(update.HUB_ACTION, update);
+    public Task SendGameRequest(GameRequestUpdate update) => SendRequest(update.HubAction, update);
     public Func<Action, Task> Exec { get; private set; }
     public Func<Func<Task>, Task> ExecAsync { get; private set; }
 
@@ -175,7 +175,7 @@ public class GameViewModel : IAsyncDisposable {
 
     public async Task StartPing() {
         await PingLock.TryExclusive(() => {
-            PingTimer = new(PING_INTERVAL);
+            PingTimer = new(PingInterval);
             PingTimer.Elapsed += async (sender, e) => await SendPing();
             PingTimer.Start();
         });
@@ -231,7 +231,7 @@ public class GameViewModel : IAsyncDisposable {
 
     // Lobby ------------------------------------------------------------------------------------------------------------------------------
     private int? LobbyRound = null;
-    public bool LobbyDisplayed => LobbyRound == Game.Round && Game.RUN_STATES.Contains(Game.State);
+    public bool LobbyDisplayed => LobbyRound == Game.Round && Game.RunStates.Contains(Game.State);
 
     public Task ShowLobby() => UpdateLock.TryExclusive(() => { LobbyRound = Game.Round; Notify(); });
 

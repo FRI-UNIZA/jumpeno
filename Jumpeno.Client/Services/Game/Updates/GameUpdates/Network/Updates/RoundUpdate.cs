@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Models;
 public class RoundUpdate : NetworkUpdate {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GameHubs.ROUND_UPDATE;
+    public override string HubAction => GameHubs.RoundUpdate;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public StateUpdate StateUpdate { get; private set; }

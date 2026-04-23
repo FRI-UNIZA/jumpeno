@@ -2,11 +2,11 @@
 
 @inherits BasicComponent
 
-<div id="@ID" class="@ComputeClass()" style="@Style">
+<div id="@Id" class="@ComputeClass()" style="@Style">
     <ImageBase
-        URL="@URL"
+        Url="@Url"
         Alt=""
-        Class="@CLASS_IMG"
+        Class="@ClassImg"
         Style="@Style"
         Draggable="false"
         Transparent
@@ -15,5 +15,5 @@
         Loading="ImageLoadingType.Eager"
         OnLoadingFinish="OnImageLoaded"
     />
-    <div class="@CLASS_ELEMENT" style="@($"background-image: url('{URL}')")" />
+    <div class="@ClassElement" style="@($"background-image: url('{Url}')")" />
 </div>

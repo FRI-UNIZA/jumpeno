@@ -2,13 +2,13 @@
 
 @page "/"
 @inherits Page
-@attribute [Route(HomePage.ROUTE_EN)]
-@attribute [Route(HomePage.ROUTE_SK)]
+@attribute [Route(HomePage.RouteEn)]
+@attribute [Route(HomePage.RouteSk)]
 
 <div class="home-page">
     <DocTitle Value="@I18N.T("Home")" />
     <div class="home-image-section">
-        <Image URL="@ImageType.JUMPENO_PLAYERS" Transparent Class="home-image" />
+        <Image URL="@ImageType.JumpenoPlayers" Transparent Class="home-image" />
     </div>
     <section class="home-text-section">
         <article class="content">
@@ -30,8 +30,8 @@
         </Paragraph>
         <div class="action-buttons">
             <Button Size="ButtonSize.M" Params="@(new ButtonLinkParams(
-                Href: I18N.Link<GamePage>(),
-                HrefPrevent: true
+                href: I18N.Link<GamePage>(),
+                hrefPrevent: true
             ))"
                 OnClick="GamePage.NavigateToConnect"
             >
@@ -40,8 +40,8 @@
             </Button>
             <AuthView Roles="[Role.User]">
                 <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.M" Params="@(new ButtonLinkParams(
-                    Href: I18N.Link<GamePage>(),
-                    HrefPrevent: true
+                    href: I18N.Link<GamePage>(),
+                    hrefPrevent: true
                 ))"
                     OnClick="GamePage.NavigateToCreate"
                 >
@@ -51,7 +51,7 @@
             </AuthView>
             <AuthView Roles="[Role.Admin]">
                 <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.M" Params="@(new ButtonLinkParams(
-                    Href: I18N.Link<AdminPage>()
+                    href: I18N.Link<AdminPage>()
                 ))">
                     <Icon><AntIcon Type="setting" Theme="outline" /></Icon>
                     <Text>@I18N.T("Admin")</Text>
@@ -59,7 +59,7 @@
             </AuthView>
             <AuthViewBlock>
                 <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.M" Params="@(new ButtonLinkParams(
-                    Href: I18N.Link<LoginPage>()
+                    href: I18N.Link<LoginPage>()
                 ))">
                     <Icon><AntIcon Type="login" Theme="outline" /></Icon>
                     <Text>@I18N.T("Log in")</Text>

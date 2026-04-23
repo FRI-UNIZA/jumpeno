@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public class RadioOption<T> : FormField<RadioOptionViewModel<T>> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_SELECTED = "selected";
+    public const string ClassSelected = "selected";
 
     // Cascading parameters ---------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = RadioComponent<T>.CASCADE_REF)]
+    [CascadingParameter(Name = RadioComponent<T>.CascadeRef)]
     public required RadioComponent<T> Radio { get; set; }
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
@@ -23,10 +23,10 @@ public class RadioOption<T> : FormField<RadioOptionViewModel<T>> {
     protected virtual bool CustomAfterChange => false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(Disabler.CLASS, Radio.Disabled || Disabled)
-        .Set(CLASS_SELECTED, IsSelected);
+        .Set(Disabler.ClassName, Radio.Disabled || Disabled)
+        .Set(ClassSelected, IsSelected);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

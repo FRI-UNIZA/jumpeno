@@ -8,7 +8,7 @@
     protected override RenderFragment RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            class="@CLASS_ELEMENT"
+            class="@ClassElement"
             type="@ButtonType.Button.String()"
             role="radio"
             aria-label="@HTML.Label.Aria(Label, IsSelected)"
@@ -16,7 +16,7 @@
             disabled="@Disabled"
             @onclick="Set"
         >
-            <div class="@CLASS_CONTENT">@ChildContent</div>
+            <div class="@ClassContent">@ChildContent</div>
         </button>
     </Fragment>;
 }

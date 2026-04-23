@@ -3,9 +3,9 @@
 @inherits BasicComponent
 
 <nav class="@ComputeClass()" style="@Style">
-    <Container Type="ContainerType.Inline" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
+    <Container Type="ContainerType.Inline" Boundary PaddingHorizontal Class="@ClassContainer">
         <LogoLink />
-        <div class="@CLASS_NAVIGATION">
+        <div class="@ClassNavigation">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
             <AuthView Roles="[Role.User]">
                 <UserDropDown />
@@ -14,7 +14,7 @@
                 <AdminDropDown />
             </AuthView>
             <NavMenuOpenButton
-                ID="@MOBILE_MENU_BUTTON_ID"
+                ID="@MobileMenuButtonId"
                 OnClick="MobileRef.Open"
                 OnFocus="OnMobileMenuButtonFocusIn"
                 OnBlur="OnMobileMenuButtonFocusOut"

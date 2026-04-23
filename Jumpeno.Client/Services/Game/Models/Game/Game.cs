@@ -5,14 +5,14 @@ namespace Jumpeno.Client.Models;
 public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, string Font)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public static readonly int FPS = AppSettings.Game.FPS;
-    public static readonly int TOUCH_DEVICE_NOTIFICATIONS = AppSettings.Game.TouchDeviceNotifications.PerSecond; // per second
+    public static readonly int TouchDeviceNotifications = AppSettings.Game.TouchDeviceNotifications.PerSecond; // per second
     // Duration:
-    public static readonly double ROUND_DURATION = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TOTAL_DURATION; // ms
-    public static readonly double ROUND_FINISH_DELAY = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
+    public static readonly double RoundDuration = From.MinToMS(AppSettings.Game.Round.Minutes) - Shrink.TotalDuration; // ms
+    public static readonly double RoundFinishDelay = From.SToMS(AppSettings.Game.FinishDelay.Seconds); // ms
     // States:
-    public static readonly List<GameStates> LOBBY_STATES = [GameStates.Lobby, GameStates.ScoreBoard];
-    public static readonly List<GameStates> PAUSE_STATES = [GameStates.Pause];
-    public static readonly List<GameStates> RUN_STATES = [GameStates.GamePlay, GameStates.Shrinking];
+    public static readonly List<GameStates> LobbyStates = [GameStates.Lobby, GameStates.ScoreBoard];
+    public static readonly List<GameStates> PauseStates = [GameStates.Pause];
+    public static readonly List<GameStates> RunStates = [GameStates.GamePlay, GameStates.Shrinking];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Identifier:
@@ -30,7 +30,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     public byte Capacity { get; }
     // State:
     public int Round { get; private set; }
-    public int ShowRound => Math.Min(LOBBY_STATES.Contains(State) ? Round + 1 : Round, Rounds);
+    public int ShowRound => Math.Min(LobbyStates.Contains(State) ? Round + 1 : Round, Rounds);
     public double Time { get; private set; }
     public GameStates State { get; private set; }
     public bool IsFinished => State == GameStates.ScoreBoard && Rounds <= Round;
@@ -91,7 +91,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         State = state;
         // Clocks:
         Clock = new(FPS);
-        TouchClock = new(TOUCH_DEVICE_NOTIFICATIONS);
+        TouchClock = new(TouchDeviceNotifications);
         // Host:
         HostConnected = hostConnected;
         // Players:
@@ -139,7 +139,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     }
 
     private QuadTreeRectF<Player> InitPlayersQT(List<Player> activePlayers) {
-        var padding = 2 * Animation.MAX_HEIGHT + Mark.HEIGHT;
+        var padding = 2 * Animation.MaxHeight + Mark.Height;
         QuadTreeRectF<Player> players = new(
             Map.Rect.Left - padding, Map.Rect.Top - padding,
             Map.Rect.Width + 2 * padding, Map.Rect.Height + 2 * padding
@@ -185,10 +185,10 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
             if (player.IsConnected) {
                 if (player.User.Name.ToLower() != connection.User.Name.ToLower()) continue;
                 if (State == GameStates.Lobby) {
-                    throw Exceptions.DEFAULT.SetInfo("Player name is taken!")
-                    .SetErrors(Errors.DEFAULT.SetID(nameID).SetInfo("Player name is taken!"));
+                    throw Exceptions.Default.SetInfo("Player name is taken!")
+                    .SetErrors(Errors.Default.SetID(nameID).SetInfo("Player name is taken!"));
                 } else {
-                    throw Exceptions.DEFAULT.SetInfo("The game is already running.");
+                    throw Exceptions.Default.SetInfo("The game is already running.");
                 }
             } else if (State == GameStates.Lobby || player.User.Equals(connection.User)) {
                 AssertReservedPlayerHostName(connection.User, userNameID: nameID);
@@ -198,8 +198,8 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         }
         // 2.1) Space not found:
         if (space == null) {
-            if (State == GameStates.Lobby) throw Exceptions.DEFAULT.SetInfo("The game is currently full!");
-            else throw Exceptions.DEFAULT.SetInfo("The game is already running.");
+            if (State == GameStates.Lobby) throw Exceptions.Default.SetInfo("The game is currently full!");
+            else throw Exceptions.Default.SetInfo("The game is already running.");
         }
         // 2.2) Or return found space:
         else return space;
@@ -226,10 +226,10 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         Players.TryGetValue(playerID, out var player); return player;
     }
 
-    public Player? GetPlayerByConnectionID(string? connectionID) {
-        if (connectionID == null) return null;
+    public Player? GetPlayerByConnectionID(string? connectionId) {
+        if (connectionId == null) return null;
         foreach (var (_, player) in Players) {
-            if (player.ConnectionID == connectionID) return player;
+            if (player.ConnectionID == connectionId) return player;
         }
         return null;
     }
@@ -248,8 +248,8 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         return Player.IsValid(player) ? player : null;
     }
 
-    public Player? GetValidPlayerByConnectionID(string? connectionID) {
-        var player = GetPlayerByConnectionID(connectionID);
+    public Player? GetValidPlayerByConnectionID(string? connectionId) {
+        var player = GetPlayerByConnectionID(connectionId);
         return Player.IsValid(player) ? player : null;
     }
 
@@ -267,10 +267,10 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
         return null;
     }
 
-    public Player? GetActivePlayerByConnectionID(string? connectionID) {
-        if (connectionID == null) return null;
+    public Player? GetActivePlayerByConnectionID(string? connectionId) {
+        if (connectionId == null) return null;
         foreach (var player in ActivePlayers) {
-            if (player.ConnectionID == connectionID) return player;
+            if (player.ConnectionID == connectionId) return player;
         }
         return null;
     }
@@ -312,7 +312,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     }}
 
     // Player > Predicates ----------------------------------------------------------------------------------------------------------------
-    public bool IsPlayerReady(Player player) => IsFinished || !LOBBY_STATES.Contains(State) || player.ReadyForRound == Round + 1;
+    public bool IsPlayerReady(Player player) => IsFinished || !LobbyStates.Contains(State) || player.ReadyForRound == Round + 1;
 
     public bool ActivePlayersReady() {
         foreach (var player in ActivePlayers) {
@@ -407,7 +407,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     private bool KeyUpdate(KeyUpdate update) {
         // 1) Check correct state:
         if (update.Round != Round) return false;
-        if (!RUN_STATES.Contains(State)) return false;
+        if (!RunStates.Contains(State)) return false;
         // 2) Find player:
         Players.TryGetValue(update.PlayerID, out var player);
         if (player == null) return false;
@@ -419,7 +419,7 @@ public partial class Game : IUpdateable, IRenderable<(Player? ScreenPlayer, stri
     private bool GamePlayUpdate(GamePlayUpdate update) {
         // 1) Check correct state:
         if (update.Round != Round) return false;
-        if (LOBBY_STATES.Contains(State)) return false;
+        if (LobbyStates.Contains(State)) return false;
         // 2) Prepare response with state update:
         var response = new GamePlayResponse {
             StateUpdated = GamePlayUpdateGuard.Update(update, () => Update(update.StateUpdate))

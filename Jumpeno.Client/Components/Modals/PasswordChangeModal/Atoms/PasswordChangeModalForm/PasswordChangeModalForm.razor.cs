@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 public partial class PasswordChangeModalForm
 {
     // Forms ------------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<PasswordChangeModalForm>();
+    public readonly string Form = Utils.Form.Of<PasswordChangeModalForm>();
     private readonly InputViewModel<string> VMPassword;
     private readonly InputViewModel<string> VMConfirmPassword;
 
@@ -11,11 +11,11 @@ public partial class PasswordChangeModalForm
     public PasswordChangeModalForm()
     {
         VMPassword = new(new InputViewModelTextParams(
-           Form: FORM,
+           Form: Form,
            ID: nameof(UserPasswordChangeDTO.NewPassword),
            TextMode: InputTextMode.Normal,
            TextCheck: UserValidator.IsPassword,
-           MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+           MaxLength: UserValidator.PasswordMaxLength,
            Placeholder: I18N.T("Password"),
            DefaultValue: "",
            Secret: true,
@@ -27,11 +27,11 @@ public partial class PasswordChangeModalForm
            OnEnter: new(async e => await ChangePassword())
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: Form,
             ID: "ConfirmPasssword",
             TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
             Secret: true,
@@ -54,14 +54,14 @@ public partial class PasswordChangeModalForm
             var errors = new List<Error>();
             errors.AddRange(body.Validate());
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
-            Checker.AssertWith(errors, Exceptions.VALUES);
+            Checker.AssertWith(errors, Exceptions.Values);
             // 3) Send request:
-            var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_PASSWORD_CHANGE, body: body);
+            var response = await HTTP.Patch<MessageDTOR>(API.Base.UserPasswordChange, body: body);
             // 4) Show result:
             await Auth.LogOut();
             await Modal.CloseAll();
             Notification.Success(response.Body.Message);
-        }, FORM);
+        }, Form);
 
         await Auth.ResolveFreeze();
         await PageLoader.Hide(PageLoaderTask.PasswordChange);

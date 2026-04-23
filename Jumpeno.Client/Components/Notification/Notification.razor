@@ -245,10 +245,10 @@
 
 <div class="notification">
     @foreach (var notification in NotificationList) {
-        <div @key="notification.Key" class="@GridClass(notification) @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION" @onanimationend="async () => await OnClose(notification)">
-            <div class="notification-wrap @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION" @onanimationend:stopPropagation>
+        <div @key="notification.Key" class="@GridClass(notification) @AnimationHandler.ClassPreventDisabledAnimation" @onanimationend="async () => await OnClose(notification)">
+            <div class="notification-wrap @AnimationHandler.ClassPreventDisabledAnimation" @onanimationend:stopPropagation>
                 <div
-                    class="notification-card @notification.Type.CSSClass() @AnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION"
+                    class="notification-card @notification.Type.CSSClass() @AnimationHandler.ClassPreventDisabledAnimation"
                     @onpointerenter="async () => await StopDelay(notification)"
                     @onpointerleave="async () => await RestartDelay(notification)"
                 >

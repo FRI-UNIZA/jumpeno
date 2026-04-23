@@ -15,5 +15,5 @@ public record GameHubAnonymousDTO(
         errors.AddRange(Checker.ValidateUndefined(Spectate, nameof(Spectate)));
         return errors;
     }
-    public GameHubAnonymousDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public GameHubAnonymousDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

@@ -2,11 +2,11 @@ namespace Jumpeno.Client.Components;
 
 public partial class ConfirmModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "confirm-modal";
-    public const string CLASS_DANGER = "danger";
+    public const string ClassName = "confirm-modal";
+    public const string ClassDanger = "danger";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
+    [CascadingParameter(Name = ThemeProvider.CascadeAppTheme)]
     public required BaseTheme Theme { get; set; }
     // Variant:
     [Parameter]
@@ -55,14 +55,14 @@ public partial class ConfirmModal {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
     // Action:
-    private EmptyDelegate Action = EmptyDelegate.EMPTY;
+    private EmptyDelegate Action = EmptyDelegate.Empty;
     private bool Loader = true;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_DANGER, Danger);
+        .Set(ClassName, Base)
+        .Set(ClassDanger, Danger);
     }
 
     // Open -------------------------------------------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ public partial class ConfirmModal {
     private async Task Confirm() {
         try {
             await PageLoader.Show(PageLoaderTask.Confirm, !Loader);
-            if (Loader) await Task.Delay(Theme.TRANSITION_FAST);
+            if (Loader) await Task.Delay(Theme.TransitionFast);
             await ModalRef.Close();
             await Action.Invoke();
         } finally {

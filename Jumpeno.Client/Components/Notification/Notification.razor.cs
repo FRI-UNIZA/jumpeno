@@ -5,10 +5,10 @@ namespace Jumpeno.Client.Components;
 public partial class Notification {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Duration:
-    public const int DEFAULT_DURATION = 3000;
+    public const int DefaultDuration = 3000;
     // ARIA:
-    private const int ARIA_DELAY_START = 0;
-    private const int ARIA_DELAY_INCREMENT = 1000;
+    private const int AriaDelayStart = 0;
+    private const int AriaDelayIncrement = 1000;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Notifications:
@@ -19,13 +19,13 @@ public partial class Notification {
     private readonly LockerSlim DisplayLock = new();
     // ARIA:
     private readonly List<NotificationData> AriaNotifications = [];
-    private int AriaDelayTime = ARIA_DELAY_START;
+    private int AriaDelayTime = AriaDelayStart;
     private Delay? AriaDelay = null;
     private readonly LockerSlim AriaLock = new();
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass GridClass(NotificationData notification) {
-        return new CSSClass("notification-grid")
+    private CssClass GridClass(NotificationData notification) {
+        return new CssClass("notification-grid")
         .Set("closing", Closing.ContainsKey(notification.Key));
     }
 
@@ -46,12 +46,12 @@ public partial class Notification {
     // ARIA -------------------------------------------------------------------------------------------------------------------------------
     private void StartAriaDisposer() {
         Delay.Clear(AriaDelay);
-        if (AriaDelayTime <= int.MaxValue - ARIA_DELAY_INCREMENT) AriaDelayTime += ARIA_DELAY_INCREMENT;
+        if (AriaDelayTime <= int.MaxValue - AriaDelayIncrement) AriaDelayTime += AriaDelayIncrement;
         AriaDelay = Delay.Set(async () => {
             await AriaLock.TryExclusive(() => {
                 AriaNotifications.Clear();
                 StateHasChanged();
-                AriaDelayTime = ARIA_DELAY_START;
+                AriaDelayTime = AriaDelayStart;
             });
         }, AriaDelayTime);
     }
@@ -67,7 +67,7 @@ public partial class Notification {
     private void SetDelay(NotificationData notification) {
         if (Delays.ContainsKey(notification.Key)) return;
         Delays[notification.Key] = Delay.Set(
-            async () => await Close(notification), notification.Duration ?? DEFAULT_DURATION
+            async () => await Close(notification), notification.Duration ?? DefaultDuration
         );
     }
 

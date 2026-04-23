@@ -7,5 +7,5 @@ public record GameMapDTO : IValidable<GameMapDTO> {
     
     // Validation -------------------------------------------------------------------------------------------------------------------------
     public List<Error> Validate() => MapValidator.ValidateID(ID, nameof(ID));
-    public GameMapDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.VALUES);
+    public GameMapDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

@@ -2,27 +2,27 @@ namespace Jumpeno.Client.Constants;
 
 public static class RequestStorages {
     // Cookies:
-    public const string COOKIE_MODAL = $"{nameof(CookieModal)}";
+    public const string CookieModal = $"{nameof(Components.CookieModal)}";
     // Disposer:
-    public const string DISPOSER = $"{nameof(Disposer)}";
+    public const string Disposer = $"{nameof(Services.Disposer)}";
     // Components:
-    public const string LAYOUT = $"{nameof(Layout)}";
-    public const string PAGE = $"{nameof(Page)}";
+    public const string Layout = $"{nameof(Base.Layout)}";
+    public const string Page = $"{nameof(Base.Page)}";
     // Database:
-    public const string DB = $"{nameof(DB)}";
+    public const string Db = $"{nameof(Db)}";
     // URL:
-    public const string URL = $"{nameof(URL)}";
+    public const string Url = $"{nameof(Url)}";
     // ScrollArea:
-    public const string SCROLLAREA_AREAS = $"{nameof(ScrollArea)}.{nameof(SCROLLAREA_AREAS)}";
-    public const string SCROLLAREA_REGISTER_LISTENERS = $"{nameof(ScrollArea)}.{nameof(SCROLLAREA_REGISTER_LISTENERS)}";
+    public const string ScrollareaAreas = $"{nameof(ScrollArea)}.{nameof(ScrollareaAreas)}";
+    public const string ScrollareaRegisterListeners = $"{nameof(ScrollArea)}.{nameof(ScrollareaRegisterListeners)}";
     // Services:
-    public static string SERVICE_COMPONENT<T>() => $"{nameof(ServiceComponent<T>)}<{typeof(T).Name}>";
-    public static string STATIC_SERVICE<T>() => $"{nameof(StaticService<T>)}<{typeof(T).Name}>";
+    public static string ServiceComponent<T>() => $"{nameof(Base.ServiceComponent<T>)}<{typeof(T).Name}>";
+    public static string StaticService<T>() => $"{nameof(Services.StaticService<T>)}<{typeof(T).Name}>";
     // Theme:
-    public const string THEME_PROVIDER = $"{nameof(ThemeProvider)}";
+    public const string ThemeProvider = $"{nameof(Themes.ThemeProvider)}";
     // Tokens:
-    public static string TOKEN_ACCESS => TokenType.Access.String();
-    public static string TOKEN_REFRESH => TokenType.Refresh.String();
-    public static string TOKEN_ACTIVATION => TokenType.Activation.String();
-    public static string TOKEN_PASSWORD_RESET => TokenType.PasswordReset.String();
+    public static string TokenAccess => TokenType.Access.String();
+    public static string TokenRefresh => TokenType.Refresh.String();
+    public static string TokenActivation => TokenType.Activation.String();
+    public static string TokenPasswordReset => TokenType.PasswordReset.String();
 }

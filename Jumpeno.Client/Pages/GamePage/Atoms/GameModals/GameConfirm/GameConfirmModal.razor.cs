@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class GameConfirmModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "game-confirm-modal";
+    public new const string ClassName = "game-confirm-modal";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -13,7 +13,7 @@ public partial class GameConfirmModal {
     public override async Task CallOnCloseFinish() { await base.CallOnCloseFinish(); await VM.SwitchToGameInput(); }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(GameModal.CLASS, Base).Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(GameModal.ClassName, Base).Set(ClassName, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async ValueTask OnComponentDisposeAsync() => await Close();

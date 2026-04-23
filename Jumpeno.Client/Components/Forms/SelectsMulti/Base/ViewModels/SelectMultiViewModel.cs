@@ -79,16 +79,16 @@ public class SelectMultiViewModel<T> : FormViewModel {
         // Value:
         Value = DefaultValue.ToDictionary(option => option.Label, option => option);
         // Events:
-        OnSelect = p.OnSelect ?? EventDelegate<SelectMultiOptionEvent<T>>.EMPTY;
-        OnDeselect = p.OnDeselect ?? EventDelegate<SelectMultiOptionEvent<T>>.EMPTY;
-        OnCancel = p.OnCancel ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
-        OnCancelClose = p.OnCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
-        OnAfterCancelClose = p.OnAfterCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.EMPTY;
-        OnClear = p.OnClear ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
-        OnClearClose = p.OnClearClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
-        OnAfterClearClose = p.OnAfterClearClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
-        OnOK = p.OnOK ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
-        OnOKClose = p.OnOKClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
-        OnAfterOKClose = p.OnAfterOKClose ?? EventDelegate<SelectMultiEvent<T>>.EMPTY;
+        OnSelect = p.OnSelect ?? EventDelegate<SelectMultiOptionEvent<T>>.Empty;
+        OnDeselect = p.OnDeselect ?? EventDelegate<SelectMultiOptionEvent<T>>.Empty;
+        OnCancel = p.OnCancel ?? EventDelegate<SelectMultiCancelEvent<T>>.Empty;
+        OnCancelClose = p.OnCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.Empty;
+        OnAfterCancelClose = p.OnAfterCancelClose ?? EventDelegate<SelectMultiCancelEvent<T>>.Empty;
+        OnClear = p.OnClear ?? EventDelegate<SelectMultiEvent<T>>.Empty;
+        OnClearClose = p.OnClearClose ?? EventDelegate<SelectMultiEvent<T>>.Empty;
+        OnAfterClearClose = p.OnAfterClearClose ?? EventDelegate<SelectMultiEvent<T>>.Empty;
+        OnOK = p.OnOK ?? EventDelegate<SelectMultiEvent<T>>.Empty;
+        OnOKClose = p.OnOKClose ?? EventDelegate<SelectMultiEvent<T>>.Empty;
+        OnAfterOKClose = p.OnAfterOKClose ?? EventDelegate<SelectMultiEvent<T>>.Empty;
     }
 }

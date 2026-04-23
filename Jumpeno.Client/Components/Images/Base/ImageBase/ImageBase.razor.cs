@@ -8,15 +8,15 @@ namespace Jumpeno.Client.Components;
 /// </summary>
 public partial class ImageBase {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_PREFIX = "image";
+    public const string IdPrefix = "image";
     // Class:
-    public const string CLASS = "image";
-    public const string CLASS_TRANSPARENT = "transparent";
-    public const string CLASS_NO_TRANSITION = "no-transition";
+    public const string ClassName = "image";
+    public const string ClassTransparent = "transparent";
+    public const string ClassNoTransition = "no-transition";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required string URL { get; set; }
+    public required string Url { get; set; }
     [Parameter]
     public string Alt { get; set; } = "";
     [Parameter]
@@ -34,25 +34,25 @@ public partial class ImageBase {
     private readonly Dictionary<string, object> Attributes = [];
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly string ID = null!;
+    private readonly string _id = null!;
     private ImageState State = ImageState.Loading;
     
     private static readonly Dictionary<string, ImageBase> Images = [];
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .Set(State)
-        .Set(CLASS_TRANSPARENT, Transparent)
-        .Set(CLASS_NO_TRANSITION, NoTransition);
+        .Set(ClassTransparent, Transparent)
+        .Set(ClassNoTransition, NoTransition);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ImageBase() {
         if (AppEnvironment.IsServer) return;
-        ID = IDGenerator.Generate(ID_PREFIX);
-        Images[ID] = this;
+        _id = IDGenerator.Generate(IdPrefix);
+        Images[_id] = this;
     }
 
     protected override void OnComponentParametersSet(bool firstTime) {
@@ -64,30 +64,30 @@ public partial class ImageBase {
             State = ImageState.Loading;
         } else {
             State = Preloaded
-                    ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, URL)
-                    : (ImageState) JS.Invoke<int>(JSImage.CheckState, URL);
+                    ? (ImageState) JS.Invoke<int>(JSImage.CheckPreloadedState, ImagePreloader.ID, Url)
+                    : (ImageState) JS.Invoke<int>(JSImage.CheckState, Url);
             HandleLoadFinish(State, OnLoadingFinish);
         } 
     }
 
     override protected void OnComponentAfterRender(bool firstRender) {
         if (!firstRender) return;
-        JS.InvokeVoid(JSImage.Init, ID);
+        JS.InvokeVoid(JSImage.Init, _id);
     }
 
     protected override void OnComponentDispose() {
         if (AppEnvironment.IsServer) return;
-        Images.Remove(ID);
+        Images.Remove(_id);
     }
     
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    public static void HandleLoadFinish(ImageState state, Action<bool> OnLoadingFinish) {
+    public static void HandleLoadFinish(ImageState state, Action<bool> onLoadingFinish) {
         switch (state) {
             case ImageState.Error:
-                OnLoadingFinish(false);
+                onLoadingFinish(false);
             break;
             case ImageState.Finished:
-                OnLoadingFinish(true);
+                onLoadingFinish(true);
             break;
         }
     }

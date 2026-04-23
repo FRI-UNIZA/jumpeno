@@ -15,10 +15,10 @@
     aria-roledescription="@RoleDescription"
     aria-label="@(ViewModel.Loading ? LoadLabel : Type == LoadAreaType.Focusable ? Label : null)"
 >
-    <div class="@CLASS_CONTENT" inert="@ViewModel.Loading">
+    <div class="@ClassContent" inert="@ViewModel.Loading">
         @ChildContent
     </div>
-    <div class="@CLASS_LOADER_WRAP">
-        <Loader Class="@CLASS_LOADER" />
+    <div class="@ClassLoaderWrap">
+        <Loader Class="@ClassLoader" />
     </div>
 </div>

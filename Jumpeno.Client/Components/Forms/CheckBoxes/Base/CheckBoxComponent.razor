@@ -8,7 +8,7 @@
         <button
             id="@ViewModel.FormID"
             type="@ButtonType.Button.String()"
-            class="@CLASS_ELEMENT"
+            class="@ClassElement"
             role="checkbox"
             aria-label="@HTML.Label.Aria(Label, ViewModel.Value)"
             aria-checked="@HTML.Label.AriaActive(ViewModel.Value)"
@@ -18,7 +18,7 @@
             @if (Icon != null) {
                 @Icon
             } else {
-                <div class="@CLASS_ICON">
+                <div class="@ClassIcon">
                     <div class="checkbox-icon-start" />
                     <div class="checkbox-icon-end" />
                 </div>
@@ -26,7 +26,7 @@
         </button>
         @if (Description != null) {
             <div
-                class="@CLASS_DESCRIPTION"
+                class="@ClassDescription"
                 @onclick="@(ActiveDescription ? async () => await ChangeValue() : () => {})"
             >
                 @Description

@@ -4,7 +4,7 @@ namespace Jumpeno.Server.Hubs;
 
 public class GameHub : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(WebApplication app) => app.MapHub<GameHub>(GameHubs.URL);
+    public static void Init(WebApplication app) => app.MapHub<GameHub>(GameHubs.Url);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static IHubContext<GameHub> Hub => AppEnvironment.GetService<IHubContext<GameHub>>();
@@ -51,7 +51,7 @@ public class GameHub : Hub {
 
     // Exceptions -------------------------------------------------------------------------------------------------------------------------
     private static async Task HandleException(IClientProxy proxy, Exception e) {
-        await proxy.SendAsync(GameHubs.ERROR, (e is AppException exception ? exception : Exceptions.DEFAULT).DTO);
+        await proxy.SendAsync(GameHubs.Error, (e is AppException exception ? exception : Exceptions.Default).DTO);
         // NOTE: Client must close the connection!
     }
 
@@ -64,7 +64,7 @@ public class GameHub : Hub {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     private async Task<(User User, object DTO)> ReadDTO() {
         // 1.1) Init context:
-        var ctx = Context.GetHttpContext() ?? throw Exceptions.SERVER;
+        var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
         // 1.2) Check app version:
         VersionMiddleware.CheckHubVersion(ctx);
         // 1.3) Init errors:
@@ -73,43 +73,43 @@ public class GameHub : Hub {
         // 2.1) Validate type:
         Checker.Validate(
             errors,
-            !ctx.Request.Query.TryGetValue(GameHubs.DTO_TYPE, out var queryDTOType),
-            Errors.EMPTY.SetID(GameHubs.DTO_TYPE)
+            !ctx.Request.Query.TryGetValue(GameHubs.DtoType, out var queryDTOType),
+            Errors.Empty.SetID(GameHubs.DtoType)
         );
         // 2.2) Validate params:
         Checker.Validate(
             errors,
-            !ctx.Request.Query.TryGetValue(GameHubs.DTO, out var queryDTO),
-            Errors.EMPTY.SetID(GameHubs.DTO)
+            !ctx.Request.Query.TryGetValue(GameHubs.Dto, out var queryDTO),
+            Errors.Empty.SetID(GameHubs.Dto)
         );
         // 2.3) Check errors:
-        Checker.AssertWith(errors, Exceptions.VALUES);
+        Checker.AssertWith(errors, Exceptions.Values);
 
         // 3.1) Read params:
         switch (queryDTOType) {
             case nameof(GameHubCreateDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubCreateDTO>(queryDTO!)
-                ?? throw Exceptions.VALUES.SetErrors(Errors.UNDEFINED.SetID(GameHubs.DTO));
+                ?? throw Exceptions.Values.SetErrors(Errors.Undefined.SetID(GameHubs.Dto));
                 dto.Assert();
                 JWT.Authorize(dto.AccessToken, [Role.User]);
                 return (await UserEntity.SelectCurrentActivatedUser(), dto);
             }
             case nameof(GameHubAnonymousDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubAnonymousDTO>(queryDTO!)
-                ?? throw Exceptions.VALUES.SetErrors(Errors.UNDEFINED.SetID(GameHubs.DTO));
+                ?? throw Exceptions.Values.SetErrors(Errors.Undefined.SetID(GameHubs.Dto));
                 dto.Assert();
                 return (new(dto.Name), dto);
             }
             case nameof(GameHubRegisteredDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubRegisteredDTO>(queryDTO!)
-                ?? throw Exceptions.VALUES.SetErrors(Errors.UNDEFINED.SetID(GameHubs.DTO));
+                ?? throw Exceptions.Values.SetErrors(Errors.Undefined.SetID(GameHubs.Dto));
                 dto.Assert();
                 JWT.Authorize(dto.AccessToken, [Role.User]);
                 return (await UserEntity.SelectCurrentActivatedUser(), dto);
             }
         }
         // 3.2) Invalid type:
-        throw Exceptions.VALUES.SetErrors(Errors.INVALID.SetID(GameHubs.DTO_TYPE));
+        throw Exceptions.Values.SetErrors(Errors.Invalid.SetID(GameHubs.DtoType));
     }
 
     // Connect ----------------------------------------------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ public class GameHub : Hub {
                     await GameService.Connect(data.Code, new(Context.ConnectionId, user, data.Device), data.Spectate, nameof(data.Code), nameof(data.Name)),
                 GameHubRegisteredDTO data =>
                     await GameService.Connect(data.Code, new(Context.ConnectionId, user, data.Device), data.Spectate, nameof(data.Code)),
-                _ => throw Exceptions.VALUES.SetErrors(Errors.INVALID.SetID(GameHubs.DTO)),
+                _ => throw Exceptions.Values.SetErrors(Errors.Invalid.SetID(GameHubs.Dto)),
             };
             // NOTE: [Locked] AfterConnected(GameContext)
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class GameHub : Hub {
         // 1) Add to groups:
         await AddToGroups(ctx);
         // 2) Send response:
-        await Hub.Clients.Client(id).SendAsync(GameHubs.CONNECTION_SUCCESSFUL, ctx.Engine.Game);
+        await Hub.Clients.Client(id).SendAsync(GameHubs.ConnectionSuccessful, ctx.Engine.Game);
     }
 
     // Client updates ---------------------------------------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ public class GameHub : Hub {
         try {
             // 1) Validate host:
             if (GameContext is null || GameContext.Connection.User.ID != GameContext.Engine.Game.Host.ID)
-                throw Exceptions.CLIENT.SetInfo("You are not a host!");
+                throw Exceptions.Client.SetInfo("You are not a host!");
             // 2) Control game:
             switch (update.Action) {
                 case GameAction.Start: await GameService.StartGame(GameContext); return;
@@ -162,7 +162,7 @@ public class GameHub : Hub {
                 case GameAction.Delete: await GameService.DeleteGame(GameContext); return;
             }
             // 3) Throw if invalid:
-            throw Exceptions.CLIENT.SetInfo("Invalid game action!");
+            throw Exceptions.Client.SetInfo("Invalid game action!");
         } catch (Exception e) {
             // 4) Handle error:
             await SendResponse(new GameActionResponseUpdate(e));
@@ -172,7 +172,7 @@ public class GameHub : Hub {
     public async Task PlayerReadyRequestUpdate(PlayerReadyRequestUpdate update) {
         try {
             // 1) Validate player:
-            if (GameContext == null) throw Exceptions.CLIENT.SetInfo("You are not a player!");
+            if (GameContext == null) throw Exceptions.Client.SetInfo("You are not a player!");
             // 2) Set player ready:
             await GameService.SetPlayerReady(GameContext);
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class GameHub : Hub {
         try {
             // 1) Validate host:
             if (GameContext is null || GameContext.Connection.User.ID != GameContext.Engine.Game.Host.ID)
-                throw Exceptions.CLIENT.SetInfo("You are not a host!");
+                throw Exceptions.Client.SetInfo("You are not a host!");
             // 2) Kick player:
             await GameService.KickPlayerByName(GameContext, update.Name);
         } catch (Exception e) {
@@ -208,20 +208,20 @@ public class GameHub : Hub {
     }
 
     public async Task PingUpdate(PingUpdate update) {
-        try { await Clients.Caller.SendAsync(update.HUB_ACTION, update); }
+        try { await Clients.Caller.SendAsync(update.HubAction, update); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
     // Server updates ---------------------------------------------------------------------------------------------------------------------
     public static async Task SendGameUpdate(Game game, UpdateGroup group, NetworkUpdate update) {
-        try { await Hub.Clients.Group(GroupName(game.ID, game.Code, group)).SendAsync(update.HUB_ACTION, update); }
+        try { await Hub.Clients.Group(GroupName(game.ID, game.Code, group)).SendAsync(update.HubAction, update); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
     public static async Task SendGameUpdate(Connection? connection, NetworkUpdate update) {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
-            await Hub.Clients.Client(id).SendAsync(update.HUB_ACTION, update);
+            await Hub.Clients.Client(id).SendAsync(update.HubAction, update);
         } catch (Exception e) {
             Console.Error.WriteLine(e);
         }
@@ -242,14 +242,14 @@ public class GameHub : Hub {
     }
 
     public async Task SendResponse(GameResponseUpdate update) {
-        try { await Clients.Caller.SendAsync(update.HUB_ACTION, update); }
+        try { await Clients.Caller.SendAsync(update.HubAction, update); }
         catch (Exception e) { Console.Error.WriteLine(e); }
     }
 
     public static async Task SendResponse(Connection? connection, GameResponseUpdate update) {
         try {
             if (connection == null || connection.ConnectionID is not string id) return;
-            await Hub.Clients.Client(id).SendAsync(update.HUB_ACTION, update);
+            await Hub.Clients.Client(id).SendAsync(update.HubAction, update);
         } catch (Exception e) {
             Console.Error.WriteLine(e);
         }

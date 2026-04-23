@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class CredentialsModal {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string FIX_URL = API.BASE.ADMIN_DB_CREDENTIALS;
+    public static readonly string FixUrl = API.Base.AdminDbCredentials;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -25,7 +25,7 @@ public partial class CredentialsModal {
             // 1.3) Split values:
             Credentials = response.Body.Message.Split(';', StringSplitOptions.RemoveEmptyEntries);
             // 1.4) Fix values:
-            if (URL == FIX_URL) {
+            if (URL == FixUrl) {
                 for (int i = 0; i < Credentials.Length; i++) {
                     Credentials[i] = Credentials[i].Replace("localhost", "database");
                 }

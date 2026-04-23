@@ -6,7 +6,7 @@
     @ref="@ModalRef"
     Unclosable="@Unclosable"
     Label="@I18N.T("Cookie settings")"
-    Class="@CLASS"
+    Class="@ClassName"
     OnCloseFinish="OnClose"
 >
     <Content>
@@ -14,7 +14,7 @@
             <Collapse Surface="CollapseSurface.FloatingCollapse">
                 <CollapseItem Label="@I18N.T("Mandatory cookies")">
                     <Title>
-                        <div class="@CLASS_COOKIE_TITLE">
+                        <div class="@ClassCookieTitle">
                             @I18N.T("Mandatory cookies")
                             <SwitchField ViewModel="SwitchMandatoryVM" Label="@I18N.T("Allow mandatory cookies")" AutoSize NoError Disabled />
                         </div>
@@ -25,7 +25,7 @@
                 </CollapseItem>
                 <CollapseItem Label="@I18N.T("Preferences")">
                     <Title>
-                        <div class="@CLASS_COOKIE_TITLE">
+                        <div class="@ClassCookieTitle">
                             @I18N.T("Preferences")
                             <SwitchField ViewModel="SwitchFunctionalVM" Label="@I18N.T("Allow preference cookies")" AutoSize NoError />
                         </div>
@@ -36,7 +36,7 @@
                 </CollapseItem>
                 <CollapseItem Label="@I18N.T("Security")">
                     <Title>
-                        <div class="@CLASS_COOKIE_TITLE">
+                        <div class="@ClassCookieTitle">
                             @I18N.T("Security")
                             <SwitchField ViewModel="SwitchSecurityVM" Label="@I18N.T("Allow security cookies")" AutoSize NoError />
                         </div>
@@ -60,10 +60,10 @@
             <Button Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Selected.Keys.ToList()))">
                 <Text>@I18N.T("Accept chosen")</Text>
             </Button>
-            <Button Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES_REQUIRED))">
+            <Button Variant="ButtonVariant.Tertiary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TypesRequired))">
                 <Text>@I18N.T("Only mandatory")</Text>
             </Button>
-            <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.TYPES))">
+            <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="@(async () => await AcceptCookies(Cookies.Types))">
                 <Text>@I18N.T("Accept all")</Text>
             </Button>
         </div>
