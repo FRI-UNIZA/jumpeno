@@ -2,11 +2,11 @@ namespace Jumpeno.Client.Layouts;
 
 public partial class AppLayout {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    private const string CLASS = "main-layout";
-    private const string CLASS_NO_NAVIGATION = "no-navigation";
-    private const string INERT_SELECTOR = $"#{WebDocument.ID}";
+    private const string ClassName = "main-layout";
+    private const string ClassNoNavigation = "no-navigation";
+    private const string InertSelector = $"#{WebDocument.ID}";
     // Cascade:
-    public const string CASCADE_APP_LAYOUT = $"{nameof(AppLayout)}.{nameof(CASCADE_APP_LAYOUT)}";
+    public const string CascadeAppLayout = $"{nameof(AppLayout)}.{nameof(CascadeAppLayout)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -17,14 +17,14 @@ public partial class AppLayout {
     private NavMenuMobile NavMenuMobileRef = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_NO_NAVIGATION, !LayoutVM.NavigationDisplayed);
+        .Set(ClassName, Base)
+        .Set(ClassNoNavigation, !_layoutVm.NavigationDisplayed);
     }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private readonly AppLayoutVM LayoutVM = new();
+    private readonly AppLayoutVM _layoutVm = new();
     
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async Task OnComponentInitializedAsync() => await Auth.Register(this);
@@ -37,15 +37,15 @@ public partial class AppLayout {
     private void NotifyState() { Layout.Current.Notify(); StateHasChanged(); }
     private void NotifyPage() { PageKey = !PageKey; NotifyState(); }
     private void NotifyAll() { Key = !Key; NotifyState(); }
-    public static void Notify(NOTIFY notify) {
+    public static void Notify(NotifyType notify) {
         switch (notify) {
-            case NOTIFY.STATE: Instance().NotifyState(); break;
-            case NOTIFY.PAGE: Instance().NotifyPage(); break;
-            case NOTIFY.ALL: Instance().NotifyAll(); break;
+            case NotifyType.State: Instance().NotifyState(); break;
+            case NotifyType.Page: Instance().NotifyPage(); break;
+            case NotifyType.All: Instance().NotifyAll(); break;
         }
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private static void OnMobileMenuOpen() => ActionHandler.SetInert(INERT_SELECTOR);
-    private static void OnMobileMenuClose() => ActionHandler.RemoveInert(INERT_SELECTOR);
+    private static void OnMobileMenuOpen() => ActionHandler.SetInert(InertSelector);
+    private static void OnMobileMenuClose() => ActionHandler.RemoveInert(InertSelector);
 }

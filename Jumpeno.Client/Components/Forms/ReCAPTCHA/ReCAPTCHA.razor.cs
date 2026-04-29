@@ -7,7 +7,7 @@ namespace Jumpeno.Client.Components;
 public partial class ReCAPTCHA
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_NAME = "recaptcha";
+    public const string ClassName = "recaptcha";
 
     // Injections -------------------------------------------------------------------------------------------------------------------------
     [Inject]
@@ -18,14 +18,14 @@ public partial class ReCAPTCHA
     [Parameter] public required string ID { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly string CAPTCHA_ID = IDGenerator.Generate(nameof(ReCAPTCHA));
+    private readonly string captchaId = IDGenerator.Generate(nameof(ReCAPTCHA));
     public bool Showing { get; private set; } = false;
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private ReCAPTCHAViewModel ViewModel { get; set; } = null!;
     
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS_NAME, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnComponentInitialized() => ViewModel = new ReCAPTCHAViewModel(Form, ID, x => Show());
@@ -35,9 +35,9 @@ public partial class ReCAPTCHA
         if (!firstRender) return;
         try
         {
-            if (await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))) return;
+            if (await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))) return;
             await JS.EvalVoidAsync($$"""
-                grecaptcha.render('{{CAPTCHA_ID}}', {
+                grecaptcha.render('{{captchaId}}', {
                     sitekey : '{{AppSettings.ReCAPTCHA.SiteKey}}',
                     theme : 'light'
                 });
@@ -55,21 +55,21 @@ public partial class ReCAPTCHA
     ///     <seealso cref="HTTP.Sync(Action)"/>.
     /// </summary>
     /// <returns>Returns ReCaptcha token or empty string if ReCaptcha is not shown.</returns>
-    /// <exception cref="EXCEPTION.DEFAULT">Can throw if grecaptcha is not loaded properly.</exception>
+    /// <exception cref="Exceptions.Default">Can throw if grecaptcha is not loaded properly.</exception>
     public async Task<string> GetToken() 
     {
-        if (!AppSettings.ReCAPTCHA.On || !CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY))) return string.Empty;
+        if (!AppSettings.ReCAPTCHA.On || await HTTP.Sync(() => !CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))) return string.Empty;
         try
         {
             if (!Showing) return string.Empty;
 
             var captchaToken = await JS.InvokeAsync<string>("grecaptcha.getResponse");
             await JS.InvokeVoidAsync("grecaptcha.reset"); // Reset captcha after each request bcs tokens live only for 1 check
-            if (string.IsNullOrWhiteSpace(captchaToken)) throw EXCEPTION.CAPTCHA_MISSING;
+            if (string.IsNullOrWhiteSpace(captchaToken)) throw Exceptions.CaptchaMissing;
             return captchaToken;
         }
         catch (AppException) { throw; }
-        catch (Exception) { throw EXCEPTION.CAPTCHA_ERROR; }
+        catch (Exception) { throw Exceptions.CaptchaError; }
     }
 
     public void Show()

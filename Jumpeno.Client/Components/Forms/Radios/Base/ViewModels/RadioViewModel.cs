@@ -24,7 +24,7 @@ public class RadioViewModel<T> : FormViewModel {
             if (Value == null) Error.SetForce(message);
             else Value?.Error?.Set(message);
         };
-        OnChange = p.OnChange ?? EventDelegate<RadioEvent<T>>.EMPTY;
-        OnAfterChange = p.OnAfterChange ?? EventDelegate<RadioEvent<T>>.EMPTY;
+        OnChange = p.OnChange ?? EventDelegate<RadioEvent<T>>.Empty;
+        OnAfterChange = p.OnAfterChange ?? EventDelegate<RadioEvent<T>>.Empty;
     }
 }

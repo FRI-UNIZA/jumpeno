@@ -2,13 +2,13 @@ namespace Jumpeno.Client.Components;
 
 public partial class CookieButton {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "cookie-button";
+    public const string ClassName = "cookie-button";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly string ID;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public CookieButton() => ID = IDGenerator.Generate(nameof(CookieButton));

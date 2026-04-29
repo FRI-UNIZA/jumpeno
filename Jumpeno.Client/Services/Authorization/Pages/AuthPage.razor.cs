@@ -4,8 +4,8 @@ namespace Jumpeno.Client.Pages;
 
 public partial class AuthPage {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string LINK_LOGIN => I18N.Link<LoginPage>(); // User not authenticated
-    public static string LINK_FALLBACK => I18N.Link<HomePage>(); // Role not allowed
+    public static string LinkLogin => I18N.Link<LoginPage>(); // User not authenticated
+    public static string LinkFallback => I18N.Link<HomePage>(); // Role not allowed
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -16,20 +16,20 @@ public partial class AuthPage {
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
     private static App App = null!;
-    public static INIT_STAGE Stage { get; private set; } = INIT_STAGE.AUTHORIZATION;
+    public static InitStage Stage { get; private set; } = InitStage.Authorizing;
     private static TaskCompletionSource StageTCS = new();
     public static Task NextStage() { try { Stage++; StageTCS = new(); return StageTCS.Task; } finally { App.Notify(); } }
     public static void FinishStage() => StageTCS.TrySetResult();
     private static bool IsRendering() {
         if (AppEnvironment.IsServer) return true;
-        else return Stage == INIT_STAGE.RENDERING;
+        else return Stage == InitStage.Rendering;
     }
 
     // Layout -----------------------------------------------------------------------------------------------------------------------------
-    private static bool IsNotBlock(RenderFragment? body) => !Auth.IsRole(Page.RolesBlock(body));
-    private static bool IsAuthenticated(RenderFragment? body) => Page.Roles(body).Length <= 0 || Auth.IsLoggedIn;
+    private static bool IsNotBlock(RenderFragment? body) => !Auth.IsRole(Page.GetRolesBlock(body));
+    private static bool IsAuthenticated(RenderFragment? body) => Page.GetRoles(body).Length <= 0 || Auth.IsLoggedIn;
     private static bool IsAuthorized(RenderFragment? body) {
-        var roles = Page.Roles(body);
+        var roles = Page.GetRoles(body);
         if (roles.Length <= 0) return true;
         foreach (var role in roles) {
             if (Auth.IsRole(role)) return true;
@@ -55,11 +55,11 @@ public partial class AuthPage {
         if (!AppSettings.Redirect) return;
         var q = URL.Query();
         if (!Auth.IsLoggedIn) {
-            if (Page.Roles(URL.Path()).Length > 0) await Navigator.NavigateTo(URL.WithQuery(LINK_LOGIN, q), replace: true);
+            if (Page.GetRoles(URL.Path()).Length > 0) await Navigator.NavigateTo(URL.WithQuery(LinkLogin, q), replace: true);
         } else {
-            if (Auth.IsRole(Page.RolesBlock(URL.Path()))) await Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q), replace: true);
-            var roles = Page.Roles(URL.Path());
-            if (roles.Length > 0 && !Auth.IsRole(roles)) await Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q), replace: true);
+            if (Auth.IsRole(Page.GetRolesBlock(URL.Path()))) await Navigator.NavigateTo(URL.WithQuery(LinkFallback, q), replace: true);
+            var roles = Page.GetRoles(URL.Path());
+            if (roles.Length > 0 && !Auth.IsRole(roles)) await Navigator.NavigateTo(URL.WithQuery(LinkFallback, q), replace: true);
         }
     }
 
@@ -69,19 +69,19 @@ public partial class AuthPage {
             if (e.IsPopState) return true;
             var q = URL.Query();
             if (!Auth.IsLoggedIn) {
-                if (Page.Roles(URL.ToRelative(e.AfterURL)).Length > 0) {
-                    Navigator.NavigateTo(URL.WithQuery(LINK_LOGIN, q));
+                if (Page.GetRoles(URL.ToRelative(e.AfterURL)).Length > 0) {
+                    Navigator.NavigateTo(URL.WithQuery(LinkLogin, q));
                     return false;
                 }
                 return true;
             } else {
-                if (Auth.IsRole(Page.RolesBlock(URL.ToRelative(e.AfterURL)))) {
-                    Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q));
+                if (Auth.IsRole(Page.GetRolesBlock(URL.ToRelative(e.AfterURL)))) {
+                    Navigator.NavigateTo(URL.WithQuery(LinkFallback, q));
                     return false;
                 }
-                var roles = Page.Roles(URL.ToRelative(e.AfterURL));
+                var roles = Page.GetRoles(URL.ToRelative(e.AfterURL));
                 if (roles.Length > 0 && !Auth.IsRole(roles)) {
-                    Navigator.NavigateTo(URL.WithQuery(LINK_FALLBACK, q));
+                    Navigator.NavigateTo(URL.WithQuery(LinkFallback, q));
                     return false;
                 }
                 return true;

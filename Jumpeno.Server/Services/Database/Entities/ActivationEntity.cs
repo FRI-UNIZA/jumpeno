@@ -5,7 +5,7 @@ public class ActivationEntity {
     public static readonly int EXPIRES = From.HourToMS(ServerSettings.Expiration.ActivationToken.Hours); // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public const string INDEX_ID = "PRIMARY";
+    public const string IndexId = "PRIMARY";
     [Key]
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]

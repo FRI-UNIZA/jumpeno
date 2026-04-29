@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class ModalProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_CONTENT = "modal-provider-content";
+    public const string ClassContent = "modal-provider-content";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Dictionary<string, ModalElement> ElementDictionary = [];
@@ -15,7 +15,7 @@ public partial class ModalProvider {
     private readonly MinWatch MinLoadingWatch = new();
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = PageLoader.CASCADE_PAGE_LOADER_DISPLAYED)]
+    [CascadingParameter(Name = PageLoader.CascadePageLoaderDisplayed)]
     public bool PageLoaderDisplayed { get; set; }
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
@@ -32,7 +32,7 @@ public partial class ModalProvider {
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     // Setting:
-    private static void SetModalState(Modal modal, MODAL_STATE state) {
+    private static void SetModalState(Modal modal, ModalStateType state) {
         Type type = typeof(Modal);
         PropertyInfo? prop = type.GetProperty(nameof(Modal.State));
         if (prop is null) return;
@@ -47,7 +47,7 @@ public partial class ModalProvider {
 
         // 1) Lock:
         await UI.Lock.TryLock();
-        if (modal.State != MODAL_STATE.CLOSED) {
+        if (modal.State != ModalStateType.Closed) {
             UI.Lock.TryUnlock(); return;
         }
 
@@ -57,7 +57,7 @@ public partial class ModalProvider {
 
         // 3) Block input:
         ActionHandler.SaveActiveElement();
-        await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.Modal, true);
 
         // 4) Min loading:
         if (modal.CreatedLoading) instance.MinLoadingWatch.Start(modal.MinLoading);
@@ -67,7 +67,7 @@ public partial class ModalProvider {
         await modal.CallOnOpenStart();
 
         // 6) Set state:
-        SetModalState(modal, MODAL_STATE.PRE_OPEN);
+        SetModalState(modal, ModalStateType.PreOpen);
         instance.TCSOpened = new();
         instance.ModalList.Add(modal);
         instance.StateHasChanged();
@@ -78,9 +78,9 @@ public partial class ModalProvider {
 
     public static async Task AddElement(ModalElement element) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.Add(element.Modal.ID, element);
+            instance.ElementDictionary.Add(element.Modal.Id, element);
         });
-        JS.InvokeVoid(JSModal.PreOpen, element.Modal.ID);
+        JS.InvokeVoid(JSModal.PreOpen, element.Modal.Id);
     }
 
     private static async Task SetModalOpen(string id) {
@@ -92,13 +92,13 @@ public partial class ModalProvider {
 
         // 2) Set state:
         instance.TCSOpen = new TaskCompletionSource();
-        SetModalState(element.Modal, MODAL_STATE.OPEN);
+        SetModalState(element.Modal, ModalStateType.Open);
         element.Notify();
         await instance.TCSOpen.Task;
 
         // 3) Unblock input:
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
-        ActionHandler.SetFocus(element.Modal.ID_DIALOG);
+        await PageLoader.Hide(PageLoaderTask.Modal, false);
+        ActionHandler.SetFocus(element.Modal.IdDialog);
 
         // 4) After finish events:
         await element.Modal.CallOnAfterOpenFinish();
@@ -113,7 +113,7 @@ public partial class ModalProvider {
     // Notification:
     public static async Task NotifyElement(Modal modal) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+            instance.ElementDictionary.TryGetValue(modal.Id, out var element);
             element?.Notify(); 
         });
     }
@@ -128,7 +128,7 @@ public partial class ModalProvider {
         var instance = Instance();
         await instance.TCSLoading.Task;
         await AwaitLoading(modal);
-        SetModalState(modal, MODAL_STATE.OPENING);
+        SetModalState(modal, ModalStateType.Openning);
         await modal.CallOnOpenFinish();
         await NotifyElement(modal);
         await instance.TCSOpened.Task;
@@ -140,12 +140,12 @@ public partial class ModalProvider {
         await instance.TCSLoading.Task;
         await AwaitLoading(modal);
 
-        instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+        instance.ElementDictionary.TryGetValue(modal.Id, out var element);
         instance.TCSDispose = new TaskCompletionSource();
         element?.StartClosing();
         await instance.TCSDispose.Task;
 
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
+        await PageLoader.Hide(PageLoaderTask.Modal, false);
         await ActionHandler.RestoreFocusAsync();
         UI.Lock.TryUnlock();
     }
@@ -155,7 +155,7 @@ public partial class ModalProvider {
 
         // 1) Lock:
         if (withLock) await UI.Lock.TryLock();
-        if (modal.State != MODAL_STATE.OPEN) {
+        if (modal.State != ModalStateType.Open) {
             if (withLock) UI.Lock.TryUnlock(); return;
         }
 
@@ -164,15 +164,15 @@ public partial class ModalProvider {
         await modal.CallOnBeforeCloseStart();
 
         // 3) Block input:
-        await PageLoader.Show(PAGE_LOADER_TASK.MODAL, true);
+        await PageLoader.Show(PageLoaderTask.Modal, true);
 
         // 4) Start events:
         await modal.CallOnCloseStart();
 
         // 5) Check element:
-        instance.ElementDictionary.TryGetValue(modal.ID, out var element);
+        instance.ElementDictionary.TryGetValue(modal.Id, out var element);
         if (element == null) {
-            await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
+            await PageLoader.Hide(PageLoaderTask.Modal, false);
             if (withLock) UI.Lock.TryUnlock();
             return;
         }
@@ -186,7 +186,7 @@ public partial class ModalProvider {
         await modal.CallOnCloseFinish();
 
         // 8) Unblock input:
-        await PageLoader.Hide(PAGE_LOADER_TASK.MODAL, false);
+        await PageLoader.Hide(PageLoaderTask.Modal, false);
         await ActionHandler.RestoreFocusAsync();
 
         // 9) After finish events:
@@ -200,14 +200,14 @@ public partial class ModalProvider {
 
     public static async Task RemoveElement(ModalElement element) {
         var instance = Instance(); await instance.ElementLock.TryExclusive(() => {
-            instance.ElementDictionary.Remove(element.Modal.ID);
+            instance.ElementDictionary.Remove(element.Modal.Id);
             instance.ModalList.Remove(element.Modal);
             instance.StateHasChanged();
         });
     }
 
     public static void NotifyDispose(Modal modal) {
-        SetModalState(modal, MODAL_STATE.CLOSED);
+        SetModalState(modal, ModalStateType.Closed);
         Instance().TCSDispose.TrySetResult();
     }
 
@@ -226,7 +226,7 @@ public partial class ModalProvider {
     public static async Task JS_ModalPreOpened(string id) {
         var instance = Instance();
         var element = instance.ElementDictionary[id];
-        SetModalState(element.Modal, element.Modal.CreatedLoading ? MODAL_STATE.LOADING : MODAL_STATE.OPENING);
+        SetModalState(element.Modal, element.Modal.CreatedLoading ? ModalStateType.Loading : ModalStateType.Openning);
         if (!element.Modal.CreatedLoading) await element.Modal.CallOnOpenFinish();
         element.Notify();
         instance.TCSLoading.TrySetResult();
@@ -245,7 +245,7 @@ public partial class ModalProvider {
         var instance = Instance(); await UI.Lock.TryExclusive(async () => {
             if (instance.ModalList.Count <= 0) return;
             var modal = instance.ModalList[^1];
-            if (modal.State == MODAL_STATE.OPEN && !modal.Unclosable) {
+            if (modal.State == ModalStateType.Open && !modal.Unclosable) {
                 await DestroyModal(modal, withLock: false);
             }
         });

@@ -1,28 +1,24 @@
-﻿@namespace Jumpeno.Client.Pages
+@namespace Jumpeno.Client.Pages
 
 @inherits Page
-@attribute [Route(GamePage.ROUTE_EN)]
-@attribute [Route(GamePage.ROUTE_SK)]
+@attribute [Route(GamePage.RouteEn)]
+@attribute [Route(GamePage.RouteSk)]
 
 <DocTitle Value="@I18N.T("Game")" />
 
 <div class="game-page">
     @if (GameVM is null) {
-        if (!ConnectVM.Create) {
-            <ConnectBox @key="@nameof(ConnectBox)" @ref="View" VM="ConnectVM" />
+        if (!_connectVm.Create) {
+            <ConnectBox @key="@nameof(ConnectBox)" @ref="View" VM="_connectVm" />
         } else {
-            <CreateBox @key="@nameof(CreateBox)" @ref="View" VM="ConnectVM" />
+            <CreateBox @key="@nameof(CreateBox)" @ref="View" VM="_connectVm" />
         }
     } else {
         <GameChat @key="@nameof(GameChat)" @ref="ChatRef" VM="GameVM" />
         switch (GameVM.Game.State) {
-            case GAME_STATE.LOBBY:
-            case GAME_STATE.PAUSE:
-            case GAME_STATE.SCOREBOARD:
-                <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
-            break;
-            case GAME_STATE.GAMEPLAY:
-            case GAME_STATE.SHRINKING:
+            case GameStates.Lobby:
+            case GameStates.Pause:
+            case GameStates.Shrinking:
                 if (GameVM.LobbyDisplayed) {
                     <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
                 } else {

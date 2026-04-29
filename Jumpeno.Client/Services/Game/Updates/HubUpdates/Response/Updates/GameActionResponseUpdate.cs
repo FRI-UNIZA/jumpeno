@@ -4,7 +4,7 @@ public class GameActionResponseUpdate : GameResponseUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GAME_HUB.GAME_ACTION_RESPONSE_UPDATE;
+    public override string HubAction => GameHubs.GameActionResponseUpdate;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]

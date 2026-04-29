@@ -10,7 +10,7 @@ public partial class RegisterForm {
     public required LoginPageViewModel VM { get; set; }
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<RegisterForm>();
+    public readonly string FormId = Form.Of<RegisterForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMPassword;
@@ -24,33 +24,33 @@ public partial class RegisterForm {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public RegisterForm() {
         VMEmail = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Email),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
-            MaxLength: UserValidator.EMAIL_MAX_LENGTH,
+            MaxLength: UserValidator.EmailMaxLength,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(async e => await Register())
         ));
         VMPlayerName = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Name),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsName,
-            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            MaxLength: UserValidator.NameMaxLength,
             Placeholder: I18N.T("Player name"),
             DefaultValue: "",
             OnEnter: new(async e => await Register())
         ));
         VMPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserRegisterDTO.Password),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
@@ -66,11 +66,11 @@ public partial class RegisterForm {
             OnEnter: new(async e => await Register())
         ));
         VMConfirmPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: "ConfirmPassword",
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Confirm password"),
             DefaultValue: "",
             Secret: true,
@@ -82,7 +82,7 @@ public partial class RegisterForm {
     private async Task Register() {
         if (!await HTTP.Sync(
             async () => {
-                if (!CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))
+                if (!CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))
                 {
                     await CookieModal.Open(sync: false);
                     Notification.Error(I18N.T("You must accept the security cookie."));
@@ -92,7 +92,7 @@ public partial class RegisterForm {
             }
         )) return;
 
-        await PageLoader.Show(PAGE_LOADER_TASK.REGISTRATION);
+        await PageLoader.Show(PageLoaderTask.Registration);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:
             var captchaToken = await ReCAPTCHARef.GetToken();
@@ -108,16 +108,16 @@ public partial class RegisterForm {
             // 3) Validation:
             var errors = body.Validate();
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMConfirmPassword.Value, VMPassword.Value, VMConfirmPassword.ID));
-            Checker.AssertWith(errors, EXCEPTION.VALUES);
+            Checker.AssertWith(errors, Exceptions.Values);
                 
             // 4) Send request:
-            var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_REGISTER, body: body);
+            var result = await HTTP.Post<MessageDTOR>(API.Base.UserRegister, body: body);
 
             // 5) Show result:
             Notification.Success(result.Body.Message);
             Success = true;
             StateHasChanged();
-        }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.REGISTRATION);
+        }, FormId);
+        await PageLoader.Hide(PageLoaderTask.Registration);
     }
 }

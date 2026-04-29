@@ -4,26 +4,26 @@ public class Connection {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string? ConnectionID { get; protected set; }
     public User User { get; protected set; }
-    public DEVICE_TYPE Device { get; protected set; }
+    public DeviceType Device { get; protected set; }
 
     // Predicates -------------------------------------------------------------------------------------------------------------------------
     public bool IsConnected => ConnectionID != null;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]
-    public Connection(string? connectionID, User user, DEVICE_TYPE device) {
+    public Connection(string? connectionID, User user, DeviceType device) {
         ConnectionID = connectionID;
         User = user;
         Device = device;
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public void Connect(string connectionID, DEVICE_TYPE device) {
+    public void Connect(string connectionID, DeviceType device) {
         ConnectionID = connectionID;
         Device = device;
     }
 
-    public void Synchronize(string? connectionID, User user, DEVICE_TYPE device) {
+    public void Synchronize(string? connectionID, User user, DeviceType device) {
         ConnectionID = connectionID;
         User = user;
         Device = device;

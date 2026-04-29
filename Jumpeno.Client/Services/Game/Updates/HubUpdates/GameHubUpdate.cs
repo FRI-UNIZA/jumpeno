@@ -4,5 +4,5 @@ public abstract class GameHubUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public abstract string HUB_ACTION { get; }
+    public abstract string HubAction { get; }
 }

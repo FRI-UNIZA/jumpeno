@@ -5,16 +5,16 @@ using Microsoft.Extensions.Caching.Memory;
 public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext) : IDisposable
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string IP_UNKNOWN = "unknown";
+    public const string IpUnknown = "unknown";
 
     // User block threshold for 1 minute:
-    public const int EMAIL_BLOCK_THRESHOLD = 4;
+    public const int EmailBlockThreshold = 4;
 
     // IP block thresholds per category for 1 minute:
-    public readonly Dictionary<ATTEMPTS_CATEGORY, int> IP_BLOCK_TRESHOLD = new()
+    public readonly Dictionary<AttemptsCategory, int> IpBlockTreshold = new()
     {
-        { ATTEMPTS_CATEGORY.LOGIN, 10 },
-        { ATTEMPTS_CATEGORY.REGISTER, 7 }
+        { AttemptsCategory.Login, 10 },
+        { AttemptsCategory.Register, 7 }
     };
 
     // Structures -------------------------------------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     // Actions [email] --------------------------------------------------------------------------------------------------------------------
     private int IncrementFailedEmail(string email)
     {
-        var key = MEMORY_CACHE.USER_ATTEMPT(email);
+        var key = MemoryCaches.USER_ATTEMPT(email);
 
         return Lock.Exclusive(() => {
             var counter = cache.GetOrCreate(key, e => 
@@ -57,14 +57,14 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
     public bool IncrementAndCheckIfEmailBlocked(string email)
     {
         int count = IncrementFailedEmail(email);
-        return count >= EMAIL_BLOCK_THRESHOLD;
+        return count >= EmailBlockThreshold;
     }
 
     // Actions [IP] -----------------------------------------------------------------------------------------------------------------------
-    private int IncrementFailedIP(ATTEMPTS_CATEGORY category)
+    private int IncrementFailedIp(AttemptsCategory category)
     {
-        string ip = httpContext.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? IP_UNKNOWN;
-        var key = MEMORY_CACHE.IP_ATTEMPT(category, ip);
+        string ip = httpContext.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? IpUnknown;
+        var key = MemoryCaches.IP_ATTEMPT(category, ip);
         
         return Lock.Exclusive(() => {
             var counter = cache.GetOrCreate(key, e => 
@@ -76,9 +76,9 @@ public class AttemptService(IMemoryCache cache, IHttpContextAccessor httpContext
         });
     }
 
-    public bool IncrementAndCheckIfIPBlocked(ATTEMPTS_CATEGORY category)
+    public bool IncrementAndCheckIfIpBlocked(AttemptsCategory category)
     {
-        int count = IncrementFailedIP(category);
-        return count >= IP_BLOCK_TRESHOLD[category];
+        int count = IncrementFailedIp(category);
+        return count >= IpBlockTreshold[category];
     }
 }

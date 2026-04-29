@@ -3,21 +3,21 @@ namespace Jumpeno.Client.Models;
 public class Shrink : IUpdateable, IPreRendered<Game> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Level:
-    public static (int LEVEL, double TIMER) DEFAULT => (-1, DURATION);
-    public const int MAX_LEVEL = ((int) Map.WIDTH + Tile.SIZE) / Tile.SIZE / 2;
+    public static (int LEVEL, double TIMER) Default => (-1, Duration);
+    public const int MaxLevel = ((int) Map.Width + Tile.Size) / Tile.Size / 2;
     // Alpha:
-    public const double MIN_ALPHA = 0.2;
-    public const double MAX_ALPHA = 0.5;
-    public const double LUMA_THRESHOLD = 220;
+    public const double MinAlpha = 0.2;
+    public const double MaxAlpha = 0.5;
+    public const double LumaThreshold = 220;
     // Duration:
-    public const double FADE_IN_MS = 400; // ms
-    public const double MARK_MS = 3000; // ms
-    public const double HIGHLIGHT_MS = 2000; // ms
-    public const double DURATION = MARK_MS + HIGHLIGHT_MS; // ms
-    public const double TOTAL_DURATION = DURATION * MAX_LEVEL; // ms
+    public const double FadeInMs = 400; // ms
+    public const double MarkMs = 3000; // ms
+    public const double HighlightMs = 2000; // ms
+    public const double Duration = MarkMs + HighlightMs; // ms
+    public const double TotalDuration = Duration * MaxLevel; // ms
     // Blick:
-    public const double BLICK_INTERVAL_MS = 800; // ms
-    public const double HALF_BLICK_INTERVAL_MS = BLICK_INTERVAL_MS / 2; // ms
+    public const double BlickIntervalMs = 800; // ms
+    public const double HalfBlickIntervalMs = BlickIntervalMs / 2; // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Level:
@@ -25,9 +25,9 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     public double Timer { get; private set; }
     // Alpha:
     public float Alpha { get {
-        var t = Math.Max(Timer - MARK_MS, 0) % BLICK_INTERVAL_MS;
-        var alpha = Level == 0 && Timer < FADE_IN_MS ? MIN_ALPHA * (Timer % FADE_IN_MS / FADE_IN_MS) : MIN_ALPHA;
-        alpha += (MAX_ALPHA - MIN_ALPHA) * (1 - Math.Abs(HALF_BLICK_INTERVAL_MS - t) / HALF_BLICK_INTERVAL_MS);
+        var t = Math.Max(Timer - MarkMs, 0) % BlickIntervalMs;
+        var alpha = Level == 0 && Timer < FadeInMs ? MinAlpha * (Timer % FadeInMs / FadeInMs) : MinAlpha;
+        alpha += (MaxAlpha - MinAlpha) * (1 - Math.Abs(HalfBlickIntervalMs - t) / HalfBlickIntervalMs);
         return (float)alpha;
     } }
     // Color:
@@ -38,8 +38,8 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldWidth { get; set; }
     [JsonInclude][Newtonsoft.Json.JsonProperty] private float WorldHeight { get; set; }
     public RectangleF Rect => new(
-        WorldX + Math.Max(Level, 0) * Tile.SIZE, WorldY,
-        WorldWidth - 2 * Math.Max(Level, 0) * Tile.SIZE, WorldHeight
+        WorldX + Math.Max(Level, 0) * Tile.Size, WorldY,
+        WorldWidth - 2 * Math.Max(Level, 0) * Tile.Size, WorldHeight
     );
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
         PreRenderer = InitPrerenderer();
     }
 
-    public Shrink(Map map) : this(DEFAULT.LEVEL, DEFAULT.TIMER, 0, 0, 0, 0) {
+    public Shrink(Map map) : this(Default.LEVEL, Default.TIMER, 0, 0, 0, 0) {
         var rect = map.Rect;
         WorldX = rect.X;
         WorldY = rect.Y;
@@ -74,7 +74,7 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     };
 
     private bool TimeFlowUpdate(TimeFlowUpdate update) {
-        if (update.Game.State != GAME_STATE.SHRINKING) return false;
+        if (update.Game.State != GameStates.Shrinking) return false;
         Timer += update.DeltaT;
         return true;
     }
@@ -87,16 +87,16 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
     private readonly PreRenderer<Game> PreRenderer;
-    private PreRenderer<Game> InitPrerenderer() => new(CANVAS.TILE_PATTERN, PreRender, ApplyRender);
+    private PreRenderer<Game> InitPrerenderer() => new(CanvasType.TilePatern, PreRender, ApplyRender);
     private async Task<bool> PreRender(Canvas2DContext ctx, Game game) {
         // 1) Initialize:
         var prerendered = false;
         // 2) Clear:
         await ctx.ClearRectAsync(WorldX, WorldY, WorldWidth, WorldHeight);
         // 3) Render pattern:
-        for (int i = 0, x = (int) WorldX; x < WorldX + WorldWidth; x += Tile.SIZE) {
-            for (float y = WorldY; y < WorldY + WorldHeight; y += Tile.SIZE, i++) {
-                var tile = new Tile(new(x + Tile.HALF_SIZE, y + Tile.HALF_SIZE));
+        for (int i = 0, x = (int) WorldX; x < WorldX + WorldWidth; x += Tile.Size) {
+            for (float y = WorldY; y < WorldY + WorldHeight; y += Tile.Size, i++) {
+                var tile = new Tile(new(x + Tile.HalfSize, y + Tile.HalfSize));
                 if (!await tile.Render(ctx, (game.Map, false))) break;
                 if (i > 0) continue;
                 prerendered = true;
@@ -107,19 +107,19 @@ public class Shrink : IUpdateable, IPreRendered<Game> {
     }
     private async Task<bool> ApplyRender((Canvas2DContext Source, Canvas2DContext Destination) context, Game game) {
         // 1) Check state & init:
-        if (game.State != GAME_STATE.SHRINKING || Level < 0) return false;
+        if (game.State != GameStates.Shrinking || Level < 0) return false;
         var (source, ctx) = context; var rect = Rect;
 
         // 2) Highlight area color & size:
         await ctx.SetFillStyleAsync($"{Color(game.Map.Tint, Alpha)}");
-        var add = rect.Width < 2 * Tile.SIZE + Tile.HALF_SIZE ? 4 : 1; var screen = game.Map.ScreenRect;
-        var size = new Size(game.Map.ToScreenWidth(Tile.SIZE + Tile.HALF_SIZE) + add, game.Map.ToScreenHeight(rect.Height) + 1);
-        if (Level < MAX_LEVEL - 1) {
+        var add = rect.Width < 2 * Tile.Size + Tile.HalfSize ? 4 : 1; var screen = game.Map.ScreenRect;
+        var size = new Size(game.Map.ToScreenWidth(Tile.Size + Tile.HalfSize) + add, game.Map.ToScreenHeight(rect.Height) + 1);
+        if (Level < MaxLevel - 1) {
             // 2.1) Left part:
-            var point = game.Map.ToScreen(new(rect.X - Tile.HALF_SIZE, rect.Y + rect.Height));
+            var point = game.Map.ToScreen(new(rect.X - Tile.HalfSize, rect.Y + rect.Height));
             await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
             // 2.2) Right part:
-            point = game.Map.ToScreen(new(rect.X + rect.Width - Tile.SIZE, rect.Y + rect.Height));
+            point = game.Map.ToScreen(new(rect.X + rect.Width - Tile.Size, rect.Y + rect.Height));
             await ctx.FillRectAsync(point.X - 0.5, point.Y - 0.5, size.Width, size.Height);
         } else {
             // 2.3) Middle part:

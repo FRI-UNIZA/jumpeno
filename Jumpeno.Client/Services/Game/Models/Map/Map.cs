@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Models;
 
 public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const float WIDTH = 1024;
-    public const float HEIGHT = 576;
+    public const float Width = 1024;
+    public const float Height = 576;
     // Color:
-    public const int BOX_SHADOW_CONTRAST = 30;
+    public const int BoxShadowContrast = 30;
     // Default:
-    public const string DEFAULT_NAME = "Jumper's home";
+    public const string DefaultName = "Jumper's home";
 
     // Description ------------------------------------------------------------------------------------------------------------------------
     public string Name { get; private set; }
@@ -35,7 +35,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         Math.Min(ScreenMinX, ScreenMaxX), Math.Min(ScreenMinY, ScreenMaxY),
         ScreenWidth, ScreenHeight
     );
-    public double DPR { get; private set; } = 0.0;
+    public double Dpr { get; private set; } = 0.0;
 
     // Tiles ------------------------------------------------------------------------------------------------------------------------------
     [JsonInclude][Newtonsoft.Json.JsonProperty]
@@ -73,7 +73,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         ScreenMaxX = screenMaxX;
         ScreenMinY = screenMinY;
         ScreenMaxY = screenMaxY;
-        DPR = dpr;
+        Dpr = dpr;
         Tiles = tiles;
         TileQT = InitTileQT(Tiles);
         Shrink = shrink;
@@ -100,13 +100,13 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         string name, List<Tile> tiles,
         RGBColor background, string backgroundImage, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, backgroundImage, tileImage, foreground, tint, border) {}
+    : this(name, 0, Width, 0, Height, tiles, background, backgroundImage, tileImage, foreground, tint, border) {}
 
     public Map(
         string name, List<Tile> tiles,
         RGBColor background, string tileImage, RGBColor foreground, RGBColor tint, RGBColor border
     )
-    : this(name, 0, WIDTH, 0, HEIGHT, tiles, background, null, tileImage, foreground, tint, border) {}
+    : this(name, 0, Width, 0, Height, tiles, background, null, tileImage, foreground, tint, border) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
     private QuadTreeRectF<Tile> InitTileQT(List<Tile> tiles) {
@@ -116,7 +116,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
     }
 
     private static RGBColor InitBoxShadow(RGBColor border) {
-        var luma = (byte)Math.Max(border.Luminance() - BOX_SHADOW_CONTRAST, 0);
+        var luma = (byte)Math.Max(border.Luminance() - BoxShadowContrast, 0);
         return new(luma, luma, luma);
     }
 
@@ -126,7 +126,7 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
         ScreenMaxX = maxX;
         ScreenMinY = minY;
         ScreenMaxY = maxY;
-        DPR = dpr;
+        Dpr = dpr;
     }
 
     // Updates ----------------------------------------------------------------------------------------------------------------------------
@@ -164,9 +164,9 @@ public class Map : IRectFQuadStorable, IUpdateable, IPreRendered {
 
     // Pre-Rendering ----------------------------------------------------------------------------------------------------------------------
     private readonly PreRenderer<Map> PreRendererBG;
-    private static PreRenderer<Map> InitPrerendererBG() => new(CANVAS.MAP_BACKGROUND, PreRenderBG, ApplyRender);
+    private static PreRenderer<Map> InitPrerendererBG() => new(CanvasType.MapBackground, PreRenderBG, ApplyRender);
     private readonly PreRenderer<Map> PreRendererTiles;
-    private static PreRenderer<Map> InitPrerendererTiles() => new(CANVAS.MAP_TILES, PreRenderTiles, ApplyRender);
+    private static PreRenderer<Map> InitPrerendererTiles() => new(CanvasType.MapTiles, PreRenderTiles, ApplyRender);
 
     private static async Task<bool> PreRenderBG(Canvas2DContext ctx, Map map)
     {

@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Services;
 
 public static class URL {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string SCHEMA_DIVIDER = "://";
+    public const string SchemaDivider = "://";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<string> ThemeCSSClass;
@@ -18,8 +18,8 @@ public static class URL {
 
     // Normalization ----------------------------------------------------------------------------------------------------------------------
     public static string NormSchema(string schema) {
-        if (schema.EndsWith(SCHEMA_DIVIDER)) return schema;
-        return $"{schema}{SCHEMA_DIVIDER}";
+        if (schema.EndsWith(SchemaDivider)) return schema;
+        return $"{schema}{SchemaDivider}";
     }
     public static string NormBaseUrl(string baseUrl) {
         if (baseUrl.EndsWith('/')) return baseUrl[..^1];
@@ -46,7 +46,7 @@ public static class URL {
     public static string ToRelative() => ToRelative(Url());
     public static string NoQuery() => NoQuery(Url());
     public static string WithQuery(string query) => WithQuery(Url(), query);
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes) => GetQueryParams(arrayTypes, Url());
+    public static QueryParams GetQueryParams(Dictionary<string, QuaryArrayType> arrayTypes) => GetQueryParams(arrayTypes, Url());
     public static QueryParams GetQueryParams() => GetQueryParams(Url());
     public static string SetQueryParams(QueryParams queryParams) => SetQueryParams(Url(), queryParams);
     public static bool PathMatches(string url, bool exact = false) => PathMatches(Url(), url, exact);
@@ -66,7 +66,7 @@ public static class URL {
     }
     
     public static string Schema(string url) {
-        var index = url.IndexOf(SCHEMA_DIVIDER);
+        var index = url.IndexOf(SchemaDivider);
         if (index >= 0) {
             return url.Substring(0, index);
         }
@@ -75,7 +75,7 @@ public static class URL {
 
     public static string Host(string url) {
         var schema = Schema(url);
-        if (schema != "" || url.StartsWith(SCHEMA_DIVIDER)) {
+        if (schema != "" || url.StartsWith(SchemaDivider)) {
             url = url.Substring(NormSchema(schema).Length);
         }
         var index = url.IndexOf('/');
@@ -142,7 +142,7 @@ public static class URL {
 
     public static string WithQuery(string url, string query) => $"{NoQuery(url)}{query}";
 
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, string url) => new(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
+    public static QueryParams GetQueryParams(Dictionary<string, QuaryArrayType> arrayTypes, string url) => new(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
     public static QueryParams GetQueryParams(string url) => GetQueryParams([], url);
 
     public static string SetQueryParams(string url, QueryParams queryParams) => WithQuery(NoQuery(url), queryParams.ToString());

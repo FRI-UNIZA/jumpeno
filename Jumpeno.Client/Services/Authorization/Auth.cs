@@ -11,14 +11,14 @@ public static class Auth {
     public static bool IsAnonymousUser => IsUser && !IsRegisteredUser;
     public static bool IsAdmin => Admin != null;
     public static bool IsLoggedIn => IsRegisteredUser || IsAdmin;
-    public static bool IsRole(ROLE role) {
+    public static bool IsRole(Role role) {
         switch (role) {
-            case ROLE.USER: return IsRegisteredUser;
-            case ROLE.ADMIN: return IsAdmin;
+            case Role.User: return IsRegisteredUser;
+            case Role.Admin: return IsAdmin;
             default: return false;
         }
     }
-    public static bool IsRole(ROLE[] roles) {
+    public static bool IsRole(Role[] roles) {
         foreach (var role in roles) {
             if (IsRole(role)) return true;
         }
@@ -49,7 +49,7 @@ public static class Auth {
                 // 1.2) Validation:
                 body.Assert();
                 // 1.3) Send request:
-                var response = await HTTP.Post<UserLoginDTOR>(API.BASE.USER_LOGIN, body: body);
+                var response = await HTTP.Post<UserLoginDTOR>(API.Base.UserLogin, body: body);
                 // 1.4) Validate response:
                 response.Body.Assert();
                 // 1.5) Store new access token:
@@ -69,7 +69,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task<bool> TryLogInAdmin() {
@@ -78,7 +78,7 @@ public static class Auth {
             if (AppEnvironment.IsServer) return false;
             // 2) Read token:
             var q = URL.GetQueryParams();
-            var token = q.GetString(TOKEN_TYPE.REFRESH.String());
+            var token = q.GetString(TokenType.Refresh.String());
             if (token == null) return false;
             // 3) Send request:
             try {
@@ -90,7 +90,7 @@ public static class Auth {
                 // 3.1.2) Validation:
                 body.Assert();
                 // 3.1.3) Send request:
-                var response = await HTTP.Post<AuthRefreshDTOR>(API.BASE.AUTH_REFRESH, body: body);
+                var response = await HTTP.Post<AuthRefreshDTOR>(API.Base.AuthRefresh, body: body);
                 // 3.1.4) Validate response:
                 response.Body.Assert();
                 // 3.1.6) Invalidate origin:
@@ -111,16 +111,16 @@ public static class Auth {
                 // 3.2.3) Reset profile:
                 await ResetAuthProfile(false);
                 // 3.2.4) Show notification:
-                if (e.Code == CODE.INVALID_TOKEN) Notification.Error(e.Message);
+                if (e.Code == Codes.InvalidToken) Notification.Error(e.Message);
                 // 3.2.5) Return fail:
                 return false;
             } finally {
                 // 4) Update URL:
-                q.Remove(TOKEN_TYPE.REFRESH.String());
+                q.Remove(TokenType.Refresh.String());
                 await Navigator.SetQueryParams(q);
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task<bool> TryLogInToken() {
@@ -128,7 +128,7 @@ public static class Auth {
             try {
                 StartProcessing();
                 // 1.1) Request access token:
-                var response = await HTTP.Post<AuthRefreshDTOR>(API.BASE.AUTH_REFRESH);
+                var response = await HTTP.Post<AuthRefreshDTOR>(API.Base.AuthRefresh);
                 // 1.2) Validate response:
                 response.Body.Assert();
                 // 1.3) Invalidate origin:
@@ -151,7 +151,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task Refresh(int iteration) {
@@ -159,13 +159,13 @@ public static class Auth {
             try {
                 StartProcessing();
                 // 1.1) Check iteration:
-                if (iteration > 1) throw EXCEPTION.INVALID_TOKEN;
+                if (iteration > 1) throw Exceptions.InvalidToken;
                 // 1.2) Request access token:
-                var response = await HTTP.Post<AuthRefreshDTOR>(API.BASE.AUTH_REFRESH);
+                var response = await HTTP.Post<AuthRefreshDTOR>(API.Base.AuthRefresh);
                 // 1.3) Validate response:
                 response.Body.Assert();
                 // 1.4) Check if correct (across tabs):
-                var data = Token.Decode(response.Body.AccessToken) ?? throw EXCEPTION.INVALID_TOKEN;
+                var data = Token.Decode(response.Body.AccessToken) ?? throw Exceptions.InvalidToken;
                 if (data.sub != Token.Access.sub) Navigator.Refresh();
                 // 1.5) Invalidate origin:
                 await RequestInvalidate();
@@ -181,11 +181,11 @@ public static class Auth {
                 // 2.4) Navigate to login:
                 await Navigator.NavigateTo(I18N.Link<LoginPage>(), forceLoad: true);
                 // 2.5) Throw back:
-                throw EXCEPTION.NOT_AUTHENTICATED;
+                throw Exceptions.NotAuthenticated;
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     public static async Task LogOut() {
@@ -205,7 +205,7 @@ public static class Auth {
             } finally {
                 await StopProcessing();
             }
-        }, WINDOW_LOCK.AUTHENTICATION);
+        }, WindowLock.Authentication);
     }
 
     // Profile ----------------------------------------------------------------------------------------------------------------------------
@@ -250,9 +250,9 @@ public static class Auth {
         await UpdateLock.Exclusive(async () => {
             try {
                 if (processing) StartProcessing();
-                if (Token.Access.role == ROLE.USER) {
+                if (Token.Access.role == Role.User) {
                     // 1.1) Load user profile:
-                    response ??= await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
+                    response ??= await HTTP.Get<UserProfileDTOR>(API.Base.UserProfile);
                     // 1.2) Validate response:
                     response.Body.Assert();
                     // 1.3) Store user profile:
@@ -268,8 +268,8 @@ public static class Auth {
     }
     public static async Task LoadProfile() {
         if (AppEnvironment.IsServer) return;
-        var response = await HTTP.Get<UserProfileDTOR>(API.BASE.USER_PROFILE);
-        await Window.Lock(async () => await LoadAuthProfile(true, response), WINDOW_LOCK.AUTHENTICATION);
+        var response = await HTTP.Get<UserProfileDTOR>(API.Base.UserProfile);
+        await Window.Lock(async () => await LoadAuthProfile(true, response), WindowLock.Authentication);
     }
 
     private static async Task ResetAuthProfile(bool processing = true) {
@@ -282,20 +282,20 @@ public static class Auth {
     }
     public static async Task ResetProfile() {
         if (AppEnvironment.IsServer) return;
-        await Window.Lock(async () => await ResetAuthProfile(), WINDOW_LOCK.AUTHENTICATION);
+        await Window.Lock(async () => await ResetAuthProfile(), WindowLock.Authentication);
     }
 
     // Invalidation -----------------------------------------------------------------------------------------------------------------------
     private static void AssertInvalidToken(AppException e) {
-        if (e.Code == CODE.INVALID_TOKEN) return;
+        if (e.Code == Codes.InvalidToken) return;
         else throw e;
     }
     private static async Task RequestInvalidate() {
-        try { await HTTP.Delete(API.BASE.AUTH_INVALIDATE); }
+        try { await HTTP.Delete(API.Base.AuthInvalidate); }
         catch (AppException e) { AssertInvalidToken(e); }
     }
     private static async Task RequestDelete() {
-        try { await HTTP.Delete(API.BASE.AUTH_DELETE); }
+        try { await HTTP.Delete(API.Base.AuthDelete); }
         catch (AppException e) { AssertInvalidToken(e); }
     }
 }

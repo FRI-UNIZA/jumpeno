@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Localization;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class CultureController(CookieStorage CookieStorage) : Controller {
+public class CultureController(CookieStorage cookieStorage) : Controller {
     // Endpoints --------------------------------------------------------------------------------------------------------------------------
     /// <summary>Sets culture cookie and redirects to given URI.</summary>
     /// <param name="culture">Culture to set.</param>
@@ -14,8 +14,8 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
     [ProducesResponseType(StatusCodes.Status302Found)]
     public IActionResult Redirect(string culture, string redirectURI) {
         if (culture != null) {
-            CookieStorage.Set(new Cookie(
-                COOKIE.PREFERENCES.APP_CULTURE,
+            cookieStorage.Set(new Client.Models.Cookie(
+                Cookies.Preference.AppCulture,
                 culture,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -25,16 +25,16 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     public static Action<RequestLocalizationOptions> SetupAction() => options => {
-        var supportedCultures = I18N.LANGUAGES.Select(lang => new CultureInfo(lang)).ToList();
+        var supportedCultures = I18N.Languages.Select(lang => new CultureInfo(lang)).ToList();
     
-        options.DefaultRequestCulture = new RequestCulture(I18N.FALLBACK);
+        options.DefaultRequestCulture = new RequestCulture(I18N.Fallback);
         options.SupportedCultures = supportedCultures;
         options.SupportedUICultures = supportedCultures;
         options.RequestCultureProviders.Clear();
         options.AddInitialRequestCultureProvider(new CustomRequestCultureProvider(
             async ctx => {
                 if (ServerEnvironment.IsStaticPath(ctx.Request.Path)) return null;
-                string culture = GetCultureString([.. I18N.LANGUAGES], I18N.FALLBACK, ctx);
+                string culture = GetCultureString([.. I18N.Languages], I18N.Fallback, ctx);
                 UpdateURL(culture, ctx);
                 return await Task.FromResult(new ProviderCultureResult(culture));
             }
@@ -45,9 +45,9 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
 
     public static string GetCultureString(List<string> languages, string defaultLanguage, HttpContext ctx) {
         // 1) Page rendering (not API nor HUB):
-        if (!URL.Path().StartsWith(API.BASE.PREFIX) && !URL.Path().StartsWith(HUB.BASE.PREFIX)) {
+        if (!URL.Path().StartsWith(API.Base.Prefix) && !URL.Path().StartsWith(HUB.Base.Prefix)) {
             // 1.1) Language by domain name:
-            if (!I18N.USE_PREFIX) {
+            if (!I18N.UsePrefix) {
                 return I18N.GetLanguage(ctx.Request.Host.ToString());
             }
 
@@ -63,7 +63,7 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
             }
 
             // 1.3) Check cookies:
-            string? cookie = AppEnvironment.GetService<CookieStorage>().Get(COOKIE.PREFERENCES.APP_CULTURE);
+            string? cookie = AppEnvironment.GetService<CookieStorage>().Get(Cookies.Preference.AppCulture);
             cookie = $"{cookie}";
             if (languages.Contains(cookie)) {
                 return cookie;
@@ -71,7 +71,7 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
         }
 
         // 2) Check Accept-Language (HUB communicates in default):
-        if (!URL.Path().StartsWith(HUB.BASE.PREFIX)) {
+        if (!URL.Path().StartsWith(HUB.Base.Prefix)) {
             string? acceptLanguage = ctx.Request.Headers.AcceptLanguage;
             if (acceptLanguage is null || acceptLanguage.Trim() == "") {
                 return defaultLanguage;
@@ -99,7 +99,7 @@ public class CultureController(CookieStorage CookieStorage) : Controller {
         string currentPath = URL.Path(keepEnd: true);
         string path = currentPath;
 
-        if (!I18N.USE_PREFIX) {
+        if (!I18N.UsePrefix) {
             if (path != "/" && path.EndsWith('/')) {
                 path = path[..^1];
             }

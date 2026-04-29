@@ -5,7 +5,7 @@ public record GameHubRegisteredDTO(
     string Code,
     // Player:
     string AccessToken,
-    DEVICE_TYPE Device,
+    DeviceType Device,
     bool Spectate
 ) : IValidable<GameHubRegisteredDTO> {
     public List<Error> Validate() {
@@ -15,5 +15,5 @@ public record GameHubRegisteredDTO(
         errors.AddRange(Checker.ValidateUndefined(Spectate, nameof(Spectate)));
         return errors;
     }
-    public GameHubRegisteredDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public GameHubRegisteredDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

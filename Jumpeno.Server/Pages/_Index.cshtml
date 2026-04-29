@@ -19,10 +19,10 @@
         <meta name="keywords" content="@I18N.T("JUMPENO_KEYWORDS")">
         <meta name="author" content="FRI UNIZA">
         <!-- Icons -->
-        <link rel="shortcut icon" href="@IMAGE.FAVICON_ICO" />
-        <link rel="icon" type="image/png" sizes="96x96" href="@IMAGE.FAVICON_PNG" />
-        <link rel="icon" type="image/svg+xml" href="@IMAGE.FAVICON_SVG" />
-        <link rel="apple-touch-icon" sizes="180x180" href="@IMAGE.FAVICON_APPLE_TOUCH_ICON" />
+        <link rel="shortcut icon" href="@ImageType.FaviconIco" />
+        <link rel="icon" type="image/png" sizes="96x96" href="@ImageType.FaviconPng" />
+        <link rel="icon" type="image/svg+xml" href="@ImageType.FaviconSvg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="@ImageType.FaviconAppleTouchIcon" />
         <!-- CSS Modules -->
         <link href="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical />
         <link href="@AppEnvironment.Import("_content/AntDesign/css/ant-design-blazor.css")" rel="stylesheet" no-antblazor-css @Import.Critical />
@@ -50,9 +50,9 @@
         <script src="modules/OverlayScrollbars/OverlayScrollbars.2.10.0.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/AntDesign/js/ant-design-blazor.js")" no-antblazor-js @Import.Critical></script>
         <script src="@AppEnvironment.Import("_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js")" @Import.Critical></script>
-        @if (AppSettings.ReCAPTCHA.On && (AppEnvironment.GetService<CookieStorage>().IsCookieAccepted(typeof(COOKIE.SECURITY))))
+        @if (AppSettings.ReCAPTCHA.On && (AppEnvironment.GetService<CookieStorage>().IsCookieAccepted(typeof(Cookies.Security))))
         {
-            <script src="@API.GOOGLE.RECAPTCHA.API?render=explicit"></script>
+            <script src="@API.Google.Recaptcha.API?render=explicit"></script>
         }
         <!-- JS Global -->
         @if (AppEnvironment.IsProduction && AppSettings.Bundle) {
@@ -89,7 +89,7 @@
         <script>
             (async () => {
                 JSActionHandler.SetFocus(JSServerPageLoader.ID);
-                JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@COOKIE.PREFERENCES.APP_THEME.String()");
+                JSThemeProvider.Init(@($"{AppSettings.Theme.AutoDetect}".ToLower()), "@Cookies.Preference.AppTheme.String()");
                 JSTempTitle.Add();
                 JSWindow.Init();
                 JSImage.InitAll();

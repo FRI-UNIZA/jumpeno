@@ -5,22 +5,22 @@ namespace Jumpeno.Client.Themes;
 public partial class ThemeProvider {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Class:
-    public static string CLASS_NO_THEME => JSThemeProvider.CLASS_NO_THEME;
-    public static string CLASS_DARK_THEME => JSThemeProvider.CLASS_DARK_THEME;
-    public static string CLASS_LIGHT_THEME => JSThemeProvider.CLASS_LIGHT_THEME;
+    public static string ClassNoTheme => JSThemeProvider.ClassNoTheme;
+    public static string ClassDarkTheme => JSThemeProvider.ClassDarkTheme;
+    public static string ClassLightTheme => JSThemeProvider.ClassLightTheme;
 
-    public static string CLASS_SETTING_THEME => JSThemeProvider.CLASS_SETTING_THEME;
-    public static string CLASS_SETTING_THEME_ANIMATION => JSThemeProvider.CLASS_SETTING_THEME_ANIMATION;
+    public static string ClassSettingTheme => JSThemeProvider.ClassSettingTheme;
+    public static string ClassSettingThemeAnimation => JSThemeProvider.ClassSettingThemeAnimation;
 
-    public static string CLASS_THEME_TRANSITION_CONTAINER => JSThemeProvider.CLASS_THEME_TRANSITION_CONTAINER;
+    public static string ClassThemeTransitionContainer => JSThemeProvider.ClassThemeTransitionContainer;
 
-    public static string SUFFIX => JSThemeProvider.SUFFIX;
-    public static string THEME_SUFFIX => JSThemeProvider.THEME_SUFFIX;
+    public static string Suffix => JSThemeProvider.Suffix;
+    public static string ThemeSuffix => JSThemeProvider.ThemeSuffix;
     // Autodetect:
-    public static bool THEME_AUTODETECT { get; private set; }
+    public static bool ThemeAutodetect { get; private set; }
     // Cascade:
-    public const string CASCADE_APP_THEME = $"{nameof(ThemeProvider)}.{nameof(CASCADE_APP_THEME)}";
-    public const string CASCADE_CHANGE_APP_THEME = $"{nameof(ThemeProvider)}.{nameof(CASCADE_CHANGE_APP_THEME)}";
+    public const string CascadeAppTheme = $"{nameof(ThemeProvider)}.{nameof(CascadeAppTheme)}";
+    public const string CascadeChangeAppTheme = $"{nameof(ThemeProvider)}.{nameof(CascadeChangeAppTheme)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -28,10 +28,10 @@ public partial class ThemeProvider {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static ThemeProvider? Instance {
-        get { return RequestStorage.Get<ThemeProvider>(REQUEST_STORAGE.THEME_PROVIDER); }
-        set { if (value == null) RequestStorage.Delete(REQUEST_STORAGE.THEME_PROVIDER); else RequestStorage.Set(REQUEST_STORAGE.THEME_PROVIDER, value); }
+        get { return RequestStorage.Get<ThemeProvider>(RequestStorages.ThemeProvider); }
+        set { if (value == null) RequestStorage.Delete(RequestStorages.ThemeProvider); else RequestStorage.Set(RequestStorages.ThemeProvider, value); }
     }
-    private BaseTheme AppTheme = THEME.DEFAULT;
+    private BaseTheme AppTheme = ThemeType.Default;
     public static string ThemeCSSClass(string classname) {
         return $"{HttpUtility.HtmlEncode(classname).Replace("Theme", "").ToLower()}-theme";
     }
@@ -40,17 +40,17 @@ public partial class ThemeProvider {
     }
     public static string ThemeCSSClass() {
         var instance = Instance;
-        if (instance == null) return ThemeCSSClass(THEME.DEFAULT);
+        if (instance == null) return ThemeCSSClass(ThemeType.Default);
         return ThemeCSSClass(instance.AppTheme);
     }
     public static string ServerBodyClass() {
         AppEnvironment.AssertServer();
-        var c = new CSSClass(Window.CLASS_BODY)
-        .SetSurface(SURFACE.PRIMARY);
+        var c = new CssClass(Window.ClassBody)
+        .SetSurface(Surface.Priamary);
         var cookie = GetThemeCookie();
         if (cookie is null) {
-            c.Set(ThemeCSSClass(THEME.DEFAULT));
-            c.Set(CLASS_NO_THEME);
+            c.Set(ThemeCSSClass(ThemeType.Default));
+            c.Set(ClassNoTheme);
         } else {
             c.Set(ThemeCSSClass(cookie));
         }
@@ -61,7 +61,7 @@ public partial class ThemeProvider {
     // AppSettings:
     public static void Init() {
         InitOnce.Check(nameof(ThemeProvider));
-        THEME_AUTODETECT = AppSettings.Theme.AutoDetect;
+        ThemeAutodetect = AppSettings.Theme.AutoDetect;
     }
     // Component:
     private readonly TaskCompletionSource InitTCS = new();
@@ -73,32 +73,32 @@ public partial class ThemeProvider {
     protected override async Task OnInitializedAsync() {
         await HTTP.Sync(() => {
             var cookie = GetThemeCookie();
-            if (THEME_AUTODETECT && cookie is null) {
+            if (ThemeAutodetect && cookie is null) {
                 if (AppEnvironment.IsServer) {
-                    AppTheme = THEME.DEFAULT;
+                    AppTheme = ThemeType.Default;
                 } else {
-                    AppTheme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? THEME.DARK : THEME.LIGHT;
+                    AppTheme = JS.Invoke<bool>(JSThemeProvider.DarkThemePreferred) ? ThemeType.Dark : ThemeType.Light;
                 }
             } else if (cookie is null) {
-                AppTheme = THEME.DEFAULT;
+                AppTheme = ThemeType.Default;
             } else {
                 AppTheme = CreateThemeByName(cookie);
                 if (!AppEnvironment.IsServer) {
                     SetThemeCookie(AppTheme);
                 }
             }
-            ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
+            ScrollArea.SetTheme(AppTheme.BodyScrollTheme);
             InitTCS.SetResult();
         });
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Get cookie:
-    private static string? GetThemeCookie() => AppEnvironment.GetService<CookieStorage>().Get(COOKIE.PREFERENCES.APP_THEME);
+    private static string? GetThemeCookie() => AppEnvironment.GetService<CookieStorage>().Get(Cookies.Preference.AppTheme);
     // Set cookie:
     private static void SetThemeCookie(string className) {
-        AppEnvironment.GetService<CookieStorage>().Set(new Cookie(
-            COOKIE.PREFERENCES.APP_THEME,
+        AppEnvironment.GetService<CookieStorage>().Set(new Models.Cookie(
+            Cookies.Preference.AppTheme,
             className,
             DateTimeOffset.UtcNow.AddYears(1)
         ));
@@ -110,21 +110,21 @@ public partial class ThemeProvider {
             var type = Type.GetType($"{typeof(BaseTheme).Namespace}.{className}")!;
             return (BaseTheme)Activator.CreateInstance(type)!;
         } catch {
-            return THEME.DEFAULT;
+            return ThemeType.Default;
         }
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task<bool> ChangeAppTheme(BaseTheme theme) {
         try {
-            await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE);
+            await PageLoader.Show(PageLoaderTask.ThemeChange);
             if (AppEnvironment.IsServer) throw new InvalidOperationException("Theme change not allowed on the server!");
             if (theme.GetType().Name == AppTheme.GetType().Name) throw new InvalidOperationException("Theme already set!");
             await HTTP.Sync(() => SetThemeCookie(theme));
             AppTheme = theme;
             return true;
         } catch {
-            Notification.Error(MESSAGE.DEFAULT.T);
+            Notification.Error(Messages.Default.T);
             return false;
         } finally {
             ScrollArea.SavePositions();
@@ -132,17 +132,17 @@ public partial class ThemeProvider {
             AnimationHandler.DisableAnimation();
             JS.InvokeVoid(JSThemeProvider.StartSettingTheme);
             JS.InvokeVoid(JSThemeProvider.SetCustomTheme, ThemeCSSClass(AppTheme));
-            ScrollArea.SetTheme(AppTheme.BODY_SCROLL_THEME);
+            ScrollArea.SetTheme(AppTheme.BodyScrollTheme);
             StateHasChanged();
             await Task.Yield();
             AnimationHandler.RestoreAnimation();
             await Task.Yield();
             ScrollArea.RestorePositions();
             JS.InvokeVoid(JSThemeProvider.ApplyThemeAnimation);
-            await Task.Delay(AppTheme.TRANSITION_EXTRA_SLOW);
+            await Task.Delay(AppTheme.TransitionExtraSlow);
             ActionHandler.RestoreScroll();
             JS.InvokeVoid(JSThemeProvider.FinishSettingTheme);
-            await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE);
+            await PageLoader.Hide(PageLoaderTask.ThemeChange);
         }
     }
 }

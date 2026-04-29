@@ -9,7 +9,7 @@ public static class ServerSettings {
     public static ServerSettingsLogging Logging { get; private set; } public class ServerSettingsLogging {
         public ServerSettingsLoggingLogLevel LogLevel { get; init; } public class ServerSettingsLoggingLogLevel {
             public string Default { get; init; }
-            public string Microsoft_AspNetCore { get; init; }
+            public string MicrosoftAspNetCore { get; init; }
         }
     }
     public static ServerSettingsAuth Auth { get; private set; } public class ServerSettingsAuth {
@@ -73,7 +73,7 @@ public static class ServerSettings {
         Logging = new() {
             LogLevel = new() {
                 Default = file.GetValue<string>("Logging:LogLevel:Default")!,
-                Microsoft_AspNetCore = file.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
+                MicrosoftAspNetCore = file.GetValue<string>("Logging:LogLevel:Microsoft.AspNetCore")!
             }
         };
         Auth = new() {

@@ -4,7 +4,7 @@ public class PlayerKickResponseUpdate : GameResponseUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GAME_HUB.PLAYER_KICK_RESPONSE_UPDATE;
+    public override string HubAction => GameHubs.PlayerKickResponseUpdate;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor]

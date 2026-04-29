@@ -2,18 +2,18 @@ namespace Jumpeno.Client.Layouts;
 
 public partial class Container {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "container";
-    public const string CLASS_BOUNDARY = "boundary";
-    public const string CLASS_PADDING_VERTICAL = "padding-vertical";
-    public const string CLASS_PADDING_HORIZONTAL = "padding-horizontal";
+    public const string ClassName = "container";
+    public const string ClassBoundary = "boundary";
+    public const string ClassPaddingVertical = "padding-vertical";
+    public const string ClassPaddingHorizontal = "padding-horizontal";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public string Tag { get; set; } = "div";
     [Parameter]
-    public string? ID { get; set; }
+    public string? Id { get; set; }
     [Parameter]
-    public CONTAINER_TYPE Type { get; set; } = CONTAINER_TYPE.NONE;
+    public ContainerType Type { get; set; } = ContainerType.None;
     [Parameter]
     public bool Boundary { get; set; } = false;
     [Parameter]
@@ -28,23 +28,23 @@ public partial class Container {
     public RenderFragment? ChildContent { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .Set(Type)
-        .Set(CLASS_BOUNDARY, Boundary)
-        .Set(CLASS_PADDING_VERTICAL, PaddingVertical)
-        .Set(CLASS_PADDING_HORIZONTAL, PaddingHorizontal);
+        .Set(ClassBoundary, Boundary)
+        .Set(ClassPaddingVertical, PaddingVertical)
+        .Set(ClassPaddingHorizontal, PaddingHorizontal);
     }
 
     // Render -----------------------------------------------------------------------------------------------------------------------------
     private RenderFragment Render() => builder => {
         var sequence = 0;
         builder.OpenElement(sequence++, Tag);
-        builder.AddAttribute(sequence++, SCOPE.GLOBAL);
+        builder.AddAttribute(sequence++, Scope.Global);
         builder.AddAttribute(sequence++, "class", ComputeClass());
         builder.AddAttribute(sequence++, "style", Style);
-        if (ID is not null) builder.AddAttribute(sequence++, "id", ID);
+        if (Id is not null) builder.AddAttribute(sequence++, "id", Id);
         if (Attributes is not null) {
             foreach (var attribute in Attributes) {
                 builder.AddAttribute(sequence++, attribute.Key, attribute.Value);

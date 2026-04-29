@@ -2,17 +2,17 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
+<AuthView Roles="[Role.User]">
     <div class="@ComputeClass()" style="@Style">
         <div class="avatar-show">
             <div class="current-avatar-wrap">
                 <div class="current-avatar">
                     <Image Class="avatar-image" URL="@Auth.User.Skin.ToImagePath()" Alt="@I18N.T("Current avatar")" NotDraggable Preloaded />
                 </div>
-                <TextSpan Size="TEXT_SIZE.S">@I18N.T("Current avatar")</TextSpan>
+                <TextSpan Size="TextSize.S">@I18N.T("Current avatar")</TextSpan>
             </div>
             <div class="button-change-skin-wrap">
-                <Button Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.S" Class="button-change-skin" OnClick="ChangeSkin"> 
+                <Button Variant="ButtonVariant.Primary" Size="ButtonSize.S" Class="button-change-skin" OnClick="ChangeSkin"> 
                     <Text >
                         @I18N.T("Change")
                     </Text>
@@ -22,12 +22,12 @@
                 <div class="selected-avatar">
                     <Image Class="avatar-image" URL="@SelectedSkin.ToImagePath()" Alt="@I18N.T("Selected avatar")" NotDraggable Preloaded />
                 </div>
-                <TextSpan Size="TEXT_SIZE.S">@I18N.T("Selected avatar")</TextSpan>
+                <TextSpan Size="TextSize.S">@I18N.T("Selected avatar")</TextSpan>
             </div>
         </div>
         <LineDivider Text="@I18N.T("Choose skin")" />
         <div class="avatar-grid"> 
-            @foreach (SKIN skin in Skins)
+            @foreach (Skin skin in Skins)
             {
                 <div class="@ComputeAvatarOptionClass(skin)" @onclick="() => SelectSkin(skin)">
                     <Image Class="avatar-image" URL="@skin.ToImagePath()" Alt="@I18N.T("Avatar option")" NotDraggable Preloaded />

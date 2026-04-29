@@ -1,21 +1,21 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class GamePage {
-    public const string ROUTE_EN = "/en/game/{URLCode?}";
-    public const string ROUTE_SK = "/sk/hra/{URLCode?}";
+    public const string RouteEn = "/en/game/{URLCode?}";
+    public const string RouteSk = "/sk/hra/{URLCode?}";
 
     // Navigation -------------------------------------------------------------------------------------------------------------------------
     public static string Link(string url, string code) => URL.ReplaceSegments(url, new() {{ 1, $"{code}" }});
     // Navigator data:
     public record NavData(bool Create);
-    public static readonly NavData DEFAULT_NAV_DATA = new(false);
+    public static readonly NavData DefaultNavData = new(false);
     // Navigator state:
     public record HistoryState(bool WasRedirect, bool WasCreate);
-    public static readonly HistoryState DEFAULT_HISTORY_STATE = new(false, false);
+    public static readonly HistoryState DefaultHistoryState = new(false, false);
     public static class NavState {
-        public static (string Key, HistoryState? Data)? New(HistoryState? state) => new(HISTORY_STATE.GAME_PAGE, state);
-        public static HistoryState Get() => Navigator.State(HISTORY_STATE.GAME_PAGE, DEFAULT_HISTORY_STATE);
-        public static void Set(HistoryState state) => Navigator.SetState(HISTORY_STATE.GAME_PAGE, state);
+        public static (string Key, HistoryState? Data)? New(HistoryState? state) => new(Constants.HistoryState.GamePage, state);
+        public static HistoryState Get() => Navigator.State(Constants.HistoryState.GamePage, DefaultHistoryState);
+        public static void Set(HistoryState state) => Navigator.SetState(Constants.HistoryState.GamePage, state);
     }
     // Navigation init:
     public static void InitNavigation() {
@@ -39,7 +39,7 @@ public partial class GamePage {
                 data: new NavData(create),
                 state: NavState.New(new HistoryState(false, create))
             )
-        , PAGE_LOADER_TASK.ANIMATION);
+        , PageLoaderTask.Animation);
         Navigator.AllowAny();
     }
     public static async Task NavigateToConnect() => await NavigateTo(false);
@@ -47,37 +47,37 @@ public partial class GamePage {
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string? URLCode { get; set; }
+    public string? UrlCode { get; set; }
 
-    [CascadingParameter(Name = AppLayout.CASCADE_APP_LAYOUT)]
+    [CascadingParameter(Name = AppLayout.CascadeAppLayout)]
     public required AppLayoutVM LayoutVM { get; set; }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private readonly ConnectViewModel ConnectVM;
+    private readonly ConnectViewModel _connectVm;
     private GameViewModel? GameVM;
     private GameChat? ChatRef;
 
     // Views ------------------------------------------------------------------------------------------------------------------------------
-    public static readonly List<Type?> CONNECT_VIEWS = [typeof(ConnectBox), typeof(CreateBox)];
-    public static readonly List<Type?> GAME_VIEWS = [typeof(Lobby), typeof(GameScreen)];
+    public static readonly List<Type?> ConnectViews = [typeof(ConnectBox), typeof(CreateBox)];
+    public static readonly List<Type?> GameViews = [typeof(Lobby), typeof(GameScreen)];
     public Component? View { get; private set; } = null;
 
     // Layout -----------------------------------------------------------------------------------------------------------------------------
     private void ShowWebLayout() {
         LayoutVM?.ShowNavigation();
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.Page, 0, 0);
     }
 
     private void ShowGameLayout() {
         LayoutVM?.HideNavigation(false);
-        ScrollArea.ScrollTo(SCROLLAREA_ID.PAGE, 0, 0);
+        ScrollArea.ScrollTo(ScrollAreaId.Page, 0, 0);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GamePage() {
-        ConnectVM = new(new(
+        _connectVm = new(new(
             Create: ShouldOpenCreateBox(),
-            URLCode: () => URLCode,
+            URLCode: () => UrlCode,
             Chat: () => ChatRef,
             OnConnect: new(OnConnect),
             OnDisconnect: new(OnDisconnect),
@@ -86,9 +86,9 @@ public partial class GamePage {
         GameVM = null;
     }
 
-    protected override async Task OnPageInitializedAsync() { ShowWebLayout(); await ConnectVM.OnPageInitializedAsync(); }
-    protected override async Task OnPageParametersSetAsync(bool firstTime) => await ConnectVM.OnPageParametersSetAsync();
-    protected override async ValueTask OnPageDisposeAsync() => await ConnectVM.OnPageDisposeAsync();
+    protected override async Task OnPageInitializedAsync() { ShowWebLayout(); await _connectVm.OnPageInitializedAsync(); }
+    protected override async Task OnPageParametersSetAsync(bool firstTime) => await _connectVm.OnPageParametersSetAsync();
+    protected override async ValueTask OnPageDisposeAsync() => await _connectVm.OnPageDisposeAsync();
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
     private void OnConnect(GameViewModel vm) {

@@ -1,8 +1,8 @@
-﻿@namespace Jumpeno.Client.Pages
+@namespace Jumpeno.Client.Pages
 
 @inherits Page
-@attribute [Route(AdminPage.ROUTE_EN)]
-@attribute [Route(AdminPage.ROUTE_SK)]
+@attribute [Route(AdminPage.RouteEn)]
+@attribute [Route(AdminPage.RouteSk)]
 
 <DocTitle Value="@I18N.T("Admin")" />
 
@@ -10,13 +10,13 @@
     <div class="feature-panel">
         <div class="active-games-heading-line">
             <Heading2 Class="active-games-heading">@I18N.T("Active games")</Heading2>
-            <Button Class="active-games-control-button" Size="BUTTON_SIZE.S" Params="@(new ButtonLinkParams(
-                Href: I18N.Link<GameControlPage>()
+            <Button Class="active-games-control-button" Size="ButtonSize.S" Params="@(new ButtonLinkParams(
+                href: I18N.Link<GameControlPage>()
             ))">
                 <Icon><AntIcon Type="aim" Theme="outline" Label="@I18N.T("Controller")" /></Icon>
             </Button>
         </div>
-        <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT">
+        <Box Surface="BoxSurface.PrimaryTransparent">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 440px; padding: 40px 0;">
                 <AntIcon Type="coffee" Theme="outline" Style="font-size: 180px; margin: 0 auto 30px; transform: translateX(14px)" />
                 <Paragraph Style="text-align: center">@I18N.T("We are working on the implementation of this functionality.")</Paragraph>
@@ -30,74 +30,74 @@
     <div class="service-panel">
         <Heading2 Class="admin-heading admin-title">@I18N.T("Admin")</Heading2>
         <Box Class="db-box">
-            <Heading2 Size="TEXT_SIZE.M" Class="db-heading"><AntIcon Type="database" Theme="outline" />&nbsp;@I18N.T("Database")</Heading2>
-            <Paragraph Size="TEXT_SIZE.S" Class="db-info">
+            <Heading2 Size="TextSize.M" Class="db-heading"><AntIcon Type="database" Theme="outline" />&nbsp;@I18N.T("Database")</Heading2>
+            <Paragraph Size="TextSize.S" Class="db-info">
                 <b>MariaDB</b>
                 @I18N.T("Use credentials from the connection string"):
             </Paragraph>
             <div class="db-buttons">
-                <Button Size="BUTTON_SIZE.S" Class="db-button" Params="@(new ButtonLinkParams(
-                    Href: AppSettings.Links.Adminer,
-                    Target: WEBLINK_TARGET.BLANK
+                <Button Size="ButtonSize.S" Class="db-button" Params="@(new ButtonLinkParams(
+                    href: AppSettings.Links.Adminer,
+                    target: WebLinkTarget.Blank
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>Adminer</Text>
                 </Button>
-                <CredentialsModal Label="@I18N.T("Credentials")" URL="@API.BASE.ADMIN_DB_CREDENTIALS" @ref="@DBCredentialsModalRef" />
-                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="OpenDBCredentials">
+                <CredentialsModal Label="@I18N.T("Credentials")" URL="@API.Base.AdminDbCredentials" @ref="@DBCredentialsModalRef" />
+                <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="db-button" OnClick="OpenDBCredentials">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Credentials")</Text>
                 </Button>
             </div>
         </Box>
         <Box Class="email-box">
-            <Heading2 Size="TEXT_SIZE.M" Class="email-heading">
+            <Heading2 Size="TextSize.M" Class="email-heading">
                 <AntIcon Type="mail" Theme="outline" Style="position: relative; top: 1px" />&nbsp;@I18N.T("Email")
             </Heading2>
-            <Paragraph Size="TEXT_SIZE.S" Class="email-info">
+            <Paragraph Size="TextSize.S" Class="email-info">
                 <b>@AppSettings.Email</b>
                 @I18N.T("Emails, files and forms"):
             </Paragraph>
             <div class="email-buttons">
-                <Button Size="BUTTON_SIZE.S" Class="email-button" Params="@(new ButtonLinkParams(
-                    Href: AppSettings.Links.Email,
-                    Target: WEBLINK_TARGET.BLANK
+                <Button Size="ButtonSize.S" Class="email-button" Params="@(new ButtonLinkParams(
+                    href: AppSettings.Links.Email,
+                    target: WebLinkTarget.Blank
                 ))">
                     <Icon><AntIcon Type="link" Theme="outline" /></Icon>
                     <Text>@I18N.T("Email")</Text>
                 </Button>
-                <CredentialsModal Label="@I18N.T("Password")" URL="@API.BASE.ADMIN_EMAIL_PASSWORD" @ref="@EmailPasswordModalRef" />
-                <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="email-button" OnClick="OpenEmailPassword">
+                <CredentialsModal Label="@I18N.T("Password")" URL="@API.Base.AdminEmailPassword" @ref="@EmailPasswordModalRef" />
+                <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="email-button" OnClick="OpenEmailPassword">
                     <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                     <Text>@I18N.T("Password")</Text>
                 </Button>
             </div>
             <div>
-                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph" Style="font-weight: 600; font-size: 14px" Spacing>
+                <Paragraph Size="TextSize.S" Class="email-factor-paragraph" Style="font-weight: 600; font-size: 14px" Spacing>
                     <AntIcon Type="info-circle" Theme="outline" />&nbsp;@I18N.T("Two-factor authentication (2FA)")
                 </Paragraph>
-                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
+                <Paragraph Size="TextSize.S" Class="email-factor-paragraph">
                     @I18N.T("Get your access from email admin.")
                 </Paragraph>
-                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
+                <Paragraph Size="TextSize.S" Class="email-factor-paragraph">
                     @I18N.T("In case of emergency use the backup key.")
                 </Paragraph>
-                <Paragraph Size="TEXT_SIZE.S" Class="email-factor-paragraph">
+                <Paragraph Size="TextSize.S" Class="email-factor-paragraph">
                     @I18N.T("Generate and set new secret after!")
                 </Paragraph>
             </div>
-            <CredentialsModal Label="@I18N.T("Backup keys")" URL="@API.BASE.ADMIN_EMAIL_BACKUP_KEYS" @ref="@EmailBackupKeysModalRef" />
-            <Button Variant="BUTTON_VARIANT.SECONDARY" Size="BUTTON_SIZE.S" Class="db-button" OnClick="OpenEmailBackupKeys">
+            <CredentialsModal Label="@I18N.T("Backup keys")" URL="@API.Base.AdminEmailBackupKeys" @ref="@EmailBackupKeysModalRef" />
+            <Button Variant="ButtonVariant.Secondary" Size="ButtonSize.S" Class="db-button" OnClick="OpenEmailBackupKeys">
                 <Icon><AntIcon Type="eye-invisible" Theme="outline" /></Icon>
                 <Text>@I18N.T("Backup keys")</Text>
             </Button>
         </Box>
         <Box Class="map-box">
-            <Heading2 Size="TEXT_SIZE.M" Class="map-heading">
+            <Heading2 Size="TextSize.M" Class="map-heading">
                 <AntIcon Type="picture" Theme="outline" Style="position: relative; bottom: -0.5px;" />&nbsp;@I18N.T("Game maps")
             </Heading2>
-            <Button Size="BUTTON_SIZE.S" Class="map-button" Params="@(new ButtonLinkParams(
-                Href: I18N.Link<MapsPage>()
+            <Button Size="ButtonSize.S" Class="map-button" Params="@(new ButtonLinkParams(
+                href: I18N.Link<MapsPage>()
             ))">
                 <Icon><AntIcon Type="arrow-right" Theme="outline" /></Icon>
                 <Text>@I18N.T("Manage")</Text>

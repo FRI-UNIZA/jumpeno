@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Components;
 
 public partial class SwitchField {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "switch-field";
+    public new const string ClassName = "switch-field";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

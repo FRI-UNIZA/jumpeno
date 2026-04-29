@@ -8,8 +8,8 @@ public partial class CanvasPreRenderer {
     private static readonly List<PreRenderedCanvas> List = [];
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    protected static void Add(CANVAS id, float width, float height) => List.Add(new(id, (int) width, (int) height));
-    protected static void Add(CANVAS id, int width, int height) => List.Add(new(id, width, height));
+    protected static void Add(CanvasType id, float width, float height) => List.Add(new(id, (int) width, (int) height));
+    protected static void Add(CanvasType id, int width, int height) => List.Add(new(id, width, height));
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     static CanvasPreRenderer() => Init();
@@ -26,8 +26,8 @@ public partial class CanvasPreRenderer {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     private static void Init() {
         // Add objects here:
-        Add(CANVAS.MAP_BACKGROUND, Map.WIDTH, Map.HEIGHT);
-        Add(CANVAS.MAP_TILES, Map.WIDTH, Map.HEIGHT);
-        Add(CANVAS.TILE_PATTERN, Map.WIDTH, Map.HEIGHT);
+        Add(CanvasType.MapBackground, Map.Width, Map.Height);
+        Add(CanvasType.MapTiles, Map.Width, Map.Height);
+        Add(CanvasType.TilePatern, Map.Width, Map.Height);
     }
 }

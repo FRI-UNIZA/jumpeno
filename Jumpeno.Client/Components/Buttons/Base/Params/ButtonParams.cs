@@ -1,9 +1,9 @@
 namespace Jumpeno.Client.Models;
 
 public class ButtonParams(
-    BUTTON_TYPE? Type = null,
-    string? Label = null
+    ButtonType? type = null,
+    string? label = null
 ) {
-    public BUTTON_TYPE Type { get; } = Type is null ? BUTTON_TYPE.BUTTON : (BUTTON_TYPE) Type;
-    public string Label { get; } = Label is null ? "" : Label;
+    public ButtonType Type { get; } = type ?? ButtonType.Button;
+    public string Label { get; } = label ?? "";  
 }

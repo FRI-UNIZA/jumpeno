@@ -3,18 +3,18 @@ namespace Jumpeno.Client.Components;
 public partial class AvatarTab : IProfileTab
 {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly ICollection<SKIN> Skins = Enum.GetValues<SKIN>();
+    private readonly ICollection<Skin> Skins = Enum.GetValues<Skin>();
 
     // Forms ------------------------------------------------------------------------------------------------------------------------------
-    private readonly string FORM = Form.Of<AvatarTab>();
-    private SKIN SelectedSkin = Auth.User.Skin;
+    private readonly string form = Form.Of<AvatarTab>();
+    private Skin SelectedSkin = Auth.User.Skin;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("avatar-tab", Base);
-    private string ComputeAvatarOptionClass(SKIN skin) => new CSSClass("avatar-option").Set("selected", SelectedSkin == skin);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("avatar-tab", Base);
+    private string ComputeAvatarOptionClass(Skin skin) => new CssClass("avatar-option").Set("selected", SelectedSkin == skin);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    private void SelectSkin(SKIN skin) 
+    private void SelectSkin(Skin skin) 
     {
         SelectedSkin = skin;
         StateHasChanged();
@@ -22,18 +22,18 @@ public partial class AvatarTab : IProfileTab
 
     private async Task ChangeSkin() 
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.USER_UPDATE);
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
         await HTTP.Try(async () => {
             var model = new UserUpdateDTO(NewSkin: SelectedSkin);
 
-            var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_UPDATE, body: model);
+            var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
             var body = result.Body.Assert();
 
             await Auth.LoadProfile();
             await ResetForm();
             Notification.Success(result.Body.Message);
-        }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.USER_UPDATE);
+        }, form);
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
     public Task ResetForm()

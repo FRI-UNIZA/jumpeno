@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public abstract partial class GameCanvasComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "game-canvas";
+    public const string ClassName = "game-canvas";
 
     // Identifiers ------------------------------------------------------------------------------------------------------------------------
-    public override sealed string Selector => $"#{ID} canvas";
+    public sealed override string Selector => $"#{ID} canvas";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     /// <summary>Use for game UI or notifications</summary>
@@ -15,7 +15,7 @@ public abstract partial class GameCanvasComponent {
     protected abstract Map CurrentMap();
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     public virtual CSSStyle ComputeStyle() {
         var map = CurrentMap(); return new CSSStyle()

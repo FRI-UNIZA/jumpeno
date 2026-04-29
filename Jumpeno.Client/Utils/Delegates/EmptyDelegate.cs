@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Utils;
 
 public class EmptyDelegate {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly EmptyDelegate EMPTY = new(() => {});
+    public static readonly EmptyDelegate Empty = new(() => {});
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action? WrappedAction;

@@ -27,6 +27,6 @@ public partial class GameCanvas {
         // 2) Get context:
         ctx ??= await CanvasRef.CreateCanvas2DAsync();
         // 3) Render game:
-        await Game.Render(ctx, (Player, AppTheme.FONT_PRIMARY));
+        await Game.Render(ctx, (Player, AppTheme.FontPrimary));
     }
 }

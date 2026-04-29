@@ -11,16 +11,16 @@ public class CaptchaValidatorService(AttemptService attemptService)
         QueryParams q = new();
         q.Set("secret", ServerSettings.ReCAPTCHA.Secret);
         q.Set("response", token);
-        var response = await HTTP.Post<GoogleReCAPTCHA_DTOR>(API.GOOGLE.RECAPTCHA.SITE_VERIFY, query: q);
+        var response = await HTTP.Post<GoogleReCAPTCHA_DTOR>(API.Google.Recaptcha.SiteVerify, query: q);
         response.Body.Assert();
 
-        return response.Code == CODE.SUCCESS && response.Body.Success;
+        return response.Code == Codes.Success && response.Body.Success;
     }
 
     /// <summary>Validates the provided captcha token.</summary>
     /// <param name="token">Captcha token to validate.</param>
     /// <param name="captchaID">ID of the captcha component for error tracking.</param>
-    /// <exception cref="EXCEPTION.CAPTCHA_MISSING">Throws if the captcha is invalid.</exception>
+    /// <exception cref="Exceptions.CaptchaMissing">Throws if the captcha is invalid.</exception>
     public async Task AssertAsync(
         // Parameters:
         string? token,
@@ -28,8 +28,8 @@ public class CaptchaValidatorService(AttemptService attemptService)
         string captchaID = ""
     ) {
         if (!AppSettings.ReCAPTCHA.On) return;
-        if (string.IsNullOrEmpty(token)) throw EXCEPTION.CAPTCHA_MISSING.Add(ERROR.EMPTY.SetID(captchaID));
-        if (!await ValidateAsync(token)) throw EXCEPTION.CAPTCHA_INVALID.Add(ERROR.INVALID.SetID(captchaID));
+        if (string.IsNullOrEmpty(token)) throw Exceptions.CaptchaMissing.Add(Errors.Empty.SetID(captchaID));
+        if (!await ValidateAsync(token)) throw Exceptions.CaptchaInvalid.Add(Errors.Invalid.SetID(captchaID));
     }
 
     // Actions [email] --------------------------------------------------------------------------------------------------------------------
@@ -47,12 +47,12 @@ public class CaptchaValidatorService(AttemptService attemptService)
     // Actions [IP] -----------------------------------------------------------------------------------------------------------------------
     public async Task AssertTokenForIP(
         // Parameters:
-        ATTEMPTS_CATEGORY category, string? token,
+        AttemptsCategory category, string? token,
         // Exceptions:
         string captchaID = ""
     ) {
         if (!AppSettings.ReCAPTCHA.On) return;
-        if (!attemptService.IncrementAndCheckIfIPBlocked(category)) return;        
+        if (!attemptService.IncrementAndCheckIfIpBlocked(category)) return;        
         await AssertAsync(token, captchaID);
     }
 
@@ -67,14 +67,14 @@ public class CaptchaValidatorService(AttemptService attemptService)
     /// <returns>Task to await</returns>
     public async Task AssertTokenForEmailAndIP(
         // Parameters:
-        string? token, string? email = null, ATTEMPTS_CATEGORY? category = null,
+        string? token, string? email = null, AttemptsCategory? category = null,
         // Exceptions:
         string captchaID = ""
     ) {
         if (!AppSettings.ReCAPTCHA.On) return;
         if (
             (email is null || !attemptService.IncrementAndCheckIfEmailBlocked(email)) &
-            (category is null || !attemptService.IncrementAndCheckIfIPBlocked((ATTEMPTS_CATEGORY)category))
+            (category is null || !attemptService.IncrementAndCheckIfIpBlocked((AttemptsCategory)category))
         ) return;
         await AssertAsync(token, captchaID);
     }
