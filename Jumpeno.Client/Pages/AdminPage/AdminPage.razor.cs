@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class AdminPage {
-    public const string RouteEn = "/en/admin";
-    private const string RouteSk = "/sk/admin";
+    public const string RouteEN = "/en/admin";
+    private const string RouteSK = "/sk/admin";
     public static readonly Role[] Roles = [Role.Admin];
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
