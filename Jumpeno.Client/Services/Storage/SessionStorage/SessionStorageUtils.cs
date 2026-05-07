@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Services;
 
-public static class SessionStorage {
+public static class SessionStorageUtils {
     public static string Get(string key) => JS.Invoke<string>(JSSessionStorage.Get, key);
 
     public static bool IsSet(string key) => JS.Invoke<string>(JSSessionStorage.Get, key) != null;

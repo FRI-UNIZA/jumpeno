@@ -7,13 +7,11 @@ public static class URL {
     public const string SchemaDivider = "://";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static Func<string> ThemeCSSClass;
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(Func<string> url, Func<string> themeCSSClass) {
+    public static void Init(Func<string> url) {
         InitOnce.Check(nameof(URL));
         Url = url;
-        ThemeCSSClass = themeCSSClass;
     }
 
     // Normalization ----------------------------------------------------------------------------------------------------------------------
@@ -27,7 +25,7 @@ public static class URL {
     }
     public static string NormPath(string path, bool keepEnd = false) {
         if (!path.StartsWith('/')) path = $"/{path}";
-        if (!keepEnd && path != "/" && path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+        if (!keepEnd && path != "/" && path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
         return path;
     }
 
@@ -117,7 +115,7 @@ public static class URL {
         var index = url.IndexOf('?');
         if (index >= 0 && index > url.LastIndexOf("?}")) {
             url = url.Substring(index);
-            if (url.IndexOf('?') < 0 || url.IndexOf("=") < 0) {
+            if (url.IndexOf('?') < 0 || url.IndexOf('=') < 0) {
                 return "";
             }
             return url;
@@ -189,9 +187,8 @@ public static class URL {
 
         var newPath = "";
         for (var i = 0; i < oldSegments.Length; i++) {
-            var segment = segments.ContainsKey(i)
-                          ? encode ? EncodeValue(segments[i]) : segments[i]
-                          : oldSegments[i];
+            var segment = segments.TryGetValue(i, out string? value)
+                          ? encode ? EncodeValue(value) : value : oldSegments[i];
             newPath = $"{newPath}/{segment}";
         }
         if (newPath == "") newPath = "/";
@@ -257,7 +254,7 @@ public static class URL {
 
     // File name --------------------------------------------------------------------------------------------------------------------------
     public static string AppendText(string file, string text) => $"{Directory(file)}/{FileName(file)}-{text}{Extension(file, true)}";    
-    public static string AppendTheme(string file, string? theme = null) => AppendText(file, theme ?? ThemeCSSClass());
+    public static string AppendTheme(string file, string? theme = null) => AppendText(file, theme ?? ThemeUtils.ThemeCssClass());
     public static string AppendCulture(string file, string? culture = null) =>  AppendText(file, culture ?? I18N.Culture);
 
     // Links ------------------------------------------------------------------------------------------------------------------------------
@@ -265,7 +262,8 @@ public static class URL {
         if (encode) return Encode(url);
         else return url;
     }
-    public static string FileLink(string file, bool theme = false, bool culture = false) {
+    public static string FileLink(string file, bool theme = false, bool culture = false) 
+    {
         if (theme) file = AppendTheme(file);
         if (culture) file = AppendCulture(file);
         return Encode($"{file}?v={AppSettings.Version}");

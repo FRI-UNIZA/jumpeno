@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
 
-public class HTTP : StaticService<HTTP> {
+public class HTTP {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
@@ -52,7 +52,6 @@ public class HTTP : StaticService<HTTP> {
         // Retry on refresh:
         for (int iteration = 1; iteration <= 2; iteration++) {
             // Access instance:
-            var instance = Instance();
             HttpResponseMessage? response;
             int code = Codes.Default;
             bool isLocalURL = URL.IsLocal(url);

@@ -155,16 +155,34 @@ public static class JWT {
         // Validate token:
         if (!ValidateAccess(token)) throw Exceptions.NotAuthenticated;
         // Store token:
-        Token.StoreAccess(token);
+        var decodedToken = Token.Decode(token) ?? throw Exceptions.NotAuthenticated;
+
+        // Store token data in request storage for later use:
+        ServerContext.GetScopedService<RequestStorage>().Set(RequestStorageKeys.TokenAccess, decodedToken);
+
+        // Create user claims and store in context:
+        var context = ServerContext.Instance;
+        context.User = CreateUserClaims(decodedToken);
+
         // Check roles:
-        bool allowed = false;
-        foreach (var role in roles) {
-            if (role == Token.Access.role) {
-                allowed = true;
-                break;
-            }
-        }
-        if (!allowed) throw Exceptions.NotAuthorized;
+        if (!roles.Any(x => x == decodedToken.role)) 
+            throw Exceptions.NotAuthorized;
+    }
+
+    private static ClaimsPrincipal CreateUserClaims(Token.Data data)
+    {
+        var claims = new[] 
+        { 
+            new Claim(ClaimTypes.NameIdentifier, data.sub),
+            new Claim(ClaimTypes.Role, data.role.ToString()),
+            new Claim("type", data.type.ToString()),
+            new Claim("data", data.data),
+            new Claim("iss", data.iss),
+            new Claim("aud", data.aud)
+        };
+
+        var identity = new ClaimsIdentity(claims, "CustomAuth");
+        return new ClaimsPrincipal(identity);
     }
     
     public static void Authorize(HttpContext ctx) {

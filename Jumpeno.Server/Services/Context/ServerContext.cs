@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Services;
 
 public static class ServerContext {
     public static HttpContext Instance => AppEnvironment.GetService<IHttpContextAccessor>().HttpContext!;
-
+    public static T GetScopedService<T>() => Instance.RequestServices.GetService<T>()!;
     public static void Respond(HTTPHeadResult result) {
         var ctx = Instance;
         ctx.Response.StatusCode = result.Code;

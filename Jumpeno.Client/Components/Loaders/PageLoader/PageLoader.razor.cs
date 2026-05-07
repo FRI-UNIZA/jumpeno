@@ -30,7 +30,7 @@ public partial class PageLoader {
     private TaskCompletionSource RenderTCS = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public static CssClass ComputeContentClass() => new CssClass(ClassContent).Set(ThemeProvider.ClassThemeTransitionContainer);
+    public static CssClass ComputeContentClass() => new CssClass(ClassContent).Set(ThemeUtils.ClassThemeTransitionContainer);
 
     public override CssClass ComputeClass() {
         return base.ComputeClass()

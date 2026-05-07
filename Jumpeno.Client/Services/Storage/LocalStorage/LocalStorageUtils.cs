@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Services;
 
-public static class LocalStorage {
+public static class LocalStorageUtils {
     public static string Get(string key)
     {
         HTTP.EnforceSync();
