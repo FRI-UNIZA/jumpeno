@@ -95,7 +95,7 @@ public class I18N {
 
     // Links ------------------------------------------------------------------------------------------------------------------------------
     private static string PageLink<T>() {
-        string link = typeof(T).GetField($"ROUTE_{Culture.ToUpper()}")!.GetValue(null)!.ToString()!;
+        string link = typeof(T).GetField($"Route{Culture.ToUpper()}")!.GetValue(null)!.ToString()!;
         if (UsePrefix && link == $"/{Culture}") {
             return $"{link}/";
         }

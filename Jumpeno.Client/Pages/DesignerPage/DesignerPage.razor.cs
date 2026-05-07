@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class DesignerPage {
-    public const string RouteEn = "/en/designer";
-    public const string RouteSk = "/sk/designer";
+    public const string RouteEN = "/en/designer";
+    public const string RouteSK = "/sk/designer";
     
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public const string ClassPage = "designer-page";
