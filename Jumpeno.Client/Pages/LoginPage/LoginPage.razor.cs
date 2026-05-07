@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class LoginPage {
-    public const string RouteEn = "/en/login";
-    public const string RouteSk = "/sk/prihlasenie";
+    public const string RouteEN = "/en/login";
+    public const string RouteSK = "/sk/prihlasenie";
     public static readonly Role[] RolesBlock = [Role.User, Role.Admin];
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------

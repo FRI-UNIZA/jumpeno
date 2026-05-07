@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class GameControlPage {
-    public const string RouteEn = "/en/game-control";
-    public const string RouteSk = "/sk/ovladac-hry";
+    public const string RouteEN = "/en/game-control";
+    public const string RouteSK = "/sk/ovladac-hry";
     public static readonly Role[] Roles = [Role.Admin];
 
     // Form -------------------------------------------------------------------------------------------------------------------------------

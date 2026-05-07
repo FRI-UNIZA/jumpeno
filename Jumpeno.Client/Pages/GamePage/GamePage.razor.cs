@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class GamePage {
-    public const string RouteEn = "/en/game/{URLCode?}";
-    public const string RouteSk = "/sk/hra/{URLCode?}";
+    public const string RouteEN = "/en/game/{URLCode?}";
+    public const string RouteSK = "/sk/hra/{URLCode?}";
 
     // Navigation -------------------------------------------------------------------------------------------------------------------------
     public static string Link(string url, string code) => URL.ReplaceSegments(url, new() {{ 1, $"{code}" }});

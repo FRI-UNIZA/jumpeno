@@ -7,13 +7,13 @@ namespace Jumpeno.Client.Components;
 /// </summary>
 public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string ClassName => JsScrollArea.Class;
-    public static string ClassContent => JsScrollArea.ClassContent;
-    public static string ClassScrollbar => JsScrollArea.ClassScrollbar;
+    public static string ClassName => JSScrollArea.Class;
+    public static string ClassContent => JSScrollArea.ClassContent;
+    public static string ClassScrollbar => JSScrollArea.ClassScrollbar;
 
-    public static string LightTheme => JsScrollArea.LightTheme;
-    public static string DarkTheme => JsScrollArea.DarkTheme;
-    public static string CustomTheme => JsScrollArea.CustomTheme;
+    public static string LightTheme => JSScrollArea.LightTheme;
+    public static string DarkTheme => JSScrollArea.DarkTheme;
+    public static string CustomTheme => JSScrollArea.CustomTheme;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
@@ -60,23 +60,23 @@ public partial class ScrollArea {
         if (firstRender) {
             Areas.Add(Id, this);
             JS.InvokeVoid(
-                JsScrollArea.Activate, Id,
+                JSScrollArea.Activate, Id,
                 Theme is null ? null : GetThemeString((ScrollAreaTheme) Theme), AutoHide.StringLower(), OverflowX, OverflowY
             );
             RegisterAreaListeners(Id);
         } else {
             if (Theme is null) return;
-            JS.InvokeVoid(JsScrollArea.Update, Id, GetThemeString((ScrollAreaTheme) Theme));
+            JS.InvokeVoid(JSScrollArea.Update, Id, GetThemeString((ScrollAreaTheme) Theme));
         }
     }
 
     protected override void OnComponentDispose() {
         if (AppEnvironment.IsServer) return;
         if (Listeners.Length > 0) {
-            JS.InvokeVoid(JsScrollArea.RemoveScrollListener, Id);
+            JS.InvokeVoid(JSScrollArea.RemoveScrollListener, Id);
             Listeners = [];
         }
-        JS.InvokeVoid(JsScrollArea.Destroy, Id);
+        JS.InvokeVoid(JSScrollArea.Destroy, Id);
         Areas.Remove(Id);
     }
 
@@ -106,30 +106,30 @@ public partial class ScrollArea {
     // Theme ------------------------------------------------------------------------------------------------------------------------------
     public static void SetTheme(ScrollAreaTheme theme) {
         if (AppEnvironment.IsServer) return;
-        JS.InvokeVoid(JsScrollArea.SetTheme, GetThemeString(theme));
+        JS.InvokeVoid(JSScrollArea.SetTheme, GetThemeString(theme));
     }
 
     // Scrollbars -------------------------------------------------------------------------------------------------------------------------
     public static void HideScrollbars(string id) {
         if (AppEnvironment.IsServer) return;
-        JS.InvokeVoid(JsScrollArea.HideScrollbars, id);
+        JS.InvokeVoid(JSScrollArea.HideScrollbars, id);
     }
     public void HideScrollbars() => HideScrollbars(Id);
 
     public static void ShowScrollbars(string id) {
         if (AppEnvironment.IsServer) return;
-        JS.InvokeVoid(JsScrollArea.ShowScrollbars, id);
+        JS.InvokeVoid(JSScrollArea.ShowScrollbars, id);
     }
     public void ShowScrollbars() => ShowScrollbars(Id);
 
     // Restore ----------------------------------------------------------------------------------------------------------------------------
-    public static void SavePositions() => JS.InvokeVoid(JsScrollArea.SavePositions);
-    public static void RestorePositions() => JS.InvokeVoid(JsScrollArea.RestorePositions);
+    public static void SavePositions() => JS.InvokeVoid(JSScrollArea.SavePositions);
+    public static void RestorePositions() => JS.InvokeVoid(JSScrollArea.RestorePositions);
 
     // Scroll -----------------------------------------------------------------------------------------------------------------------------
     public static void ScrollTo(string id, double left, double top) {
         if (AppEnvironment.IsServer) return;
-        JS.InvokeVoid(JsScrollArea.Scroll, id, left, top);
+        JS.InvokeVoid(JSScrollArea.Scroll, id, left, top);
     }
     public void ScrollTo(double left, double top) => ScrollTo(Id, left, top);
 
@@ -141,13 +141,13 @@ public partial class ScrollArea {
 
     public static ScrollAreaPosition Position(string id) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
-        return JS.Invoke<ScrollAreaPosition>(JsScrollArea.Position, id);
+        return JS.Invoke<ScrollAreaPosition>(JSScrollArea.Position, id);
     }
     public ScrollAreaPosition Position() => Position(Id);
 
     public static ScrollAreaItemPosition ItemPosition(string id, string selector) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
-        return JS.Invoke<ScrollAreaItemPosition>(JsScrollArea.ItemPosition, id, selector);
+        return JS.Invoke<ScrollAreaItemPosition>(JSScrollArea.ItemPosition, id, selector);
     }
     public ScrollAreaItemPosition ItemPosition(string selector) => ItemPosition(Id, selector);
 
@@ -157,7 +157,7 @@ public partial class ScrollArea {
         var area = GetArea(id);
         if (area is not null) {
             area.Listeners = [.. area.Listeners, listener];
-            JS.InvokeVoid(JsScrollArea.AddScrollListener, id);
+            JS.InvokeVoid(JSScrollArea.AddScrollListener, id);
         } else {
             var reg = GetRegisterListeners(id);
             if (reg is null) reg = [];
@@ -172,7 +172,7 @@ public partial class ScrollArea {
         if (area is not null) {
             area.Listeners = [.. area.Listeners.Except([listener])];
             if (area.Listeners.Length <= 0) {
-                JS.InvokeVoid(JsScrollArea.RemoveScrollListener, id);
+                JS.InvokeVoid(JSScrollArea.RemoveScrollListener, id);
                 area.Listeners = [];
             }
         } else {

@@ -1,7 +1,7 @@
 namespace Jumpeno.Client.Constants;
 
-public static class JsScrollArea {
-    public static readonly string ClassName = nameof(JsScrollArea);
+public static class JSScrollArea {
+    public static readonly string ClassName = nameof(JSScrollArea);
 
     public const string Class = "scroll-area";
     public const string ClassContent = $"{Class}-content";
