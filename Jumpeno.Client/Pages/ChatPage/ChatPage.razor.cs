@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 namespace Jumpeno.Client.Pages;
 
 public partial class ChatPage : Page {
-    public const string ROUTE_EN = "/en/chat";
-    public const string ROUTE_SK = "/sk/chat";
-    public static readonly ROLE[] ROLES = [ROLE.USER, ROLE.ADMIN];
+    public const string RouteEN = "/en/chat";
+    public const string RouteSK = "/sk/chat";
+    public static readonly Role[] Roles = [Role.User, Role.Admin];
     private static readonly Regex GameLinkRegex =
         new(@"https?://\S+/(?:en|sk)/game/([A-Z]{4})(?=\s|$)", RegexOptions.Compiled);
         

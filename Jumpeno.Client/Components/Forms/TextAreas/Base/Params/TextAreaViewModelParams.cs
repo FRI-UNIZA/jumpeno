@@ -4,7 +4,7 @@ public record TextAreaViewModelParams(
     string? Form = null,
     string? ID = null,
     // Value:
-    INPUT_TEXT_MODE TextMode = INPUT_TEXT_MODE.NORMAL,
+    InputTextMode TextMode = InputTextMode.Normal,
     bool Trim = false,
     Predicate<string>? TextCheck = null,
     int? MaxLength = null,

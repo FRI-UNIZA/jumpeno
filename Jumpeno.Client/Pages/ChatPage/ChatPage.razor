@@ -8,11 +8,11 @@
     <DocTitle Value="@I18N.T("Chat")" />
 
     <div class="chat-container">
-        <ScrollArea ID="chatMessages" Class="chat-messages-wrapper" AutoHide="SCROLLAREA_AUTOHIDE.NEVER" OverflowX="false" OverflowY="true">
+        <ScrollArea ID="chatMessages" Class="chat-messages-wrapper" AutoHide="ScrollAreaAutoHide.Never" OverflowX="false" OverflowY="true">
             @if (VM.Messages.Count == 0) {
                 <div class="empty-state">
                     <AntIcon Type="coffee" Theme="outline" Class="empty-icon" />
-                    <Paragraph Size="TEXT_SIZE.M" Class="empty-text">@I18N.T("No messages yet. Start the conversation!")</Paragraph>
+                    <Paragraph Size="TextSize.M" Class="empty-text">@I18N.T("No messages yet. Start the conversation!")</Paragraph>
                 </div>
             } else {
                 string? prevSender = null;
@@ -52,14 +52,14 @@
                 @if (VM.Status == ChatHubConnectionStatus.Error && VM.ErrorMessage is not null) {
                     <div class="chat-error">
                         <AntIcon Type="warning" Theme="outline" />
-                        <Paragraph Size="TEXT_SIZE.S" Class="error-text">@VM.ErrorMessage</Paragraph>
+                        <Paragraph Size="TextSize.S" Class="error-text">@VM.ErrorMessage</Paragraph>
                     </div>
                 }
             </div>
             <div class="jump-to-bottom-wrapper">
                 @if (!_autoScrollEnabled) {
                     <div class="jump-to-bottom">
-                        <Button OnClick="JumpToBottom" Variant="BUTTON_VARIANT.PRIMARY" Size="BUTTON_SIZE.S">
+                        <Button OnClick="JumpToBottom" Variant="ButtonVariant.Primary" Size="ButtonSize.S">
                             <Icon><AntIcon Type="down" Theme="outline" /></Icon>
                             <Text>@I18N.T("Jump to bottom")</Text>
                         </Button>
@@ -75,15 +75,15 @@
                         ViewModel="VM.InputVM"
                         Name="message"
                         Label="@I18N.T("Message")"
-                        Size="FORM_SIZE.M"
+                        Size="FormSize.M"
                         AllowClear
                         Class="chat-input"
                     />
                 </div>
                 <Button
                     OnClick="@(async () => { if (VM.Send is not null) await VM.Send(); })"
-                    Variant="BUTTON_VARIANT.PRIMARY"
-                    Size="BUTTON_SIZE.M"
+                    Variant="ButtonVariant.Primary"
+                    Size="ButtonSize.M"
                     Disabled="@(string.IsNullOrWhiteSpace(VM.CurrentInputText) || VM.Status != ChatHubConnectionStatus.Connected)"
                     Class="send-button">
                     <Icon><AntIcon Type="send" Theme="outline" /></Icon>
@@ -110,8 +110,8 @@
                     @if (VM.CanManualReconnect) {
                         <Button
                             OnClick="ManualReconnect"
-                            Variant="BUTTON_VARIANT.PRIMARY"
-                            Size="BUTTON_SIZE.S"
+                            Variant="ButtonVariant.Primary"
+                            Size="ButtonSize.S"
                             Class="reconnect-button">
                             <Icon><AntIcon Type="reload" Theme="outline" /></Icon>
                             <Text>@I18N.T("Reconnect")</Text>

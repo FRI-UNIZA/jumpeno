@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Constants;
 
 public static class ChatHubConstants {
     // Routes -------------------------------------------------------------------------------------------------------------------------
-    public static string URL => HUB.BASE.CHAT;
+    public static string URL => HUB.Base.Chat;
     // Params -------------------------------------------------------------------------------------------------------------------------
     public const string ParamAccessToken = "AccessToken";
     public const string ParamLastMessageId = "LastMessageId";

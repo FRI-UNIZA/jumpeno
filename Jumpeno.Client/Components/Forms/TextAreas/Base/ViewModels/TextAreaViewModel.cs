@@ -2,7 +2,7 @@ namespace Jumpeno.Client.ViewModels;
 
 public class TextAreaViewModel : FormViewModel {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly INPUT_TEXT_MODE TextMode;
+    public readonly InputTextMode TextMode;
     public readonly bool Trim;
     public readonly Predicate<string>? TextCheck;
     public readonly int? MaxLength;
@@ -51,8 +51,8 @@ public class TextAreaViewModel : FormViewModel {
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public string ApplyTextMode(string value) => TextMode switch {
-        INPUT_TEXT_MODE.LOWERCASE => value.ToLower(),
-        INPUT_TEXT_MODE.UPPERCASE => value.ToUpper(),
+        InputTextMode.LowerCase => value.ToLower(),
+        InputTextMode.UpperCase => value.ToUpper(),
         _ => value
     };
 

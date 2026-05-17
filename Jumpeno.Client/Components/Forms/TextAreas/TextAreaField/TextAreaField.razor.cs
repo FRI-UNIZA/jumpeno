@@ -5,5 +5,5 @@ public partial class TextAreaField {
     public new const string Class = "textarea-field";
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(Class, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(Class, Base);
 }

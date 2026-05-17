@@ -10,6 +10,6 @@ public static class HUB {
         // Game:
         public static string Game => $"{URL}/Game";
         // Chat:
-        public static string CHAT => $"{PREFIX}/chat";
+        public static string Chat => $"{Prefix}/chat";
     }
 }

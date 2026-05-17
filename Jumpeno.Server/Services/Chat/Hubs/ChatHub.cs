@@ -29,7 +29,7 @@ public class ChatHub : Hub {
 
     // Exceptions -------------------------------------------------------------------------------------------------------------------------
     private static async Task HandleException(IClientProxy proxy, Exception e) {
-        await proxy.SendAsync(ChatHubConstants.Error, (e is AppException exception ? exception : EXCEPTION.DEFAULT).DTO);
+        await proxy.SendAsync(ChatHubConstants.Error, (e is AppException exception ? exception : Exceptions.Default).DTO);
         // NOTE: Client must close the connection!
     }
 
@@ -43,11 +43,11 @@ public class ChatHub : Hub {
     public override async Task OnConnectedAsync() {
         try {
             // 1) Check app version:
-            var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
+            var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
             VersionMiddleware.CheckHubVersion(ctx);
             // 2) Authorize — only activated registered/admin users may use chat:
             var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
-            JWT.Authorize(token, [ROLE.USER, ROLE.ADMIN]);
+            JWT.Authorize(token, [Role.User, Role.Admin]);
             await UserEntity.SelectCurrentActivatedUser(); // throws if not activated
             await base.OnConnectedAsync();
 
@@ -105,7 +105,7 @@ public class ChatHub : Hub {
             while (window.Count > 0 && (now - window.Peek()).TotalSeconds > RateLimitMessageWindowSec)
                 window.Dequeue();
             if (window.Count >= RateLimitMessageCount)
-                throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID("RateLimit"));
+                throw Exceptions.Values.SetErrors(Errors.Invalid.SetID("RateLimit"));
             window.Enqueue(now);
         }
     }
@@ -119,7 +119,7 @@ public class ChatHub : Hub {
                 window.Dequeue();
             var recentCount = window.Count(e => e.Text == text);
             if (recentCount >= DuplicateMessageLimitCount)
-                throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID("DuplicateMessage"));
+                throw Exceptions.Values.SetErrors(Errors.Invalid.SetID("DuplicateMessage"));
             window.Enqueue((text, now));
         }
     }
@@ -129,9 +129,9 @@ public class ChatHub : Hub {
     public async Task SendGlobalMessage(ChatMessageSendUpdate update) {
         try {
             // 1) Re-authorize on every message:
-            var ctx = Context.GetHttpContext() ?? throw EXCEPTION.SERVER;
+            var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
             var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
-            JWT.Authorize(token, [ROLE.USER, ROLE.ADMIN]);
+            JWT.Authorize(token, [Role.User, Role.Admin]);
             var user = await UserEntity.SelectCurrentActivatedUser();
 
             // 1) Sanitize:
@@ -139,9 +139,9 @@ public class ChatHub : Hub {
 
             // 2) Validate length:
             if (text.Length < MinMessageLength)
-                throw EXCEPTION.VALUES.SetErrors(ERROR.EMPTY.SetID(nameof(update.Text)));
+                throw Exceptions.Values.SetErrors(Errors.Empty.SetID(nameof(update.Text)));
             if (text.Length > MaxMessageLength)
-                throw EXCEPTION.VALUES.SetErrors(ERROR.INVALID.SetID(nameof(update.Text)));
+                throw Exceptions.Values.SetErrors(Errors.Invalid.SetID(nameof(update.Text)));
 
             // 3) Rate limit:
             CheckRateLimit();

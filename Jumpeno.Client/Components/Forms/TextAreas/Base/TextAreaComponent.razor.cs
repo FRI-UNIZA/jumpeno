@@ -31,7 +31,7 @@ public partial class TextAreaComponent {
         ? $"--textarea-max-rows: {DefaultMaxRows};"
         : string.Empty;
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
         .Set(Class, Base)
         .Set($"text-mode-{ViewModel.TextMode.StringLower()}")
@@ -118,7 +118,7 @@ public partial class TextAreaComponent {
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e) {
-        if (e.Key == KEYBOARD.ENTER) {
+        if (e.Key == KeyBoard.Enter) {
             if (!e.ShiftKey) {
                 // Plain Enter — fire OnEnter and prevent newline
                 ShouldPreventKeyDown = true;

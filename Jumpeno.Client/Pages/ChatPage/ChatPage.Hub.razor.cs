@@ -30,7 +30,7 @@ public partial class ChatPage {
 
             HubConnection = new HubConnectionBuilder()
                 .WithUrl(hubURL, options => {
-                    options.Headers[HEADER.ACCEPT_LANGUAGE] = I18N.Culture;
+                    options.Headers[Header.AcceptLanguage] = I18N.Culture;
                 })
                 .Build();
 

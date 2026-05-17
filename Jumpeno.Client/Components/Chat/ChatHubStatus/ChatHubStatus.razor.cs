@@ -9,7 +9,7 @@ public partial class ChatHubStatus {
     public ChatHubConnectionStatus Status { get; set; } = ChatHubConnectionStatus.Connecting;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass()
+    public override CssClass ComputeClass() => base.ComputeClass()
         .Set(Class, Base)
         .SetVariant(Status);
 

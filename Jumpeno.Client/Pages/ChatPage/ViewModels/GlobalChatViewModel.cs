@@ -91,9 +91,9 @@ public class GlobalChatViewModel {
     public void SetValidationError(AppExceptionDTO dto, int seconds = 4) {
         var error = dto.Errors.FirstOrDefault();
         var message = (error?.ID, error?.Info.Key) switch {
-            ("Text", var k) when k == ERROR.EMPTY.Info.Key
+            ("Text", var k) when k == Errors.Empty.Info.Key
                 => I18N.T("Message is too short (at least 2 characters)."),
-            ("Text", var k) when k == ERROR.INVALID.Info.Key
+            ("Text", var k) when k == Errors.Invalid.Info.Key
                 => I18N.T("Message is too long (max 500 characters)."),
             ("RateLimit", _)
                 => I18N.T("You're sending messages too fast. Please slow down."),

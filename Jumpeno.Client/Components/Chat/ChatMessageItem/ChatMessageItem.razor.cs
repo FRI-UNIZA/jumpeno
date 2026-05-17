@@ -9,7 +9,7 @@ public partial class ChatMessageItem {
     public required ChatMessage Message { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(Class, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(Class, Base);
 
     private string FormattedTime => Message.SentAt.ToLocalTime().ToString("HH:mm");
 }
