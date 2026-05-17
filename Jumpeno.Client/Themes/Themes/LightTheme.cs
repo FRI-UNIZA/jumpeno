@@ -584,7 +584,7 @@ public class LightTheme : BaseTheme {
 
 // NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
     // Chat Message -----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor CHAT_MESSAGE_OTHER_BACKGROUND => new(240, 240, 240);
-    public override RGBAColor CHAT_MESSAGE_OWN_BACKGROUND => new(250, 250, 175);
-    public override RGBAColor CHAT_MESSAGE_OTHER_TEXT => new(42, 33, 56);
+    public override RGBAColor ChatMessageOtherBackground => new(240, 240, 240);
+    public override RGBAColor ChatMessageOwnBackground => new(250, 250, 175);
+    public override RGBAColor ChatMessageOtherText => new(42, 33, 56);
 }

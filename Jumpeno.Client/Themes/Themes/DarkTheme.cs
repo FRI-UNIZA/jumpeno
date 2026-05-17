@@ -616,7 +616,7 @@ public class DarkTheme : BaseTheme {
 
 // NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
     // Chat Message -----------------------------------------------------------------------------------------------------------------------
-    public override RGBAColor CHAT_MESSAGE_OTHER_BACKGROUND => new(42, 33, 56);
-    public override RGBAColor CHAT_MESSAGE_OWN_BACKGROUND => new(240, 240, 240);
-    public override RGBAColor CHAT_MESSAGE_OTHER_TEXT => new(255, 255, 255);
+    public override RGBAColor ChatMessageOtherBackground => new(42, 33, 56);
+    public override RGBAColor ChatMessageOwnBackground => new(240, 240, 240);
+    public override RGBAColor ChatMessageOtherText => new(255, 255, 255);
 }

@@ -666,8 +666,8 @@ public class BaseTheme {
 
 // NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
     // Chat Message -----------------------------------------------------------------------------------------------------------------------
-    public RGBAColor CHAT_MESSAGE_OWN_TEXT => new(42, 33, 56);
-    public virtual RGBAColor CHAT_MESSAGE_OTHER_TEXT { get; }
-    public virtual RGBAColor CHAT_MESSAGE_OTHER_BACKGROUND { get; }
-    public virtual RGBAColor CHAT_MESSAGE_OWN_BACKGROUND { get; }
+    public RGBAColor ChatMessageOwnText => new(42, 33, 56);
+    public virtual RGBAColor ChatMessageOtherText { get; }
+    public virtual RGBAColor ChatMessageOtherBackground { get; }
+    public virtual RGBAColor ChatMessageOwnBackground { get; }
 }
