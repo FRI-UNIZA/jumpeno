@@ -128,11 +128,22 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<AttemptService>();
 builder.Services.AddScoped<CaptchaValidatorService>();
 
+// Cron services:
+builder.Services.AddHostedService<ActivationCleaner>();
+builder.Services.AddHostedService<RefreshCleaner>();
+
 // SignalR & Hubs:
 builder.Services.AddSignalR();
 
 // Database:
-builder.Services.AddDbContextFactory<DB>(DB.Setup);
+builder.Services.AddDbContext<DB>(options => 
+    options.UseMySql(ServerSettings.Database.ConnectionString, new MySqlServerVersion(new Version(ServerSettings.Database.Version)))
+);
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ActivationService>();
+builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<RefreshService>();
+builder.Services.AddScoped<TransactionService>();
 
 var app = builder.Build();
 
@@ -236,7 +247,6 @@ app.UseMiddleware<VersionMiddleware>();
 app.UseMiddleware<APIMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<HeadersMiddleware>();
-app.UseMiddleware<DisposeMiddleware>();
 
 // Mapping:
 app.MapRazorPages();
@@ -245,5 +255,4 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Index");
 
 // Start app:
-CronService.Start();
 app.Run();

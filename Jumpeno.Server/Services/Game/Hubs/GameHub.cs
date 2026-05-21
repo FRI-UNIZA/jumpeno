@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Hubs;
 
 #pragma warning disable CS1998
 
-public class GameHub : Hub {
+public class GameHub(UserService userService) : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(WebApplication app) => app.MapHub<GameHub>(GameHubs.Url);
 
@@ -92,7 +92,7 @@ public class GameHub : Hub {
                 ?? throw Exceptions.Values.SetErrors(Errors.Undefined.SetID(GameHubs.Dto));
                 dto.Assert();
                 JWT.Authorize(dto.AccessToken, [Role.User]);
-                return (await UserEntity.SelectCurrentActivatedUser(), dto);
+                return (await userService.SelectCurrentActivatedUser(), dto);
             }
             case nameof(GameHubAnonymousDTO): {
                 var dto = JsonSerializer.Deserialize<GameHubAnonymousDTO>(queryDTO!)
@@ -105,7 +105,7 @@ public class GameHub : Hub {
                 ?? throw Exceptions.Values.SetErrors(Errors.Undefined.SetID(GameHubs.Dto));
                 dto.Assert();
                 JWT.Authorize(dto.AccessToken, [Role.User]);
-                return (await UserEntity.SelectCurrentActivatedUser(), dto);
+                return (await userService.SelectCurrentActivatedUser(), dto);
             }
         }
         // 3.2) Invalid type:

@@ -3,66 +3,8 @@ namespace Jumpeno.Server.Services;
 using MySqlConnector;
 
 public class DB : DbContext {
-    // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly string Version = ServerSettings.Database.Version;
-    public static readonly string ConnectionString = ServerSettings.Database.ConnectionString;
 
-    // Configuration ----------------------------------------------------------------------------------------------------------------------
-    public static void Setup(DbContextOptionsBuilder options) =>
-    options.UseMySql(ConnectionString, new MySqlServerVersion(new Version(Version)));
-    protected override void OnConfiguring(DbContextOptionsBuilder options) => Setup(options);
-
-    // Constraints ------------------------------------------------------------------------------------------------------------------------
-    private const string MysqlException = "MySqlException";
-    private const string StartPhrase = "Duplicate entry";
-    private const string SearchPhrase = "' for key '";
-
-    private static Error? ParseForDuplicates(Exception e, Dictionary<string, Error> uniques) {
-        // 1) Check exception type:
-        if (!(e.GetType().Name.Contains(MysqlException) && e.Message.StartsWith(StartPhrase))) return null;
-        // 2) Parse key:
-        var index = e.Message.IndexOf(SearchPhrase);
-        if (index < 0) return null;
-        var key = e.Message[(index + SearchPhrase.Length)..];
-        key = key[..key.IndexOf('\'')];
-        // 3) Set error:
-        if (!uniques.TryGetValue(key, out var error)) return null;
-        return error;
-    }
-
-    private static List<Error> HandleUniqueConstraints(DbUpdateException e, Dictionary<string, Error>? uniques = null) {
-        // 1) Check custom errors:
-        if (uniques == null) throw e;
-        // 2) Parse unique errors:
-        List<Error> errors = [];
-        Exception top = e;
-        while (top.InnerException != null) {
-            var inner = top.InnerException; top = inner;
-            var error = ParseForDuplicates(inner, uniques);
-            if (error == null) continue;
-            errors.Add(error);
-        }
-        // 3) Throw if not parsed:
-        if (errors.Count == 0) throw e;
-        return errors;
-    }
-
-    private static List<Error> HandleUniqueConstraints(MySqlException e, Dictionary<string, Error>? uniques = null) {
-        // 1) Check custom errors:
-        if (uniques == null) throw e;
-        // 2) Parse unique errors:
-        List<Error> errors = [];
-        Exception? inner = e;
-        while (inner != null) {
-            var error = ParseForDuplicates(inner, uniques);
-            if (error == null) continue;
-            errors.Add(error);
-            inner = inner.InnerException;
-        }
-        // 3) Throw if not parsed:
-        if (errors.Count == 0) throw e;
-        return errors;
-    }
+    public DB(DbContextOptions<DB> options) : base(options) { }
 
     // Tables -----------------------------------------------------------------------------------------------------------------------------
     public DbSet<UserEntity> User { get; set; }
@@ -70,75 +12,5 @@ public class DB : DbContext {
     public DbSet<ActivationEntity> Activation { get; set; }
     public DbSet<RefreshEntity> Refresh { get; set; }
 
-    // Context ----------------------------------------------------------------------------------------------------------------------------
-    public static async Task<DB> Context() {
-        if (AppEnvironment.IsController) {
-            // 1) Try to get existing context:
-            var requestStorage = Services.ServerContext.GetScopedService<RequestStorage>();
-            var ctx = requestStorage.Get<DB>(RequestStorageKeys.DB);
-            if (ctx != null) return ctx;
-            // 2) Or create a new context:
-            ctx = await AppEnvironment.GetService<IDbContextFactory<DB>>().CreateDbContextAsync();
-            requestStorage.Set(RequestStorageKeys.DB, ctx);
-            RequestDisposer.RequestRegister(ctx);
-            return ctx;
-        } else {   
-            // 3) Server fallback (no HttpContext/RequestStorage):
-            return ServerContext;
-        }
-    }
-
-    // Server context ---------------------------------------------------------------------------------------------------------------------
-    // NOTE: Autonomous server database operations must run in UseServerContext hook
-    private static DB ServerContext = null!;
-    private static readonly Locker ServerContextLock = new();
-    public static async Task UseServerContext(Func<Task> action) {
-        await ServerContextLock.Exclusive(async () => {
-            try {
-                ServerContext = await AppEnvironment.GetService<IDbContextFactory<DB>>().CreateDbContextAsync();
-                await action();
-            } finally {
-                ServerContext.Dispose();
-                ServerContext = null!;
-            }
-        });
-    }
-
-    // Transaction ------------------------------------------------------------------------------------------------------------------------
-    public static async Task Transaction(Func<Task> action, Isolation isolation = Isolation.ReadCommitted) {
-        var db = await Context();
-        using var transaction = await db.Database.BeginTransactionAsync((System.Data.IsolationLevel) isolation);
-        try {
-            await action();
-            await transaction.CommitAsync();
-        } catch {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-
-    // Save -------------------------------------------------------------------------------------------------------------------------------
-    /// <summary>[Use with CREATE only!] Saves database changes and returns duplicate errors if any.</summary>
-    /// <param name="uniques">Dictionary of errors to throw for column index specified as key</param>
-    /// <returns>Tuple of rows affected and occured duplicate errors</returns>
-    public static async Task<(int rows, List<Error> errors)> Save(Dictionary<string, Error>? uniques = null) {
-        try {
-            var ctx = await Context();
-            return (await ctx.SaveChangesAsync(), []);
-        } catch (DbUpdateException e) {
-            return (0, HandleUniqueConstraints(e, uniques));
-        }
-    }
     
-    /// <summary>[Use with UPDATE only!] Performs database update and returns duplicate errors if any.</summary>
-    /// <param name="action">Update action to perform</param>
-    /// <param name="uniques">Dictionary of errors to throw for column index specified as key</param>
-    /// <returns>Tuple of rows affected and occured duplicate errors</returns> 
-    public static async Task<(int rows, List<Error> errors)> Update(Func<Task<int>> action, Dictionary<string, Error>? uniques = null) {
-        try {
-            return (await action(), []);
-        } catch (MySqlException e) {
-            return (0, HandleUniqueConstraints(e, uniques));
-        }
-    }
 }

@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class AdminController : ControllerBase {
+public class AdminController(RefreshService refreshService) : ControllerBase {
     /// <summary>Sends admin refresh token to email.</summary>
     /// <param name="body">Admin email.</param>
     /// <response code="200">Refresh token generated and sent to email.</response>
@@ -22,7 +22,7 @@ public class AdminController : ControllerBase {
         // 3) Create refresh token:
         var refreshToken = JWT.GenerateAdminRefresh(email);
         // 4) Store refresh token:
-        await RefreshEntity.Create(refreshToken);
+        await refreshService.Create(refreshToken);
         // 5) Send token:
         Services.Email.SendAdminLogin(email, refreshToken);
         // 6) Send response:

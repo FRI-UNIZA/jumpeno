@@ -1,24 +1,22 @@
 namespace Jumpeno.Server.Utils;
 
-#pragma warning disable CS4014
-#pragma warning disable CS1998
-
-public class Cron {
+public abstract class Cron : BackgroundService {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public virtual int INTERVAL { get; } // ms
+    protected abstract TimeSpan Interval { get; }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    public void Start() => RunLoop();
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
+        while (!stoppingToken.IsCancellationRequested) {
+            try {
+                await RunAsync(stoppingToken);
+            } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+                break;
+            } catch {}
 
-    private async Task RunLoop() {
-        while (true) {
-            try { Run(); } catch {}
-            try { await RunAsync(); } catch {}
-            await Task.Delay(INTERVAL);
+            await Task.Delay(Interval, stoppingToken);
         }
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    protected virtual void Run() {}
-    protected virtual async Task RunAsync() {}
+    protected abstract Task RunAsync(CancellationToken stoppingToken);
 }
