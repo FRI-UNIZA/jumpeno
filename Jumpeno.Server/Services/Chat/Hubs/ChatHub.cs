@@ -4,9 +4,6 @@ public class ChatHub : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(WebApplication app) => app.MapHub<ChatHub>(ChatHubConstants.URL);
 
-    // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static IHubContext<ChatHub> Hub => AppEnvironment.GetService<IHubContext<ChatHub>>();
-
     // Constants --------------------------------------------------------------------------------------------------------------------------
     private const int HistoryMessageCapacity = 10;
     private const int MinMessageLength = 2;
@@ -39,41 +36,55 @@ public class ChatHub : Hub {
     }
 
     // Connect ----------------------------------------------------------------------------------------------------------------------------
-    //TODO: XML documentation comments (/// <summary>) or extraction into better-named private methods
     public override async Task OnConnectedAsync() {
         try {
-            // 1) Check app version:
-            var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
-            VersionMiddleware.CheckHubVersion(ctx);
-            // 2) Authorize — only activated registered/admin users may use chat:
-            var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
-            JWT.Authorize(token, [Role.User, Role.Admin]);
-            await UserEntity.SelectCurrentActivatedUser(); // throws if not activated
-            await base.OnConnectedAsync();
+            await AuthenticateAndBaseConnectAsync();
 
-            // Initialize per-connection tracking:
-            RateWindows[Context.ConnectionId] = new Queue<DateTime>();
-            DuplicateWindows[Context.ConnectionId] = new Queue<(string, DateTime)>();
+            InitializeConnectionTracking();
 
-            var rawLastId = ctx.Request.Query[ChatHubConstants.ParamLastMessageId].ToString();
-            Guid? lastKnownId = Guid.TryParse(rawLastId, out var parsed) ? parsed : null;
+            var lastKnownId = ParseLastKnownId();
 
-            
-            // Send history to the newly connected client:
-            List<ChatMessageReceiveUpdate> history;
-            lock (HistoryLock) {
-                history = MessageOrder.Select(id => MessageIndex[id]).ToList();
-            }
-            bool send = lastKnownId == null;
-            foreach (var msg in history) {
-                if (!send) {
-                    if (msg.ID == lastKnownId) send = true;  // start sending AFTER this one
-                    continue;
-                }
-                await Clients.Caller.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
-            }
+            var history = GetHistorySnapshot();
+            await SendHistoryToCallerAsync(history, lastKnownId);
         } catch (Exception e) {
             await HandleCallException(e);
+        }
+    }
+
+    private async Task AuthenticateAndBaseConnectAsync() {
+        var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
+        VersionMiddleware.CheckHubVersion(ctx);
+        var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
+        JWT.Authorize(token, [Role.User, Role.Admin]);
+        await UserEntity.SelectCurrentActivatedUser(); // throws if not activated
+        await base.OnConnectedAsync();
+    }
+
+    private void InitializeConnectionTracking() {
+        RateWindows[Context.ConnectionId] = new Queue<DateTime>();
+        DuplicateWindows[Context.ConnectionId] = new Queue<(string, DateTime)>();
+    }
+
+    private Guid? ParseLastKnownId() {
+        var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
+        var rawLastId = ctx.Request.Query[ChatHubConstants.ParamLastMessageId].ToString();
+        return Guid.TryParse(rawLastId, out var parsed) ? parsed : null;
+    }
+
+    private List<ChatMessageReceiveUpdate> GetHistorySnapshot() {
+        lock (HistoryLock) {
+            return MessageOrder.Select(id => MessageIndex[id]).ToList();
+        }
+    }
+
+    private async Task SendHistoryToCallerAsync(List<ChatMessageReceiveUpdate> history, Guid? lastKnownId) {
+        bool send = lastKnownId == null;
+        foreach (var msg in history) {
+            if (!send) {
+                if (msg.ID == lastKnownId) send = true;  // start sending AFTER this one
+                continue;
+            }
+            await Clients.Caller.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
         }
     }
 
@@ -125,50 +136,59 @@ public class ChatHub : Hub {
     }
 
     // Client → Server --------------------------------------------------------------------------------------------------------------------
-    //TODO: XML documentation comments (/// <summary>) or extraction into better-named private methods
     public async Task SendGlobalMessage(ChatMessageSendUpdate update) {
         try {
-            // 1) Re-authorize on every message:
-            var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
-            var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
-            JWT.Authorize(token, [Role.User, Role.Admin]);
-            var user = await UserEntity.SelectCurrentActivatedUser();
+            var user = await AuthenticateAndGetUserAsync();
 
-            // 1) Sanitize:
-            var text = Sanitize(update.Text ?? string.Empty);
+            var text = ValidateSanitizeAndCheck(update.Text);
 
-            // 2) Validate length:
-            if (text.Length < MinMessageLength)
-                throw Exceptions.Values.SetErrors(Errors.Empty.SetID(nameof(update.Text)));
-            if (text.Length > MaxMessageLength)
-                throw Exceptions.Values.SetErrors(Errors.Invalid.SetID(nameof(update.Text)));
+            var msg = CreateAndStoreMessage(user, text);
 
-            // 3) Rate limit:
-            CheckRateLimit();
-
-            // 4) Duplicate check:
-            CheckDuplicate(text);
-
-            var msg = new ChatMessageReceiveUpdate(
-                ID: Guid.NewGuid(),
-                SenderName: user.Name,
-                Text: text,
-                SentAt: DateTime.UtcNow
-            );
-
-            // Store in history:
-            lock (HistoryLock) {
-                MessageIndex[msg.ID] = msg;
-                MessageOrder.Enqueue(msg.ID);
-                if (MessageOrder.Count > HistoryMessageCapacity) {
-                    var oldID = MessageOrder.Dequeue();
-                    MessageIndex.Remove(oldID);
-                }
-            }
-
-            await Hub.Clients.All.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
+            await BroadcastMessageAsync(msg);
         } catch (Exception e) {
             await HandleException(Clients.Caller, e);
         }
+    }
+
+    private async Task<User> AuthenticateAndGetUserAsync() {
+        var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
+        var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
+        JWT.Authorize(token, [Role.User, Role.Admin]);
+        return await UserEntity.SelectCurrentActivatedUser();
+    }
+
+    private string ValidateSanitizeAndCheck(string? input) {
+        var text = Sanitize(input ?? string.Empty);
+        if (text.Length < MinMessageLength)
+            throw Exceptions.Values.SetErrors(Errors.Empty.SetID(nameof(input)));
+        if (text.Length > MaxMessageLength)
+            throw Exceptions.Values.SetErrors(Errors.Invalid.SetID(nameof(input)));
+        CheckRateLimit();
+        CheckDuplicate(text);
+        return text;
+    }
+
+    private ChatMessageReceiveUpdate CreateAndStoreMessage(User user, string text) {
+        var msg = new ChatMessageReceiveUpdate(
+            ID: Guid.NewGuid(),
+            SenderName: user.Name,
+            Text: text,
+            SentAt: DateTime.UtcNow
+        );
+
+        lock (HistoryLock) {
+            MessageIndex[msg.ID] = msg;
+            MessageOrder.Enqueue(msg.ID);
+            if (MessageOrder.Count > HistoryMessageCapacity) {
+                var oldID = MessageOrder.Dequeue();
+                MessageIndex.Remove(oldID);
+            }
+        }
+
+        return msg;
+    }
+
+    private async Task BroadcastMessageAsync(ChatMessageReceiveUpdate msg) {
+        await Clients.All.SendAsync(ChatHubConstants.ReceiveGlobalMessage, msg);
     }
 }

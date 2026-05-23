@@ -17,79 +17,111 @@ public partial class ChatPage {
         _ => string.Empty
     };
 
-    //TODO: split into separate methods to improve the readability of the code
     private async Task ConnectToHub() {
         try {
             VM.SetConnecting();
 
-            var q = new QueryParams();
-            q.Set(ChatHubConstants.ParamAccessToken, Token.Access.raw);
-            if (VM.LastReceivedMessageId.HasValue)
-                q.Set(ChatHubConstants.ParamLastMessageId, VM.LastReceivedMessageId.Value.ToString());
-            var hubURL = URL.SetQueryParams(URL.ToAbsolute(ChatHubConstants.URL), q);
-
-            HubConnection = new HubConnectionBuilder()
-                .WithUrl(hubURL, options => {
-                    options.Headers[Header.AcceptLanguage] = I18N.Culture;
-                })
-                .Build();
-
-            HubConnection.On<ChatMessageReceiveUpdate>(ChatHubConstants.ReceiveGlobalMessage, async (msg) => {
-                await InvokeAsync(async () => {
-                    VM.AddMessage(msg);
-                    StateHasChanged();
-                    await ScrollToBottom();
-                });
-            });
-
-            HubConnection.On<AppExceptionDTO>(ChatHubConstants.Error, async (error) => {
-                await InvokeAsync(() => {
-                    VM.SetValidationError(error);
-                    StateHasChanged();
-                });
-            });
-
-            HubConnection.Closed += async _ => {
-                await TryAutoReconnect();
-            };
+            var hubURL = BuildHubUrl();
+            HubConnection = CreateHubConnection(hubURL);
+            RegisterHubHandlers(HubConnection);
+            RegisterClosedHandler(HubConnection);
 
             await HubConnection.StartAsync();
-            VM.SetConnected(IsConnected);
-            VM.Send = BuildSendAction();
-            await InvokeAsync(StateHasChanged);
+            FinishConnectedState();
         } catch (Exception e) {
             Console.Error.WriteLine($"[ChatHub] Connection failed: {e.Message}");
             await TryAutoReconnect();
         }
     }
 
-    //TODO: split into separate methods to improve the readability of the code
-    private async Task TryAutoReconnect() {
-        if (VM.ReconnectAttempts >= GlobalChatViewModel.MaxReconnectAttempts) {
+    private string BuildHubUrl() {
+        var q = new QueryParams();
+        q.Set(ChatHubConstants.ParamAccessToken, Token.Access.raw);
+        if (VM.LastReceivedMessageId.HasValue)
+            q.Set(ChatHubConstants.ParamLastMessageId, VM.LastReceivedMessageId.Value.ToString());
+        return URL.SetQueryParams(URL.ToAbsolute(ChatHubConstants.URL), q);
+    }
+
+    private HubConnection CreateHubConnection(string hubURL) {
+        return new HubConnectionBuilder()
+            .WithUrl(hubURL, options => {
+                options.Headers[Header.AcceptLanguage] = I18N.Culture;
+            })
+            .Build();
+    }
+
+    private void RegisterHubHandlers(HubConnection connection) {
+        connection.On<ChatMessageReceiveUpdate>(ChatHubConstants.ReceiveGlobalMessage, async msg => {
+            await InvokeAsync(async () => {
+                VM.AddMessage(msg);
+                StateHasChanged();
+                await ScrollToBottom();
+            });
+        });
+
+        connection.On<AppExceptionDTO>(ChatHubConstants.Error, async error => {
             await InvokeAsync(() => {
-                VM.SetDisconnected();
+                VM.SetValidationError(error);
                 StateHasChanged();
             });
+        });
+    }
+
+    private void RegisterClosedHandler(HubConnection connection) {
+        connection.Closed += async _ => {
+            await TryAutoReconnect();
+        };
+    }
+
+    private void FinishConnectedState() {
+        VM.SetConnected(IsConnected);
+        VM.Send = BuildSendAction();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private async Task TryAutoReconnect() {
+        if (!CanReconnect()) {
+            await SetDisconnectedAsync();
             return;
         }
 
-        var delay = ReconnectDelays[VM.ReconnectAttempts];
-        await InvokeAsync(() => {
-            VM.SetReconnecting();
-            StateHasChanged();
-        });
-
-        await Task.Delay(delay);
+        await SetReconnectingAsync();
+        await Task.Delay(GetReconnectDelay());
 
         try {
-            if (HubConnection is not null) {
-                await HubConnection.DisposeAsync();
-                HubConnection = null;
-            }
+            await DisposeCurrentConnectionAsync();
             await ConnectToHub();
         } catch {
             await TryAutoReconnect();
         }
+    }
+
+    private bool CanReconnect() {
+        return VM.ReconnectAttempts < GlobalChatViewModel.MaxReconnectAttempts;
+    }
+
+    private TimeSpan GetReconnectDelay() {
+        return ReconnectDelays[VM.ReconnectAttempts];
+    }
+
+    private async Task SetDisconnectedAsync() {
+        await InvokeAsync(() => {
+            VM.SetDisconnected();
+            StateHasChanged();
+        });
+    }
+
+    private async Task SetReconnectingAsync() {
+        await InvokeAsync(() => {
+            VM.SetReconnecting();
+            StateHasChanged();
+        });
+    }
+
+    private async Task DisposeCurrentConnectionAsync() {
+        if (HubConnection is null) return;
+        await HubConnection.DisposeAsync();
+        HubConnection = null;
     }
 
     public async Task ManualReconnect() {
