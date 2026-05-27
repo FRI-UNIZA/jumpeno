@@ -65,34 +65,4 @@ public class Disposer {
     public void Final() => Exec(false);
     public async void FinalAsync() => await ExecAsync(false);
 
-    // Request registration ---------------------------------------------------------------------------------------------------------------
-    private static LinkedList<object> RequestList { get {
-        var list = RequestStorage.Get<LinkedList<object>>(REQUEST_STORAGE.DISPOSER);
-        if (list is null) {
-            list = [];
-            RequestStorage.Set(REQUEST_STORAGE.DISPOSER, list);
-        }
-        return list;
-    } }
-
-    // Call in middleware:
-    public static async Task RequestDispose() {
-        foreach (var disposable in RequestList) {
-            if (disposable is IDisposable syncObject) syncObject.Dispose();
-            else if (disposable is IAsyncDisposable asyncObject) await asyncObject.DisposeAsync();
-        }
-    }
-
-    // Use to register request disposable objects:
-    private static void RequestRegister(object instance) {
-        if (!AppEnvironment.IsServer) return;
-        Checker.CheckDisposable(instance); 
-        RequestList.AddLast(instance);
-    }
-    public static void RequestRegister(IDisposable instance) => RequestRegister((object) instance);
-    public static void RequestRegisterAsync(IAsyncDisposable instance) => RequestRegister(instance);
-    public static void TryRequestRegister(object instance) {
-        if (!Checker.IsDisposable(instance)) return;
-        RequestRegister(instance);
-    }
 }

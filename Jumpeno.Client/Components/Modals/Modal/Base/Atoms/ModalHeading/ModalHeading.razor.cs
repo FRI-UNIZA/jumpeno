@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Components;
 
 public partial class ModalHeading {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "modal-heading";
+    public const string ClassName = "modal-heading";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]

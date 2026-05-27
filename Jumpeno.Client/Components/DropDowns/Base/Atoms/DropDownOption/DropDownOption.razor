@@ -3,10 +3,10 @@
 @inherits BasicComponent
 
 <button
-    type="@BUTTON_TYPE.BUTTON.String()"
+    type="@ButtonType.Button.String()"
     role="option"
     aria-label="@Label"
-    class="@CLASS"
+    class="@ClassName"
     @onclick="@Ref.CreateAction(Action)"
 >
     @ChildContent

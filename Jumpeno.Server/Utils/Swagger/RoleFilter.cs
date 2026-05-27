@@ -18,7 +18,7 @@ public class RoleFilter : IOperationFilter {
                         new OpenApiSecurityScheme {
                             Reference = new OpenApiReference {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = AUTH.BEARER
+                                Id = AuthTypes.Bearer
                             }
                         },
                         roles

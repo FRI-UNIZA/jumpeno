@@ -1,13 +1,13 @@
 namespace Jumpeno.Client.Models;
 
-public class GameActionRequestUpdate(GAME_ACTION action) : GameRequestUpdate
+public class GameActionRequestUpdate(GameAction action) : GameRequestUpdate
 {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     [JsonIgnore]
-    public override string HUB_ACTION => GAME_HUB.GAME_ACTION_REQUEST_UPDATE;
+    public override string HubAction => GameHubs.GameActionRequestUpdate;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public GAME_ACTION Action { get; private set; } = action;
+    public GameAction Action { get; private set; } = action;
     
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public override string ToString() => Format.JSON_PRETTY(this);

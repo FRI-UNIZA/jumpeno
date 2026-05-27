@@ -16,7 +16,7 @@ public record InputViewModelLongParams(
     Action<string>? OnError = null
 ) : InputViewModelParams<long>(
     Form, ID,
-    INPUT_TEXT_MODE.NORMAL, true, null,
+    InputTextMode.Normal, true, null,
     MaxLength, 0,
     Placeholder, DefaultValue, ClearValue,
     Secret,

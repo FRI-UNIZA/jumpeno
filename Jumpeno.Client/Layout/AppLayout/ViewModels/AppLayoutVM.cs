@@ -9,12 +9,12 @@ public class AppLayoutVM {
     public void ShowNavigation() {
         NavigationDisplayed = true;
         Padding = true;
-        AppLayout.Notify(NOTIFY.STATE);
+        AppLayout.Notify(NotifyType.State);
     }
 
     public void HideNavigation(bool keepPadding = true) {
         NavigationDisplayed = false;
         Padding = keepPadding;
-        AppLayout.Notify(NOTIFY.STATE);
+        AppLayout.Notify(NotifyType.State);
     }
 }

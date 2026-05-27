@@ -2,54 +2,54 @@ namespace Jumpeno.Client.Components;
 
 public partial class PageLoader {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID = "page-loader";
+    public const string Id = "page-loader";
     // Class:
-    public const string CLASS_CONTENT = "page-loader-content";
-    public const string CLASS_BEFORE = "page-loader-before";
-    public const string CLASS_AFTER = "page-loader-after";
-    public const string CLASS_DISPLAYED = "displayed";
-    public const string CLASS_CUSTOM = "custom-loader";
+    public const string ClassContent = "page-loader-content";
+    public const string ClassBefore = "page-loader-before";
+    public const string ClassAfter = "page-loader-after";
+    public const string ClassDisplayed = "displayed";
+    public const string ClassCustom = "custom-loader";
     // Cascade:
-    public const string CASCADE_PAGE_LOADER_DISPLAYED = $"{nameof(PageLoader)}.{nameof(CASCADE_PAGE_LOADER_DISPLAYED)}";
+    public const string CascadePageLoaderDisplayed = $"{nameof(PageLoader)}.{nameof(CascadePageLoaderDisplayed)}";
     // Min loading time:
-    public const uint MIN_LOADING = 150; // ms
+    public const uint MinLoading = 150; // ms
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public PAGE_LOADER_SURFACE? Surface { get; set; } = PAGE_LOADER_SURFACE.SECONDARY;
+    public PageLoaderSurface? Surface { get; set; } = PageLoaderSurface.Secondary;
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private bool PageLoaderDisplayed { get; set; } = true;
     private readonly LockerSlim Lock = new();
-    private readonly HashSet<PAGE_LOADER_TASK> PageLoaderTasks = [PAGE_LOADER_TASK.INITIAL];
-    private readonly HashSet<PAGE_LOADER_TASK> GlobalLoaders = [];
-    private readonly MinWatch MinWatch = new(MIN_LOADING);
+    private readonly HashSet<PageLoaderTask> PageLoaderTasks = [PageLoaderTask.Initial];
+    private readonly HashSet<PageLoaderTask> GlobalLoaders = [];
+    private readonly MinWatch MinWatch = new(MinLoading);
     private TaskCompletionSource NoLoaderTCS = new();
     private TaskCompletionSource RenderTCS = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public static CSSClass ComputeContentClass() => new CSSClass(CLASS_CONTENT).Set(ThemeProvider.CLASS_THEME_TRANSITION_CONTAINER);
+    public static CssClass ComputeContentClass() => new CssClass(ClassContent).Set(ThemeUtils.ClassThemeTransitionContainer);
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(ID, Base)
+        .Set(Id, Base)
         .SetSurface(Surface)
-        .Set(CLASS_DISPLAYED, PageLoaderDisplayed)
-        .Set(CLASS_CUSTOM, GlobalLoaders.Count == 0);
+        .Set(ClassDisplayed, PageLoaderDisplayed)
+        .Set(ClassCustom, GlobalLoaders.Count == 0);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override async ValueTask OnComponentDisposeAsync() => await Lock.DisposeSafe();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    private bool UpdateGlobalLoaders(PAGE_LOADER_TASK task, bool custom) {
+    private bool UpdateGlobalLoaders(PageLoaderTask task, bool custom) {
         if (custom) return false;
         GlobalLoaders.Add(task);
         return GlobalLoaders.Count == 1;
     }
-    private bool RemoveGlobalLoader(PAGE_LOADER_TASK task) {
+    private bool RemoveGlobalLoader(PageLoaderTask task) {
         var custom = !GlobalLoaders.Remove(task);
         if (custom) return false;
         return GlobalLoaders.Count == 0;
@@ -68,7 +68,7 @@ public partial class PageLoader {
     /// <param name="task">Task to show page loader for</param>
     /// <param name="custom">True means invisible to only block user input (we can show custom loader)</param>
     /// <returns>Task to await</returns>
-    public static async Task Show(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT, bool custom = false) {
+    public static async Task Show(PageLoaderTask task = PageLoaderTask.Default, bool custom = false) {
         var instance = Instance(); await instance.Lock.TryExclusive(async () => {
             // 1) Set tasks:
             instance.PageLoaderTasks.Add(task);
@@ -86,7 +86,7 @@ public partial class PageLoader {
                 }
                 await instance.Render();
                 if (firstLoader) {
-                    ActionHandler.SetFocus(ID);
+                    ActionHandler.SetFocus(Id);
                     Window.Inert();
                 }
             }
@@ -97,7 +97,7 @@ public partial class PageLoader {
     /// <param name="task">Task to hide page loader for</param>
     /// <param name="minLoading">True ensures that the page loader was displayed for at least the minimum loading time</param>
     /// <returns>True if page loader is hidden (no more active loaders)</returns>
-    public static async Task<bool> Hide(PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT, bool minLoading = true) {
+    public static async Task<bool> Hide(PageLoaderTask task = PageLoaderTask.Default, bool minLoading = true) {
         var instance = Instance(); return await instance.Lock.TryExclusive(async () => {
             // 0) Check state:
             if (!instance.PageLoaderDisplayed) return true;
@@ -128,7 +128,7 @@ public partial class PageLoader {
     }
 
     public static async Task Show(
-        Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT,
+        Func<Task> action, PageLoaderTask task = PageLoaderTask.Default,
         bool custom = false, bool minLoading = true
     ) {
         await Show(task, custom);
@@ -137,7 +137,7 @@ public partial class PageLoader {
     }
 
     public static async Task Try(
-        Func<Task> action, PAGE_LOADER_TASK task = PAGE_LOADER_TASK.DEFAULT,
+        Func<Task> action, PageLoaderTask task = PageLoaderTask.Default,
         bool custom = false, bool minLoading = true
     ) {
         try { await Show(action, task, custom, minLoading); }
@@ -151,7 +151,7 @@ public partial class PageLoader {
         }, false);
     }
 
-    public static async Task<bool> IsActiveTask(PAGE_LOADER_TASK task) {
+    public static async Task<bool> IsActiveTask(PageLoaderTask task) {
         var instance = Instance(); return await instance.Lock.TryExclusive(() => {
             return instance.PageLoaderTasks.Contains(task);
         }, false);

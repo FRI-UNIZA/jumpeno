@@ -4,22 +4,20 @@ namespace Jumpeno.Client.Services;
 
 public static class URL {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string SCHEMA_DIVIDER = "://";
+    public const string SchemaDivider = "://";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private static Func<string> ThemeCSSClass;
 
     // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(Func<string> url, Func<string> themeCSSClass) {
+    public static void Init(Func<string> url) {
         InitOnce.Check(nameof(URL));
         Url = url;
-        ThemeCSSClass = themeCSSClass;
     }
 
     // Normalization ----------------------------------------------------------------------------------------------------------------------
     public static string NormSchema(string schema) {
-        if (schema.EndsWith(SCHEMA_DIVIDER)) return schema;
-        return $"{schema}{SCHEMA_DIVIDER}";
+        if (schema.EndsWith(SchemaDivider)) return schema;
+        return $"{schema}{SchemaDivider}";
     }
     public static string NormBaseUrl(string baseUrl) {
         if (baseUrl.EndsWith('/')) return baseUrl[..^1];
@@ -27,7 +25,7 @@ public static class URL {
     }
     public static string NormPath(string path, bool keepEnd = false) {
         if (!path.StartsWith('/')) path = $"/{path}";
-        if (!keepEnd && path != "/" && path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+        if (!keepEnd && path != "/" && path.EndsWith('/')) path = path.Substring(0, path.Length - 1);
         return path;
     }
 
@@ -46,7 +44,7 @@ public static class URL {
     public static string ToRelative() => ToRelative(Url());
     public static string NoQuery() => NoQuery(Url());
     public static string WithQuery(string query) => WithQuery(Url(), query);
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes) => GetQueryParams(arrayTypes, Url());
+    public static QueryParams GetQueryParams(Dictionary<string, QuaryArrayType> arrayTypes) => GetQueryParams(arrayTypes, Url());
     public static QueryParams GetQueryParams() => GetQueryParams(Url());
     public static string SetQueryParams(QueryParams queryParams) => SetQueryParams(Url(), queryParams);
     public static bool PathMatches(string url, bool exact = false) => PathMatches(Url(), url, exact);
@@ -66,7 +64,7 @@ public static class URL {
     }
     
     public static string Schema(string url) {
-        var index = url.IndexOf(SCHEMA_DIVIDER);
+        var index = url.IndexOf(SchemaDivider);
         if (index >= 0) {
             return url.Substring(0, index);
         }
@@ -75,7 +73,7 @@ public static class URL {
 
     public static string Host(string url) {
         var schema = Schema(url);
-        if (schema != "" || url.StartsWith(SCHEMA_DIVIDER)) {
+        if (schema != "" || url.StartsWith(SchemaDivider)) {
             url = url.Substring(NormSchema(schema).Length);
         }
         var index = url.IndexOf('/');
@@ -117,7 +115,7 @@ public static class URL {
         var index = url.IndexOf('?');
         if (index >= 0 && index > url.LastIndexOf("?}")) {
             url = url.Substring(index);
-            if (url.IndexOf('?') < 0 || url.IndexOf("=") < 0) {
+            if (url.IndexOf('?') < 0 || url.IndexOf('=') < 0) {
                 return "";
             }
             return url;
@@ -142,7 +140,7 @@ public static class URL {
 
     public static string WithQuery(string url, string query) => $"{NoQuery(url)}{query}";
 
-    public static QueryParams GetQueryParams(Dictionary<string, QUERY_ARRAY_TYPE> arrayTypes, string url) => new(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
+    public static QueryParams GetQueryParams(Dictionary<string, QuaryArrayType> arrayTypes, string url) => new(arrayTypes, QueryHelpers.ParseQuery(Query(url)));
     public static QueryParams GetQueryParams(string url) => GetQueryParams([], url);
 
     public static string SetQueryParams(string url, QueryParams queryParams) => WithQuery(NoQuery(url), queryParams.ToString());
@@ -189,9 +187,8 @@ public static class URL {
 
         var newPath = "";
         for (var i = 0; i < oldSegments.Length; i++) {
-            var segment = segments.ContainsKey(i)
-                          ? encode ? EncodeValue(segments[i]) : segments[i]
-                          : oldSegments[i];
+            var segment = segments.TryGetValue(i, out string? value)
+                          ? encode ? EncodeValue(value) : value : oldSegments[i];
             newPath = $"{newPath}/{segment}";
         }
         if (newPath == "") newPath = "/";
@@ -257,7 +254,7 @@ public static class URL {
 
     // File name --------------------------------------------------------------------------------------------------------------------------
     public static string AppendText(string file, string text) => $"{Directory(file)}/{FileName(file)}-{text}{Extension(file, true)}";    
-    public static string AppendTheme(string file, string? theme = null) => AppendText(file, theme ?? ThemeCSSClass());
+    public static string AppendTheme(string file, string? theme = null) => AppendText(file, theme ?? ThemeUtils.ThemeCssClass());
     public static string AppendCulture(string file, string? culture = null) =>  AppendText(file, culture ?? I18N.Culture);
 
     // Links ------------------------------------------------------------------------------------------------------------------------------
@@ -265,7 +262,8 @@ public static class URL {
         if (encode) return Encode(url);
         else return url;
     }
-    public static string FileLink(string file, bool theme = false, bool culture = false) {
+    public static string FileLink(string file, bool theme = false, bool culture = false) 
+    {
         if (theme) file = AppendTheme(file);
         if (culture) file = AppendCulture(file);
         return Encode($"{file}?v={AppSettings.Version}");

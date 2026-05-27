@@ -7,23 +7,23 @@ namespace Jumpeno.Client.Components;
 /// </summary>
 public partial class ScrollArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static string CLASS => JSScrollArea.CLASS;
-    public static string CLASS_CONTENT => JSScrollArea.CLASS_CONTENT;
-    public static string CLASS_SCROLLBAR => JSScrollArea.CLASS_SCROLLBAR;
+    public static string ClassName => JSScrollArea.Class;
+    public static string ClassContent => JSScrollArea.ClassContent;
+    public static string ClassScrollbar => JSScrollArea.ClassScrollbar;
 
-    public static string LIGHT_THEME => JSScrollArea.LIGHT_THEME;
-    public static string DARK_THEME => JSScrollArea.DARK_THEME;
-    public static string CUSTOM_THEME => JSScrollArea.CUSTOM_THEME;
+    public static string LightTheme => JSScrollArea.LightTheme;
+    public static string DarkTheme => JSScrollArea.DarkTheme;
+    public static string CustomTheme => JSScrollArea.CustomTheme;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Each Change of Theme parameter is applied in css (null means current theme):
     [Parameter]
-    public SCROLLAREA_THEME? Theme { get; set; }
+    public ScrollAreaTheme? Theme { get; set; }
     // Next parameters can only be set once:
     [Parameter]
-    public string ID { get; set; }
+    public string Id { get; set; }
     [Parameter]
-    public SCROLLAREA_AUTOHIDE AutoHide { get; set; }
+    public ScrollAreaAutoHide AutoHide { get; set; }
     [Parameter]
     public bool OverflowX { get; set; }
     [Parameter]
@@ -34,51 +34,50 @@ public partial class ScrollArea {
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Dictionary<string, ScrollArea> Areas =>
-        RequestStorage.Access<Dictionary<string, ScrollArea>>(REQUEST_STORAGE.SCROLLAREA_AREAS, []);
+        AppEnvironment.MemoryStorage.Access<Dictionary<string, ScrollArea>>(MemoryStorageKeys.ScrollareaAreas, []);
     // Listeners:
     private Action<ScrollAreaPosition>[] Listeners = [];
     private static Dictionary<string, Action<ScrollAreaPosition>[]> RegisterListeners =>
-        RequestStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(REQUEST_STORAGE.SCROLLAREA_REGISTER_LISTENERS, []);
-
+        AppEnvironment.MemoryStorage.Access<Dictionary<string, Action<ScrollAreaPosition>[]>>(MemoryStorageKeys.ScrollareaRegisterListeners, []);
     // Utils ------------------------------------------------------------------------------------------------------------------------------
-    private static string GetThemeString(SCROLLAREA_THEME theme) => theme.ToString()!.ToLower().Replace("_", "-");
+    private static string GetThemeString(ScrollAreaTheme theme) => theme.ToString()!.ToLower().Replace("_", "-");
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ScrollArea() {
         Theme = null;
-        AutoHide = SCROLLAREA_AUTOHIDE.NEVER;
+        AutoHide = ScrollAreaAutoHide.Never;
         OverflowX = true;
         OverflowY = true;
         Class = "";
         ChildContent = null;
-        ID = IDGenerator.Generate(CLASS);
+        Id = IDGenerator.Generate(ClassName);
     }
 
     override protected void OnComponentAfterRender(bool firstRender) {
         if (firstRender) {
-            Areas.Add(ID, this);
+            Areas.Add(Id, this);
             JS.InvokeVoid(
-                JSScrollArea.Activate, ID,
-                Theme is null ? null : GetThemeString((SCROLLAREA_THEME) Theme), AutoHide.StringLower(), OverflowX, OverflowY
+                JSScrollArea.Activate, Id,
+                Theme is null ? null : GetThemeString((ScrollAreaTheme) Theme), AutoHide.StringLower(), OverflowX, OverflowY
             );
-            RegisterAreaListeners(ID);
+            RegisterAreaListeners(Id);
         } else {
             if (Theme is null) return;
-            JS.InvokeVoid(JSScrollArea.Update, ID, GetThemeString((SCROLLAREA_THEME) Theme));
+            JS.InvokeVoid(JSScrollArea.Update, Id, GetThemeString((ScrollAreaTheme) Theme));
         }
     }
 
     protected override void OnComponentDispose() {
         if (AppEnvironment.IsServer) return;
         if (Listeners.Length > 0) {
-            JS.InvokeVoid(JSScrollArea.RemoveScrollListener, ID);
+            JS.InvokeVoid(JSScrollArea.RemoveScrollListener, Id);
             Listeners = [];
         }
-        JS.InvokeVoid(JSScrollArea.Destroy, ID);
-        Areas.Remove(ID);
+        JS.InvokeVoid(JSScrollArea.Destroy, Id);
+        Areas.Remove(Id);
     }
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
@@ -105,7 +104,7 @@ public partial class ScrollArea {
     }
 
     // Theme ------------------------------------------------------------------------------------------------------------------------------
-    public static void SetTheme(SCROLLAREA_THEME theme) {
+    public static void SetTheme(ScrollAreaTheme theme) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.SetTheme, GetThemeString(theme));
     }
@@ -115,13 +114,13 @@ public partial class ScrollArea {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.HideScrollbars, id);
     }
-    public void HideScrollbars() => HideScrollbars(ID);
+    public void HideScrollbars() => HideScrollbars(Id);
 
     public static void ShowScrollbars(string id) {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.ShowScrollbars, id);
     }
-    public void ShowScrollbars() => ShowScrollbars(ID);
+    public void ShowScrollbars() => ShowScrollbars(Id);
 
     // Restore ----------------------------------------------------------------------------------------------------------------------------
     public static void SavePositions() => JS.InvokeVoid(JSScrollArea.SavePositions);
@@ -132,25 +131,25 @@ public partial class ScrollArea {
         if (AppEnvironment.IsServer) return;
         JS.InvokeVoid(JSScrollArea.Scroll, id, left, top);
     }
-    public void ScrollTo(double left, double top) => ScrollTo(ID, left, top);
+    public void ScrollTo(double left, double top) => ScrollTo(Id, left, top);
 
     public static void InitScrollTo(string id, double left, double top) {
         ScrollTo(id, 1, 1);
         ScrollTo(id, left, top);
     }
-    public void InitScrollTo(double left, double top) => InitScrollTo(ID, left, top);
+    public void InitScrollTo(double left, double top) => InitScrollTo(Id, left, top);
 
     public static ScrollAreaPosition Position(string id) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaPosition>(JSScrollArea.Position, id);
     }
-    public ScrollAreaPosition Position() => Position(ID);
+    public ScrollAreaPosition Position() => Position(Id);
 
     public static ScrollAreaItemPosition ItemPosition(string id, string selector) {
         if (AppEnvironment.IsServer) throw new Exception("Can't use on the server!");
         return JS.Invoke<ScrollAreaItemPosition>(JSScrollArea.ItemPosition, id, selector);
     }
-    public ScrollAreaItemPosition ItemPosition(string selector) => ItemPosition(ID, selector);
+    public ScrollAreaItemPosition ItemPosition(string selector) => ItemPosition(Id, selector);
 
     // Listeners --------------------------------------------------------------------------------------------------------------------------
     public static void AddScrollListener(string id, Action<ScrollAreaPosition> listener) {
@@ -165,7 +164,7 @@ public partial class ScrollArea {
             RegisterListeners[id] = [.. reg, listener];
         }
     }
-    public void AddScrollListener(Action<ScrollAreaPosition> listener) => AddScrollListener(ID, listener);
+    public void AddScrollListener(Action<ScrollAreaPosition> listener) => AddScrollListener(Id, listener);
 
     public static void RemoveScrollListener(string id, Action<ScrollAreaPosition> listener) {
         if (AppEnvironment.IsServer) return;
@@ -182,7 +181,7 @@ public partial class ScrollArea {
             else RegisterListeners[id] = [.. reg.Except([listener])];
         }
     }
-    public void RemoveScrollListener(Action<ScrollAreaPosition> listener) => RemoveScrollListener(ID, listener);
+    public void RemoveScrollListener(Action<ScrollAreaPosition> listener) => RemoveScrollListener(Id, listener);
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]

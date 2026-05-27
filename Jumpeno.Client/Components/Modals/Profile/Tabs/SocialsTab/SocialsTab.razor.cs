@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 public partial class SocialsTab : IProfileTab
 {
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("socials-tab", Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("socials-tab", Base);
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     public async Task ConnectGoogle()

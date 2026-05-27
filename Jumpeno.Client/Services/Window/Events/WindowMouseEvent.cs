@@ -5,5 +5,5 @@ public record WindowMouseEvent(
     double X,
     double Y
 ) {
-    public MOUSE_BUTTON Button => MOUSE_BUTTON_Extension.From(RawButton);
+    public MouseButton Button => MouseButtonExtension.From(RawButton);
 }

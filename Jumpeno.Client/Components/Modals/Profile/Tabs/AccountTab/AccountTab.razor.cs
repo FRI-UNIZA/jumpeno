@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Components;
 public partial class AccountTab : IProfileTab
 {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    private readonly ICollection<SKIN> Skins = Enum.GetValues<SKIN>();
+    private readonly ICollection<Skin> Skins = Enum.GetValues<Skin>();
 
     // Forms ------------------------------------------------------------------------------------------------------------------------------
     private readonly string FORM = Form.Of<AccountTab>();
@@ -18,7 +18,7 @@ public partial class AccountTab : IProfileTab
     private AntDesign.Popover SkinPopover = new();
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("account-tab", Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("account-tab", Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public AccountTab()
@@ -30,7 +30,7 @@ public partial class AccountTab : IProfileTab
             Placeholder: I18N.T("Player name"),
             DefaultValue: Auth.User.Name ?? "",
             TextCheck: UserValidator.IsName,
-            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            MaxLength: UserValidator.NameMaxLength,
             OnEnter: new(async e => await UpdateUserProfileInfo())
         ));
         VMEmail = new(new InputViewModelTextParams(
@@ -40,64 +40,64 @@ public partial class AccountTab : IProfileTab
             Placeholder: I18N.T("Email"),
             DefaultValue: Auth.User.Email ?? "",
             TextCheck: UserValidator.IsEmail,
-            MaxLength: UserValidator.EMAIL_MAX_LENGTH
+            MaxLength: UserValidator.EmailMaxLength
         ));
     }
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private async Task SendActivationLink()
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.ACTIVATION);
+        await PageLoader.Show(PageLoaderTask.Activation);
         await HTTP.Try(async () => {
-            var result = await HTTP.Post<MessageDTOR>(API.BASE.USER_SEND_ACTIVATION);
+            var result = await HTTP.Post<MessageDTOR>(API.Base.UserSendActivation);
             var body = result.Body.Assert();
             Notification.Success(body.Message);
         }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.ACTIVATION);
+        await PageLoader.Hide(PageLoaderTask.Activation);
     }
 
     private async Task UpdateUserProfileInfo() 
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.USER_UPDATE);
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
         await HTTP.Try(async () => {
             var model = new UserUpdateDTO(NewName: VMPlayerName.Value);
-            var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_UPDATE, body: model);
+            var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
             var body = result.Body.Assert();
             
             await Auth.LoadProfile();
             await ResetForm();
             Notification.Success(body.Message);
         }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.USER_UPDATE);
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
     private async Task DeleteAccount() 
     {
         await ConfirmModalRef.Open(async () => {
-            await PageLoader.Show(PAGE_LOADER_TASK.DELETE_ACCOUNT);
+            await PageLoader.Show(PageLoaderTask.DeleteAccount);
             await Auth.RequestFreeze();
             await HTTP.Try(async () => {
-                var result = await HTTP.Delete<MessageDTOR>(API.BASE.USER_DELETE);
+                var result = await HTTP.Delete<MessageDTOR>(API.Base.UserDelete);
                 var body = result.Body.Assert();
                 await Auth.LogOut();
                 await ModalRef.Close();
                 Notification.Success(body.Message);
             }, FORM);
             await Auth.ResolveFreeze();
-            await PageLoader.Hide(PAGE_LOADER_TASK.DELETE_ACCOUNT);
+            await PageLoader.Hide(PageLoaderTask.DeleteAccount);
         });
     }
 
-    private async Task ChangeSkin(SKIN skin)
+    private async Task ChangeSkin(Skin skin)
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.USER_UPDATE);
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
         await SkinPopover.Close();
         if (Auth.User.Skin != skin)
         {
             await HTTP.Try(async () => {
                 var model = new UserUpdateDTO(NewSkin: skin);
 
-                var result = await HTTP.Patch<MessageDTOR>(API.BASE.USER_UPDATE, body: model);
+                var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
                 var body = result.Body.Assert();
 
                 await Auth.LoadProfile();
@@ -105,7 +105,7 @@ public partial class AccountTab : IProfileTab
                 Notification.Success(result.Body.Message);
             }, FORM);
         }
-        await PageLoader.Hide(PAGE_LOADER_TASK.USER_UPDATE);
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
     public Task ResetForm()

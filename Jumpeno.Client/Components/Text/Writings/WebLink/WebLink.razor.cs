@@ -2,15 +2,15 @@ namespace Jumpeno.Client.Components;
 
 public partial class WebLink : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "web-link";
-    public const string CLASS_UNDERLINE = "underline";
-    public const string CLASS_DEFAULT_ACTIVE = "active";
+    public new const string ClassName = "web-link";
+    public const string ClassUnderline = "underline";
+    public const string ClassDefaultActive = "active";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string ID { get; set; } = "";
+    public string Id { get; set; } = "";
     [Parameter]
-    public WEBLINK_ROLE Role { get; set; } = WEBLINK_ROLE.LINK;
+    public WebLinkRole Role { get; set; } = WebLinkRole.Link;
     [Parameter]
     public string? Href { get; set; } = null;
     [Parameter]
@@ -24,15 +24,15 @@ public partial class WebLink : IDisabledComponent {
     [Parameter]
     public EventCallback<WebLinkKeyEvent> OnEnter { get; set; } = EventCallback<WebLinkKeyEvent>.Empty;
     [Parameter]
-    public OneOf<WEBLINK_TARGET, string> Target { get; set; } = WEBLINK_TARGET.SELF;
+    public OneOf<WebLinkTarget, string> Target { get; set; } = WebLinkTarget.Self;
     [Parameter]
-    public WEBLINK_MATCH Match { get; set; } = WEBLINK_MATCH.PREFIX;
+    public WebLinkMatch Match { get; set; } = WebLinkMatch.Prefix;
     [Parameter]
     public bool Underline { get; set; } = false;
     [Parameter]
     public bool Disabled { get; set; } = false;
     [Parameter]
-    public string ActiveClass { get; set; } = CLASS_DEFAULT_ACTIVE;
+    public string ActiveClass { get; set; } = ClassDefaultActive;
     [Parameter]
     public int TabIndex { get; set; } = 0;
     private readonly Dictionary<string, object> Attributes = [];
@@ -41,7 +41,7 @@ public partial class WebLink : IDisabledComponent {
     private bool IsActive() {
         if (Href == null) return false;
         if (URL.Schema(Href) != "") return false;
-        return Match == WEBLINK_MATCH.ALL ? IsExactMatch() : IsPrefixMatch();
+        return Match == WebLinkMatch.All ? IsExactMatch() : IsPrefixMatch();
     }
 
     private bool IsExactMatch() {
@@ -69,10 +69,10 @@ public partial class WebLink : IDisabledComponent {
         return Target.IsT0 ? Target.AsT0.String() : Target.AsT1;
     }
 
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_UNDERLINE, Underline)
+        .Set(ClassName, Base)
+        .Set(ClassUnderline, Underline)
         .Set(ActiveClass, IsActive());
     }
 
@@ -80,7 +80,7 @@ public partial class WebLink : IDisabledComponent {
 
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
-        if (ID == "") ID = IDGenerator.Generate(nameof(WebLink));
+        if (Id == "") Id = IDGenerator.Generate(nameof(WebLink));
         if (Label != "") Attributes["aria-label"] = Label;
     }
 
@@ -92,7 +92,7 @@ public partial class WebLink : IDisabledComponent {
     }
     private async Task OnKeyPressEvent(KeyboardEventArgs e) {
         if (Disabled) return;
-        if (e.Key == KEYBOARD.ENTER) await OnEnter.InvokeAsync(new(this, e));
+        if (e.Key == KeyBoard.Enter) await OnEnter.InvokeAsync(new(this, e));
         await OnKeyPress.InvokeAsync(new(this, e));
     }
 

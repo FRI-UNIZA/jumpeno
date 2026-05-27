@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Services;
 
 public partial class AnimationHandler {
     // Class ------------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_DISABLED_ANIMATION = JSAnimationHandler.CLASS_DISABLED_ANIMATION;
-    public const string CLASS_PREVENT_DISABLED_ANIMATION = JSAnimationHandler.CLASS_PREVENT_DISABLED_ANIMATION;
+    public const string ClassDisabledAnimation = JSAnimationHandler.ClassDisabledAnimation;
+    public const string ClassPreventDisabledAnimation = JSAnimationHandler.ClassPreventDisabledAnimation;
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public static void DisableAnimation(string selector = "body") => JS.InvokeVoid(JSAnimationHandler.DisableAnimation, selector);
@@ -25,11 +25,11 @@ public partial class AnimationHandler {
     => await JS.InvokeVoidAsync(JSAnimationHandler.CallOnAnimationEnd, selector, new JSInvoker(new(action)).Ref, nameof(JSInvoker.JS_Execute));
 
     public static void SetOnAnimationEndEvent<T>(string selector, EventDelegate<T> action, T e) {
-        if (action == EventDelegate<T>.EMPTY) return;
+        if (action == EventDelegate<T>.Empty) return;
         CallOnAnimationEnd(selector, async () => await action.Invoke(e));
     }
     public static async Task SetOnAnimationEndEventAsync<T>(string selector, EventDelegate<T> action, T e) {
-        if (action == EventDelegate<T>.EMPTY) return;
+        if (action == EventDelegate<T>.Empty) return;
         await CallOnAnimationEndAsync(selector, async () => await action.Invoke(e));
     }
 
@@ -49,11 +49,11 @@ public partial class AnimationHandler {
     => await JS.InvokeVoidAsync(JSAnimationHandler.CallOnTransitionEnd, selector, new JSInvoker(new(action)).Ref, nameof(JSInvoker.JS_Execute));
 
     public static void SetOnTransitionEndEvent<T>(string selector, EventDelegate<T> action, T e) {
-        if (action == EventDelegate<T>.EMPTY) return;
+        if (action == EventDelegate<T>.Empty) return;
         CallOnTransitionEnd(selector, async () => await action.Invoke(e));
     }
     public static async Task SetOnTransitionEndEventAsync<T>(string selector, EventDelegate<T> action, T e) {
-        if (action == EventDelegate<T>.EMPTY) return;
+        if (action == EventDelegate<T>.Empty) return;
         await CallOnTransitionEndAsync(selector, async () => await action.Invoke(e));
     }
 

@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Utils;
 
 public class EventDelegate<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static readonly EventDelegate<T> EMPTY = new(v => {});
+    public static readonly EventDelegate<T> Empty = new(v => {});
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Action<T>? WrappedAction;

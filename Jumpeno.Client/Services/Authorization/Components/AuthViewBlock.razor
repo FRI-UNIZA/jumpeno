@@ -4,7 +4,7 @@
 
 @code {
     [Parameter]
-    public ROLE[] Roles { get; set; } = [ROLE.USER, ROLE.ADMIN];
+    public Role[] Roles { get; set; } = [Role.User, Role.Admin];
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
 }

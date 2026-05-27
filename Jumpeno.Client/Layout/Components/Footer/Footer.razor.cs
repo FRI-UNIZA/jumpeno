@@ -2,18 +2,18 @@ namespace Jumpeno.Client.Layouts;
 
 public partial class Footer {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "footer";
-    public const string CLASS_DISPLAY = "display";
+    public const string ClassName = "footer";
+    public const string ClassDisplay = "display";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public bool Display { get; set; } = true;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(SURFACE.SECONDARY, Base)
-        .Set(CLASS_DISPLAY, Display);
+        .Set(ClassName, Base)
+        .Set(Surface.Secondary, Base)
+        .Set(ClassDisplay, Display);
     }
 }

@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
+<AuthView Roles="[Role.User]">
     <div class="@ComputeClass()" style="@Style">
         <div class="profile-sections-columns">
             <div class="profile-sections">
@@ -22,7 +22,7 @@
                                         <AntIcon Type="edit" Theme="outline" Class="edit-icon-on-image" />
                                     </div>
                                 </div>
-                                <Button Size="BUTTON_SIZE.S" Class="button-avatar-change">
+                                <Button Size="ButtonSize.S" Class="button-avatar-change">
                                     <Text>
                                         <AntIcon Type="edit" Theme="outline" />
                                         @I18N.T("Change avatar")
@@ -33,7 +33,7 @@
 
                         <ContentTemplate>
                             <div class="skins-grid">
-                                @foreach (SKIN skin in Skins)
+                                @foreach (Skin skin in Skins)
                                 {
                                     <div class="one-skin" @onclick="() => ChangeSkin(skin)">
                                         <Image Class="skin-item" URL="@skin.ToImagePath()" Alt="@I18N.T("Avatar option")" Preloaded />
@@ -59,13 +59,13 @@
                                 <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
                                 @I18N.T("Account not activated")
                             </Paragraph>
-                            <Button Variant="BUTTON_VARIANT.QUATERNARY" NoShadow Size="BUTTON_SIZE.S" OnClick="SendActivationLink">
+                            <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="SendActivationLink">
                                 <Text>@I18N.T("Resend link")</Text>
                             </Button>
                         </div>
                     }
 
-                    <Button OnClick="DeleteAccount" Size="BUTTON_SIZE.S" Variant="BUTTON_VARIANT.DANGER">
+                    <Button OnClick="DeleteAccount" Size="ButtonSize.S" Variant="ButtonVariant.Danger">
                         <Text>
                             @I18N.T("Delete account")
                         </Text>
@@ -75,13 +75,13 @@
                 <div class="profile-details">
                     <div class="profile-section">
                         <div>
-                            <Heading1 Size="TEXT_SIZE.S" Style="font-weight: bold; font-size: 40px;">
+                            <Heading1 Size="TextSize.S" Style="font-weight: bold; font-size: 40px;">
                                 @I18N.T("My profile")
                             </Heading1>
                         </div>
                         <div class="avatar-info">
-                            <Heading1 Size="TEXT_SIZE.S" Style="font-size: 15px">
-                                <AntIcon Type="edit" Theme="outline" Style="font-size: 20px; margin-right: 8px"/>
+                            <Heading1 Size="TextSize.S" Style="font-size: 15px">
+                                <AntIcon Type="edit" Theme="outline" Style="font-size: 20px; margin-right: 8px" />
                                 @I18N.T("Click on avatar to change")
                             </Heading1>
                         </div>
@@ -89,34 +89,34 @@
                             <div class="input-label">
                                 @I18N.T("Player name"):
                             </div>
-                            <InputField Class="name-input" Name="name" Size="FORM_SIZE.S" ViewModel="@VMPlayerName" Align="FORM_ALIGN.CENTER" />
-                            <Button OnClick="UpdateUserProfileInfo" Size="BUTTON_SIZE.S">
+                            <InputField Class="name-input" Name="name" Size="FormSize.S" ViewModel="@VMPlayerName" Align="FormAlign.Center" />
+                            <Button OnClick="UpdateUserProfileInfo" Size="ButtonSize.S">
                                 <Text>
                                     @I18N.T("Change name")
                                 </Text>
                             </Button>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
 
-            
+
             <div class="email-section">
                 <div class="profile-section">
                     <div class="input-label">
                         @I18N.T("Email"):
                     </div>
-                    <InputField Class="email-input" Name="email" Size="FORM_SIZE.S" ViewModel="@VMEmail" Align="FORM_ALIGN.CENTER" Disabled />
+                    <InputField Class="email-input" Name="email" Size="FormSize.S" ViewModel="@VMEmail" Align="FormAlign.Center" Disabled />
                 </div>
-                <Button class="button-change" Size="BUTTON_SIZE.S" Disabled>
+                <Button class="button-change" Size="ButtonSize.S" Disabled>
                     <Text>
                         @I18N.T("Change email")
                     </Text>
                 </Button>
             </div>
         </div>
-        
+
         <ConfirmModal @ref="ConfirmModalRef" Label="@I18N.T("Delete account")" Danger>
             <Message>
                 @I18N.T("Are you sure you want to delete your account?")<br />

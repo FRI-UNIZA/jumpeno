@@ -2,9 +2,9 @@ namespace Jumpeno.Client.Components;
 
 public abstract partial class FormField<T> : IDisabledComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "field";
-    public const string CLASS_CONTENT = "field-content";
-    public const string CLASS_AUTO_SIZE = "auto-size";
+    public const string ClassName = "field";
+    public const string ClassContent = "field-content";
+    public const string ClassAutoSize = "auto-size";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // ViewModel:
@@ -15,13 +15,13 @@ public abstract partial class FormField<T> : IDisabledComponent {
     public virtual required OneOf<string, List<string>> Label { get; set; }
     // Style:
     [Parameter]
-    public virtual FORM_VARIANT? Variant { get; set; } = FORM_VARIANT.PRIMARY;
+    public virtual FormVariant? Variant { get; set; } = FormVariant.Primary;
     [Parameter]
-    public virtual FORM_SIZE? Size { get; set; } = FORM_SIZE.M;
+    public virtual FormSize? Size { get; set; } = FormSize.M;
     [Parameter]
-    public virtual FORM_ALIGN? Align { get; set; }
+    public virtual FormAlign? Align { get; set; }
     [Parameter]
-    public virtual FORM_ALIGN? ErrorAlign { get; set; }
+    public virtual FormAlign? ErrorAlign { get; set; }
     [Parameter]
     public virtual bool AutoSize { get; set; } = false;
     // Error display:
@@ -37,16 +37,16 @@ public abstract partial class FormField<T> : IDisabledComponent {
     public virtual bool Propagate { get; set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
+        .Set(ClassName, Base)
         .SetVariant(Variant)
         .SetSize(Size)
         .Set(Align)
-        .Set(CLASS_AUTO_SIZE, AutoSize)
-        .Set(FormError.CLASS_ERROR, ViewModel.Error.HasError)
-        .Set(Disabler.CLASS, Disabled)
-        .Set(FormErrorType);
+        .Set(ClassAutoSize, AutoSize)
+        .Set(FormError.ClassError, ViewModel.Error.HasError)
+        .Set(Disabler.ClassName, Disabled)
+        .Set(ErrorType);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -63,6 +63,6 @@ public abstract partial class FormField<T> : IDisabledComponent {
     public override sealed async ValueTask DisposeAsync() => await base.DisposeAsync();
 
     // Rendering --------------------------------------------------------------------------------------------------------------------------
-    protected virtual FORM_ERROR_TYPE? FormErrorType => null;
+    protected virtual FormErrorType? ErrorType => null;
     protected virtual RenderFragment? RenderField() => null;
 }

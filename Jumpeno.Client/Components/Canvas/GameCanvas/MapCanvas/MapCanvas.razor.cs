@@ -8,13 +8,13 @@ public partial class MapCanvas {
     [Parameter] public required Map? Map { get; set; }
 
     // Map --------------------------------------------------------------------------------------------------------------------------------
-    private Map DEFAULT_MAP => new(
-        Map.DEFAULT_NAME, [],
-        AppTheme.GAME_CANVAS_DEFAULT_BACKGROUND,
-        IMAGE.MAP_JUMPERS_HOME_TILE,
-        AppTheme.GAME_CANVAS_DEFAULT_FOREGROUND,
-        AppTheme.GAME_CANVAS_DEFAULT_TINT,
-        AppTheme.GAME_CANVAS_DEFAULT_BORDER
+    private Map DefaultMap => new(
+        Map.DefaultName, [],
+        AppTheme.GameCanvasDefaultBackground,
+        ImageType.MapJumpersHomeTile,
+        AppTheme.GameCanvasDefaultForeground,
+        AppTheme.GameCanvasDefaultTint,
+        AppTheme.GameCanvasDefaultBorder
     );
 
     private Map UpdateMap() {
@@ -23,7 +23,7 @@ public partial class MapCanvas {
         return map;
     }
 
-    protected override Map CurrentMap() => Map ?? DEFAULT_MAP;
+    protected override Map CurrentMap() => Map ?? DefaultMap;
 
     // Render -----------------------------------------------------------------------------------------------------------------------------
     protected override async Task PreRenderCanvas() {

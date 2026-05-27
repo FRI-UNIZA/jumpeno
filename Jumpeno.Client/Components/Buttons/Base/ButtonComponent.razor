@@ -6,7 +6,7 @@
     protected RenderFragment Render() => @<Fragment>
         @if (Params.IsT0) {
             <button
-                id="@ID"
+                id="@Id"
                 type="@Params.AsT0.Type.StringLower()"
                 @onclick="@(async e => await OnClick.InvokeAsync(new(this, e)))"
                 @attributes="@Attributes"
@@ -17,7 +17,7 @@
             </button>
         } else {
             <WebLink
-                ID="@ID"
+                Id="@Id"
                 Href="@Params.AsT1.Href"
                 HrefPrevent="@Params.AsT1.HrefPrevent"
                 Label="@Params.AsT1.Label"

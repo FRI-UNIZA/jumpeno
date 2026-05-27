@@ -2,11 +2,11 @@ namespace Jumpeno.Client.Components;
 
 public partial class SwitchComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "switch";
-    public const string CLASS_SWITCH_ELEMENT = "switch-element";
-    public const string CLASS_SWITCH_DESCRIPTION = "switch-description";
-    public const string CLASS_ACTIVE_DESCRIPTION = "active-description";
-    public const string CLASS_CHECKED = "checked";
+    public new const string ClassName = "switch";
+    public const string ClassSwitchElement = "switch-element";
+    public const string ClassSwitchDescription = "switch-description";
+    public const string ClassActiveDescription = "active-description";
+    public const string ClassChecked = "checked";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
@@ -14,15 +14,15 @@ public partial class SwitchComponent {
     [Parameter]
     public bool ActiveDescription { get; set; } = false;
     [Parameter]
-    public SWITCH_POSITION? Position { get; set; } = SWITCH_POSITION.START;
+    public SwitchPosition? Position { get; set; } = SwitchPosition.Start;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_ACTIVE_DESCRIPTION, ActiveDescription)
+        .Set(ClassName, Base)
+        .Set(ClassActiveDescription, ActiveDescription)
         .Set(Position)
-        .Set(CLASS_CHECKED, ViewModel.Value);
+        .Set(ClassChecked, ViewModel.Value);
     }
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

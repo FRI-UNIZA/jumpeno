@@ -2,21 +2,21 @@ namespace Jumpeno.Client.Components;
 
 public partial class LoadArea {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "load-area";
-    public const string CLASS_CONTENT = "load-area-content";
-    public const string CLASS_LOADER_WRAP = "load-area-loader-wrap";
-    public const string CLASS_LOADER = "load-area-loader";
-    public const string CLASS_NO_STYLE = "no-style";
-    public const string CLASS_NO_LOADER = "no-loader";
-    public const string CLASS_LOADING = "loading";
+    public const string ClassName = "load-area";
+    public const string ClassContent = "load-area-content";
+    public const string ClassLoaderWrap = "load-area-loader-wrap";
+    public const string ClassLoader = "load-area-loader";
+    public const string ClassNoStyle = "no-style";
+    public const string ClassNoLoader = "no-loader";
+    public const string ClassLoading = "loading";
     // Min loading time:
-    public const uint MIN_LOADING = 150; // ms
+    public const uint MinLoading = 150; // ms
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required LoadAreaViewModel ViewModel { get; set; }
     [Parameter]
-    public required LOAD_AREA_TYPE Type { get; set; } = LOAD_AREA_TYPE.FOCUSABLE;
+    public required LoadAreaType Type { get; set; } = LoadAreaType.Focusable;
     [Parameter]
     public required string Label { get; set; }
     [Parameter]
@@ -34,12 +34,12 @@ public partial class LoadArea {
     private string RestoreFocusID = WebDocument.ID;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_NO_STYLE, NoStyle)
-        .Set(CLASS_NO_LOADER, NoLoader)
-        .Set(CLASS_LOADING, ViewModel.Loading);
+        .Set(ClassName, Base)
+        .Set(ClassNoStyle, NoStyle)
+        .Set(ClassNoLoader, NoLoader)
+        .Set(ClassLoading, ViewModel.Loading);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
@@ -54,13 +54,13 @@ public partial class LoadArea {
     private void StartLoading(LoadAreaViewModel.MessageStartData data) {
         try {
             if (IsDisposed) return;
-            if (Type == LOAD_AREA_TYPE.NO_FOCUS) { StateHasChanged(); return; }
+            if (Type == LoadAreaType.NoFocus) { StateHasChanged(); return; }
             RestoreFocusID = ActionHandler.ActiveID() ?? ViewModel.ID;
             if (RestoreFocusID == "") RestoreFocusID = ViewModel.ID;
-            var focusChildID = ActionHandler.FocusedChildID($"#{ViewModel.ID}");
-            if (focusChildID == "") focusChildID = ViewModel.ID;
-            if (focusChildID == ViewModel.ID) focusChildID = null;
-            if (focusChildID != null) ActionHandler.SetFocus(ViewModel.ID, preventScroll: data.PreventScroll);
+            var focusChildId = ActionHandler.FocusedChildID($"#{ViewModel.ID}");
+            if (focusChildId == "") focusChildId = ViewModel.ID;
+            if (focusChildId == ViewModel.ID) focusChildId = null;
+            if (focusChildId != null) ActionHandler.SetFocus(ViewModel.ID, preventScroll: data.PreventScroll);
             StateHasChanged();
         } catch {}
     }
@@ -68,7 +68,7 @@ public partial class LoadArea {
     private async Task FinishLoading(LoadAreaViewModel.MessageFinishData data) {
         try {
             if (IsDisposed) return;
-            if (Type == LOAD_AREA_TYPE.NO_FOCUS) { StateHasChanged(); return; }
+            if (Type == LoadAreaType.NoFocus) { StateHasChanged(); return; }
             try {
                 if (!data.RestoreFocus) { StateHasChanged(); return; }
                 var hasFocus = ViewModel.HasFocus();
@@ -94,16 +94,16 @@ public partial class LoadArea {
     protected override void Notify(string message, object? data = null) {
         if (!AppEnvironment.IsClient) return;
         switch (message) {
-            case LoadAreaViewModel.MESSAGE_SET_RESTORE_ID: SetRestoreID((LoadAreaViewModel.MessageSetRestoreIDData)data!); break;
+            case LoadAreaViewModel.MessageSetRestoreId: SetRestoreID((LoadAreaViewModel.MessageSetRestoreIDData)data!); break;
         }
     }
 
     protected override async Task NotifyAsync(string message, object? data = null) {
         if (!AppEnvironment.IsClient) return;
         switch (message) {
-            case LoadAreaViewModel.MESSAGE_START: StartLoading((LoadAreaViewModel.MessageStartData)data!); break;
-            case LoadAreaViewModel.MESSAGE_FINISH: await FinishLoading((LoadAreaViewModel.MessageFinishData)data!); break;
-            case LoadAreaViewModel.MESSAGE_RESTORE: await RestoreFocus((LoadAreaViewModel.MessageRestoreData)data!); break;
+            case LoadAreaViewModel.MessageStart: StartLoading((LoadAreaViewModel.MessageStartData)data!); break;
+            case LoadAreaViewModel.MessageFinish: await FinishLoading((LoadAreaViewModel.MessageFinishData)data!); break;
+            case LoadAreaViewModel.MessageRestore: await RestoreFocus((LoadAreaViewModel.MessageRestoreData)data!); break;
         }
     }
 }

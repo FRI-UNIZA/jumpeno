@@ -25,7 +25,7 @@ public class HubAuth {
     /// <param name="dispose">Function to dispose Hub</param>
     /// <returns>Refresh exception if occured.</returns>
     public async Task<AppException?> OnError(AppExceptionDTO exceptionDTO, Func<Task> dispose) {
-        if (exceptionDTO.Code != CODE.NOT_AUTHENTICATED) return null;
+        if (exceptionDTO.Code != Codes.NotAuthenticated) return null;
         if (Request == null) return null;
         if (LastRequest != Request) {
             await dispose();

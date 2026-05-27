@@ -10,5 +10,5 @@ public record UserLoginDTO(
         errors.AddRange(UserValidator.ValidateWeakPassword(Password, nameof(Password)));
         return errors;
     }
-    public UserLoginDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? EXCEPTION.VALUES);
+    public UserLoginDTO Assert(AppException? exception = null) => Checker.AssertWith(this, Validate(), exception ?? Exceptions.Values);
 }

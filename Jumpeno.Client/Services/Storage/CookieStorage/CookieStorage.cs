@@ -10,13 +10,13 @@ public abstract class CookieStorage {
 
     // Types ------------------------------------------------------------------------------------------------------------------------------
     protected abstract string? GetItem(string key);
-    protected abstract void SetItem(Cookie cookie);
+    protected abstract void SetItem(Models.Cookie cookie);
     protected abstract void DeleteItem(string key, string domain, string path);
 
     private bool IsCookieType(Type keyType)
     {
         if (keyType is null) return false;
-        return COOKIE.TYPES.Contains(keyType);
+        return Cookies.Types.Contains(keyType);
     }
 
     private List<Type> ConvertToTypes(List<string> acceptedNames) {
@@ -24,7 +24,7 @@ public abstract class CookieStorage {
         foreach (var name in acceptedNames) {
             try
             {
-                Type? type = Type.GetType($"{typeof(COOKIE).FullName}+{name}");
+                Type? type = Type.GetType($"{typeof(Cookies).FullName}+{name}");
                 if (type is not null && IsCookieType(type)) accepted.Add(type);
             }
             catch
@@ -45,12 +45,12 @@ public abstract class CookieStorage {
     // General:
     private bool IsAccepted(Enum key) => AreAccepted([key]);
     private bool AreAccepted(Enum[] keys) {
-        var allRequired = AreAcceptedBy(keys, COOKIE.TYPES_REQUIRED);
+        var allRequired = AreAcceptedBy(keys, Cookies.TypesRequired);
         if (allRequired) return true;
 
         var accepted = GetAcceptedCookies();
         if (accepted.Count == 0) {
-            accepted = COOKIE.TYPES_REQUIRED;
+            accepted = Cookies.TypesRequired;
         }
         return AreAcceptedBy(keys, accepted);
     }
@@ -59,7 +59,7 @@ public abstract class CookieStorage {
     public bool IsCookieAccepted(Type key) => GetAcceptedCookies().Any(x => x == key);
 
     public List<Type> GetAcceptedCookies() {
-        var json = GetCookie(COOKIE.MANDATORY.APP_COOKIES_ACCEPTED);
+        var json = GetCookie(Cookies.Mandatory.AppCookiesAccepted);
         if (json is null) return [];
         
         var acceptedNames = JsonConvert.DeserializeObject<List<string>>(json);
@@ -71,11 +71,11 @@ public abstract class CookieStorage {
     private void SetAcceptedCookies(List<Type> accepted) {
         var names = accepted.Select(x => x.Name).ToList();
         if (names.Count <= 0) {
-            DeleteCookie(COOKIE.MANDATORY.APP_COOKIES_ACCEPTED);
+            DeleteCookie(Cookies.Mandatory.AppCookiesAccepted);
         } else {
             var json = JsonConvert.SerializeObject(names);
-            SetCookie(new Cookie(
-                COOKIE.MANDATORY.APP_COOKIES_ACCEPTED,
+            SetCookie(new Models.Cookie(
+                Cookies.Mandatory.AppCookiesAccepted,
                 json,
                 DateTimeOffset.UtcNow.AddYears(1)
             ));
@@ -86,12 +86,12 @@ public abstract class CookieStorage {
     // Cookie consent ---------------------------------------------------------------------------------------------------------------------
     public void AcceptCookieConsent(List<Type> accept) {
         var acceptedCookies = accept.Where(IsCookieType).ToList();
-        var unacceptedCookies = COOKIE.TYPES.Except(acceptedCookies);
+        var unacceptedCookies = Cookies.Types.Except(acceptedCookies);
 
         SetAcceptedCookies(acceptedCookies);
 
         foreach (Enum cookie in unacceptedCookies.SelectMany(x => Enum.GetValues(x).Cast<Enum>())) {
-            COOKIE.ORIGIN.TryGetValue(cookie, out var origins);
+            Cookies.Origin.TryGetValue(cookie, out var origins);
             if (origins == null) {
                 DeleteCookie(cookie);
             } else {
@@ -115,18 +115,18 @@ public abstract class CookieStorage {
         return GetCookie(key);
     }
 
-    private void SetCookie(Cookie cookie) {
+    private void SetCookie(Models.Cookie cookie) {
         Checker.CheckEmptyString(cookie.Key.String(), name: "key");
         if (!AppEnvironment.IsServer && cookie.HttpOnly) {
             cookie.HttpOnly = false;
         }
-        if (!cookie.Secure && cookie.SameSite == SAME_SITE.NONE) {
+        if (!cookie.Secure && cookie.SameSite == SameSite.None) {
             throw new Exception("Only secure cookies can have \"SameSite: None\"");
         }
         cookie.Value = cookie.Value;
         SetItem(cookie);
     }
-    public void Set(Cookie cookie) {
+    public void Set(Models.Cookie cookie) {
         if (!IsAccepted(cookie.Key)) return;
         SetCookie(cookie);
     }
@@ -136,8 +136,8 @@ public abstract class CookieStorage {
         Checker.CheckEmptyString(keyValue, name: "key");
         DeleteItem(
             keyValue,
-            domain is null ? COOKIE.DEFAULT_DOMAIN : domain,
-            path is null ? COOKIE.DEFAULT_PATH : path
+            domain is null ? Cookies.DefaultDomain : domain,
+            path is null ? Cookies.DefaultPath : path
         );
     }
     public void Delete(Enum key, string? domain = null, string? path = null) {

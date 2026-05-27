@@ -4,22 +4,22 @@ public partial class ProfileModal {
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private Modal ModalRef = null!;
     // Tabs:
-    private PROFILE_TAB Tab = PROFILE_TAB.ACCOUNT;
+    private ProfileTabType Tab = ProfileTabType.Account;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass TabButtonClass(PROFILE_TAB tab) => new CSSClass("profile-tab-button").Set("active", Tab == tab);
+    private CssClass TabButtonClass(ProfileTabType tab) => new CssClass("profile-tab-button").Set("active", Tab == tab);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task Open() {
         await ModalRef.OpenLoading();
-        Tab = PROFILE_TAB.ACCOUNT;
+        Tab = ProfileTabType.Account;
         var success = await HTTP.Try(Auth.LoadProfile);
         if (success) await ModalRef.FinishLoading();
         else await ModalRef.CloseLoading();
     }
 
     // Events -----------------------------------------------------------------------------------------------------------------------------
-    private Action ChangeTab(PROFILE_TAB tab) => async () => {
+    private Action ChangeTab(ProfileTabType tab) => async () => {
         ModalRef.ScrollAreaRef.ScrollTo(0, 0);
         Tab = tab;
         StateHasChanged();

@@ -6,10 +6,10 @@ public partial class Game {
         return new(killerID, deadID, penalize);
     }
     public LifeUpdate NewLifeResetUpdate(byte playerID) {
-        return new(playerID, Body.IMMORTAL_MS);
+        return new(playerID, Body.ImmortalMs);
     }
     public LifeUpdate NewLifeUpdate(byte playerID) {
-        return new(playerID, Time + Body.IMMORTAL_MS);
+        return new(playerID, Time + Body.ImmortalMs);
     }
 
     public MovementUpdate NewMovementUpdate(byte playerID) {
@@ -19,7 +19,7 @@ public partial class Game {
     public MovementUpdate NewMovementUpdate(Player jumper, Player victim) {
         return new MovementUpdate(
             jumper.ID,
-            new(jumper.Body.Position.Center.X, victim.Body.Position.Center.Y + Body.HEIGHT),
+            new(jumper.Body.Position.Center.X, victim.Body.Position.Center.Y + Body.Height),
             jumper.Body.Direction, jumper.Body.JumpFinishY, jumper.Body.Normal
         );
     }
@@ -38,26 +38,26 @@ public partial class Game {
         random ??= new Random();
         used ??= [];
         // 2) Randomize position:
-        float x = Map.WorldMinX + random.Next(0, (int) Map.WorldWidth) / Tile.SIZE * Tile.SIZE + Tile.HALF_SIZE;
-        while (used.Contains(x)) x = Map.WorldMinX + (x - Map.WorldMinX + Tile.SIZE) % Map.WorldWidth;
+        float x = Map.WorldMinX + random.Next(0, (int) Map.WorldWidth) / Tile.Size * Tile.Size + Tile.HalfSize;
+        while (used.Contains(x)) x = Map.WorldMinX + (x - Map.WorldMinX + Tile.Size) % Map.WorldWidth;
         used.Add(x);
-        var y = Map.WorldMinY + random.Next(0, (int) Map.WorldHeight) / Tile.SIZE * Tile.SIZE + Body.HALF_HEIGHT;
+        var y = Map.WorldMinY + random.Next(0, (int) Map.WorldHeight) / Tile.Size * Tile.Size + Body.HalfHeight;
         // 3) Avoid tile collision:
         var position = new PointF(x, y);
-        while (Map.GetCollidingTiles(new(position.X - Tile.HALF_SIZE, position.Y - Tile.HALF_SIZE, Tile.SIZE, Tile.SIZE)).Count > 0) {
-            position.Y = Map.WorldMinY + (position.Y - Map.WorldMinY + Tile.SIZE) % Map.WorldHeight;
+        while (Map.GetCollidingTiles(new(position.X - Tile.HalfSize, position.Y - Tile.HalfSize, Tile.Size, Tile.Size)).Count > 0) {
+            position.Y = Map.WorldMinY + (position.Y - Map.WorldMinY + Tile.Size) % Map.WorldHeight;
         }
         // 4) Put on the ground:
         while (
-            Map.GetCollidingTiles(new(position.X - Tile.HALF_SIZE, position.Y - Tile.HALF_SIZE, Tile.SIZE, Tile.SIZE)).Count <= 0
+            Map.GetCollidingTiles(new(position.X - Tile.HalfSize, position.Y - Tile.HalfSize, Tile.Size, Tile.Size)).Count <= 0
             && (position.Y > Map.WorldMinY)
-        ) position.Y -= Tile.SIZE;
-        position.Y += Tile.SIZE;
+        ) position.Y -= Tile.Size;
+        position.Y += Tile.Size;
         // 5) Return update:
-        return new(player.ID, position, Body.DEFAULT_DIRECTION, null, Body.DEFAULT_NORMAL, new(random.NextDouble() < 0.5 ? 1 : -1, -1));
+        return new(player.ID, position, Body.DefaultDirection, null, Body.DefaultNormal, new(random.NextDouble() < 0.5 ? 1 : -1, -1));
     }
 
-    public StateUpdate NewStateUpdate(double time, GAME_STATE state, int? level = null, double? timer = null) {
+    public StateUpdate NewStateUpdate(double time, GameStates state, int? level = null, double? timer = null) {
         return new(time, state, level ?? Map.Shrink.Level, timer ?? Map.Shrink.Timer);
     }
     public TimeFlowUpdate NewTimeFlowUpdate(double deltaT) => new(deltaT);
@@ -104,7 +104,7 @@ public partial class Game {
     private PlayerUpdate NewPlayerRemoveUpdate(Player player, bool kick) {
         bool isHost = player.User.ID == Host.ID;
         var update = NewPlayerManipulationUpdate(player);
-        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GAME_STATE.LOBBY, update);
+        return Updater.NewPlayerUpdate(Round, !isHost && HostConnected, player, player.ReadyForRound, kick || State == GameStates.Lobby, update);
     }
     public PlayerUpdate NewPlayerRemoveUpdate(Player player) => NewPlayerRemoveUpdate(player, false);
     public PlayerUpdate NewPlayerKickUpdate(Player player) => NewPlayerRemoveUpdate(player, true);
@@ -120,12 +120,12 @@ public partial class Game {
         KillPlayers();
         ResurrectPlayers();
         return Updater.NewRoundUpdate(
-            Round + 1, NewStateUpdate(0, GAME_STATE.GAMEPLAY, Shrink.DEFAULT.LEVEL, Shrink.DEFAULT.TIMER),
+            Round + 1, NewStateUpdate(0, GameStates.GamePlay, Shrink.Default.LEVEL, Shrink.Default.TIMER),
             Players
         );
     }
     public RoundUpdate NewRoundFinishUpdate() {
         KillPlayers();
-        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GAME_STATE.SCOREBOARD), Players);
+        return Updater.NewRoundUpdate(Round, NewStateUpdate(Time, GameStates.ScoreBoard), Players);
     }
 }

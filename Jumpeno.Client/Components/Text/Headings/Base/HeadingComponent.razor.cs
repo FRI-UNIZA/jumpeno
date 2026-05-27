@@ -2,12 +2,12 @@ namespace Jumpeno.Client.Components;
 
 public partial class HeadingComponent {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public new const string CLASS = "heading";
+    public new const string ClassName = "heading";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public required HEADING_TYPE Type { get; set; }
+    public required HeadingType Type { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }

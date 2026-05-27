@@ -10,7 +10,7 @@ public partial class UserLoginForm {
     public required LoginPageViewModel VM { get; set; }
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
-    public readonly string FORM = Form.Of<UserLoginForm>();
+    public readonly string FormId = Form.Of<UserLoginForm>();
     private readonly InputViewModel<string> VMEmail;
     private readonly InputViewModel<string> VMPassword;
     private ReCAPTCHA ReCAPTCHARef = null!;
@@ -18,22 +18,22 @@ public partial class UserLoginForm {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public UserLoginForm() {
         VMEmail = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserLoginDTO.Email),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Trim: true,
             TextCheck: UserValidator.IsEmail,
-            MaxLength: UserValidator.EMAIL_MAX_LENGTH,
+            MaxLength: UserValidator.EmailMaxLength,
             Placeholder: I18N.T("Email"),
             DefaultValue: "",
             OnEnter: new(async e => await Login())
         ));
         VMPassword = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: FormId,
             ID: nameof(UserLoginDTO.Password),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             Placeholder: I18N.T("Password"),
             DefaultValue: "",
             Secret: true,
@@ -45,7 +45,7 @@ public partial class UserLoginForm {
     private async Task Login() {
         if (!await HTTP.Sync(
             async () => {
-                if (!CookieStorage.IsCookieAccepted(typeof(COOKIE.SECURITY)))
+                if (!CookieStorage.IsCookieAccepted(typeof(Cookies.Security)))
                 {
                     await CookieModal.Open(sync: false);
                     Notification.Error(I18N.T("You must accept the security cookie."));
@@ -55,13 +55,13 @@ public partial class UserLoginForm {
             }
         )) return;
 
-        await PageLoader.Show(PAGE_LOADER_TASK.LOGIN);
+        await PageLoader.Show(PageLoaderTask.Login);
         await HTTP.Try(async () => {
             // 1) Get CAPTCHA token:
             var captchaToken = await ReCAPTCHARef.GetToken();
             // 2) Login:
             await Auth.LogInUser(VMEmail.Value, VMPassword.Value, captchaToken);
-        }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.LOGIN);
+        }, FormId);
+        await PageLoader.Hide(PageLoaderTask.Login);
     }
 }

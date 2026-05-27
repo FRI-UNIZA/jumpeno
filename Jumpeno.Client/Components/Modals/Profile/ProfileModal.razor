@@ -2,7 +2,7 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
+<AuthView Roles="[Role.User]">
     <Modal @ref="@ModalRef"
            Label="@I18N.T("My profile")"
            NoFooter
@@ -11,27 +11,27 @@
             <div class="profile-modal-tab-switch">
                 <div class="profile-tab-buttons">
                     @code {
-                        private RenderFragment TabButton(PROFILE_TAB tab, string iconType) => @<Fragment>
+                        private RenderFragment TabButton(ProfileTabType tab, string iconType) => @<Fragment>
                                 <button class="@TabButtonClass(tab)" @onclick="@ChangeTab(tab)">
                                     <AntIcon Type="@iconType" Theme="outline" />
                                     <span class="tab-text">@I18N.T(tab.String())</span>
                                 </button>
                         </Fragment>;
                     }
-                    @TabButton(PROFILE_TAB.ACCOUNT, "user")
-                    @TabButton(PROFILE_TAB.PASSWORD, "unlock")
-                    @TabButton(PROFILE_TAB.CONNECTIONS, "link")
+                    @TabButton(ProfileTabType.Account, "user")
+                    @TabButton(ProfileTabType.Password, "unlock")
+                    @TabButton(ProfileTabType.Connections, "link")
                 </div>
                 <div class="profile-tabs">
                     @switch (Tab)
                     {
-                        case PROFILE_TAB.ACCOUNT:
+                        case ProfileTabType.Account:
                             <AccountTab ModalRef="@ModalRef" />
                             break;
-                        case PROFILE_TAB.PASSWORD:
+                        case ProfileTabType.Password:
                             <PasswordChangeTab />
                             break;
-                        case PROFILE_TAB.CONNECTIONS:
+                        case ProfileTabType.Connections:
                             <SocialsTab />
                             break;
                     }

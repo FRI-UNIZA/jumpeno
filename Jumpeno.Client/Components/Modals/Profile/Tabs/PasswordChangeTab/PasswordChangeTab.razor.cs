@@ -14,7 +14,7 @@ public partial class PasswordChangeTab : IProfileTab
     private string Password = "";
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set("password-change-tab", Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set("password-change-tab", Base);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public PasswordChangeTab()
@@ -22,25 +22,25 @@ public partial class PasswordChangeTab : IProfileTab
         VMOldPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserPasswordChangeDTO.OldPassword),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Secret: true,
             Trim: true,
             Placeholder: "••••••••",
             DefaultValue: "",
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             OnEnter: new(async e => await ChangePassword())
         ));
         VMNewPassword = new(new InputViewModelTextParams(
             Form: FORM,
             ID: nameof(UserPasswordChangeDTO.NewPassword),
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Secret: true,
             Trim: true,
             Placeholder: "••••••••",
             DefaultValue: "",
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             OnInput: new(e => {
                 Password = e.TextAfter;
                 StateHasChanged();
@@ -50,13 +50,13 @@ public partial class PasswordChangeTab : IProfileTab
         VMNewPasswordConfirm = new(new InputViewModelTextParams(
             Form: FORM,
             ID: "ConfirmPassword",
-            TextMode: INPUT_TEXT_MODE.NORMAL,
+            TextMode: InputTextMode.Normal,
             Secret: true,
             Trim: true,
             Placeholder: "••••••••",
             DefaultValue: "",
             TextCheck: UserValidator.IsPassword,
-            MaxLength: UserValidator.PASSWORD_MAX_LENGTH,
+            MaxLength: UserValidator.PasswordMaxLength,
             OnEnter: new(async e => await ChangePassword())
         ));
     }
@@ -64,7 +64,7 @@ public partial class PasswordChangeTab : IProfileTab
     // Actions ----------------------------------------------------------------------------------------------------------------------------
     public async Task ChangePassword()
     {
-        await PageLoader.Show(PAGE_LOADER_TASK.PASSWORD_CHANGE);
+        await PageLoader.Show(PageLoaderTask.PasswordChange);
 
         await HTTP.Try(async () => {
             // 1) Create body:
@@ -77,16 +77,16 @@ public partial class PasswordChangeTab : IProfileTab
 
             errors.AddRange(body.Validate());
             errors.AddRange(UserValidator.ValidateConfirmPassword(VMNewPasswordConfirm.Value, VMNewPassword.Value, VMNewPasswordConfirm.ID));
-            Checker.AssertWith(errors, EXCEPTION.VALUES);
+            Checker.AssertWith(errors, Exceptions.Values);
             // 3) Send request:
-            var response = await HTTP.Patch<MessageDTOR>(API.BASE.USER_PASSWORD_CHANGE, body: body);
+            var response = await HTTP.Patch<MessageDTOR>(API.Base.UserPasswordChange, body: body);
             // 4) Show result:
             await Auth.LogOut();
             await Modal.CloseAll();
             Notification.Success(response.Body.Message);
         }, FORM);
 
-        await PageLoader.Hide(PAGE_LOADER_TASK.PASSWORD_CHANGE);
+        await PageLoader.Hide(PageLoaderTask.PasswordChange);
     }
 
     public Task ResetForm()

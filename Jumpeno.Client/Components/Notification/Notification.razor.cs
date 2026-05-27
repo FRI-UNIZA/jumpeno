@@ -5,10 +5,10 @@ namespace Jumpeno.Client.Components;
 public partial class Notification {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     // Duration:
-    public const int DEFAULT_DURATION = 3000;
+    public const int DefaultDuration = 3000;
     // ARIA:
-    private const int ARIA_DELAY_START = 0;
-    private const int ARIA_DELAY_INCREMENT = 1000;
+    private const int AriaDelayStart = 0;
+    private const int AriaDelayIncrement = 1000;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     // Notifications:
@@ -19,24 +19,17 @@ public partial class Notification {
     private readonly LockerSlim DisplayLock = new();
     // ARIA:
     private readonly List<NotificationData> AriaNotifications = [];
-    private int AriaDelayTime = ARIA_DELAY_START;
+    private int AriaDelayTime = AriaDelayStart;
     private Delay? AriaDelay = null;
     private readonly LockerSlim AriaLock = new();
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    private CSSClass GridClass(NotificationData notification) {
-        return new CSSClass("notification-grid")
+    private CssClass GridClass(NotificationData notification) {
+        return new CssClass("notification-grid")
         .Set("closing", Closing.ContainsKey(notification.Key));
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
-    protected override void OnComponentAfterRender(bool firstRender) {
-        if (!firstRender) return;
-        foreach (var notification in SSRStorage.State.ServerNotifications) {
-            Open(notification);
-        }
-        SSRStorage.State.ServerNotifications.Clear();
-    }
 
     protected override async ValueTask OnComponentDisposeAsync() {
         await DisplayLock.DisposeSafe();
@@ -46,12 +39,12 @@ public partial class Notification {
     // ARIA -------------------------------------------------------------------------------------------------------------------------------
     private void StartAriaDisposer() {
         Delay.Clear(AriaDelay);
-        if (AriaDelayTime <= int.MaxValue - ARIA_DELAY_INCREMENT) AriaDelayTime += ARIA_DELAY_INCREMENT;
+        if (AriaDelayTime <= int.MaxValue - AriaDelayIncrement) AriaDelayTime += AriaDelayIncrement;
         AriaDelay = Delay.Set(async () => {
             await AriaLock.TryExclusive(() => {
                 AriaNotifications.Clear();
                 StateHasChanged();
-                AriaDelayTime = ARIA_DELAY_START;
+                AriaDelayTime = AriaDelayStart;
             });
         }, AriaDelayTime);
     }
@@ -67,7 +60,7 @@ public partial class Notification {
     private void SetDelay(NotificationData notification) {
         if (Delays.ContainsKey(notification.Key)) return;
         Delays[notification.Key] = Delay.Set(
-            async () => await Close(notification), notification.Duration ?? DEFAULT_DURATION
+            async () => await Close(notification), notification.Duration ?? DefaultDuration
         );
     }
 
@@ -80,10 +73,6 @@ public partial class Notification {
     // Display ----------------------------------------------------------------------------------------------------------------------------
     private static async void Open(NotificationData notification) {
         var instance = Instance();
-        if (AppEnvironment.IsServer) {
-            SSRStorage.State.ServerNotifications.Add(notification);
-            return;
-        }
         if (notification.Duration is not null && notification.Duration < 1) {
             throw new Exception("Minimal duration is 1ms!");
         }
@@ -133,18 +122,18 @@ public partial class Notification {
     }
 
     // Open -------------------------------------------------------------------------------------------------------------------------------
-    public static void Basic(string title, string message, int? duration = null) => Open(new(NOTIFICATION_TYPE.BASIC, title, message, duration));
+    public static void Basic(string title, string message, int? duration = null) => Open(new(NotificationType.Basic, title, message, duration));
     public static void Basic(string message, int? duration = null) => Basic(I18N.T("Notification"), message, duration);
 
-    public static void Success(string title, string message, int? duration = null) => Open(new(NOTIFICATION_TYPE.SUCCESS, title, message, duration));
+    public static void Success(string title, string message, int? duration = null) => Open(new(NotificationType.Succcess, title, message, duration));
     public static void Success(string message, int? duration = null) => Success(I18N.T("Success"), message, duration);
     
-    public static void Error(string title, string message, int? duration = null) => Open(new(NOTIFICATION_TYPE.ERROR, title, message, duration));
+    public static void Error(string title, string message, int? duration = null) => Open(new(NotificationType.Error, title, message, duration));
     public static void Error(string message, int? duration = null) => Error(I18N.T("Error occurred"), message, duration);
 
-    public static void Warning(string title, string message, int? duration = null) => Open(new(NOTIFICATION_TYPE.WARNING, title, message, duration));
+    public static void Warning(string title, string message, int? duration = null) => Open(new(NotificationType.Warning, title, message, duration));
     public static void Warning(string message, int? duration = null) => Warning(I18N.T("Warning"), message, duration);
 
-    public static void Info(string title, string message, int? duration = null) => Open(new(NOTIFICATION_TYPE.INFO, title, message, duration));
+    public static void Info(string title, string message, int? duration = null) => Open(new(NotificationType.Info, title, message, duration));
     public static void Info(string message, int? duration = null) => Info(I18N.T("Information"), message, duration);
 }

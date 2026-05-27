@@ -3,10 +3,10 @@ namespace Jumpeno.Client.Base;
 public class ServiceComponent<T> : Component {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public ServiceComponent() {
-        var key = REQUEST_STORAGE.SERVICE_COMPONENT<T>();
-        var instance = RequestStorage.Get<T>(key);
+        var key = MemoryStorageKeys.ServiceComponent<T>();
+        var instance = AppEnvironment.GetService<MemoryStorage>().Get<T>(key);
         if (instance is not null) throw new InvalidOperationException($"{key} already initialized!");
-        RequestStorage.Set(key, this);
+        AppEnvironment.GetService<MemoryStorage>().Set(key, this);
     }
     protected override sealed void OnInitialized() => base.OnInitialized();
     protected override sealed async Task OnInitializedAsync() => await base.OnInitializedAsync();
@@ -18,5 +18,5 @@ public class ServiceComponent<T> : Component {
     public override sealed async ValueTask DisposeAsync() => await base.DisposeAsync();
 
     // Methods ----------------------------------------------------------------------------------------------------------------------------
-    protected static T Instance() => RequestStorage.Get<T>(REQUEST_STORAGE.SERVICE_COMPONENT<T>())!;
+    protected static T Instance() => AppEnvironment.MemoryStorage.Get<T>(MemoryStorageKeys.ServiceComponent<T>())!;
 }

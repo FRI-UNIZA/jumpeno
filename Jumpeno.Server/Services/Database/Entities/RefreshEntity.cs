@@ -4,21 +4,21 @@ namespace Jumpeno.Server.Models;
 [Index(nameof(Expires))]
 public class RefreshEntity {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public const string INDEX_TOKEN = "PRIMARY";
+    public const string IndexToken = "PRIMARY";
     [Key]
     [Column(TypeName = "VARCHAR(512)")]
     public required string Token { get; set; }
 
-    public const string INDEX_ID = "IX_Refresh_ID";
+    public const string IndexId = "IX_Refresh_ID";
     [ForeignKey(nameof(User))]
     [Column(TypeName = "VARCHAR(255)")]
-    public string? ID { get; set; }
+    public string? Id { get; set; }
 
-    public const string INDEX_ORIGIN = "IX_Refresh_Origin";
+    public const string IndexOrigin = "IX_Refresh_Origin";
     [Column(TypeName = "VARCHAR(512)")]
     public string? Origin { get; set; }
     
-    public const string INDEX_EXPIRES = "IX_Refresh_Expires";
+    public const string IndexExpires = "IX_Refresh_Expires";
     public required DateTime Expires { get; set; }
 
     // Relations --------------------------------------------------------------------------------------------------------------------------
@@ -29,20 +29,20 @@ public class RefreshEntity {
         // Parameters:
         string token, string? id = null, string? origin = null,
         // Exceptions:
-        string tokenID = "", string idID = "", string originID = ""
+        string tokenID = "", string idId = "", string originId = ""
     ) {
         // 1) Validation:
         var errors = TokenValidator.ValidateToken(token, tokenID);
-        if (id != null) errors.AddRange(UserValidator.ValidateID(id, idID));
-        errors.AddRange(Checker.Validate(token == origin, ERROR.MATCH(nameof(token), nameof(origin)).SetID(originID)));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        if (id != null) errors.AddRange(UserValidator.ValidateID(id, idId));
+        errors.AddRange(Checker.Validate(token == origin, Errors.Match(nameof(token), nameof(origin)).SetID(originId)));
+        Checker.Assert(errors, Exceptions.Values);
         // 2) Read token:
-        var data = Client.Utils.Token.Decode(token) ?? throw EXCEPTION.NOT_AUTHENTICATED;
-        if (id != null && id != data.sub) throw new InvalidDataException(nameof(UserEntity.ID));
+        var data = Client.Utils.Token.Decode(token) ?? throw Exceptions.NotAuthenticated;
+        if (id != null && id != data.sub) throw new InvalidDataException(nameof(UserEntity.Id));
         // 3) Create record:
         var record = new RefreshEntity() {
             Token = token,
-            ID = id,
+            Id = id,
             Origin = origin,
             Expires = data.exp
         };
@@ -112,12 +112,12 @@ public class RefreshEntity {
         // Parameters:
         string origin, string? except = null,
         // Exceptions:
-        string originID = "", string exceptID = ""
+        string originID = "", string exceptId = ""
     ) {
         // 1) Validation:
         var errors = TokenValidator.ValidateToken(origin, originID);
-        if (except != null) errors.AddRange(TokenValidator.ValidateToken(except, exceptID));
-        Checker.Assert(errors, EXCEPTION.VALUES);
+        if (except != null) errors.AddRange(TokenValidator.ValidateToken(except, exceptId));
+        Checker.Assert(errors, Exceptions.Values);
         // 2) Delete records:
         var ctx = await DB.Context();
         int rows = await ctx.Refresh
@@ -142,14 +142,14 @@ public class RefreshEntity {
         // Parameters:
         string id,
         // Exceptions:
-        string idID = ""
+        string idId = ""
     ) {
         // 1) Validation:
-        UserValidator.AssertID(id, idID);
+        UserValidator.AssertID(id, idId);
         // 2) Delete records:
         var ctx = await DB.Context();
         int rows = await ctx.Refresh
-            .Where(o => o.ID == id)
+            .Where(o => o.Id == id)
             .ExecuteDeleteAsync();
         // 3) True if deleted:
         return rows > 0;

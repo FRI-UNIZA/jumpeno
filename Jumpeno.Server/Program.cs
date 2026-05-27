@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load AppSettings.Client.json:
-const string SharedSettingsPath = "AppSettings.Client.json";
-var appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Client", SharedSettingsPath);
-if (!File.Exists(appSettingsPath)) appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), SharedSettingsPath);
+const string sharedSettingsPath = "AppSettings.Client.json";
+var appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Jumpeno.Client", sharedSettingsPath);
+if (!File.Exists(appSettingsPath)) appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), sharedSettingsPath);
 var appSettingsClient = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile(appSettingsPath, optional: true, reloadOnChange: true)
@@ -21,9 +21,9 @@ var appSettingsServer = new ConfigurationBuilder().AddJsonStream(stream).Build()
 ServerSettings.Init(builder.Configuration, appSettingsServer);
 
 // Origin policy:
-const string ORIGIN_POLICY = "OriginPolicy";
+const string originPolicy = "OriginPolicy";
 builder.Services.AddCors(options => {
-    options.AddPolicy(ORIGIN_POLICY, policy => {
+    options.AddPolicy(originPolicy, policy => {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
@@ -33,7 +33,7 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.Secure = CookieSecurePolicy.Always; // Enforce secure cookies
 });
 builder.Services.AddAntiforgery(options => {
-    options.Cookie.Name = COOKIE.MANDATORY.ASP_NET_CORE_ANTIFORGERY.String();
+    options.Cookie.Name = Cookies.Mandatory.AspNetCoreAntiforgery.String();
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
@@ -45,7 +45,7 @@ builder.Services.AddAntiforgery(options => {
 // Add services to the container:
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews(options => {
-    options.Conventions.Add(new ApiRoutePrefixConvention(API.BASE.PREFIX));
+    options.Conventions.Add(new ApiRoutePrefixConvention(API.Base.Prefix));
 }).AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -58,11 +58,12 @@ builder.Services.AddRazorPages();
         options.SwaggerDoc(AppSettings.Version, new OpenApiInfo { Title = AppSettings.Name, Version = AppSettings.Version });
 
         // Enable JWT Authentication in Swagger:
-        options.AddSecurityDefinition(AUTH.BEARER, new OpenApiSecurityScheme {
-            Name = HEADER.AUTHORIZATION,
+        options.AddSecurityDefinition(AuthTypes.Bearer, new OpenApiSecurityScheme
+        {
+            Name = Header.Authorization,
             Type = SecuritySchemeType.Http,
-            Scheme = AUTH.BEARER,
-            BearerFormat = AUTH.JWT,
+            Scheme = AuthTypes.Bearer,
+            BearerFormat = AuthTypes.Jwt,
             In = ParameterLocation.Header,
             Description = "Enter 'Bearer {token}'"
         });
@@ -72,7 +73,7 @@ builder.Services.AddRazorPages();
                 new OpenApiSecurityScheme {
                     Reference = new OpenApiReference {
                         Type = ReferenceType.SecurityScheme,
-                        Id = AUTH.BEARER
+                        Id = AuthTypes.Bearer
                     }
                 },
                 Array.Empty<string>()
@@ -100,6 +101,7 @@ builder.Services.AddRazorPages();
 
 // Storage:
 builder.Services.AddSingleton<CookieStorage, CookieStorageServer>();
+builder.Services.AddScoped<RequestStorage>();
 
 // Localization:
 builder.Services.AddLocalization();
@@ -145,7 +147,7 @@ using (var scope = app.Services.CreateScope()) {
 }
 
 // Apply the CORS middleware:
-app.UseCors(ORIGIN_POLICY);
+app.UseCors(originPolicy);
 app.UseStaticFiles();
 // Configure Forwarded Headers Middleware:
 var forwardedHeadersOptions = new ForwardedHeadersOptions {
@@ -165,13 +167,13 @@ AppEnvironment.Init(
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
         if (ctx == null) return false;
-        return ctx.Request.Path.StartsWithSegments(API.BASE.PREFIX);
+        return ctx.Request.Path.StartsWithSegments(API.Base.Prefix);
     },
     () => {
         var accessor = AppEnvironment.GetService<IHttpContextAccessor>();
         HttpContext ctx = accessor.HttpContext!;
         if (ctx == null) return false;
-        return ctx.Request.Path.StartsWithSegments(HUB.BASE.PREFIX);
+        return ctx.Request.Path.StartsWithSegments(HUB.Base.Prefix);
     },
     #if IS_DEVELOPMENT
         () => true,
@@ -180,27 +182,13 @@ AppEnvironment.Init(
     #endif
     T => app.Services.GetService(T)!
 );
-RequestStorage.Init(
-    key => {
-        var ctx = ServerContext.Instance;
-        return ctx.Items[key]!;
-    },
-    (key, o) => {
-        var ctx = ServerContext.Instance;
-        ctx.Items[key] = o;
-    },
-    key => {
-        var ctx = ServerContext.Instance;
-        return ctx.Items.Remove(key);
-    }
-);
+
+
 URL.Init(
     () => {
         var ctx = ServerContext.Instance;
-        var replaceURL = RequestStorage.Get<string>(REQUEST_STORAGE.URL);
-        return replaceURL is not null ? replaceURL : ctx.Request.GetEncodedUrl(); 
-    },
-    ThemeProvider.ThemeCSSClass
+        return ctx.Request.GetEncodedUrl(); 
+    }
 );
 app.UseRequestLocalization();
 I18N.Init(app.Services.GetRequiredService<IStringLocalizer<Resource>>());
@@ -209,7 +197,7 @@ HTTP.Init(
     async (e, form) => {
         if (AppEnvironment.IsController) return;
         if (e is AppException eApp) ErrorHandler.Notify(eApp);
-        else ErrorHandler.Notify(EXCEPTION.DEFAULT);
+        else ErrorHandler.Notify(Exceptions.Default);
         await Task.CompletedTask;
     },
     async callback => await callback.Invoke(),
@@ -222,17 +210,7 @@ HTTP.Init(
         }
     }
 );
-Navigator.Init(
-    (url, forceLoad, replace) => {
-        var ctx = ServerContext.Instance;
-        var currentURL = URL.Url();
-        if (url != currentURL) {
-            ctx.Response.Redirect(url);
-        }
-    },
-    () => {}
-);
-ThemeProvider.Init();
+
 
 // Swagger:
 #if IS_DEVELOPMENT

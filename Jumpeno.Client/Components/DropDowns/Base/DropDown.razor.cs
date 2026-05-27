@@ -2,26 +2,26 @@ namespace Jumpeno.Client.Components;
 
 public partial class DropDown {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string ID_PREFIX = "dropdown";
-    public const string ID_START_PREFIX = "dropdown-start";
-    public const string ID_BUTTON_PREFIX = "dropdown-button";
-    public const string ID_OPTIONS_PREFIX = "dropdown-options";
-    public const string ID_END_PREFIX = "dropdown-end";
+    public const string IdPrefix = "dropdown";
+    public const string IdStartPrefix = "dropdown-start";
+    public const string IdButtonPrefix = "dropdown-button";
+    public const string IdOptionsPrefix = "dropdown-options";
+    public const string IdEndPrefix = "dropdown-end";
     // Classes:
-    public const string CLASS = "dropdown";
-    public const string CLASS_START = "dropdown-start";
-    public const string CLASS_BUTTON = "dropdown-button";
-    public const string CLASS_MARK = "dropdown-mark";
-    public const string CLASS_MENU = "dropdown-menu";
-    public const string CLASS_OPTIONS = "dropdown-options";
-    public const string CLASS_END = "dropdown-end";
-    public const string CLASS_DISPLAYED = "displayed";
+    public const string ClassName = "dropdown";
+    public const string ClassStart = "dropdown-start";
+    public const string ClassButton = "dropdown-button";
+    public const string ClassMark = "dropdown-mark";
+    public const string ClassMenu = "dropdown-menu";
+    public const string ClassOptions = "dropdown-options";
+    public const string ClassEnd = "dropdown-end";
+    public const string ClassDisplayed = "displayed";
     // Cascade:
-    public const string CASCADE_REF = $"{nameof(DropDown)}.{nameof(CASCADE_REF)}";
+    public const string CascadeRef = $"{nameof(DropDown)}.{nameof(CascadeRef)}";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public string? ID { get; set; } = null;
+    public string? Id { get; set; } = null;
     [Parameter]
     public required string Title { get; set; }
     [Parameter]
@@ -30,17 +30,17 @@ public partial class DropDown {
     public required RenderFragment Options { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public string ID_DROPDOWN { get; private set; } = null!;
-    public string ID_START { get; private set; } = null!;
-    public string ID_BUTTON { get; private set; } = null!;
-    public string ID_OPTIONS { get; private set; } = null!;
-    public string ID_END { get; private set; } = null!;
+    public string IdDropdown { get; private set; } = null!;
+    public string IdStart { get; private set; } = null!;
+    public string IdButton { get; private set; } = null!;
+    public string IdOptions { get; private set; } = null!;
+    public string IdEnd { get; private set; } = null!;
     private void SetIDs(string id) {
-        ID_DROPDOWN = id;
-        ID_START = $"{ID_START_PREFIX}-{ID_DROPDOWN}";
-        ID_BUTTON = $"{ID_BUTTON_PREFIX}-{ID_DROPDOWN}";
-        ID_OPTIONS = $"{ID_OPTIONS_PREFIX}-{ID_DROPDOWN}";
-        ID_END = $"{ID_END_PREFIX}-{ID_DROPDOWN}";
+        IdDropdown = id;
+        IdStart = $"{IdStartPrefix}-{IdDropdown}";
+        IdButton = $"{IdButtonPrefix}-{IdDropdown}";
+        IdOptions = $"{IdOptionsPrefix}-{IdDropdown}";
+        IdEnd = $"{IdEndPrefix}-{IdDropdown}";
     }
     // Ref:
     private readonly DotNetObjectReference<DropDown> Ref;
@@ -49,16 +49,16 @@ public partial class DropDown {
     private bool Displayed { get; set; } = false;
     private readonly LockerSlim Lock = new();
     // Computed:
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(CLASS, Base)
-        .Set(CLASS_DISPLAYED, Displayed);
+        .Set(ClassName, Base)
+        .Set(ClassDisplayed, Displayed);
     }
     private string ComputeLabel() => Displayed ? $"{I18N.T("Close")} {Title}" : $"{I18N.T("Open")} {Title}";
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------    
     public DropDown() {
-        SetIDs(IDGenerator.Generate(ID_PREFIX));
+        SetIDs(IDGenerator.Generate(IdPrefix));
         Ref = DotNetObjectReference.Create(this);
     }
 
@@ -73,7 +73,7 @@ public partial class DropDown {
 
     protected override void OnComponentParametersSet(bool firstTime) {
         if (!firstTime) return;
-        if (ID != null) SetIDs(ID);
+        if (Id != null) SetIDs(Id);
     }
 
     protected override async ValueTask OnComponentDisposeAsync() {
@@ -113,7 +113,7 @@ public partial class DropDown {
         });
     };
 
-    public void SetFocus() => ActionHandler.SetFocus(ID_BUTTON);
+    public void SetFocus() => ActionHandler.SetFocus(IdButton);
 
     // JS Interop -------------------------------------------------------------------------------------------------------------------------
     [JSInvokable]
@@ -132,5 +132,5 @@ public partial class DropDown {
     public async Task JS_OnResize(WindowResizeEvent e) => await Close();
 
     [JSInvokable]
-    public async Task JS_OnKeyDown(WindowKeyEvent e) { if (e.Key == KEYBOARD.ESC) await Close(); }
+    public async Task JS_OnKeyDown(WindowKeyEvent e) { if (e.Key == KeyBoard.Esc) await Close(); }
 }

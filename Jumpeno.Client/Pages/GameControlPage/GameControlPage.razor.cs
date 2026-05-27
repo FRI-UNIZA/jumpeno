@@ -1,12 +1,12 @@
 namespace Jumpeno.Client.Pages;
 
 public partial class GameControlPage {
-    public const string ROUTE_EN = "/en/game-control";
-    public const string ROUTE_SK = "/sk/ovladac-hry";
-    public static readonly ROLE[] ROLES = [ROLE.ADMIN];
+    public const string RouteEN = "/en/game-control";
+    public const string RouteSK = "/sk/ovladac-hry";
+    public static readonly Role[] Roles = [Role.Admin];
 
     // Form -------------------------------------------------------------------------------------------------------------------------------
-    private readonly string FORM = Form.Of<GameControlPage>();
+    private readonly string form = Form.Of<GameControlPage>();
     private readonly InputViewModel<string> VMCode;
     private readonly InputViewModel<string> VMName;
     private ConfirmModal DeleteConfirmModalRef = null!;
@@ -32,21 +32,21 @@ public partial class GameControlPage {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public GameControlPage() {
         VMCode = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: form,
             ID: nameof(VMCode),
-            TextMode: INPUT_TEXT_MODE.UPPERCASE,
+            TextMode: InputTextMode.UpperCase,
             Trim: true,
             TextCheck: GameValidator.IsCode,
-            MaxLength: GameValidator.CODE_LENGTH,
+            MaxLength: GameValidator.CodeLength,
             Placeholder: I18N.T("Code"),
             DefaultValue: ""
         ));
         VMName = new(new InputViewModelTextParams(
-            Form: FORM,
+            Form: form,
             ID: nameof(VMName),
             Trim: true,
             TextCheck: UserValidator.IsName,
-            MaxLength: UserValidator.NAME_MAX_LENGTH,
+            MaxLength: UserValidator.NameMaxLength,
             Placeholder: I18N.T("Player name"),
             DefaultValue: ""
         ));
@@ -54,7 +54,7 @@ public partial class GameControlPage {
 
     // Actions > Game ---------------------------------------------------------------------------------------------------------------------
     private async Task ActionRequest(string url) {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Show(PageLoaderTask.GameRequest);
         await HTTP.Try(async () => {
             try {
                 // 1) Data:
@@ -67,17 +67,17 @@ public partial class GameControlPage {
                 // 4) Match errors:
                 MapGameControlErrors(e); throw;                
             }
-        }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+        }, form);
+        await PageLoader.Hide(PageLoaderTask.GameRequest);
     }
 
-    private Task Delete() => DeleteConfirmModalRef.Open(() => ActionRequest(API.BASE.GAME_DELETE));
+    private Task Delete() => DeleteConfirmModalRef.Open(() => ActionRequest(API.Base.GameDelete));
 
-    private Task Toggle() => ActionRequest(API.BASE.GAME_TOGGLE);
+    private Task Toggle() => ActionRequest(API.Base.GameToggle);
 
     // Actions > Player -------------------------------------------------------------------------------------------------------------------
     private async Task PlayerRequest(string url) {
-        await PageLoader.Show(PAGE_LOADER_TASK.GAME_REQUEST);
+        await PageLoader.Show(PageLoaderTask.GameRequest);
         await HTTP.Try(async () => {
             try {
                 // 1) Data:
@@ -90,18 +90,18 @@ public partial class GameControlPage {
                 // 4) Match errors:
                 MapGamePlayerControlErrors(e); throw;
             }
-        }, FORM);
-        await PageLoader.Hide(PAGE_LOADER_TASK.GAME_REQUEST);
+        }, form);
+        await PageLoader.Hide(PageLoaderTask.GameRequest);
     }
 
-    private Task PlayerReady() => PlayerRequest(API.BASE.GAME_SET_PLAYER_READY);
+    private Task PlayerReady() => PlayerRequest(API.Base.GameSetPlayerReady);
 
     private async Task PlayerKick() {
         await HTTP.Try(async () => {
             // 1) Check name before modal open:
             UserValidator.AssertName(VMName.Value, checkUnknown: true, VMName.ID);
             // 2) Open confirm modal:
-            await PlayerKickConfirmModalRef.Open(() => PlayerRequest(API.BASE.GAME_KICK_PLAYER));
-        }, FORM);
+            await PlayerKickConfirmModalRef.Open(() => PlayerRequest(API.Base.GameKickPlayer));
+        }, form);
     }
 }

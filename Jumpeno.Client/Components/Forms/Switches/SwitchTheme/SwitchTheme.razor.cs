@@ -2,24 +2,24 @@ namespace Jumpeno.Client.Components;
 
 public partial class SwitchTheme {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "switch-theme";
+    public const string ClassName = "switch-theme";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = ThemeProvider.CASCADE_CHANGE_APP_THEME)]
+    [CascadingParameter(Name = ThemeProvider.CascadeChangeAppTheme)]
     public required Func<BaseTheme, Task<bool>> ChangeAppTheme { get; set; }
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
-    private readonly string FORM = Form.Of<SwitchTheme>();
+    private readonly string formId = Form.Of<SwitchTheme>();
     private readonly SwitchViewModel SwitchVM;
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     public SwitchTheme() => SwitchVM = new(new(
-        FORM,
-        CLASS,
-        OnChange: new(async e => await PageLoader.Show(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH)),
+        formId,
+        ClassName,
+        OnChange: new(async e => await PageLoader.Show(PageLoaderTask.ThemeChangeSwitch)),
         OnAfterChange: new(TriggerChange)
     ));
     protected override void OnComponentParametersSet(bool firstTime) => SwitchVM.SetValue(AppTheme is LightTheme);
@@ -29,6 +29,6 @@ public partial class SwitchTheme {
         if (!await ChangeAppTheme(AppTheme is DarkTheme ? new LightTheme() : new DarkTheme())) {
             SwitchVM.SetValue(!e.Value);
         }
-        await PageLoader.Hide(PAGE_LOADER_TASK.THEME_CHANGE_SWITCH);
+        await PageLoader.Hide(PageLoaderTask.ThemeChangeSwitch);
     }
 }

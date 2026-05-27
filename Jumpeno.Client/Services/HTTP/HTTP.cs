@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS8618
 
-public class HTTP : StaticService<HTTP> {
+public class HTTP {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private static Func<HttpClient> Client;
     private static Func<int, AppException, Task> OnRefresh;
@@ -52,9 +52,8 @@ public class HTTP : StaticService<HTTP> {
         // Retry on refresh:
         for (int iteration = 1; iteration <= 2; iteration++) {
             // Access instance:
-            var instance = Instance();
             HttpResponseMessage? response;
-            int code = CODE.DEFAULT;
+            int code = Codes.Default;
             bool isLocalURL = URL.IsLocal(url);
             // Cancel token:
             var cts = new CancellationTokenSource();
@@ -71,9 +70,9 @@ public class HTTP : StaticService<HTTP> {
 
                 if (isLocalURL) {
                     // Add authorization:
-                    try { SetHeader(request, HEADER.AUTHORIZATION, $"{AUTH.BEARER} {Token.Access.raw}"); } catch {}
+                    try { SetHeader(request, Header.Authorization, $"{AuthTypes.Bearer} {Token.Access.raw}"); } catch {}
                     // Add version:
-                    SetHeader(request, HEADER.APP_VERSION, AppSettings.Version);
+                    SetHeader(request, Header.AppVersion, AppSettings.Version);
                 }
 
                 // Add body:
@@ -82,11 +81,11 @@ public class HTTP : StaticService<HTTP> {
                     && body is not null
                 ) {
                     var jsonBody = JsonConvert.SerializeObject(body);
-                    request.Content = new StringContent(jsonBody, Encoding.UTF8, CONTENT_TYPE.JSON);
+                    request.Content = new StringContent(jsonBody, Encoding.UTF8, ContentType.Json);
                 }
 
                 // Add headers:
-                SetHeader(request, HEADER.ACCEPT_LANGUAGE, I18N.Culture);
+                SetHeader(request, Header.AcceptLanguage, I18N.Culture);
                 if (headers is not null) {
                     foreach (var header in headers) {
                         SetHeader(request, header.Key, header.Value);
@@ -94,7 +93,7 @@ public class HTTP : StaticService<HTTP> {
                 }
 
                 // Add content headers:
-                SetContentHeader(request, HEADER.CONTENT_TYPE, CONTENT_TYPE.JSON);
+                SetContentHeader(request, Header.ContentType, ContentType.Json);
                 if (contentHeaders is not null) {
                     foreach (var header in contentHeaders) {
                         SetContentHeader(request, header.Key, header.Value);
@@ -108,9 +107,9 @@ public class HTTP : StaticService<HTTP> {
                 response = await Client().SendAsync(request, cts.Token);
                 code = (int) response.StatusCode;
             } catch (OperationCanceledException) {
-                throw EXCEPTION.REQUEST_CANCELLED;
+                throw Exceptions.RequestCancelled;
             } catch {
-                throw EXCEPTION.REQUEST_FAILED;
+                throw Exceptions.RequestFailed;
             } finally {
                 cts.Dispose();
             }
@@ -122,7 +121,7 @@ public class HTTP : StaticService<HTTP> {
                     if (bodyAccess) return new HTTPResult<T>(code, response.Headers, response.Content.Headers, (await response.Content.ReadFromJsonAsync<T>())!);
                     return new HTTPHeadResult(code, response.Headers, response.Content.Headers);
                 } catch {
-                    var exception = EXCEPTION.PARSING_ERROR
+                    var exception = Exceptions.ParsingError
                     .SetHeaders(response.Headers).SetContentHeaders(response.Content.Headers);
                     throw exception;
                 }
@@ -135,7 +134,7 @@ public class HTTP : StaticService<HTTP> {
                     // Info:
                     TInfo info;
                     try { info = json[nameof(AppException.Info)]!.ToObject<TInfo>()!; }
-                    catch { info = new(MESSAGE.DEFAULT); }
+                    catch { info = new(Messages.Default); }
                     // Errors:
                     List<Error> errors;
                     try { errors = json[nameof(AppException.Errors)]!.ToObject<List<Error>>()!; }
@@ -145,20 +144,20 @@ public class HTTP : StaticService<HTTP> {
                     try { data = json[nameof(AppException.Data)]!.ToObject<IDictionary>()!; }
                     catch { data = new Dictionary<object, object>(); }
                     // Code & headers:
-                    exception = EXCEPTION.DEFAULT.SetCode(code)
+                    exception = Exceptions.Default.SetCode(code)
                     .SetHeaders(response?.Headers).SetContentHeaders(response?.Content.Headers)
                     .SetInfo(info).SetErrors(errors)
                     .SetData(data);
                 } catch {
-                    exception = EXCEPTION.DEFAULT.SetCode(code)
+                    exception = Exceptions.Default.SetCode(code)
                     .SetHeaders(response?.Headers).SetContentHeaders(response?.Content.Headers);
                 }
                 // Try to refresh token:
-                if (isLocalURL && exception.Code == EXCEPTION.NOT_AUTHENTICATED.Code) await OnRefresh(iteration, exception);
+                if (isLocalURL && exception.Code == Exceptions.NotAuthenticated.Code) await OnRefresh(iteration, exception);
                 else throw exception;
             }
         }
-        throw EXCEPTION.DEFAULT;
+        throw Exceptions.Default;
     }
 
     // Requests ---------------------------------------------------------------------------------------------------------------------------
@@ -379,10 +378,10 @@ public class HTTP : StaticService<HTTP> {
                 await callback();
                 return true;
             }
-            catch (AppException e) { if (e.Code != CODE.REQUEST_CANCELLED) await OnError(e, form); }
+            catch (AppException e) { if (e.Code != Codes.RequestCancelled) await OnError(e, form); }
             catch (AggregateException e) {
                 foreach (var inner in e.InnerExceptions) {
-                    if (inner is AppException app && app.Code == CODE.REQUEST_CANCELLED) continue;
+                    if (inner is AppException app && app.Code == Codes.RequestCancelled) continue;
                     await OnError(inner, form);
                 }
             }

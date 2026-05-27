@@ -2,10 +2,10 @@ namespace Jumpeno.Client.Components;
 
 public partial class FormLabel {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "form-label";
-    public const string CLASS_ELEMENT = "form-label-element";
-    public const string CLASS_TEXT = "form-label-text";
-    public const string CLASS_CONTENT = "form-label-content";
+    public const string ClassName = "form-label";
+    public const string ClassElement = "form-label-element";
+    public const string ClassText = "form-label-text";
+    public const string ClassContent = "form-label-content";
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     // Label:
@@ -13,15 +13,15 @@ public partial class FormLabel {
     public required OneOf<string, List<string>> Label { get; set; }
     // Style:
     [Parameter]
-    public FORM_VARIANT? Variant { get; set; } = FORM_VARIANT.PRIMARY;
+    public FormVariant? Variant { get; set; } = FormVariant.Primary;
     [Parameter]
-    public FORM_SIZE? Size { get; set; } = FORM_SIZE.M;
+    public FormSize? Size { get; set; } = FormSize.M;
     [Parameter]
-    public FORM_ALIGN? Align { get; set; } = null;
+    public FormAlign? Align { get; set; } = null;
     // Content:
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base).SetVariant(Variant).SetSize(Size).Set(Align);
+    public override CssClass ComputeClass() => base.ComputeClass().Set(ClassName, Base).SetVariant(Variant).SetSize(Size).Set(Align);
 }

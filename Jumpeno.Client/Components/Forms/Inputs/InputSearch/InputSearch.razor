@@ -18,8 +18,8 @@
 >
     <IconAfter>
         <button
-            type="@BUTTON_TYPE.BUTTON.StringLower()"
-            class="@INPUT_ICON.CLASS input-search-button"
+            type="@ButtonType.Button.StringLower()"
+            class="@InputIconType.ClassName input-search-button"
             aria-label="@I18N.T("Search")"
             @onclick="async () => {
                 await ViewModel.Search(ViewModel.InputVM.Value);

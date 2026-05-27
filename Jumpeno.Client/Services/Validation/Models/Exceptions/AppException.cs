@@ -77,9 +77,9 @@ public class AppException : Exception {
     }
 
     public AppException() : this(
-        CODE.DEFAULT,
+        Codes.Default,
         HTTPHeadResult.EmptyHeaders(), HTTPHeadResult.EmptyContentHeaders(),
-        new(MESSAGE.DEFAULT), [],
+        new(Messages.Default), [],
         new Dictionary<object, object>()
     ) {}
 
