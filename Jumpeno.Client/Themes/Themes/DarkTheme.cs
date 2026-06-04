@@ -613,4 +613,10 @@ public class DarkTheme : BaseTheme {
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
     public override RGBAColor TextDisabledColor => new(180, 180, 180);
     public virtual RGBAColor TextDisabledColor_SurfaceSecondary => new(120, 120, 120);
+
+// NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
+    // Chat Message -----------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor ChatMessageOtherBackground => new(42, 33, 56);
+    public override RGBAColor ChatMessageOwnBackground => new(240, 240, 240);
+    public override RGBAColor ChatMessageOtherText => new(255, 255, 255);
 }

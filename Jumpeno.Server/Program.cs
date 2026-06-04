@@ -225,6 +225,7 @@ app.UseHttpsRedirection();
 
 // Hubs:
 GameHub.Init(app);
+ChatHub.Init(app);
 
 // Framework files:
 app.UseBlazorFrameworkFiles();

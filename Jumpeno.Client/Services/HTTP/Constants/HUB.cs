@@ -9,5 +9,7 @@ public static class HUB {
         // Endpoints ----------------------------------------------------------------------------------------------------------------------
         // Game:
         public static string Game => $"{URL}/Game";
+        // Chat:
+        public static string Chat => $"{Prefix}/chat";
     }
 }

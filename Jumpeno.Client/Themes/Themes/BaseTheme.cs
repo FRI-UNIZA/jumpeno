@@ -663,4 +663,11 @@ public class BaseTheme {
 
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
     public virtual RGBAColor TextDisabledColor { get; }
+
+// NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
+    // Chat Message -----------------------------------------------------------------------------------------------------------------------
+    public RGBAColor ChatMessageOwnText => new(42, 33, 56);
+    public virtual RGBAColor ChatMessageOtherText { get; }
+    public virtual RGBAColor ChatMessageOtherBackground { get; }
+    public virtual RGBAColor ChatMessageOwnBackground { get; }
 }

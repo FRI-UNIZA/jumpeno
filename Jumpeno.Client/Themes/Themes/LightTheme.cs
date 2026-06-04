@@ -581,4 +581,10 @@ public class LightTheme : BaseTheme {
 
     // Text [disabled] --------------------------------------------------------------------------------------------------------------------
     public override RGBAColor TextDisabledColor => new(180, 180, 180);
+
+// NOTE: Chat -----------------------------------------------------------------------------------------------------------------------------
+    // Chat Message -----------------------------------------------------------------------------------------------------------------------
+    public override RGBAColor ChatMessageOtherBackground => new(240, 240, 240);
+    public override RGBAColor ChatMessageOwnBackground => new(250, 250, 175);
+    public override RGBAColor ChatMessageOtherText => new(42, 33, 56);
 }

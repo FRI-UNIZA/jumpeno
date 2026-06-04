@@ -39,6 +39,7 @@ body {
     --theme-email-button-color: rgb(0, 0, 0);
     --theme-email-button-background: rgb(255, 215, 0);
     --theme-email-button-background-highlight: rgb(255, 239, 0);
+    --theme-chat-message-own-text: rgba(42, 33, 56, 1);
 }
 
 body.light-theme.surface-primary,
@@ -335,6 +336,9 @@ body.light-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-chat-message-other-background: rgba(240, 240, 240, 1);
+    --theme-chat-message-own-background: rgba(250, 250, 175, 1);
+    --theme-chat-message-other-text: rgba(42, 33, 56, 1);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-game-waiting-background: rgb(61, 61, 61);
@@ -739,6 +743,9 @@ body.dark-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-chat-message-other-background: rgba(42, 33, 56, 1);
+    --theme-chat-message-own-background: rgba(240, 240, 240, 1);
+    --theme-chat-message-other-text: rgba(255, 255, 255, 1);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-game-waiting-background: rgb(61, 61, 61);

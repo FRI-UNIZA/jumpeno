@@ -1,28 +1,426 @@
+/* Variables --------------------------------------------------------------------------------------------------------------------------- */
+/* (none — using inherited theme variables) */
+
+
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
-::deep.chat-page {
+
+/* Styles > Page layout */
+::deep .chat-page {
     /* Display: */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
     /* Size: */
     width: 100%;
-    padding: 40px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
+
+/* Styles > Container */
+::deep .chat-container {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* Size: */
+    padding: 20px;
+    min-height: 500px;
+    max-height: 70vh;
+}
+
+
+/* Styles > Messages wrapper */
+::deep .chat-messages-wrapper {
+    /* Display: */
+    flex: 1;
+    /* Size: */
+    margin: -8px;
+    padding: 8px;
+}
+
+::deep .chat-messages-wrapper > .scroll-area-content {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Size: */
+    padding: 8px 4px;
+    min-height: 100%;
+}
+
+
+/* Styles > Empty state */
+::deep .empty-state {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .25em;
+    /* Size: */
+    padding: 60px 20px;
+    /* Style: */
+    color: var(--theme-text-highlight-color);
+}
+
+::deep .empty-icon {
+    /* Content: */
+    font-size: 64px;
+    /* Style: */
+    opacity: 0.5;
+}
+
+::deep .empty-text {
+    /* Size: */
+    margin: 0;
+    /* Style: */
+    opacity: 0.7;
+    /* Content: */
+    text-align: center;
+}
+
+
+/* Styles > Message bubbles */
+::deep .chat-message {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    /* Size: */
+    max-width: 70%;
+}
+
+::deep .chat-message.other-message {
+    /* Display: */
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+::deep .chat-message.own-message {
+    /* Display: */
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+::deep .message-sender {
+    /* Size: */
+    padding: 0 4px;
+    /* Style: */
+    color: var(--theme-text-color);
+    /* Content: */
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+::deep .message-bubble {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Size: */
+    max-width: 100%;
+    padding: 10px 14px;
+    /* Style: */
+    border-radius: 18px;
+    /* Content: */
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+::deep .other-message .message-bubble {
+    /* Style: */
+    background: var(--theme-chat-message-other-background);
+    color: var(--theme-chat-message-other-text);
+    border-top-left-radius: 4px;
+}
+
+::deep .own-message .message-bubble {
+    /* Style: */
+    background: var(--theme-chat-message-own-background);
+    color: var(--theme-chat-message-own-text);
+    border-top-right-radius: 4px;
+}
+
+::deep .message-content {
+    /* Content: */
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+::deep .message-time {
+    /* Display: */
+    align-self: flex-end;
+    /* Style: */
+    opacity: 0.65;
+    color: var(--theme-text-highlight-color);
+    /* Content: */
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+
+/* Styles > Message spacing */
+::deep .chat-message:not(.grouped) {
+    /* Size: */
+    margin-top: 12px;
+}
+
+::deep .chat-message.grouped {
+    /* Size: */
+    margin-top: 2px;
+}
+
+::deep .other-message.grouped .message-bubble {
+    /* Style: */
+    border-top-left-radius: 4px;
+}
+
+::deep .own-message.grouped .message-bubble {
+    /* Style: */
+    border-top-right-radius: 4px;
+}
+
+
+/* Styles > Input area */
+::deep .chat-input-area {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Size: */
+    padding-top: 16px;
+}
+
+::deep .chat-input-wrapper .textarea-element {
+    /* Size: */
+    padding-left: 26px;
+}
+
+::deep .input-wrapper {
+    /* Display: */
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+::deep .chat-input {
+    /* Display: */
+    flex: 1;
+    /* Size: */
+    width: 100%;
+}
+
+::deep .send-button {
+    /* Display: */
+    flex-shrink: 0;
+}
+
+
+/* Styles > Jump to bottom */
+::deep .jump-to-bottom-wrapper {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    /* Transform: */
+    transform: translate(-50%, -100%);
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep .jump-to-bottom {
+    /* Actions: */
+    pointer-events: all;
+}
+
+
+/* Styles > Error */
+::deep .chat-error-wrapper {
+    /* Position: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    /* Transform: */
+    transform: translateY(-100%);
+    /* Size: */
+    padding-bottom: 6px;
+    /* Actions: */
+    pointer-events: none;
+}
+
+::deep .chat-error {
+    /* Display: */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Size: */
+    padding: 8px 12px;
+    /* Style: */
+    background: var(--theme-status-danger-box-background);
+    border: 1px solid var(--theme-status-danger-accent-color);
+    border-radius: 8px;
+    color: var(--theme-status-danger-accent-color);
+    /* Actions: */
+    pointer-events: all;
+}
+
+::deep .error-text {
+    /* Size: */
+    margin: 0;
+}
+
+/* Styles > Status dot */
+::deep .chat-input-wrapper {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    flex: 1;
+    /* Size: */
+    width: 100%;
+}
+
+::deep .status-dot {
+    /* Position: */
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    z-index: 1;
+    /* Size: */
+    width: 8px;
+    height: 8px;
+    /* Style: */
+    border-radius: 50%;
+}
+
+/* Variant [Connecting] */
+::deep .status-dot.status-connecting {
+    /* Style: */
+    background: var(--theme-status-warning-accent-color);
+}
+
+/* Variant [Connected] */
+::deep .status-dot.status-connected {
+    /* Style: */
+    background: var(--theme-status-success-accent-color);
+}
+
+/* Variant [Reconnecting] */
+::deep .status-dot.status-reconnecting {
+    /* Style: */
+    background: var(--theme-status-warning-accent-color);
+}
+
+/* Variant [Disconnected] */
+::deep .status-dot.status-disconnected {
+    /* Style: */
+    background: var(--theme-status-danger-accent-color);
+}
+
+/* Variant [Error] */
+::deep .status-dot.status-error {
+    /* Style: */
+    background: var(--theme-status-danger-accent-color);
+}
+
+
+/* Styles > Connection status bar */
+::deep .connection-status {
+    /* Display: */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Size: */
+    padding: 6px 12px;
+    /* Style: */
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+::deep .status-text {
+    /* Display: */
+    flex: 1;
+    /* Size: */
+    margin: 0;
+    /* Content: */
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Variant [Connecting] */
+::deep .connection-status.status-connecting {
+    /* Style: */
+    background: var(--theme-status-warning-box-background);
+    border-color: var(--theme-status-warning-accent-color);
+    color: var(--theme-status-warning-accent-color);
+}
+
+/* Variant [Reconnecting] */
+::deep .connection-status.status-reconnecting {
+    /* Style: */
+    background: var(--theme-status-warning-box-background);
+    border-color: var(--theme-status-warning-accent-color);
+    color: var(--theme-status-warning-accent-color);
+}
+
+/* Variant [Disconnected] */
+::deep .connection-status.status-disconnected {
+    /* Style: */
+    background: var(--theme-status-danger-box-background);
+    border-color: var(--theme-status-danger-accent-color);
+    color: var(--theme-status-danger-accent-color);
+}
+
+/* Styles > Game code link */
+::deep .game-code-link {
+    /* Style: */
+    color: var(--theme-text-color);
+    background-color: var(--theme-button-secondary-background);
+    border-radius: 4px;
+    text-decoration: none;
+    /* Size: */
+    padding: 1px 5px;
+    /* Content: */
+    font-weight: 700;
+    font-size: 0.95em;
+    letter-spacing: 0.05em;
+    font-family: monospace;
+}
+
+/* State [Hover] */
+::deep .game-code-link:hover {
+    /* Style: */
+    text-decoration: underline;
+}
+
+/* Variant [Own message] */
+::deep .own-message .game-code-link {
+    /* Style: */
+    color: var(--theme-button-secondary-background);
+    background: var(--theme-body-background);
+}
+
+/* Responsive -------------------------------------------------------------------------------------------------------------------------- */
 @media (min-width: 768px) {
-    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
-    ::deep.chat-page {
+    ::deep .chat-page {
         /* Size: */
-        padding: 60px 0;
-    }    
+        padding: 60px 40px;
+    }
+
+    ::deep .chat-container {
+        /* Size: */
+        padding: 24px;
+    }
 }
 
 @media (min-width: 1200px) {
-    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
-    ::deep.chat-page {
+    ::deep .chat-page {
         /* Size: */
-        padding: 80px 0;
-    }    
+        padding: 80px 40px;
+    }
 }
