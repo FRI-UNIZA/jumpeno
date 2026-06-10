@@ -2,17 +2,20 @@ namespace Jumpeno.Client.Components;
 
 public partial class AccountTab : IProfileTab
 {
+    // Attributes -------------------------------------------------------------------------------------------------------------------------
+    private readonly ICollection<Skin> Skins = Enum.GetValues<Skin>();
+
     // Forms ------------------------------------------------------------------------------------------------------------------------------
-    private readonly string form = Form.Of<AccountTab>();
+    private readonly string FORM = Form.Of<AccountTab>();
     private readonly InputViewModel<string> VMPlayerName;
     private readonly InputViewModel<string> VMEmail;
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter] public required Modal ModalRef { get; set; }
-    [Parameter] public required PasswordChangeModal PasswordChangeModalRef { get; set; }
 
     // ViewModels -------------------------------------------------------------------------------------------------------------------------
     private ConfirmModal ConfirmModalRef { get ; set; } = null!;
+    private AntDesign.Popover SkinPopover = new();
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     public override CssClass ComputeClass() => base.ComputeClass().Set("account-tab", Base);
@@ -21,16 +24,17 @@ public partial class AccountTab : IProfileTab
     public AccountTab()
     {
         VMPlayerName = new(new InputViewModelTextParams(
-            Form: form,
+            Form: FORM,
             ID: nameof(UserUpdateDTO.NewName),
             Trim: true,
             Placeholder: I18N.T("Player name"),
             DefaultValue: Auth.User.Name ?? "",
             TextCheck: UserValidator.IsName,
-            MaxLength: UserValidator.NameMaxLength
+            MaxLength: UserValidator.NameMaxLength,
+            OnEnter: new(async e => await UpdateUserProfileInfo())
         ));
         VMEmail = new(new InputViewModelTextParams(
-            Form: form,
+            Form: FORM,
             ID: nameof(UserUpdateDTO.NewEmail),
             Trim: true,
             Placeholder: I18N.T("Email"),
@@ -48,7 +52,7 @@ public partial class AccountTab : IProfileTab
             var result = await HTTP.Post<MessageDTOR>(API.Base.UserSendActivation);
             var body = result.Body.Assert();
             Notification.Success(body.Message);
-        }, form);
+        }, FORM);
         await PageLoader.Hide(PageLoaderTask.Activation);
     }
 
@@ -56,14 +60,14 @@ public partial class AccountTab : IProfileTab
     {
         await PageLoader.Show(PageLoaderTask.UserUpdate);
         await HTTP.Try(async () => {
-            var model = new UserUpdateDTO(NewName: VMPlayerName.Value, NewEmail: VMEmail.Value);
+            var model = new UserUpdateDTO(NewName: VMPlayerName.Value);
             var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
             var body = result.Body.Assert();
             
             await Auth.LoadProfile();
             await ResetForm();
             Notification.Success(body.Message);
-        }, form);
+        }, FORM);
         await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
@@ -78,18 +82,33 @@ public partial class AccountTab : IProfileTab
                 await Auth.LogOut();
                 await ModalRef.Close();
                 Notification.Success(body.Message);
-            }, form);
+            }, FORM);
             await Auth.ResolveFreeze();
             await PageLoader.Hide(PageLoaderTask.DeleteAccount);
         });
     }
 
-    private async Task ChangePassword()
+    private async Task ChangeSkin(Skin skin)
     {
-        await PasswordChangeModalRef.Open();
+        await PageLoader.Show(PageLoaderTask.UserUpdate);
+        await SkinPopover.Close();
+        if (Auth.User.Skin != skin)
+        {
+            await HTTP.Try(async () => {
+                var model = new UserUpdateDTO(NewSkin: skin);
+
+                var result = await HTTP.Patch<MessageDTOR>(API.Base.UserUpdate, body: model);
+                var body = result.Body.Assert();
+
+                await Auth.LoadProfile();
+                await ResetForm();
+                Notification.Success(result.Body.Message);
+            }, FORM);
+        }
+        await PageLoader.Hide(PageLoaderTask.UserUpdate);
     }
 
-    public Task ResetForm() 
+    public Task ResetForm()
     {
         VMPlayerName.SetValue(Auth.User.Name ?? "");
         VMEmail.SetValue(Auth.User.Email ?? "");

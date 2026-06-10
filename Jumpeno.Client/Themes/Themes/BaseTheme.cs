@@ -634,8 +634,15 @@ public class BaseTheme {
     public virtual RGBAColor ModalProfileAvatarBorderColor { get; }
     public virtual string ModalProfileAvatarBoxShadow { get; }
     public virtual string ModalProfileAvatarSkinBoxShadow => "inset 0 0 0.5em rgba(0, 0, 0, 0.2)";
+    public virtual string ModalProfileBorderColor => new RGBAColor(0, 0, 0, 0.2f);
+    public virtual string ModalProfileAvatarEditBackground => new RGBAColor(0, 0, 0, 0.4f);
+    public virtual string ModalProfileInputLabelColor => new RGBColor(153, 153, 153);
+    public virtual string ModalProfileNavigationColor => new RGBColor(214, 218, 28);
+    public virtual RGBAColor ModalProfileNavigationBackground => new(42, 33, 56);
+    public virtual RGBAColor ModalProfileNavigationItemUnactive => new(255, 255, 255, 0.4f);
+    public virtual RGBColor ModalProfileNavigationItemActive => new(255, 255, 255);
 
-// NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
+    // NOTE: Progress -------------------------------------------------------------------------------------------------------------------------
     // PasswordStrength -------------------------------------------------------------------------------------------------------------------
     public virtual RGBColor PasswordStrengthBarSegmentBackground => new(236, 240, 241);
     public virtual RGBColor PasswordStrengthRuleCompletedTextColor => new(46, 125, 50);

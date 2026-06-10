@@ -4,51 +4,119 @@
 
 <AuthView Roles="[Role.User]">
     <div class="@ComputeClass()" style="@Style">
-        <div class="profile-row">
-            <div class="user-profile-image-wrap">
-                <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="user-profile-image" />
-            </div>
-            <InputField Class="profile-name" Name="name" ViewModel="@VMPlayerName" Style="width: 100%; max-width: 360px" Align="FormAlign.Center" AllowClear />
-            <InputField Class="profile-name" Name="email" ViewModel="@VMEmail" Size="FormSize.S" Style="width: 100%; max-width: 360px" Align="FormAlign.Center" AllowClear Disabled />
-            <Button OnClick="UpdateUserProfileInfo" Size="ButtonSize.S">
-                <Text>
-                    @I18N.T("Change")
-                </Text>
-            </Button>
-        </div>
-        <div class="profile-button-row">
-            @if (Auth.User.Activated)
-            {
-                <div class="activated-box">
-                    <Paragraph Class="profile-activated">
-                        <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
-                        @I18N.T("Account activated")
-                    </Paragraph>
-                </div>
-            }
-            else
-            {
-                <div class="activated-box">
-                    <Paragraph Class="profile-activated">
-                        <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
-                        @I18N.T("Account not activated")
-                    </Paragraph>
-                    <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="SendActivationLink">
-                        <Text>@I18N.T("Resend link")</Text>
+        <div class="profile-sections-columns">
+            <div class="profile-sections">
+                <div class="profile-section">
+                    <div class="user-profile-image-wrap avatar">
+                        <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="user-profile-image" />
+                        <div class="image-edit-overlay">
+                            <AntIcon Type="edit" Theme="outline" Class="edit-icon-on-image" />
+                        </div>
+                    </div>
+                    <AntDesign.Popover @ref="@SkinPopover" Trigger="[AntDesign.Trigger.Click]" Placement="AntDesign.Placement.Bottom" OverlayClassName="skin-popover">
+                        <ChildContent>
+                            <div class="profile-section">
+                                <div class="user-profile-image-wrap avatar-popover">
+                                    <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="user-profile-image" />
+                                    <div class="image-edit-overlay">
+                                        <AntIcon Type="edit" Theme="outline" Class="edit-icon-on-image" />
+                                    </div>
+                                </div>
+                                <Button Size="ButtonSize.S" Class="button-avatar-change">
+                                    <Text>
+                                        <AntIcon Type="edit" Theme="outline" />
+                                        @I18N.T("Change avatar")
+                                    </Text>
+                                </Button>
+                            </div>
+                        </ChildContent>
+
+                        <ContentTemplate>
+                            <div class="skins-grid">
+                                @foreach (Skin skin in Skins)
+                                {
+                                    <div class="one-skin" @onclick="() => ChangeSkin(skin)">
+                                        <Image Class="skin-item" URL="@skin.ToImagePath()" Alt="@I18N.T("Avatar option")" Preloaded />
+                                    </div>
+                                }
+                            </div>
+                        </ContentTemplate>
+                    </AntDesign.Popover>
+
+                    @if (Auth.User.Activated)
+                    {
+                        <div class="activated-box">
+                            <Paragraph Class="profile-activated">
+                                <AntIcon Type="check" Theme="outline" Class="user-activated-icon" />
+                                @I18N.T("Account activated")
+                            </Paragraph>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="activated-box">
+                            <Paragraph Class="profile-activated">
+                                <AntIcon Type="close" Theme="outline" Class="user-not-activated-icon" />
+                                @I18N.T("Account not activated")
+                            </Paragraph>
+                            <Button Variant="ButtonVariant.Quaternary" NoShadow Size="ButtonSize.S" OnClick="SendActivationLink">
+                                <Text>@I18N.T("Resend link")</Text>
+                            </Button>
+                        </div>
+                    }
+
+                    <Button OnClick="DeleteAccount" Size="ButtonSize.S" Variant="ButtonVariant.Danger">
+                        <Text>
+                            @I18N.T("Delete account")
+                        </Text>
                     </Button>
                 </div>
-            }
-            <Button OnClick="ChangePassword" Size="ButtonSize.S">
-                <Text>
-                    @I18N.T("Change password")
-                </Text>
-            </Button>
-            <Button OnClick="DeleteAccount" Size="ButtonSize.S" Variant="ButtonVariant.Danger">
-                <Text>
-                    @I18N.T("Delete account")
-                </Text>
-            </Button>
+
+                <div class="profile-details">
+                    <div class="profile-section">
+                        <div>
+                            <Heading1 Size="TextSize.S" Style="font-weight: bold; font-size: 40px;">
+                                @I18N.T("My profile")
+                            </Heading1>
+                        </div>
+                        <div class="avatar-info">
+                            <Heading1 Size="TextSize.S" Style="font-size: 15px">
+                                <AntIcon Type="edit" Theme="outline" Style="font-size: 20px; margin-right: 8px" />
+                                @I18N.T("Click on avatar to change")
+                            </Heading1>
+                        </div>
+                        <div class="profile-section name-section">
+                            <div class="input-label">
+                                @I18N.T("Player name"):
+                            </div>
+                            <InputField Class="name-input" Name="name" Size="FormSize.S" ViewModel="@VMPlayerName" Align="FormAlign.Center" />
+                            <Button OnClick="UpdateUserProfileInfo" Size="ButtonSize.S">
+                                <Text>
+                                    @I18N.T("Change name")
+                                </Text>
+                            </Button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="email-section">
+                <div class="profile-section">
+                    <div class="input-label">
+                        @I18N.T("Email"):
+                    </div>
+                    <InputField Class="email-input" Name="email" Size="FormSize.S" ViewModel="@VMEmail" Align="FormAlign.Center" Disabled />
+                </div>
+                <Button class="button-change" Size="ButtonSize.S" Disabled>
+                    <Text>
+                        @I18N.T("Change email")
+                    </Text>
+                </Button>
+            </div>
         </div>
+
         <ConfirmModal @ref="ConfirmModalRef" Label="@I18N.T("Delete account")" Danger>
             <Message>
                 @I18N.T("Are you sure you want to delete your account?")<br />

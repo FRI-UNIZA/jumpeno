@@ -5,8 +5,6 @@ public partial class ProfileModal {
     private Modal ModalRef = null!;
     // Tabs:
     private ProfileTabType Tab = ProfileTabType.Account;
-    // Modals:
-    private PasswordChangeModal PasswordChangeModalRef { get; set; } = null!;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
     private CssClass TabButtonClass(ProfileTabType tab) => new CssClass("profile-tab-button").Set("active", Tab == tab);
