@@ -18,6 +18,10 @@
         switch (GameVM.Game.State) {
             case GameStates.Lobby:
             case GameStates.Pause:
+            case GameStates.ScoreBoard:
+                <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
+            break;
+            case GameStates.GamePlay:
             case GameStates.Shrinking:
                 if (GameVM.LobbyDisplayed) {
                     <Lobby @key="@nameof(Lobby)" @ref="View" VM="GameVM" />
