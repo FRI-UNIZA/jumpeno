@@ -155,11 +155,11 @@ public class UserController(
                 var existing = await passwordService.ByIDLeftJoinRefresh(User.GetSub());
                 if (existing != null)
                 {
-                    if (!PasswordEntity.Validate(body.OldPassword, existing.Value.Item1.Salt, existing.Value.Item1.Hash))
+                    if (!passwordService.Validate(body.OldPassword, existing.Value.Item1.Salt, existing.Value.Item1.Hash))
                         Checker.AssertWith([Errors.Default.SetID(nameof(body.OldPassword)).SetInfo("Old password does not match")], Exceptions.Values);
-                    if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.Default;
+                    if (!await passwordService.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.Default;
 
-                    if (!await PasswordEntity.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.Default;
+                    if (!await passwordService.Update(existing.Value.Item1.ID, body.NewPassword, passwordID: nameof(body.NewPassword))) throw Exceptions.Default;
                 }
                 else
                 {
