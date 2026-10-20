@@ -1,6 +1,6 @@
 namespace Jumpeno.Server.Hubs;
 
-public class ChatHub : Hub {
+public class ChatHub(UserService userService) : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(WebApplication app) => app.MapHub<ChatHub>(ChatHubConstants.URL);
 
@@ -56,7 +56,7 @@ public class ChatHub : Hub {
         VersionMiddleware.CheckHubVersion(ctx);
         var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
         JWT.Authorize(token, [Role.User, Role.Admin]);
-        await UserEntity.SelectCurrentActivatedUser(); // throws if not activated
+        await userService.SelectCurrentActivatedUser(); // throws if not activated
         await base.OnConnectedAsync();
     }
 
@@ -154,7 +154,7 @@ public class ChatHub : Hub {
         var ctx = Context.GetHttpContext() ?? throw Exceptions.Server;
         var token = ctx.Request.Query[ChatHubConstants.ParamAccessToken].ToString();
         JWT.Authorize(token, [Role.User, Role.Admin]);
-        return await UserEntity.SelectCurrentActivatedUser();
+        return await userService.SelectCurrentActivatedUser();
     }
 
     private string ValidateSanitizeAndCheck(string? input) {

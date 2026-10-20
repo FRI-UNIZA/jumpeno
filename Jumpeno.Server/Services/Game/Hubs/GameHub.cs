@@ -1,7 +1,5 @@
 namespace Jumpeno.Server.Hubs;
 
-#pragma warning disable CS1998
-
 public class GameHub(UserService userService) : Hub {
     // Initialization ---------------------------------------------------------------------------------------------------------------------
     public static void Init(WebApplication app) => app.MapHub<GameHub>(GameHubs.Url);
