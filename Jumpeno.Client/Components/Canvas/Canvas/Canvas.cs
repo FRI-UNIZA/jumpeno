@@ -11,9 +11,9 @@ public abstract class Canvas : BasicComponent {
     public abstract bool Dynamic { get; }
 
     // NOTE: Tab switch fix: Canvas is refreshed on visibility change by this rate:
-    public virtual int REFRESH_INIT_DELAY => 1000; // ms
-    public virtual int REFRESH_TIMES => 2;
-    public virtual int REFRESH_INTERVAL => 1000; // ms
+    public virtual int RefreshInitDelay => 1000; // ms
+    public virtual int RefreshTimes => 2;
+    public virtual int RefreshInterval => 1000; // ms
 
     // Views ------------------------------------------------------------------------------------------------------------------------------
     private readonly DotNetObjectReference<Canvas> Ref;
@@ -24,14 +24,14 @@ public abstract class Canvas : BasicComponent {
     [JSInvokable]
     public async Task JS_OnVisibilityChange(WindowVisibilityEvent e) {
         if (e.Hidden) return;
-        await Task.Delay(REFRESH_INIT_DELAY);
+        await Task.Delay(RefreshInitDelay);
         var counter = 0; do {
             await RenderLock.TryExclusive(async () => {
                 await PreRenderCanvas();
                 if (!Dynamic) StateHasChanged();
             });
-            await Task.Delay(REFRESH_INTERVAL);
-        } while (++counter < REFRESH_TIMES);
+            await Task.Delay(RefreshInterval);
+        } while (++counter < RefreshTimes);
     }
 
     // Dimensions -------------------------------------------------------------------------------------------------------------------------

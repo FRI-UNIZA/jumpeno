@@ -1049,4 +1049,31 @@ Information collected may include your IP address, browser data, and interaction
   <data name="Security" xml:space="preserve">
     <value>Security</value>
   </data>
+  <data name="Change avatar" xml:space="preserve">
+    <value>Change avatar</value>
+  </data>
+  <data name="Profile details" xml:space="preserve">
+    <value>Profile details</value>
+  </data>
+  <data name="Change name" xml:space="preserve">
+    <value>Change name</value>
+  </data>
+  <data name="Change email" xml:space="preserve">
+    <value>Change email</value>
+  </data>
+  <data name="Old password" xml:space="preserve">
+    <value>Old password</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="Old password does not match" xml:space="preserve">
+    <value>Old password does not match</value>
+  </data>
+  <data name="Click on avatar to change" xml:space="preserve">
+    <value>Click on avatar to change</value>
+  </data>
+  <data name="Connections" xml:space="preserve">
+    <value>Connections</value>
+  </data>
 </root>

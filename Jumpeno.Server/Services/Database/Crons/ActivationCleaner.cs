@@ -1,11 +1,12 @@
 namespace Jumpeno.Server.Utils;
 
-public class ActivationCleaner : Cron {
+public class ActivationCleaner(IServiceScopeFactory scopeFactory) : Cron {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public override int INTERVAL => From.MinToMS(ServerSettings.Schedule.ActivationCleaner.Minutes); // ms
+    protected override TimeSpan Interval => TimeSpan.FromMinutes(ServerSettings.Schedule.ActivationCleaner.Minutes);
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------
-    protected override async Task RunAsync() {
-        await DB.UseServerContext(ActivationEntity.DeleteExpired);
+    protected override async Task RunAsync(CancellationToken stoppingToken) {
+        using var scope = scopeFactory.CreateScope();
+        await scope.ServiceProvider.GetRequiredService<ActivationService>().DeleteExpired();
     }
 }

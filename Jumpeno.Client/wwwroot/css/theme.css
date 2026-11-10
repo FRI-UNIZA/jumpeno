@@ -39,6 +39,7 @@ body {
     --theme-email-button-color: rgb(0, 0, 0);
     --theme-email-button-background: rgb(255, 215, 0);
     --theme-email-button-background-highlight: rgb(255, 239, 0);
+    --theme-chat-message-own-text: rgba(42, 33, 56, 1);
 }
 
 body.light-theme.surface-primary,
@@ -81,14 +82,14 @@ body.light-theme .surface-primary {
     --theme-status-info-accent-highlight-color: rgba(24, 170, 255, 1);
     --theme-status-info-neon-color: rgba(0, 251, 255, 1);
     --theme-body-background: rgba(255, 255, 255, 1);
-    --theme-body-scroll-theme: OS_THEME_DARK;
+    --theme-body-scroll-theme: OSThemeDark;
     --theme-body-selection-color: rgba(42, 33, 56, 1);
     --theme-body-selection-background: rgba(255, 239, 0, 1);
     --theme-body-backdrop: rgba(0, 0, 0, 0.5);
     --theme-qr-code-background: rgba(255, 255, 255, 1);
     --theme-nav-menu-box-shadow: 0 0 20em rgba(0, 0, 0, 0.3);
     --theme-nav-menu-mobile-button-color: rgba(82, 69, 103, 1);
-    --theme-nav-menu-mobile-scroll-theme: OS_THEME_DARK;
+    --theme-nav-menu-mobile-scroll-theme: OSThemeDark;
     --theme-nav-menu-mobile-button-highlight-color: rgba(132, 124, 145, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(42, 33, 56, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
@@ -335,6 +336,9 @@ body.light-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-chat-message-other-background: rgba(240, 240, 240, 1);
+    --theme-chat-message-own-background: rgba(250, 250, 175, 1);
+    --theme-chat-message-other-text: rgba(42, 33, 56, 1);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-game-waiting-background: rgb(61, 61, 61);
@@ -362,6 +366,13 @@ body.light-theme .surface-primary {
     --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
     --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-border-color: rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-avatar-edit-background: rgba(0, 0, 0, 0.4);
+    --theme-modal-profile-input-label-color: rgb(153, 153, 153);
+    --theme-modal-profile-navigation-color: rgb(214, 218, 28);
+    --theme-modal-profile-navigation-background: rgba(42, 33, 56, 1);
+    --theme-modal-profile-navigation-item-unactive: rgba(255, 255, 255, 0.4);
+    --theme-modal-profile-navigation-item-active: rgb(255, 255, 255);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
     --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));
@@ -485,14 +496,14 @@ body.dark-theme .surface-primary {
     --theme-status-info-accent-highlight-color: rgba(24, 170, 255, 1);
     --theme-status-info-neon-color: rgba(0, 251, 255, 1);
     --theme-body-background: rgba(42, 33, 56, 1);
-    --theme-body-scroll-theme: OS_THEME_DARK;
+    --theme-body-scroll-theme: OSThemeDark;
     --theme-body-selection-color: rgba(42, 33, 56, 1);
     --theme-body-selection-background: rgba(255, 239, 0, 1);
     --theme-body-backdrop: rgba(0, 0, 0, 0.5);
     --theme-qr-code-background: rgba(255, 255, 255, 1);
     --theme-nav-menu-box-shadow: 0 0 20em rgba(0, 0, 0, 0.8);
     --theme-nav-menu-mobile-button-color: rgba(236, 240, 241, 1);
-    --theme-nav-menu-mobile-scroll-theme: OS_THEME_LIGHT;
+    --theme-nav-menu-mobile-scroll-theme: OSThemeLight;
     --theme-nav-menu-mobile-button-highlight-color: rgba(255, 255, 255, 1);
     --theme-nav-menu-mobile-button-focus-background: rgba(236, 240, 241, 0.08);
     --theme-nav-menu-mobile-button-focus-box-shadow: 0 1em 6em rgba(0, 0, 0, 0.4);
@@ -739,6 +750,9 @@ body.dark-theme .surface-primary {
     --theme-text-accent-color: rgba(42, 33, 56, 1);
     --theme-text-accent-highlight-color: rgba(122, 113, 136, 1);
     --theme-text-disabled-color: rgba(180, 180, 180, 1);
+    --theme-chat-message-other-background: rgba(42, 33, 56, 1);
+    --theme-chat-message-own-background: rgba(240, 240, 240, 1);
+    --theme-chat-message-other-text: rgba(255, 255, 255, 1);
     --theme-game-state-color: rgba(255, 255, 255, 1);
     --theme-game-state-text-shadow: 0.09em 0.045em 0.24em rgba(0, 0, 0, 0.8);
     --theme-game-waiting-background: rgb(61, 61, 61);
@@ -766,6 +780,13 @@ body.dark-theme .surface-primary {
     --theme-modal-profile-tab-button-active-text-shadow: -1px 1px 2px rgb(255, 231, 94);
     --theme-modal-profile-tab-button-divider-color: rgb(236, 236, 236);
     --theme-modal-profile-avatar-skin-box-shadow: inset 0 0 0.5em rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-border-color: rgba(0, 0, 0, 0.2);
+    --theme-modal-profile-avatar-edit-background: rgba(0, 0, 0, 0.4);
+    --theme-modal-profile-input-label-color: rgb(153, 153, 153);
+    --theme-modal-profile-navigation-color: rgb(214, 218, 28);
+    --theme-modal-profile-navigation-background: rgba(42, 33, 56, 1);
+    --theme-modal-profile-navigation-item-unactive: rgba(255, 255, 255, 0.4);
+    --theme-modal-profile-navigation-item-active: rgb(255, 255, 255);
     --theme-password-strength-bar-segment-background: rgb(236, 240, 241);
     --theme-password-strength-rule-completed-text-color: rgb(46, 125, 50);
     --theme-password-strength-bar-segment-n1-filled-background: linear-gradient(90deg, rgb(229, 57, 53), rgb(255, 82, 82));

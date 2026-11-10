@@ -4,7 +4,7 @@ namespace Jumpeno.Client.Utils;
 
 public class EventPredicate<T> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public static EventPredicate<T> EMPTY(bool result) => new(v => result);
+    public static EventPredicate<T> Empty(bool result) => new(v => result);
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly Func<T, bool>? WrappedAction;

@@ -2,7 +2,7 @@ namespace Jumpeno.Client.Models;
 
 public class Error {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string DEFAULT_ID = "";
+    public const string DefaultId = "";
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     public string ID { get; private set; }
@@ -15,5 +15,5 @@ public class Error {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor][Newtonsoft.Json.JsonConstructor]
     protected Error(string id, TInfo info) { ID = id; Info = info; }
-    public Error() : this(DEFAULT_ID, new(MESSAGE.DEFAULT)) {}
+    public Error() : this(DefaultId, new(Messages.Default)) {}
 }

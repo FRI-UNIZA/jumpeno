@@ -1,59 +1,59 @@
 namespace Jumpeno.Client.Constants;
 
 public static class API {
-    public static class BASE {
+    public static class Base {
         // URL ----------------------------------------------------------------------------------------------------------------------------
-        public static string PREFIX => AppSettings.Api.Base.Prefix;
-        public static string URL => $"{AppSettings.Api.Base.URL}{PREFIX}";
+        public static string Prefix => AppSettings.Api.Base.Prefix;
+        public static string Url => $"{AppSettings.Api.Base.URL}{Prefix}";
 
         // Endpoints ----------------------------------------------------------------------------------------------------------------------
         // Cookie:
-        public static string COOKIE_SET => $"{URL}/Cookie/Set";
+        public static string CookieSet => $"{Url}/Cookie/Set";
         // Culture:
-        public static string CULTURE_REDIRECT => $"{URL}/Culture/Redirect";
+        public static string CultureRedirect => $"{Url}/Culture/Redirect";
         // Admin:
-        public static string ADMIN_LOGIN => $"{URL}/Admin/Login";
-        public static string ADMIN_DB_CREDENTIALS => $"{URL}/Admin/DBCredentials";
-        public static string ADMIN_EMAIL_PASSWORD => $"{URL}/Admin/EmailPassword";
-        public static string ADMIN_EMAIL_BACKUP_KEYS => $"{URL}/Admin/EmailBackupKeys";
+        public static string AdminLogin => $"{Url}/Admin/Login";
+        public static string AdminDbCredentials => $"{Url}/Admin/DBCredentials";
+        public static string AdminEmailPassword => $"{Url}/Admin/EmailPassword";
+        public static string AdminEmailBackupKeys => $"{Url}/Admin/EmailBackupKeys";
         // Auth:
-        public static string AUTH_REFRESH => $"{URL}/Auth/Refresh";
-        public static string AUTH_INVALIDATE => $"{URL}/Auth/Invalidate";
-        public static string AUTH_DELETE => $"{URL}/Auth/Delete";
+        public static string AuthRefresh => $"{Url}/Auth/Refresh";
+        public static string AuthInvalidate => $"{Url}/Auth/Invalidate";
+        public static string AuthDelete => $"{Url}/Auth/Delete";
         // User:
-        public static string USER_REGISTER => $"{URL}/User/Register";
-        public static string USER_SEND_ACTIVATION => $"{URL}/User/SendActivation";
-        public static string USER_ACTIVATE => $"{URL}/User/Activate";
-        public static string USER_LOGIN => $"{URL}/User/Login";
-        public static string USER_PASSWORD_RESET_REQUEST => $"{URL}/User/PasswordResetRequest";
-        public static string USER_PASSWORD_RESET => $"{URL}/User/PasswordReset";
-        public static string USER_PASSWORD_CHANGE => $"{URL}/User/PasswordChange";
-        public static string USER_PROFILE => $"{URL}/User/Profile";
-        public static string USER_UPDATE => $"{URL}/User/Update";
-        public static string USER_DELETE => $"{URL}/User/Delete";
+        public static string UserRegister => $"{Url}/User/Register";
+        public static string UserSendActivation => $"{Url}/User/SendActivation";
+        public static string UserActivate => $"{Url}/User/Activate";
+        public static string UserLogin => $"{Url}/User/Login";
+        public static string UserPasswordResetRequest => $"{Url}/User/PasswordResetRequest";
+        public static string UserPasswordReset => $"{Url}/User/PasswordReset";
+        public static string UserPasswordChange => $"{Url}/User/PasswordChange";
+        public static string UserProfile => $"{Url}/User/Profile";
+        public static string UserUpdate => $"{Url}/User/Update";
+        public static string UserDelete => $"{Url}/User/Delete";
         // Game:
-        public static string GAME_MAPS => $"{URL}/Game/Maps";
-        public static string GAME_MAP => $"{URL}/Game/Map";
-        public static string GAME_START => $"{URL}/Game/Start";
-        public static string GAME_PAUSE => $"{URL}/Game/Pause";
-        public static string GAME_TOGGLE => $"{URL}/Game/Toggle";
-        public static string GAME_DELETE => $"{URL}/Game/Delete";
-        public static string GAME_SET_PLAYER_READY => $"{URL}/Game/SetPlayerReady";
-        public static string GAME_KICK_PLAYER => $"{URL}/Game/KickPlayer";
+        public static string GameMaps => $"{Url}/Game/Maps";
+        public static string GameMap => $"{Url}/Game/Map";
+        public static string GameStart => $"{Url}/Game/Start";
+        public static string GamePause => $"{Url}/Game/Pause";
+        public static string GameToggle => $"{Url}/Game/Toggle";
+        public static string GameDelete => $"{Url}/Game/Delete";
+        public static string GameSetPlayerReady => $"{Url}/Game/SetPlayerReady";
+        public static string GameKickPlayer => $"{Url}/Game/KickPlayer";
     }
 
-    public static class GOOGLE  {
+    public static class Google  {
         // URL ----------------------------------------------------------------------------------------------------------------------------
-        public static string URL => AppSettings.Api.Google.URL;
+        public static string Url => AppSettings.Api.Google.URL;
 
         // ReCAPTCHA ----------------------------------------------------------------------------------------------------------------------
-        public static class RECAPTCHA  {
-            public static string PREFIX => AppSettings.Api.Google.ReCAPTCHA.Prefix;
-            public static string URL => $"{GOOGLE.URL}{PREFIX}";
+        public static class Recaptcha  {
+            public static string Prefix => AppSettings.Api.Google.ReCAPTCHA.Prefix;
+            public static string Url => $"{Google.Url}{Prefix}";
 
             // Endpoints ------------------------------------------------------------------------------------------------------------------
-            public static string API => $"{URL}.js";
-            public static string SITE_VERIFY => $"{URL}/siteverify";
+            public static string API => $"{Url}.js";
+            public static string SiteVerify => $"{Url}/siteverify";
         }
     }
 }

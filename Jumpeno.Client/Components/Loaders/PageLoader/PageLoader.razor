@@ -2,14 +2,14 @@
 
 @inherits ServiceComponent<PageLoader>
 
-<CascadingValue Name="@CASCADE_PAGE_LOADER_DISPLAYED" Value="PageLoaderDisplayed">
+<CascadingValue Name="@CascadePageLoaderDisplayed" Value="PageLoaderDisplayed">
     <div class="@ComputeContentClass()" inert="@PageLoaderDisplayed">
         @ChildContent
     </div>
 </CascadingValue>
-<div class="@CLASS_BEFORE" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(ID))" />
+<div class="@ClassBefore" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(Id))" />
 <div
-    id="@ID"
+    id="@Id"
     class="@ComputeClass()"
     style="@Style"
     aria-live="off"
@@ -20,4 +20,4 @@
 >
     <PageLoaderIndicator />
 </div>
-<div class="@CLASS_AFTER" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(ID))" />
+<div class="@ClassAfter" tabindex="0" inert="@(!PageLoaderDisplayed)" @onfocus="@(() => ActionHandler.SetFocus(Id))" />

@@ -2,9 +2,9 @@ namespace Jumpeno.Client.ViewModels;
 
 public class InputViewModel<T> : FormViewModel {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public readonly INPUT_TYPE Type;
+    public readonly InputType Type;
     // Input:
-    public readonly INPUT_TEXT_MODE TextMode;
+    public readonly InputTextMode TextMode;
     public readonly bool Trim;
     public readonly Predicate<string>? TextCheck;
     public readonly int? MaxLength;
@@ -68,12 +68,12 @@ public class InputViewModel<T> : FormViewModel {
     public InputViewModel(InputViewModelDoubleParams @params) : this((InputViewModelParams<T>)(object) @params) {}
 
     // Initializers -----------------------------------------------------------------------------------------------------------------------
-    private static INPUT_TYPE InitType(InputViewModelParams<T> @params) {
+    private static InputType InitType(InputViewModelParams<T> @params) {
         var paramsType = @params.GetType();
-        if (paramsType == typeof(InputViewModelTextParams)) return INPUT_TYPE.TEXT;
-        else if (paramsType == typeof(InputViewModelLongParams)) return INPUT_TYPE.LONG;
-        else if (paramsType == typeof(InputViewModelDoubleParams)) return INPUT_TYPE.DOUBLE;
-        else return INPUT_TYPE.TEXT;
+        if (paramsType == typeof(InputViewModelTextParams)) return InputType.Text;
+        else if (paramsType == typeof(InputViewModelLongParams)) return InputType.Long;
+        else if (paramsType == typeof(InputViewModelDoubleParams)) return InputType.Double;
+        else return InputType.Text;
     }
     private static int InitDecimals(InputViewModelParams<T> @params) {
         if (@params.GetType() == typeof(InputViewModelDoubleParams)) {
@@ -86,30 +86,30 @@ public class InputViewModel<T> : FormViewModel {
     private static Boundary<T>[] CreateNumberBoundaries(
         OneOf<InputViewModelLongParams, InputViewModelDoubleParams> @params
     ) {
-        OneOf<long, double> MinValue;
-        OneOf<long, double> MaxValue;
+        OneOf<long, double> minValue;
+        OneOf<long, double> maxValue;
         bool isMaxLengthError;
         bool isDecimalError = false;
         bool isBoundaryError;
 
         if (@params.IsT0) {
-            MinValue = @params.AsT0.MinValue;
-            MaxValue = @params.AsT0.MaxValue;
+            minValue = @params.AsT0.MinValue;
+            maxValue = @params.AsT0.MaxValue;
 
-            isMaxLengthError = @params.AsT0.MaxLength is not null && $"{MinValue.AsT0}".Length > @params.AsT0.MaxLength || $"{MaxValue.AsT0}".Length > @params.AsT0.MaxLength;
-            isBoundaryError = MaxValue.AsT0 < MinValue.AsT0;
+            isMaxLengthError = @params.AsT0.MaxLength is not null && $"{minValue.AsT0}".Length > @params.AsT0.MaxLength || $"{maxValue.AsT0}".Length > @params.AsT0.MaxLength;
+            isBoundaryError = maxValue.AsT0 < minValue.AsT0;
         } else {
-            MinValue = @params.AsT1.MinValue;
-            MaxValue = @params.AsT1.MaxValue;
+            minValue = @params.AsT1.MinValue;
+            maxValue = @params.AsT1.MaxValue;
             
-            var minParts = Precision.SplitDouble(MinValue.AsT1);
+            var minParts = Precision.SplitDouble(minValue.AsT1);
             minParts[1] = minParts[1].Substring(0, Math.Min(@params.AsT1.Decimals, minParts[1].Length));
-            var maxParts = Precision.SplitDouble(MaxValue.AsT1);
+            var maxParts = Precision.SplitDouble(maxValue.AsT1);
             maxParts[1] = maxParts[1].Substring(0, Math.Min(@params.AsT1.Decimals, maxParts[1].Length));
             isMaxLengthError =  @params.AsT1.MaxLength is not null && $"{minParts[0]}".Length > @params.AsT1.MaxLength || $"{maxParts[0]}".Length > @params.AsT1.MaxLength;
             isDecimalError = $"{minParts[1]}".Length > @params.AsT1.Decimals || $"{maxParts[1]}".Length > @params.AsT1.Decimals;
 
-            isBoundaryError = MaxValue.AsT1 < MinValue.AsT1;
+            isBoundaryError = maxValue.AsT1 < minValue.AsT1;
         }
 
         if (isMaxLengthError) throw new InvalidDataException("Boundary does not match MaxLength condition!");
@@ -117,8 +117,8 @@ public class InputViewModel<T> : FormViewModel {
         if (isBoundaryError) throw new InvalidDataException("Max value must be greater or equal to min value!");
 
         return [
-            new(MinValue.IsT0 ? (T)(object) MinValue.AsT0 : (T)(object) MinValue.AsT1, false),
-            new(MaxValue.IsT0 ? (T)(object) MaxValue.AsT0 : (T)(object) MaxValue.AsT1, false)
+            new(minValue.IsT0 ? (T)(object) minValue.AsT0 : (T)(object) minValue.AsT1, false),
+            new(maxValue.IsT0 ? (T)(object) maxValue.AsT0 : (T)(object) maxValue.AsT1, false)
         ];
     }
     private static Boundary<T>[] GetBoundaries(InputViewModelParams<T> @params) {
@@ -131,18 +131,18 @@ public class InputViewModel<T> : FormViewModel {
         return [new(default!, false), new(default!, false)];
     }
     public T ApplyTextMode(T value) {
-        if (Type == INPUT_TYPE.TEXT) {
+        if (Type == InputType.Text) {
             switch (TextMode) {
-                case INPUT_TEXT_MODE.LOWERCASE:
+                case InputTextMode.LowerCase:
                     return (T)(object)value!.ToString()!.ToLower();
-                case INPUT_TEXT_MODE.UPPERCASE:
+                case InputTextMode.UpperCase:
                     return (T)(object)value!.ToString()!.ToUpper();
             }
         }
         return value;
     }
     public T ApplyTrim(T value) {
-        if (Type == INPUT_TYPE.TEXT && Trim) {
+        if (Type == InputType.Text && Trim) {
             return (T)(object) value!.ToString()!.Trim();
         }
         return value;
@@ -151,7 +151,7 @@ public class InputViewModel<T> : FormViewModel {
         var valString = $"{value}";
         T valResult;
         try {
-            if (Type == INPUT_TYPE.LONG) {
+            if (Type == InputType.Long) {
                 var val = long.Parse(valString);
                 var minValue = (long)(object) MinValue!;
                 var maxValue = (long)(object) MaxValue!;
@@ -165,7 +165,7 @@ public class InputViewModel<T> : FormViewModel {
 
                 valResult = (T)(object) val;
 
-            } else if (Type == INPUT_TYPE.DOUBLE) {
+            } else if (Type == InputType.Double) {
                 var val = Precision.ParseDouble(valString);
                 var minValue = (double)(object) MinValue!;
                 var maxValue = (double)(object) MaxValue!;

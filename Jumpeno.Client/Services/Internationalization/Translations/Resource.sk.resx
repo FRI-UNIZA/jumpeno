@@ -1049,4 +1049,31 @@ Niektoré cookies môžu byť spoločnosťou Google použité aj na bezpečnostn
   <data name="Security" xml:space="preserve">
     <value>Bezpečnosť</value>
   </data>
+  <data name="Change avatar" xml:space="preserve">
+    <value>Zmeniť avatar</value>
+  </data>
+  <data name="Profile details" xml:space="preserve">
+    <value>Detaily profilu</value>
+  </data>
+  <data name="Change name" xml:space="preserve">
+    <value>Zmeniť meno</value>
+  </data>
+  <data name="Change email" xml:space="preserve">
+    <value>Zmeniť email</value>
+  </data>
+  <data name="Old password" xml:space="preserve">
+    <value>Staré heslo</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Nové heslo</value>
+  </data>
+  <data name="Old password does not match" xml:space="preserve">
+    <value>Staré heslo sa nezhoduje</value>
+  </data>
+  <data name="Click on avatar to change" xml:space="preserve">
+    <value>Avatara zmeníš kliknutím</value>
+  </data>
+  <data name="Connections" xml:space="preserve">
+    <value>Prepojenia</value>
+  </data>
 </root>

@@ -3,7 +3,7 @@ namespace Jumpeno.Client.Utils;
 public class GameClock(int fps) {
     // Constants --------------------------------------------------------------------------------------------------------------------------
     public readonly int FPS = fps;
-    public readonly int INTERVAL = 1000 / fps; // ms
+    public readonly int Interval = 1000 / fps; // ms
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private DateTime Time = DateTime.UtcNow;
@@ -29,9 +29,9 @@ public class GameClock(int fps) {
             // 1) Compute delta:
             var deltaT = ComputeDelta();
             // 2) Check valid value:
-            if (deltaT <= INTERVAL) {
+            if (deltaT <= Interval) {
                 locker?.Unlock();
-                await Task.Delay(INTERVAL - (int) Math.Ceiling(deltaT));
+                await Task.Delay(Interval - (int) Math.Ceiling(deltaT));
                 if (locker != null) await (locker?.Lock!)();
                 continue;
             }

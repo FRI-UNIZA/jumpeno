@@ -11,8 +11,8 @@ public record SelectMultiViewModelParams<T> (
     bool Search = false,
     Predicate<SelectSearchEvent<T>>? CustomSearch = null,
     // Search input:
-    INPUT_TEXT_MODE SearchTextMode = INPUT_TEXT_MODE.NORMAL,
-    INPUT_SEARCH_MODE SearchMode = INPUT_SEARCH_MODE.LOWERCASE,
+    InputTextMode SearchTextMode = InputTextMode.Normal,
+    InputSearchMode SearchMode = InputSearchMode.LowerCase,
     bool SearchTrim = true,
     Predicate<string>? SearchTextCheck = null,
     int? SearchMaxLength = null,

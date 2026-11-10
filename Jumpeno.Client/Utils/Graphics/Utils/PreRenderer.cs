@@ -1,12 +1,12 @@
 namespace Jumpeno.Client.Utils;
 
 public class PreRenderer<T>(
-    CANVAS id,
+    CanvasType id,
     Func<Canvas2DContext, T, Task<bool>> preRender,
     Func<(Canvas2DContext Source, Canvas2DContext Destination), T, Task<bool>> applyRender
 ) {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public CANVAS ID { get; private set; } = id;
+    public CanvasType ID { get; private set; } = id;
     private Canvas2DContext? Source => CanvasReferrer.Get(ID);
     
     // Actions ----------------------------------------------------------------------------------------------------------------------------

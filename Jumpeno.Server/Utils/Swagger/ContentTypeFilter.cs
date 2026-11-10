@@ -12,7 +12,7 @@ public class ContentTypeFilter : IOperationFilter {
             if (operation.RequestBody != null) {
                 var schemas = operation.RequestBody.Content.ToDictionary(c => c.Key, c => c.Value.Schema);
                 operation.RequestBody.Content.Clear();
-                operation.RequestBody.Content.Add(CONTENT_TYPE.JSON, new OpenApiMediaType {
+                operation.RequestBody.Content.Add(ContentType.Json, new OpenApiMediaType {
                     Schema = schemas.FirstOrDefault().Value
                 });
             }
@@ -20,7 +20,7 @@ public class ContentTypeFilter : IOperationFilter {
             foreach (var response in operation.Responses) {
                 var schemas = response.Value.Content.ToDictionary(c => c.Key, c => c.Value.Schema);
                 response.Value.Content.Clear();
-                response.Value.Content.Add(CONTENT_TYPE.JSON, new OpenApiMediaType {
+                response.Value.Content.Add(ContentType.Json, new OpenApiMediaType {
                     Schema = schemas.FirstOrDefault().Value
                 });
             }

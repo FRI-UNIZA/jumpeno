@@ -2,47 +2,47 @@ namespace Jumpeno.Client.Utils;
 
 public class NetworkUpdater {
     // GamePlayUpdate ---------------------------------------------------------------------------------------------------------------------
-    private ulong GamePlayUpdateID = 0;
+    private ulong _gamePlayUpdateId = 0;
     public GamePlayUpdate NewGamePlayUpdate(
         int round, StateUpdate stateUpdate,
         Dictionary<byte, MovementUpdate>? movements = null,
         Dictionary<byte, KillUpdate>? kills = null,
         Dictionary<byte, LifeUpdate>? lives = null
     ) {
-        return new GamePlayUpdate(GamePlayUpdateID++, round, stateUpdate, movements, kills, lives);
+        return new GamePlayUpdate(_gamePlayUpdateId++, round, stateUpdate, movements, kills, lives);
     }
 
     // KeyUpdate --------------------------------------------------------------------------------------------------------------------------
-    private ulong KeyUpdateID = 0;
+    private ulong _keyUpdateId = 0;
     public KeyUpdate NewKeyUpdate(int round, byte playerID, LinkedList<Control> controls) {
-        return new KeyUpdate(KeyUpdateID++, round, playerID, controls);
+        return new KeyUpdate(_keyUpdateId++, round, playerID, controls);
     }
 
     // PlayerUpdate -----------------------------------------------------------------------------------------------------------------------
-    private ulong PlayerUpdateID = 0;
+    private ulong _playerUpdateId = 0;
     public PlayerUpdate NewPlayerUpdate(
         int round, bool hostConnected, Player player, int readyForRound, bool invalidate, GamePlayUpdate? gamePlayUpdate = null
     )
-    => new(PlayerUpdateID++, round, hostConnected, player, readyForRound, invalidate, gamePlayUpdate);
+    => new(_playerUpdateId++, round, hostConnected, player, readyForRound, invalidate, gamePlayUpdate);
 
     // RoundUpdate ------------------------------------------------------------------------------------------------------------------------
-    private ulong RoundUpdateID = 0;
+    private ulong _roundUpdateId = 0;
     public RoundUpdate NewRoundUpdate(int round, StateUpdate stateUpdate, Dictionary<byte, Player> players) {
-        return new RoundUpdate(RoundUpdateID++, round, stateUpdate, players);
+        return new RoundUpdate(_roundUpdateId++, round, stateUpdate, players);
     }
 
     // SpectatorUpdate --------------------------------------------------------------------------------------------------------------------
-    private ulong SpectatorUpdateID = 0;
+    private ulong _spectatorUpdateId = 0;
     public SpectatorUpdate NewSpectatorUpdate(int round, bool hostConnected, int spectatorCount) {
-        return new SpectatorUpdate(SpectatorUpdateID++, round, hostConnected, spectatorCount);
+        return new SpectatorUpdate(_spectatorUpdateId++, round, hostConnected, spectatorCount);
     }
 
     // Reset ------------------------------------------------------------------------------------------------------------------------------
     public void Reset() {
-        GamePlayUpdateID = 0;
-        KeyUpdateID = 0;
-        PlayerUpdateID = 0;
-        RoundUpdateID = 0;
-        SpectatorUpdateID = 0;
+        _gamePlayUpdateId = 0;
+        _keyUpdateId = 0;
+        _playerUpdateId = 0;
+        _roundUpdateId = 0;
+        _spectatorUpdateId = 0;
     }
 }

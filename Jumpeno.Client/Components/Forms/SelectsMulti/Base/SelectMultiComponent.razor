@@ -5,40 +5,40 @@
 @inherits FormField<SelectMultiViewModel<T>>
 
 @code {
-    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.CONNECTED;
+    protected override FormErrorType? ErrorType => FormErrorType.Connected;
     protected override RenderFragment? RenderField() => @<Fragment>
         <button
             id="@ViewModel.FormID"
-            type="@BUTTON_TYPE.BUTTON.String()"
+            type="@ButtonType.Button.String()"
             aria-roledescription="multi-select"
             aria-label="@($"{HTML.Label.First(Label)}, {OptionPlaceholder()}")"
             aria-invalid="@ViewModel.Error.HasError"
-            class="@CLASS_SELECT_INPUT"
+            class="@ClassSelectInput"
             disabled="@Disabled"
             @onclick="@Open"
         >
             @if (ViewModel.Value.Count == 0) {
                 if (ViewModel.Placeholder == null) {
-                    <span class="@CLASS_SELECT_INPUT_EMPTY">&nbsp;</span>
+                    <span class="@ClassSelectInputEmpty">&nbsp;</span>
                 } else {
-                    <span class="@CLASS_SELECT_INPUT_TEXT @CLASS_SELECT_INPUT_PLACEHOLDER">@ViewModel.Placeholder</span>
+                    <span class="@ClassSelectInputText @ClassSelectInputPlaceholder">@ViewModel.Placeholder</span>
                 }
             } else {
-                <span class="@CLASS_SELECT_INPUT_TEXT">@ViewModel.Value.Values.FirstOrDefault()?.Label</span>
+                <span class="@ClassSelectInputText">@ViewModel.Value.Values.FirstOrDefault()?.Label</span>
             }
-            <div class="@CLASS_SELECT_INPUT_INDICATORS">
+            <div class="@ClassSelectInputIndicators">
                 @if (ViewModel.Value.Count > 1) {
-                    <span class="@CLASS_SELECT_INPUT_COUNT">
-                        <span class="@CLASS_SELECT_INPUT_PLUS">+</span>
+                    <span class="@ClassSelectInputCount">
+                        <span class="@ClassSelectInputPlus">+</span>
                         @(ViewModel.Value.Count - 1)
                     </span>
                 }
-                <AntIcon Type="down" Theme="outline" Class="@CLASS_SELECT_INPUT_ICON" />
+                <AntIcon Type="down" Theme="outline" Class="@ClassSelectInputIcon" />
             </div>
         </button>
         <Modal
             @ref="@ModalRef"
-            Surface="ModalSurface"
+            Surface="MSurface"
             Label="Label"
             Class="@ComputeModalClass()"
             OnOpenStart="@HandleOpenStart"
@@ -50,16 +50,16 @@
                 @if (ViewModel.Search) {
                     <InputSearch
                         ViewModel="ViewModel.SearchVM"
-                        Variant="FORM_VARIANT.PRIMARY"
+                        Variant="FormVariant.Primary"
                         Size="SearchSize"
                         Align="SearchAlign"
                         Label="@I18N.T("Search")"
-                        Class="@CLASS_SELECT_INPUT_SEARCH"
+                        Class="@ClassSelectInputSearch"
                     />
                 }
             </SubHeader>
             <Content>
-                <div class="@CLASS_OPTIONS" role="listbox">
+                <div class="@ClassOptions" role="listbox">
                     @if (DisplayedOptions.Count > 0) {
                         var index = 0;
                         @foreach(var option in DisplayedOptions) {
@@ -67,7 +67,7 @@
                             <button
                                 @key="option.Label"
                                 id="@($"{ViewModel.FormID}-{index++}")"
-                                type="@BUTTON_TYPE.BUTTON.String()"
+                                type="@ButtonType.Button.String()"
                                 role="option"
                                 aria-label="@HTML.Label.OptionAria(option.Label, isSelected)"
                                 aria-selected="@HTML.Label.OptionAriaActive(isSelected)"
@@ -80,14 +80,14 @@
                             </button>
                         }
                     } else {
-                        <p tabindex="0" class="@CLASS_SELECT_EMPTY_TEXT">-- @I18N.T("No data") --</p>
+                        <p tabindex="0" class="@ClassSelectEmptyText">-- @I18N.T("No data") --</p>
                     }
                 </div>
             </Content>
             <Footer>
                 <WebLink
-                    Role="WEBLINK_ROLE.BUTTON"
-                    Size="TEXT_SIZE.M"
+                    Role="WebLinkRole.Button"
+                    Size="TextSize.M"
                     NoWrap
                     OnClick="ClearSelect"
                     OnEnter="ClearSelect"
@@ -95,8 +95,8 @@
                     @I18N.T("Clear")
                 </WebLink>
                 <Button
-                    Variant="BUTTON_VARIANT.QUATERNARY"
-                    Size="BUTTON_SIZE.S"
+                    Variant="ButtonVariant.Quaternary"
+                    Size="ButtonSize.S"
                     NoShadow
                     OnClick="ConfirmSelect"
                 >

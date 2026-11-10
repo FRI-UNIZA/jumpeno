@@ -43,9 +43,9 @@
             ServerPageLoader.Hide();
             // Init actions:
             await Init.RunAfterLoader();
-            await PageLoader.Hide(PAGE_LOADER_TASK.INITIAL, false);
+            await PageLoader.Hide(PageLoaderTask.Initial, false);
             // PageLoader:
-            await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.ID));
+            await PageLoader.WithActiveLoader(() => ActionHandler.SetFocus(PageLoader.Id));
             await PageLoader.AwaitAllLoaders();
             // Focus:
             if (shouldCookiesModalShow)
@@ -59,12 +59,11 @@
         } catch {
             // Initialization error:
             ServerPageLoader.Stop();
-            Notification.Error(MESSAGE.DEFAULT.T);
+            Notification.Error(Messages.Default.T);
         }
     }
 }
 
-<SSRStorage />
 <AnimationHandler />
 <UI />
 <ThemeProvider @ref="ThemeProviderRef">

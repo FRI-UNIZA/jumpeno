@@ -4,15 +4,15 @@
 @inherits FormField<InputViewModel<T>>
 
 @code {
-    protected override FORM_ERROR_TYPE? FormErrorType => FORM_ERROR_TYPE.AUTOHIDE;
+    protected override FormErrorType? ErrorType => FormErrorType.AutoHide;
     protected override RenderFragment RenderField() => @<Fragment>
-        <div class="@CLASS_CONTAINER" inert="@Disabled">
+        <div class="@ClassContainer" inert="@Disabled">
             @if (Icon is not null) { <div class="input-icon-before">@Icon</div> }
             <input
                 id="@ViewModel.FormID"
                 name="@Name"
                 type="@ComputeType()"
-                class="@CLASS_INPUT_ELEMENT"
+                class="@ClassInputElement"
                 placeholder="@ViewModel.Placeholder"
                 aria-label="@HTML.Label.First(Label)"
                 aria-invalid="@ViewModel.Error.HasError"

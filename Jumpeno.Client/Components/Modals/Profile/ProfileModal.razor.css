@@ -1,17 +1,19 @@
 /* Constants -------------------------------------------------------------------------------------------------------------------------- */
 ::deep.modal.profile-modal {
-    /* Position: */
     --profile-tabs-menu-z-index: 10;
-    /* Size: */
     --tab-buttons-height: 50px;
 }
 
 /* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.modal.profile-modal {
-    /* Size: */
-    --modal-min-width: 860px;
+    --modal-min-width: 800px;
     --modal-max-width: 1200px;
-    --modal-min-height: 580px;
+    --modal-min-height: 480px;
+}
+
+::deep.modal.profile-modal .modal-content-box {
+    /* Size: */
+    padding: 0;
 }
 
 ::deep.modal.profile-modal .profile-modal-tab-switch {
@@ -31,70 +33,61 @@
     /* Position: */
     position: sticky;
     top: 0;
-    z-index: var(--profile-tabs-menu-z-index);   
+    z-index: var(--profile-tabs-menu-z-index);  
     /* Display: */
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: stretch;
     align-items: stretch;
-    gap: 14px;
+    gap: 0;
     /* Size: */
     width: calc(100% + 2 * var(--modal-padding-content-x));
     margin: calc(-1 * var(--modal-padding-content-y)) calc(-1 * var(--modal-padding-content-x)) 0;
     height: var(--tab-buttons-height);
     /* Style: */
-    background: var(--theme-surface-background);
+    background: var(--theme-modal-profile-navigation-background);
 }
 
 ::deep.modal.profile-modal .profile-tab-button {
     /* Display: */
     display: inline-flex;
+    flex: 1;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
     /* Size: */
-    padding: 2px 6px;
+    padding: 10px;
     /* Style: */
     background: none;
     outline: none;
     border: none;
-    color: var(--theme-modal-profile-tab-button-color);
-    border: 3px solid transparent;
-    /* Content: */
+    color: var(--theme-modal-profile-navigation-item-unactive);
     white-space: nowrap;
-    font-size: 15px;
-    /* Actions: */
+    font-size: 20px;
     cursor: pointer;
-    /* Animations: */
-    transition-property: color, text-shadow;
+    /* Animations */
+    transition-property: color, text-shadow, background-color;
     transition-duration: calc(var(--theme-transition-fast) * 1ms);
     transition-timing-function: ease;
 }
 
+::deep.modal.profile-modal .profile-tab-button .tab-text {
+    /* Display: */
+    display: none;
+}
+
 ::deep.modal.profile-modal .profile-tab-button.active {
     /* Style: */
-    color: var(--theme-modal-profile-tab-button-active-color);
-    text-shadow: var(--theme-modal-profile-tab-button-active-text-shadow);
-    border-bottom-color: var(--theme-modal-profile-tab-button-active-color);
+    color: var(--theme-modal-profile-navigation-item-active);
+    background-color: var(--theme-menu-button-mobile-active-background);
+    text-shadow: none;
 }
 
-::deep.modal.profile-modal .profile-tab-button:not(.active):hover,
-::deep.modal.profile-modal .profile-tab-button:not(.active):focus-visible {
+::deep.modal.profile-modal .profile-tab-button:hover,
+::deep.modal.profile-modal .profile-tab-button:focus-visible {
     /* Style: */
-    color: var(--theme-modal-profile-tab-button-highlight-color);
-}
-
-::deep.modal.profile-modal .profile-tab-buttons::after {
-    /* Position: */
-    position: absolute;
-    right: auto;
-    bottom: 0;
-    /* Size: */
-    width: calc(100% - 2 * var(--modal-padding-content-x));
-    height: 0;
-    /* Style: */
-    border: 0 solid var(--theme-modal-profile-tab-button-divider-color);
-    border-bottom-width: 1px;
-    /* Content: */
-    content: "";
+    color: var(--theme-modal-profile-navigation-item-active);
+    text-shadow: 0 0 8px;
 }
 
 ::deep.modal.profile-modal .profile-tabs { 
@@ -105,10 +98,10 @@
     /* Size: */
     width: 100%;
     min-height: calc(100% - var(--tab-buttons-height) - var(--modal-padding-content-y));
+    margin-bottom: 15px;
 }
 
 @media (min-width: 768px) {
-    /* Media > Styles ------------------------------------------------------------------------------------------------------------------ */
     ::deep.modal.profile-modal .profile-modal-tab-switch {
         /* Display: */
         flex-direction: row;
@@ -118,38 +111,37 @@
     ::deep.modal.profile-modal .profile-tab-buttons {
         /* Display: */
         flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        /* Size: */
+        justify-content: center;
+        align-items: center;
+        /* Size */
         width: 200px;
         height: 100%;
         margin: 0;
     }
 
+    ::deep.modal.profile-modal .profile-tab-button .tab-text {
+        /* Display: */
+        display: inline;
+        font-size: 15px;
+    }
+
     ::deep.modal.profile-modal .profile-tab-buttons::after {
-        /* Position: */
-        right: 0;
-        bottom: auto;
-        /* Size: */
-        width: 0;
-        height: 100%;
-        /* Style: */
-        border-right-width: 1px;
+        /* Display: */
+        display: none;
     }
 
     ::deep.modal.profile-modal .profile-tab-button {
-        /* Size: */
+        /* Display: */
+        flex: none;
+        justify-content: flex-start;
+        /* Size */
         width: 100%;
-    }
-
-    ::deep.modal.profile-modal .profile-tab-button.active {
-        /* Style: */
-        border-bottom-color: transparent;
-        border-right-color: rgb(245, 208, 0);
+        padding: 10px 20px 10px 20px;
     }
 
     ::deep.modal.profile-modal .profile-tabs {
         /* Size: */
         min-height: 100%;
+        margin-top: -20px;
     }
 }

@@ -2,7 +2,7 @@ namespace Jumpeno.Server.Controllers;
 
 [ApiController]
 [Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
-public class CookieController(CookieStorage CookieStorage) : ControllerBase {
+public class CookieController(CookieStorage cookieStorage) : ControllerBase {
     /// <summary>Sets accepted cookies.</summary>
     /// <param name="body">List of accepted cookie names.</param>
     /// <response code="200">Cookies accepted.</response>
@@ -12,7 +12,7 @@ public class CookieController(CookieStorage CookieStorage) : ControllerBase {
         // 1) Validation:
         body.Validate();
         // 2) Set cookies:
-        CookieStorage.AcceptCookieConsent(body.AcceptedNames);
+        cookieStorage.AcceptCookieConsent(body.AcceptedNames);
         // 3) Response:
         return new(I18N.T("Cookies accepted."));
     }

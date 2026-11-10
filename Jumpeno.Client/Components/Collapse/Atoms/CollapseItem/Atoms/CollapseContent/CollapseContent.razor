@@ -1,17 +1,18 @@
 @namespace Jumpeno.Client.Components
 
+@using CSSClass = Jumpeno.Client.Services.CssClass
 @inherits BasicComponent
 
 @code {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS = "collapse-content";
+    public const string ClassName = "collapse-content";
     
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
     
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() => base.ComputeClass().Set(CLASS, Base);
+    public override CSSClass ComputeClass() => base.ComputeClass().Set(ClassName, Base);
 }
 
 <p class="@ComputeClass()" style="@Style">

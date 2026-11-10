@@ -5,11 +5,21 @@ using System.Diagnostics;
 #pragma warning disable CS8618
 #pragma warning disable CA1816
 
-public class Navigator : StaticService<Navigator>, IAsyncDisposable {
+public class Navigator : IAsyncDisposable {
+
+    protected static Navigator Instance()
+    {
+        var key = MemoryStorageKeys.Navigator;
+        var instance = AppEnvironment.MemoryStorage.Get<Navigator>(key);
+        if (instance is null)
+        {
+            instance = new Navigator();
+            AppEnvironment.MemoryStorage.Set(key, instance);
+        }
+        return instance;
+    }
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     private readonly NavigationManager Manager;
-    private static Action<string, bool, bool> ServerRedirect;
-    private static Action ServerRefresh;
     // Stats:
     private string PreviousURL = "";
     private bool ProgramNavigation = false;
@@ -18,20 +28,20 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     private object? NavData = null;
     private (string Key, object? Data)? NavState = null;
     // Notify:
-    private NOTIFY? Notify = null;
+    private NotifyType? Notify = null;
     // Loading:
     private bool Loader = true;
-    private const int MIN_LOADING = 175; // ms
-    private readonly MinWatch MinLoadingWatch = new(MIN_LOADING);
+    private const int MinLoading = 175; // ms
+    private readonly MinWatch MinLoadingWatch = new(MinLoading);
     private TaskCompletionSource NavigationFinished;
     // PopState:
     private bool IsPopState = false;
     private readonly Stopwatch PopWatch = new();
-    private readonly int POP_THROTTLE = 500; // ms
+    private readonly int popThrottle = 500; // ms
     // Events:
     private TaskCompletionSource NavEventTCS = new();
     private bool IsRunning = false;
-    private readonly int RUN_DELAY = 100; // ms
+    private readonly int runDelay = 100; // ms
     // Locks:
     private readonly LockerSlim NavLock = new();
     // Listeners & interceptors:
@@ -52,15 +62,6 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     private readonly Disposer Disposer;
     public async ValueTask DisposeAsync() => await Disposer.DisposeAsync();
     ~Navigator() => Disposer.Final();
-
-    // Initialization ---------------------------------------------------------------------------------------------------------------------
-    public static void Init(Action<string, bool, bool> serverRedirect, Action serverRefresh) {
-        InitOnce.Check(nameof(Navigator));
-        ServerRedirect = serverRedirect;
-        ServerRefresh = serverRefresh;
-    }
-
-    public static void Init() => Init((url, forceLoad, replace) => {}, () => {});
 
     // Reset ------------------------------------------------------------------------------------------------------------------------------
     private void ResetStats() {
@@ -83,7 +84,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     private async Task Terminate() {
         Release();
-        await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
+        await PageLoader.Hide(PageLoaderTask.Navigator, false);
     }
 
     private void PreventNavigation(LocationChangingContext ctx) {
@@ -100,7 +101,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             if (!ProgramNavigation) {
                 if (IsRunning) { ctx.PreventNavigation(); return; }
                 if (!ctx.IsNavigationIntercepted) {
-                    if (PopWatch.ElapsedMilliseconds < POP_THROTTLE) {
+                    if (PopWatch.ElapsedMilliseconds < popThrottle) {
                         ctx.PreventNavigation(); return;
                     }
                     IsPopState = true;
@@ -123,10 +124,10 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             PreviousURL = URL.Url();
             // 8) Loader:
             if (Loader) {
-                await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
+                await PageLoader.Show(PageLoaderTask.Navigator);
                 MinLoadingWatch.Start();
             } else {
-                await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION, true);   
+                await PageLoader.Show(PageLoaderTask.Navigator, true);   
             }
             // 9) Check cancellation:
             ctx.CancellationToken.ThrowIfCancellationRequested();
@@ -147,18 +148,18 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
                 await listener.Invoke(new(ProgramNavigation, IsPopState, PreviousURL, e.Location));
             }
             // 3) Notify:
-            if (Notify is NOTIFY notify) {
+            if (Notify is NotifyType notify) {
                 AppLayout.Notify(notify);
                 NavigationFinished.TrySetResult();
             } else {
                 var samePage = URL.PathMatches(URL.Path(PreviousURL), URL.Path(e.Location));
                 if (ProgramNavigation) {
                     if (!SettingQueries && URL.IsLocal(e.Location)) {
-                        AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+                        AppLayout.Notify(samePage ? NotifyType.Page : NotifyType.State);
                     }
                     NavigationFinished.TrySetResult();
                 } else {
-                    AppLayout.Notify(samePage ? NOTIFY.PAGE : NOTIFY.STATE);
+                    AppLayout.Notify(samePage ? NotifyType.Page : NotifyType.State);
                 }
             }
             // 4) Set state:
@@ -167,7 +168,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
             ResetStats();
             // 6) Handle loader:
             if (Loader) await MinLoadingWatch.Task;
-            await PageLoader.Hide(PAGE_LOADER_TASK.NAVIGATION, false);
+            await PageLoader.Hide(PageLoaderTask.Navigator, false);
             Loader = true;
             // 7) Run after listeners:
             foreach (var listener in AfterFinishListeners) {
@@ -185,28 +186,18 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     private async Task Navigate(
         string url,
         bool forceLoad = false, bool replace = false, bool queries = false,
-        object? data = null, (string Key, object? Data)? state = null, NOTIFY? notify = null,
+        object? data = null, (string Key, object? Data)? state = null, NotifyType? notify = null,
         bool loader = true
     ) {
         // 1) Set running:
-        if (AppEnvironment.IsClient) {
-            while (IsRunning) await Task.Delay(RUN_DELAY);
-            IsRunning = true;
-        }
+        while (IsRunning) await Task.Delay(runDelay);
+        IsRunning = true;
         // 2) Lock program navigation:
         await NavLock.TryLock();
         // 3) Show program loader before start:
-        if (AppEnvironment.IsClient) {
-            if (loader) await PageLoader.Show(PAGE_LOADER_TASK.NAVIGATION);
-        }
-        // 4) Handle server:
-        if (AppEnvironment.IsServer) {
-            ServerRedirect(url, forceLoad, replace);
-            RequestStorage.Set(REQUEST_STORAGE.URL, url);
-            NavLock.TryUnlock();
-            return;
-        }
-        // 5) Set stats:
+        if (loader) await PageLoader.Show(PageLoaderTask.Navigator);
+
+        // 4) Set stats:
         ProgramNavigation = true;
         SettingQueries = queries;
         Loader = loader;
@@ -214,19 +205,19 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         NavState = AppEnvironment.IsClient ? state : null;
         Notify = notify;
         NavigationFinished = new TaskCompletionSource();
-        // 6) Handle culture:
+        // 5) Handle culture:
         if (!queries && URL.IsLocal(url)) {
             if (!I18N.IsCurrentCultureUrl(url)) forceLoad = true;
         }
-        // 7) Navigate:
+        // 6) Navigate:
         Manager.NavigateTo(url, forceLoad, replace);
-        // 8) Wait until finished:
+        // 7) Wait until finished:
         await NavigationFinished.Task;
     }
 
     public static async Task NavigateTo(
         string url, bool forceLoad = false, bool replace = false,
-        object? data = null, (string Key, object? Data)? state = null, NOTIFY? notify = null
+        object? data = null, (string Key, object? Data)? state = null, NotifyType? notify = null
     ) => await Instance().Navigate(
         url,
         forceLoad, replace, queries: false,
@@ -234,8 +225,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
         loader: !forceLoad
     );
     public static void Refresh() {
-        if (AppEnvironment.IsServer) ServerRefresh();
-        else Instance().Manager.Refresh(forceReload: true);
+        Instance().Manager.Refresh(forceReload: true);
     }
     public static async Task SetQueryParams(QueryParams queryParams) => await Instance().Navigate(
         URL.SetQueryParams(queryParams),
@@ -277,10 +267,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
     public static async Task RemoveBlocker(Func<NavigationEvent, bool> predicate) {
         var instance = Instance();
         await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.Blockers.Count; i++) {
-                if (!predicate.Equals(instance.Blockers[i])) continue;
-                instance.Blockers.RemoveAt(i); break;
-            }
+            instance.Blockers.RemoveAll(p => predicate == p);
         });
     }
 
@@ -296,10 +283,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     public static async Task RemoveAfterEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.AfterListeners.Count; i++) {
-                if (!listener.Equals(instance.AfterListeners[i])) continue;
-                instance.AfterListeners.RemoveAt(i); break;
-            }
+            instance.AfterListeners.RemoveAll(l => listener.Equals(l));
         });
     }
     public static async Task RemoveAfterEventListener(Action<NavigationEvent> listener) {
@@ -321,10 +305,7 @@ public class Navigator : StaticService<Navigator>, IAsyncDisposable {
 
     public static async Task RemoveAfterFinishEventListener(EventDelegate<NavigationEvent> listener) {
         var instance = Instance(); await instance.NavLock.TryExclusive(() => {
-            for (int i = 0; i < instance.AfterFinishListeners.Count; i++) {
-                if (!listener.Equals(instance.AfterFinishListeners[i])) continue;
-                instance.AfterFinishListeners.RemoveAt(i); break;
-            }
+            instance.AfterFinishListeners.RemoveAll(l => listener.Equals(l));
         });
     }
     public static async Task RemoveAfterFinishEventListener(Action<NavigationEvent> listener) {

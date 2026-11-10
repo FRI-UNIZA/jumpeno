@@ -1,0 +1,11 @@
+@namespace Jumpeno.Client.Components
+
+@inherits BasicComponent
+
+<div class="@ComputeClass()">
+    <div class="chat-message-item__header">
+        <span class="chat-message-item__sender">@Message.SenderName</span>
+        <span class="chat-message-item__time">@FormattedTime</span>
+    </div>
+    <p class="chat-message-item__text">@Message.Text</p>
+</div>

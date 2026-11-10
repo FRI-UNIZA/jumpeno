@@ -1,6 +1,6 @@
 namespace Jumpeno.Client.Models;
 
 public record Control(
-    GAME_CONTROLS Key,
+    GameControls Key,
     bool Pressed
 );

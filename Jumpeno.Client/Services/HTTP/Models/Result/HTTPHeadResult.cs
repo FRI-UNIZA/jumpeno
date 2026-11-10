@@ -37,7 +37,7 @@ public class HTTPHeadResult {
     // Methods ----------------------------------------------------------------------------------------------------------------------------
     private static HttpResponseMessage EmptyMessage() {
         var msg = new HttpResponseMessage {
-            Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json")
+            Content = new StringContent("{}", Encoding.UTF8, "application/json")
         };
         msg.Headers.Clear();
         msg.Content.Headers.Clear();

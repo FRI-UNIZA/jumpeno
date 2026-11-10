@@ -1,7 +1,7 @@
 namespace Jumpeno.Client.Models;
 
 public record PreRenderedCanvas(
-    CANVAS ID,
+    CanvasType ID,
     int Width,
     int Height
 ) {

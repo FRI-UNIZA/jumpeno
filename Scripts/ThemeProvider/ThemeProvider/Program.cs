@@ -1,6 +1,7 @@
-﻿namespace ThemeProvider;
+namespace ThemeProvider;
 
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Jumpeno.Client.Utils;
 
@@ -27,7 +28,7 @@ public class Program {
     private static readonly string CSS_PATH = $"{ROOT}/Jumpeno.Client/wwwroot/css/theme.css";
 
     // Dependencies -----------------------------------------------------------------------------------------------------------------------
-    private static readonly string USINGS = "using Jumpeno.Client.Models;";
+    private static readonly string USINGS = "using Jumpeno.Client.Models;using Jumpeno.Client.Enums;";
     private static readonly PortableExecutableReference[] REFERENCES = [
         MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
         MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
@@ -38,7 +39,7 @@ public class Program {
         MetadataReference.CreateFromFile(Assembly.Load("System.Text.Json").Location)
     ];
     private static readonly (string Path, string Usings)[] DEPENDENCIES = [
-        ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/SCROLLAREA_THEME.cs", ""),
+        ($"{ROOT}/Jumpeno.Client/Components/ScrollArea/Constants/ScrollAreaTheme.cs", ""),
         ($"{ROOT}/Jumpeno.Client/Utils/Graphics/Models/RGBColor.cs", "using System; using System.Linq; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Client/Utils/Graphics/Models/RGBAColor.cs", "using System; using System.Text.Json.Serialization;"),
         ($"{ROOT}/Jumpeno.Client/Themes/Themes/BaseTheme.cs", USINGS)
@@ -46,7 +47,7 @@ public class Program {
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------
     // Property:
-    private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{name.ToLower().Replace("_", "-")}";
+    private static string TransformName(string name) => $"--{VARIABLE_PREFIX}-{Regex.Replace(name.Replace('_','-'), "(?<!^)([A-Z])", "-$1").ToLower()}";
     private static string TransformValue(string className, string name, object? value) {
         return value == null ? throw new ArgumentNullException($"{className}.{name}") : $"{value}";
     }
@@ -69,13 +70,13 @@ public class Program {
         var type = Reflex.CompileClass(CLASS_DIR, NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
         var instance = Reflex.CreateInstance<object>(type);
         
-        Dictionary<string, string> constants = new();
+        Dictionary<string, string> constants = [];
 
         // 2) Divide constants:
-        foreach (var property in Reflex.GetMembers(instance)) {
-            string propertyName = TransformName(property.Name);
-            if (property.IsVirtual) continue;
-            string propertyValue = TransformValue(CLASSNAME_BASE, property.Name, property.Value);
+        foreach (var (Name, Value, _, IsVirtual) in Reflex.GetMembers(instance)) {
+            string propertyName = TransformName(Name);
+            if (IsVirtual) continue;
+            string propertyValue = TransformValue(CLASSNAME_BASE, Name, Value);
             constants[propertyName] = propertyValue;
         }
 
@@ -94,23 +95,23 @@ public class Program {
         // 1) Initialization:
         var type = Reflex.CompileClass(CLASS_DIR, NAMESPACE, className, USINGS, REFERENCES, DEPENDENCIES);
         var instance = Reflex.CreateInstance<object>(type);
-        Dictionary<string, Dictionary<string, string>> surfaces = new();
+        Dictionary<string, Dictionary<string, string>> surfaces = [];
 
         // 2) Divide variables:
-        foreach (var property in Reflex.GetMembers(instance)) {
-            string propertyName = TransformName(property.Name);
-            string propertyValue = TransformValue(className, property.Name, property.Value);
+        foreach (var (Name, Value, _, IsVirtual) in Reflex.GetMembers(instance)) {
+            string propertyName = TransformName(Name);
+            string propertyValue = TransformValue(className, Name, Value);
             // 2.1) Constants:
-            if (!property.IsVirtual) continue;
+            if (!IsVirtual) continue;
             // 2.2) Variables:
             var surfaceName = SurfaceName(propertyName);
             if (surfaceName == null) {
                 // 2.2.1) Common variables:
-                if (!surfaces.ContainsKey(SURFACE_PRIMARY)) surfaces[SURFACE_PRIMARY] = new();
+                if (!surfaces.ContainsKey(SURFACE_PRIMARY)) surfaces[SURFACE_PRIMARY] = [];
                 surfaces[SURFACE_PRIMARY][propertyName] = propertyValue;
             } else {
                 // 2.2.2) Surface variables:
-                if (!surfaces.ContainsKey(surfaceName)) surfaces[surfaceName] = new();
+                if (!surfaces.ContainsKey(surfaceName)) surfaces[surfaceName] = [];
                 string propertySurfaceName = RemoveSurface(propertyName, surfaceName);
                 surfaces[surfaceName][propertySurfaceName] = propertyValue;
             }
@@ -136,8 +137,8 @@ public class Program {
         // 1) Init constants:
         string content = GenerateConstants(THEMES[0].CLASSNAME);
         // 2) Add themes:
-        foreach (var THEME in THEMES) {
-            content += "\n" + GenerateVariables(THEME.CLASSNAME, THEME.CSS_CLASS);
+        foreach (var (CLASSNAME, CSS_CLASS) in THEMES) {
+            content += "\n" + GenerateVariables(CLASSNAME, CSS_CLASS);
         }
         // 3) Write to file:
         File.WriteAllText(CSS_PATH, content);

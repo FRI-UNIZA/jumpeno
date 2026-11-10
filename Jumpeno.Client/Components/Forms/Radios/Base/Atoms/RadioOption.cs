@@ -2,31 +2,31 @@ namespace Jumpeno.Client.Components;
 
 public class RadioOption<T> : FormField<RadioOptionViewModel<T>> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const string CLASS_SELECTED = "selected";
+    public const string ClassSelected = "selected";
 
     // Cascading parameters ---------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = RadioComponent<T>.CASCADE_REF)]
+    [CascadingParameter(Name = RadioComponent<T>.CascadeRef)]
     public required RadioComponent<T> Radio { get; set; }
 
     // Parameters -------------------------------------------------------------------------------------------------------------------------
     [Parameter]
-    public override FORM_VARIANT? Variant { get; set; } = null;
+    public override FormVariant? Variant { get; set; } = null;
     [Parameter]
-    public override FORM_SIZE? Size { get; set; } = null;
+    public override FormSize? Size { get; set; } = null;
     [Parameter]
-    public override FORM_ALIGN? Align { get; set; } = null;
+    public override FormAlign? Align { get; set; } = null;
     [Parameter]
-    public override FORM_ALIGN? ErrorAlign { get; set; } = null;
+    public override FormAlign? ErrorAlign { get; set; } = null;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     protected bool IsSelected => Radio.ViewModel.Value?.DTO == ViewModel.DTO;
     protected virtual bool CustomAfterChange => false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public override CSSClass ComputeClass() {
+    public override CssClass ComputeClass() {
         return base.ComputeClass()
-        .Set(Disabler.CLASS, Radio.Disabled || Disabled)
-        .Set(CLASS_SELECTED, IsSelected);
+        .Set(Disabler.ClassName, Radio.Disabled || Disabled)
+        .Set(ClassSelected, IsSelected);
     }
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------

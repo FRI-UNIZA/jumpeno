@@ -12,26 +12,29 @@ public static class AppEnvironment {
     public static bool IsDevelopment => IsDevelopmentCheck(); private static Func<bool> IsDevelopmentCheck;
     public static bool IsProduction => !IsDevelopment;
 
+    // Static helpers ---------------------------------------------------------------------------------------------------------------------
+    public static MemoryStorage MemoryStorage => GetService<MemoryStorage>();
+
     // Validation -------------------------------------------------------------------------------------------------------------------------
-    public static List<Error> ValidateServer() => Checker.Validate(!IsServer, ERROR.DEFAULT.SetInfo("Not a server environment!"));
+    public static List<Error> ValidateServer() => Checker.Validate(!IsServer, Errors.Default.SetInfo("Not a server environment!"));
     public static void AssertServer() => Checker.Assert(ValidateServer());
 
-    public static List<Error> ValidateClient() => Checker.Validate(IsServer, ERROR.DEFAULT.SetInfo("Not a client environment!"));
+    public static List<Error> ValidateClient() => Checker.Validate(IsServer, Errors.Default.SetInfo("Not a client environment!"));
     public static void AssertClient() => Checker.Assert(ValidateClient());
     
-    public static List<Error> ValidateController() => Checker.Validate(!IsController, ERROR.DEFAULT.SetInfo("Not a controller!"));
+    public static List<Error> ValidateController() => Checker.Validate(!IsController, Errors.Default.SetInfo("Not a controller!"));
     public static void AssertController() => Checker.Assert(ValidateController());
 
-    public static List<Error> ValidateAPI() => Checker.Validate(!IsAPI, ERROR.DEFAULT.SetInfo("Not an API!"));
+    public static List<Error> ValidateAPI() => Checker.Validate(!IsAPI, Errors.Default.SetInfo("Not an API!"));
     public static void AssertAPI() => Checker.Assert(ValidateAPI());
 
-    public static List<Error> ValidateHub() => Checker.Validate(!IsHub, ERROR.DEFAULT.SetInfo("Not a hub!"));
+    public static List<Error> ValidateHub() => Checker.Validate(!IsHub, Errors.Default.SetInfo("Not a hub!"));
     public static void AssertHub() => Checker.Assert(ValidateHub());
 
-    public static List<Error> ValidateDevelopment() => Checker.Validate(!IsDevelopment, ERROR.DEFAULT.SetInfo("Not a development environment!"));
+    public static List<Error> ValidateDevelopment() => Checker.Validate(!IsDevelopment, Errors.Default.SetInfo("Not a development environment!"));
     public static void AssertDevelopment() => Checker.Assert(ValidateDevelopment());
 
-    public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, ERROR.DEFAULT.SetInfo("Not a production environment!"));
+    public static List<Error> ValidateProduction() => Checker.Validate(IsDevelopment, Errors.Default.SetInfo("Not a production environment!"));
     public static void AssertProduction() => Checker.Assert(ValidateProduction());
 
     // Utils ------------------------------------------------------------------------------------------------------------------------------

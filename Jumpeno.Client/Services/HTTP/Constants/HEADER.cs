@@ -1,9 +1,9 @@
 namespace Jumpeno.Client.Constants;
 
-public static class HEADER {
-    public const string AUTHORIZATION = "Authorization";
-    public const string APP_VERSION = "App-Version";
-    public const string ACCEPT_LANGUAGE = "Accept-Language";
-    public const string CONTENT_LANGUAGE = "Content-Language";
-    public const string CONTENT_TYPE = "Content-Type";
+public static class Header {
+    public const string Authorization = "Authorization";
+    public const string AppVersion = "App-Version";
+    public const string AcceptLanguage = "Accept-Language";
+    public const string ContentLanguage = "Content-Language";
+    public const string ContentType = "Content-Type";
 }

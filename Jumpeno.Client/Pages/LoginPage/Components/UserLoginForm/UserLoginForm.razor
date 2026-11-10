@@ -5,27 +5,27 @@
 <DocTitle Value="@I18N.T("Login")" />
 
 <div class="user-login-form">
-    <Heading1 Class="login-heading" Size="TEXT_SIZE.L">@I18N.T("Login")</Heading1>
+    <Heading1 Class="login-heading" Size="TextSize.L">@I18N.T("Login")</Heading1>
     <div class="login-inputs">
-        <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
-        <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+        <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FormSize.M" Align="FormAlign.Center" Autocomplete />
+        <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FormSize.M" Align="FormAlign.Center" />
     </div>
-    <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FORM" ID="@nameof(UserLoginDTO.CAPTCHAToken)" />
-    <Button Size="BUTTON_SIZE.M" OnClick="Login">
+    <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FormId" ID="@nameof(UserLoginDTO.CAPTCHAToken)" />
+    <Button Size="ButtonSize.M" OnClick="Login">
         <Text>@I18N.T("Log in")</Text>
     </Button>
-    <Paragraph Size="TEXT_SIZE.S" Class="register-block">
+    <Paragraph Size="TextSize.S" Class="register-block">
         @I18N.T("Not a user?")&nbsp;
-        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.REGISTER)" OnEnter="() => VM.Show(LOGIN_FORM.REGISTER)" Underline>
+        <WebLink Size="TextSize.S" NoWrap OnClick="() => VM.Show(LoginFormType.Register)" OnEnter="() => VM.Show(LoginFormType.Register)" Underline>
             @I18N.T("Register")
         </WebLink>
     </Paragraph>
     <div class="login-options">
-        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)" OnEnter="() => VM.Show(LOGIN_FORM.PASSWORD_RESET)">
+        <WebLink Size="TextSize.S" NoWrap OnClick="() => VM.Show(LoginFormType.PasswordReset)" OnEnter="() => VM.Show(LoginFormType.PasswordReset)">
             &nbsp;@I18N.T("Reset password")&nbsp;
         </WebLink>
         <span class="option-delimiter">|</span>
-        <WebLink Size="TEXT_SIZE.S" NoWrap OnClick="() => VM.Show(LOGIN_FORM.ADMIN)" OnEnter="() => VM.Show(LOGIN_FORM.ADMIN)">
+        <WebLink Size="TextSize.S" NoWrap OnClick="() => VM.Show(LoginFormType.Admin)" OnEnter="() => VM.Show(LoginFormType.Admin)">
             <AntIcon Type="safety-certificate" Theme="outline" Class="icon-admin"/>&nbsp;@I18N.T("I am admin")&nbsp;
         </WebLink>
     </div>

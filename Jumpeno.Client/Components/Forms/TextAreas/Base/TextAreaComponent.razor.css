@@ -1,0 +1,120 @@
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
+
+/* Styles > Container */
+::deep .textarea-container {
+    /* Position: */
+    position: relative;
+    /* Display: */
+    display: flex;
+    align-items: flex-start;
+    /* Size: */
+    width: 100%;
+}
+
+
+/* Styles > Textarea element */
+::deep .textarea-element {
+    /* Size: */
+    width: 100%;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    /* Style: */
+    background-color: var(--theme-form-primary-background);
+    border: 1px solid var(--theme-form-primary-border-color);
+    border-radius: 6px;
+    color: var(--theme-form-primary-color);
+    resize: none;
+    overflow-y: hidden;
+    /* Content: */
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    /* Animations: */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* State [Focus] */
+::deep .textarea-element:focus {
+    /* Style: */
+    outline: none;
+    border-color: var(--theme-form-primary-highlight-border-color);
+    box-shadow: 0 0 0 3px rgba(var(--theme-form-primary-highlight-box-shadow), 0.1);
+}
+
+/* State [Invalid] */
+::deep .textarea-element[aria-invalid="true"] {
+    /* Style: */
+    border-color: var(--theme-status-danger-accent-color);
+}
+
+
+/* Styles > Auto-resize */
+::deep .textarea.auto-resize .textarea-element {
+    /* Style: */
+    overflow-y: auto;
+    /* Size: */
+    max-height: calc(var(--textarea-max-rows, 3.5) * 1.5em + 16px);
+}
+
+
+/* Styles > Icons */
+::deep .textarea-icon-before,
+::deep .textarea-icon-after {
+    /* Display: */
+    display: flex;
+    align-items: flex-start;
+    flex-shrink: 0;
+    /* Size: */
+    padding-top: 10px;
+    /* Style: */
+    color: var(--theme-form-primary-icon-color);
+}
+
+::deep .textarea-icon-before {
+    /* Size: */
+    padding-right: 8px;
+}
+
+::deep .textarea-icon-after {
+    /* Size: */
+    padding-left: 8px;
+}
+
+
+/* Styles > Clear button */
+::deep .textarea-clear {
+    /* Position: */
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+::deep .textarea-clear-button {
+    /* Display: */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Size: */
+    padding: 2px;
+    /* Style: */
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: var(--theme-form-primary-icon-color);
+    cursor: pointer;
+    /* Animations: */
+    transition: color 0.2s ease;
+}
+
+/* State [Hover] */
+::deep .textarea-clear-button:hover {
+    /* Style: */
+    color: var(--theme-form-primary-color);
+}
+
+
+/* Styles [NoValue] -------------------------------------------------------------------------------------------------------------------- */
+::deep .textarea.value-default .textarea-clear {
+    /* Display: */
+    display: none;
+}

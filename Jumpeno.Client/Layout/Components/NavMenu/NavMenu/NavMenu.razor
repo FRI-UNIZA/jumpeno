@@ -1,20 +1,20 @@
-﻿@namespace Jumpeno.Client.Layouts
+@namespace Jumpeno.Client.Layouts
 
 @inherits BasicComponent
 
 <nav class="@ComputeClass()" style="@Style">
-    <Container Type="CONTAINER_TYPE.INLINE" Boundary PaddingHorizontal Class="@CLASS_CONTAINER">
+    <Container Type="ContainerType.Inline" Boundary PaddingHorizontal Class="@ClassContainer">
         <LogoLink />
-        <div class="@CLASS_NAVIGATION">
+        <div class="@ClassNavigation">
             <MenuControls OnFocusIn="OnControlsFocusIn" OnFocusOut="OnControlsFocusOut" />
-            <AuthView Roles="[ROLE.USER]">
+            <AuthView Roles="[Role.User]">
                 <UserDropDown />
             </AuthView>
-            <AuthView Roles="[ROLE.ADMIN]">
+            <AuthView Roles="[Role.Admin]">
                 <AdminDropDown />
             </AuthView>
             <NavMenuOpenButton
-                ID="@MOBILE_MENU_BUTTON_ID"
+                ID="@MobileMenuButtonId"
                 OnClick="MobileRef.Open"
                 OnFocus="OnMobileMenuButtonFocusIn"
                 OnBlur="OnMobileMenuButtonFocusOut"

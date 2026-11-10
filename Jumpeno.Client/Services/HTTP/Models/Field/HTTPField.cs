@@ -44,7 +44,6 @@ public class HTTPField<T> {
         } finally {
             Loading = false;
             component.Notify();
-            SSRStorage.Commit(field, this);
         }
     }
 }

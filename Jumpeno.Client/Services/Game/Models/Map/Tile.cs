@@ -2,8 +2,8 @@ namespace Jumpeno.Client.Models;
 
 public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
     // Constants --------------------------------------------------------------------------------------------------------------------------
-    public const int SIZE = 64;
-    public const int HALF_SIZE = SIZE / 2;
+    public const int Size = 64;
+    public const int HalfSize = Size / 2;
 
     // Attributes -------------------------------------------------------------------------------------------------------------------------
     [JsonInclude][Newtonsoft.Json.JsonProperty]
@@ -14,11 +14,11 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     [JsonConstructor][Newtonsoft.Json.JsonConstructor]
     public Tile(PointF center) {
-        Position = new(center, SIZE - 2, SIZE - 2);
+        Position = new(center, Size - 2, Size - 2);
         Rect = Collision.GetBoundingBox(Position);
     }
 
-    public Tile(int x, int y) : this(new PointF(x * SIZE + HALF_SIZE, y * SIZE + HALF_SIZE)) {}
+    public Tile(int x, int y) : this(new PointF(x * Size + HalfSize, y * Size + HalfSize)) {}
 
     // Static tile creation methods -------------------------------------------------------------------------------------------------------
     public static List<Tile> CreateTiles(List<(int x, int y)> tilePositions)
@@ -35,12 +35,12 @@ public class Tile : IRectFPositionable, IRenderable<(Map Map, bool Scale)> {
     public async Task<bool> Render(Canvas2DContext ctx, (Map Map, bool Scale) @params) {
         var (map, scale) = @params;
         var point = scale ? map.ToScreen(Center) : map.ToCanvas(Center);
-        int size = scale ? map.ToScreenWidth(SIZE) : SIZE;
+        int size = scale ? map.ToScreenWidth(Size) : Size;
         if (ImageReferrer.Get(map.TileImage) is not ElementReference img) return false;
         await ctx.DrawImageAsync(
             img,
             0, 0,
-            SIZE, SIZE,
+            Size, Size,
             point.X - size / 2 - 0.5, point.Y - size / 2 - 0.5,
             size + 1, size + 1
         );

@@ -1,5 +1,8 @@
 namespace Jumpeno.Client.Services;
 
+/// <summary>
+/// DEPRECATED DO NOT USE
+/// </summary>
 public partial class SSRStorage {
     // Storage ----------------------------------------------------------------------------------------------------------------------------
     private SSRState StorageState = null!;

@@ -2,18 +2,18 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.USER]">
-    <DropDown @ref="DropDownRef" Title="@I18N.T("User menu")" Class="@CLASS">
+<AuthView Roles="[Role.User]">
+    <DropDown @ref="DropDownRef" Title="@I18N.T("User menu")" Class="@ClassName">
         <DropDownButton>
-            <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="@CLASS_PROFILE_IMAGE" />
+            <Image URL="@Auth.User.Skin.ToImagePath()" Transparent Class="@ClassProfileImage" />
         </DropDownButton>
         <Options>
             <DropDownOption Label="@I18N.T("My profile")" Action="OpenProfile">
-                <AntIcon Type="setting" Theme="outline" Class="@CLASS_ICON" Style="font-size: 18px;" />
+                <AntIcon Type="setting" Theme="outline" Class="@ClassIcon" Style="font-size: 18px;" />
                 <DropDownOptionText>@I18N.T("My profile")</DropDownOptionText>
             </DropDownOption>
             <DropDownOption Label="@I18N.T("Log out")" Action="LogOut">
-                <AntIcon Type="logout" Theme="outline" Class="@CLASS_ICON" Style="margin-top: -1px;" />
+                <AntIcon Type="logout" Theme="outline" Class="@ClassIcon" Style="margin-top: -1px;" />
                 <DropDownOptionText>@I18N.T("Log out")</DropDownOptionText>
             </DropDownOption>
         </Options>

@@ -2,18 +2,18 @@
 
 @inherits BasicComponent
 
-<AuthView Roles="[ROLE.ADMIN]">
-    <DropDown @ref="DropDownRef" Title="@I18N.T("Admin menu")" Class="@CLASS">
+<AuthView Roles="[Role.Admin]">
+    <DropDown @ref="DropDownRef" Title="@I18N.T("Admin menu")" Class="@ClassName">
         <DropDownButton>
-            <AntIcon Type="user" Theme="outline" Class="@CLASS_PROFILE_IMAGE" />
+            <AntIcon Type="user" Theme="outline" Class="@ClassProfileImage" />
         </DropDownButton>
         <Options>
             <DropDownOption Label="@I18N.T("Settings")" Action="OpenSettings">
-                <AntIcon Type="setting" Theme="outline" Class="@CLASS_ICON" Style="font-size: 18px;" />
+                <AntIcon Type="setting" Theme="outline" Class="@ClassIcon" Style="font-size: 18px;" />
                 <DropDownOptionText>@I18N.T("Settings")</DropDownOptionText>
             </DropDownOption>
             <DropDownOption Label="@I18N.T("Log out")" Action="LogOut">
-                <AntIcon Type="logout" Theme="outline" Class="@CLASS_ICON" Style="margin-top: -1px;" />
+                <AntIcon Type="logout" Theme="outline" Class="@ClassIcon" Style="margin-top: -1px;" />
                 <DropDownOptionText>@I18N.T("Log out")</DropDownOptionText>
             </DropDownOption>
         </Options>

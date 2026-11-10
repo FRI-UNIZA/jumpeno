@@ -1,19 +1,40 @@
+/* Keyframes --------------------------------------------------------------------------------------------------------------------------- */
+@keyframes account-tab-rotate-360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Styles ------------------------------------------------------------------------------------------------------------------------------ */
 ::deep.account-tab {
     /* Display: */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Size: */
+    margin-top: 20px;
+}
+
+::deep.account-tab .profile-sections-columns {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 20px;
-    /* Size: */
-    min-width: 100%;
-    max-width: 100%;
-    padding: 30px 0 40px;
-    margin-top: -20px;
+    margin-top: 20px;
 }
 
-::deep.account-tab .profile-row,
-::deep.account-tab .profile-button-row {
+::deep.account-tab .profile-sections {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+::deep.account-tab .profile-section {
     /* Display: */
     display: flex;
     flex-direction: column;
@@ -22,24 +43,14 @@
     gap: 12px;
 }
 
-::deep.account-tab .profile-row {
-    /* Size: */
-    width: 54%;
-    padding-left: 20px;
-}
-
-::deep.account-tab .profile-button-row {
-    /* Size: */
-    width: 46%;
-}
-
 ::deep.account-tab .user-profile-image-wrap {
     /* Position: */
     position: relative;
     /* Size: */
     width: 140px;
     height: 140px;
-    margin-bottom: 10px;
+    scale: 1.2;
+    margin-bottom: 20px;
     /* Style: */
     border-radius: 100%;
     background-color: var(--theme-modal-profile-avatar-background);
@@ -49,6 +60,12 @@
     overflow: hidden;
     /* Base: */
     font-size: 1px;
+    animation: account-tab-rotate-360 0.5s linear;
+}
+
+::deep.account-tab .avatar-popover {
+    /* Display: */
+    display: none;
 }
 
 ::deep.account-tab .image.user-profile-image {
@@ -61,42 +78,42 @@
     pointer-events: none;
 }
 
-::deep.account-tab .heading.profile-name {
-    /* Content: */
-    text-align: center;
-}
-
-::deep.account-tab .paragraph.profile-email {
+.skin-popover .skins-grid {
+    /* Display: */
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 12px;
     /* Size: */
-    margin-top: -10px;
+    padding: 10px;
+    max-height: 350px;
     /* Content: */
-    text-align: center;
+    overflow-y: auto;
 }
 
-::deep.account-tab .paragraph.profile-activated {
-    /* Content: */
-    text-align: center;
+.skin-popover .one-skin {
+    /* Size: */
+    padding: 4px 13px;
+    width: fit-content;
+    /* Style: */
+    box-shadow: var(--theme-modal-profile-avatar-skin-box-shadow);
+    border: 2px solid var(--theme-modal-profile-border-color);
+    border-radius: 10px;
 }
 
-::deep.account-tab .user-activated-icon,
-::deep.account-tab .user-not-activated-icon {
+.skin-popover .skin-item {
     /* Position: */
-    position: relative;
-    bottom: -2px;
+    --image-fit: none;
+    --image-position: 0 0;
     /* Size: */
-    margin: 0 5px 0 -8px;
-    /* Content: */
-    font-size: 22px;
+    --image-width: 66px;
+    --image-height: 78px;
+    /* Actions: */
+    cursor: pointer;
 }
 
-::deep.account-tab .user-activated-icon {
-    /* Style: */
-    color: var(--theme-status-success-accent-color);
-}
-
-::deep.account-tab .user-not-activated-icon {
-    /* Style: */
-    color: var(--theme-status-danger-accent-color);
+.skin-popover .skin-item:hover {
+    /* Transform: */
+    transform: scale(1.2);
 }
 
 ::deep.account-tab .activated-box {
@@ -111,21 +128,184 @@
     padding-top: 12px;
 }
 
-@media (max-width: 600px) {
-    ::deep.account-tab {
+::deep.account-tab .avatar-info {
+    /* Display: */
+    display: none;
+}
+
+::deep.account-tab .paragraph.profile-activated {
+    /* Content: */
+    text-align: center;
+}
+
+::deep.account-tab .user-activated-icon,
+::deep.account-tab .user-not-activated-icon {
+    /* Position: */
+    position: relative;
+    bottom: -2px;
+    /* Size: */
+    margin: 0 5px 0 0px;
+    /* Content: */
+    font-size: 22px;
+}
+
+::deep.account-tab .user-activated-icon {
+    /* Style: */
+    color: var(--theme-status-success-accent-color);
+}
+
+::deep.account-tab .user-not-activated-icon {
+    /* Style: */
+    color: var(--theme-status-danger-accent-color);
+}
+
+::deep.account-tab .profile-details {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+::deep.account-tab .name-section {
+    /* Size: */
+    margin-bottom: auto;
+}
+
+::deep.account-tab .name-input {
+    /* Size: */
+    min-width: 350px;
+    width: 100%;
+}
+
+::deep.account-tab .email-input {
+    /* Size: */
+    min-width: 350px;
+    width: 100%;
+}
+
+::deep.account-tab .input-label {
+    /* Display: */
+    align-self: center;
+    /* Size: */
+    margin-bottom: -10px;
+    margin-top: -5px;
+    /* Style: */
+    color: var(--theme-modal-profile-input-label-color);
+    /* Content: */
+    font-size: 13px;
+}
+
+::deep.account-tab .email-section {
+    /* Display: */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+::deep.account-tab .button-change {
+    /* Size: */
+    margin-top: auto;
+}
+
+@media (min-width: 768px) {
+    ::deep.account-tab .profile-sections {
         /* Display: */
-        flex-direction: column;
-        gap: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 70px;
     }
 
-    ::deep.account-tab .profile-row {
+    ::deep.account-tab .image-edit-overlay {
+        /* Position: */
+        position: absolute;
+        top: 0;
+        left: 0;
+        /* Display: */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         /* Size: */
         width: 100%;
-        padding-left: 0;
+        height: 100%;
+        /* Style: */
+        background-color: var(--theme-modal-profile-avatar-edit-background);
+        opacity: 0;
+        border-radius: 100%;
+        /* Transition: */
+        transition: opacity 0.3s ease;
     }
 
-    ::deep.account-tab .profile-button-row {
+    ::deep.account-tab .user-profile-image-wrap {
+        /* Actions: */
+        cursor: pointer;
+    }
+
+    ::deep.account-tab .user-profile-image-wrap:hover .image-edit-overlay {
+        /* Style: */
+        opacity: 1;
+    }
+
+    ::deep.account-tab .avatar-popover {
+        /* Display: */
+        display: block;
+    }
+
+    ::deep.account-tab .avatar {
+        /* Display: */
+        display: none;
+    }
+
+    ::deep.account-tab .button-avatar-change {
+        /* Display: */
+        display: none;
+    }
+
+    ::deep.account-tab .edit-icon-on-image {
+        /* Style: */
+        color: white;
+        /* Content: */
+        font-size: 30px;
+    }
+
+    ::deep.account-tab .profile-details {
+        /* Display: */
+        display: flex;
+        flex-direction: row;
+        gap: 70px;
         /* Size: */
+        margin-top: 20px; 
+    }
+
+    .skin-popover .skins-grid {
+        /* Display: */
+        grid-template-columns: repeat(5, auto);
+    }
+
+    ::deep.account-tab .name-input {
+        /* Size: */
+        min-width: 0px;
         width: 100%;
+    }
+
+    ::deep.account-tab .email-input {
+        /* Size: */
+        min-width: 400px;
+        width: 100%;
+    }
+
+    ::deep.account-tab .email-section {
+        /* Display: */
+        flex-direction: row;
+    }
+
+    ::deep.account-tab .avatar-info {
+        /* Display: */
+        display: flex;
     }
 }

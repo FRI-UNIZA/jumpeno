@@ -1,8 +1,8 @@
 namespace Jumpeno.Client.Models;
 
-public class DesignerSurface(SURFACE surface) {
+public class DesignerSurface(Surface surface) {
     // Attributes -------------------------------------------------------------------------------------------------------------------------
-    public SURFACE Surface { get; private set; } = surface;
+    public Surface Surface { get; private set; } = surface;
     private readonly List<DesignerSurface> Children = [];
 
     // Actions ----------------------------------------------------------------------------------------------------------------------------

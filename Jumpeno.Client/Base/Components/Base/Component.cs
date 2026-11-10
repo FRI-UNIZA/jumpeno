@@ -5,7 +5,7 @@ namespace Jumpeno.Client.Base;
 /// <summary>Component base to derive specific base classes.</summary>
 public class Component : ComponentBase, IAsyncDisposable {
     // Parameters -------------------------------------------------------------------------------------------------------------------------
-    [CascadingParameter(Name = ThemeProvider.CASCADE_APP_THEME)]
+    [CascadingParameter(Name = ThemeProvider.CascadeAppTheme)]
     public required BaseTheme AppTheme { get; set; }
     [Parameter]
     public bool Base { get; set; } = true;
@@ -23,7 +23,7 @@ public class Component : ComponentBase, IAsyncDisposable {
     public bool IsDisposed { get; private set; } = false;
 
     // Markup -----------------------------------------------------------------------------------------------------------------------------
-    public virtual CSSClass ComputeClass() => new CSSClass().Set(Class).Set(Disabler?.CSSClass);
+    public virtual CssClass ComputeClass() => new CssClass().Set(Class).Set(Disabler?.CSSClass);
 
     // Lifecycle --------------------------------------------------------------------------------------------------------------------------
     protected override void OnInitialized() {

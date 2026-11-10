@@ -8,39 +8,39 @@
     @if (!Success) {
         <div class="register-form-content">
             <div class="register-box">
-                <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration")</Heading1>
+                <Heading1 Class="register-heading" Size="TextSize.L">@I18N.T("Registration")</Heading1>
                 <div class="register-inputs">
-                    <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" Autocomplete />
-                    <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
-                    <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
-                    <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FORM_SIZE.M" Align="FORM_ALIGN.CENTER" />
+                    <InputField ViewModel="VMEmail" Name="email" Label="@I18N.T("Email")" Size="FormSize.M" Align="FormAlign.Center" Autocomplete />
+                    <InputField ViewModel="VMPlayerName" Name="name" Label="@I18N.T("Player name")" Size="FormSize.M" Align="FormAlign.Center" />
+                    <InputField ViewModel="VMPassword" Name="password" Label="@I18N.T("Password")" Size="FormSize.M" Align="FormAlign.Center" />
+                    <InputField ViewModel="VMConfirmPassword" Name="confirm password" Label="@I18N.T("Confirm password")" Size="FormSize.M" Align="FormAlign.Center" />
                 </div>
-                <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT" Class="password-strength-box-mobile">
+                <Box Surface="BoxSurface.PrimaryTransparent" Class="password-strength-box-mobile">
                     <PasswordStrength Password="@Password" HideLock />
                 </Box>
-                <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FORM" ID="@nameof(UserRegisterDTO.CAPTCHAToken)" />
-                <Button Size="BUTTON_SIZE.M" OnClick="Register" Class="button-register">
+                <ReCAPTCHA @ref="ReCAPTCHARef" Form="@FormId" ID="@nameof(UserRegisterDTO.CAPTCHAToken)" />
+                <Button Size="ButtonSize.M" OnClick="Register" Class="button-register">
                     <Text>@I18N.T("Register")</Text>
                 </Button>
-                <Paragraph Size="TEXT_SIZE.S" Class="register-block">
+                <Paragraph Size="TextSize.S" Class="register-block">
                     @I18N.T("Have an account?")&nbsp;
-                    <WebLink Size="TEXT_SIZE.S"
+                    <WebLink Size="TextSize.S"
                         NoWrap
-                        OnClick="() => VM.Show(LOGIN_FORM.USER)"
-                        OnEnter="() => VM.Show(LOGIN_FORM.USER)"
+                        OnClick="() => VM.Show(LoginFormType.User)"
+                        OnEnter="() => VM.Show(LoginFormType.User)"
                         Underline
                     >
                         @I18N.T("Log in")
                     </WebLink>
                 </Paragraph>
             </div>
-            <Box Surface="BOX_SURFACE.PRIMARY_TRANSPARENT" Class="password-strength-box">
+            <Box Surface="BoxSurface.PrimaryTransparent" Class="password-strength-box">
                 <PasswordStrength Password="@Password" />
             </Box>
         </div>
     } else {
         <div class="register-success-box">
-            <Heading1 Class="register-heading" Size="TEXT_SIZE.L">@I18N.T("Registration successful.")</Heading1>
+            <Heading1 Class="register-heading" Size="TextSize.L">@I18N.T("Registration successful.")</Heading1>
             <AntIcon Type="check-circle" Theme="outline" Class="register-icon" />
             <div class="activation-box">
                 <Paragraph Class="activation-text">@I18N.T("In order to play, account must be activated!")</Paragraph>
@@ -48,10 +48,10 @@
                 <Paragraph Class="activation-text-info">(@I18N.T("You can always ask for new one in profile."))</Paragraph>
             </div>
             <WebLink
-                Size="TEXT_SIZE.S"
+                Size="TextSize.S"
                 NoWrap
-                OnClick="() => VM.Show(LOGIN_FORM.USER)"
-                OnEnter="() => VM.Show(LOGIN_FORM.USER)"
+                OnClick="() => VM.Show(LoginFormType.User)"
+                OnEnter="() => VM.Show(LoginFormType.User)"
                 Class="register-redirect"
             >
                 <AntIcon Type="login" Theme="outline" Class="icon-login" />&nbsp;@I18N.T("Log in")&nbsp;

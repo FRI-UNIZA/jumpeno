@@ -7,6 +7,6 @@ public record struct CreateData(
     bool Anonyms,
     byte Rounds,
     byte Capacity,
-    DISPLAY_MODE DisplayMode,
-    GAME_MODE GameMode
+    DisplayMode DisplayMode,
+    GameMode GameMode
 );

@@ -1,5 +1,5 @@
 namespace Jumpeno.Client.Constants;
 
-public static class EMAIL {
-    public const byte MAX_LENGTH = 255;
+public static class Email {
+    public const byte MaxLength = 255;
 }

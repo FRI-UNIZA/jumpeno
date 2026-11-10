@@ -15,11 +15,11 @@
             @onkeyup:stopPropagation="@(!Propagate)"
             @onkeypress:stopPropagation="@(!Propagate)"
         >
-            <div class="@CLASS_CONTENT">
+            <div class="@ClassContent">
                 @RenderField()
             </div>
             <FormError
-                Type="@FormErrorType"
+                Type="@ErrorType"
                 ViewModel="@ViewModel.Error"
                 Align="Align"
                 ErrorAlign="ErrorAlign"
