@@ -64,10 +64,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Step 1:
-      - uses: actions/checkout@master
-      # Step 2:
-      - name: Push with curl
-        uses: wei/curl@master
+      - name: Trigger redeploy
+        env:
+          WEBHOOK_URL: ${{ vars.WEBHOOK_URL }}
+          WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
+        run: |
+          curl --fail-with-body --path-as-is \
+            --request POST "$WEBHOOK_URL" \
+            --header "X-Webhook-Token: $WEBHOOK_TOKEN"
         with:
           args: -X POST -k ${{ vars.PORTAINER_WEBHOOK_URL }}
