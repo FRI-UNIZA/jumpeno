@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Install dependencies
@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get install -y python3 && \
     apt-get clean
 RUN apt-get update && \
-    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
     apt-get install -y nodejs && \
     apt-get clean
 RUN apt-get update && apt-get install -y jq
@@ -48,7 +48,7 @@ RUN BUNDLE=$(jq -r '.Bundle' ./Jumpeno.Client/AppSettings.Client.json) && \
 RUN dotnet publish Jumpeno.Server/Jumpeno.Server.csproj -c Release -o /app
 
 # Stage 2: Use a runtime image for deployment
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app .
 EXPOSE 80

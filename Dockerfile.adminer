@@ -1,5 +1,5 @@
 # Build image
-FROM adminer:5.3.0
+FROM adminer:6.3.1
 
 # Expose service
 EXPOSE 8080

@@ -1,7 +1,8 @@
 namespace Jumpeno.Server.Services;
 
-using MimeKit;
+using MailKit;
 using MailKit.Net.Smtp;
+using MimeKit;
 
 public static partial class Email {
     // Constants --------------------------------------------------------------------------------------------------------------------------
