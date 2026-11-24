@@ -165,7 +165,8 @@ var forwardedHeadersOptions = new ForwardedHeadersOptions {
     ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
                        Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto |
                        Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost,
-    KnownNetworks = {}, // Clears the default networks
+   
+    KnownIPNetworks = {}, // Clears the default networks
     KnownProxies = {} // Clears the default proxies
 };
 
